@@ -1,6 +1,17 @@
+signpic.over.id=[§6Sign-URL§r] %s
+signpic.over.size=[§6Sign-Size§r] §7[width:§r%s§7] × [height:§r%s§7]
+signpic.over.status=[§6Sign-Status§r] %s
+signpic.over.advmsg=[§6Sign-Info§r] %s
+signpic.over.raw=[§6Sign-Raw§r] §7[§r%s§7]
+signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
 signpic.state.init=Initializing...
 signpic.state.available=Available! (%s%%)
 signpic.state.loading=Loading...
 signpic.state.downloading=Downloading... (%s%%)
 signpic.state.failed=Loading Failed... (%s%%)
 signpic.state.error=ERROR
+signpic.advmsg.invaildurl=Invaild URL
+signpic.advmsg.invaildimage=Invaild Image
+signpic.advmsg.io=Read Error: §7%s
+signpic.advmsg.unknown=Unknown Error: §7%s
+signpic.advmsg.dlerror=Failed to download: §7%s

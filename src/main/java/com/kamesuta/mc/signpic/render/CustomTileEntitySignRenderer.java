@@ -2,12 +2,11 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageState;
+import com.kamesuta.mc.signpic.util.SignParser;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
@@ -20,48 +19,29 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
-	protected ImageManager manager;
+	protected final ImageManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
 	protected ResourceLocation resWarning;
+	protected ResourceLocation resError;
 
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
 		this.manager = manager;
 		this.resWarning = new ResourceLocation(Reference.MODID, "textures/state/warning.png");
+		this.resError = new ResourceLocation(Reference.MODID, "textures/state/error.png");
 	}
 
 	@Override
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float color)
 	{
-		final String s = StringUtils.join(tile.signText);
-		if (s.endsWith("]") && s.contains("[")) {
-			// Extract URL
-			final int start = s.lastIndexOf("[");
-			String url = s.substring(0, start);
-			if (url.startsWith("$")) {
-				url = "https://" + url.substring(1);
-			} else if (url.startsWith("//")) {
-				url = "http://" + url.substring(2);
-			} else if (!(url.startsWith("http://") || url.startsWith("https://"))) {
-				url = "http://" + url;
-			}
-
-			// Extract Size
-			final String size = s.substring(start+1, s.length()-1);
-			final String[] sp_size = size.split("x");
-			float wid = 1;
-			try {
-				if (sp_size.length >= 1)
-					wid = Float.parseFloat(sp_size[0]);
-			} catch (final NumberFormatException e) {}
-			float hei = 1;
-			try {
-				if (sp_size.length >= 2)
-					hei = Float.parseFloat(sp_size[1]);
-			} catch (final NumberFormatException e) {}
+		final SignParser sign = new SignParser(tile);
+		if (sign.isVaild()) {
+			// Size
+			final float wid = sign.width();
+			final float hei = sign.height();
 
 			// Load Image
-			final Image image = this.manager.get(url);
+			final Image image = this.manager.get(sign.id());
 
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
@@ -87,21 +67,20 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Draw Canvas
+			final FontRenderer fontrenderer = func_147498_b();
 			//glDisable(GL_CULL_FACE);
+			glDisable(GL_LIGHTING);
 			glPushMatrix();
 			glTranslatef(-wid/2, hei-.5f, 0f);
-			glScalef(1f, -1f, -1f);
+			glScalef(1f, -1f, 1f);
 			glPushMatrix();
 			glScalef(wid, hei, 1f);
-			if (image.getState() == ImageState.AVAILABLE) {
-				glBindTexture(GL_TEXTURE_2D, image.getTexture().getGlTextureId());
-				this.t.startDrawingQuads();
-				this.t.addVertexWithUV(0, 0, 0, 0, 0);
-				this.t.addVertexWithUV(0, 1, 0, 0, 1);
-				this.t.addVertexWithUV(1, 1, 0, 1, 1);
-				this.t.addVertexWithUV(1, 0, 0, 1, 0);
-				this.t.draw();
-			} else {
+
+			glEnable(GL_LIGHTING);
+			drawImage(image);
+			glDisable(GL_LIGHTING);
+			if (image.getState() != ImageState.AVAILABLE) {
+				glLineWidth(1f);
 				glDisable(GL_TEXTURE_2D);
 				glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
 				this.t.startDrawing(GL_LINE_LOOP);
@@ -116,27 +95,26 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			if (wid<1.5f || hei<1.5) {
 				glScalef(.5f, .5f, .5f);
-				glTranslatef(wid/2, -hei/2-.6f, 0);
+				glTranslatef(wid/2, -hei/2-1f, 0);
 			}
 			// Draw Canvas - Draw Loading
 			glPushMatrix();
 			glTranslatef(wid/2, hei/2, 0);
 			glScalef(.5f, .5f, 1f);
-			if (image.getState() == ImageState.DOWNLOADING) {
+			glPushMatrix();
+			glScalef(.5f, .5f, 1f);
+			if (image.getState() == ImageState.LOADING || image.getState() == ImageState.DOWNLOADING) {
+				glLineWidth(3f);
 				glDisable(GL_TEXTURE_2D);
-				glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				if (image.getState() == ImageState.LOADING)
+					glColor4f(0f/256f, 144f/256f, 55f/256f, 1f);
+				if (image.getState() == ImageState.DOWNLOADING)
+					glColor4f(0f/256f, 102f/256f, 204f/256f, 1f);
 				this.t.startDrawing(GL_LINE_LOOP);
 				addCircleVertex(0f, 1f, 1f);
 				this.t.draw();
 
-				final float progress = .7f;
 				glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
-				this.t.startDrawing(GL_POLYGON);
-				this.t.addVertex(0f, 0f, 0f);
-				addCircleVertex(progress, 0f, 1f);
-				//addCircleVertex(0, progress);
-				this.t.draw();
-
 				final long time = System.currentTimeMillis();
 				final float time1 = time % 893 / 893f;
 				this.t.startDrawing(GL_LINE_LOOP);
@@ -148,50 +126,74 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				addCircleVertex(time2, time2+0.1f, 1.03f);
 				addCircleVertex(time2+0.1f, time2, 1.05f);
 				this.t.draw();
+
+				if (image.getState() == ImageState.DOWNLOADING) {
+					final float progress = image.getProgress();
+					glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
+					this.t.startDrawing(GL_POLYGON);
+					this.t.addVertex(0f, 0f, 0f);
+					addCircleVertex(progress, 0f, 1f);
+					this.t.draw();
+				}
+
 				glEnable(GL_TEXTURE_2D);
 			}
+			glPopMatrix();
 
+			glPushMatrix();
+			glTranslatef(-.5f, -.5f, 0f);
 			if (image.getState() == ImageState.FAILED) {
-				final Image warning = this.manager.get(this.resWarning);
-				if (warning.getState() == ImageState.AVAILABLE) {
+				drawImage(this.manager.get(this.resWarning));
+			}
+			if (image.getState() == ImageState.ERROR) {
+				drawImage(this.manager.get(this.resError));
+			}
+			glPopMatrix();
+
+			if (image.getState() != ImageState.AVAILABLE) {
+				f3 = 0.06666668F * f1;
+				glTranslatef(0f, 1f, 0f);
+				glPushMatrix();
+				glScalef(f3, f3, 1f);
+				final String msg1 = image.getStatusMessage();
+				fontrenderer.drawString(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
+				glPopMatrix();
+				f3 = 0.036666668F * f1;
+				glPushMatrix();
+				glScalef(f3, f3, 1f);
+				final String msg2 = image.getId();
+				fontrenderer.drawString(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
+				glPopMatrix();
+				final String msg3 = image.advMessage();
+				if (msg3 != null) {
 					glPushMatrix();
-					glTranslatef(-.5f, -.5f, 0f);
-					glBindTexture(GL_TEXTURE_2D, warning.getTexture().getGlTextureId());
-					this.t.startDrawingQuads();
-					this.t.addVertexWithUV(0, 0, 0, 0, 0);
-					this.t.addVertexWithUV(0, 1, 0, 0, 1);
-					this.t.addVertexWithUV(1, 1, 0, 1, 1);
-					this.t.addVertexWithUV(1, 0, 0, 1, 0);
-					this.t.draw();
+					glScalef(f3, f3, 1f);
+					fontrenderer.drawString(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
 					glPopMatrix();
 				}
 			}
 
-			glDepthMask(false);
-			final FontRenderer fontrenderer = func_147498_b();
-			glPushMatrix();
-			f3 = 0.06666668F * f1;
-			glTranslatef(0f, -1.3f, 0f);
-			glScalef(f3, f3, 1f);
-			final String msg1 = image.getStatusMessage();
-			fontrenderer.drawString(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
-			glPopMatrix();
-			glPushMatrix();
-			f3 = 0.036666668F * f1;
-			glTranslatef(0f, -1.3f, 0f);
-			glScalef(f3, f3, 1f);
-			final String msg2 = image.getId();
-			fontrenderer.drawString(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
-			glPopMatrix();
-			glDepthMask(true);
-
 			glPopMatrix();
 			glPopMatrix();
 			glEnable(GL_CULL_FACE);
+			glEnable(GL_LIGHTING);
 
 			glPopMatrix();
 		} else {
 			super.renderTileEntityAt(tile, x, y, z, color);
+		}
+	}
+
+	protected void drawImage(final Image image) {
+		if (image.getState() == ImageState.AVAILABLE) {
+			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			glBindTexture(GL_TEXTURE_2D, image.getTexture().getGlTextureId());
+			this.t.startDrawingQuads();
+			this.t.addVertexWithUV(0, 0, 0, 0, 0);
+			this.t.addVertexWithUV(0, 1, 0, 0, 1);
+			this.t.addVertexWithUV(1, 1, 0, 1, 1);
+			this.t.addVertexWithUV(1, 0, 0, 1, 0);
+			this.t.draw();
 		}
 	}
 

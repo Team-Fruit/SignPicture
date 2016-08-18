@@ -16,4 +16,8 @@ public interface Image {
 
 	String getId();
 
+	String getLocal();
+
+	String advMessage();
+
 }

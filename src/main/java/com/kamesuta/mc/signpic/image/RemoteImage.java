@@ -1,8 +1,10 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
+import java.io.IOException;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 
 import net.minecraft.client.resources.I18n;
 
@@ -11,8 +13,10 @@ public class RemoteImage implements Image {
 	protected ImageLocation location;
 	protected ImageTexture texture;
 	protected ImageState state = ImageState.INIT;
+	protected String advmsg;
 	protected ImageDownloader downloading;
 	protected Thread downloadingprocess;
+	protected File local;
 
 	public RemoteImage(final ImageLocation location, final String id) {
 		this.location = location;
@@ -53,24 +57,29 @@ public class RemoteImage implements Image {
 			}
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
-			Reference.logger.info("ERROR: " + this + ": " + e);
+			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
 		}
 	}
 
 	@Override
 	public void load() {
 		try {
-			Reference.logger.info("Loading Start: " + this);
 			final File local = this.location.localLocation(this);
-
 			if (local.exists()) {
+				this.local = local;
 				this.texture = new ImageTexture(local);
 				Reference.logger.info("Loaded: " + this);
 				this.state = ImageState.AVAILABLE;
 			}
+		} catch (final InvaildImageException e) {
+			this.state = ImageState.ERROR;
+			this.advmsg = I18n.format("signpic.advmsg.invaildimage");
+		} catch (final IOException e) {
+			this.state = ImageState.ERROR;
+			this.advmsg = I18n.format("signpic.advmsg.io", e);
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
-			Reference.logger.info("ERROR: " + this + ": " + e);
+			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
 		}
 	}
 
@@ -90,7 +99,20 @@ public class RemoteImage implements Image {
 
 	@Override
 	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int)getProgress()*100);
+		return I18n.format(this.state.msg, (int)getProgress()*100, this.advmsg);
+	}
+
+	@Override
+	public String advMessage() {
+		return this.advmsg;
+	}
+
+	@Override
+	public String getLocal() {
+		if (this.local != null)
+			return "File:"+this.local.getName();
+		else
+			return "None";
 	}
 
 	@Override
