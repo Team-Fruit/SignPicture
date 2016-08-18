@@ -18,12 +18,12 @@ public class ImageDownloader implements Runnable {
 	public static Downloader downloader = new Downloader().setMax(3);
 
 	protected final ImageLocation location;
-	protected final Image image;
+	protected final RemoteImage image;
 
 	protected long maxsize;
 	protected CountingOutputStream countoutput;
 
-	public ImageDownloader(final ImageLocation location, final Image image) {
+	public ImageDownloader(final ImageLocation location, final RemoteImage image) {
 		this.location = location;
 		this.image = image;
 	}

@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageState;
@@ -15,14 +16,18 @@ import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
 	protected ImageManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
+	protected ResourceLocation resWarning;
+
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
 		this.manager = manager;
+		this.resWarning = new ResourceLocation(Reference.MODID, "textures/state/warning.png");
 	}
 
 	@Override
@@ -84,12 +89,12 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			// Draw Canvas
 			//glDisable(GL_CULL_FACE);
 			glPushMatrix();
-			glTranslatef(wid/2, hei-.5f, 0f);
-			glScalef(-1f, -1f, -1f);
+			glTranslatef(-wid/2, hei-.5f, 0f);
+			glScalef(1f, -1f, -1f);
 			glPushMatrix();
 			glScalef(wid, hei, 1f);
-			if (image.state == ImageState.AVAILABLE) {
-				glBindTexture(GL_TEXTURE_2D, image.texture.getGlTextureId());
+			if (image.getState() == ImageState.AVAILABLE) {
+				glBindTexture(GL_TEXTURE_2D, image.getTexture().getGlTextureId());
 				this.t.startDrawingQuads();
 				this.t.addVertexWithUV(0, 0, 0, 0, 0);
 				this.t.addVertexWithUV(0, 1, 0, 0, 1);
@@ -116,8 +121,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			// Draw Canvas - Draw Loading
 			glPushMatrix();
 			glTranslatef(wid/2, hei/2, 0);
-			glScalef(-.5f, .5f, 1f);
-			if (image.state == ImageState.ERROR) {
+			glScalef(.5f, .5f, 1f);
+			if (image.getState() == ImageState.DOWNLOADING) {
 				glDisable(GL_TEXTURE_2D);
 				glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 				this.t.startDrawing(GL_LINE_LOOP);
@@ -146,6 +151,22 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				glEnable(GL_TEXTURE_2D);
 			}
 
+			if (image.getState() == ImageState.FAILED) {
+				final Image warning = this.manager.get(this.resWarning);
+				if (warning.getState() == ImageState.AVAILABLE) {
+					glPushMatrix();
+					glTranslatef(-.5f, -.5f, 0f);
+					glBindTexture(GL_TEXTURE_2D, warning.getTexture().getGlTextureId());
+					this.t.startDrawingQuads();
+					this.t.addVertexWithUV(0, 0, 0, 0, 0);
+					this.t.addVertexWithUV(0, 1, 0, 0, 1);
+					this.t.addVertexWithUV(1, 1, 0, 1, 1);
+					this.t.addVertexWithUV(1, 0, 0, 1, 0);
+					this.t.draw();
+					glPopMatrix();
+				}
+			}
+
 			glDepthMask(false);
 			final FontRenderer fontrenderer = func_147498_b();
 			glPushMatrix();
@@ -157,9 +178,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPopMatrix();
 			glPushMatrix();
 			f3 = 0.036666668F * f1;
-			glTranslatef(0f, 1.3f, 0f);
+			glTranslatef(0f, -1.3f, 0f);
 			glScalef(f3, f3, 1f);
-			final String msg2 = image.id;
+			final String msg2 = image.getId();
 			fontrenderer.drawString(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
 			glPopMatrix();
 			glDepthMask(true);
@@ -167,9 +188,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPopMatrix();
 			glPopMatrix();
 			glEnable(GL_CULL_FACE);
-
-
-			//fontrenderer.drawString(size, -fontrenderer.getStringWidth(size) / 2, 0, 0);
 
 			glPopMatrix();
 		} else {
