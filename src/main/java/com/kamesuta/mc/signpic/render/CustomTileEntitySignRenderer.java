@@ -18,8 +18,8 @@ import net.minecraft.tileentity.TileEntitySign;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
-	final Tessellator t = Tessellator.instance;
 	protected ImageManager manager;
+	protected final Tessellator t = Tessellator.instance;
 
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
 		this.manager = manager;
@@ -82,11 +82,12 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Draw Canvas
-			glDisable(GL_CULL_FACE);
+			//glDisable(GL_CULL_FACE);
 			glPushMatrix();
+			glTranslatef(wid/2, hei-.5f, 0f);
 			glScalef(-1f, -1f, -1f);
-			glTranslatef(wid/2, hei-.5f, 0);
-			glScalef(wid, hei, 0f);
+			glPushMatrix();
+			glScalef(wid, hei, 1f);
 			if (image.state == ImageState.AVAILABLE) {
 				glBindTexture(GL_TEXTURE_2D, image.texture.getGlTextureId());
 				this.t.startDrawingQuads();
@@ -106,37 +107,70 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				this.t.draw();
 				glEnable(GL_TEXTURE_2D);
 			}
+			glPopMatrix();
 
+			if (wid<1.5f || hei<1.5) {
+				glScalef(.5f, .5f, .5f);
+				glTranslatef(wid/2, -hei/2-.6f, 0);
+			}
 			// Draw Canvas - Draw Loading
-			if (image.state == ImageState.DOWNLOADING) {
+			glPushMatrix();
+			glTranslatef(wid/2, hei/2, 0);
+			glScalef(-.5f, .5f, 1f);
+			if (image.state == ImageState.ERROR) {
 				glDisable(GL_TEXTURE_2D);
 				glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
 				this.t.startDrawing(GL_LINE_LOOP);
-				addCircleVertex(0, 1, 1);
+				addCircleVertex(0f, 1f, 1f);
 				this.t.draw();
 
-				final float progress = image.getProgress();
+				final float progress = .7f;
 				glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
 				this.t.startDrawing(GL_POLYGON);
-				addCircleVertex(0, progress, 1);
+				this.t.addVertex(0f, 0f, 0f);
+				addCircleVertex(progress, 0f, 1f);
+				//addCircleVertex(0, progress);
+				this.t.draw();
+
+				final long time = System.currentTimeMillis();
+				final float time1 = time % 893 / 893f;
+				this.t.startDrawing(GL_LINE_LOOP);
+				addCircleVertex(time1, time1+0.2f, 1.07f);
+				addCircleVertex(time1+0.2f, time1, 1.09f);
+				this.t.draw();
+				final float time2 = time % 627 / 627f;
+				this.t.startDrawing(GL_LINE_LOOP);
+				addCircleVertex(time2, time2+0.1f, 1.03f);
+				addCircleVertex(time2+0.1f, time2, 1.05f);
 				this.t.draw();
 				glEnable(GL_TEXTURE_2D);
 			}
+
+			glDepthMask(false);
+			final FontRenderer fontrenderer = func_147498_b();
+			glPushMatrix();
+			f3 = 0.06666668F * f1;
+			glTranslatef(0f, -1.3f, 0f);
+			glScalef(f3, f3, 1f);
+			final String msg1 = image.getStatusMessage();
+			fontrenderer.drawString(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
+			glPopMatrix();
+			glPushMatrix();
+			f3 = 0.036666668F * f1;
+			glTranslatef(0f, 1.3f, 0f);
+			glScalef(f3, f3, 1f);
+			final String msg2 = image.id;
+			fontrenderer.drawString(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
+			glPopMatrix();
+			glDepthMask(true);
+
+			glPopMatrix();
 			glPopMatrix();
 			glEnable(GL_CULL_FACE);
 
-			final FontRenderer fontrenderer = func_147498_b();
-			f3 = 0.016666668F * f1;
-			glTranslatef(0.0F, 0.5F * f1, 0.07F * f1);
-			glScalef(f3, -f3, f3);
-			glNormal3f(0.0F, 0.0F, -1.0F * f3);
-			//glDepthMask(false);
 
-			fontrenderer.drawString(size, -fontrenderer.getStringWidth(size) / 2, 0, 0);
+			//fontrenderer.drawString(size, -fontrenderer.getStringWidth(size) / 2, 0, 0);
 
-			//glDepthMask(true);
-			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			glPopMatrix();
 		} else {
 			super.renderTileEntityAt(tile, x, y, z, color);

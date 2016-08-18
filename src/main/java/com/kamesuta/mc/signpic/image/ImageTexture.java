@@ -7,7 +7,10 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 
 public class ImageTexture {
 
@@ -29,6 +32,14 @@ public class ImageTexture {
 
 	public ImageTexture(final InputStream in) throws IOException {
 		this(ImageIO.read(in));
+	}
+
+	public ImageTexture(final IResourceManager manager, final ResourceLocation location) throws IOException {
+		this(ImageIO.read(manager.getResource(location).getInputStream()));
+	}
+
+	public ImageTexture(final ResourceLocation location) throws IOException {
+		this(FMLClientHandler.instance().getClient().getResourceManager(), location);
 	}
 
 	public int getGlTextureId() {
