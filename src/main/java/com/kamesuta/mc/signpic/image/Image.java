@@ -1,105 +1,19 @@
 package com.kamesuta.mc.signpic.image;
 
-import java.io.File;
+public interface Image {
 
-import com.kamesuta.mc.signpic.Reference;
+	void preload();
 
-import net.minecraft.client.resources.I18n;
+	void load();
 
-public class Image {
+	float getProgress();
 
-	public final String id;
-	public ImageTexture texture;
-	public ImageState state = ImageState.INIT;
-	public ImageDownloader downloading;
-	public Thread downloadingprocess;
+	String getStatusMessage();
 
-	public Image(final String url) {
-		this.id = url;
-	}
+	ImageState getState();
 
-	public void preload(final ImageLocation location) {
-		try {
-			Reference.logger.info("PreLoading Start: " + this);
-			final File local = location.localLocation(this);
+	ImageTexture getTexture();
 
-			Reference.logger.info("PreLoading/Downloading Start: " + this);
-			this.state = ImageState.LOADING;
-			if (!local.exists()) {
-				Reference.logger.info("File not exists: " + this);
-				if (this.downloading == null)
-					this.downloading = new ImageDownloader(location, this);
-				if (this.downloadingprocess == null) {
-					this.downloadingprocess = new Thread(this.downloading);
-					this.downloadingprocess.start();
-				}
-			}
-		} catch (final Exception e) {
-			this.state = ImageState.ERROR;
-			Reference.logger.info("ERROR: " + this + ": " + e);
-		}
-	}
+	String getId();
 
-	public void load(final ImageLocation location) {
-		try {
-			Reference.logger.info("Loading Start: " + this);
-			final File local = location.localLocation(this);
-
-			if (local.exists()) {
-				this.texture = new ImageTexture(local);
-				Reference.logger.info("Loaded: " + this);
-				this.state = ImageState.AVAILABLE;
-			}
-		} catch (final Exception e) {
-			this.state = ImageState.ERROR;
-			Reference.logger.info("ERROR: " + this + ": " + e);
-		}
-	}
-
-	public float getProgress() {
-		switch(this.state) {
-		case AVAILABLE:
-			return 1f;
-		case DOWNLOADING:
-		case FAILED:
-			if (this.downloading != null)
-				return this.downloading.getProgress();
-		default:
-			return 0;
-		}
-	}
-
-	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int)getProgress()*100);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Image))
-			return false;
-		final Image other = (Image) obj;
-		if (this.id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!this.id.equals(other.id))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Image[%s]", this.id);
-	}
 }

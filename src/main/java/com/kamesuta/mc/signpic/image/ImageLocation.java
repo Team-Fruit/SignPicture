@@ -15,11 +15,11 @@ public class ImageLocation {
 		this.localroot = localroot;
 	}
 
-	public URI remoteLocation(final Image image) throws URISyntaxException {
+	public URI remoteLocation(final RemoteImage image) throws URISyntaxException {
 		return new URI(image.id);
 	}
 
-	public File localLocation(final Image image) throws URISyntaxException, MalformedURLException {
+	public File localLocation(final RemoteImage image) throws URISyntaxException, MalformedURLException {
 		final URI i = remoteLocation(image);
 
 		final URL l = i.toURL();
@@ -43,7 +43,7 @@ public class ImageLocation {
 		return new File(this.localroot, url);
 	}
 
-	public File localLocationPrepare(final Image image) throws MalformedURLException, URISyntaxException {
+	public File localLocationPrepare(final RemoteImage image) throws MalformedURLException, URISyntaxException {
 		final File file = localLocation(image);
 		final File parent = file.getParentFile();
 		if (!parent.exists())
