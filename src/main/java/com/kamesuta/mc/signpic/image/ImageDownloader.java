@@ -45,7 +45,7 @@ public class ImageDownloader implements Runnable {
 			// Reference.logger.info(EntityUtils.toString(entity));
 			this.image.state = ImageState.LOADING;
 		} catch (final Exception e) {
-			this.image.state = ImageState.FAILD;
+			this.image.state = ImageState.FAILED;
 			Reference.logger.warn("Failed to download :", e);
 		} finally {
 			IOUtils.closeQuietly(input);

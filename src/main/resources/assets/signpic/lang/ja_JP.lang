@@ -1,0 +1,6 @@
+signpic.state.init=初期化中...
+signpic.state.available=完了! (%s%%)
+signpic.state.loading=ロード中...
+signpic.state.downloading=ダウンロード中... (%s%%)
+signpic.state.failed=読み込み失敗... (%s%%)
+signpic.state.error=エラー

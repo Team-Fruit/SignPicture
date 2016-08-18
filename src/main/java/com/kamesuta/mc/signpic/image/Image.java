@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.kamesuta.mc.signpic.Reference;
 
+import net.minecraft.client.resources.I18n;
+
 public class Image {
 
 	public final String id;
@@ -59,10 +61,16 @@ public class Image {
 		case AVAILABLE:
 			return 1f;
 		case DOWNLOADING:
-			return this.downloading.getProgress();
+		case FAILED:
+			if (this.downloading != null)
+				return this.downloading.getProgress();
 		default:
 			return 0;
 		}
+	}
+
+	public String getStatusMessage() {
+		return I18n.format(this.state.msg, (int)getProgress()*100);
 	}
 
 	@Override

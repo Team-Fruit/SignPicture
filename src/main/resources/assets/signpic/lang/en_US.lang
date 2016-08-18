@@ -1,0 +1,6 @@
+signpic.state.init=Initializing...
+signpic.state.available=Available! (%s%%)
+signpic.state.loading=Loading...
+signpic.state.downloading=Downloading... (%s%%)
+signpic.state.failed=Loading Failed... (%s%%)
+signpic.state.error=ERROR
