@@ -1,8 +1,10 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
@@ -12,6 +14,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Reference;
+
+import net.minecraft.client.resources.I18n;
 
 public class ImageDownloader implements Runnable {
 
@@ -34,19 +38,24 @@ public class ImageDownloader implements Runnable {
 		Reference.logger.info("Downloading Start: " + this.image);
 		InputStream input = null;
 		try {
+			final File local = this.location.localLocation(this.image);
+
 			final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.image));
 			final HttpResponse response = downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 
 			this.maxsize = entity.getContentLength();
 			input = entity.getContent();
-			this.countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(this.location.localLocationPrepare(this.image))));
+			this.countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local)));
 			IOUtils.copy(input, this.countoutput);
-			// Reference.logger.info(EntityUtils.toString(entity));
+
 			this.image.state = ImageState.LOADING;
+		} catch (final URISyntaxException e) {
+			this.image.state = ImageState.ERROR;
+			this.image.advmsg = I18n.format("signpic.advmsg.invaildurl");
 		} catch (final Exception e) {
 			this.image.state = ImageState.FAILED;
-			Reference.logger.warn("Failed to download :", e);
+			this.image.advmsg = I18n.format("signpic.advmsg.dlerror", e);
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(this.countoutput);

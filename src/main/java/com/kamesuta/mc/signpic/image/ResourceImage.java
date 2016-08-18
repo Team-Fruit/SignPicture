@@ -1,6 +1,8 @@
 package com.kamesuta.mc.signpic.image;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImage implements Image {
@@ -23,7 +25,8 @@ public class ResourceImage implements Image {
 	@Override
 	public void load() {
 		try {
-			this.texture = new ImageTexture(this.location);
+			final IResourceManager manager = FMLClientHandler.instance().getClient().getResourceManager();
+			this.texture = new ImageTexture(manager, this.location);
 			this.state = ImageState.AVAILABLE;
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
@@ -87,5 +90,15 @@ public class ResourceImage implements Image {
 	@Override
 	public String getId() {
 		return this.id;
+	}
+
+	@Override
+	public String getLocal() {
+		return "Resource:"+this.location;
+	}
+
+	@Override
+	public String advMessage() {
+		return null;
 	}
 }
