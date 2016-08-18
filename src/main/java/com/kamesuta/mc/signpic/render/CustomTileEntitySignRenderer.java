@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntitySign;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
+	final Tessellator t = Tessellator.instance;
 	protected ImageManager manager;
 
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
@@ -83,28 +84,26 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			// Draw Canvas
 			glDisable(GL_CULL_FACE);
 			glPushMatrix();
-			glScalef(-1f, 1f, -1f);
-			glTranslatef(.5f, .5f, 0f);
-			glTranslatef(wid/2-.5f, hei-1f, 0);
-			glScalef(-wid, -hei, 0f);
+			glScalef(-1f, -1f, -1f);
+			glTranslatef(wid/2, hei-.5f, 0);
+			glScalef(wid, hei, 0f);
 			if (image.state == ImageState.AVAILABLE) {
 				glBindTexture(GL_TEXTURE_2D, image.texture.getGlTextureId());
-				final Tessellator t = Tessellator.instance;
-				t.startDrawingQuads();
-				t.addVertexWithUV(0, 0, 0, 0, 0);
-				t.addVertexWithUV(0, 1, 0, 0, 1);
-				t.addVertexWithUV(1, 1, 0, 1, 1);
-				t.addVertexWithUV(1, 0, 0, 1, 0);
-				t.draw();
+				this.t.startDrawingQuads();
+				this.t.addVertexWithUV(0, 0, 0, 0, 0);
+				this.t.addVertexWithUV(0, 1, 0, 0, 1);
+				this.t.addVertexWithUV(1, 1, 0, 1, 1);
+				this.t.addVertexWithUV(1, 0, 0, 1, 0);
+				this.t.draw();
 			} else {
 				glDisable(GL_TEXTURE_2D);
 				glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
-				glBegin(GL_LINE_LOOP);
-				glVertex3i(0, 0, 0);
-				glVertex3i(0, 1, 0);
-				glVertex3i(1, 1, 0);
-				glVertex3i(1, 0, 0);
-				glEnd();
+				this.t.startDrawing(GL_LINE_LOOP);
+				this.t.addVertex(0, 0, 0);
+				this.t.addVertex(0, 1, 0);
+				this.t.addVertex(1, 1, 0);
+				this.t.addVertex(1, 0, 0);
+				this.t.draw();
 				glEnable(GL_TEXTURE_2D);
 			}
 
@@ -113,33 +112,15 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				glDisable(GL_TEXTURE_2D);
 				glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-				glBegin(GL_LINE_LOOP);
-				for(int i =0; i <= 32; i++){
-					final double angle = -Math.PI/2+2*Math.PI*i/32;
-					final double ix = Math.cos(angle)/4;
-					final double iy = Math.sin(angle)/4;
-					glVertex3d(.5+ix/2, .5+iy/2, 0);
-				}
-				glEnd();
+				this.t.startDrawing(GL_LINE_LOOP);
+				addCircleVertex(0, 1, 1);
+				this.t.draw();
 
 				final float progress = image.getProgress();
 				glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
-				glBegin(GL_POLYGON);
-				glVertex3d(.5, .5, 0);
-				for(int i =0; i <= 32; i++){
-					final double angle = -Math.PI/2+2*Math.PI*i/32;
-					if (((double)i / 32) >= progress)
-						break;
-					final double ix = Math.cos(angle)/4;
-					final double iy = Math.sin(angle)/4;
-					glVertex3d(.5+ix/2, .5+iy/2, 0);
-				}
-				final double angle = -Math.PI/2+2*Math.PI*progress;
-				final double ix = Math.cos(angle)/4;
-				final double iy = Math.sin(angle)/4;
-				glVertex3d(.5+ix/2, .5+iy/2, 0);
-
-				glEnd();
+				this.t.startDrawing(GL_POLYGON);
+				addCircleVertex(0, progress, 1);
+				this.t.draw();
 				glEnable(GL_TEXTURE_2D);
 			}
 			glPopMatrix();
@@ -160,6 +141,25 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		} else {
 			super.renderTileEntityAt(tile, x, y, z, color);
 		}
+	}
+
+	protected void addCircleVertex(final float start, final float end, final float r) {
+		final float acc = 32f;
+		final double sangle = Math.PI*(2d*start-.5);
+		final double sx = Math.cos(sangle);
+		final double sy = Math.sin(sangle);
+		final double eangle = Math.PI*(2d*end-.5);
+		final double ex = Math.cos(eangle);
+		final double ey = Math.sin(eangle);
+
+		this.t.addVertex(sx*r, sy*r, 0);
+		for(int i=(int)((end<start)?Math.floor(start*acc):Math.ceil(start*acc)); (end<start)?i>end*acc:i<end*acc; i+=(end<start)?-1:1) {
+			final double angle = Math.PI*(2d*i/acc-.5);
+			final double ix = Math.cos(angle);
+			final double iy = Math.sin(angle);
+			this.t.addVertex(ix*r, iy*r, 0);
+		}
+		this.t.addVertex(ex*r, ey*r, 0);
 	}
 
 	@Override
