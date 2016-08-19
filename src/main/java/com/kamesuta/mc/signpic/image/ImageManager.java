@@ -7,7 +7,7 @@ import java.util.HashMap;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageManager {
-	public static Deque<Image> textureloadqueue = new ArrayDeque<Image>();
+	public static Deque<Image> lazyloadqueue = new ArrayDeque<Image>();
 
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 

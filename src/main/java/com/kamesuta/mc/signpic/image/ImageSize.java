@@ -18,7 +18,7 @@ public class ImageSize {
 		return createSize(s, raw.width, raw.height, maxWidth, maxHeight);
 	}
 
-	public static ImageSize createSize(final ImageSizes s, final float rawWidth, final float rawHeight, final ImageSize raw, final ImageSize max) {
+	public static ImageSize createSize(final ImageSizes s, final float rawWidth, final float rawHeight, final ImageSize max) {
 		if (max == null) return new ImageSize(rawWidth, rawHeight);
 		return createSize(s, rawWidth, rawHeight, max.width, max.height);
 	}

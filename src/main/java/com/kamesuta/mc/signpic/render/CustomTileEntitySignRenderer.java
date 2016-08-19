@@ -101,17 +101,13 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glScalef(.5f, .5f, 1f);
 			glPushMatrix();
 			glScalef(.5f, .5f, 1f);
-			if (image.getState() == ImageState.IOLOADING || image.getState() == ImageState.DOWNLOADING) {
+			if (image.getState() == ImageState.IOLOADING ||
+					image.getState() == ImageState.DOWNLOADING ||
+					image.getState() == ImageState.TEXTURELOADING) {
 				glLineWidth(3f);
 				glDisable(GL_TEXTURE_2D);
-				if (image.getState() == ImageState.IOLOADING)
-					glColor4f(0f/256f, 144f/256f, 55f/256f, 1f);
-				if (image.getState() == ImageState.DOWNLOADING)
-					glColor4f(0f/256f, 102f/256f, 204f/256f, 1f);
-				this.t.startDrawing(GL_LINE_LOOP);
-				addCircleVertex(0f, 1f, 1f);
-				this.t.draw();
 
+				// Loading Circle
 				glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
 				final long time = System.currentTimeMillis();
 				final float time1 = time % 893 / 893f;
@@ -125,14 +121,18 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				addCircleVertex(time2+0.1f, time2, 1.05f);
 				this.t.draw();
 
-				if (image.getState() == ImageState.DOWNLOADING) {
-					final float progress = image.getProgress();
-					glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
-					this.t.startDrawing(GL_POLYGON);
-					this.t.addVertex(0f, 0f, 0f);
-					addCircleVertex(progress, 0f, 1f);
-					this.t.draw();
-				}
+				// Design Circle
+				image.getState().themeColor();
+				this.t.startDrawing(GL_LINE_LOOP);
+				addCircleVertex(0f, 1f, 1f);
+				this.t.draw();
+
+				// Progress Circle
+				final float progress = image.getProgress();
+				this.t.startDrawing(GL_POLYGON);
+				this.t.addVertex(0f, 0f, 0f);
+				addCircleVertex(progress, 0f, 1f);
+				this.t.draw();
 
 				glEnable(GL_TEXTURE_2D);
 			}
