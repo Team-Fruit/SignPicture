@@ -11,24 +11,29 @@ public abstract class Image {
 		this.id = id;
 	}
 
-	public abstract void init();
+	public String getId() {
+		return this.id;
+	}
 
-	public abstract void preload();
+	public ImageTextures getTexture() {
+		if (this.state == ImageState.AVAILABLE)
+			return this.texture;
+		else
+			throw new IllegalStateException("Not Available");
+	}
+
+	public ImageState getState() {
+		return this.state;
+	}
 
 	public abstract float getProgress();
 
 	public abstract String getStatusMessage();
 
-	public abstract ImageState getState();
-
-	public abstract ImageTextures getTexture();
-
-	public abstract String getId();
-
 	public abstract String getLocal();
 
 	public abstract String advMessage();
 
-	public abstract void load();
+	public abstract void process();
 
 }

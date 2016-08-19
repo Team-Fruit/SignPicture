@@ -2,14 +2,15 @@ package com.kamesuta.mc.signpic.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.image.ImageSize;
+
 import net.minecraft.tileentity.TileEntitySign;
 
 public class SignParser {
 	protected String text;
 	protected boolean vaild;
 	protected String id;
-	protected float w;
-	protected float h;
+	protected ImageSize size;
 
 	public SignParser(final String text) {
 		this.text = text;
@@ -40,8 +41,7 @@ public class SignParser {
 				else
 					hei = wid;
 			} catch (final NumberFormatException e) {}
-			this.w = wid;
-			this.h = hei;
+			this.size = new ImageSize(wid, hei);
 		}
 	}
 
@@ -66,23 +66,18 @@ public class SignParser {
 		return this.id;
 	}
 
-	public float width() {
+	public ImageSize size() {
 		if (!this.vaild) throw new IllegalStateException("Invaild Sign");
-		return this.w;
-	}
-
-	public float height() {
-		if (!this.vaild) throw new IllegalStateException("Invaild Sign");
-		return this.h;
+		return this.size;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + Float.floatToIntBits(this.h);
 		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-		result = prime * result + Float.floatToIntBits(this.w);
+		result = prime * result + ((this.size == null) ? 0 : this.size.hashCode());
+		result = prime * result + (this.vaild ? 1231 : 1237);
 		return result;
 	}
 
@@ -95,20 +90,23 @@ public class SignParser {
 		if (!(obj instanceof SignParser))
 			return false;
 		final SignParser other = (SignParser) obj;
-		if (Float.floatToIntBits(this.h) != Float.floatToIntBits(other.h))
-			return false;
 		if (this.id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!this.id.equals(other.id))
 			return false;
-		if (Float.floatToIntBits(this.w) != Float.floatToIntBits(other.w))
+		if (this.size == null) {
+			if (other.size != null)
+				return false;
+		} else if (!this.size.equals(other.size))
+			return false;
+		if (this.vaild != other.vaild)
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("SignParser[id=%s, width=%s, height=%s]", this.id, this.w, this.h);
+		return String.format("SignParser[id=%s, size=%s, vaild=%s, text=%s]", this.id, this.size, this.vaild, this.text);
 	}
 }

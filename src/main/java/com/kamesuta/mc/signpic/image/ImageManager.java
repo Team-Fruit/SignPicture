@@ -19,11 +19,7 @@ public class ImageManager {
 			image = new RemoteImage(id, this.location);
 			this.pool.put(id, image);
 		}
-		if (image.getState() == ImageState.INIT) {
-			image.init();
-		} else if (image.getState() == ImageState.LOADING) {
-			image.preload();
-		}
+		image.process();
 		return image;
 	}
 
@@ -34,11 +30,7 @@ public class ImageManager {
 			image = new ResourceImage(location);
 			this.pool.put(id, image);
 		}
-		if (image.getState() == ImageState.INIT) {
-			image.init();
-		} else if (image.getState() == ImageState.LOADING) {
-			image.preload();
-		}
+		image.process();
 		return image;
 	}
 }

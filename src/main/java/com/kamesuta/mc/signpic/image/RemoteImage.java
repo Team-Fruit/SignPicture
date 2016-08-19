@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import com.kamesuta.mc.signpic.Reference;
@@ -20,30 +21,20 @@ public class RemoteImage extends Image {
 		this.location = location;
 	}
 
-	@Override
-	public String getId() {
-		return this.id;
-	}
-
-	@Override
-	public ImageTextures getTexture() {
-		return this.texture;
-	}
-
-	@Override
-	public ImageState getState() {
-		return this.state;
-	}
-
-	@Override
 	public void init() {
+		Reference.logger.info("PreLoading Start: " + this);
+		this.state = ImageState.INITALIZED;
+	}
+
+	public void download() {
+		this.state = ImageState.DOWNLOADING;
 		try {
-			Reference.logger.info("PreLoading Start: " + this);
 			final File local = this.location.localLocation(this);
 
 			Reference.logger.info("PreLoading/Downloading Start: " + this);
-			this.state = ImageState.LOADING;
-			if (!local.exists()) {
+			if (local.exists()) {
+				this.state = ImageState.DOWNLOADED;
+			} else {
 				Reference.logger.info("File not exists: " + this);
 				if (this.downloading == null)
 					this.downloading = new ImageDownloader(this, this.location);
@@ -59,15 +50,22 @@ public class RemoteImage extends Image {
 		}
 	}
 
-	@Override
-	public void preload() {
+	public void ioload() {
+		this.state = ImageState.IOLOADING;
 		try {
 			final File local = this.location.localLocation(this);
+
 			if (local.exists()) {
 				this.local = local;
-				this.texture = new ImageTextures(local);
-				Reference.logger.info("Loaded: " + this);
-				this.state = ImageState.AVAILABLE;
+				Reference.logger.info("Loading: " + this);
+				if (this.loading == null)
+					this.loading = new ImageLoader(this, local);
+				if (this.loadingprocess == null) {
+					this.loadingprocess = new Thread(this.loading);
+					this.loadingprocess.start();
+				}
+			} else {
+				throw new FileNotFoundException("The file was changed");
 			}
 		} catch (final InvaildImageException e) {
 			this.state = ImageState.ERROR;
@@ -82,9 +80,28 @@ public class RemoteImage extends Image {
 		}
 	}
 
-	@Override
-	public void load() {
+	public void complete() {
+		this.state = ImageState.AVAILABLE;
+	}
 
+	@Override
+	public void process() {
+		switch(this.state) {
+		case INIT:
+			init();
+			break;
+		case INITALIZED:
+			download();
+			break;
+		case DOWNLOADED:
+			ioload();
+			break;
+		case IOLOADED:
+			complete();
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override
@@ -146,6 +163,6 @@ public class RemoteImage extends Image {
 
 	@Override
 	public String toString() {
-		return String.format("Image[%s]", this.id);
+		return String.format("RemoteImage[%s]", this.id);
 	}
 }

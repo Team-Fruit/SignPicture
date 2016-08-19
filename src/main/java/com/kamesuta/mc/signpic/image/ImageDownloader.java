@@ -13,7 +13,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
-import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
@@ -35,8 +34,6 @@ public class ImageDownloader implements Runnable {
 
 	@Override
 	public void run() {
-		this.image.state = ImageState.DOWNLOADING;
-		Reference.logger.info("Downloading Start: " + this.image);
 		InputStream input = null;
 		try {
 			final File local = this.location.localLocation(this.image);
@@ -50,7 +47,7 @@ public class ImageDownloader implements Runnable {
 			this.countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local)));
 			IOUtils.copy(input, this.countoutput);
 
-			this.image.state = ImageState.LOADING;
+			this.image.state = ImageState.DOWNLOADED;
 		} catch (final URISyntaxException e) {
 			this.image.state = ImageState.ERROR;
 			this.image.advmsg = I18n.format("signpic.advmsg.invaildurl");

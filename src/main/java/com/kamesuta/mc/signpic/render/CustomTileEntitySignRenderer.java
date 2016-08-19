@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
+import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.image.ImageState;
 import com.kamesuta.mc.signpic.util.SignParser;
 
@@ -37,8 +38,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		final SignParser sign = new SignParser(tile);
 		if (sign.isVaild()) {
 			// Size
-			final float wid = sign.width();
-			final float hei = sign.height();
+			final ImageSize size = sign.size();
 
 			// Load Image
 			final Image image = this.manager.get(sign.id());
@@ -71,10 +71,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			//glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
 			glPushMatrix();
-			glTranslatef(-wid/2, hei-.5f, 0f);
+			glTranslatef(-size.width/2, size.height-.5f, 0f);
 			glScalef(1f, -1f, 1f);
 			glPushMatrix();
-			glScalef(wid, hei, 1f);
+			glScalef(size.width, size.height, 1f);
 
 			drawImage(image);
 			if (image.getState() != ImageState.AVAILABLE) {
@@ -91,20 +91,20 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 			glPopMatrix();
 
-			if (wid<1.5f || hei<1.5) {
+			if (size.width<1.5f || size.height<1.5) {
 				glScalef(.5f, .5f, .5f);
-				glTranslatef(wid/2, -hei/2-1f, 0);
+				glTranslatef(size.width/2, -size.height/2-1f, 0);
 			}
 			// Draw Canvas - Draw Loading
 			glPushMatrix();
-			glTranslatef(wid/2, hei/2, 0);
+			glTranslatef(size.width/2, size.height/2, 0);
 			glScalef(.5f, .5f, 1f);
 			glPushMatrix();
 			glScalef(.5f, .5f, 1f);
-			if (image.getState() == ImageState.LOADING || image.getState() == ImageState.DOWNLOADING) {
+			if (image.getState() == ImageState.IOLOADING || image.getState() == ImageState.DOWNLOADING) {
 				glLineWidth(3f);
 				glDisable(GL_TEXTURE_2D);
-				if (image.getState() == ImageState.LOADING)
+				if (image.getState() == ImageState.IOLOADING)
 					glColor4f(0f/256f, 144f/256f, 55f/256f, 1f);
 				if (image.getState() == ImageState.DOWNLOADING)
 					glColor4f(0f/256f, 102f/256f, 204f/256f, 1f);
@@ -185,7 +185,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	protected void drawImage(final Image image) {
 		if (image.getState() == ImageState.AVAILABLE) {
 			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			glBindTexture(GL_TEXTURE_2D, image.getTexture().get());
+			image.getTexture();
 			this.t.startDrawingQuads();
 			this.t.addVertexWithUV(0, 0, 0, 0, 0);
 			this.t.addVertexWithUV(0, 1, 0, 0, 1);

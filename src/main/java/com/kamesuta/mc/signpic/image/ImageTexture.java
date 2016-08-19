@@ -12,7 +12,7 @@ public class ImageTexture {
 
 	protected BufferedImage temp;
 	protected int id = -1;
-	protected final float delay;
+	protected float delay;
 
 	public ImageTexture(final BufferedImage image, final float delay) {
 		this.temp = image;
@@ -21,6 +21,14 @@ public class ImageTexture {
 
 	public ImageTexture(final BufferedImage image) {
 		this(image, DefaultDelay);
+	}
+
+	public ImageTexture(final float delay) {
+		this(null, delay);
+	}
+
+	public ImageTexture() {
+		this(null, DefaultDelay);
 	}
 
 	public ImageTexture load() {
@@ -33,8 +41,20 @@ public class ImageTexture {
 		return this;
 	}
 
+	public boolean setImage(final BufferedImage image) {
+		if (this.id == -1) {
+			this.temp = image;
+			return true;
+		}
+		return false;
+	}
+
 	public int getId() {
 		return this.id;
+	}
+
+	public void setDelay(final float delay) {
+		this.delay = delay;
 	}
 
 	public float getDelay() {

@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
+import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.util.SignParser;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -38,7 +39,8 @@ public class RenderOverlay {
 						event.left.add("");
 						final String id = sign.id();
 						event.left.add(I18n.format("signpic.over.id", id));
-						event.left.add(I18n.format("signpic.over.size", sign.width(), sign.height()));
+						final ImageSize size = sign.size();
+						event.left.add(I18n.format("signpic.over.size", size.width, size.height));
 						final Image image = this.manager.get(id);
 						event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
 						final String advmsg = image.advMessage();
