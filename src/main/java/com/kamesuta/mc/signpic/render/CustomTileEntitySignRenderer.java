@@ -185,7 +185,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	protected void drawImage(final Image image) {
 		if (image.getState() == ImageState.AVAILABLE) {
 			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			image.getTexture();
+			image.getTexture().get().bind();
 			this.t.startDrawingQuads();
 			this.t.addVertexWithUV(0, 0, 0, 0, 0);
 			this.t.addVertexWithUV(0, 1, 0, 0, 1);

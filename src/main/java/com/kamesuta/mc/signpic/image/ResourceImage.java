@@ -90,7 +90,7 @@ public class ResourceImage extends Image {
 			return false;
 		if (!(obj instanceof RemoteImage))
 			return false;
-		final RemoteImage other = (RemoteImage) obj;
+		final Image other = (Image) obj;
 		if (this.id == null) {
 			if (other.id != null)
 				return false;

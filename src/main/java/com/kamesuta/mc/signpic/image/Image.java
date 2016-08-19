@@ -36,4 +36,7 @@ public abstract class Image {
 
 	public abstract void process();
 
+	public boolean processTexture() {
+		return true;
+	}
 }

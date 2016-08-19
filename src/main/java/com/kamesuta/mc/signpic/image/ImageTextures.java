@@ -17,7 +17,7 @@ public class ImageTextures {
 
 	public ImageTexture get() {
 		if (this.textures.size()==1) {
-			return this.textures.get(0);
+			return this.textures.get(0).load();
 		} else if (this.textures.size()>1) {
 			final ImageTexture texture = this.textures.get(this.currentTextureId).load();
 			if(this.timer.getTime() > texture.delay){
@@ -28,6 +28,10 @@ public class ImageTextures {
 		} else {
 			return ImageTexture.NULL;
 		}
+	}
+
+	public List<ImageTexture> getAll() {
+		return this.textures;
 	}
 
 	public void delete() {

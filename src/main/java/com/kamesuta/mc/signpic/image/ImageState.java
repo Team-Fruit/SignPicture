@@ -9,6 +9,9 @@ public enum ImageState {
 	IOLOAD("signpic.state.ioloading"),
 	IOLOADING("signpic.state.ioloading"),
 	IOLOADED("signpic.state.ioloading"),
+	TEXTURELOAD("signpic.state.ioloading"),
+	TEXTURELOADING("signpic.state.ioloading"),
+	TEXTURELOADED("signpic.state.ioloading"),
 	AVAILABLE("signpic.state.available"),
 	FAILED("signpic.state.failed"),
 	ERROR("signpic.state.error");
