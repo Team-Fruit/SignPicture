@@ -65,7 +65,7 @@ public class RemoteImage extends Image {
 			}
 		} catch (final IOException e) {
 			this.state = ImageState.ERROR;
-			this.advmsg = I18n.format("signpic.advmsg.io", e);
+			this.advmsg = I18n.format("signpic.advmsg.ioerror", e);
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
