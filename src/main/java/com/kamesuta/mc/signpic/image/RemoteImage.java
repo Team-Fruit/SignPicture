@@ -6,15 +6,14 @@ import java.io.IOException;
 import java.util.List;
 
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 
 import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
 	protected ImageDownloader downloading;
 	protected Thread downloadingprocess;
-	protected ImageLoader loading;
-	protected Thread loadingprocess;
+	protected ImageLoader ioloading;
+	protected Thread ioloadingprocess;
 	protected File local;
 
 	public RemoteImage(final String id, final ImageLocation location) {
@@ -59,18 +58,15 @@ public class RemoteImage extends Image {
 			if (local.exists()) {
 				this.local = local;
 				Reference.logger.info("Loading: " + this);
-				if (this.loading == null)
-					this.loading = new ImageLoader(this, local);
-				if (this.loadingprocess == null) {
-					this.loadingprocess = new Thread(this.loading);
-					this.loadingprocess.start();
+				if (this.ioloading == null)
+					this.ioloading = new ImageLoader(this, local);
+				if (this.ioloadingprocess == null) {
+					this.ioloadingprocess = new Thread(this.ioloading);
+					this.ioloadingprocess.start();
 				}
 			} else {
 				throw new FileNotFoundException("The file was changed");
 			}
-		} catch (final InvaildImageException e) {
-			this.state = ImageState.ERROR;
-			this.advmsg = I18n.format("signpic.advmsg.invaildimage");
 		} catch (final IOException e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.io", e);
@@ -139,14 +135,14 @@ public class RemoteImage extends Image {
 		case AVAILABLE:
 			return 1f;
 		case DOWNLOADING:
-		case FAILED:
 			if (this.downloading != null)
 				return this.downloading.getProgress();
+		case IOLOADING:
+			if (this.ioloading != null)
+				return this.ioloading.getProgress();
 		case TEXTURELOADING:
-			if (this.texture != null && !this.texture.getAll().isEmpty()) {
-				final float f = (float)this.processing / this.texture.getAll().size();
-				return f;
-			}
+			if (this.texture != null && !this.texture.getAll().isEmpty())
+				return  (float)this.processing / this.texture.getAll().size();
 		default:
 			return 0;
 		}

@@ -9,7 +9,6 @@ import com.kamesuta.mc.signpic.image.ImageLocation;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.kamesuta.mc.signpic.render.RenderOverlay;
-import com.kamesuta.mc.signpic.render.RenderTick;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -66,7 +65,7 @@ public class ClientProxy extends CommonProxy {
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, renderer);
 
-		FMLCommonHandler.instance().bus().register(new RenderTick());
+		FMLCommonHandler.instance().bus().register(this.manager);
 		MinecraftForge.EVENT_BUS.register(new RenderOverlay(this.manager));
 	}
 

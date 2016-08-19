@@ -76,7 +76,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPushMatrix();
 			glScalef(size.width, size.height, 1f);
 
-			drawImage(image);
+			image.draw();
 			if (image.getState() != ImageState.AVAILABLE) {
 				glLineWidth(1f);
 				glDisable(GL_TEXTURE_2D);
@@ -141,10 +141,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPushMatrix();
 			glTranslatef(-.5f, -.5f, 0f);
 			if (image.getState() == ImageState.FAILED) {
-				drawImage(this.manager.get(this.resWarning));
+				this.manager.get(this.resWarning).draw();;
 			}
 			if (image.getState() == ImageState.ERROR) {
-				drawImage(this.manager.get(this.resError));
+				this.manager.get(this.resError).draw();;
 			}
 			glPopMatrix();
 
@@ -179,19 +179,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPopMatrix();
 		} else {
 			super.renderTileEntityAt(tile, x, y, z, color);
-		}
-	}
-
-	protected void drawImage(final Image image) {
-		if (image.getState() == ImageState.AVAILABLE) {
-			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			image.getTexture().get().bind();
-			this.t.startDrawingQuads();
-			this.t.addVertexWithUV(0, 0, 0, 0, 0);
-			this.t.addVertexWithUV(0, 1, 0, 0, 1);
-			this.t.addVertexWithUV(1, 1, 0, 1, 1);
-			this.t.addVertexWithUV(1, 0, 0, 1, 0);
-			this.t.draw();
 		}
 	}
 
