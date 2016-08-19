@@ -9,6 +9,27 @@ public class ImageSize {
 		this.height = height;
 	}
 
+	public static ImageSize createSize(final ImageSizes s, final float rawWidth, final float rawHeight, final float maxWidth, final float maxHeight) {
+		return s.size(rawWidth, rawHeight, maxWidth, maxHeight);
+	}
+
+	public static ImageSize createSize(final ImageSizes s, final ImageSize raw, final float maxWidth, final float maxHeight) {
+		if (raw == null) return new ImageSize(maxWidth, maxHeight);
+		return createSize(s, raw.width, raw.height, maxWidth, maxHeight);
+	}
+
+	public static ImageSize createSize(final ImageSizes s, final float rawWidth, final float rawHeight, final ImageSize raw, final ImageSize max) {
+		if (max == null) return new ImageSize(rawWidth, rawHeight);
+		return createSize(s, rawWidth, rawHeight, max.width, max.height);
+	}
+
+	public static ImageSize createSize(final ImageSizes s, final ImageSize raw, final ImageSize max) {
+		if (raw == null && max == null) throw new IllegalArgumentException("No Size Defined");
+		else if (raw == null) return max;
+		else if (max == null) return raw;
+		return createSize(s, raw.width, raw.height, max.width, max.height);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

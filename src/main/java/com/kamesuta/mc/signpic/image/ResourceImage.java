@@ -1,34 +1,61 @@
 package com.kamesuta.mc.signpic.image;
 
+import com.kamesuta.mc.signpic.Reference;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImage extends Image {
+	protected ImageLoader loading;
+	protected Thread loadingprocess;
 	protected ResourceLocation location;
-
-	protected ImageTextures texture;
-	protected ImageState state = ImageState.INIT;
 
 	public ResourceImage(final ResourceLocation location) {
 		super(location.toString());
 		this.location = location;
 	}
 
-	@Override
 	public void init() {
-		this.state = ImageState.LOADING;
+		this.state = ImageState.INITALIZED;
+	}
+
+	public void ioload() {
+		this.state = ImageState.IOLOADING;
+		try {
+			final IResourceManager manager = FMLClientHandler.instance().getClient().getResourceManager();
+			if (this.loading == null)
+				this.loading = new ImageLoader(this, manager, this.location);
+			if (this.loadingprocess == null) {
+				this.loadingprocess = new Thread(this.loading);
+				this.loadingprocess.start();
+			}
+		} catch (final Exception e) {
+			this.state = ImageState.ERROR;
+			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
+			Reference.logger.error("UnknownError", e);
+		}
+	}
+
+	public void complete() {
+		this.state = ImageState.AVAILABLE;
 	}
 
 	@Override
-	public void preload() {
-		try {
-			final IResourceManager manager = FMLClientHandler.instance().getClient().getResourceManager();
-			this.texture = new ImageTextures(manager, this.location);
-			this.state = ImageState.AVAILABLE;
-		} catch (final Exception e) {
-			this.state = ImageState.ERROR;
+	public void process() {
+		switch(this.state) {
+		case INIT:
+			init();
+			break;
+		case INITALIZED:
+			ioload();
+			break;
+		case IOLOADED:
+			complete();
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -41,6 +68,7 @@ public class ResourceImage extends Image {
 			return 0;
 		}
 	}
+
 	@Override
 	public String getStatusMessage() {
 		return I18n.format(this.state.msg, (int)getProgress()*100);
@@ -73,17 +101,12 @@ public class ResourceImage extends Image {
 
 	@Override
 	public String toString() {
-		return String.format("Image[%s]", this.id);
+		return String.format("ResourceImage[%s]", this.id);
 	}
 
 	@Override
 	public ImageState getState() {
 		return this.state;
-	}
-
-	@Override
-	public ImageTextures getTexture() {
-		return this.texture;
 	}
 
 	@Override
@@ -99,9 +122,5 @@ public class ResourceImage extends Image {
 	@Override
 	public String advMessage() {
 		return null;
-	}
-
-	@Override
-	public void load() {
 	}
 }
