@@ -66,7 +66,7 @@ public class ImageLoader implements Runnable {
 			this.image.advmsg = I18n.format("signpic.advmsg.invaildimage");
 		} catch (final IOException e) {
 			this.image.state = ImageState.FAILED;
-			this.image.advmsg = I18n.format("signpic.advmsg.io", e);
+			this.image.advmsg = I18n.format("signpic.advmsg.ioerror", e);
 		} catch (final Exception e) {
 			this.image.state = ImageState.FAILED;
 			this.image.advmsg = I18n.format("signpic.advmsg.unknown", e);
