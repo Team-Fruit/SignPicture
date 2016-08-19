@@ -18,7 +18,6 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
@@ -68,13 +67,10 @@ public class ImageLoader implements Runnable {
 		} catch (final IOException e) {
 			this.image.state = ImageState.FAILED;
 			this.image.advmsg = I18n.format("signpic.advmsg.io", e);
-			Reference.logger.error("IO Error", e);
 		} catch (final Exception e) {
 			this.image.state = ImageState.FAILED;
 			this.image.advmsg = I18n.format("signpic.advmsg.unknown", e);
-			Reference.logger.error("Unknown Error", e);
 		}
-
 	}
 
 	protected static final String[] imageatt = new String[] {
