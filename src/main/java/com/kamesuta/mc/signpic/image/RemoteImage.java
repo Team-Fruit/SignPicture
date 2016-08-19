@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
@@ -80,6 +81,30 @@ public class RemoteImage extends Image {
 		}
 	}
 
+	public void textureload() {
+		this.state = ImageState.TEXTURELOADING;
+	}
+
+	protected int processing = 0;
+	@Override
+	public boolean processTexture() {
+		if (this.state == ImageState.TEXTURELOADING) {
+			final List<ImageTexture> texs = this.texture.getAll();
+			if (this.processing < texs.size()) {
+				final ImageTexture tex = texs.get(this.processing);
+				tex.load();
+				this.processing++;
+				return false;
+			} else {
+				this.state = ImageState.TEXTURELOADED;
+				return true;
+			}
+		} else {
+			Reference.logger.warn("Image#loadTexture only must be called TEXTURELOADING phase");
+			return true;
+		}
+	}
+
 	public void complete() {
 		this.state = ImageState.AVAILABLE;
 	}
@@ -97,6 +122,9 @@ public class RemoteImage extends Image {
 			ioload();
 			break;
 		case IOLOADED:
+			textureload();
+			break;
+		case TEXTURELOADED:
 			complete();
 			break;
 		default:
@@ -152,7 +180,7 @@ public class RemoteImage extends Image {
 			return false;
 		if (!(obj instanceof RemoteImage))
 			return false;
-		final RemoteImage other = (RemoteImage) obj;
+		final Image other = (Image) obj;
 		if (this.id == null) {
 			if (other.id != null)
 				return false;

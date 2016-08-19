@@ -1,10 +1,14 @@
 package com.kamesuta.mc.signpic.image;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 
 import net.minecraft.util.ResourceLocation;
 
 public class ImageManager {
+	public static Deque<Image> textureloadqueue = new ArrayDeque<Image>();
+
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 
 	public ImageLocation location;

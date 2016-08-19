@@ -12,11 +12,11 @@ public class ImageLocation {
 		this.localroot = localroot;
 	}
 
-	public URI remoteLocation(final RemoteImage image) throws URISyntaxException {
+	public URI remoteLocation(final Image image) throws URISyntaxException {
 		return new URI(image.id);
 	}
 
-	public File localLocation(final RemoteImage image) {
+	public File localLocation(final Image image) {
 		return new File(this.localroot, DigestUtils.md5Hex(image.id));
 	}
 }
