@@ -9,7 +9,7 @@ public class ImageTextures {
 
 	protected final Timer timer = new Timer();
 	protected final List<ImageTexture> textures;
-	protected int currentTextureId = 0;
+	protected int currenttexture = 0;
 
 	public ImageTextures(final List<ImageTexture> images) {
 		this.textures = images;
@@ -19,12 +19,12 @@ public class ImageTextures {
 		if (this.textures.size()==1) {
 			return this.textures.get(0).load();
 		} else if (this.textures.size()>1) {
-			final ImageTexture texture = this.textures.get(this.currentTextureId).load();
+			final ImageTexture texture = this.textures.get(this.currenttexture).load();
 			if(this.timer.getTime() > texture.delay){
 				this.timer.set(0);
-				this.currentTextureId = (this.currentTextureId<this.textures.size()-1)?this.currentTextureId+1:0;
+				this.currenttexture = (this.currenttexture<this.textures.size()-1)?this.currenttexture+1:0;
 			}
-			return this.textures.get(this.currentTextureId);
+			return this.textures.get(this.currenttexture);
 		} else {
 			return ImageTexture.NULL;
 		}

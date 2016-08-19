@@ -1,5 +1,9 @@
 package com.kamesuta.mc.signpic.image;
 
+import static org.lwjgl.opengl.GL11.*;
+
+import net.minecraft.client.renderer.Tessellator;
+
 public abstract class Image {
 	protected String id;
 	protected ImageTextures texture;
@@ -38,5 +42,19 @@ public abstract class Image {
 
 	public boolean processTexture() {
 		return true;
+	}
+
+	public void draw() {
+		if (this.state == ImageState.AVAILABLE) {
+			final Tessellator t = Tessellator.instance;
+			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			this.texture.get().bind();
+			t.startDrawingQuads();
+			t.addVertexWithUV(0, 0, 0, 0, 0);
+			t.addVertexWithUV(0, 1, 0, 0, 1);
+			t.addVertexWithUV(1, 1, 0, 1, 1);
+			t.addVertexWithUV(1, 0, 0, 1, 0);
+			t.draw();
+		}
 	}
 }
