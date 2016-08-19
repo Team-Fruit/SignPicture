@@ -31,11 +31,9 @@ public class RemoteImage extends Image {
 		try {
 			final File local = this.location.localLocation(this);
 
-			Reference.logger.info("PreLoading/Downloading Start: " + this);
 			if (local.exists()) {
 				this.state = ImageState.DOWNLOADED;
 			} else {
-				Reference.logger.info("File not exists: " + this);
 				if (this.downloading == null)
 					this.downloading = new ImageDownloader(this, this.location);
 				if (this.downloadingprocess == null) {
@@ -46,7 +44,6 @@ public class RemoteImage extends Image {
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
-			Reference.logger.error("UnknownError", e);
 		}
 	}
 
@@ -57,7 +54,6 @@ public class RemoteImage extends Image {
 
 			if (local.exists()) {
 				this.local = local;
-				Reference.logger.info("Loading: " + this);
 				if (this.ioloading == null)
 					this.ioloading = new ImageLoader(this, local);
 				if (this.ioloadingprocess == null) {
@@ -73,7 +69,6 @@ public class RemoteImage extends Image {
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
-			Reference.logger.error("UnknownError", e);
 		}
 	}
 

@@ -34,7 +34,7 @@ public class ResourceImage extends Image {
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
-			Reference.logger.error("UnknownError", e);
+			Reference.logger.error("Resource:UnknownError", e);
 		}
 	}
 
