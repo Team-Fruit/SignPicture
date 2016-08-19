@@ -2,12 +2,12 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            name = 'forge'
+            url = 'http://files.minecraftforge.net/maven'
         }
         maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+            name = 'sonatype'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
         }
     }
     dependencies {
@@ -16,51 +16,166 @@ buildscript {
 }
 
 apply plugin: 'forge'
+apply plugin: 'curseforge'
 
-version = "0.1"
-group= "com.kamesuta.mc.signpic" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "SignPicture"
+ext.build = System.getenv().BUILD_NUMBER ?: 'git'
+ext.modversion = "${project.version_major}.${project.version_minor}.${project.version_micro}.${build}"
+
+group = 'com.kamesuta.mc'
+version = "${project.version_minecraft}-${modversion}"
+compileJava.options.encoding = 'UTF-8'
+
+idea {
+    module {
+        downloadSources = true
+        inheritOutputDirs = true
+    }
+}
 
 minecraft {
-    version = "1.7.10-10.13.4.1558-1.7.10"
-    runDir = "eclipse"
+    version = "${project.version_minecraft}-${project.version_forge}"
+
+    if (project.hasProperty('version_mappings'))
+        mappings = project.version_mappings
+
+    if (!project.hasProperty('run_location'))
+        runDir = 'run'
+    else
+        runDir = run_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft)
+
+    replaceIn 'Reference.java'
+    replace '${version}', modversion
+    replace '${mcversion}', project.version_minecraft
+    replace '${forgeversion}', project.version_forge
 }
 
-dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
-}
-
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property 'version', project.version
+    inputs.property 'mcversion', project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand([
+                'modid'          : project.name,
+                'version'        : modversion,
+                'mcversion'      : project.version_minecraft,
+                'forgeversion'   : project.version_forge,
+                'minforgeversion': project.hasProperty('version_minforge') ? project.version_minforge : project.version_forge,
+        ])
     }
 
-    // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
 }
 
-tasks.withType(Jar) {compileJava.options.encoding = 'UTF-8'}
+dependencies {
+}
 
+def commonManifest = {
+    if (project.hasProperty('extra_fmlat')) {
+        attributes 'FMLAT': project.extra_fmlat
+    }
+}
+
+jar {
+    from sourceSets.api.output
+    classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
+    manifest commonManifest
+}
+
+task devJar(dependsOn: 'classes', type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.api.output
+    classifier = 'dev'
+    manifest commonManifest
+}
+
+task sourceJar(dependsOn: 'classes', type: Jar) {
+    from sourceSets.main.allSource
+    from sourceSets.api.allSource
+    classifier = 'sources'
+    manifest commonManifest
+}
+
+task apiJar(dependsOn: 'classes', type: Jar) {
+    from sourceSets.api.output
+    classifier = 'api'
+    manifest commonManifest
+}
+
+artifacts {
+    archives devJar
+    archives sourceJar
+    archives apiJar
+}
+
+if (!project.hasProperty('keystore_location'))
+    ext.keystore_location = '.'
+
+if (!project.hasProperty('keystore_alias'))
+    ext.keystore_alias = ''
+
+if (!project.hasProperty('keystore_password'))
+    ext.keystore_password = ''
+
+task signJars(dependsOn: ['reobf', 'devJar', 'sourceJar', 'apiJar']) {
+    inputs.dir jar.destinationDir
+    inputs.file keystore_location
+    inputs.property 'keystore_alias', keystore_alias
+    inputs.property 'keystore_password', keystore_password
+    outputs.dir jar.destinationDir
+
+    onlyIf {
+        return keystore_location != '.'
+    }
+
+    doLast {
+        jar.destinationDir.eachFile { file ->
+            if (!file.getPath().endsWith('.jar'))
+                return;
+
+            logger.lifecycle "signing ${file}"
+            ant.signjar(
+                    destDir: file.getParentFile(),
+                    jar: file,
+                    keystore: keystore_location,
+                    alias: keystore_alias,
+                    storepass: keystore_password
+            )
+        }
+    }
+}
+
+if (!project.hasProperty('release_location'))
+    ext.release_location = '.'
+else
+    ext.release_location = release_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft).replace('{version}', version)
+
+task release(dependsOn: 'signJars', type: Copy) {
+    from project.tasks.jar.destinationDir
+    into project.file(project.release_location)
+
+    eachFile { file ->
+        logger.lifecycle "copying ${file}"
+    }
+
+    onlyIf {
+        return project.release_location != '.'
+    }
+}
+
+if (project.hasProperty('api_key_curseforge') && project.hasProperty('extra_curseforge_id')) {
+    curse {
+        dependsOn signJars
+        releaseType = project.hasProperty('extra_curseforge_releasetype') ? project.extra_curseforge_releasetype : 'release'
+        apiKey = project.api_key_curseforge
+        projectId = project.extra_curseforge_id
+        changelog = ''
+
+        additionalArtifact devJar, sourceJar, apiJar
+        relatedProject 'lunatriuscore'
+    }
+}

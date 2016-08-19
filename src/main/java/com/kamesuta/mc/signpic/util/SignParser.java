@@ -18,7 +18,8 @@ public class SignParser {
 		if (this.vaild = this.text.endsWith("]") && this.text.contains("[")) {
 			final int start = this.text.lastIndexOf("[");
 			String url = this.text.substring(0, start);
-			if (url.startsWith("$")) {
+			if (url.startsWith("!")) {
+			} else if (url.startsWith("$")) {
 				url = "https://" + url.substring(1);
 			} else if (url.startsWith("//")) {
 				url = "http://" + url.substring(2);
