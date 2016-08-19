@@ -2,39 +2,75 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
+import com.kamesuta.mc.signpic.render.RenderHelper;
+import com.kamesuta.mc.signpic.render.StateRender.Color;
+import com.kamesuta.mc.signpic.render.StateRender.Speed;
+
 public enum ImageState {
-	INIT("signpic.state.init"),
-	INITALIZED("signpic.state.initalized"),
-	DOWNLOADING("signpic.state.downloading") {
+	INIT("signpic.state.init", Color.DEFAULT, Speed.WAIT),
+	INITALIZED("signpic.state.initalized", Color.DEFAULT, Speed.WAIT),
+	DOWNLOADING("signpic.state.downloading", Color.DOWNLOAD, Speed.RUN),
+	DOWNLOADED("signpic.state.downloaded", Color.DOWNLOAD, Speed.WAIT),
+	IOLOADING("signpic.state.ioloading", Color.IOLOAD, Speed.RUN),
+	IOLOADED("signpic.state.ioloaded", Color.IOLOAD, Speed.WAIT),
+	TEXTURELOADING("signpic.state.textureloading", Color.TEXTURELOAD, Speed.RUN),
+	TEXTURELOADED("signpic.state.textureloaded", Color.TEXTURELOAD, Speed.WAIT),
+	AVAILABLE("signpic.state.available", Color.DEFAULT, Speed.RUN) {
 		@Override
-		public void themeColor() {
-			glColor4f(0f/256f, 102f/256f, 204f/256f, 1f);
+		public void themeImage(final ImageManager manager, final Image image) {}
+	},
+	FAILED("signpic.state.failed", Color.DEFAULT, Speed.WAIT) {
+		@Override
+		public void themeImage(final ImageManager manager, final Image image) {
+			glPushMatrix();
+			glTranslatef(-.5f, -.5f, 0f);
+			manager.get(CustomTileEntitySignRenderer.resWarning).draw();;
+			glPopMatrix();
 		}
 	},
-	DOWNLOADED("signpic.state.downloaded"),
-	IOLOADING("signpic.state.ioloading") {
+	ERROR("signpic.state.error", Color.DEFAULT, Speed.WAIT) {
 		@Override
-		public void themeColor() {
-			glColor4f(0f/256f, 144f/256f, 55f/256f, 1f);
+		public void themeImage(final ImageManager manager, final Image image) {
+			glPushMatrix();
+			glTranslatef(-.5f, -.5f, 0f);
+			manager.get(CustomTileEntitySignRenderer.resError).draw();;
+			glPopMatrix();
 		}
 	},
-	IOLOADED("signpic.state.ioloaded"),
-	TEXTURELOADING("signpic.state.textureloading") {
-		@Override
-		public void themeColor() {
-			glColor4f(238f/256f, 97f/256f, 35f/256f, 1f);
-		}
-	},
-	TEXTURELOADED("signpic.state.textureloaded"),
-	AVAILABLE("signpic.state.available"),
-	FAILED("signpic.state.failed"),
-	ERROR("signpic.state.error"),
 	;
 
 	public final String msg;
-	ImageState(final String s) {
+	protected final Color color;
+	protected final Speed speed;
+	ImageState(final String s, final Color color, final Speed speed) {
 		this.msg = s;
+		this.color = color;
+		this.speed = speed;
 	}
 
-	public void themeColor() {}
+	public void themeImage(final ImageManager manager, final Image image) {
+		glLineWidth(3f);
+		glDisable(GL_TEXTURE_2D);
+
+		glPushMatrix();
+		glScalef(.5f, .5f, 1f);
+
+		// Loading Circle
+		this.color.loadingColor();
+		RenderHelper.drawLoadingCircle(this.speed.inner, this.speed.outer);
+
+		// Design Circle
+		this.color.designColor();
+		RenderHelper.drawDesignCircle();
+
+		// Progress Circle
+		this.color.progressColor();
+		final float progress = image.getProgress();
+		RenderHelper.drawProgressCircle(progress);
+
+		glPopMatrix();
+
+		glEnable(GL_TEXTURE_2D);
+	}
 }

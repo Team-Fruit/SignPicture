@@ -133,6 +133,9 @@ public class RemoteImage extends Image {
 	public float getProgress() {
 		switch(this.state) {
 		case AVAILABLE:
+		case DOWNLOADED:
+		case IOLOADED:
+		case TEXTURELOADED:
 			return 1f;
 		case DOWNLOADING:
 			if (this.downloading != null)
@@ -150,7 +153,7 @@ public class RemoteImage extends Image {
 
 	@Override
 	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int)getProgress()*100, this.advmsg);
+		return I18n.format(this.state.msg, (int)getProgress()*100);
 	}
 
 	@Override
