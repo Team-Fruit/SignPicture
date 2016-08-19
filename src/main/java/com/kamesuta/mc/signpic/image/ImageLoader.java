@@ -28,7 +28,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageLoader implements Runnable {
-	public static final ImageSize MAX_SIZE = new ImageSize(32, 32);
+	public static final ImageSize MAX_SIZE = new ImageSize(512, 512);
 
 	protected Image image;
 	protected InputStream input;
@@ -103,7 +103,7 @@ public class ImageLoader implements Runnable {
 		for (int i = 0; i < frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
 			final int delay = gifImage.getDelay(i);
-			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), delay);
+			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float)delay / 100);
 			textures.add(texture);
 			this.progress = i;
 		}

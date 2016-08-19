@@ -19,7 +19,7 @@ public class ImageManager {
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 
 	protected final Timer timer = new Timer();
-	protected final int currentprocess = 0;
+	protected int currentprocess = 0;
 	protected final ArrayList<Image> processes = new ArrayList<Image>();
 
 	public ImageLocation location;
@@ -61,7 +61,6 @@ public class ImageManager {
 		}
 
 		if (!this.processes.isEmpty()) {
-			final Image task = this.processes.get(this.currentprocess);
 			if(this.timer.getTime() > LoadSpan){
 				this.timer.set(0);
 				this.currentprocess = (this.currentprocess<this.processes.size()-1)?this.currentprocess+1:0;
