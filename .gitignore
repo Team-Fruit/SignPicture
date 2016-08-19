@@ -11,6 +11,9 @@
 !/lib
 !/lib/
 !/build.gradle
+!/settings.gradle
+!/gradle.properties
+!/install.bat
 !/gradlew
 !/gradlew.bat
 !/install.bat
