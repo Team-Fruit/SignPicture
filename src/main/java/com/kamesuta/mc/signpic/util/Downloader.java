@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.image;
+package com.kamesuta.mc.signpic.util;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;

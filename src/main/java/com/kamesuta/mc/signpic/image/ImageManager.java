@@ -16,13 +16,13 @@ public class ImageManager {
 	public Image get(final String id) {
 		Image image = this.pool.get(id);
 		if (image == null) {
-			image = new RemoteImage(this.location, id);
+			image = new RemoteImage(id, this.location);
 			this.pool.put(id, image);
 		}
 		if (image.getState() == ImageState.INIT) {
-			image.preload();
+			image.init();
 		} else if (image.getState() == ImageState.LOADING) {
-			image.load();
+			image.preload();
 		}
 		return image;
 	}
@@ -35,9 +35,9 @@ public class ImageManager {
 			this.pool.put(id, image);
 		}
 		if (image.getState() == ImageState.INIT) {
-			image.preload();
+			image.init();
 		} else if (image.getState() == ImageState.LOADING) {
-			image.load();
+			image.preload();
 		}
 		return image;
 	}

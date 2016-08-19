@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
 
@@ -27,7 +28,7 @@ public class ImageDownloader implements Runnable {
 	protected long maxsize;
 	protected CountingOutputStream countoutput;
 
-	public ImageDownloader(final ImageLocation location, final RemoteImage image) {
+	public ImageDownloader(final RemoteImage image, final ImageLocation location) {
 		this.location = location;
 		this.image = image;
 	}

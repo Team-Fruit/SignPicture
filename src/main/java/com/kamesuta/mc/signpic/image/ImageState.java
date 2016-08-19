@@ -2,9 +2,11 @@ package com.kamesuta.mc.signpic.image;
 
 public enum ImageState {
 	INIT("signpic.state.init"),
-	AVAILABLE("signpic.state.available"),
-	LOADING("signpic.state.loading"),
 	DOWNLOADING("signpic.state.downloading"),
+	LOADING("signpic.state.loading"),
+	IOLOADING("signpic.state.ioloading"),
+	POSTLOADING("signpic.state.postloading"),
+	AVAILABLE("signpic.state.available"),
 	FAILED("signpic.state.failed"),
 	ERROR("signpic.state.error");
 

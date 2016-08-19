@@ -76,9 +76,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPushMatrix();
 			glScalef(wid, hei, 1f);
 
-			glEnable(GL_LIGHTING);
 			drawImage(image);
-			glDisable(GL_LIGHTING);
 			if (image.getState() != ImageState.AVAILABLE) {
 				glLineWidth(1f);
 				glDisable(GL_TEXTURE_2D);
@@ -187,7 +185,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	protected void drawImage(final Image image) {
 		if (image.getState() == ImageState.AVAILABLE) {
 			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			glBindTexture(GL_TEXTURE_2D, image.getTexture().getGlTextureId());
+			glBindTexture(GL_TEXTURE_2D, image.getTexture().get());
 			this.t.startDrawingQuads();
 			this.t.addVertexWithUV(0, 0, 0, 0, 0);
 			this.t.addVertexWithUV(0, 1, 0, 0, 1);

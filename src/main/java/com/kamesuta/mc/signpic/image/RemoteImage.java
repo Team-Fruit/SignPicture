@@ -8,19 +8,16 @@ import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 
 import net.minecraft.client.resources.I18n;
 
-public class RemoteImage implements Image {
-	protected final String id;
-	protected ImageLocation location;
-	protected ImageTexture texture;
-	protected ImageState state = ImageState.INIT;
-	protected String advmsg;
+public class RemoteImage extends Image {
 	protected ImageDownloader downloading;
 	protected Thread downloadingprocess;
+	protected ImageLoader loading;
+	protected Thread loadingprocess;
 	protected File local;
 
-	public RemoteImage(final ImageLocation location, final String id) {
+	public RemoteImage(final String id, final ImageLocation location) {
+		super(id);
 		this.location = location;
-		this.id = id;
 	}
 
 	@Override
@@ -29,7 +26,7 @@ public class RemoteImage implements Image {
 	}
 
 	@Override
-	public ImageTexture getTexture() {
+	public ImageTextures getTexture() {
 		return this.texture;
 	}
 
@@ -39,7 +36,7 @@ public class RemoteImage implements Image {
 	}
 
 	@Override
-	public void preload() {
+	public void init() {
 		try {
 			Reference.logger.info("PreLoading Start: " + this);
 			final File local = this.location.localLocation(this);
@@ -49,7 +46,7 @@ public class RemoteImage implements Image {
 			if (!local.exists()) {
 				Reference.logger.info("File not exists: " + this);
 				if (this.downloading == null)
-					this.downloading = new ImageDownloader(this.location, this);
+					this.downloading = new ImageDownloader(this, this.location);
 				if (this.downloadingprocess == null) {
 					this.downloadingprocess = new Thread(this.downloading);
 					this.downloadingprocess.start();
@@ -58,16 +55,17 @@ public class RemoteImage implements Image {
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
+			Reference.logger.error("UnknownError", e);
 		}
 	}
 
 	@Override
-	public void load() {
+	public void preload() {
 		try {
 			final File local = this.location.localLocation(this);
 			if (local.exists()) {
 				this.local = local;
-				this.texture = new ImageTexture(local);
+				this.texture = new ImageTextures(local);
 				Reference.logger.info("Loaded: " + this);
 				this.state = ImageState.AVAILABLE;
 			}
@@ -80,7 +78,13 @@ public class RemoteImage implements Image {
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
 			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
+			Reference.logger.error("UnknownError", e);
 		}
+	}
+
+	@Override
+	public void load() {
+
 	}
 
 	@Override
