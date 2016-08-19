@@ -66,7 +66,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			// Draw Canvas
 			final FontRenderer fontrenderer = func_147498_b();
-			//glDisable(GL_CULL_FACE);
+			glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
 			glPushMatrix();
 			glTranslatef(-size.width/2, size.height-.5f, 0f);

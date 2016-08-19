@@ -15,7 +15,7 @@ public class ImageTextures {
 		this.textures = images;
 	}
 
-	public ImageTexture get() {
+	public IImageTexture get() {
 		if (this.textures.size()==1) {
 			return this.textures.get(0).load();
 		} else if (this.textures.size()>1) {

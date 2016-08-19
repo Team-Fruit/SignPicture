@@ -29,19 +29,19 @@ import net.minecraft.util.ResourceLocation;
 public class ImageLoader implements Runnable {
 	public static final ImageSize MAX_SIZE = new ImageSize(512, 512);
 
-	protected Image image;
+	protected RemoteImage image;
 	protected InputStream input;
 
-	public ImageLoader(final Image image, final InputStream in) throws IOException {
+	public ImageLoader(final RemoteImage image, final InputStream in) throws IOException {
 		this.image = image;
 		this.input = in;
 	}
 
-	public ImageLoader(final Image image, final File file) throws IOException {
+	public ImageLoader(final RemoteImage image, final File file) throws IOException {
 		this(image, new FileInputStream(file));
 	}
 
-	public ImageLoader(final Image image, final IResourceManager manager, final ResourceLocation location) throws IOException {
+	public ImageLoader(final RemoteImage image, final IResourceManager manager, final ResourceLocation location) throws IOException {
 		this(image, manager.getResource(location).getInputStream());
 	}
 

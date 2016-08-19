@@ -10,6 +10,8 @@ import com.kamesuta.mc.signpic.Reference;
 import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
+	protected ImageTextures texture;
+	protected String advmsg;
 	protected ImageDownloader downloading;
 	protected Thread downloadingprocess;
 	protected ImageLoader ioloading;
@@ -147,8 +149,15 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
-	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int)getProgress()*100);
+	public IImageTexture getTexture() {
+		return getTextures().get();
+	}
+
+	public ImageTextures getTextures() {
+		if (this.state == ImageState.AVAILABLE)
+			return this.texture;
+		else
+			throw new IllegalStateException("Not Available");
 	}
 
 	@Override

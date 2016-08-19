@@ -1,77 +1,25 @@
 package com.kamesuta.mc.signpic.image;
 
-import com.kamesuta.mc.signpic.Reference;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImage extends Image {
-	protected ImageLoader loading;
-	protected Thread loadingprocess;
+	protected McImageTexture texture;
 	protected ResourceLocation location;
 
 	public ResourceImage(final ResourceLocation location) {
-		super(location.toString());
+		super("!" + location.toString());
 		this.location = location;
-	}
-
-	public void init() {
-		this.state = ImageState.INITALIZED;
-	}
-
-	public void ioload() {
-		this.state = ImageState.IOLOADING;
-		try {
-			final IResourceManager manager = FMLClientHandler.instance().getClient().getResourceManager();
-			if (this.loading == null)
-				this.loading = new ImageLoader(this, manager, this.location);
-			if (this.loadingprocess == null) {
-				this.loadingprocess = new Thread(this.loading);
-				this.loadingprocess.start();
-			}
-		} catch (final Exception e) {
-			this.state = ImageState.ERROR;
-			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
-			Reference.logger.error("Resource:UnknownError", e);
-		}
-	}
-
-	public void complete() {
+		this.texture = new McImageTexture(location);
 		this.state = ImageState.AVAILABLE;
 	}
 
 	@Override
 	public void process() {
-		switch(this.state) {
-		case INIT:
-			init();
-			break;
-		case INITALIZED:
-			ioload();
-			break;
-		case IOLOADED:
-			complete();
-			break;
-		default:
-			break;
-		}
 	}
 
 	@Override
 	public float getProgress() {
-		switch(this.state) {
-		case AVAILABLE:
-			return 1f;
-		default:
-			return 0;
-		}
-	}
-
-	@Override
-	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int)getProgress()*100);
+		return 1f;
 	}
 
 	@Override
@@ -105,22 +53,12 @@ public class ResourceImage extends Image {
 	}
 
 	@Override
-	public ImageState getState() {
-		return this.state;
-	}
-
-	@Override
-	public String getId() {
-		return this.id;
-	}
-
-	@Override
 	public String getLocal() {
-		return "Resource:"+this.location;
+		return "Resource:" + this.location;
 	}
 
 	@Override
-	public String advMessage() {
-		return null;
+	public IImageTexture getTexture() {
+		return this.texture;
 	}
 }

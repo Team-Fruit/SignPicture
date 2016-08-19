@@ -29,17 +29,21 @@ public class ImageManager {
 	}
 
 	public Image get(final String id) {
-		Image image = this.pool.get(id);
-		if (image == null) {
-			image = new RemoteImage(id, this.location);
-			this.pool.put(id, image);
-			this.processes.add(image);
+		if (id.startsWith("!")) {
+			return get(new ResourceLocation(id.substring(1)));
+		} else {
+			Image image = this.pool.get(id);
+			if (image == null) {
+				image = new RemoteImage(id, this.location);
+				this.pool.put(id, image);
+				this.processes.add(image);
+			}
+			return image;
 		}
-		return image;
 	}
 
 	public Image get(final ResourceLocation location) {
-		final String id = location.toString();
+		final String id = "!" + location.toString();
 		Image image = this.pool.get(id);
 		if (image == null) {
 			image = new ResourceImage(location);
