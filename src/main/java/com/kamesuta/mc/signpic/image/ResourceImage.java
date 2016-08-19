@@ -5,28 +5,27 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
-public class ResourceImage implements Image {
+public class ResourceImage extends Image {
 	protected ResourceLocation location;
 
-	protected final String id;
-	protected ImageTexture texture;
+	protected ImageTextures texture;
 	protected ImageState state = ImageState.INIT;
 
 	public ResourceImage(final ResourceLocation location) {
-		this.id = location.toString();
+		super(location.toString());
 		this.location = location;
 	}
 
 	@Override
-	public void preload() {
+	public void init() {
 		this.state = ImageState.LOADING;
 	}
 
 	@Override
-	public void load() {
+	public void preload() {
 		try {
 			final IResourceManager manager = FMLClientHandler.instance().getClient().getResourceManager();
-			this.texture = new ImageTexture(manager, this.location);
+			this.texture = new ImageTextures(manager, this.location);
 			this.state = ImageState.AVAILABLE;
 		} catch (final Exception e) {
 			this.state = ImageState.ERROR;
@@ -83,7 +82,7 @@ public class ResourceImage implements Image {
 	}
 
 	@Override
-	public ImageTexture getTexture() {
+	public ImageTextures getTexture() {
 		return this.texture;
 	}
 
@@ -100,5 +99,9 @@ public class ResourceImage implements Image {
 	@Override
 	public String advMessage() {
 		return null;
+	}
+
+	@Override
+	public void load() {
 	}
 }

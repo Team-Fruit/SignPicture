@@ -1,23 +1,34 @@
 package com.kamesuta.mc.signpic.image;
 
-public interface Image {
+public abstract class Image {
+	protected String id;
+	protected ImageTextures texture;
+	protected ImageState state = ImageState.INIT;
+	protected ImageLocation location;
+	protected String advmsg;
 
-	void preload();
+	public Image(final String id) {
+		this.id = id;
+	}
 
-	void load();
+	public abstract void init();
 
-	float getProgress();
+	public abstract void preload();
 
-	String getStatusMessage();
+	public abstract float getProgress();
 
-	ImageState getState();
+	public abstract String getStatusMessage();
 
-	ImageTexture getTexture();
+	public abstract ImageState getState();
 
-	String getId();
+	public abstract ImageTextures getTexture();
 
-	String getLocal();
+	public abstract String getId();
 
-	String advMessage();
+	public abstract String getLocal();
+
+	public abstract String advMessage();
+
+	public abstract void load();
 
 }
