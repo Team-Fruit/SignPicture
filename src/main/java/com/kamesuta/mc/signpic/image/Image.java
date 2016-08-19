@@ -3,13 +3,12 @@ package com.kamesuta.mc.signpic.image;
 import static org.lwjgl.opengl.GL11.*;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
 
 public abstract class Image {
 	protected String id;
-	protected ImageTextures texture;
 	protected ImageState state = ImageState.INIT;
 	protected ImageLocation location;
-	protected String advmsg;
 
 	public Image(final String id) {
 		this.id = id;
@@ -19,12 +18,7 @@ public abstract class Image {
 		return this.id;
 	}
 
-	public ImageTextures getTexture() {
-		if (this.state == ImageState.AVAILABLE)
-			return this.texture;
-		else
-			throw new IllegalStateException("Not Available");
-	}
+	public abstract IImageTexture getTexture();
 
 	public ImageState getState() {
 		return this.state;
@@ -32,11 +26,15 @@ public abstract class Image {
 
 	public abstract float getProgress();
 
-	public abstract String getStatusMessage();
+	public String getStatusMessage() {
+		return I18n.format(this.state.msg, (int)getProgress()*100);
+	}
 
 	public abstract String getLocal();
 
-	public abstract String advMessage();
+	public String advMessage() {
+		return null;
+	};
 
 	public abstract void process();
 
@@ -48,7 +46,7 @@ public abstract class Image {
 		if (this.state == ImageState.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			this.texture.get().bind();
+			getTexture().bind();
 			t.startDrawingQuads();
 			t.addVertexWithUV(0, 0, 0, 0, 0);
 			t.addVertexWithUV(0, 1, 0, 0, 1);

@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
 
-public class ImageTexture {
-	public static final ImageTexture NULL = new ImageTexture(null);
+public class ImageTexture implements IImageTexture {
+	public static final IImageTexture NULL = new ImageTexture(null);
 	public static float DefaultDelay = .05f;
 
 	protected BufferedImage temp;
@@ -61,6 +61,7 @@ public class ImageTexture {
 		return this.delay;
 	}
 
+	@Override
 	public void bind() {
 		if (this.id != -1)
 			glBindTexture(GL_TEXTURE_2D, this.id);
