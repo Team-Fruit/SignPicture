@@ -83,6 +83,7 @@ public class RemoteImage extends Image {
 
 	public void textureload() {
 		this.state = ImageState.TEXTURELOADING;
+		ImageManager.lazyloadqueue.offer(this);
 	}
 
 	protected int processing = 0;
@@ -141,6 +142,11 @@ public class RemoteImage extends Image {
 		case FAILED:
 			if (this.downloading != null)
 				return this.downloading.getProgress();
+		case TEXTURELOADING:
+			if (this.texture != null && !this.texture.getAll().isEmpty()) {
+				final float f = (float)this.processing / this.texture.getAll().size();
+				return f;
+			}
 		default:
 			return 0;
 		}

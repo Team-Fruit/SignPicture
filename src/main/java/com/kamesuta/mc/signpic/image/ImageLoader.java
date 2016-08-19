@@ -29,7 +29,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageLoader implements Runnable {
-	public static final ImageSize MAX_SIZE = new ImageSize(256, 256);
+	public static final ImageSize MAX_SIZE = new ImageSize(32, 32);
 
 	protected Image image;
 	protected ImageInputStream stream;
@@ -99,7 +99,6 @@ public class ImageLoader implements Runnable {
 				final NodeList children = tree.getChildNodes();
 
 				final ImageTexture texture = new ImageTexture();
-				ImageSize size = null;
 				for (int j = 0; j < children.getLength(); j++) {
 					final Node nodeItem = children.item(j);
 
@@ -115,7 +114,6 @@ public class ImageLoader implements Runnable {
 							final int wid = imageAttr.get("imageWidth");
 							final int hei = imageAttr.get("imageHeight");
 							canvas = new BufferedImage(wid, hei, BufferedImage.TYPE_INT_ARGB);
-							size = new ImageSize(wid, hei);
 						}
 						canvas.getGraphics().drawImage(image, imageAttr.get("imageLeftPosition"), imageAttr.get("imageTopPosition"), null);
 					} else if (nodeItem.getNodeName().equals("GraphicControlExtension")) {
@@ -124,23 +122,8 @@ public class ImageLoader implements Runnable {
 						texture.setDelay((float)Integer.valueOf(nodedelay.getNodeValue())/100f);
 					}
 				}
-				final ImageSize newsize = ImageSize.createSize(ImageSizes.LIMIT, size, MAX_SIZE);
-				if (size==null || newsize.equals(size)) {
-					final BufferedImage thumb = new BufferedImage(canvas.getWidth(), canvas.getHeight(), canvas.getType());
-					final Graphics g = thumb.getGraphics();
-					g.drawImage(canvas, 0, 0, null);
-					g.dispose();
-					texture.setImage(thumb);
-				} else {
-					final int wid = (int)newsize.width;
-					final int hei = (int)newsize.height;
-					final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
-					final Graphics g = thumb.getGraphics();
-					g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);
-					g.dispose();
-					texture.setImage(thumb);
-				}
-
+				final ImageSize newsize = ImageSize.createSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
+				texture.setImage(createResizedImage(canvas, newsize));
 				textures.add(texture);
 			}
 			this.image.texture = new ImageTextures(textures);
@@ -153,13 +136,24 @@ public class ImageLoader implements Runnable {
 	protected void loadImage(final ImageReader reader) throws IOException {
 		final ImageReadParam param = reader.getDefaultReadParam();
 		reader.setInput(this.stream, true, true);
-		BufferedImage bi;
+		BufferedImage canvas;
 		try {
-			bi = reader.read(0, param);
+			canvas = reader.read(0, param);
 		} finally {
 			reader.dispose();
 			this.stream.close();
 		}
-		this.image.texture = new ImageTextures(Lists.newArrayList(new ImageTexture(bi)));
+		final ImageSize newsize = ImageSize.createSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
+		this.image.texture = new ImageTextures(Lists.newArrayList(new ImageTexture(createResizedImage(canvas, newsize))));
+	}
+
+	protected BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
+		final int wid = (int)newsize.width;
+		final int hei = (int)newsize.height;
+		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
+		final Graphics g = thumb.getGraphics();
+		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);
+		g.dispose();
+		return thumb;
 	}
 }

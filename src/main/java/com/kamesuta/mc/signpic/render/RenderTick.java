@@ -19,9 +19,9 @@ public class RenderTick {
 		Timer.tick();
 
 		Image textureload;
-		if ((textureload = ImageManager.textureloadqueue.peek()) != null) {
+		if ((textureload = ImageManager.lazyloadqueue.peek()) != null) {
 			if (textureload.processTexture()) {
-				ImageManager.textureloadqueue.poll();
+				ImageManager.lazyloadqueue.poll();
 			}
 		}
 	}
