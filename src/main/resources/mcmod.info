@@ -1,23 +1,17 @@
-{
-	"modListVersion": 2,
-	"modList": [
-		{
-			"modid": "signpic",
-			"name": "SignPicture",
-			"description": "The sign tells us how beautiful it is!",
-			"mcversion": "${mcversion}",
-			"version": "${version}",
-			"authorList": [
-				"Kamesuta"
-			],
-			"credits": "Kamesuta",
-			"dependants": [  ],
-			"parent": "",
-			"logoFile": "/assets/signpic/logo.png",
-			"screenshots": [  ],
-			"updateUrl": "https://github.com/Kamesuta/SignPicture/releases",
-			"url": "https://github.com/Kamesuta/SignPicture/releases",
-			"useDependencyInformation": true
-		}
-	]
-}
+[
+	{
+		"modid": "signpic",
+		"name": "SignPicture",
+		"description": "The sign tells us how beautiful it is!",
+		"version": "${version}",
+		"mcversion": "${mcversion}",
+		"logoFile": "logo.png",
+		"url": "https://github.com/Kamesuta/SignPicture/releases",
+		"updateUrl": "https://github.com/Kamesuta/SignPicture/releases",
+		"authors": ["Kamesuta"],
+		"credits": "@2016 Kamesuta",
+		"parent": "",
+		"screenshots": [],
+		"dependencies": []
+	}
+]
