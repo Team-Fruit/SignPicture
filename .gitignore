@@ -10,6 +10,8 @@
 !/gradle/
 !/lib
 !/lib/
+!/version
+!/version/
 !/build.gradle
 !/settings.gradle
 !/gradle.properties
