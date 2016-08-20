@@ -5,8 +5,8 @@ public class ImageSize {
 	public final float height;
 
 	public ImageSize(final float width, final float height) {
-		this.width = (width>=0)?width:-1;
-		this.height = (height>=0)?height:-1;
+		this.width = (width>=0)?width:Float.NaN;
+		this.height = (height>=0)?height:Float.NaN;
 	}
 
 	public boolean vaildWidth() {
@@ -31,11 +31,11 @@ public class ImageSize {
 		}else if (vaildWidth() && vaildHeight()) {
 			return this;
 		} else if (vaildWidth()) {
-			return createSize(ImageSizes.WIDTH, availableaspect, this.width, -1);
+			return createSize(ImageSizes.WIDTH, availableaspect, this.width, Float.NaN);
 		} else if (vaildHeight()) {
-			return createSize(ImageSizes.HEIGHT, availableaspect, -1, this.height);
+			return createSize(ImageSizes.HEIGHT, availableaspect, Float.NaN, this.height);
 		} else {
-			return createSize(ImageSizes.HEIGHT, availableaspect, -1, 1);
+			return createSize(ImageSizes.HEIGHT, availableaspect, Float.NaN, 1);
 		}
 	}
 

@@ -5,11 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.lwjgl.util.Timer;
+
 import com.kamesuta.mc.signpic.Reference;
 
 import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
+	public static final float ImageGarbageCollection = 3f;
+
+	protected final ImageLocation location;
 	protected ImageTextures texture;
 	protected String advmsg;
 	protected ImageDownloader downloading;
@@ -17,6 +22,7 @@ public class RemoteImage extends Image {
 	protected ImageLoader ioloading;
 	protected Thread ioloadingprocess;
 	protected File local;
+	protected final Timer lastloaded = new Timer();
 
 	public RemoteImage(final String id, final ImageLocation location) {
 		super(id);
@@ -128,6 +134,17 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
+	public boolean shouldCollect() {
+		return this.lastloaded.getTime() > ImageGarbageCollection;
+	}
+
+	@Override
+	public void delete() {
+		if (this.texture!=null)
+			this.texture.delete();
+	}
+
+	@Override
 	public float getProgress() {
 		switch(this.state) {
 		case AVAILABLE:
@@ -150,7 +167,7 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
-	public IImageTexture getTexture() {
+	public IImageTexture getTexture() throws IllegalStateException {
 		return getTextures().get();
 	}
 
@@ -159,6 +176,11 @@ public class RemoteImage extends Image {
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
+	}
+
+	@Override
+	public void onImageUsed() {
+		this.lastloaded.set(0);
 	}
 
 	@Override

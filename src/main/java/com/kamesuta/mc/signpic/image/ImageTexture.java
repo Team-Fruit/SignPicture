@@ -78,5 +78,7 @@ public class ImageTexture implements IImageTexture {
 	public void delete() {
 		if (this.id != -1)
 			TextureUtil.deleteTexture(this.id);
+		if (this.temp != null)
+			this.temp = null;
 	}
 }

@@ -17,10 +17,10 @@ public class ImageManager {
 	public static Deque<Image> lazyloadqueue = new ArrayDeque<Image>();
 
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
+	protected final ArrayList<Image> processes = new ArrayList<Image>();
+	protected int currentprocess = 0;
 
 	protected final Timer timer = new Timer();
-	protected int currentprocess = 0;
-	protected final ArrayList<Image> processes = new ArrayList<Image>();
 
 	public ImageLocation location;
 
@@ -38,6 +38,7 @@ public class ImageManager {
 				this.pool.put(id, image);
 				this.processes.add(image);
 			}
+			image.onImageUsed();
 			return image;
 		}
 	}
@@ -50,7 +51,14 @@ public class ImageManager {
 			this.pool.put(id, image);
 			this.processes.add(image);
 		}
+		image.onImageUsed();
 		return image;
+	}
+
+	public void delete(final Image image) {
+		this.pool.remove(image.id);
+		this.processes.remove(image);
+		image.delete();
 	}
 
 	@SubscribeEvent
@@ -64,12 +72,16 @@ public class ImageManager {
 			}
 		}
 
-		if (!this.processes.isEmpty()) {
-			if(this.timer.getTime() > LoadSpan){
-				this.timer.set(0);
-				this.currentprocess = (this.currentprocess<this.processes.size()-1)?this.currentprocess+1:0;
+		if(this.timer.getTime() > LoadSpan){
+			this.timer.set(0);
+			final int processsize = this.processes.size();
+			if (!this.processes.isEmpty()) {
+				this.currentprocess = (this.currentprocess<processsize-1)?this.currentprocess+1:0;
+				final Image image = this.processes.get(this.currentprocess);
+				image.process();
+				if (image.shouldCollect())
+					delete(image);
 			}
-			this.processes.get(this.currentprocess).process();
 		}
 	}
 }
