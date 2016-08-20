@@ -6,9 +6,8 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 
 public abstract class Image {
-	protected String id;
+	protected final String id;
 	protected ImageState state = ImageState.INIT;
-	protected ImageLocation location;
 
 	public Image(final String id) {
 		this.id = id;
@@ -18,7 +17,7 @@ public abstract class Image {
 		return this.id;
 	}
 
-	public abstract IImageTexture getTexture();
+	public abstract IImageTexture getTexture() throws IllegalStateException;
 
 	public ImageState getState() {
 		return this.state;
@@ -36,10 +35,25 @@ public abstract class Image {
 		return null;
 	};
 
+	public void onImageUsed() {}
+
+	public boolean shouldCollect() {
+		return false;
+	}
+
+	public void delete() {}
+
 	public abstract void process();
 
 	public boolean processTexture() {
 		return true;
+	}
+
+	public ImageSize getSize() {
+		if (this.state == ImageState.AVAILABLE)
+			return getTexture().getSize();
+		else
+			return IImageTexture.DefaultSize;
 	}
 
 	public void draw() {

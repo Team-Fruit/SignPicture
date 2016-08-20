@@ -39,9 +39,11 @@ public class RenderOverlay {
 						event.left.add("");
 						final String id = sign.id();
 						event.left.add(I18n.format("signpic.over.id", id));
-						final ImageSize size = sign.size();
-						event.left.add(I18n.format("signpic.over.size", size.width, size.height));
+						final ImageSize signsize = sign.size();
 						final Image image = this.manager.get(id);
+						final ImageSize imagesize = image.getSize();
+						final ImageSize viewsize = sign.size().getAspectSize(imagesize);
+						event.left.add(I18n.format("signpic.over.size", signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
 						event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
 						final String advmsg = image.advMessage();
 						if (advmsg != null)
