@@ -63,8 +63,6 @@ public class ImageManager {
 
 	@SubscribeEvent
 	public void renderTickProcess(final TickEvent.RenderTickEvent event) {
-		Timer.tick();
-
 		Image textureload;
 		if ((textureload = ImageManager.lazyloadqueue.peek()) != null) {
 			if (textureload.processTexture()) {
@@ -83,5 +81,7 @@ public class ImageManager {
 					delete(image);
 			}
 		}
+
+		Timer.tick();
 	}
 }
