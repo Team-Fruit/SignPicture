@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.image.IImageTexture;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
@@ -35,11 +36,16 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	{
 		final SignParser sign = new SignParser(tile);
 		if (sign.isVaild()) {
-			// Size
-			final ImageSize size = sign.size();
-
 			// Load Image
 			final Image image = this.manager.get(sign.id());
+
+			// Size
+			ImageSize imagesize;
+			if (image.getState() == ImageState.AVAILABLE)
+				imagesize = image.getTexture().getSize();
+			else
+				imagesize = IImageTexture.DefaultSize;
+			final ImageSize size = sign.size().getAspectSize(imagesize);
 
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
