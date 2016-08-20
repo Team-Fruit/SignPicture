@@ -24,7 +24,6 @@ public class RemoteImage extends Image {
 	}
 
 	public void init() {
-		Reference.logger.info("PreLoading Start: " + this);
 		this.state = ImageState.INITALIZED;
 	}
 

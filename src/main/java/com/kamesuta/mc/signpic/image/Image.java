@@ -27,7 +27,7 @@ public abstract class Image {
 	public abstract float getProgress();
 
 	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int)getProgress()*100);
+		return I18n.format(this.state.msg, (int) (getProgress()*100));
 	}
 
 	public abstract String getLocal();
