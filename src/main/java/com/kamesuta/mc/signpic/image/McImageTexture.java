@@ -15,4 +15,8 @@ public class McImageTexture implements IImageTexture {
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(this.location);
 	}
 
+	@Override
+	public ImageSize getSize() {
+		return DefaultSize;
+	}
 }

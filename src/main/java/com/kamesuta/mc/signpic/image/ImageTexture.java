@@ -7,15 +7,16 @@ import java.awt.image.BufferedImage;
 import net.minecraft.client.renderer.texture.TextureUtil;
 
 public class ImageTexture implements IImageTexture {
-	public static final IImageTexture NULL = new ImageTexture(null);
+	public static final ImageTexture NULL = new ImageTexture(null);
 	public static float DefaultDelay = .05f;
 
 	protected BufferedImage temp;
+	protected ImageSize size;
 	protected int id = -1;
 	protected float delay;
 
 	public ImageTexture(final BufferedImage image, final float delay) {
-		this.temp = image;
+		setImage(image);
 		this.delay = delay;
 	}
 
@@ -41,9 +42,16 @@ public class ImageTexture implements IImageTexture {
 		return this;
 	}
 
+	@Override
+	public ImageSize getSize() {
+		return this.size;
+	}
+
 	public boolean setImage(final BufferedImage image) {
 		if (this.id == -1) {
 			this.temp = image;
+			if (image != null)
+				this.size = new ImageSize(image.getWidth(), image.getHeight());
 			return true;
 		}
 		return false;

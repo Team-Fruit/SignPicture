@@ -30,17 +30,15 @@ public class SignParser {
 
 			final String size = this.text.substring(start+1, this.text.length()-1);
 			final String[] sp_size = size.split("x");
-			float wid = 1;
+			float wid = -1;
 			try {
 				if (sp_size.length >= 1)
 					wid = Float.parseFloat(sp_size[0]);
 			} catch (final NumberFormatException e) {}
-			float hei = 1;
+			float hei = -1;
 			try {
 				if (sp_size.length >= 2)
 					hei = Float.parseFloat(sp_size[1]);
-				else
-					hei = wid;
 			} catch (final NumberFormatException e) {}
 			this.size = new ImageSize(wid, hei);
 		}

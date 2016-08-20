@@ -5,8 +5,38 @@ public class ImageSize {
 	public final float height;
 
 	public ImageSize(final float width, final float height) {
-		this.width = width;
-		this.height = height;
+		this.width = (width>=0)?width:-1;
+		this.height = (height>=0)?height:-1;
+	}
+
+	public boolean vaildWidth() {
+		return this.width>=0;
+	}
+
+	public boolean vaildHeight() {
+		return this.height>=0;
+	}
+
+	public float max() {
+		return Math.max(this.width, this.height);
+	}
+
+	public float min() {
+		return Math.min(this.width, this.height);
+	}
+
+	public ImageSize getAspectSize(final ImageSize availableaspect) {
+		if (availableaspect == null) {
+			return this;
+		}else if (vaildWidth() && vaildHeight()) {
+			return this;
+		} else if (vaildWidth()) {
+			return createSize(ImageSizes.WIDTH, availableaspect, this.width, -1);
+		} else if (vaildHeight()) {
+			return createSize(ImageSizes.HEIGHT, availableaspect, -1, this.height);
+		} else {
+			return createSize(ImageSizes.HEIGHT, availableaspect, -1, 1);
+		}
 	}
 
 	public static ImageSize createSize(final ImageSizes s, final float rawWidth, final float rawHeight, final float maxWidth, final float maxHeight) {
