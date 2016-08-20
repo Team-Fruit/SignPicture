@@ -23,11 +23,11 @@ public class RemoteImage extends Image {
 		this.location = location;
 	}
 
-	public void init() {
+	protected void init() {
 		this.state = ImageState.INITALIZED;
 	}
 
-	public void download() {
+	protected void download() {
 		this.state = ImageState.DOWNLOADING;
 		try {
 			final File local = this.location.localLocation(this);
@@ -39,6 +39,7 @@ public class RemoteImage extends Image {
 					this.downloading = new ImageDownloader(this, this.location);
 				if (this.downloadingprocess == null) {
 					this.downloadingprocess = new Thread(this.downloading);
+					this.downloadingprocess.setName("signpic-dl-" + this.downloadingprocess.getId());
 					this.downloadingprocess.start();
 				}
 			}
@@ -48,7 +49,7 @@ public class RemoteImage extends Image {
 		}
 	}
 
-	public void ioload() {
+	protected void ioload() {
 		this.state = ImageState.IOLOADING;
 		try {
 			final File local = this.location.localLocation(this);
@@ -59,6 +60,7 @@ public class RemoteImage extends Image {
 					this.ioloading = new ImageLoader(this, local);
 				if (this.ioloadingprocess == null) {
 					this.ioloadingprocess = new Thread(this.ioloading);
+					this.ioloadingprocess.setName("signpic-io-" + this.ioloadingprocess.getId());
 					this.ioloadingprocess.start();
 				}
 			} else {
@@ -73,7 +75,7 @@ public class RemoteImage extends Image {
 		}
 	}
 
-	public void textureload() {
+	protected void textureload() {
 		this.state = ImageState.TEXTURELOADING;
 		ImageManager.lazyloadqueue.offer(this);
 	}
@@ -98,7 +100,7 @@ public class RemoteImage extends Image {
 		}
 	}
 
-	public void complete() {
+	protected void complete() {
 		this.state = ImageState.AVAILABLE;
 	}
 
