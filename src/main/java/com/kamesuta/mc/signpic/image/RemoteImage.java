@@ -12,7 +12,7 @@ import com.kamesuta.mc.signpic.Reference;
 import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
-	public static final float ImageGarbageCollection = 3f;
+	public static final float ImageGarbageCollection = 15f;
 
 	protected final ImageLocation location;
 	protected ImageTextures texture;
