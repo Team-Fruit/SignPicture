@@ -97,7 +97,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			if (size.width<1.5f || size.height<1.5) {
 				glScalef(.5f, .5f, .5f);
-				glTranslatef(size.width/2, -size.height/2-1f, 0);
+				glTranslatef(size.width/2, size.height/4, 0);
 			}
 			// Draw Canvas - Draw Loading
 			glPushMatrix();
