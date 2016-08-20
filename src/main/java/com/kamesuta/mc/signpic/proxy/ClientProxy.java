@@ -9,6 +9,8 @@ import com.kamesuta.mc.signpic.image.ImageLocation;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.kamesuta.mc.signpic.render.RenderOverlay;
+import com.kamesuta.mc.signpic.version.CommandDownloadLatest;
+import com.kamesuta.mc.signpic.version.VersionChecker;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -18,6 +20,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -59,14 +62,20 @@ public class ClientProxy extends CommonProxy {
 	public void init(final FMLInitializationEvent event) {
 		super.init(event);
 
+		// Replace Sign Renderer
 		final CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer(this.manager);
 		renderer.func_147497_a(TileEntityRendererDispatcher.instance);
 		@SuppressWarnings("unchecked")
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, renderer);
 
+		// RenderTick Manager & Overlay
 		FMLCommonHandler.instance().bus().register(this.manager);
 		MinecraftForge.EVENT_BUS.register(new RenderOverlay(this.manager));
+
+		// Versioning
+		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());
+		new VersionChecker().init();
 	}
 
 	@Override
