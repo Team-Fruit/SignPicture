@@ -106,19 +106,19 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				glPushMatrix();
 				glScalef(f3, f3, 1f);
 				final String msg1 = image.getStatusMessage();
-				fontrenderer.drawString(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
+				fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
 				glPopMatrix();
 				f3 = 0.036666668F * f1;
 				glPushMatrix();
 				glScalef(f3, f3, 1f);
 				final String msg2 = image.getId();
-				fontrenderer.drawString(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
+				fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
 				glPopMatrix();
 				final String msg3 = image.advMessage();
 				if (msg3 != null) {
 					glPushMatrix();
 					glScalef(f3, f3, 1f);
-					fontrenderer.drawString(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
+					fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
 					glPopMatrix();
 				}
 			}

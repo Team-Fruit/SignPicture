@@ -6,7 +6,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
-public abstract class CommonProxy {
+public class CommonProxy {
 	public void preInit(final FMLPreInitializationEvent event) {
 		Reference.logger = event.getModLog();
 	}
