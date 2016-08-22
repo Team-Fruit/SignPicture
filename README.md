@@ -37,7 +37,7 @@ The sign tells us how beautiful it is!
 
 ## Downloads
 
-Downloads can be found on ~CurseForge~(Not yet) or on the [github](https://github.com/Kamesuta/SignPicture/releases).
+Downloads can be found on ~~CurseForge~~ (Not yet) or on the [github](https://github.com/Kamesuta/SignPicture/releases).
 
 ## Installation
 
