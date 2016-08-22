@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.handler.KeyHandler;
+import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.image.ImageLocation;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -46,6 +48,8 @@ public class ClientProxy extends CommonProxy {
 		rootdir.mkdir();
 
 		this.manager = new ImageManager(new ImageLocation(rootdir));
+
+		KeyHandler.INSTANCE.init();
 	}
 
 	public File getDataDirectory() {
@@ -69,8 +73,10 @@ public class ClientProxy extends CommonProxy {
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, renderer);
 
-		// RenderTick Manager & Overlay
+		// Event Register
 		FMLCommonHandler.instance().bus().register(this.manager);
+		FMLCommonHandler.instance().bus().register(KeyHandler.INSTANCE);
+		MinecraftForge.EVENT_BUS.register(new SignHandler());
 		MinecraftForge.EVENT_BUS.register(new RenderOverlay(this.manager));
 
 		// Versioning
