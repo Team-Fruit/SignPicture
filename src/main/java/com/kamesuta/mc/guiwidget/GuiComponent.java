@@ -5,38 +5,30 @@ import com.kamesuta.mc.guiwidget.position.Point;
 import net.minecraft.client.gui.Gui;
 
 public class GuiComponent extends Gui implements GuiCommon {
-	public GuiComponent() {
-	}
+	@Override
+	public void init(final GuiEvent ev, final GuiPosition pgp) {}
 
 	@Override
-	public void init(final GuiTools tools, final GuiPosition pgp) {
-	}
+	public void draw(final GuiEvent ev, final GuiPosition pgp, final Point p, final float frame) {}
 
 	@Override
-	public void draw(final GuiTools tools, final GuiPosition pgp, final Point p, final float frame) {
-	}
+	public void update(final GuiEvent ev, final GuiPosition pgp, final Point p) {}
 
 	@Override
-	public void update(final GuiTools tools, final GuiPosition pgp, final Point p) {
-	}
+	public void keyTyped(final GuiEvent ev, final GuiPosition pgp, final Point p, final char c, final int keycode) {}
 
 	@Override
-	public void keyTyped(final GuiTools tools, final GuiPosition pgp, final Point p, final char c, final int keycode) {
-	}
+	public void mouseScrolled(final GuiEvent ev, final GuiPosition pgp, final Point p, final int scroll) {}
 
 	@Override
-	public void mouseScrolled(final GuiTools tools, final GuiPosition pgp, final Point p, final int scroll) {
-	}
+	public void mouseMoved(final GuiEvent ev, final GuiPosition pgp, final Point p, final int button) {}
 
 	@Override
-	public void mouseDragged(final GuiTools tools, final GuiPosition pgp, final Point p, final int button, final long time) {
-	}
+	public void mouseClicked(final GuiEvent ev, final GuiPosition pgp, final Point p, final int button) {}
 
 	@Override
-	public void mouseMovedOrUp(final GuiTools tools, final GuiPosition pgp, final Point p, final int button) {
-	}
+	public void mouseDragged(final GuiEvent ev, final GuiPosition pgp, final Point p, final int button, final long time) {}
 
 	@Override
-	public void mouseClicked(final GuiTools tools, final GuiPosition pgp, final Point p, final int button) {
-	}
+	public void mouseReleased(final GuiEvent ev, final GuiPosition pgp, final Point mouse, final int button) {}
 }
