@@ -2,6 +2,10 @@ package com.kamesuta.mc.guiwidget.position;
 
 public interface IPositionAbsolute extends IPosition {
 
+	int x();
+
+	int y();
+
 	int x1();
 
 	int y1();

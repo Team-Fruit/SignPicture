@@ -2,6 +2,7 @@ package com.kamesuta.mc.guiwidget;
 
 import org.apache.commons.lang3.StringUtils;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -10,16 +11,17 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiGraphics extends Gui {
+	public static final GuiGraphics INSTANCE = new GuiGraphics();
+
 	public static final ResourceLocation guiTex = new ResourceLocation("textures/gui/widgets.png");
 
-	private final Minecraft mc;
 	public final TextureManager renderEngine;
 	public final FontRenderer fontRenderer;
 
-	public GuiGraphics() {
-		this.mc = Minecraft.getMinecraft();
-		this.renderEngine = this.mc.renderEngine;
-		this.fontRenderer = this.mc.fontRenderer;
+	private GuiGraphics() {
+		final Minecraft mc = FMLClientHandler.instance().getClient();
+		this.renderEngine = mc.renderEngine;
+		this.fontRenderer = mc.fontRenderer;
 	}
 
 	public void drawString(final String text, final int x, final int y, final int colour, final boolean shadow) {
