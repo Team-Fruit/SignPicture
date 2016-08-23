@@ -6,11 +6,14 @@ import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
 import com.kamesuta.mc.guiwidget.position.relative.IPositionRelative;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
 
-public abstract class GuiBase extends GuiComponent {
+public abstract class WBase extends WComponent {
+	protected static final ResourceLocation guiTex = new ResourceLocation("textures/gui/widgets.png");
+
 	protected IPositionRelative position;
 
-	public GuiBase(final IPositionRelative position) {
+	public WBase(final IPositionRelative position) {
 		this.position = position;
 	}
 
@@ -18,7 +21,7 @@ public abstract class GuiBase extends GuiComponent {
 		return this.position;
 	}
 
-	public GuiPosition getGuiPosition(final GuiPosition pgp) {
+	public WPosition getGuiPosition(final WPosition pgp) {
 		return pgp.child(getGuiRelative());
 	}
 

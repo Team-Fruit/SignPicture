@@ -4,22 +4,18 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.input.Keyboard;
 
-import com.kamesuta.mc.guiwidget.GuiBase;
-import com.kamesuta.mc.guiwidget.GuiEvent;
-import com.kamesuta.mc.guiwidget.GuiPosition;
+import com.kamesuta.mc.guiwidget.WBase;
+import com.kamesuta.mc.guiwidget.WEvent;
+import com.kamesuta.mc.guiwidget.WPosition;
 import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.relative.IPositionRelative;
 import com.kamesuta.mc.guiwidget.position.relative.RelativePosition;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
 
-public class GuiTextField extends GuiBase {
-	protected final Minecraft mc = FMLClientHandler.instance().getClient();
-
+public class MTextField extends WBase {
 	protected String text;
 	protected int seek;
 	protected boolean isFocused;
@@ -29,7 +25,7 @@ public class GuiTextField extends GuiBase {
 	public String actionCommand;
 	protected String allowedCharacters;
 
-	public GuiTextField(final IPositionRelative position, final String text) {
+	public MTextField(final IPositionRelative position, final String text) {
 		super(position);
 		this.isFocused = false;
 		this.isEnabled = true;
@@ -68,12 +64,12 @@ public class GuiTextField extends GuiBase {
 	}
 
 	@Override
-	public void update(final GuiEvent ev, final GuiPosition pgp, final Point p) {
+	public void update(final WEvent ev, final WPosition pgp, final Point p) {
 		this.cursorCounter += 1;
 	}
 
 	@Override
-	public void keyTyped(final GuiEvent ev, final GuiPosition pgp, final Point p, final char c, final int keycode) {
+	public void keyTyped(final WEvent ev, final WPosition pgp, final Point p, final char c, final int keycode) {
 		if ((!this.isEnabled) || (!this.isFocused)) {
 			return;
 		} else if (keycode == Keyboard.KEY_BACK) {
@@ -130,7 +126,7 @@ public class GuiTextField extends GuiBase {
 	}
 
 	@Override
-	public void mouseClicked(final GuiEvent ev, final GuiPosition pgp, final Point p, final int button) {
+	public void mouseClicked(final WEvent ev, final WPosition pgp, final Point p, final int button) {
 		final IPositionAbsolute gp = pgp.child(this.position).getAbsolute();
 		if (gp.pointInside(p)) {
 			setFocused(true);
@@ -138,7 +134,7 @@ public class GuiTextField extends GuiBase {
 				setText("");
 			}
 			final IPositionAbsolute in = getGuiPosition(pgp).child(new RelativePosition(1, 1, -2, -2, true)).getAbsolute();
-			this.seek = this.mc.fontRenderer.trimStringToWidth(getText(), p.x - (in.x1() + 4)).length();
+			this.seek = mc.fontRenderer.trimStringToWidth(getText(), p.x - (in.x1() + 4)).length();
 		} else {
 			setFocused(false);
 		}
@@ -159,18 +155,24 @@ public class GuiTextField extends GuiBase {
 	}
 
 	@Override
-	public void draw(final GuiEvent ev, final GuiPosition pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
 		final IPositionAbsolute out = getGuiPosition(pgp).getAbsolute();
 		final IPositionAbsolute in = getGuiPosition(pgp).child(new RelativePosition(1, 1, -2, -2, true)).getAbsolute();
+		drawBackground(out, in);
+		drawText(out, in);
+	}
 
+	protected void drawBackground(final IPositionAbsolute out, final IPositionAbsolute in) {
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
 		draw(out, GL_QUADS);
 		glColor4f(0f, 0f, 0f, 1f);
 		draw(in, GL_QUADS);
 		glEnable(GL_TEXTURE_2D);
+	}
 
-		drawString(this.mc.fontRenderer, getDrawText(), in.x1() + 4, in.y1() + (in.y2()-in.y1()) / 2 - 4, getTextColour());
+	protected void drawText(final IPositionAbsolute out, final IPositionAbsolute in) {
+		drawString(mc.fontRenderer, getDrawText(), in.x1() + 4, in.y1() + (in.y2()-in.y1()) / 2 - 4, getTextColour());
 	}
 
 	public String getDrawText() {
@@ -193,12 +195,12 @@ public class GuiTextField extends GuiBase {
 		return this.isEnabled ? 14737632 : 7368816;
 	}
 
-	public GuiTextField setMaxStringLength(final int i) {
+	public MTextField setMaxStringLength(final int i) {
 		this.maxStringLength = i;
 		return this;
 	}
 
-	public GuiTextField setAllowedCharacters(final String s) {
+	public MTextField setAllowedCharacters(final String s) {
 		this.allowedCharacters = s;
 		return this;
 	}
