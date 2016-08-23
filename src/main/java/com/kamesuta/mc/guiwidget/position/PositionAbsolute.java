@@ -31,6 +31,16 @@ public class PositionAbsolute implements IPositionAbsolute {
 	}
 
 	@Override
+	public int w() {
+		return Math.abs(this.x2 - this.x1);
+	}
+
+	@Override
+	public int h() {
+		return Math.abs(this.y2 - this.y1);
+	}
+
+	@Override
 	public int x1() {
 		return this.x1;
 	}

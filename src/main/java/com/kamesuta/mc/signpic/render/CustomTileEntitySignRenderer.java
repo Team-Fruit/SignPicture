@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
@@ -23,8 +22,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	protected final ImageManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
-	public static final ResourceLocation resWarning = new ResourceLocation(Reference.MODID, "textures/state/warning.png");
-	public static final ResourceLocation resError = new ResourceLocation(Reference.MODID, "textures/state/error.png");
+	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
+	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
 		this.manager = manager;

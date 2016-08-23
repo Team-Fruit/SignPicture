@@ -12,15 +12,15 @@ import com.kamesuta.mc.guiwidget.position.PositionAbsolute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-public class GuiFrame extends GuiScreen implements GuiContainer {
-	protected final ArrayList<GuiCommon> widgets = new ArrayList<GuiCommon>();
-	protected final GuiEvent event = new GuiEvent();
+public class WFrame extends GuiScreen implements WContainer {
+	protected final ArrayList<WCommon> widgets = new ArrayList<WCommon>();
+	protected final WEvent event = new WEvent();
 
-	public GuiFrame() {
+	public WFrame() {
 	}
 
-	public GuiPosition getGuiPosition() {
-		return GuiPosition.createBase(getAbsolute());
+	public WPosition getGuiPosition() {
+		return WPosition.createBase(getAbsolute());
 	}
 
 	public IPositionAbsolute getAbsolute() {
@@ -33,24 +33,24 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 	}
 
 	@Override
-	public List<GuiCommon> getContainer() {
+	public List<WCommon> getContainer() {
 		return this.widgets;
 	}
 
 	@Override
-	public boolean add(final GuiCommon widget) {
+	public boolean add(final WCommon widget) {
 		return this.widgets.add(widget);
 	}
 
 	@Override
-	public boolean remove(final GuiCommon widget) {
+	public boolean remove(final WCommon widget) {
 		return this.widgets.remove(widget);
 	}
 
 	@Override
 	public void initGui() {
-		final GuiPosition gp = getGuiPosition();
-		for (final GuiCommon widget : this.widgets)
+		final WPosition gp = getGuiPosition();
+		for (final WCommon widget : this.widgets)
 			widget.init(this.event, gp);
 		sInitGui();
 	}
@@ -83,9 +83,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 
 	@Override
 	public void drawScreen(final int mousex, final int mousey, final float f) {
-		final GuiPosition gp = getGuiPosition();
+		final WPosition gp = getGuiPosition();
 		final Point p = getMouseAbsolute();
-		for (final GuiCommon widget : this.widgets)
+		for (final WCommon widget : this.widgets)
 			widget.draw(this.event, gp, p, f);
 		sDrawScreen(mousex, mousey, f);
 	}
@@ -99,9 +99,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 	@Override
 	protected void mouseClicked(final int x, final int y, final int button) {
 		this.mousebutton = button;
-		final GuiPosition gp = getGuiPosition();
+		final WPosition gp = getGuiPosition();
 		final Point p = getMouseAbsolute();
-		for (final GuiCommon widget : this.widgets)
+		for (final WCommon widget : this.widgets)
 			widget.mouseClicked(this.event, gp, p, button);
 		sMouseClicked(x, y, button);
 	}
@@ -115,9 +115,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 		if (this.mousebutton!=0 && button==0) {
 			mouseReleased(x, y, this.mousebutton);
 		} else {
-			final GuiPosition gp = getGuiPosition();
+			final WPosition gp = getGuiPosition();
 			final Point p = getMouseAbsolute();
-			for (final GuiCommon widget : this.widgets)
+			for (final WCommon widget : this.widgets)
 				widget.mouseMoved(this.event, gp, p, button);
 		}
 		this.mousebutton = button;
@@ -129,9 +129,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 	}
 
 	protected void mouseReleased(final int x, final int y, final int button) {
-		final GuiPosition gp = getGuiPosition();
+		final WPosition gp = getGuiPosition();
 		final Point p = getMouseAbsolute();
-		for (final GuiCommon widget : this.widgets)
+		for (final WCommon widget : this.widgets)
 			widget.mouseReleased(this.event, gp, p, button);
 		sMouseReleased(x, y, button);
 	}
@@ -141,9 +141,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 	@Override
 	protected void mouseClickMove(final int x, final int y, final int button, final long time) {
 		this.mousebutton = button;
-		final GuiPosition gp = getGuiPosition();
+		final WPosition gp = getGuiPosition();
 		final Point p = getMouseAbsolute();
-		for (final GuiCommon widget : this.widgets)
+		for (final WCommon widget : this.widgets)
 			widget.mouseDragged(this.event, gp, p, button, time);
 		sMouseClickMove(x, y, button, time);
 	}
@@ -155,9 +155,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 	@Override
 	public void updateScreen() {
 		if (this.mc.currentScreen == this) {
-			final GuiPosition gp = getGuiPosition();
+			final WPosition gp = getGuiPosition();
 			final Point p = getMouseAbsolute();
-			for (final GuiCommon widget : this.widgets) {
+			for (final WCommon widget : this.widgets) {
 				widget.update(this.event, gp, p);
 			}
 		}
@@ -170,9 +170,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 
 	@Override
 	protected void keyTyped(final char c, final int keycode) {
-		final GuiPosition gp = getGuiPosition();
+		final WPosition gp = getGuiPosition();
 		final Point p = getMouseAbsolute();
-		for (final GuiCommon widget : this.widgets)
+		for (final WCommon widget : this.widgets)
 			widget.keyTyped(this.event, gp, p, c, keycode);
 		sKeyTyped(c, keycode);
 	}
@@ -185,9 +185,9 @@ public class GuiFrame extends GuiScreen implements GuiContainer {
 	public void handleMouseInput() {
 		final int i = Mouse.getEventDWheel();
 		if (i != 0) {
-			final GuiPosition gp = getGuiPosition();
+			final WPosition gp = getGuiPosition();
 			final Point p = getMouseAbsolute();
-			for (final GuiCommon widget : this.widgets)
+			for (final WCommon widget : this.widgets)
 				widget.mouseScrolled(this.event, gp, p, i);
 		}
 		sHandleMouseInput();

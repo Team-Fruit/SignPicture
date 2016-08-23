@@ -6,6 +6,10 @@ public interface IPositionAbsolute extends IPosition {
 
 	int y();
 
+	int w();
+
+	int h();
+
 	int x1();
 
 	int y1();

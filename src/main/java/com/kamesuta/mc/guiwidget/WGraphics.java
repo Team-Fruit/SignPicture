@@ -10,15 +10,15 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiGraphics extends Gui {
-	public static final GuiGraphics INSTANCE = new GuiGraphics();
+public class WGraphics extends Gui {
+	public static final WGraphics INSTANCE = new WGraphics();
 
 	public static final ResourceLocation guiTex = new ResourceLocation("textures/gui/widgets.png");
 
 	public final TextureManager renderEngine;
 	public final FontRenderer fontRenderer;
 
-	private GuiGraphics() {
+	private WGraphics() {
 		final Minecraft mc = FMLClientHandler.instance().getClient();
 		this.renderEngine = mc.renderEngine;
 		this.fontRenderer = mc.fontRenderer;
