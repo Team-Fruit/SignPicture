@@ -2,9 +2,9 @@ package com.kamesuta.mc.guiwidget.position;
 
 public class Point implements java.io.Serializable {
 
-	public int x;
+	protected int x;
 
-	public int y;
+	protected int y;
 
 	private static final long serialVersionUID = -5276940640259749850L;
 
@@ -21,11 +21,11 @@ public class Point implements java.io.Serializable {
 		this.y = y;
 	}
 
-	public double getX() {
+	public int x() {
 		return this.x;
 	}
 
-	public double getY() {
+	public int y() {
 		return this.y;
 	}
 

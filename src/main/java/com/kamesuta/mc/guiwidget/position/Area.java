@@ -1,17 +1,19 @@
 package com.kamesuta.mc.guiwidget.position;
 
-public class PositionAbsolute implements IPositionAbsolute {
+import com.kamesuta.mc.guiwidget.position.relative.RCommon;
+
+public class Area {
 	/**
 	 * anchor x, usually, same as
 	 */
-	public final int x;
-	public final int y;
-	public final int x1;
-	public final int y1;
-	public final int x2;
-	public final int y2;
+	protected final int x;
+	protected final int y;
+	protected final int x1;
+	protected final int y1;
+	protected final int x2;
+	protected final int y2;
 
-	public PositionAbsolute(final int x, final int y, final int x1, final int y1, final int x2, final int y2) {
+	public Area(final int x, final int y, final int x1, final int y1, final int x2, final int y2) {
 		this.x = x;
 		this.y = y;
 		this.x1 = x1;
@@ -20,52 +22,62 @@ public class PositionAbsolute implements IPositionAbsolute {
 		this.y2 = y2;
 	}
 
-	@Override
-	public int x() {
+	public int anc_x() {
 		return this.x;
 	}
 
-	@Override
-	public int y() {
+	public int anc_y() {
 		return this.y;
 	}
 
-	@Override
 	public int w() {
 		return Math.abs(this.x2 - this.x1);
 	}
 
-	@Override
 	public int h() {
 		return Math.abs(this.y2 - this.y1);
 	}
 
-	@Override
 	public int x1() {
 		return this.x1;
 	}
 
-	@Override
 	public int y1() {
 		return this.y1;
 	}
 
-	@Override
 	public int x2() {
 		return this.x2;
 	}
 
-	@Override
 	public int y2() {
 		return this.y2;
 	}
 
-	@Override
+	public int minx() {
+		return Math.min(this.x1, this.x2);
+	}
+
+	public int maxx() {
+		return Math.max(this.x1, this.x2);
+	}
+
+	public int miny() {
+		return Math.min(this.y1, this.y2);
+	}
+
+	public int maxy() {
+		return Math.max(this.y1, this.y2);
+	}
+
+	public Area child(final RCommon p) {
+		return p.getAbsolute(this);
+	}
+
 	public boolean isVaild() {
 		return this.x1!=this.x2 && this.y1!=this.y2;
 	}
 
-	@Override
 	public final boolean pointInside(final Point p) {
 		return p.x >= this.x1 && p.x < this.x2 && p.y >= this.y1 && p.y < this.y2;
 	}
@@ -89,9 +101,9 @@ public class PositionAbsolute implements IPositionAbsolute {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof PositionAbsolute))
+		if (!(obj instanceof Area))
 			return false;
-		final PositionAbsolute other = (PositionAbsolute) obj;
+		final Area other = (Area) obj;
 		if (this.x != other.x)
 			return false;
 		if (this.x1 != other.x1)

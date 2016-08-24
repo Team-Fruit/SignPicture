@@ -4,10 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
-import com.kamesuta.mc.guiwidget.WPosition;
-import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
 import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.relative.IPositionRelative;
+import com.kamesuta.mc.guiwidget.position.Area;
+import com.kamesuta.mc.guiwidget.position.relative.RCommon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -19,7 +18,7 @@ public class MButton extends WBase {
 	private boolean isEnabled = true;
 	public boolean visible = true;
 
-	public MButton(final IPositionRelative position, final String text) {
+	public MButton(final RCommon position, final String text) {
 		super(position);
 		this.text = text;
 	}
@@ -37,8 +36,8 @@ public class MButton extends WBase {
 	}
 
 	@Override
-	public void mouseClicked(final WEvent ev, final WPosition pgp, final Point p, final int button) {
-		final IPositionAbsolute abs = getGuiPosition(pgp).getAbsolute();
+	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+		final Area abs = getGuiPosition(pgp);
 		if ((this.isEnabled) && (abs.pointInside(p))) {
 			if (onClicked(ev, pgp, p, button)) {
 				if (this.actionCommand != null)
@@ -49,12 +48,12 @@ public class MButton extends WBase {
 		}
 	}
 
-	protected boolean onClicked(final WEvent ev, final WPosition pgp, final Point p, final int button) {
+	protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 		return true;
 	}
 
 	@Override
-	public void draw(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		if (!this.visible) {
 			return;
 		}
@@ -64,13 +63,13 @@ public class MButton extends WBase {
 		}
 	}
 
-	protected void drawButtonTex(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
-		final IPositionAbsolute abs = getGuiPosition(pgp).getAbsolute();
+	protected void drawButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {
+		final Area abs = getGuiPosition(pgp);
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(guiTex);
 		final int state = getButtonTex(ev, pgp, p, frame);
 		drawTexturedModalRect(abs.x1(), abs.y1(), 0, 46 + state * 20, abs.w() / 2, abs.h() / 2);
-		drawTexturedModalRect(abs.x1() + abs.w() / 2, abs.y(), 200 - abs.w() / 2, 46 + state * 20, abs.w() / 2,
+		drawTexturedModalRect(abs.x1() + abs.w() / 2, abs.anc_y(), 200 - abs.w() / 2, 46 + state * 20, abs.w() / 2,
 				abs.h() / 2);
 		drawTexturedModalRect(abs.x1(), abs.y1() + abs.h() / 2, 0, 46 + state * 20 + 20 - abs.h() / 2,
 				abs.w() / 2, abs.h() / 2);
@@ -78,19 +77,19 @@ public class MButton extends WBase {
 				46 + state * 20 + 20 - abs.h() / 2, abs.w() / 2, abs.h() / 2);
 	}
 
-	public int getButtonTex(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
-		final IPositionAbsolute abs = getGuiPosition(pgp).getAbsolute();
+	public int getButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {
+		final Area abs = getGuiPosition(pgp);
 		return abs.pointInside(p) ? 2 : !this.isEnabled ? 0 : 1;
 	}
 
-	public void drawText(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
-		final IPositionAbsolute abs = getGuiPosition(pgp).getAbsolute();
-		drawCenteredString(mc.fontRenderer, this.text, abs.x() + abs.w() / 2, abs.y() + (abs.h() - 8) / 2,
+	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame) {
+		final Area abs = getGuiPosition(pgp);
+		drawCenteredString(mc.fontRenderer, this.text, abs.anc_x() + abs.w() / 2, abs.anc_y() + (abs.h() - 8) / 2,
 				getTextColour(ev, pgp, p, frame));
 	}
 
-	public int getTextColour(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
-		final IPositionAbsolute abs = getGuiPosition(pgp).getAbsolute();
+	public int getTextColour(final WEvent ev, final Area pgp, final Point p, final float frame) {
+		final Area abs = getGuiPosition(pgp);
 		return abs.pointInside(p) ? -96 : !this.isEnabled ? -6250336 : -2039584;
 	}
 

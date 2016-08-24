@@ -1,15 +1,14 @@
 package com.kamesuta.mc.guiwidget.position.relative;
 
-import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
-import com.kamesuta.mc.guiwidget.position.PositionAbsolute;
+import com.kamesuta.mc.guiwidget.position.Area;
 
-public class AbsolutePosition extends RelativeBase {
-	public final int x;
-	public final int y;
-	public final int w;
-	public final int h;
+public class RRelativeSized extends RBase {
+	public int x;
+	public int y;
+	public int w;
+	public int h;
 
-	public AbsolutePosition(final int x, final int y, final int w, final int h, final boolean isAnchor) {
+	public RRelativeSized(final int x, final int y, final int w, final int h, final boolean isAnchor) {
 		super(isAnchor);
 		this.x = x;
 		this.y = y;
@@ -18,17 +17,26 @@ public class AbsolutePosition extends RelativeBase {
 	}
 
 	@Override
-	public IPositionAbsolute getAbsolute(final IPositionAbsolute parent) {
-		final int px = parent.x();
-		final int py = parent.y();
+	public boolean isVaild() {
+		return 0!=this.w && 0!=this.h;
+	}
+
+	@Override
+	public Area getAbsolute(final Area parent) {
+		final int px = parent.anc_x();
+		final int py = parent.anc_y();
 		final int px1 = parent.x1();
 		final int py1 = parent.y1();
 		final int px2 = parent.x2();
 		final int py2 = parent.y2();
-		final int abs_x1 = px1 + this.x;
-		final int abs_y1 = py1 + this.y;
-		final int abs_x2 = abs_x1 + this.w;
-		final int abs_y2 = abs_y1 + this.h;
+		final int cx1 = this.x;
+		final int cy1 = this.y;
+		final int cx2 = this.x+this.w;
+		final int cy2 = this.y+this.h;
+		final int abs_x1 = (cx1>=0) ? px1+cx1 : px2+cx1+1;
+		final int abs_y1 = (cy1>=0) ? py1+cy1 : py2+cy1+1;
+		final int abs_x2 = (cx2>=0) ? px1+cx2 : px2+cx2+1;
+		final int abs_y2 = (cy2>=0) ? py1+cy2 : py2+cy2+1;
 		final int rx1 = Math.min(abs_x1, abs_x2);
 		final int ry1 = Math.min(abs_y1, abs_y2);
 		final int rx2 = Math.max(abs_x1, abs_x2);
@@ -39,12 +47,7 @@ public class AbsolutePosition extends RelativeBase {
 		final int ay2 = Math.min(py2, ry2);
 		final int ax = this.isAnchor ? ax1 : px;
 		final int ay = this.isAnchor ? ay1 : py;
-		return new PositionAbsolute(ax, ay, ax1, ay1, ax2, ay2);
-	}
-
-	@Override
-	public boolean isVaild() {
-		return this.w > 0 && this.h > 0;
+		return new Area(ax, ay, ax1, ay1, ax2, ay2);
 	}
 
 	@Override
@@ -64,9 +67,9 @@ public class AbsolutePosition extends RelativeBase {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (!(obj instanceof AbsolutePosition))
+		if (!(obj instanceof RRelativeSized))
 			return false;
-		final AbsolutePosition other = (AbsolutePosition) obj;
+		final RRelativeSized other = (RRelativeSized) obj;
 		if (this.h != other.h)
 			return false;
 		if (this.w != other.w)
@@ -80,6 +83,6 @@ public class AbsolutePosition extends RelativeBase {
 
 	@Override
 	public String toString() {
-		return String.format("AbsolutePosition [x=%s, y=%s, w=%s, h=%s]", this.x, this.y, this.w, this.h);
+		return String.format("RelativeSizedPosition [x=%s, y=%s, w=%s, h=%s]", this.x, this.y, this.w, this.h);
 	}
 }

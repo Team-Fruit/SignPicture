@@ -1,15 +1,14 @@
 package com.kamesuta.mc.guiwidget.position.relative;
 
-import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
-import com.kamesuta.mc.guiwidget.position.PositionAbsolute;
+import com.kamesuta.mc.guiwidget.position.Area;
 
-public class RelativePosition extends RelativeBase {
+public class LRArea extends RBase {
 	public int x1;
 	public int y1;
 	public int x2;
 	public int y2;
 
-	public RelativePosition(final int x1, final int y1, final int x2, final int y2, final boolean isAnchor) {
+	public LRArea(final int x1, final int y1, final int x2, final int y2, final boolean isAnchor) {
 		super(isAnchor);
 		this.x1 = x1;
 		this.y1 = y1;
@@ -23,9 +22,9 @@ public class RelativePosition extends RelativeBase {
 	}
 
 	@Override
-	public IPositionAbsolute getAbsolute(final IPositionAbsolute parent) {
-		final int px = parent.x();
-		final int py = parent.y();
+	public Area getAbsolute(final Area parent) {
+		final int px = parent.anc_x();
+		final int py = parent.anc_y();
 		final int px1 = parent.x1();
 		final int py1 = parent.y1();
 		final int px2 = parent.x2();
@@ -44,11 +43,11 @@ public class RelativePosition extends RelativeBase {
 		final int ay2 = Math.min(py2, ry2);
 		final int ax = this.isAnchor ? ax1 : px;
 		final int ay = this.isAnchor ? ay1 : py;
-		return new PositionAbsolute(ax, ay, ax1, ay1, ax2, ay2);
+		return new Area(ax, ay, ax1, ay1, ax2, ay2);
 	}
 
-	public static RelativePosition createFit(final boolean isAnchor) {
-		return new RelativePosition(0, 0, -1, -1, isAnchor);
+	public static LRArea createFit(final boolean isAnchor) {
+		return new LRArea(0, 0, -1, -1, isAnchor);
 	}
 
 	@Override
@@ -68,9 +67,9 @@ public class RelativePosition extends RelativeBase {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (!(obj instanceof RelativePosition))
+		if (!(obj instanceof LRArea))
 			return false;
-		final RelativePosition other = (RelativePosition) obj;
+		final LRArea other = (LRArea) obj;
 		if (this.x1 != other.x1)
 			return false;
 		if (this.x2 != other.x2)
