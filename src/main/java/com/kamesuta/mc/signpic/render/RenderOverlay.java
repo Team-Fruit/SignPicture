@@ -27,29 +27,31 @@ public class RenderOverlay {
 	@SubscribeEvent
 	public void onText(final RenderGameOverlayEvent.Text event) {
 		if (this.mc.gameSettings.showDebugInfo) {
-			final int x = this.mc.objectMouseOver.blockX;
-			final int y = this.mc.objectMouseOver.blockY;
-			final int z = this.mc.objectMouseOver.blockZ;
-			final Block block = this.mc.theWorld.getBlock(x, y, z);
-			if (block instanceof BlockSign) {
-				final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
-				if (tile instanceof TileEntitySign) {
-					final SignParser sign = new SignParser((TileEntitySign)tile);
-					if (sign.isVaild()) {
-						event.left.add("");
-						final String id = sign.id();
-						event.left.add(I18n.format("signpic.over.id", id));
-						final ImageSize signsize = sign.size();
-						final Image image = this.manager.get(id);
-						final ImageSize imagesize = image.getSize();
-						final ImageSize viewsize = sign.size().getAspectSize(imagesize);
-						event.left.add(I18n.format("signpic.over.size", signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
-						event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
-						final String advmsg = image.advMessage();
-						if (advmsg != null)
-							event.left.add(I18n.format("signpic.over.advmsg", advmsg));
-						event.left.add(I18n.format("signpic.over.raw", sign.text()));
-						event.left.add(I18n.format("signpic.over.local", image.getLocal()));
+			if (this.mc.objectMouseOver != null) {
+				final int x = this.mc.objectMouseOver.blockX;
+				final int y = this.mc.objectMouseOver.blockY;
+				final int z = this.mc.objectMouseOver.blockZ;
+				final Block block = this.mc.theWorld.getBlock(x, y, z);
+				if (block instanceof BlockSign) {
+					final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
+					if (tile instanceof TileEntitySign) {
+						final SignParser sign = new SignParser((TileEntitySign)tile);
+						if (sign.isVaild()) {
+							event.left.add("");
+							final String id = sign.id();
+							event.left.add(I18n.format("signpic.over.id", id));
+							final ImageSize signsize = sign.size();
+							final Image image = this.manager.get(id);
+							final ImageSize imagesize = image.getSize();
+							final ImageSize viewsize = sign.size().getAspectSize(imagesize);
+							event.left.add(I18n.format("signpic.over.size", signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
+							event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
+							final String advmsg = image.advMessage();
+							if (advmsg != null)
+								event.left.add(I18n.format("signpic.over.advmsg", advmsg));
+							event.left.add(I18n.format("signpic.over.raw", sign.text()));
+							event.left.add(I18n.format("signpic.over.local", image.getLocal()));
+						}
 					}
 				}
 			}
