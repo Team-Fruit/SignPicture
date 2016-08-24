@@ -1,14 +1,15 @@
 package com.kamesuta.mc.guiwidget.position.relative;
 
 import com.kamesuta.mc.guiwidget.position.Area;
+import com.kamesuta.mc.guiwidget.position.RBase;
 
 public class RAbsolute extends RBase {
-	public final int x;
-	public final int y;
-	public final int w;
-	public final int h;
+	public final float x;
+	public final float y;
+	public final float w;
+	public final float h;
 
-	public RAbsolute(final int x, final int y, final int w, final int h, final boolean isAnchor) {
+	public RAbsolute(final float x, final float y, final float w, final float h, final boolean isAnchor) {
 		super(isAnchor);
 		this.x = x;
 		this.y = y;
@@ -18,63 +19,32 @@ public class RAbsolute extends RBase {
 
 	@Override
 	public Area getAbsolute(final Area parent) {
-		final int px = parent.anc_x();
-		final int py = parent.anc_y();
-		final int px1 = parent.x1();
-		final int py1 = parent.y1();
-		final int px2 = parent.x2();
-		final int py2 = parent.y2();
-		final int abs_x1 = px1 + this.x;
-		final int abs_y1 = py1 + this.y;
-		final int abs_x2 = abs_x1 + this.w;
-		final int abs_y2 = abs_y1 + this.h;
-		final int rx1 = Math.min(abs_x1, abs_x2);
-		final int ry1 = Math.min(abs_y1, abs_y2);
-		final int rx2 = Math.max(abs_x1, abs_x2);
-		final int ry2 = Math.max(abs_y1, abs_y2);
-		final int ax1 = Math.max(px1, rx1);
-		final int ay1 = Math.max(py1, ry1);
-		final int ax2 = Math.min(px2, rx2);
-		final int ay2 = Math.min(py2, ry2);
-		final int ax = this.isAnchor ? ax1 : px;
-		final int ay = this.isAnchor ? ay1 : py;
+		final float px = parent.anc_x();
+		final float py = parent.anc_y();
+		final float px1 = parent.x1();
+		final float py1 = parent.y1();
+		final float px2 = parent.x2();
+		final float py2 = parent.y2();
+		final float abs_x1 = px1 + this.x;
+		final float abs_y1 = py1 + this.y;
+		final float abs_x2 = abs_x1 + this.w;
+		final float abs_y2 = abs_y1 + this.h;
+		final float rx1 = Math.min(abs_x1, abs_x2);
+		final float ry1 = Math.min(abs_y1, abs_y2);
+		final float rx2 = Math.max(abs_x1, abs_x2);
+		final float ry2 = Math.max(abs_y1, abs_y2);
+		final float ax1 = Math.max(px1, rx1);
+		final float ay1 = Math.max(py1, ry1);
+		final float ax2 = Math.min(px2, rx2);
+		final float ay2 = Math.min(py2, ry2);
+		final float ax = this.isAnchor ? ax1 : px;
+		final float ay = this.isAnchor ? ay1 : py;
 		return new Area(ax, ay, ax1, ay1, ax2, ay2);
 	}
 
 	@Override
 	public boolean isVaild() {
 		return this.w > 0 && this.h > 0;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + this.h;
-		result = prime * result + this.w;
-		result = prime * result + this.x;
-		result = prime * result + this.y;
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (!(obj instanceof RAbsolute))
-			return false;
-		final RAbsolute other = (RAbsolute) obj;
-		if (this.h != other.h)
-			return false;
-		if (this.w != other.w)
-			return false;
-		if (this.x != other.x)
-			return false;
-		if (this.y != other.y)
-			return false;
-		return true;
 	}
 
 	@Override

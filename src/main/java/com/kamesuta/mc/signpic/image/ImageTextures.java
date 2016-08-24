@@ -21,7 +21,7 @@ public class ImageTextures {
 		} else if (this.textures.size()>1) {
 			final ImageTexture texture = this.textures.get(this.currenttexture).load();
 			if(this.timer.getTime() > texture.delay){
-				this.timer.set(0);
+				this.timer.reset();;
 				this.currenttexture = (this.currenttexture<this.textures.size()-1)?this.currenttexture+1:0;
 			}
 			return this.textures.get(this.currenttexture);

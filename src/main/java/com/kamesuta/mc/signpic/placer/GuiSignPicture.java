@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.WFrame;
+import com.kamesuta.mc.guiwidget.animation.Easings;
 import com.kamesuta.mc.guiwidget.component.MButton;
 import com.kamesuta.mc.guiwidget.component.MTextField;
 import com.kamesuta.mc.guiwidget.position.Area;
@@ -59,7 +60,7 @@ public class GuiSignPicture extends WFrame {
 			}
 		});
 		// add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
-		add(new MButton(new RArea(Coord.bottom(10), Coord.left(0), Coord.width(20), Coord.height(20), true), "aaaa") {
+		add(new MButton(new RArea(Coord.bottom(10), Coord.left(0), Coord.width(0).add(Easings.easeOutCirc.move(2f, 30)), Coord.height(20), true), "aaaa") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				final ModContainer container = Loader.instance().getIndexedModList().get("signpic");

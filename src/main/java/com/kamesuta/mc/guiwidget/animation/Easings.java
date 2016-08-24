@@ -161,4 +161,9 @@ public enum Easings implements Easing {
 			return c/2 * (Math.sqrt(1 - t*t) + 1) + b;
 		}
 	},
+	;
+
+	public Motion move(final float time, final int to) {
+		return new Motion(this, time, to);
+	}
 }
