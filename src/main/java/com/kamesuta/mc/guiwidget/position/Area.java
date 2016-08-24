@@ -1,73 +1,87 @@
 package com.kamesuta.mc.guiwidget.position;
 
-import com.kamesuta.mc.guiwidget.position.relative.RCommon;
-
 public class Area {
 	/**
 	 * anchor x, usually, same as
 	 */
-	protected final int x;
-	protected final int y;
-	protected final int x1;
-	protected final int y1;
-	protected final int x2;
-	protected final int y2;
+	protected final float x;
+	protected final float y;
+	protected final float x1;
+	protected final float y1;
+	protected final float x2;
+	protected final float y2;
 
-	public Area(final int x, final int y, final int x1, final int y1, final int x2, final int y2) {
-		this.x = x;
-		this.y = y;
-		this.x1 = x1;
-		this.y1 = y1;
-		this.x2 = x2;
-		this.y2 = y2;
+	public Area(final float ax, final float ay, final float ax1, final float ay1, final float ax2, final float ay2) {
+		this.x = ax;
+		this.y = ay;
+		this.x1 = ax1;
+		this.y1 = ay1;
+		this.x2 = ax2;
+		this.y2 = ay2;
 	}
 
-	public int anc_x() {
+	public float anc_x() {
 		return this.x;
 	}
 
-	public int anc_y() {
+	public float anc_y() {
 		return this.y;
 	}
 
-	public int w() {
+	public float w() {
 		return Math.abs(this.x2 - this.x1);
 	}
 
-	public int h() {
+	public float h() {
 		return Math.abs(this.y2 - this.y1);
 	}
 
-	public int x1() {
+	public float x1() {
 		return this.x1;
 	}
 
-	public int y1() {
+	public float y1() {
 		return this.y1;
 	}
 
-	public int x2() {
+	public float x2() {
 		return this.x2;
 	}
 
-	public int y2() {
+	public float y2() {
 		return this.y2;
 	}
 
-	public int minx() {
-		return Math.min(this.x1, this.x2);
+	public int ianc_x() {
+		return (int) this.x;
 	}
 
-	public int maxx() {
-		return Math.max(this.x1, this.x2);
+	public int ianc_y() {
+		return (int) this.y;
 	}
 
-	public int miny() {
-		return Math.min(this.y1, this.y2);
+	public int iw() {
+		return (int) Math.abs(this.x2 - this.x1);
 	}
 
-	public int maxy() {
-		return Math.max(this.y1, this.y2);
+	public int ih() {
+		return (int) Math.abs(this.y2 - this.y1);
+	}
+
+	public int ix1() {
+		return (int) this.x1;
+	}
+
+	public int iy1() {
+		return (int) this.y1;
+	}
+
+	public int ix2() {
+		return (int) this.x2;
+	}
+
+	public int iy2() {
+		return (int) this.y2;
 	}
 
 	public Area child(final RCommon p) {
@@ -86,12 +100,12 @@ public class Area {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + this.x;
-		result = prime * result + this.x1;
-		result = prime * result + this.x2;
-		result = prime * result + this.y;
-		result = prime * result + this.y1;
-		result = prime * result + this.y2;
+		result = prime * result + Float.floatToIntBits(this.x);
+		result = prime * result + Float.floatToIntBits(this.x1);
+		result = prime * result + Float.floatToIntBits(this.x2);
+		result = prime * result + Float.floatToIntBits(this.y);
+		result = prime * result + Float.floatToIntBits(this.y1);
+		result = prime * result + Float.floatToIntBits(this.y2);
 		return result;
 	}
 
@@ -104,17 +118,17 @@ public class Area {
 		if (!(obj instanceof Area))
 			return false;
 		final Area other = (Area) obj;
-		if (this.x != other.x)
+		if (Float.floatToIntBits(this.x) != Float.floatToIntBits(other.x))
 			return false;
-		if (this.x1 != other.x1)
+		if (Float.floatToIntBits(this.x1) != Float.floatToIntBits(other.x1))
 			return false;
-		if (this.x2 != other.x2)
+		if (Float.floatToIntBits(this.x2) != Float.floatToIntBits(other.x2))
 			return false;
-		if (this.y != other.y)
+		if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y))
 			return false;
-		if (this.y1 != other.y1)
+		if (Float.floatToIntBits(this.y1) != Float.floatToIntBits(other.y1))
 			return false;
-		if (this.y2 != other.y2)
+		if (Float.floatToIntBits(this.y2) != Float.floatToIntBits(other.y2))
 			return false;
 		return true;
 	}

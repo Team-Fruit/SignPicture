@@ -8,7 +8,7 @@ import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.relative.RCommon;
+import com.kamesuta.mc.guiwidget.position.RCommon;
 import com.kamesuta.mc.guiwidget.position.relative.LRArea;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -133,7 +133,7 @@ public class MTextField extends WBase {
 				setText("");
 			}
 			final Area in = getGuiPosition(pgp).child(new LRArea(1, 1, -2, -2, true));
-			this.seek = mc.fontRenderer.trimStringToWidth(getText(), p.x() - (in.x1() + 4)).length();
+			this.seek = mc.fontRenderer.trimStringToWidth(getText(), (int) p.x() - (in.ix1() + 4)).length();
 		} else {
 			setFocused(false);
 		}
@@ -171,7 +171,7 @@ public class MTextField extends WBase {
 	}
 
 	protected void drawText(final Area out, final Area in) {
-		drawString(mc.fontRenderer, getDrawText(), in.x1() + 4, in.y1() + (in.y2()-in.y1()) / 2 - 4, getTextColour());
+		drawString(mc.fontRenderer, getDrawText(), in.ix1() + 4, in.iy1() + (in.iy2()-in.iy1()) / 2 - 4, getTextColour());
 	}
 
 	public String getDrawText() {

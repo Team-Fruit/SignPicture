@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kamesuta.mc.guiwidget.position.Point;
+import com.kamesuta.mc.guiwidget.position.RCommon;
 import com.kamesuta.mc.guiwidget.position.Area;
-import com.kamesuta.mc.guiwidget.position.relative.RCommon;
 
 public class WPanel extends WBase implements WContainer {
 	protected final ArrayList<WCommon> widgets = new ArrayList<WCommon>();

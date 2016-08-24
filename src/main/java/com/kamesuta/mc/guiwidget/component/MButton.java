@@ -4,9 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
-import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.Area;
-import com.kamesuta.mc.guiwidget.position.relative.RCommon;
+import com.kamesuta.mc.guiwidget.position.Point;
+import com.kamesuta.mc.guiwidget.position.RCommon;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -68,13 +68,13 @@ public class MButton extends WBase {
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		mc.renderEngine.bindTexture(guiTex);
 		final int state = getButtonTex(ev, pgp, p, frame);
-		drawTexturedModalRect(abs.x1(), abs.y1(), 0, 46 + state * 20, abs.w() / 2, abs.h() / 2);
-		drawTexturedModalRect(abs.x1() + abs.w() / 2, abs.anc_y(), 200 - abs.w() / 2, 46 + state * 20, abs.w() / 2,
-				abs.h() / 2);
-		drawTexturedModalRect(abs.x1(), abs.y1() + abs.h() / 2, 0, 46 + state * 20 + 20 - abs.h() / 2,
-				abs.w() / 2, abs.h() / 2);
-		drawTexturedModalRect(abs.x1() + abs.w() / 2, abs.y1() + abs.h() / 2, 200 - abs.w() / 2,
-				46 + state * 20 + 20 - abs.h() / 2, abs.w() / 2, abs.h() / 2);
+		drawTexturedModalRect(abs.ix1(), abs.iy1(), 0, 46 + state * 20, abs.iw() / 2, abs.ih() / 2);
+		drawTexturedModalRect(abs.ix1() + abs.iw() / 2, abs.ianc_y(), 200 - abs.iw() / 2, 46 + state * 20, abs.iw() / 2,
+				abs.ih() / 2);
+		drawTexturedModalRect(abs.ix1(), abs.iy1() + abs.ih() / 2, 0, 46 + state * 20 + 20 - abs.ih() / 2,
+				abs.iw() / 2, abs.ih() / 2);
+		drawTexturedModalRect(abs.ix1() + abs.iw() / 2, abs.iy1() + abs.ih() / 2, 200 - abs.iw() / 2,
+				46 + state * 20 + 20 - abs.ih() / 2, abs.iw() / 2, abs.ih() / 2);
 	}
 
 	public int getButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {
@@ -84,7 +84,7 @@ public class MButton extends WBase {
 
 	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area abs = getGuiPosition(pgp);
-		drawCenteredString(mc.fontRenderer, this.text, abs.anc_x() + abs.w() / 2, abs.anc_y() + (abs.h() - 8) / 2,
+		drawCenteredString(mc.fontRenderer, this.text, abs.ianc_x() + abs.iw() / 2, abs.ianc_y() + (abs.ih() - 8) / 2,
 				getTextColour(ev, pgp, p, frame));
 	}
 

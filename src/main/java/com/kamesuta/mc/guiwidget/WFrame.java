@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.Area;
+import com.kamesuta.mc.guiwidget.position.Point;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -23,8 +23,8 @@ public class WFrame extends GuiScreen implements WContainer {
 	}
 
 	public Point getMouseAbsolute() {
-		return new Point(Mouse.getX() * this.width / this.mc.displayWidth,
-				this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1);
+		return new Point((float) Mouse.getX() * this.width / this.mc.displayWidth,
+				this.height - (float) Mouse.getY() * this.height / this.mc.displayHeight - 1);
 	}
 
 	@Override

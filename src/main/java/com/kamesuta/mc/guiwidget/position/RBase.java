@@ -1,4 +1,4 @@
-package com.kamesuta.mc.guiwidget.position.relative;
+package com.kamesuta.mc.guiwidget.position;
 
 public abstract class RBase implements RCommon {
 	public boolean isAnchor;
