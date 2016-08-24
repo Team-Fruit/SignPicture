@@ -1,15 +1,14 @@
 package com.kamesuta.mc.guiwidget.position.relative;
 
-import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
-import com.kamesuta.mc.guiwidget.position.PositionAbsolute;
+import com.kamesuta.mc.guiwidget.position.Area;
 
-public class PercentageSizedPosition extends RelativeBase {
+public class RPercentageSized extends RBase {
 	public final float per_x;
 	public final float per_y;
 	public final float per_w;
 	public final float per_h;
 
-	public PercentageSizedPosition(final float per_x, final float per_y, final float per_w, final float per_h, final boolean isAnchor) {
+	public RPercentageSized(final float per_x, final float per_y, final float per_w, final float per_h, final boolean isAnchor) {
 		super(isAnchor);
 		this.per_x = per_x;
 		this.per_y = per_y;
@@ -23,9 +22,9 @@ public class PercentageSizedPosition extends RelativeBase {
 	}
 
 	@Override
-	public IPositionAbsolute getAbsolute(final IPositionAbsolute parent) {
-		final int px = parent.x();
-		final int py = parent.y();
+	public Area getAbsolute(final Area parent) {
+		final int px = parent.anc_x();
+		final int py = parent.anc_y();
 		final int px1 = parent.x1();
 		final int py1 = parent.y1();
 		final int px2 = parent.x2();
@@ -50,7 +49,7 @@ public class PercentageSizedPosition extends RelativeBase {
 		final int ay2 = Math.min(py2, ry2);
 		final int ax = this.isAnchor ? ax1 : px;
 		final int ay = this.isAnchor ? ay1 : py;
-		return new PositionAbsolute(ax, ay, ax1, ay1, ax2, ay2);
+		return new Area(ax, ay, ax1, ay1, ax2, ay2);
 	}
 
 	@Override
@@ -70,9 +69,9 @@ public class PercentageSizedPosition extends RelativeBase {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (!(obj instanceof PercentageSizedPosition))
+		if (!(obj instanceof RPercentageSized))
 			return false;
-		final PercentageSizedPosition other = (PercentageSizedPosition) obj;
+		final RPercentageSized other = (RPercentageSized) obj;
 		if (Float.floatToIntBits(this.per_h) != Float.floatToIntBits(other.per_h))
 			return false;
 		if (Float.floatToIntBits(this.per_w) != Float.floatToIntBits(other.per_w))

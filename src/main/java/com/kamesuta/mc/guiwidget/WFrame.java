@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
-import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
 import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.PositionAbsolute;
+import com.kamesuta.mc.guiwidget.position.Area;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -19,12 +18,8 @@ public class WFrame extends GuiScreen implements WContainer {
 	public WFrame() {
 	}
 
-	public WPosition getGuiPosition() {
-		return WPosition.createBase(getAbsolute());
-	}
-
-	public IPositionAbsolute getAbsolute() {
-		return new PositionAbsolute(0, 0, 0, 0, this.width, this.height);
+	public Area getAbsolute() {
+		return new Area(0, 0, 0, 0, this.width, this.height);
 	}
 
 	public Point getMouseAbsolute() {
@@ -49,7 +44,7 @@ public class WFrame extends GuiScreen implements WContainer {
 
 	@Override
 	public void initGui() {
-		final WPosition gp = getGuiPosition();
+		final Area gp = getAbsolute();
 		for (final WCommon widget : this.widgets)
 			widget.init(this.event, gp);
 		sInitGui();
@@ -83,7 +78,7 @@ public class WFrame extends GuiScreen implements WContainer {
 
 	@Override
 	public void drawScreen(final int mousex, final int mousey, final float f) {
-		final WPosition gp = getGuiPosition();
+		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
 			widget.draw(this.event, gp, p, f);
@@ -99,7 +94,7 @@ public class WFrame extends GuiScreen implements WContainer {
 	@Override
 	protected void mouseClicked(final int x, final int y, final int button) {
 		this.mousebutton = button;
-		final WPosition gp = getGuiPosition();
+		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
 			widget.mouseClicked(this.event, gp, p, button);
@@ -115,7 +110,7 @@ public class WFrame extends GuiScreen implements WContainer {
 		if (this.mousebutton!=0 && button==0) {
 			mouseReleased(x, y, this.mousebutton);
 		} else {
-			final WPosition gp = getGuiPosition();
+			final Area gp = getAbsolute();
 			final Point p = getMouseAbsolute();
 			for (final WCommon widget : this.widgets)
 				widget.mouseMoved(this.event, gp, p, button);
@@ -129,7 +124,7 @@ public class WFrame extends GuiScreen implements WContainer {
 	}
 
 	protected void mouseReleased(final int x, final int y, final int button) {
-		final WPosition gp = getGuiPosition();
+		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
 			widget.mouseReleased(this.event, gp, p, button);
@@ -141,7 +136,7 @@ public class WFrame extends GuiScreen implements WContainer {
 	@Override
 	protected void mouseClickMove(final int x, final int y, final int button, final long time) {
 		this.mousebutton = button;
-		final WPosition gp = getGuiPosition();
+		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
 			widget.mouseDragged(this.event, gp, p, button, time);
@@ -155,7 +150,7 @@ public class WFrame extends GuiScreen implements WContainer {
 	@Override
 	public void updateScreen() {
 		if (this.mc.currentScreen == this) {
-			final WPosition gp = getGuiPosition();
+			final Area gp = getAbsolute();
 			final Point p = getMouseAbsolute();
 			for (final WCommon widget : this.widgets) {
 				widget.update(this.event, gp, p);
@@ -170,7 +165,7 @@ public class WFrame extends GuiScreen implements WContainer {
 
 	@Override
 	protected void keyTyped(final char c, final int keycode) {
-		final WPosition gp = getGuiPosition();
+		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
 			widget.keyTyped(this.event, gp, p, c, keycode);
@@ -185,7 +180,7 @@ public class WFrame extends GuiScreen implements WContainer {
 	public void handleMouseInput() {
 		final int i = Mouse.getEventDWheel();
 		if (i != 0) {
-			final WPosition gp = getGuiPosition();
+			final Area gp = getAbsolute();
 			final Point p = getMouseAbsolute();
 			for (final WCommon widget : this.widgets)
 				widget.mouseScrolled(this.event, gp, p, i);

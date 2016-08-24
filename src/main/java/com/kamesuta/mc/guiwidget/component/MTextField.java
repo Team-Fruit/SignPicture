@@ -6,11 +6,10 @@ import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
-import com.kamesuta.mc.guiwidget.WPosition;
-import com.kamesuta.mc.guiwidget.position.IPositionAbsolute;
+import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.relative.IPositionRelative;
-import com.kamesuta.mc.guiwidget.position.relative.RelativePosition;
+import com.kamesuta.mc.guiwidget.position.relative.RCommon;
+import com.kamesuta.mc.guiwidget.position.relative.LRArea;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -25,7 +24,7 @@ public class MTextField extends WBase {
 	public String actionCommand;
 	protected String allowedCharacters;
 
-	public MTextField(final IPositionRelative position, final String text) {
+	public MTextField(final RCommon position, final String text) {
 		super(position);
 		this.isFocused = false;
 		this.isEnabled = true;
@@ -64,12 +63,12 @@ public class MTextField extends WBase {
 	}
 
 	@Override
-	public void update(final WEvent ev, final WPosition pgp, final Point p) {
+	public void update(final WEvent ev, final Area pgp, final Point p) {
 		this.cursorCounter += 1;
 	}
 
 	@Override
-	public void keyTyped(final WEvent ev, final WPosition pgp, final Point p, final char c, final int keycode) {
+	public void keyTyped(final WEvent ev, final Area pgp, final Point p, final char c, final int keycode) {
 		if ((!this.isEnabled) || (!this.isFocused)) {
 			return;
 		} else if (keycode == Keyboard.KEY_BACK) {
@@ -126,15 +125,15 @@ public class MTextField extends WBase {
 	}
 
 	@Override
-	public void mouseClicked(final WEvent ev, final WPosition pgp, final Point p, final int button) {
-		final IPositionAbsolute gp = pgp.child(this.position).getAbsolute();
+	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+		final Area gp = pgp.child(this.position);
 		if (gp.pointInside(p)) {
 			setFocused(true);
 			if (button == 1) {
 				setText("");
 			}
-			final IPositionAbsolute in = getGuiPosition(pgp).child(new RelativePosition(1, 1, -2, -2, true)).getAbsolute();
-			this.seek = mc.fontRenderer.trimStringToWidth(getText(), p.x - (in.x1() + 4)).length();
+			final Area in = getGuiPosition(pgp).child(new LRArea(1, 1, -2, -2, true));
+			this.seek = mc.fontRenderer.trimStringToWidth(getText(), p.x() - (in.x1() + 4)).length();
 		} else {
 			setFocused(false);
 		}
@@ -155,14 +154,14 @@ public class MTextField extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final WPosition pgp, final Point p, final float frame) {
-		final IPositionAbsolute out = getGuiPosition(pgp).getAbsolute();
-		final IPositionAbsolute in = getGuiPosition(pgp).child(new RelativePosition(1, 1, -2, -2, true)).getAbsolute();
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+		final Area out = getGuiPosition(pgp);
+		final Area in = getGuiPosition(pgp).child(new LRArea(1, 1, -2, -2, true));
 		drawBackground(out, in);
 		drawText(out, in);
 	}
 
-	protected void drawBackground(final IPositionAbsolute out, final IPositionAbsolute in) {
+	protected void drawBackground(final Area out, final Area in) {
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
 		draw(out, GL_QUADS);
@@ -171,7 +170,7 @@ public class MTextField extends WBase {
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	protected void drawText(final IPositionAbsolute out, final IPositionAbsolute in) {
+	protected void drawText(final Area out, final Area in) {
 		drawString(mc.fontRenderer, getDrawText(), in.x1() + 4, in.y1() + (in.y2()-in.y1()) / 2 - 4, getTextColour());
 	}
 

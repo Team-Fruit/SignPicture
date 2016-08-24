@@ -1,7 +1,5 @@
 package com.kamesuta.mc.guiwidget.animation;
 
-import com.kamesuta.mc.guiwidget.MathHelper;
-
 public class Animation {
 	public final double duration;
 	protected double elapsed = 0;
@@ -13,7 +11,7 @@ public class Animation {
 	}
 
 	public Animation setElapsed(final double elapsed) {
-		this.elapsed = MathHelper.clip(elapsed, 0, this.duration);
+		this.elapsed = Math.min(0, Math.max(elapsed, this.duration));
 		return this;
 	}
 

@@ -1,9 +1,9 @@
 package com.kamesuta.mc.guiwidget.position.relative;
 
-public abstract class RelativeBase implements IPositionRelative {
+public abstract class RBase implements RCommon {
 	public boolean isAnchor;
 
-	public RelativeBase(final boolean isAnchor) {
+	public RBase(final boolean isAnchor) {
 		this.isAnchor = isAnchor;
 	}
 
@@ -25,9 +25,9 @@ public abstract class RelativeBase implements IPositionRelative {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof RelativeBase))
+		if (!(obj instanceof RBase))
 			return false;
-		final RelativeBase other = (RelativeBase) obj;
+		final RBase other = (RBase) obj;
 		if (this.isAnchor != other.isAnchor)
 			return false;
 		return true;
