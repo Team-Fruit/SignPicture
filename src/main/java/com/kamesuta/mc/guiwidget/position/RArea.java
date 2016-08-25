@@ -20,8 +20,12 @@ public class RArea extends RBase {
 		this(a, b, c, d, true);
 	}
 
+	public static RArea diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
+		return new RArea(Coord.left(diff_x1), Coord.top(diff_y1), Coord.right(-diff_x2), Coord.bottom(-diff_y2), true);
+	}
+
 	public Area build(final Area a) {
-		if (!check_x() || !check_y()) throw new IllegalStateException("insufficient coors");
+		if (!check_x() || !check_y()) throw new IllegalStateException(String.format("insufficient coors [%s]", this));
 		final float px = a.anc_x();
 		final float py = a.anc_y();
 		final float px1 = a.x1();
@@ -114,8 +118,8 @@ public class RArea extends RBase {
 	}
 
 	protected void set(final Coord n) {
-		if (n==null) throw new IllegalStateException("null coord");
-		if (n.side==null) throw new IllegalStateException("invaild coord");
+		if (n==null) throw new IllegalStateException(String.format("null coord [%s]", this));
+		if (n.side==null) throw new IllegalStateException(String.format("invaild coord [%s]", this));
 		switch(n.side) {
 		case Top:
 			if (this.y1 == null) this.y1 = n;
@@ -139,17 +143,15 @@ public class RArea extends RBase {
 		case Height:
 			this.h = n;
 			break;
-		default:
-			throw new IllegalStateException("unknown type");
 		}
 	}
 
 	protected boolean check_x() {
-		return this.x1!=null && (this.x2!=null || this.w!=null);
+		return exists(this.x1) && (exists(this.x2) || exists(this.w));
 	}
 
 	protected boolean check_y() {
-		return this.y1!=null && (this.y2!=null || this.h!=null);
+		return exists(this.y1) && (exists(this.y2) || exists(this.h));
 	}
 
 	@Override
@@ -160,5 +162,13 @@ public class RArea extends RBase {
 	@Override
 	public Area getAbsolute(final Area parent) {
 		return build(parent);
+	}
+
+	@Override
+	public String toString() {
+		if (check_x() && check_y())
+			return String.format("RArea[%s=%s, %s=%s, %s, %s]", exists(this.x2)?"x1":"x", this.x1, exists(this.y2)?"y1":"y", this.y1, exists(this.x2)?"x2="+this.x2:"w="+this.w, exists(this.y2)?"y2="+this.y2:"h="+this.h);
+		else
+			return String.format("RArea(Invaild)[x1=%s, y1=%s, x2=%s, y2=%s, w=%s, h=%s]", this.x1, this.y1, this.x2, this.y2, this.w, this.h);
 	}
 }

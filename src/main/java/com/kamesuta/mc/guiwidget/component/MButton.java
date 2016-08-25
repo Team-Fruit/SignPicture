@@ -68,18 +68,6 @@ public class MButton extends WBase {
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		texture.bindTexture(widget);
 		final int state = getButtonTex(ev, pgp, p, frame);
-		//		drawTexturedModalRect(a.x1(), a.y1(), 0, 46 + state * 20, a.w() / 2, a.h() / 2);
-		//		drawTexturedModalRect(a.x1() + a.w() / 2, a.y1(), 200 - a.w() / 2, 46 + state * 20, a.w() / 2, a.h() / 2);
-		//		drawTexturedModalRect(a.x1(), a.y1() + a.h() / 2, 0, 46 + state * 20 + 20 - a.h() / 2, a.w() / 2, a.h() / 2);
-		//		drawTexturedModalRect(a.x1() + a.w() / 2, a.y1() + a.h() / 2, 200 - a.w() / 2, 46 + state * 20 + 20 - a.h() / 2, a.w() / 2, a.h() / 2);
-
-		//		drawTexturedModalRect(a.ix1(), a.iy1(), 0, 46 + state * 20, a.iw() / 2, a.ih() / 2);
-		//		drawTexturedModalRect(a.ix1() + a.iw() / 2, a.iy1(), 200 - a.iw() / 2, 46 + state * 20, a.iw() / 2,
-		//				a.ih() / 2);
-		//		drawTexturedModalRect(a.ix1(), a.iy1() + a.ih() / 2, 0, 46 + state * 20 + 20 - a.ih() / 2,
-		//				a.iw() / 2, a.ih() / 2);
-		//		drawTexturedModalRect(a.ix1() + a.iw() / 2, a.iy1() + a.ih() / 2, 200 - a.iw() / 2,
-		//				46 + state * 20 + 20 - a.ih() / 2, a.iw() / 2, a.ih() / 2);
 
 		drawTexturedModalRect(a.x1(), a.y1(), 0, 46 + state * 20, a.w() / 2, a.h() / 2);
 		drawTexturedModalRect(a.x1() + a.w() / 2, a.y1(), 200 - a.w() / 2, 46 + state * 20, a.w() / 2,
