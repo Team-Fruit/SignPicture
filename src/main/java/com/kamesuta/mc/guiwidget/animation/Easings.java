@@ -163,7 +163,7 @@ public enum Easings implements Easing {
 	},
 	;
 
-	public Motion move(final float time, final int to) {
+	public Motion move(final float time, final float to) {
 		return new Motion(this, time, to);
 	}
 }

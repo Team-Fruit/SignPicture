@@ -2,8 +2,6 @@ package com.kamesuta.mc.signpic.placer;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.io.File;
-
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.guiwidget.WBase;
@@ -16,10 +14,6 @@ import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.signpic.Reference;
-
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 
 public class GuiSignPicture extends WFrame {
 	protected String url;
@@ -59,16 +53,11 @@ public class GuiSignPicture extends WFrame {
 			}
 		});
 		//add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
-		add(new MButton(new RArea(Coord.bottom(10), Coord.left(0), Coord.width(0).add(Easings.easeOutCirc.move(2f, 30)), Coord.height(20), true), "aaaa") {
+		final Coord c = Coord.width(0);
+		add(new MButton(new RArea(Coord.bottom(10), Coord.left(0), c.add(Easings.easeOutCirc.move(2f, 30)), Coord.height(20), true), "aaaa") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				final ModContainer container = Loader.instance().getIndexedModList().get("signpic");
-				if (container != null) {
-					final File f = container.getSource();
-					Reference.logger.info(f);
-					Reference.logger.info(f.isFile());
-				} else
-					Reference.logger.info("Not Found");
+				c.motion.stop().add(Easings.easeOutCirc.move(2f, c.motion.getLast() + 30));
 				return true;
 			}
 		});
