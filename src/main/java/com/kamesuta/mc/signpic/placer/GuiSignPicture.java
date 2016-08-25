@@ -16,7 +16,6 @@ import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.guiwidget.position.legacy.LRArea;
 import com.kamesuta.mc.signpic.Reference;
 
 import cpw.mods.fml.common.Loader;
@@ -34,7 +33,7 @@ public class GuiSignPicture extends WFrame {
 
 	@Override
 	protected void initWidgets() {
-		add(new WBase(LRArea.createFit(true)) {
+		add(new WBase(RArea.diff(0, 0, 0, 0)) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 				glColor4f(0f, 0f, 0f, 0.3f);
@@ -43,7 +42,7 @@ public class GuiSignPicture extends WFrame {
 				glEnable(GL_TEXTURE_2D);
 			}
 		});
-		add(new WBase(new LRArea(5, -151, 135, -21, true)) {
+		add(new WBase(new RArea(Coord.left(5), Coord.bottom(150), Coord.left(135), Coord.bottom(20))) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 				glColor4f(0f, 0f, 0f, 0.3f);
@@ -52,14 +51,14 @@ public class GuiSignPicture extends WFrame {
 				glEnable(GL_TEXTURE_2D);
 			}
 		});
-		add(new MTextField(new LRArea(5, -21, -6, -6, true), "aaaa") {
+		add(new MTextField(new RArea(Coord.left(5), Coord.bottom(20), Coord.right(5), Coord.bottom(5)), "aaaa") {
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();
 				GuiSignPicture.this.url = getText();
 			}
 		});
-		// add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
+		//add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
 		add(new MButton(new RArea(Coord.bottom(10), Coord.left(0), Coord.width(0).add(Easings.easeOutCirc.move(2f, 30)), Coord.height(20), true), "aaaa") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {

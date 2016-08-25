@@ -9,7 +9,6 @@ import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
-import com.kamesuta.mc.guiwidget.position.legacy.LRArea;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -132,7 +131,7 @@ public class MTextField extends WBase {
 			if (button == 1) {
 				setText("");
 			}
-			final Area in = getGuiPosition(pgp).child(new LRArea(1, 1, -2, -2, true));
+			final Area in = getGuiPosition(pgp).child(1, 1, -1, -1);
 			this.seek = font.trimStringToWidth(getText(), (int) p.x() - (in.ix1() + 4)).length();
 		} else {
 			setFocused(false);
@@ -156,7 +155,7 @@ public class MTextField extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area out = getGuiPosition(pgp);
-		final Area in = getGuiPosition(pgp).child(new LRArea(1, 1, -2, -2, true));
+		final Area in = getGuiPosition(pgp).child(1, 1, -1, -1);
 		drawBackground(out, in);
 		drawText(out, in);
 	}

@@ -51,7 +51,7 @@ public class Coord {
 		Percent {
 			@Override
 			public float calc(final float all, final float c) {
-				return all * c / 100;
+				return all * c;
 			}
 		},
 		;
@@ -59,69 +59,51 @@ public class Coord {
 		public abstract float calc(float all, float f);
 	}
 
-	public static Coord absolute(final float n, final CoordSide side) {
-		return new Coord(n, side, CoordType.Absolute);
-	}
-
-	public static Coord percent(final float n, final CoordSide side) {
-		return new Coord(n, side, CoordType.Percent);
-	}
-
-	public static Coord unknown(final String n, final CoordSide side) {
-		if (n.endsWith("%")) {
-			final float n1 = Integer.parseInt(n.substring(0, n.length()-1));
-			return percent(n1, side);
-		} else {
-			final float n1 = Integer.parseInt(n);
-			return absolute(n1, side);
-		}
-	}
-
 	public static Coord top(final float n) {
-		return absolute(n, CoordSide.Top);
+		return new Coord(n, CoordSide.Top, CoordType.Absolute);
 	}
 
-	public static Coord top(final String n) {
-		return unknown(n, CoordSide.Top);
+	public static Coord ptop(final float n) {
+		return new Coord(n, CoordSide.Top, CoordType.Percent);
 	}
 
 	public static Coord left(final float n) {
-		return absolute(n, CoordSide.Left);
+		return new Coord(n, CoordSide.Left, CoordType.Absolute);
 	}
 
-	public static Coord left(final String n) {
-		return unknown(n, CoordSide.Left);
+	public static Coord pleft(final float n) {
+		return new Coord(n, CoordSide.Left, CoordType.Percent);
 	}
 
 	public static Coord bottom(final float n) {
-		return absolute(n, CoordSide.Bottom);
+		return new Coord(n, CoordSide.Bottom, CoordType.Absolute);
 	}
 
-	public static Coord bottom(final String n) {
-		return unknown(n, CoordSide.Bottom);
+	public static Coord pbottom(final float n) {
+		return new Coord(n, CoordSide.Bottom, CoordType.Percent);
 	}
 
 	public static Coord right(final float n) {
-		return absolute(n, CoordSide.Right);
+		return new Coord(n, CoordSide.Right, CoordType.Absolute);
 	}
 
-	public static Coord right(final String n) {
-		return unknown(n, CoordSide.Right);
+	public static Coord pright(final float n) {
+		return new Coord(n, CoordSide.Right, CoordType.Percent);
 	}
 
 	public static Coord width(final float n) {
-		return absolute(n, CoordSide.Width);
+		return new Coord(n, CoordSide.Width, CoordType.Absolute);
 	}
 
-	public static Coord width(final String n) {
-		return unknown(n, CoordSide.Width);
+	public static Coord pwidth(final float n) {
+		return new Coord(n, CoordSide.Width, CoordType.Percent);
 	}
 
 	public static Coord height(final float n) {
-		return absolute(n, CoordSide.Height);
+		return new Coord(n, CoordSide.Height, CoordType.Absolute);
 	}
 
-	public static Coord height(final String n) {
-		return unknown(n, CoordSide.Height);
+	public static Coord pheight(final float n) {
+		return new Coord(n, CoordSide.Height, CoordType.Percent);
 	}
 }
