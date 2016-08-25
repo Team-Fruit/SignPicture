@@ -8,7 +8,7 @@ import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.RCommon;
+import com.kamesuta.mc.guiwidget.position.R;
 import com.kamesuta.mc.guiwidget.position.relative.LRArea;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -24,7 +24,7 @@ public class MTextField extends WBase {
 	public String actionCommand;
 	protected String allowedCharacters;
 
-	public MTextField(final RCommon position, final String text) {
+	public MTextField(final R position, final String text) {
 		super(position);
 		this.isFocused = false;
 		this.isEnabled = true;

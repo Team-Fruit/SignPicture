@@ -20,6 +20,10 @@ public class Area {
 		this.y2 = ay2;
 	}
 
+	public Area(final float ax1, final float ay1, final float ax2, final float ay2) {
+		this(ax1, ay1, ax1, ay1, ax2, ay2);
+	}
+
 	public float anc_x() {
 		return this.x;
 	}
@@ -84,8 +88,16 @@ public class Area {
 		return (int) this.y2;
 	}
 
-	public Area child(final RCommon p) {
+	public Area child(final R p) {
 		return p.getAbsolute(this);
+	}
+
+	public Area child(final float ax, final float ay, final float ax1, final float ay1, final float ax2, final float ay2) {
+		return new Area(this.x + ax, this.y + ay, this.x1 + ax1, this.y1 + ay1, this.x2 + ax2, this.y2 + ay2);
+	}
+
+	public Area child(final float ax1, final float ay1, final float ax2, final float ay2) {
+		return new Area(this.x1 + ax1, this.y1 + ay1, this.x2 + ax2, this.y2 + ay2);
 	}
 
 	public boolean isVaild() {
