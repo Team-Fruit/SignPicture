@@ -1,4 +1,4 @@
-package com.kamesuta.mc.guiwidget.position.relative;
+package com.kamesuta.mc.guiwidget.position.legacy;
 
 //import java.util.EnumSet;
 //
