@@ -15,7 +15,7 @@ public class Coord {
 	}
 
 	public float get() {
-		return (float) this.motion.get();
+		return this.motion.get();
 	}
 
 	public float getAbsCoord(final float abslength) {
