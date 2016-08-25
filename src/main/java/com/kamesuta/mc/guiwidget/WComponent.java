@@ -1,11 +1,9 @@
 package com.kamesuta.mc.guiwidget;
 
-import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.Area;
+import com.kamesuta.mc.guiwidget.position.Point;
 
-import net.minecraft.client.gui.Gui;
-
-public class WComponent extends Gui implements WCommon {
+public class WComponent extends WGui implements WCommon {
 	@Override
 	public void init(final WEvent ev, final Area pgp) {}
 

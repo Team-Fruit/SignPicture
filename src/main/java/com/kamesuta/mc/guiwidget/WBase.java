@@ -6,25 +6,23 @@ import org.lwjgl.opengl.GL11;
 
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
+import com.kamesuta.mc.guiwidget.position.R;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.guiwidget.position.RCommon;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 
 public abstract class WBase extends WComponent {
-	protected static final ResourceLocation guiTex = new ResourceLocation("textures/gui/widgets.png");
 
-	protected RCommon position;
+	protected R position;
 
-	public WBase(final RCommon position) {
+	public WBase(final R position) {
 		this.position = position;
 	}
 
-	public RCommon getGuiRelative() {
+	public R getGuiRelative() {
 		return this.position;
 	}
 
@@ -128,6 +126,22 @@ public abstract class WBase extends WComponent {
 	/**
 	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
 	 */
+	public void drawTexturedModalRect(final Area a, final float u, final float v)
+	{
+		final float f = 0.00390625F;
+		final float f1 = 0.00390625F;
+		final Tessellator tessellator = Tessellator.instance;
+		tessellator.startDrawingQuads();
+		tessellator.addVertexWithUV(a.x1(), a.y2(), 0, u * f, v + a.h() * f1);
+		tessellator.addVertexWithUV(a.x2(), a.y2(), 0, u + a.w() * f, v + a.h() * f1);
+		tessellator.addVertexWithUV(a.x2(), a.y1(), 0, u + a.w() * f, v * f1);
+		tessellator.addVertexWithUV(a.x1(), a.y1(), 0, u * f, v * f1);
+		tessellator.draw();
+	}
+
+	/**
+	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
+	 */
 	public void drawTexturedModalRect(final Area a, final Area texture)
 	{
 		final float f = 0.00390625F;
@@ -141,7 +155,7 @@ public abstract class WBase extends WComponent {
 		tessellator.draw();
 	}
 
-	public void drawTexturedModelRectFromIcon(final Area a, final float x, final float y, final IIcon icon, final float w, final float h)
+	public void drawTexturedModelRectFromIcon(final Area a, final float y, final IIcon icon)
 	{
 		final Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();

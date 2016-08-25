@@ -1,6 +1,6 @@
 package com.kamesuta.mc.guiwidget.position;
 
-public interface RCommon {
+public interface R {
 
 	boolean isVaild();
 
