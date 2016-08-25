@@ -1,4 +1,4 @@
-package com.kamesuta.mc.guiwidget.position.relative;
+package com.kamesuta.mc.guiwidget.position.legacy;
 
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.RBase;

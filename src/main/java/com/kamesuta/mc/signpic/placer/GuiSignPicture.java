@@ -16,7 +16,7 @@ import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.guiwidget.position.relative.LRArea;
+import com.kamesuta.mc.guiwidget.position.legacy.LRArea;
 import com.kamesuta.mc.signpic.Reference;
 
 import cpw.mods.fml.common.Loader;

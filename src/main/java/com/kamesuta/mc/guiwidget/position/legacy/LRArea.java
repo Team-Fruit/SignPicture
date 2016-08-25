@@ -1,20 +1,25 @@
-package com.kamesuta.mc.guiwidget.position.relative;
+package com.kamesuta.mc.guiwidget.position.legacy;
 
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.RBase;
 
-public class RAbsolute extends RBase {
-	public final float x;
-	public final float y;
-	public final float w;
-	public final float h;
+public class LRArea extends RBase {
+	public float x1;
+	public float y1;
+	public float x2;
+	public float y2;
 
-	public RAbsolute(final float x, final float y, final float w, final float h, final boolean isAnchor) {
+	public LRArea(final float x1, final float y1, final float x2, final float y2, final boolean isAnchor) {
 		super(isAnchor);
-		this.x = x;
-		this.y = y;
-		this.w = w;
-		this.h = h;
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+	}
+
+	@Override
+	public boolean isVaild() {
+		return this.x1!=this.x2 && this.y1!=this.y2;
 	}
 
 	@Override
@@ -25,10 +30,10 @@ public class RAbsolute extends RBase {
 		final float py1 = parent.y1();
 		final float px2 = parent.x2();
 		final float py2 = parent.y2();
-		final float abs_x1 = px1 + this.x;
-		final float abs_y1 = py1 + this.y;
-		final float abs_x2 = abs_x1 + this.w;
-		final float abs_y2 = abs_y1 + this.h;
+		final float abs_x1 = (this.x1>=0) ? px1+this.x1 : px2+this.x1+1;
+		final float abs_y1 = (this.y1>=0) ? py1+this.y1 : py2+this.y1+1;
+		final float abs_x2 = (this.x2>=0) ? px1+this.x2 : px2+this.x2+1;
+		final float abs_y2 = (this.y2>=0) ? py1+this.y2 : py2+this.y2+1;
 		final float rx1 = Math.min(abs_x1, abs_x2);
 		final float ry1 = Math.min(abs_y1, abs_y2);
 		final float rx2 = Math.max(abs_x1, abs_x2);
@@ -42,13 +47,12 @@ public class RAbsolute extends RBase {
 		return new Area(ax, ay, ax1, ay1, ax2, ay2);
 	}
 
-	@Override
-	public boolean isVaild() {
-		return this.w > 0 && this.h > 0;
+	public static LRArea createFit(final boolean isAnchor) {
+		return new LRArea(0, 0, -1, -1, isAnchor);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("AbsolutePosition [x=%s, y=%s, w=%s, h=%s]", this.x, this.y, this.w, this.h);
+		return String.format("RelativePosition [x1=%s, y1=%s, x2=%s, y2=%s]", this.x1, this.y1, this.x2, this.y2);
 	}
 }

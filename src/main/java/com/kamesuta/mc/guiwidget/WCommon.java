@@ -1,15 +1,9 @@
 package com.kamesuta.mc.guiwidget;
 
-import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.Area;
-
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.client.Minecraft;
+import com.kamesuta.mc.guiwidget.position.Point;
 
 public interface WCommon {
-	Minecraft mc = FMLClientHandler.instance().getClient();
-	WGraphics g = WGraphics.INSTANCE;
-
 	void init(WEvent ev, Area pgp);
 
 	void draw(WEvent ev, Area pgp, Point mouse, float frame);

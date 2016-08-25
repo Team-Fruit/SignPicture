@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.guiwidget.WGui;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
@@ -20,7 +21,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-public class RenderOverlay {
+public class RenderOverlay extends WGui {
 	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
 
 	protected final ImageManager manager;
@@ -35,7 +36,7 @@ public class RenderOverlay {
 	public void onDraw(final RenderGameOverlayEvent event) {
 		if (PlacerMode.INSTANCE.isEnabled()) {
 			if ((int)(System.currentTimeMillis()/500)%2==0) {
-				final FontRenderer fontrenderer = this.mc.fontRenderer;
+				final FontRenderer fontrenderer = font;
 
 				glPushMatrix();
 				glTranslatef(5f, 5f, 0f);
