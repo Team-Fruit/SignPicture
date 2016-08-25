@@ -29,6 +29,7 @@ public class ThreadInformationChecker extends Thread {
 						InformationChecker.onlineVersion = version.version;
 						InformationChecker.onlineVersionRemote = version.remote;
 						InformationChecker.onlineVersionLocal = version.local;
+						InformationChecker.onlineVersionMessage = version.message;
 					}
 				}
 		} catch(final Exception e) {

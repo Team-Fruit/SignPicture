@@ -8,6 +8,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
@@ -15,10 +16,11 @@ import net.minecraft.util.StatCollector;
 public final class InformationChecker {
 
 	public static boolean doneChecking = false;
-	public static String onlineVersion;
 	public static boolean triedToWarnPlayer = false;
+	public static String onlineVersion;
 	public static String onlineVersionRemote;
 	public static String onlineVersionLocal;
+	public static String onlineVersionMessage;
 
 	public static boolean startedDownload = false;
 	public static boolean downloadedFile = false;
@@ -44,6 +46,8 @@ public final class InformationChecker {
 							final int clientBuild2 = Integer.parseInt(client[1]);
 
 							if(onlineBuild1 > clientBuild1 || onlineBuild2 > clientBuild2) {
+								if (onlineVersionMessage!=null && !onlineVersionMessage.isEmpty())
+									player.addChatComponentMessage(new ChatComponentText(onlineVersionMessage));
 								player.addChatComponentMessage(new ChatComponentTranslation("signpic.versioning.outdated", Reference.VERSION, onlineVersion));
 								final IChatComponent component = IChatComponent.Serializer.func_150699_a(StatCollector.translateToLocal("signpic.versioning.updateMessage"));
 								player.addChatComponentMessage(component);
