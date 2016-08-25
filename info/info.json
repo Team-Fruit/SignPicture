@@ -1,9 +1,9 @@
 {
-    "versions": {
-    	"1.7.10": {
-	        "version": "1.2.0"
-	        "remote": "https://github.com/Kamesuta/SignPicture/releases/download/1.2.0/SignPicture-1.7.10-1.2.0-universal.jar",
-	        "local": "SignPicture-1.7.10-1.2.0-universal.jar",
-    	}
-    }
+	"versions": {
+		"1.7.10": {
+			"version": "1.2.0",
+			"remote": "https://github.com/Kamesuta/SignPicture/releases/download/1.2.0/SignPicture-1.7.10-1.2.0-universal.jar",
+			"local": "SignPicture-1.7.10-1.2.0-universal.jar"
+		}
+	}
 }
