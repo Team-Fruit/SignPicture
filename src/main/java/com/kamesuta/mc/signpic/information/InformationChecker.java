@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.version;
+package com.kamesuta.mc.signpic.information;
 
 import com.kamesuta.mc.signpic.Reference;
 
@@ -12,19 +12,19 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
-public final class VersionChecker {
+public final class InformationChecker {
 
 	public static boolean doneChecking = false;
 	public static String onlineVersion;
 	public static boolean triedToWarnPlayer = false;
-	public static String onlineVersionURL;
+	public static String onlineVersionRemote;
 	public static String onlineVersionLocal;
 
 	public static boolean startedDownload = false;
 	public static boolean downloadedFile = false;
 
 	public void init() {
-		new ThreadVersionChecker();
+		new ThreadInformationChecker();
 		FMLCommonHandler.instance().bus().register(this);
 	}
 

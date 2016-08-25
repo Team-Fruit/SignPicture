@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.version;
+package com.kamesuta.mc.signpic.information;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -29,8 +29,8 @@ public class ThreadDownloadMod extends Thread {
 	@Override
 	public void run() {
 		try {
-			final String stringurl = VersionChecker.onlineVersionURL;
-			final String stringlocal = VersionChecker.onlineVersionLocal;
+			final String stringurl = InformationChecker.onlineVersionRemote;
+			final String stringlocal = InformationChecker.onlineVersionLocal;
 			final String local;
 			if (stringlocal!=null && !stringlocal.isEmpty())
 				local = stringlocal;
@@ -41,9 +41,9 @@ public class ThreadDownloadMod extends Thread {
 			if(FMLClientHandler.instance().getClient().thePlayer != null)
 				FMLClientHandler.instance().getClient().thePlayer.addChatMessage(component);
 
-			VersionChecker.startedDownload = true;
+			InformationChecker.startedDownload = true;
 
-			final URL url = new URL(VersionChecker.onlineVersionURL);
+			final URL url = new URL(InformationChecker.onlineVersionRemote);
 			final InputStream webReader = url.openStream();
 
 			final File dir = new File(".", "mods");
@@ -65,7 +65,7 @@ public class ThreadDownloadMod extends Thread {
 				FMLClientHandler.instance().getClient().thePlayer.addChatMessage(new ChatComponentTranslation("signpic.versioning.doneDownloading", local).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
 
 			Desktop.getDesktop().open(dir.getCanonicalFile());
-			VersionChecker.downloadedFile = true;
+			InformationChecker.downloadedFile = true;
 
 			finalize();
 		} catch(final Throwable e) {
