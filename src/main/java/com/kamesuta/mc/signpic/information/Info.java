@@ -8,5 +8,6 @@ public class Info {
 		public String version;
 		public String remote;
 		public String local;
+		public String message;
 	}
 }
