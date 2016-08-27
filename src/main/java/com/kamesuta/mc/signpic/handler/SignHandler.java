@@ -17,6 +17,7 @@ public class SignHandler {
 			for (final Field field : fields) {
 				if (TileEntitySign.class.equals(field.getType())) {
 					Reference.logger.info("Hook the TileEntitySign field included by GuiEditSign");
+					field.setAccessible(true);
 					f = field;
 				}
 			}
@@ -32,10 +33,8 @@ public class SignHandler {
 		if (event.gui instanceof GuiEditSign) {
 			if (f != null) {
 				try {
-					f.setAccessible(true);
 					final GuiEditSign ges = (GuiEditSign) event.gui;
-					TileEntitySign tileSign;
-					tileSign = (TileEntitySign) f.get(ges);
+					final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
 
 					FMLClientHandler.instance().getClient().displayGuiScreen(new GuiSignPlacer(tileSign));
 				} catch (final IllegalArgumentException e) {
