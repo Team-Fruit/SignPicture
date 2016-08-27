@@ -68,6 +68,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			final FontRenderer fontrenderer = func_147498_b();
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
+			glEnable(GL_BLEND);
 			glPushMatrix();
 			glTranslatef(-size.width/2, size.height-.5f, 0f);
 			glScalef(1f, -1f, 1f);
@@ -125,8 +126,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPopMatrix();
 			glPopMatrix();
-			glEnable(GL_CULL_FACE);
+			glDisable(GL_BLEND);
 			glEnable(GL_LIGHTING);
+			glEnable(GL_CULL_FACE);
 
 			glPopMatrix();
 		} else {

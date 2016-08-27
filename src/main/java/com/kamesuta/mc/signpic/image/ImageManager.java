@@ -4,6 +4,8 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.lwjgl.util.Timer;
 
@@ -15,7 +17,7 @@ public class ImageManager {
 	public static final float LoadSpan = .5f;
 
 	public static Deque<Image> lazyloadqueue = new ArrayDeque<Image>();
-
+	public static final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 	protected final ArrayList<Image> processes = new ArrayList<Image>();
 	protected int currentprocess = 0;
