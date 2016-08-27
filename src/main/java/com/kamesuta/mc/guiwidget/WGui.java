@@ -25,6 +25,7 @@ public class WGui extends Gui {
 	public static final TextureManager texture;
 	public static final FontRenderer font;
 	public static final Tessellator t = Tessellator.instance;
+	public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
 		texture = mc.renderEngine;
@@ -205,36 +206,17 @@ public class WGui extends Gui {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
+	public static void drawRect(final Area a, final int color)
+	{
+		drawRect(a.x1(), a.y1(), a.x2(), a.y2(), color);
+	}
+
 	/**
 	 * Draws a rectangle with a vertical gradient between the specified colors.
 	 */
 	public static void drawGradientRect(final Area a, final int color1, final int color2)
 	{
-		final float f = (color1 >> 24 & 255) / 255.0F;
-		final float f1 = (color1 >> 16 & 255) / 255.0F;
-		final float f2 = (color1 >> 8 & 255) / 255.0F;
-		final float f3 = (color1 & 255) / 255.0F;
-		final float f4 = (color2 >> 24 & 255) / 255.0F;
-		final float f5 = (color2 >> 16 & 255) / 255.0F;
-		final float f6 = (color2 >> 8 & 255) / 255.0F;
-		final float f7 = (color2 & 255) / 255.0F;
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-		t.startDrawingQuads();
-		t.setColorRGBA_F(f1, f2, f3, f);
-		t.addVertex(a.x2(), a.y1(), 0f);
-		t.addVertex(a.x1(), a.y1(), 0f);
-		t.setColorRGBA_F(f5, f6, f7, f4);
-		t.addVertex(a.x1(), a.y2(), 0f);
-		t.addVertex(a.x2(), a.y2(), 0f);
-		t.draw();
-		GL11.glShadeModel(GL11.GL_FLAT);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		drawGradientRect(a.x1(), a.y1(), a.x2(), a.y2(), color1, color2);
 	}
 
 	/**
@@ -242,10 +224,7 @@ public class WGui extends Gui {
 	 */
 	public static void drawCenteredString(final String text, final Area a, final int color)
 	{
-		glPushMatrix();
-		glTranslatef(a.x1(), a.x2(), 0f);
-		font.drawStringWithShadow(text, - font.getStringWidth(text) / 2, 0, color);
-		glPopMatrix();
+		drawCenteredString(text, a.x1(), a.y1(), color);
 	}
 
 	/**
@@ -253,10 +232,7 @@ public class WGui extends Gui {
 	 */
 	public static void drawString(final String text, final Area a, final int color)
 	{
-		glPushMatrix();
-		glTranslatef(a.x1(), a.x2(), 0f);
-		font.drawStringWithShadow(text, 0, 0, color);
-		glPopMatrix();
+		drawString(text, a.x1(), a.y1(), color);
 	}
 
 	/**
@@ -264,14 +240,7 @@ public class WGui extends Gui {
 	 */
 	public static void drawTexturedModalRect(final Area a, final float u, final float v)
 	{
-		final float f = 0.00390625F;
-		final float f1 = 0.00390625F;
-		t.startDrawingQuads();
-		t.addVertexWithUV(a.x1(), a.y2(), 0, u * f, v + a.h() * f1);
-		t.addVertexWithUV(a.x2(), a.y2(), 0, u + a.w() * f, v + a.h() * f1);
-		t.addVertexWithUV(a.x2(), a.y1(), 0, u + a.w() * f, v * f1);
-		t.addVertexWithUV(a.x1(), a.y1(), 0, u * f, v * f1);
-		t.draw();
+		drawTexturedModalRect(a.x1(), a.y1(), u, v, a.w(), a.h());
 	}
 
 	/**
@@ -289,14 +258,9 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final Area a, final float y, final IIcon icon)
+	public static void drawTexturedModelRectFromIcon(final Area a, final IIcon icon)
 	{
-		t.startDrawingQuads();
-		t.addVertexWithUV(a.x1(), a.y2(), 0, icon.getMinU(), icon.getMaxV());
-		t.addVertexWithUV(a.x2(), a.y2(), 0, icon.getMaxU(), icon.getMaxV());
-		t.addVertexWithUV(a.x2(), a.y1(), 0, icon.getMaxU(), icon.getMinV());
-		t.addVertexWithUV(a.x1(), a.y1(), 0, icon.getMinU(), icon.getMinV());
-		t.draw();
+		drawTexturedModelRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
 	}
 
 	public static void translate(final Area p) {

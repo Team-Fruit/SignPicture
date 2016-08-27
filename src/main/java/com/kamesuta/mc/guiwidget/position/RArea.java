@@ -1,6 +1,6 @@
 package com.kamesuta.mc.guiwidget.position;
 
-public class RArea extends RBase {
+public class RArea implements R {
 	protected Coord x1;
 	protected Coord y1;
 	protected Coord x2;
@@ -8,30 +8,19 @@ public class RArea extends RBase {
 	protected Coord w;
 	protected Coord h;
 
-	public RArea(final Coord a, final Coord b, final Coord c, final Coord d, final boolean isAnchor) {
-		super(isAnchor);
+	public RArea(final Coord a, final Coord b, final Coord c, final Coord d) {
 		set(a);
 		set(b);
 		set(c);
 		set(d);
 	}
 
-	public RArea(final Coord a, final Coord b, final Coord c, final Coord d) {
-		this(a, b, c, d, true);
-	}
-
 	public static RArea diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
-		return new RArea(Coord.left(diff_x1), Coord.top(diff_y1), Coord.right(-diff_x2), Coord.bottom(-diff_y2), true);
+		return new RArea(Coord.left(diff_x1), Coord.top(diff_y1), Coord.right(-diff_x2), Coord.bottom(-diff_y2));
 	}
 
 	public Area build(final Area a) {
 		if (!check_x() || !check_y()) throw new IllegalStateException(String.format("insufficient coors [%s]", this));
-		final float px = a.anc_x();
-		final float py = a.anc_y();
-		final float px1 = a.x1();
-		final float py1 = a.y1();
-		final float px2 = a.x2();
-		final float py2 = a.y2();
 		final float tx1 = base_x(a);
 		final float ty1 = base_y(a);
 		final float tx2 = next_x(a, tx1);
@@ -40,13 +29,7 @@ public class RArea extends RBase {
 		final float ry1 = Math.min(ty1, ty2);
 		final float rx2 = Math.max(tx1, tx2);
 		final float ry2 = Math.max(ty1, ty2);
-		final float ax1 = Math.max(px1, rx1);
-		final float ay1 = Math.max(py1, ry1);
-		final float ax2 = Math.min(px2, rx2);
-		final float ay2 = Math.min(py2, ry2);
-		final float ax = this.isAnchor ? ax1 : px;
-		final float ay = this.isAnchor ? ay1 : py;
-		return new Area(ax, ay, ax1, ay1, ax2, ay2);
+		return new Area(rx1, ry1, rx2, ry2);
 	}
 
 	protected float base_x(final Area a) {

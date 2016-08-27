@@ -2,11 +2,9 @@ package com.kamesuta.mc.signpic.proxy;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.BitSet;
 import java.util.Map;
 
-import org.lwjgl.opengl.EXTFramebufferObject;
-
+import com.kamesuta.mc.guiwidget.StencilClip;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
@@ -22,14 +20,10 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -39,19 +33,8 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(final FMLPreInitializationEvent event) {
 		super.preInit(event);
 
-		if (!Boolean.parseBoolean(System.getProperty("forge.forceDisplayStencil", "false"))) {
-			try {
-				if (!(ReflectionHelper.findField(OpenGlHelper.class, "field_153212_w").getInt(null)==2 &&
-						EXTFramebufferObject.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT)!=EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT)) {
-					final int i = 8;
-					ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits").setInt(null, i);
-					final BitSet stencilBits = ReflectionHelper.getPrivateValue(MinecraftForgeClient.class, null, "stencilBits");
-					stencilBits.set(0, i);
-				}
-			} catch (final Throwable e) {
-				Reference.logger.info("Failed to enable stencil buffer", e);
-			}
-		}
+		// Enable stencil clip
+		StencilClip.init();
 
 		// Occupy my cache directory
 		final File mcdir = getDataDirectory();
