@@ -14,15 +14,10 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageManager {
-	public static final float LoadSpan = .5f;
-
 	public static Deque<Image> lazyloadqueue = new ArrayDeque<Image>();
 	public static final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 	protected final ArrayList<Image> processes = new ArrayList<Image>();
-	protected int currentprocess = 0;
-
-	protected final Timer timer = new Timer();
 
 	public ImageLocation location;
 
@@ -72,16 +67,10 @@ public class ImageManager {
 			}
 		}
 
-		if(this.timer.getTime() > LoadSpan){
-			this.timer.set(0);
-			final int processsize = this.processes.size();
-			if (!this.processes.isEmpty()) {
-				this.currentprocess = (this.currentprocess<processsize-1)?this.currentprocess+1:0;
-				final Image image = this.processes.get(this.currentprocess);
-				image.process();
-				if (image.shouldCollect())
-					delete(image);
-			}
+		for (final Image image : this.processes) {
+			image.process();
+			if (image.shouldCollect())
+				delete(image);
 		}
 
 		Timer.tick();

@@ -17,10 +17,9 @@ public class ImageLoader implements Runnable {
 
 	@Override
 	public void run() {
-		this.image.state = ImageState.DOWNLOADING;
 		final File local = this.image.location.localLocation(this.image);
 		try {
-
+			this.image.state = ImageState.DOWNLOADING;
 			if (local.exists()) {
 				this.image.state = ImageState.DOWNLOADED;
 			} else {
@@ -29,21 +28,18 @@ public class ImageLoader implements Runnable {
 					this.image.downloading.load();
 				}
 			}
-		} catch (final Exception e) {
-			this.image.state = ImageState.ERROR;
-			this.image.advmsg = I18n.format("signpic.advmsg.unknown", e);
-		}
 
-		this.image.state = ImageState.IOLOADING;
-		try {
-			if (local.exists()) {
-				this.image.local = local;
-				if (this.image.ioloading == null) {
-					this.image.ioloading = new ImageIOLoader(this.image, local);
-					this.image.ioloading.load();
+			if (this.image.state == ImageState.DOWNLOADED) {
+				this.image.state = ImageState.IOLOADING;
+				if (local.exists()) {
+					this.image.local = local;
+					if (this.image.ioloading == null) {
+						this.image.ioloading = new ImageIOLoader(this.image, local);
+						this.image.ioloading.load();
+					}
+				} else {
+					throw new FileNotFoundException("The file was changed");
 				}
-			} else {
-				throw new FileNotFoundException("The file was changed");
 			}
 		} catch (final IOException e) {
 			this.image.state = ImageState.ERROR;
