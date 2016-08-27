@@ -19,7 +19,7 @@ public class WFrame extends GuiScreen implements WContainer {
 	}
 
 	public Area getAbsolute() {
-		return new Area(0, 0, 0, 0, this.width, this.height);
+		return new Area(0, 0, this.width, this.height);
 	}
 
 	public Point getMouseAbsolute() {
