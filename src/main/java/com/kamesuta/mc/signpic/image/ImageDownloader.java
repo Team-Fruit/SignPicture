@@ -19,7 +19,7 @@ import net.minecraft.client.resources.I18n;
 
 public class ImageDownloader {
 
-	public static Downloader downloader = new Downloader().setMax(3);
+	public static Downloader downloader = new Downloader();
 
 	protected final ImageLocation location;
 	protected final RemoteImage image;
