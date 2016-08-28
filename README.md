@@ -136,5 +136,5 @@ Thanks to
 
 * Notch et al for Minecraft
 * Lex et al for MinecraftForge
-* Kamesuta et al for SignPicture
+* Kamesuta for SignPicture
 * all [contributors](https://github.com/Team-Fruit/SignPicture/graphs/contributors)
