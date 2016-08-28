@@ -62,18 +62,17 @@ public class GuiSignPicture extends WFrame {
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 				final Area a = new Area(75, 75, 150, 150);
 				final Area b = new Area(85, 85, 160, 160);
-				clip.initCropping();
-				clip.startClippingWithArea(a);
+				clip.clipArea(b);
 				glColor4f(0f, 0f, 1f, 0.3f);
 				glDisable(GL_TEXTURE_2D);
 				draw(pgp, GL_QUADS);
 				glEnable(GL_TEXTURE_2D);
-				clip.startClippingWithArea(b);
+				clip.end();
+				clip.clipArea(a);
 				glColor4f(1f, 0f, 0f, 0.3f);
 				glDisable(GL_TEXTURE_2D);
 				draw(pgp, GL_QUADS);
 				glEnable(GL_TEXTURE_2D);
-				clip.end();
 				clip.end();
 
 				glDisable(GL_TEXTURE_2D);
