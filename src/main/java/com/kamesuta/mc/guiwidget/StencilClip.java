@@ -21,7 +21,7 @@ public class StencilClip {
 	private StencilClip() {}
 
 	public void startCropping() {
-		if (this.layer == 0) {
+		if (this.layer <= 0) {
 			glEnable(GL_STENCIL_TEST);
 			glClear(GL_STENCIL_BUFFER_BIT);
 		}
@@ -34,12 +34,12 @@ public class StencilClip {
 		glDepthMask(false);
 
 		// draw where pattern has been drawn
-		glStencilFunc(GL_ALWAYS, this.layer, this.layer);
-		glStencilMask(this.layer);
+		glStencilFunc(GL_EQUAL, this.layer, 0xff);
+		glStencilMask(0xff);
 	}
 
 	public void endCropping() {
-		if (this.layer == 0) {
+		if (this.layer < 0) {
 			throw new IllegalStateException("Not Clipping");
 		} else {
 			// stencil mode off
@@ -48,27 +48,25 @@ public class StencilClip {
 			glDepthMask(true);
 
 			// draw where pattern has been drawn
-			glStencilFunc(GL_EQUAL, this.layer, this.layer);
-			glStencilMask(this.layer);
+			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+			glStencilMask(0xff);
 
 			glEnable(GL_BLEND);
 		}
 	}
 
 	public void end() {
-		if (this.layer == 0) {
-			throw new IllegalStateException("Not Clipping");
-		} else {
+		if (this.layer > 0) {
 			// layer
 			this.layer--;
 
 			// draw where pattern has been drawn
-			glStencilFunc(GL_EQUAL, this.layer, this.layer);
-			glStencilMask(this.layer);
+			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+			glStencilMask(0xff);
 
 			glEnable(GL_BLEND);
 		}
-		if (this.layer == 0) {
+		if (this.layer <= 0) {
 			glClear(GL_STENCIL_BUFFER_BIT);
 			glDisable(GL_STENCIL_TEST);
 		}
