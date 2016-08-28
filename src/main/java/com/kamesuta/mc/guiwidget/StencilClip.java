@@ -16,57 +16,71 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 public class StencilClip {
 	public static final StencilClip instance = new StencilClip();
-	private ClipState state = ClipState.NONE;
+	private int layer = 0;
 
 	private StencilClip() {}
 
-	public void startMasking() {
-		if (this.state != ClipState.NONE) {
-			throw new IllegalStateException("Already clipping!");
+	public void initCropping() {
+		if (this.layer > 0) {
+			throw new IllegalStateException("Clipping!");
 		} else {
-			this.state = ClipState.MASK;
 			glEnable(GL_STENCIL_TEST);
-			glClear(GL_DEPTH_BUFFER_BIT);
-			glStencilFunc(GL_NEVER, 1, 0xFF);
-			glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);  // draw 1s on test fail (always)
-
-			glColorMask(false, false, false, false);
-			glDepthMask(false);
-
-			// draw stencil pattern
-			glStencilMask(0xFF);
-			glClear(GL_STENCIL_BUFFER_BIT);  // needs mask=0xFF
+			glClear(GL_STENCIL_BUFFER_BIT);
 		}
 	}
 
-	public void startClippingWithMask() {
-		if (this.state != ClipState.MASK) {
-			throw new IllegalStateException("No mask!");
+	public void startCropping() {
+		// layer
+		this.layer++;
+
+		// stencil mode on
+		glStencilOp(GL_INCR, GL_KEEP, GL_KEEP);
+		glColorMask(false, false, false, false);
+		glDepthMask(false);
+
+		// draw where pattern has been drawn
+		glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+		glStencilMask(0xff);
+	}
+
+	public void endCropping() {
+		if (this.layer < 0) {
+			throw new IllegalStateException("Not Clipping");
 		} else {
-			this.state = ClipState.CLIP;
+			// stencil mode off
+			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 			glColorMask(true, true, true, true);
 			glDepthMask(true);
-			glStencilMask(0x00);
-			// draw only where stencil's value is 1
-			glStencilFunc(GL_EQUAL, 1, 0xFF);
+
+			// draw where pattern has been drawn
+			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+			glStencilMask(0xff);
+
 			glEnable(GL_BLEND);
 		}
 	}
 
-	public void clip() {
-		if (this.state != ClipState.CLIP) {
-			throw new IllegalStateException("Not clipping!");
-		} else {
-			this.state = ClipState.NONE;
-			//glClear(GL_DEPTH_BUFFER_BIT);
+	public void end() {
+		if (this.layer > 0) {
+			// layer
+			this.layer--;
+
+			// draw where pattern has been drawn
+			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+			glStencilMask(0xff);
+
+			glEnable(GL_BLEND);
+		}
+		if (this.layer <= 0) {
+			glClear(GL_STENCIL_BUFFER_BIT);
 			glDisable(GL_STENCIL_TEST);
 		}
 	}
 
 	public void startClippingWithArea(final Area a) {
-		startMasking();
+		startCropping();
 		WGui.drawRect(a);
-		startClippingWithMask();
+		endCropping();
 	}
 
 	public static void init() {
@@ -74,20 +88,12 @@ public class StencilClip {
 			try {
 				if (!(ReflectionHelper.findField(OpenGlHelper.class, "field_153212_w").getInt(null)==2 &&
 						EXTFramebufferObject.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT)!=EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT)) {
-					final int i = 8;
-					ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits").setInt(null, i);
-					final BitSet stencilBits = ReflectionHelper.getPrivateValue(MinecraftForgeClient.class, null, "stencilBits");
-					stencilBits.set(0, i);
+					ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits").setInt(null, 8);
+					ReflectionHelper.<BitSet, MinecraftForgeClient>getPrivateValue(MinecraftForgeClient.class, null, "stencilBits").set(0, 8);
 				}
 			} catch (final Throwable e) {
 				Reference.logger.info("Failed to enable stencil buffer", e);
 			}
 		}
-	}
-
-	private enum ClipState {
-		MASK,
-		CLIP,
-		NONE,
 	}
 }
