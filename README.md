@@ -1,7 +1,8 @@
-[![Latest Tag](https://img.shields.io/github/tag/Kamesuta/SignPicture.svg?label=Latest Tag)](https://github.com/Kamesuta/SignPicture/tags)
-[![Latest Release](https://img.shields.io/github/release/Kamesuta/SignPicture.svg?label=Latest Release)](https://github.com/Kamesuta/SignPicture/releases)
+[![Latest Tag](https://img.shields.io/github/tag/Team-Fruit/SignPicture.svg?label=Latest Tag)](https://github.com/Team-Fruit/SignPicture/tags)
+[![Latest Release](https://img.shields.io/github/release/Team-Fruit/SignPicture.svg?label=Latest Release)](https://github.com/Team-Fruit/SignPicture/releases)
 
 # Sign Picture
+![Minecraft](https://img.shields.io/badge/Minecraft-1.7.10-yellow.svg)
 
 ## Table of Contents
 
@@ -22,22 +23,22 @@ The sign tells us how beautiful it is!
 
 ## Contacts
 
-* [GitHub](https://github.com/Kamesuta/SignPicture)
+* [GitHub](https://github.com/Team-Fruit/SignPicture)
 
 ## License
 
 * Sign Picture
-  - (c) 2016 Kamesuta
-  - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Kamesuta/SignPicture/master/LICENSE)
+  - (c) 2016 Kamesuta et al
+  - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/LICENSE)
 * Textures and Models
-  - (c) 2016 Kamesuta
+  - (c) 2016 Kamesuta et al
   - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%203.0-yellow.svg?style=flat)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 * Text and Translations
   - [![License](https://img.shields.io/badge/License-No%20Restriction-green.svg?style=flat)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 ## Downloads
 
-Downloads can be found on ~~CurseForge~~ (Not yet) or on the [github](https://github.com/Kamesuta/SignPicture/releases).
+Downloads can be found on ~~CurseForge~~ (Not yet) or on the [github](https://github.com/Team-Fruit/SignPicture/releases).
 
 ## Installation
 
@@ -48,7 +49,7 @@ You install this mod by putting it into the `minecraft/mods/` folder. It has no 
 Sign Picture crashing, have a suggestion, found a bug?  Create an issue now!
 
 1. Make sure your issue has not already been answered or fixed and you are using the latest version. Also think about whether your issue is a valid one before submitting it.
-2. Go to [the issues page](https://github.com/Kamesuta/SignPicture/issues) and click [new issue](https://github.com/Kamesuta/SignPicture/issues/new)
+2. Go to [the issues page](https://github.com/Team-Fruit/SignPicture/issues) and click [new issue](https://github.com/Team-Fruit/SignPicture/issues/new)
 3. Enter your a title of your issue (something that summarizes your issue), and then create a detailed description of the issue.
     * The following details are required. Not including them can cause the issue to be closed.
         * Forge version
@@ -70,10 +71,10 @@ Providing as many details as possible does help us to find and resolve the issue
 
 ## Building
 
-1. Clone this repository via 
-  - SSH `git clone git@github.com:Kamesuta/SignPicture.git` or 
-  - HTTPS `git clone https://github.com/Kamesuta/SignPicture.git`
-2. Setup workspace 
+1. Clone this repository via
+  - SSH `git clone git@github.com:Team-Fruit/SignPicture.git` or
+  - HTTPS `git clone https://github.com/Team-Fruit/SignPicture.git`
+2. Setup workspace
   - Decompiled source `gradlew setupDecompWorkspace`
   - Obfuscated source `gradlew setupDevWorkspace`
   - CI server `gradlew setupCIWorkspace`
@@ -87,7 +88,7 @@ Providing as many details as possible does help us to find and resolve the issue
 Before you want to add major changes, you might want to discuss them with us first, before wasting your time.
 If you are still willing to contribute to this project, you can contribute via [Pull-Request](https://help.github.com/articles/creating-a-pull-request).
 
-The [guidelines for contributing](https://github.com/Kamesuta/SignPicture/blob/master/CONTRIBUTING.md) contain more detailed information about topics like the used code style and should also be considered.
+The [guidelines for contributing](https://github.com/Team-Fruit/SignPicture/blob/master/CONTRIBUTING.md) contain more detailed information about topics like the used code style and should also be considered.
 
 Here are a few things to keep in mind that will help get your PR approved.
 
@@ -103,7 +104,7 @@ Getting Started
 
 1. Fork this repository
 2. Clone the fork via
-  * SSH `git clone git@github.com:<your username>/SignPicture.git` or 
+  * SSH `git clone git@github.com:<your username>/SignPicture.git` or
   * HTTPS `git clone https://github.com/<your username>/SignPicture.git`
 3. Change code base
 4. Add changes to git `git add -A`
@@ -132,8 +133,8 @@ You can provide any additional languages by creating a new file with the [approp
 ## Credits
 
 Thanks to
- 
+
 * Notch et al for Minecraft
 * Lex et al for MinecraftForge
-* Kamesuta for SignPicture
-* all [contributors](https://github.com/Kamesuta/SignPicture/graphs/contributors)
+* Kamesuta et al for SignPicture
+* all [contributors](https://github.com/Team-Fruit/SignPicture/graphs/contributors)
