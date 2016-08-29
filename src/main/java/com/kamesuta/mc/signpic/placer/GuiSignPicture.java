@@ -53,11 +53,15 @@ public class GuiSignPicture extends WFrame {
 			}
 		});
 		//add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
+		final Coord b = Coord.bottom(0)
+				.add(Easings.easeInOutQuart.move(2, 10))
+				.add(Easings.easeInCirc.move(3, 40))
+				.add(Easings.easeInOutQuart.move(1, 100));
 		final Coord c = Coord.left(0)
 				.add(Easings.easeInOutQuart.move(2, 10))
 				.add(Easings.easeInCirc.move(3, 40))
 				.add(Easings.easeInOutQuart.move(1, 100));
-		add(new MButton(new RArea(Coord.bottom(10), c, Coord.width(20), Coord.height(20)), "aaaa") {
+		add(new MButton(new RArea(b, c.addAfter(b.motion).start(), Coord.width(20), Coord.height(20)), "aaaa") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				c.motion.stop().add(Easings.easeOutCirc.move(2f, c.motion.getLast() + 30));

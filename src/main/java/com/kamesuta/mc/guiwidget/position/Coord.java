@@ -27,6 +27,16 @@ public class Coord {
 		return this;
 	}
 
+	public Coord addAfter(final MotionQueue q) {
+		this.motion.addAfter(q);
+		return this;
+	}
+
+	public Coord start() {
+		this.motion.start();
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("Coord [coord=%s, side=%s, type=%s]", get(), this.side, this.type);
