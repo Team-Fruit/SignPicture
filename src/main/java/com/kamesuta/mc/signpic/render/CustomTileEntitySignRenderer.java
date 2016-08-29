@@ -65,7 +65,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
 			glEnable(GL_BLEND);
-
 			glPushMatrix();
 
 			glTranslatef(-size.width/2, size.height-.5f, 0f);
@@ -88,8 +87,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPopMatrix();
 
 			glDisable(GL_BLEND);
-			glEnable(GL_CULL_FACE);
 			glEnable(GL_LIGHTING);
+			glEnable(GL_CULL_FACE);
 
 			glPopMatrix();
 		} else {

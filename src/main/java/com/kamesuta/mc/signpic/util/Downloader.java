@@ -60,6 +60,7 @@ public class Downloader {
 		} catch (final KeyManagementException e) {
 		} catch (final KeyStoreException e) {
 		}
+
 		if (registry != null)
 			this.manager = new PoolingHttpClientConnectionManager(registry);
 		else
@@ -80,15 +81,5 @@ public class Downloader {
 				.setDefaultRequestConfig(requestConfig)
 				.setDefaultHeaders(headers)
 				.build();
-	}
-
-	public int getMax() {
-		return this.manager.getMaxTotal();
-	}
-
-	public Downloader setMax(final int max) {
-		this.manager.setMaxTotal(max);
-		this.manager.setDefaultMaxPerRoute(max);
-		return this;
 	}
 }

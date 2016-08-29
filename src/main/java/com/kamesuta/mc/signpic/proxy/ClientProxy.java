@@ -10,10 +10,10 @@ import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.image.ImageLocation;
 import com.kamesuta.mc.signpic.image.ImageManager;
+import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
+import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.kamesuta.mc.signpic.render.RenderOverlay;
-import com.kamesuta.mc.signpic.version.CommandDownloadLatest;
-import com.kamesuta.mc.signpic.version.VersionChecker;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -85,7 +85,7 @@ public class ClientProxy extends CommonProxy {
 
 		// Versioning
 		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());
-		new VersionChecker().init();
+		new InformationChecker().init();
 	}
 
 	@Override
