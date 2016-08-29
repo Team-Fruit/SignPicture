@@ -17,9 +17,9 @@ import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
 
-public class ImageDownloader implements Runnable {
+public class ImageDownloader {
 
-	public static Downloader downloader = new Downloader().setMax(3);
+	public static Downloader downloader = new Downloader();
 
 	protected final ImageLocation location;
 	protected final RemoteImage image;
@@ -32,8 +32,7 @@ public class ImageDownloader implements Runnable {
 		this.image = image;
 	}
 
-	@Override
-	public void run() {
+	public void load() {
 		InputStream input = null;
 		try {
 			final File local = this.location.localLocation(this.image);

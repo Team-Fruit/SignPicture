@@ -14,6 +14,10 @@ signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
 signpic.key.category=Sign Picture
 signpic.key.gui=Open GUI
 
+# Key
+signpic.key.category=Sign Picture
+signpic.key.gui=Open GUI
+
 # Image State
 signpic.state.init=Waiting...
 signpic.state.initalized=Initalized!
@@ -38,7 +42,8 @@ signpic.advmsg.dlerror=Failed to Download: §7%s
 signpic.versioning.outdated=You are running Sign Picture %s, the latest is %s.
 signpic.versioning.updateMessage=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to automatically download the latest version","color":"green"}},"clickEvent":{"action":"run_command","value":"/signpic-download-latest"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's website","color":"green"}},"clickEvent":{"action":"open_url","value":"https://github.com/Kamesuta/SignPicture/"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the version's Changelog","color":"green"}},"clickEvent":{"action":"open_url","value":"https://github.com/Kamesuta/SignPicture/releases"}},"]"]
 signpic.versioning.startingDownload=[{"text":"Starting download of %s. Please do not remove your hard disk. Enjoying ","color":"aqua"}]
-signpic.versioning.doneDownloading=Finished downloading %s. Delete your old Sign Picture .jar and reload your game to update.
+signpic.versioning.doneDownloading=Finished downloading %s. Delete your old SignPicture .jar and reload your game to update.
+signpic.versioning.doneDownloadingWithFile=Finished downloading %s. Delete %s and reload your game to update.
 signpic.versioning.downloadedAlready=You already downloaded the latest version. Close your game, delete the old version from your mods folder and load it again to update!
 signpic.versioning.downloadingAlready=The update is already downloading, give it some time, will you?
 signpic.versioning.error=Woah! It seems like something went wrong while trying to download the Sign Picture update.

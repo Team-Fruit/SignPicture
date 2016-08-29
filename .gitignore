@@ -12,6 +12,8 @@
 !/lib/
 !/version
 !/version/
+!/info
+!/info/
 !/build.gradle
 !/settings.gradle
 !/gradle.properties

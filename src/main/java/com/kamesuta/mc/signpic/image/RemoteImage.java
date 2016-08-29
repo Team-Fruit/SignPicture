@@ -1,15 +1,11 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Reference;
-
-import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
 	public static final float ImageGarbageCollection = 15f;
@@ -18,9 +14,7 @@ public class RemoteImage extends Image {
 	protected ImageTextures texture;
 	protected String advmsg;
 	protected ImageDownloader downloading;
-	protected Thread downloadingprocess;
-	protected ImageLoader ioloading;
-	protected Thread ioloadingprocess;
+	protected ImageIOLoader ioloading;
 	protected File local;
 	protected final Timer lastloaded = new Timer();
 
@@ -33,52 +27,9 @@ public class RemoteImage extends Image {
 		this.state = ImageState.INITALIZED;
 	}
 
-	protected void download() {
+	protected void load() {
 		this.state = ImageState.DOWNLOADING;
-		try {
-			final File local = this.location.localLocation(this);
-
-			if (local.exists()) {
-				this.state = ImageState.DOWNLOADED;
-			} else {
-				if (this.downloading == null)
-					this.downloading = new ImageDownloader(this, this.location);
-				if (this.downloadingprocess == null) {
-					this.downloadingprocess = new Thread(this.downloading);
-					this.downloadingprocess.setName("signpic-dl-" + this.downloadingprocess.getId());
-					this.downloadingprocess.start();
-				}
-			}
-		} catch (final Exception e) {
-			this.state = ImageState.ERROR;
-			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
-		}
-	}
-
-	protected void ioload() {
-		this.state = ImageState.IOLOADING;
-		try {
-			final File local = this.location.localLocation(this);
-
-			if (local.exists()) {
-				this.local = local;
-				if (this.ioloading == null)
-					this.ioloading = new ImageLoader(this, local);
-				if (this.ioloadingprocess == null) {
-					this.ioloadingprocess = new Thread(this.ioloading);
-					this.ioloadingprocess.setName("signpic-io-" + this.ioloadingprocess.getId());
-					this.ioloadingprocess.start();
-				}
-			} else {
-				throw new FileNotFoundException("The file was changed");
-			}
-		} catch (final IOException e) {
-			this.state = ImageState.ERROR;
-			this.advmsg = I18n.format("signpic.advmsg.ioerror", e);
-		} catch (final Exception e) {
-			this.state = ImageState.ERROR;
-			this.advmsg = I18n.format("signpic.advmsg.unknown", e);
-		}
+		ImageManager.threadpool.execute(new ImageLoader(this, this.location));
 	}
 
 	protected void textureload() {
@@ -117,10 +68,7 @@ public class RemoteImage extends Image {
 			init();
 			break;
 		case INITALIZED:
-			download();
-			break;
-		case DOWNLOADED:
-			ioload();
+			load();
 			break;
 		case IOLOADED:
 			textureload();
