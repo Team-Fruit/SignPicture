@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
+import com.kamesuta.mc.guiwidget.position.Area;
+
 public class ImageSize {
 	public final float width;
 	public final float height;
@@ -7,6 +9,10 @@ public class ImageSize {
 	public ImageSize(final float width, final float height) {
 		this.width = (width>=0)?width:Float.NaN;
 		this.height = (height>=0)?height:Float.NaN;
+	}
+
+	public ImageSize(Area a) {
+		this(a.w(), a.h());
 	}
 
 	public boolean vaildWidth() {
@@ -26,17 +32,23 @@ public class ImageSize {
 	}
 
 	public ImageSize getAspectSize(final ImageSize availableaspect) {
-		if (availableaspect == null) {
+		if (availableaspect == null)
 			return this;
-		}else if (vaildWidth() && vaildHeight()) {
+		else if (vaildWidth() && vaildHeight())
 			return this;
-		} else if (vaildWidth()) {
+		else if (vaildWidth())
 			return createSize(ImageSizes.WIDTH, availableaspect, this.width, Float.NaN);
-		} else if (vaildHeight()) {
+		else if (vaildHeight())
 			return createSize(ImageSizes.HEIGHT, availableaspect, Float.NaN, this.height);
-		} else {
+		else
 			return createSize(ImageSizes.HEIGHT, availableaspect, Float.NaN, 1);
-		}
+	}
+
+	public ImageSize getLimitSize(final ImageSize imagesize) {
+		if (imagesize == null)
+			return this;
+		else
+			return imagesize.getAspectSize(this);
 	}
 
 	public static ImageSize createSize(final ImageSizes s, final float rawWidth, final float rawHeight, final float maxWidth, final float maxHeight) {

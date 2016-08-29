@@ -27,7 +27,7 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
-	public ImageManager manager;
+	public static ImageManager manager;
 
 	@Override
 	public void preInit(final FMLPreInitializationEvent event) {
@@ -51,7 +51,7 @@ public class ClientProxy extends CommonProxy {
 		}
 		rootdir.mkdir();
 
-		this.manager = new ImageManager(new ImageLocation(rootdir));
+		manager = new ImageManager(new ImageLocation(rootdir));
 
 		KeyHandler.INSTANCE.init();
 	}
@@ -71,17 +71,17 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		final CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer(this.manager);
+		final CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer(manager);
 		renderer.func_147497_a(TileEntityRendererDispatcher.instance);
 		@SuppressWarnings("unchecked")
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, renderer);
 
 		// Event Register
-		FMLCommonHandler.instance().bus().register(this.manager);
+		FMLCommonHandler.instance().bus().register(manager);
 		FMLCommonHandler.instance().bus().register(KeyHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new SignHandler());
-		MinecraftForge.EVENT_BUS.register(new RenderOverlay(this.manager));
+		MinecraftForge.EVENT_BUS.register(new RenderOverlay(manager));
 
 		// Versioning
 		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());

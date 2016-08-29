@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.handler;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.signpic.placer.GuiSignPicture;
+import com.kamesuta.mc.signpic.proxy.ClientProxy;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -53,7 +54,7 @@ public class KeyHandler {
 				//						tileSign.setEditable(true);
 				//					}
 				//				}
-				mc.displayGuiScreen(new GuiSignPicture());
+				mc.displayGuiScreen(new GuiSignPicture(ClientProxy.manager));
 			}
 		}
 	}

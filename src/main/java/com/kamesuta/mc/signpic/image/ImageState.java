@@ -7,6 +7,9 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender.Color;
 import com.kamesuta.mc.signpic.render.StateRender.Speed;
 
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.Tessellator;
+
 public enum ImageState {
 	INIT("signpic.state.init", Color.DEFAULT, Speed.WAIT),
 	INITALIZED("signpic.state.initalized", Color.DEFAULT, Speed.WAIT),
@@ -19,6 +22,15 @@ public enum ImageState {
 	AVAILABLE("signpic.state.available", Color.DEFAULT, Speed.RUN) {
 		@Override
 		public void themeImage(final ImageManager manager, final Image image) {}
+
+		@Override
+		public void mainImage(final ImageManager manager, final Image image) {
+			image.draw();
+		}
+
+		@Override
+		public void message(final ImageManager manager, final Image image, final FontRenderer fontrenderer) {
+		}
 	},
 	FAILED("signpic.state.failed", Color.DEFAULT, Speed.WAIT) {
 		@Override
@@ -71,6 +83,44 @@ public enum ImageState {
 
 		glPopMatrix();
 
+		glEnable(GL_TEXTURE_2D);
+	}
+
+	public void message(final ImageManager manager, final Image image, final FontRenderer fontrenderer) {
+		final float f1 = 0.6666667F;
+		float f3 = 0.06666668F * f1;
+		glTranslatef(0f, 1f, 0f);
+		glPushMatrix();
+		glScalef(f3, f3, 1f);
+		final String msg1 = image.getStatusMessage();
+		fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
+		glPopMatrix();
+		f3 = 0.036666668F * f1;
+		glPushMatrix();
+		glScalef(f3, f3, 1f);
+		final String msg2 = image.getId();
+		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
+		glPopMatrix();
+		final String msg3 = image.advMessage();
+		if (msg3 != null) {
+			glPushMatrix();
+			glScalef(f3, f3, 1f);
+			fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
+			glPopMatrix();
+		}
+	}
+
+	public void mainImage(final ImageManager manager, final Image image) {
+		final Tessellator t = Tessellator.instance;
+		glLineWidth(1f);
+		glDisable(GL_TEXTURE_2D);
+		glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
+		t.startDrawing(GL_LINE_LOOP);
+		t.addVertex(0, 0, 0);
+		t.addVertex(0, 1, 0);
+		t.addVertex(1, 1, 0);
+		t.addVertex(1, 0, 0);
+		t.draw();
 		glEnable(GL_TEXTURE_2D);
 	}
 }

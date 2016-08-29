@@ -132,7 +132,7 @@ public class MTextField extends WBase {
 				setText("");
 			}
 			final Area in = getGuiPosition(pgp).child(1, 1, -1, -1);
-			this.seek = font.trimStringToWidth(getText(), (int) p.x() - (in.ix1() + 4)).length();
+			this.seek = font.trimStringToWidth(getText(), (int) (p.x() - (in.x1() + 4))).length();
 		} else {
 			setFocused(false);
 		}
@@ -170,7 +170,7 @@ public class MTextField extends WBase {
 	}
 
 	protected void drawText(final Area out, final Area in) {
-		drawString(getDrawText(), in.ix1() + 4, in.iy1() + (in.iy2()-in.iy1()) / 2 - 4, getTextColour());
+		drawString(getDrawText(), in.x1() + 4, in.y1() + (in.y2()-in.y1()) / 2 - 4, getTextColour());
 	}
 
 	public String getDrawText() {
