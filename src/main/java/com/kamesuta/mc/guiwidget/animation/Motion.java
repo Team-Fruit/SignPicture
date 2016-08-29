@@ -7,9 +7,11 @@ public class Motion {
 	public final Easing easing;
 	public final float duration;
 	public final float end;
+	public Runnable after;
 
 	public Motion(final Easing easing, final float duration, final float end) {
 		this.timer = new Timer();
+		this.timer.pause();
 		this.easing = easing;
 		this.duration = duration;
 		this.end = end;
@@ -25,8 +27,27 @@ public class Motion {
 		return this;
 	}
 
+	public Motion pause() {
+		this.timer.pause();
+		return this;
+	}
+
+	public Motion resume() {
+		this.timer.resume();
+		return this;
+	}
+
 	public boolean isFinished() {
 		return this.timer.getTime() >= this.duration;
+	}
+
+	public void after(final Runnable r) {
+		this.after = r;
+	}
+
+	public void onFinished() {
+		if (this.after != null)
+			this.after.run();
 	}
 
 	public double easing(final double start) {
