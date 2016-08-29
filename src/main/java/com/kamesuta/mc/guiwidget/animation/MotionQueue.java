@@ -68,7 +68,7 @@ public class MotionQueue {
 	}
 
 	public Motion getAnimation() {
-		if (this.current == null || this.current.isFinished())
+		if ((this.current == null || this.current.isFinished()) && !this.paused)
 			stopNext();
 		return this.current;
 	}
@@ -79,7 +79,7 @@ public class MotionQueue {
 
 	public float get() {
 		final Motion a = getAnimation();
-		if (a != null && !this.paused)
+		if (a != null)
 			return (float) a.easing(this.coord);
 		else
 			return this.coord;
