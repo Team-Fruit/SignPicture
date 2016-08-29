@@ -5,21 +5,21 @@ import java.util.Deque;
 
 public class MotionQueue {
 	protected boolean paused = true;
-	protected final Deque<Motion> queue;
-	protected Motion current;
+	protected final Deque<IMotion> queue;
+	protected IMotion current;
 	protected float coord;
 
 	public MotionQueue(final float coord) {
-		this.queue = new ArrayDeque<Motion>();
+		this.queue = new ArrayDeque<IMotion>();
 		this.coord = coord;
 	}
 
-	public MotionQueue add(final Motion animation) {
+	public MotionQueue add(final IMotion animation) {
 		this.queue.offer(animation);
 		return this;
 	}
 
-	protected void setCurrent(final Motion current) {
+	protected void setCurrent(final IMotion current) {
 		if (this.current != null)
 			this.current.onFinished();
 		this.current = current;
@@ -61,40 +61,40 @@ public class MotionQueue {
 
 	public MotionQueue stopNext() {
 		if (this.current != null)
-			this.coord = this.current.end;
+			this.coord = this.current.getEnd(this.coord);
 		setCurrent(this.queue.poll());
 		start();
 		return this;
 	}
 
-	public Motion getAnimation() {
+	public IMotion getAnimation() {
 		if ((this.current == null || this.current.isFinished()) && !this.paused)
 			stopNext();
 		return this.current;
 	}
 
-	public Motion getAnimationLast() {
+	public IMotion getAnimationLast() {
 		return this.queue.peekLast();
 	}
 
 	public float get() {
-		final Motion a = getAnimation();
+		final IMotion a = getAnimation();
 		if (a != null)
-			return (float) a.easing(this.coord);
+			return (float) a.get(this.coord);
 		else
 			return this.coord;
 	}
 
 	public float getLast() {
-		final Motion a = getAnimationLast();
+		final IMotion a = getAnimationLast();
 		if (a != null)
-			return a.end;
+			return a.getEnd(this.coord);
 		else
 			return this.coord;
 	}
 
 	public MotionQueue addAfter(final MotionQueue q) {
-		final Motion a = getAnimationLast();
+		final IMotion a = getAnimationLast();
 		if (a != null)
 			a.after(new Runnable() {
 				@Override
@@ -106,9 +106,17 @@ public class MotionQueue {
 	}
 
 	public MotionQueue addAfter(final Runnable r) {
-		final Motion a = getAnimationLast();
+		final IMotion a = getAnimationLast();
 		if (a != null)
 			a.after(r);
 		return this;
+	}
+
+	public boolean isFinished() {
+		final IMotion a = getAnimationLast();
+		if (a != null)
+			return a.isFinished();
+		else
+			return true;
 	}
 }

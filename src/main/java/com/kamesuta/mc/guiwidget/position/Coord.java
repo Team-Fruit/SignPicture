@@ -1,6 +1,6 @@
 package com.kamesuta.mc.guiwidget.position;
 
-import com.kamesuta.mc.guiwidget.animation.Motion;
+import com.kamesuta.mc.guiwidget.animation.IMotion;
 import com.kamesuta.mc.guiwidget.animation.MotionQueue;
 
 public class Coord {
@@ -22,8 +22,8 @@ public class Coord {
 		return this.type.calc(abslength, get());
 	}
 
-	public Coord add(final Motion animation) {
-		this.motion.add(animation);
+	public Coord add(final IMotion motion) {
+		this.motion.add(motion);
 		return this;
 	}
 

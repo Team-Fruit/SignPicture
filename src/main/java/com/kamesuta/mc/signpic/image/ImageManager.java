@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,11 +50,6 @@ public class ImageManager {
 		return image;
 	}
 
-	public void delete(final Image image) {
-		this.pool.remove(image.id);
-		image.delete();
-	}
-
 	@SubscribeEvent
 	public void renderTickProcess(final TickEvent.RenderTickEvent event) {
 		Image textureload;
@@ -63,11 +59,14 @@ public class ImageManager {
 			}
 		}
 
-		for (final Entry<String, Image> entry : this.pool.entrySet()) {
+		for (final Iterator<Entry<String, Image>> itr = this.pool.entrySet().iterator(); itr.hasNext();) {
+			final Entry<String, Image> entry = itr.next();
 			final Image image = entry.getValue();
 			image.process();
-			if (image.shouldCollect())
-				delete(image);
+			if (image.shouldCollect()) {
+				image.delete();
+				itr.remove();
+			}
 		}
 
 		Timer.tick();

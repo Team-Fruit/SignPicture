@@ -30,4 +30,12 @@ public class WComponent extends WGui implements WCommon {
 
 	@Override
 	public void mouseReleased(final WEvent ev, final Area pgp, final Point mouse, final int button) {}
+
+	@Override
+	public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {}
+
+	@Override
+	public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+		return true;
+	}
 }

@@ -2,19 +2,15 @@ package com.kamesuta.mc.guiwidget.animation;
 
 import org.lwjgl.util.Timer;
 
-public class Motion implements IMotion {
+public class BlankMotion implements IMotion {
 	protected final Timer timer;
-	protected final Easing easing;
 	protected final float duration;
-	protected final float end;
 	protected Runnable after;
 
-	public Motion(final Easing easing, final float duration, final float end) {
+	public BlankMotion(final float duration) {
 		this.timer = new Timer();
 		this.timer.pause();
-		this.easing = easing;
 		this.duration = duration;
-		this.end = end;
 	}
 
 	@Override
@@ -56,10 +52,6 @@ public class Motion implements IMotion {
 		return this.timer;
 	}
 
-	public Easing getEasing() {
-		return this.easing;
-	}
-
 	@Override
 	public float getDuration() {
 		return this.duration;
@@ -67,7 +59,7 @@ public class Motion implements IMotion {
 
 	@Override
 	public float getEnd(final float start) {
-		return this.end;
+		return start;
 	}
 
 	@Override
@@ -83,11 +75,11 @@ public class Motion implements IMotion {
 
 	@Override
 	public double get(final double start) {
-		return this.easing.easing(this.timer.getTime(), start, this.end - start, this.duration);
+		return start;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Motion[%1$s->%3$s(%2$ss)]", this.easing, this.duration, this.end);
+		return String.format("Space[(%2$ss)]", this.duration);
 	}
 }
