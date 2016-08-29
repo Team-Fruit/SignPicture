@@ -33,4 +33,29 @@ public class Point implements java.io.Serializable {
 	public String toString() {
 		return String.format("Point[x=%s, y=%s]", this.x, this.y);
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Float.floatToIntBits(this.x);
+		result = prime * result + Float.floatToIntBits(this.y);
+		return result;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Point))
+			return false;
+		final Point other = (Point) obj;
+		if (Float.floatToIntBits(this.x) != Float.floatToIntBits(other.x))
+			return false;
+		if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y))
+			return false;
+		return true;
+	}
 }

@@ -7,25 +7,22 @@ import org.lwjgl.input.Keyboard;
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.WFrame;
+import com.kamesuta.mc.guiwidget.animation.BlankMotion;
 import com.kamesuta.mc.guiwidget.animation.Easings;
+import com.kamesuta.mc.guiwidget.animation.MotionQueue;
 import com.kamesuta.mc.guiwidget.component.MButton;
 import com.kamesuta.mc.guiwidget.component.MTextField;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.signpic.image.Image;
-import com.kamesuta.mc.signpic.image.ImageManager;
-import com.kamesuta.mc.signpic.image.ImageSize;
-import com.kamesuta.mc.signpic.image.ImageSizes;
+import com.kamesuta.mc.signpic.proxy.ClientProxy;
 
 public class GuiSignPicture extends WFrame {
-	protected String url = "";
 	protected String[] signurl = new String[4];
-	protected ImageManager manager;
+	protected SignPictureLabel picture;
 
-	public GuiSignPicture(final ImageManager manager) {
-		this.manager = manager;
+	public GuiSignPicture() {
 	}
 
 	@Override
@@ -37,15 +34,27 @@ public class GuiSignPicture extends WFrame {
 	@Override
 	protected void initWidgets() {
 		add(new WBase(RArea.diff(0, 0, 0, 0)) {
+			MotionQueue m = new MotionQueue(0).add(Easings.linear.move(.5f, .5f)).start();
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
-				glColor4f(0f, 0f, 0f, 0.3f);
+				glColor4f(0f, 0f, 0f, this.m.get());
 				glDisable(GL_TEXTURE_2D);
 				draw(getGuiPosition(pgp), GL_QUADS);
 				glEnable(GL_TEXTURE_2D);
 			}
+
+			@Override
+			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+				this.m.stop().add(Easings.linear.move(.5f, 0f)).add(new BlankMotion(.2f)).start();
+			}
+
+			@Override
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return this.m.isFinished();
+			}
 		});
-		add(new WBase(new RArea(Coord.left(5), Coord.bottom(150), Coord.left(135), Coord.bottom(20))) {
+		final Coord s = Coord.left(-130).add(Easings.easeOutExpo.move(.5f, 5)).start();
+		this.picture = new SignPictureLabel(new RArea(s, Coord.bottom(150), Coord.width(130), Coord.bottom(20)), ClientProxy.manager) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 				final Area a = getGuiPosition(pgp);
@@ -53,56 +62,68 @@ public class GuiSignPicture extends WFrame {
 				glDisable(GL_TEXTURE_2D);
 				draw(a, GL_QUADS);
 				glEnable(GL_TEXTURE_2D);
-				final Image image = GuiSignPicture.this.manager.get(GuiSignPicture.this.url);
-				if (image != null) {
-					glPushMatrix();
-					translate(a);
-
-					final ImageSize size = ImageSize.createSize(ImageSizes.LIMIT, image.getSize(), new ImageSize(a));
-
-					glPushMatrix();
-					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-					glScalef(size.width, size.height, 1f);
-					image.getState().mainImage(GuiSignPicture.this.manager, image);
-					glPopMatrix();
-
-					glPushMatrix();
-					glTranslatef(a.w()/2, a.h()/2, 0);
-					glScalef(size.width, size.height, 1f);
-					glScalef(25f, 25f, 1f);
-					image.getState().themeImage(GuiSignPicture.this.manager, image);
-					image.getState().message(GuiSignPicture.this.manager, image, font);
-					glPopMatrix();
-
-					glPopMatrix();
-				}
+				super.draw(ev, pgp, p, frame);
 			}
-		});
-		add(new MTextField(new RArea(Coord.left(5), Coord.bottom(20), Coord.right(5), Coord.bottom(5)), "aaaa") {
+
+			@Override
+			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+				s.motion.stop().add(Easings.easeOutExpo.move(.5f, -130)).start();
+			}
+
+			@Override
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return s.motion.isFinished();
+			}
+		};
+		add(this.picture);
+		final Coord d = Coord.bottom(-15).add(Easings.easeOutCirc.move(.5f, 5)).start();
+		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(5), Coord.height(15)), "aaaa") {
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();
 				final String url = getText();
-				GuiSignPicture.this.url = url;
+				GuiSignPicture.this.picture.setUrl(url);
 				for (int i=0; i<4; i++) {
 					if (16*i <= url.length())
 						GuiSignPicture.this.signurl[i] = url.substring(16*i, Math.min(16*i+15, url.length()));
 				}
 			}
+
+			@Override
+			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+				d.motion.stop().add(Easings.easeOutCirc.move(1f, -15)).start();
+			}
+
+			@Override
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return d.motion.isFinished();
+			}
 		});
 		//add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
-		final Coord b = Coord.bottom(0)
-				.add(Easings.easeInOutQuart.move(2, 10))
-				.add(Easings.easeInCirc.move(3, 40))
-				.add(Easings.easeInOutQuart.move(1, 100));
-		final Coord c = Coord.left(0)
-				.add(Easings.easeInOutQuart.move(2, 10))
-				.add(Easings.easeInCirc.move(3, 40))
-				.add(Easings.easeInOutQuart.move(1, 100));
-		add(new MButton(new RArea(b, c.addAfter(b.motion).start(), Coord.width(20), Coord.height(20)), "aaaa") {
+		final Coord c = Coord.left(-70);
+		add(new MButton(new RArea(Coord.top(20), c, Coord.width(80), Coord.height(20)), "aaaa") {
+			boolean hover;
+			@Override
+			public void mouseMoved(final WEvent ev, final Area pgp, final Point p, final int button) {
+				super.mouseMoved(ev, pgp, p, button);
+				final Area a = getGuiPosition(pgp);
+				final boolean h = a.pointInside(p);
+				if (h) {
+					if (!this.hover) {
+						this.hover = h;
+						c.motion.stop().add(Easings.easeOutBounce.move(.5f, 0)).start();
+					}
+				} else {
+					if (this.hover) {
+						this.hover = h;
+						c.motion.stop().add(Easings.easeOutBounce.move(.5f, -70)).start();
+					}
+				}
+			}
+
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				c.motion.stop().add(Easings.easeOutCirc.move(2f, c.motion.getLast() + 30));
+				//c.motion.stop().add(Easings.easeOutCirc.move(2f, c.motion.getLast() + 30));
 				return true;
 			}
 		});
