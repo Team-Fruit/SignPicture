@@ -5,11 +5,9 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
-import com.kamesuta.mc.signpic.image.ImageState;
 import com.kamesuta.mc.signpic.util.SignParser;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
@@ -64,66 +62,32 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Draw Canvas
-			final FontRenderer fontrenderer = func_147498_b();
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
+			glEnable(GL_BLEND);
+
 			glPushMatrix();
+
 			glTranslatef(-size.width/2, size.height-.5f, 0f);
 			glScalef(1f, -1f, 1f);
+
 			glPushMatrix();
 			glScalef(size.width, size.height, 1f);
-
-			image.draw();
-			if (image.getState() != ImageState.AVAILABLE) {
-				glLineWidth(1f);
-				glDisable(GL_TEXTURE_2D);
-				glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
-				this.t.startDrawing(GL_LINE_LOOP);
-				this.t.addVertex(0, 0, 0);
-				this.t.addVertex(0, 1, 0);
-				this.t.addVertex(1, 1, 0);
-				this.t.addVertex(1, 0, 0);
-				this.t.draw();
-				glEnable(GL_TEXTURE_2D);
-			}
+			image.getState().mainImage(this.manager, image);
 			glPopMatrix();
 
 			if (size.width<1.5f || size.height<1.5) {
 				glScalef(.5f, .5f, .5f);
 				glTranslatef(size.width/2, size.height/4, 0);
 			}
-			// Draw Canvas - Draw Loading
-			glPushMatrix();
 			glTranslatef(size.width/2, size.height/2, 0);
 			glScalef(.5f, .5f, 1f);
-
 			image.getState().themeImage(this.manager, image);
-
-			if (image.getState() != ImageState.AVAILABLE) {
-				f3 = 0.06666668F * f1;
-				glTranslatef(0f, 1f, 0f);
-				glPushMatrix();
-				glScalef(f3, f3, 1f);
-				final String msg1 = image.getStatusMessage();
-				fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
-				glPopMatrix();
-				f3 = 0.036666668F * f1;
-				glPushMatrix();
-				glScalef(f3, f3, 1f);
-				final String msg2 = image.getId();
-				fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
-				glPopMatrix();
-				final String msg3 = image.advMessage();
-				if (msg3 != null) {
-					glPushMatrix();
-					glScalef(f3, f3, 1f);
-					fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
-					glPopMatrix();
-				}
-			}
+			image.getState().message(this.manager, image, func_147498_b());
 
 			glPopMatrix();
-			glPopMatrix();
+
+			glDisable(GL_BLEND);
 			glEnable(GL_CULL_FACE);
 			glEnable(GL_LIGHTING);
 
