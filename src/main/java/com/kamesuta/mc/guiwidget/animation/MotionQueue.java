@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class MotionQueue {
+	protected boolean paused = true;
 	protected final Deque<Motion> queue;
 	protected Motion current;
 	protected float coord;
@@ -18,30 +19,51 @@ public class MotionQueue {
 		return this;
 	}
 
+	protected void setCurrent(final Motion current) {
+		if (this.current != null)
+			this.current.onFinished();
+		this.current = current;
+	}
+
 	public MotionQueue stop() {
 		this.coord = get();
 		this.queue.clear();
-		this.current = null;
+		setCurrent(null);
 		return this;
 	}
 
 	public MotionQueue stopLast() {
 		this.coord = getLast();
 		this.queue.clear();
-		this.current = null;
+		setCurrent(null);
 		return stop();
 	}
 
+	public MotionQueue pause() {
+		this.paused = true;
+		if (this.current != null)
+			this.current.pause();
+		return this;
+	}
+
+	public MotionQueue start() {
+		this.paused = false;
+		if (this.current != null)
+			this.current.resume();
+		return this;
+	}
+
 	public MotionQueue next() {
-		this.coord = getLast();
-		this.current = this.queue.poll();
+		setCurrent(this.queue.poll());
+		start();
 		return this;
 	}
 
 	public MotionQueue stopNext() {
 		if (this.current != null)
 			this.coord = this.current.end;
-		this.current = this.queue.poll();
+		setCurrent(this.queue.poll());
+		start();
 		return this;
 	}
 
@@ -57,7 +79,7 @@ public class MotionQueue {
 
 	public float get() {
 		final Motion a = getAnimation();
-		if (a != null)
+		if (a != null && !this.paused)
 			return (float) a.easing(this.coord);
 		else
 			return this.coord;
@@ -69,5 +91,24 @@ public class MotionQueue {
 			return a.end;
 		else
 			return this.coord;
+	}
+
+	public MotionQueue addAfter(final MotionQueue q) {
+		final Motion a = getAnimationLast();
+		if (a != null)
+			a.after(new Runnable() {
+				@Override
+				public void run() {
+					q.start();
+				}
+			});
+		return this;
+	}
+
+	public MotionQueue addAfter(final Runnable r) {
+		final Motion a = getAnimationLast();
+		if (a != null)
+			a.after(r);
+		return this;
 	}
 }
