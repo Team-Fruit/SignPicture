@@ -11,6 +11,7 @@ import com.kamesuta.mc.guiwidget.animation.BlankMotion;
 import com.kamesuta.mc.guiwidget.animation.Easings;
 import com.kamesuta.mc.guiwidget.animation.MotionQueue;
 import com.kamesuta.mc.guiwidget.component.MButton;
+import com.kamesuta.mc.guiwidget.component.MCheckBox;
 import com.kamesuta.mc.guiwidget.component.MTextField;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
@@ -53,8 +54,11 @@ public class GuiSignPicture extends WFrame {
 				return this.m.isFinished();
 			}
 		});
-		final Coord s = Coord.left(-130).add(Easings.easeOutExpo.move(.5f, 5)).start();
-		this.picture = new SignPictureLabel(new RArea(s, Coord.bottom(150), Coord.width(130), Coord.bottom(20)), ClientProxy.manager) {
+
+		add(new MCheckBox(new RArea(Coord.top(5), Coord.left(5), Coord.height(15), Coord.width(15)), "aaaabbbccc"));
+
+		final Coord s = Coord.left(-180).add(Easings.easeOutExpo.move(.5f, 5)).start();
+		this.picture = new SignPictureLabel(new RArea(s, Coord.height(180), Coord.width(180), Coord.bottom(20)), ClientProxy.manager) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 				final Area a = getGuiPosition(pgp);
@@ -67,7 +71,7 @@ public class GuiSignPicture extends WFrame {
 
 			@Override
 			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-				s.motion.stop().add(Easings.easeOutExpo.move(.5f, -130)).start();
+				s.motion.stop().add(Easings.easeOutExpo.move(.5f, -180)).start();
 			}
 
 			@Override
