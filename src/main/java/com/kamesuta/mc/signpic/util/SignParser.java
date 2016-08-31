@@ -1,5 +1,10 @@
 package com.kamesuta.mc.signpic.util;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.image.ImageSize;
@@ -15,33 +20,35 @@ public class SignParser {
 	public SignParser(final String text) {
 		this.text = text;
 
-		if (this.vaild = this.text.endsWith("]") && this.text.contains("[")) {
-			final int start = this.text.lastIndexOf("[");
-			String url = this.text.substring(0, start);
-			if (url.startsWith("!")) {
-			} else if (url.startsWith("$")) {
-				url = "https://" + url.substring(1);
-			} else if (url.startsWith("//")) {
-				url = "http://" + url.substring(2);
-			} else if (!(url.startsWith("http://") || url.startsWith("https://"))) {
-				url = "http://" + url;
-			}
+		if (this.vaild = text.endsWith("]") && text.contains("[")) {
+			final int start = text.lastIndexOf("[");
+			String url = text.substring(0, start);
+			if (!url.startsWith("!"))
+				if (url.startsWith("$"))
+					url = "https://" + url.substring(1);
+				else if (!url.startsWith("http://") && !url.startsWith("https://"))
+					url = "http://" + url;
 			this.id = url;
 
-			final String size = this.text.substring(start+1, this.text.length()-1);
-			final String[] sp_size = size.split("x");
-			float wid = -1;
-			try {
-				if (sp_size.length >= 1)
-					wid = Float.parseFloat(sp_size[0]);
-			} catch (final NumberFormatException e) {}
-			float hei = -1;
-			try {
-				if (sp_size.length >= 2)
-					hei = Float.parseFloat(sp_size[1]);
-			} catch (final NumberFormatException e) {}
-			this.size = new ImageSize(wid, hei);
+			final Map<String, String> meta = parseMeta(text.substring(start+1, text.length()-1));
+			this.size = ImageSize.parseSize(meta.containsKey("") ? meta.get("") : "");
 		}
+	}
+
+	protected static final Pattern p = Pattern.compile("(?:([^\\dx]?)(\\d*x\\d*|\\d*))+?");
+
+	protected Map<String, String> parseMeta(final String src) {
+		final Matcher m = p.matcher(src);
+		final Map<String, String> map = new HashMap<String, String>();
+		while(m.find()){
+			if (2 <= m.groupCount()) {
+				final String key = m.group(1);
+				final String value = m.group(2);
+				if (!key.isEmpty() || !value.isEmpty())
+					map.put(key, value);
+			}
+		}
+		return map;
 	}
 
 	public SignParser(final String[] sign) {

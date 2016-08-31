@@ -39,11 +39,11 @@ public class MTextField extends WBase {
 		onTextChanged(oldText);
 	}
 
-	public void onTextChanged(final String oldText) {
-	}
-
 	public final String getText() {
 		return this.text;
+	}
+
+	protected void onTextChanged(final String oldText) {
 	}
 
 	public final boolean isEnabled() {
@@ -163,9 +163,9 @@ public class MTextField extends WBase {
 	protected void drawBackground(final Area out, final Area in) {
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
-		draw(out, GL_QUADS);
+		drawRect(out);
 		glColor4f(0f, 0f, 0f, 1f);
-		draw(in, GL_QUADS);
+		drawRect(in);
 		glEnable(GL_TEXTURE_2D);
 	}
 

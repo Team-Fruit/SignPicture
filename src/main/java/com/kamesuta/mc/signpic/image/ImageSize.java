@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.kamesuta.mc.guiwidget.position.Area;
 
 public class ImageSize {
@@ -7,20 +9,20 @@ public class ImageSize {
 	public final float height;
 
 	public ImageSize(final float width, final float height) {
-		this.width = (width>=0)?width:Float.NaN;
-		this.height = (height>=0)?height:Float.NaN;
+		this.width = width;
+		this.height = height;
 	}
 
-	public ImageSize(Area a) {
+	public ImageSize(final Area a) {
 		this(a.w(), a.h());
 	}
 
 	public boolean vaildWidth() {
-		return this.width>=0;
+		return !Float.isNaN(this.width);
 	}
 
 	public boolean vaildHeight() {
-		return this.height>=0;
+		return !Float.isNaN(this.height);
 	}
 
 	public float max() {
@@ -70,6 +72,13 @@ public class ImageSize {
 		else if (raw == null) return max;
 		else if (max == null) return raw;
 		return createSize(s, raw.width, raw.height, max.width, max.height);
+	}
+
+	public static ImageSize parseSize(final String src) {
+		final String[] sp_size = src.split("x");
+		final float wid = (sp_size.length >= 1) ? NumberUtils.toFloat(sp_size[0], Float.NaN) : Float.NaN;
+		final float hei = (sp_size.length >= 2) ? NumberUtils.toFloat(sp_size[1], Float.NaN) : Float.NaN;
+		return new ImageSize(wid, hei);
 	}
 
 	@Override

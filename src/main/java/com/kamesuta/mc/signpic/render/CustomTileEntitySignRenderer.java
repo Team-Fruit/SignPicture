@@ -7,7 +7,9 @@ import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.util.SignParser;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
@@ -17,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
+	protected Minecraft mc = FMLClientHandler.instance().getClient();
 	protected final ImageManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
@@ -30,6 +33,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	@Override
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float color)
 	{
+		this.mc.mcProfiler.startSection("signpic-render");
 		final SignParser sign = new SignParser(tile);
 		if (sign.isVaild()) {
 			// Load Image
@@ -67,7 +71,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glEnable(GL_BLEND);
 			glPushMatrix();
 
-			glTranslatef(-size.width/2, size.height-.5f, 0f);
+			glTranslatef(-size.width/2, size.height + .5f*((size.height>=0)?-1f:1f), 0f);
 			glScalef(1f, -1f, 1f);
 
 			glPushMatrix();
@@ -94,6 +98,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		} else {
 			super.renderTileEntityAt(tile, x, y, z, color);
 		}
+		this.mc.mcProfiler.endSection();
 	}
 
 	@Override
