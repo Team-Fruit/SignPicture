@@ -12,6 +12,7 @@ import com.kamesuta.mc.guiwidget.animation.Easings;
 import com.kamesuta.mc.guiwidget.animation.MotionQueue;
 import com.kamesuta.mc.guiwidget.component.MButton;
 import com.kamesuta.mc.guiwidget.component.MCheckBox;
+import com.kamesuta.mc.guiwidget.component.MPanel;
 import com.kamesuta.mc.guiwidget.component.MTextField;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
@@ -56,6 +57,8 @@ public class GuiSignPicture extends WFrame {
 		});
 
 		add(new MCheckBox(new RArea(Coord.top(5), Coord.left(5), Coord.height(15), Coord.width(15)), "aaaabbbccc"));
+
+		add(new MPanel(new RArea(Coord.top(5), Coord.right(5), Coord.height(80), Coord.width(100))));
 
 		final Coord s = Coord.left(-180).add(Easings.easeOutExpo.move(.5f, 5)).start();
 		this.picture = new SignPictureLabel(new RArea(s, Coord.height(180), Coord.width(180), Coord.bottom(20)), ClientProxy.manager) {

@@ -33,6 +33,7 @@ public class WGui extends Gui {
 	}
 
 	public static final ResourceLocation widget = new ResourceLocation("textures/gui/widgets.png");
+	public static final ResourceLocation background = new ResourceLocation("textures/gui/demo_background.png");
 
 	public static void drawHorizontalLine(final float x1, final float x2, final float y, final int color)
 	{
