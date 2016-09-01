@@ -192,7 +192,7 @@ public class WFrame extends GuiScreen implements WContainer {
 		this.mc.setIngameFocus();
 	}
 
-	protected void requestClose() {
+	public void requestClose() {
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)

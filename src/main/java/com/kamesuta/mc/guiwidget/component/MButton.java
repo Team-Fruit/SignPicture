@@ -16,7 +16,6 @@ public class MButton extends WBase {
 	public String text;
 	public String actionCommand;
 	private boolean isEnabled = true;
-	public boolean visible = true;
 
 	public MButton(final R position, final String text) {
 		super(position);
@@ -38,7 +37,7 @@ public class MButton extends WBase {
 	@Override
 	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 		final Area abs = getGuiPosition(pgp);
-		if ((this.isEnabled) && (abs.pointInside(p))) {
+		if ((isEnabled()) && (abs.pointInside(p))) {
 			if (onClicked(ev, pgp, p, button)) {
 				if (this.actionCommand != null)
 					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
@@ -54,9 +53,6 @@ public class MButton extends WBase {
 
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
-		if (!this.visible) {
-			return;
-		}
 		drawButtonTex(ev, pgp, p, frame);
 		if (this.text != null) {
 			drawText(ev, pgp, p, frame);
@@ -80,7 +76,7 @@ public class MButton extends WBase {
 
 	public int getButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area abs = getGuiPosition(pgp);
-		return abs.pointInside(p) ? 2 : !this.isEnabled ? 0 : 1;
+		return !isEnabled() ? 0 : abs.pointInside(p) ? 2 : 1;
 	}
 
 	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame) {
@@ -91,7 +87,7 @@ public class MButton extends WBase {
 
 	public int getTextColour(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area abs = getGuiPosition(pgp);
-		return abs.pointInside(p) ? -96 : !this.isEnabled ? -6250336 : -2039584;
+		return abs.pointInside(p) ? -96 : !isEnabled() ? -6250336 : -2039584;
 	}
 
 	public MButton setActionCommand(final String string) {

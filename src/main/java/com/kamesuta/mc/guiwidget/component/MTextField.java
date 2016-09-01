@@ -30,13 +30,17 @@ public class MTextField extends WBase {
 		this.text = text;
 	}
 
-	public void setText(final String s) {
-		if (s.equals(this.text)) {
-			return;
+	public boolean setText(final String s) {
+		if ((s.length() <= this.maxStringLength) || (this.maxStringLength <= 0)) {
+			if (s.equals(this.text)) {
+				return true;
+			}
+			final String oldText = this.text;
+			this.text = s;
+			onTextChanged(oldText);
+			return true;
 		}
-		final String oldText = this.text;
-		this.text = s;
-		onTextChanged(oldText);
+		return false;
 	}
 
 	public final String getText() {
@@ -92,7 +96,7 @@ public class MTextField extends WBase {
 				return;
 			}
 			for (int i = 0; i < s.length(); i++) {
-				if ((this.text.length() >= this.maxStringLength) && (this.maxStringLength != 0)) {
+				if ((this.text.length() >= this.maxStringLength) && (this.maxStringLength <= 0)) {
 					return;
 				}
 				final char tc = s.charAt(i);
