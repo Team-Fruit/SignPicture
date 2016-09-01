@@ -1,26 +1,28 @@
 package com.kamesuta.mc.signpic.placer;
 
+import com.kamesuta.mc.signpic.util.Sign;
+
 public class PlacerMode {
-	public static final PlacerMode INSTANCE = new PlacerMode();
+	public static final PlacerMode instance = new PlacerMode();
 
 	private PlacerMode() {
 	}
 
-	protected String[] signtext;
+	protected Sign sign;
 
-	public void enable(final String[] signtext) {
-		this.signtext = signtext;
+	public void enable(final Sign sign) {
+		this.sign = sign;
 	}
 
 	public void disable() {
-		this.signtext = null;
+		this.sign = null;
 	}
 
 	public boolean isEnabled() {
-		return this.signtext!=null;
+		return this.sign!=null;
 	}
 
-	public String[] getSignText() {
-		return this.signtext;
+	public Sign getSign() {
+		return this.sign;
 	}
 }

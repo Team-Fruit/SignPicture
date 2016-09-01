@@ -24,6 +24,7 @@ public class SignPictureLabel extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
+		glEnable(GL_BLEND);
 		glColor4f(0f, 0f, 0f, 0.3f);
 		glDisable(GL_TEXTURE_2D);
 		draw(a, GL_QUADS);

@@ -106,8 +106,12 @@ public class ImageSize {
 		return true;
 	}
 
+	public String text() {
+		return String.format("[%s%s]", vaildWidth() ? this.width : "", vaildHeight() ? "x" + this.height : "");
+	}
+
 	@Override
 	public String toString() {
-		return String.format("ImageSize[width:%s, height:%s]", this.width, this.height);
+		return text();
 	}
 }

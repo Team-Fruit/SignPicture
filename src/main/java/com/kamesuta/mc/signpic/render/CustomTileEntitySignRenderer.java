@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
-import com.kamesuta.mc.signpic.util.SignParser;
+import com.kamesuta.mc.signpic.util.Sign;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
@@ -34,7 +34,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float color)
 	{
 		this.mc.mcProfiler.startSection("signpic-render");
-		final SignParser sign = new SignParser(tile);
+		final Sign sign = Sign.parseSignEntity(tile);
 		if (sign.isVaild()) {
 			// Load Image
 			final Image image = this.manager.get(sign.id());

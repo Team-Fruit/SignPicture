@@ -2,9 +2,8 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.placer.GuiSignPlacer;
+import com.kamesuta.mc.signpic.placer.PlacerMode;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.tileentity.TileEntitySign;
@@ -29,18 +28,20 @@ public class SignHandler {
 	private static Field f;
 
 	@SubscribeEvent
-	public void onSignDone(final GuiOpenEvent event) {
-		if (event.gui instanceof GuiEditSign) {
-			if (f != null) {
-				try {
-					final GuiEditSign ges = (GuiEditSign) event.gui;
-					final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-
-					FMLClientHandler.instance().getClient().displayGuiScreen(new GuiSignPlacer(tileSign));
-				} catch (final IllegalArgumentException e) {
-				} catch (final IllegalAccessException e) {
+	public void onSign(final GuiOpenEvent event) {
+		if (PlacerMode.instance.isEnabled())
+			if (event.gui instanceof GuiEditSign) {
+				if (f != null) {
+					try {
+						final GuiEditSign ges = (GuiEditSign) event.gui;
+						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
+						PlacerMode.instance.getSign().sendSign(tileSign);
+						event.setCanceled(true);
+						PlacerMode.instance.disable();
+					} catch (final IllegalArgumentException e) {
+					} catch (final IllegalAccessException e) {
+					}
 				}
 			}
-		}
 	}
 }

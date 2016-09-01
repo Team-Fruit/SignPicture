@@ -7,7 +7,7 @@ import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.placer.PlacerMode;
-import com.kamesuta.mc.signpic.util.SignParser;
+import com.kamesuta.mc.signpic.util.Sign;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -34,13 +34,13 @@ public class RenderOverlay extends WGui {
 
 	@SubscribeEvent
 	public void onDraw(final RenderGameOverlayEvent event) {
-		if (PlacerMode.INSTANCE.isEnabled()) {
+		if (PlacerMode.instance.isEnabled()) {
 			if ((int)(System.currentTimeMillis()/500)%2==0) {
 				final FontRenderer fontrenderer = font;
 
 				glPushMatrix();
 				glTranslatef(5f, 5f, 0f);
-				glScalef(3f, 3f, 1f);
+				glScalef(2f, 2f, 1f);
 
 				glPushMatrix();
 				glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
@@ -67,7 +67,7 @@ public class RenderOverlay extends WGui {
 				if (block instanceof BlockSign) {
 					final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
 					if (tile instanceof TileEntitySign) {
-						final SignParser sign = new SignParser((TileEntitySign)tile);
+						final Sign sign = Sign.parseSignEntity((TileEntitySign)tile);
 						if (sign.isVaild()) {
 							event.left.add("");
 							final String id = sign.id();
