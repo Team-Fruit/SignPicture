@@ -180,9 +180,24 @@ public class GuiSignPicture extends WFrame {
 			}
 		});
 
-		add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
+		final Coord m = Coord.ptop(-1f).add(Easings.easeOutElastic.move(.5f, 0f)).start();
+		add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
 			{
-				add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(GuiSignPicture.this.sign));
+				add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
+					{
+						add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(GuiSignPicture.this.sign));
+					}
+				});
+			}
+
+			@Override
+			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+				m.motion.stop().add(Easings.easeOutElastic.move(.5f, -1f)).start();
+			}
+
+			@Override
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return m.motion.isFinished();
 			}
 		});
 
@@ -250,15 +265,15 @@ public class GuiSignPicture extends WFrame {
 		});
 
 		final Coord d = Coord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
-		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15)), "Text Here") {
+		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15)), "URL Here") {
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();
+				GuiSignPicture.this.sign.setId(getText());
 			}
 
 			@Override
 			protected void onTextChanged(final String oldText) {
-				GuiSignPicture.this.sign.setId(getText());
 			}
 
 			@Override

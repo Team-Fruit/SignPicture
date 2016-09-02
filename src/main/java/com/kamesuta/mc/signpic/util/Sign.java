@@ -37,7 +37,7 @@ public class Sign {
 	}
 
 	public Sign setId(String id) {
-		if (!id.startsWith("!"))
+		if (!id.startsWith("!") && !id.isEmpty())
 			if (id.startsWith("$"))
 				id = "https://" + id.substring(1);
 			else if (!id.startsWith("http://") && !id.startsWith("https://"))
