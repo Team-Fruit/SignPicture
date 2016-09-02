@@ -11,9 +11,10 @@ import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.image.ImageSizes;
+import com.kamesuta.mc.signpic.util.Sign;
 
 public class SignPictureLabel extends WBase {
-	protected String url = "";
+	protected Sign sign;
 	protected ImageManager manager;
 
 	public SignPictureLabel(final R position, final ImageManager manager) {
@@ -29,36 +30,43 @@ public class SignPictureLabel extends WBase {
 		glDisable(GL_TEXTURE_2D);
 		draw(a, GL_QUADS);
 		glEnable(GL_TEXTURE_2D);
-		final Image image = this.manager.get(this.url);
-		if (image != null) {
-			glPushMatrix();
-			translate(a);
+		final Sign s = getSign();
+		if (s != null && s.id()!=null) {
+			final Image image = this.manager.get(this.sign.id());
+			if (image != null) {
+				glDisable(GL_CULL_FACE);
+				glPushMatrix();
+				translate(a);
 
-			final ImageSize size = ImageSize.createSize(ImageSizes.LIMIT, image.getSize(), new ImageSize(a));
+				final ImageSize siz = image.getSize().getLimitSize(s.size());
+				final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, new ImageSize(a));
 
-			glPushMatrix();
-			glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-			glScalef(size.width, size.height, 1f);
-			image.getState().mainImage(this.manager, image);
-			glPopMatrix();
+				glPushMatrix();
+				glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
+				glScalef(size.width, size.height, 1f);
+				image.getState().mainImage(this.manager, image);
+				glPopMatrix();
 
-			glPushMatrix();
-			glTranslatef(a.w()/2, a.h()/2, 0);
-			glScalef(size.width, size.height, 1f);
-			glScalef(25f, 25f, 1f);
-			image.getState().themeImage(this.manager, image);
-			image.getState().message(this.manager, image, font);
-			glPopMatrix();
+				glPushMatrix();
+				glTranslatef(a.w()/2, a.h()/2, 0);
+				glScalef(size.width, size.height, 1f);
+				glScalef(25f, 25f, 1f);
+				image.getState().themeImage(this.manager, image);
+				image.getState().message(this.manager, image, font);
+				glPopMatrix();
 
-			glPopMatrix();
+				glPopMatrix();
+				glEnable(GL_CULL_FACE);
+			}
 		}
 	}
 
-	public String getUrl() {
-		return this.url;
+	public Sign getSign() {
+		return this.sign;
 	}
 
-	public void setUrl(final String url) {
-		this.url = url;
+	public SignPictureLabel setSign(final Sign sign) {
+		this.sign = sign;
+		return this;
 	}
 }

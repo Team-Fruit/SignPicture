@@ -34,7 +34,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float color)
 	{
 		this.mc.mcProfiler.startSection("signpic-render");
-		final Sign sign = Sign.parseSignEntity(tile);
+		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
 			// Load Image
 			final Image image = this.manager.get(sign.id());

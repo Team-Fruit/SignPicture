@@ -25,6 +25,6 @@ public class McImageTexture implements IImageTexture {
 
 	@Override
 	public ImageSize getSize() {
-		return DefaultSize;
+		return ImageSize.DefaultSize;
 	}
 }

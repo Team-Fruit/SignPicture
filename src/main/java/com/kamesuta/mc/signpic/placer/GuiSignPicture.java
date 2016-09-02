@@ -7,19 +7,25 @@ import org.lwjgl.input.Keyboard;
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.WFrame;
+import com.kamesuta.mc.guiwidget.WPanel;
 import com.kamesuta.mc.guiwidget.animation.BlankMotion;
 import com.kamesuta.mc.guiwidget.animation.Easings;
 import com.kamesuta.mc.guiwidget.animation.MotionQueue;
 import com.kamesuta.mc.guiwidget.component.MButton;
+import com.kamesuta.mc.guiwidget.component.MLabel;
+import com.kamesuta.mc.guiwidget.component.MNumber;
+import com.kamesuta.mc.guiwidget.component.MPanel;
 import com.kamesuta.mc.guiwidget.component.MTextField;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.RArea;
+import com.kamesuta.mc.signpic.image.ImageSize;
+import com.kamesuta.mc.signpic.proxy.ClientProxy;
 import com.kamesuta.mc.signpic.util.Sign;
 
 public class GuiSignPicture extends WFrame {
-	private String id;
+	private final Sign sign = new Sign().setSize(ImageSize.UnknownSize);
 	//	protected SignPictureLabel picture;
 
 	public GuiSignPicture() {
@@ -155,7 +161,6 @@ public class GuiSignPicture extends WFrame {
 		//				glEnable(GL_TEXTURE_2D);
 		//			}
 		//		});
-
 		add(new WBase(RArea.diff(0, 0, 0, 0)) {
 			MotionQueue m = new MotionQueue(0).add(Easings.linear.move(.2f, .5f)).start();
 			@Override
@@ -175,43 +180,77 @@ public class GuiSignPicture extends WFrame {
 			}
 		});
 
-		final Coord d = Coord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
-		final MButton b = new MButton(new RArea(Coord.right(70), d, Coord.width(60), Coord.height(15)), "Apply") {
+		add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 			{
-				setEnabled(false);
+				add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(GuiSignPicture.this.sign));
+			}
+		});
+
+		final Coord p = Coord.right(-60).add(Easings.easeOutBounce.move(.5f, 0)).start();
+		add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
+			{
+				float i = 125;
+
+				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Width"));
+				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
+					@Override
+					protected void onNumberChanged(final String oldText, final String newText) {
+						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size().imageWidth(newText));
+					}
+				});
+				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Height"));
+				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
+					@Override
+					protected void onNumberChanged(final String oldText, final String newText) {
+						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size().imageHeight(newText));
+					}
+				});
+				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Apply") {
+					@Override
+					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						if (GuiSignPicture.this.sign.isVaild()) {
+							PlacerMode.instance.enable(GuiSignPicture.this.sign);
+							requestClose();
+							return true;
+						}
+						return false;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						return GuiSignPicture.this.sign.isVaild() && !PlacerMode.instance.isEnabled();
+					}
+				});
+				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Cancel") {
+					@Override
+					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						if (PlacerMode.instance.isEnabled()) {
+							PlacerMode.instance.disable();
+							return true;
+						}
+						return false;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						return PlacerMode.instance.isEnabled();
+					}
+				});
 			}
 
 			@Override
-			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				final Sign sign = Sign.parseText(GuiSignPicture.this.id);
-				if (sign.isVaild()) {
-					PlacerMode.instance.enable(sign);
-					requestClose();
-					return true;
-				}
-				return false;
-			}
-		};
-		add(b);
-
-		final MButton c = new MButton(new RArea(Coord.right(5), d, Coord.width(60), Coord.height(15)), "Cancel") {
-			@Override
-			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				if (PlacerMode.instance.isEnabled()) {
-					PlacerMode.instance.disable();
-					return true;
-				}
-				return false;
+			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+				p.motion.stop().add(Easings.easeOutBounce.move(.5f, -60)).start();
 			}
 
 			@Override
-			public boolean isEnabled() {
-				return PlacerMode.instance.isEnabled();
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return p.motion.isFinished();
 			}
-		};
-		add(c);
+		});
 
-		final MTextField m = new MTextField(new RArea(Coord.left(5), d, Coord.right(135), Coord.height(15)), "Text Here") {
+		final Coord d = Coord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
+		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15)), "Text Here") {
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();
@@ -219,8 +258,7 @@ public class GuiSignPicture extends WFrame {
 
 			@Override
 			protected void onTextChanged(final String oldText) {
-				GuiSignPicture.this.id = getText();
-				b.setEnabled(Sign.parseText(GuiSignPicture.this.id).isVaild());
+				GuiSignPicture.this.sign.setId(getText());
 			}
 
 			@Override
@@ -232,8 +270,7 @@ public class GuiSignPicture extends WFrame {
 			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 				return d.motion.isFinished();
 			}
-		};
-		add(m);
+		});
 	}
 
 	@Override

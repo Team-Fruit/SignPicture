@@ -28,13 +28,15 @@ public enum ImageSizes {
 	INNER {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			return new ImageSize((w/maxw>h/maxh)?maxw:w*maxh/h, (w/maxw>h/maxh)?h*maxw/w:maxh);
+			final boolean b = (Math.abs(w/maxw)>Math.abs(h/maxh));
+			return new ImageSize(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
 		}
 	},
 	OUTER {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			return new ImageSize((w/maxw<h/maxh)?maxw:w*maxh/h, (w/maxw<h/maxh)?h*maxw/w:maxh);
+			final boolean b = (Math.abs(w/maxw)<Math.abs(h/maxh));
+			return new ImageSize(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
 		}
 	},
 	WIDTH_LIMIT {

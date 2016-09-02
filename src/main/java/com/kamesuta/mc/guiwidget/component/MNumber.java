@@ -24,8 +24,13 @@ public class MNumber extends WPanel {
 			}
 		};
 		add(this.neg);
-		this.field = new MTextField(new RArea(Coord.left(buttonwidth), Coord.right(buttonwidth), Coord.top(0), Coord.bottom(0)), "");
-		this.field.setAllowedCharacters("0123456789");
+		this.field = new MTextField(new RArea(Coord.left(buttonwidth), Coord.right(buttonwidth), Coord.top(0), Coord.bottom(0)), "?") {
+			@Override
+			protected void onTextChanged(final String oldText) {
+				onNumberChanged(oldText, getText());
+			}
+		};
+		this.field.setAllowedCharacters("-.0123456789");
 		add(this.field);
 		this.pos = new MButton(new RArea(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "+") {
 			@Override
@@ -39,5 +44,8 @@ public class MNumber extends WPanel {
 	public MNumber setNumber(final float f) {
 		this.field.setText(Float.toString(f));
 		return this;
+	}
+
+	protected void onNumberChanged(final String oldText, final String newText) {
 	}
 }
