@@ -31,7 +31,7 @@ public class SignPictureLabel extends WBase {
 		draw(a, GL_QUADS);
 		glEnable(GL_TEXTURE_2D);
 		final Sign s = getSign();
-		if (s != null && s.id()!=null) {
+		if (s != null && s.id()!=null && !s.id().isEmpty()) {
 			final Image image = this.manager.get(this.sign.id());
 			if (image != null) {
 				glDisable(GL_CULL_FACE);
