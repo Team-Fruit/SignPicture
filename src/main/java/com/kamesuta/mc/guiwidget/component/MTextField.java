@@ -13,6 +13,7 @@ import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
+import com.kamesuta.mc.signpic.Reference;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -32,6 +33,7 @@ public class MTextField extends WBase {
 	protected Deque<String> next = new ArrayDeque<String>();
 
 	protected void log(final String s) {
+		Reference.logger.info("log");
 		if (!StringUtils.equals(s, this.back.peek())) {
 			this.back.push(s);
 			this.next.clear();
@@ -39,17 +41,21 @@ public class MTextField extends WBase {
 	}
 
 	protected void next() {
+		Reference.logger.info("next" + this.back + ":" + this.next);
+		final String s = getText();
 		final String b = this.next.poll();
 		if (b != null) {
-			this.back.push(b);
+			this.back.push(s);
 			setTextRaw(b);
 		}
 	}
 
 	protected void back() {
+		Reference.logger.info("back" + this.back + ":" + this.next);
+		final String s = getText();
 		final String b = this.back.poll();
 		if (b != null) {
-			this.next.push(b);
+			this.next.push(s);
 			setTextRaw(b);
 		}
 	}
