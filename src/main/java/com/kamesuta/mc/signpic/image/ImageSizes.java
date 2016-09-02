@@ -27,15 +27,19 @@ public enum ImageSizes {
 	},
 	INNER {
 		@Override
-		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			final boolean b = (Math.abs(w/maxw)>Math.abs(h/maxh));
+		public ImageSize size(final float w, final float h, float maxw, float maxh) {
+			if (w<0) maxw*=-1;
+			if (h<0) maxh*=-1;
+			final boolean b = ((w/maxw)>(h/maxh));
 			return new ImageSize(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
 		}
 	},
 	OUTER {
 		@Override
-		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			final boolean b = (Math.abs(w/maxw)<Math.abs(h/maxh));
+		public ImageSize size(final float w, final float h, float maxw, float maxh) {
+			if (w<0) maxw*=-1;
+			if (h<0) maxh*=-1;
+			final boolean b = ((w/maxw)<(h/maxh));
 			return new ImageSize(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
 		}
 	},
