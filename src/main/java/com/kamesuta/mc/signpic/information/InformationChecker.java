@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.information;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.signpic.Reference;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -34,7 +36,7 @@ public final class InformationChecker {
 	public void onTick(final ClientTickEvent event) {
 		if(doneChecking && event.phase == Phase.END && FMLClientHandler.instance().getClient().thePlayer != null && !triedToWarnPlayer) {
 			if(onlineVersion!=null && !onlineVersion.isEmpty()) {
-				if (!Reference.VERSION.equals("${version}")) {
+				if (!StringUtils.equals(Reference.VERSION, "${version}")) {
 					final EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
 					final String[] online = onlineVersion.split("\\.");
 					final String[] client = Reference.VERSION.split("\\.");

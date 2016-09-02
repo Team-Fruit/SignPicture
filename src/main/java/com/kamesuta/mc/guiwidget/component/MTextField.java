@@ -2,6 +2,10 @@ package com.kamesuta.mc.guiwidget.component;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.guiwidget.WBase;
@@ -14,7 +18,8 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
 
 public class MTextField extends WBase {
-	protected String text;
+	protected String text = "";
+	public String watermark;
 	protected int seek;
 	protected boolean isFocused;
 	protected boolean isEnabled;
@@ -23,19 +28,57 @@ public class MTextField extends WBase {
 	public String actionCommand;
 	protected String allowedCharacters;
 
-	public MTextField(final R position, final String text) {
+	protected Deque<String> back = new ArrayDeque<String>();
+	protected Deque<String> next = new ArrayDeque<String>();
+
+	protected void log(final String s) {
+		if (!StringUtils.equals(s, this.back.peek())) {
+			this.back.push(s);
+			this.next.clear();
+		}
+	}
+
+	protected void next() {
+		final String b = this.next.poll();
+		if (b != null) {
+			this.back.push(b);
+			setTextRaw(b);
+		}
+	}
+
+	protected void back() {
+		final String b = this.back.poll();
+		if (b != null) {
+			this.next.push(b);
+			setTextRaw(b);
+		}
+	}
+
+	public MTextField(final R position) {
 		super(position);
 		this.isFocused = false;
 		this.isEnabled = true;
-		this.text = text;
+	}
+
+	public MTextField(final R position, final String watermark) {
+		this(position);
+		this.watermark = watermark;
 	}
 
 	public boolean setText(final String s) {
+		if (setTextRaw(s)) {
+			log(s);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean setTextRaw(final String s) {
 		if ((s.length() <= this.maxStringLength) || (this.maxStringLength <= 0)) {
-			if (s.equals(this.text)) {
-				return true;
+			if (StringUtils.equals(s, getText())) {
+				return false;
 			}
-			final String oldText = this.text;
+			final String oldText = getText();
 			this.text = s;
 			onTextChanged(oldText);
 			return true;
@@ -72,8 +115,33 @@ public class MTextField extends WBase {
 
 	@Override
 	public void keyTyped(final WEvent ev, final Area pgp, final Point p, final char c, final int keycode) {
-		if ((!this.isEnabled) || (!this.isFocused)) {
+		if ((!isEnabled()) || (!isFocused())) {
 			return;
+		} else if (keycode == Keyboard.KEY_LCONTROL || keycode == Keyboard.KEY_RCONTROL) {
+			return;
+		} else if (c == '\026') {
+			final String s = GuiScreen.getClipboardString();
+			if ((s == null) || (s.isEmpty())) {
+				return;
+			}
+			final StringBuilder stb = new StringBuilder(getText());
+			int j = 0;
+			for (int i = 0; i < s.length(); i++) {
+				if ((getText().length() >= this.maxStringLength) && (this.maxStringLength > 0)) {
+					return;
+				}
+				final char tc = s.charAt(i);
+				if (canAddChar(tc)) {
+					stb.append(tc);
+					j++;
+				}
+			}
+			setText(stb.toString());
+			this.seek += j;
+		} else if (c == '\031') {
+			next();
+		} else if (c == '\032') {
+			back();
 		} else if (keycode == Keyboard.KEY_BACK) {
 			final String s = getText();
 			final int seek = getSeek();
@@ -90,23 +158,13 @@ public class MTextField extends WBase {
 			this.seek--;
 		} else if (keycode == Keyboard.KEY_RIGHT) {
 			this.seek++;
-		} else if (c == '\026') {
-			final String s = GuiScreen.getClipboardString();
-			if ((s == null) || (s.equals(""))) {
-				return;
-			}
-			for (int i = 0; i < s.length(); i++) {
-				if ((this.text.length() >= this.maxStringLength) && (this.maxStringLength <= 0)) {
-					return;
-				}
-				final char tc = s.charAt(i);
-				if (canAddChar(tc)) {
-					setText(this.text + tc);
-				}
-			}
+		} else if (keycode == Keyboard.KEY_HOME) {
+			this.seek = 0;
+		} else if (keycode == Keyboard.KEY_END) {
+			this.seek = getText().length();
 		} else if (keycode == Keyboard.KEY_RETURN) {
 			setFocused(false);
-		} else if (((this.text.length() < this.maxStringLength) || (this.maxStringLength == 0)) && (canAddChar(c))) {
+		} else if (((getText().length() < this.maxStringLength) || (this.maxStringLength == 0)) && (canAddChar(c))) {
 			final String s = getText();
 			final int seek = getSeek();
 			setText(s.substring(0, seek) + c + s.substring(seek, s.length()));
@@ -143,7 +201,7 @@ public class MTextField extends WBase {
 	}
 
 	public void setFocused(final boolean focus) {
-		if (focus == this.isFocused) {
+		if (focus == isFocused()) {
 			return;
 		}
 		this.isFocused = focus;
@@ -151,7 +209,7 @@ public class MTextField extends WBase {
 	}
 
 	public void onFocusChanged() {
-		if (this.isFocused) {
+		if (isFocused()) {
 			this.cursorCounter = 0;
 		}
 	}
@@ -161,7 +219,9 @@ public class MTextField extends WBase {
 		final Area out = getGuiPosition(pgp);
 		final Area in = getGuiPosition(pgp).child(1, 1, -1, -1);
 		drawBackground(out, in);
-		drawText(out, in);
+		drawWatermark(in);
+		drawText(in);
+		drawCursor(in);
 	}
 
 	protected void drawBackground(final Area out, final Area in) {
@@ -173,28 +233,27 @@ public class MTextField extends WBase {
 		glEnable(GL_TEXTURE_2D);
 	}
 
-	protected void drawText(final Area out, final Area in) {
-		drawString(getDrawText(), in.x1() + 4, in.y1() + (in.y2()-in.y1()) / 2 - 4, getTextColour());
+	protected void drawWatermark(final Area a) {
+		if (this.watermark!=null && !this.watermark.isEmpty() && getText().isEmpty() && !isFocused())
+			drawString(this.watermark, a.x1() + 4, a.y1() + a.h() / 2 - 4, 0x777777);
 	}
 
-	public String getDrawText() {
-		String s = getText();
-		final int seek = getSeek();
+	protected void drawText(final Area a) {
+		drawString(getText(), a.x1() + 4, a.y1() + a.h() / 2 - 4, getTextColour());
+	}
 
+	protected void drawCursor(final Area a) {
+		final String s = getText();
+		final int seek = getSeek();
 		final boolean blink = this.cursorCounter / 6 % 2 == 0;
-		if ((this.isEnabled) && (this.isFocused)) {
-			if (seek < s.length()) {
-				s = s.substring(0, seek) + (blink ? "_" : " ") + s.substring(seek, s.length());
-			} else {
-				if (blink)
-					s = s + "_";
-			}
+		if ((isEnabled()) && (isFocused())) {
+			if (blink)
+				drawCenteredString("\u2503", a.x1() + 4 + font.getStringWidth(s.substring(0, seek)), a.y1() + a.h() / 2 - 4, getTextColour());
 		}
-		return s;
 	}
 
 	public int getTextColour() {
-		return this.isEnabled ? 14737632 : 7368816;
+		return isEnabled() ? 14737632 : 7368816;
 	}
 
 	public MTextField setMaxStringLength(final int i) {
