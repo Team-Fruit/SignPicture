@@ -53,7 +53,7 @@ public abstract class Image {
 		if (this.state == ImageState.AVAILABLE)
 			return getTexture().getSize();
 		else
-			return IImageTexture.DefaultSize;
+			return ImageSize.DefaultSize;
 	}
 
 	public void draw() {

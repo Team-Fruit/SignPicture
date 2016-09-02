@@ -13,7 +13,6 @@ import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
-import com.kamesuta.mc.signpic.Reference;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -33,31 +32,34 @@ public class MTextField extends WBase {
 	protected Deque<String> next = new ArrayDeque<String>();
 
 	protected void log(final String s) {
-		Reference.logger.info("log");
 		if (!StringUtils.equals(s, this.back.peek())) {
-			this.back.push(s);
+			final String t = this.next.poll();
+			if (t!=null)
+				this.back.push(t);
 			this.next.clear();
+			this.next.push(s);
 		}
+		//Reference.logger.info("log" + this.back + ":" + this.next);
 	}
 
 	protected void next() {
-		Reference.logger.info("next" + this.back + ":" + this.next);
-		final String s = getText();
-		final String b = this.next.poll();
-		if (b != null) {
+		if (!this.next.isEmpty()) {
+			final String s = getText();
+			final String b = this.next.poll();
 			this.back.push(s);
 			setTextRaw(b);
 		}
+		//Reference.logger.info("next" + this.back + ":" + this.next);
 	}
 
 	protected void back() {
-		Reference.logger.info("back" + this.back + ":" + this.next);
-		final String s = getText();
-		final String b = this.back.poll();
-		if (b != null) {
+		if (!this.back.isEmpty()) {
+			final String s = getText();
+			final String b = this.back.poll();
 			this.next.push(s);
 			setTextRaw(b);
 		}
+		//Reference.logger.info("back" + this.back + ":" + this.next);
 	}
 
 	public MTextField(final R position) {

@@ -67,7 +67,7 @@ public class RenderOverlay extends WGui {
 				if (block instanceof BlockSign) {
 					final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
 					if (tile instanceof TileEntitySign) {
-						final Sign sign = Sign.parseSignEntity((TileEntitySign)tile);
+						final Sign sign = new Sign().parseSignEntity((TileEntitySign)tile);
 						if (sign.isVaild()) {
 							event.left.add("");
 							final String id = sign.id();

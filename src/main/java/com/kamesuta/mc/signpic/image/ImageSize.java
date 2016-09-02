@@ -1,10 +1,17 @@
 package com.kamesuta.mc.signpic.image;
 
+import java.text.DecimalFormat;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.guiwidget.position.Area;
 
 public class ImageSize {
+	public static final float defaultSize = 1f;
+	public static final ImageSize DefaultSize = new ImageSize(defaultSize, defaultSize);
+	public static final ImageSize UnknownSize = new ImageSize(Float.NaN, Float.NaN);
+	public static final DecimalFormat signformat = new DecimalFormat("0.#");
+
 	public final float width;
 	public final float height;
 
@@ -81,6 +88,28 @@ public class ImageSize {
 		return new ImageSize(wid, hei);
 	}
 
+	public static ImageSize parseSize(final String w, final String h) {
+		final float wid = NumberUtils.toFloat(w, Float.NaN);
+		final float hei = NumberUtils.toFloat(h, Float.NaN);
+		return new ImageSize(wid, hei);
+	}
+
+	public ImageSize imageWidth(final float width) {
+		return new ImageSize(width, this.height);
+	}
+
+	public ImageSize imageHeight(final float height) {
+		return new ImageSize(this.width, height);
+	}
+
+	public ImageSize imageWidth(final String width) {
+		return new ImageSize(NumberUtils.toFloat(width, Float.NaN), this.height);
+	}
+
+	public ImageSize imageHeight(final String height) {
+		return new ImageSize(this.width, NumberUtils.toFloat(height, Float.NaN));
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -107,7 +136,9 @@ public class ImageSize {
 	}
 
 	public String text() {
-		return String.format("[%s%s]", vaildWidth() ? this.width : "", vaildHeight() ? "x" + this.height : "");
+		return String.format("[%s%s]",
+				vaildWidth() ? signformat.format(this.width) : "",
+						(vaildHeight() && this.width!=this.height) ? "x" + signformat.format(this.height) : "");
 	}
 
 	@Override

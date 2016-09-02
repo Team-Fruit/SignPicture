@@ -26,29 +26,36 @@ public class Sign {
 		this.size = size;
 	}
 
-	public static Sign parseText(final String text) {
-		final Sign sign = new Sign();
+	public Sign parseText(final String text) {
 		if (text!=null && text.endsWith("]") && text.contains("[")) {
 			final int start = text.lastIndexOf("[");
-			String id = text.substring(0, start);
-			if (!id.startsWith("!"))
-				if (id.startsWith("$"))
-					id = "https://" + id.substring(1);
-				else if (!id.startsWith("http://") && !id.startsWith("https://"))
-					id = "http://" + id;
-			sign.id = id;
+			setId(text.substring(0, start));
 			final Map<String, String> meta = parseMeta(text.substring(start+1, text.length()-1));
-			sign.size = ImageSize.parseSize(meta.containsKey("") ? meta.get("") : "");
+			this.size = ImageSize.parseSize(meta.containsKey("") ? meta.get("") : "");
 		}
-
-		return sign;
+		return this;
 	}
 
-	public static Sign parseSignText(final String[] sign) {
+	public Sign setId(String id) {
+		if (!id.startsWith("!"))
+			if (id.startsWith("$"))
+				id = "https://" + id.substring(1);
+			else if (!id.startsWith("http://") && !id.startsWith("https://"))
+				id = "http://" + id;
+		this.id = id;
+		return this;
+	}
+
+	public Sign setSize(final ImageSize size) {
+		this.size = size;
+		return this;
+	}
+
+	public Sign parseSignText(final String[] sign) {
 		return parseText(StringUtils.join(sign));
 	}
 
-	public static Sign parseSignEntity(final TileEntitySign tile) {
+	public Sign parseSignEntity(final TileEntitySign tile) {
 		return parseSignText(tile.signText);
 	}
 
@@ -68,10 +75,6 @@ public class Sign {
 		return map;
 	}
 
-	public boolean isVaild() {
-		return this.id!=null && this.size!=null;
-	}
-
 	public String text() {
 		String id = id();
 		if (id.contains("http://"))
@@ -81,13 +84,15 @@ public class Sign {
 		return id + size().text();
 	}
 
+	public boolean isVaild() {
+		return this.id!=null && this.size!=null;
+	}
+
 	public String id() {
-		if (!isVaild()) throw new IllegalStateException("Invaild Sign: " + this);
 		return this.id;
 	}
 
 	public ImageSize size() {
-		if (!isVaild()) throw new IllegalStateException("Invaild Sign: " + this);
 		return this.size;
 	}
 
