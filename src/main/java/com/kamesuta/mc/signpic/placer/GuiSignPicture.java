@@ -211,7 +211,7 @@ public class GuiSignPicture extends WFrame {
 		};
 		add(c);
 
-		final MTextField m = new MTextField(new RArea(Coord.left(5), d, Coord.right(135), Coord.height(15)), "aaaa") {
+		final MTextField m = new MTextField(new RArea(Coord.left(5), d, Coord.right(135), Coord.height(15)), "Text Here") {
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();

@@ -75,9 +75,9 @@ public class Sign {
 	public String text() {
 		String id = id();
 		if (id.contains("http://"))
-			id = id.replaceFirst("http://", "");
+			id = id.replace("http://", "");
 		else if (id.contains("https://"))
-			id = id.replaceFirst("https://", "$");
+			id = id.replace("https://", "$");
 		return id + size().text();
 	}
 
@@ -96,7 +96,7 @@ public class Sign {
 		final String[] sign = new String[4];
 		for (int i=0; i<4; i++) {
 			if (16*i <= text.length())
-				sign[i] = text.substring(16*i, Math.min(16*i+15, text.length()));
+				sign[i] = text.substring(15*i, Math.min(15*i+15, text.length()));
 			else
 				sign[i] = "";
 		}

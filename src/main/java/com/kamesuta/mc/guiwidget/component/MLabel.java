@@ -1,5 +1,7 @@
 package com.kamesuta.mc.guiwidget.component;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
@@ -16,7 +18,7 @@ public class MLabel extends WBase {
 	}
 
 	public void setText(final String s) {
-		if (s.equals(this.text)) {
+		if (StringUtils.equals(s, this.text)) {
 			return;
 		}
 		final String oldText = this.text;
