@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.guiwidget.WGui;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
@@ -11,6 +10,7 @@ import com.kamesuta.mc.signpic.util.Sign;
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.ModelSign;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
@@ -27,6 +27,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
+	private final ModelSign model = new ModelSign();
+
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
 		this.manager = manager;
 	}
@@ -38,7 +40,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
 			// Load Image
-			final Image image = this.manager.get(sign.id);
+			final Image image = this.manager.get(sign.getURL());
 
 			// Size
 			final ImageSize size = sign.size.getAspectSize(image.getSize());
@@ -72,10 +74,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glEnable(GL_BLEND);
 			glPushMatrix();
 
-			glPushMatrix();
-			WGui.drawRect(0, 0, 2, 2, 0x000000);
-			glPopMatrix();
-
 			glTranslatef(sign.offset.x, sign.offset.y, sign.offset.z);
 
 			glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
@@ -103,7 +101,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPopMatrix();
 		} else {
+			glEnable(GL_BLEND);
+			glColor4f(1f, 1f, 1f, .5f);
 			super.renderTileEntityAt(tile, x, y, z, color);
+			glDisable(GL_BLEND);
 		}
 		this.mc.mcProfiler.endSection();
 	}

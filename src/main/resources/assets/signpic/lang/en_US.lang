@@ -1,6 +1,7 @@
 # Overlay
 ## Overlay
-signpic.over.picturemode=Place Sign and Apply Image
+signpic.over.picturemode.place=Place Sign and Apply Image
+signpic.over.picturemode.copy=Click Sign Picture and Copy Image
 
 ## F3
 signpic.over.sign=[§6Sign§r] §7[§r%s§7]
@@ -10,10 +11,6 @@ signpic.over.status=[§6Sign-Status§r] %s
 signpic.over.advmsg=[§6Sign-Info§r] %s
 signpic.over.raw=[§6Sign-Raw§r] [[§r%s§7], [§r%s§7], [§r%s§7], [§r%s§7]]
 signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
-
-# Key
-signpic.key.category=Sign Picture
-signpic.key.gui=Open GUI
 
 # Key
 signpic.key.category=Sign Picture

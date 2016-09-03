@@ -34,7 +34,7 @@ public class RenderOverlay extends WGui {
 
 	@SubscribeEvent
 	public void onDraw(final RenderGameOverlayEvent event) {
-		if (PlacerMode.instance.isEnabled()) {
+		if (PlacerMode.instance.isMode()) {
 			if ((int)(System.currentTimeMillis()/500)%2==0) {
 				final FontRenderer fontrenderer = font;
 
@@ -48,7 +48,7 @@ public class RenderOverlay extends WGui {
 				glPopMatrix();
 
 				glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
-				final String str = I18n.format("signpic.over.picturemode");
+				final String str = I18n.format(PlacerMode.instance.getMode().message);
 				fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
 				glPopMatrix();
@@ -70,7 +70,7 @@ public class RenderOverlay extends WGui {
 						final TileEntitySign tilesign = (TileEntitySign)tile;
 						final Sign sign = new Sign().parseSignEntity(tilesign);
 						if (sign.isVaild()) {
-							final String id = sign.id;
+							final String id = sign.getURL();
 							final ImageSize signsize = sign.size;
 							final Image image = this.manager.get(id);
 							final ImageSize imagesize = image.getSize();

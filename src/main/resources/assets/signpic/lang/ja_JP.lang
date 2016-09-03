@@ -1,6 +1,7 @@
 # Overlay
 ## Overlay
-signpic.over.picturemode=看板を置いて画像を適用
+signpic.over.picturemode.place=看板を置いて画像を適用
+signpic.over.picturemode.copy=画像看板をクリックしてコピー
 
 # Image State
 signpic.state.init=待機中...

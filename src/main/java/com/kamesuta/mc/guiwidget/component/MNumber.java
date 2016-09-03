@@ -42,7 +42,7 @@ public class MNumber extends WPanel {
 	}
 
 	public MNumber setNumber(final float f) {
-		this.field.setText(Float.toString(f));
+		this.field.setText(Float.isNaN(f) ? "" : Float.toString(f));
 		return this;
 	}
 

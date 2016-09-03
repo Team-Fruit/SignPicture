@@ -7,8 +7,7 @@ import net.minecraft.client.renderer.Tessellator;
 public class RenderHelper {
 	protected static final Tessellator t = Tessellator.instance;
 
-	public static void addCircleVertex(final float start, final float end, final float r) {
-		final float acc = 32f;
+	public static void addCircleVertex(final float start, final float end, final float r, final float acc) {
 		final double sangle = Math.PI*(2d*start-.5);
 		final double sx = Math.cos(sangle);
 		final double sy = Math.sin(sangle);
@@ -24,6 +23,17 @@ public class RenderHelper {
 			t.addVertex(ix*r, iy*r, 0);
 		}
 		t.addVertex(ex*r, ey*r, 0);
+	}
+
+	public static void addCircleVertex(final float start, final float end, final float r) {
+		addCircleVertex(start, end, r, 32f);
+	}
+
+	public static void addRectVertex(final float x1, final float y1, final float x2, final float y2) {
+		t.addVertex(x1, y2, 0.0D);
+		t.addVertex(x2, y2, 0.0D);
+		t.addVertex(x2, y1, 0.0D);
+		t.addVertex(x1, y1, 0.0D);
 	}
 
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
