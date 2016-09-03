@@ -40,36 +40,6 @@ public class Area {
 		return this.y2;
 	}
 
-	@Deprecated
-	public int iw() {
-		return (int) Math.abs(this.x2 - this.x1);
-	}
-
-	@Deprecated
-	public int ih() {
-		return (int) Math.abs(this.y2 - this.y1);
-	}
-
-	@Deprecated
-	public int ix1() {
-		return (int) this.x1;
-	}
-
-	@Deprecated
-	public int iy1() {
-		return (int) this.y1;
-	}
-
-	@Deprecated
-	public int ix2() {
-		return (int) this.x2;
-	}
-
-	@Deprecated
-	public int iy2() {
-		return (int) this.y2;
-	}
-
 	public Area child(final R p) {
 		return p.getAbsolute(this);
 	}

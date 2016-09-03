@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.placer;
+package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -21,8 +21,11 @@ import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.signpic.placer.PlacerMode.Mode;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.mode.Mode;
 import com.kamesuta.mc.signpic.proxy.ClientProxy;
+
+import net.minecraft.client.resources.I18n;
 
 public class GuiSignPicture extends WFrame {
 	//	protected SignPictureLabel picture;
@@ -62,7 +65,7 @@ public class GuiSignPicture extends WFrame {
 			{
 				add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 					{
-						add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(PlacerMode.instance.getSign()));
+						add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(CurrentMode.instance.getSign()));
 					}
 				});
 			}
@@ -83,62 +86,62 @@ public class GuiSignPicture extends WFrame {
 			{
 				float i = 175;
 
-				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Width"));
+				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.width")));
 				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
 					{
-						if (PlacerMode.instance.getSign().isSizeVaild())
-							setNumber(PlacerMode.instance.getSign().size.width);
+						if (CurrentMode.instance.getSign().isSizeVaild())
+							setNumber(CurrentMode.instance.getSign().size.width);
 					}
 
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						PlacerMode.instance.getSign().setSize(PlacerMode.instance.getSign().size.imageWidth(newText));
+						CurrentMode.instance.getSign().setSize(CurrentMode.instance.getSign().size.imageWidth(newText));
 					}
 				});
-				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Height"));
+				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.height")));
 				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
 					{
-						if (PlacerMode.instance.getSign().isSizeVaild())
-							setNumber(PlacerMode.instance.getSign().size.height);
+						if (CurrentMode.instance.getSign().isSizeVaild())
+							setNumber(CurrentMode.instance.getSign().size.height);
 					}
 
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						PlacerMode.instance.getSign().setSize(PlacerMode.instance.getSign().size.imageHeight(newText));
+						CurrentMode.instance.getSign().setSize(CurrentMode.instance.getSign().size.imageHeight(newText));
 					}
 				});
-				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Continue") {
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						PlacerMode.instance.setContinue(!PlacerMode.instance.isContinue());
+						CurrentMode.instance.setContinue(!CurrentMode.instance.isContinue());
 						return true;
 					}
 
 					@Override
 					public boolean isEnabled() {
-						state(PlacerMode.instance.isContinue());
+						state(CurrentMode.instance.isContinue());
 						return true;
 					}
 				});
-				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Copy") {
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.copy")) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						PlacerMode.instance.setMode(Mode.COPY);
+						CurrentMode.instance.setMode(Mode.COPY);
 						requestClose();
 						return true;
 					}
 
 					@Override
 					public boolean isEnabled() {
-						state(PlacerMode.instance.isMode(Mode.COPY));
+						state(CurrentMode.instance.isMode(Mode.COPY));
 						return true;
 					}
 				});
-				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Place") {
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						if (PlacerMode.instance.getSign().isVaild()) {
-							PlacerMode.instance.setMode(Mode.PLACE);
+						if (CurrentMode.instance.getSign().isVaild()) {
+							CurrentMode.instance.setMode(Mode.PLACE);
 							requestClose();
 							return true;
 						}
@@ -147,15 +150,15 @@ public class GuiSignPicture extends WFrame {
 
 					@Override
 					public boolean isEnabled() {
-						state(PlacerMode.instance.isMode(Mode.PLACE));
-						return PlacerMode.instance.getSign().isVaild() && !PlacerMode.instance.isMode(Mode.PLACE);
+						state(CurrentMode.instance.isMode(Mode.PLACE));
+						return CurrentMode.instance.getSign().isVaild() && !CurrentMode.instance.isMode(Mode.PLACE);
 					}
 				});
-				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Cancel") {
+				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						if (PlacerMode.instance.isMode()) {
-							PlacerMode.instance.setMode();
+						if (CurrentMode.instance.isMode()) {
+							CurrentMode.instance.setMode();
 							return true;
 						}
 						return false;
@@ -163,7 +166,7 @@ public class GuiSignPicture extends WFrame {
 
 					@Override
 					public boolean isEnabled() {
-						return PlacerMode.instance.isMode();
+						return CurrentMode.instance.isMode();
 					}
 				});
 			}
@@ -182,14 +185,14 @@ public class GuiSignPicture extends WFrame {
 		final Coord d = Coord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
 		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15)), "URL Here") {
 			{
-				if (PlacerMode.instance.getSign().id != null)
-					setText(PlacerMode.instance.getSign().id);
+				if (CurrentMode.instance.getSign().id != null)
+					setText(CurrentMode.instance.getSign().id);
 			}
 
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();
-				PlacerMode.instance.getSign().setId(getText());
+				CurrentMode.instance.getSign().setId(getText());
 			}
 
 			@Override

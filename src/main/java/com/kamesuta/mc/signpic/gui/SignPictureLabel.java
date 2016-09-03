@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.placer;
+package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 

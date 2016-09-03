@@ -1,12 +1,12 @@
-package com.kamesuta.mc.signpic.placer;
+package com.kamesuta.mc.signpic.mode;
 
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.util.Sign;
 
-public class PlacerMode {
-	public static final PlacerMode instance = new PlacerMode();
+public class CurrentMode {
+	public static final CurrentMode instance = new CurrentMode();
 
-	private PlacerMode() {
+	private CurrentMode() {
 	}
 
 	protected Sign sign = new Sign().setSize(ImageSize.UnknownSize);
@@ -47,17 +47,5 @@ public class PlacerMode {
 
 	public Sign getSign() {
 		return this.sign;
-	}
-
-	public static enum Mode {
-		PLACE("signpic.over.picturemode.place"),
-		COPY("signpic.over.picturemode.copy"),
-		NONE("signpic.over.picturemode.none"),
-		;
-
-		public final String message;
-		private Mode(final String message) {
-			this.message = message;
-		}
 	}
 }

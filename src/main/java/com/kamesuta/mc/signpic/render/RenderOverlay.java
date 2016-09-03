@@ -6,7 +6,7 @@ import com.kamesuta.mc.guiwidget.WGui;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
-import com.kamesuta.mc.signpic.placer.PlacerMode;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -34,7 +34,7 @@ public class RenderOverlay extends WGui {
 
 	@SubscribeEvent
 	public void onDraw(final RenderGameOverlayEvent event) {
-		if (PlacerMode.instance.isMode()) {
+		if (CurrentMode.instance.isMode()) {
 			if ((int)(System.currentTimeMillis()/500)%2==0) {
 				final FontRenderer fontrenderer = font;
 
@@ -48,7 +48,7 @@ public class RenderOverlay extends WGui {
 				glPopMatrix();
 
 				glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
-				final String str = I18n.format(PlacerMode.instance.getMode().message);
+				final String str = I18n.format(CurrentMode.instance.getMode().message);
 				fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
 				glPopMatrix();
