@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
+import org.apache.commons.lang3.StringUtils;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -16,7 +18,7 @@ public class McImageTexture implements IImageTexture {
 
 	@Override
 	public void bind() {
-		if (!this.location.getResourcePath().isEmpty())
+		if (!StringUtils.isEmpty(this.location.getResourcePath()))
 			mc.renderEngine.bindTexture(this.location);
 		else {
 			mc.renderEngine.bindTexture(Null);

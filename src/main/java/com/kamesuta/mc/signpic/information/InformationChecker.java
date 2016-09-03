@@ -35,7 +35,7 @@ public final class InformationChecker {
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
 		if(doneChecking && event.phase == Phase.END && FMLClientHandler.instance().getClient().thePlayer != null && !triedToWarnPlayer) {
-			if(onlineVersion!=null && !onlineVersion.isEmpty()) {
+			if(!StringUtils.isEmpty(onlineVersion)) {
 				if (!StringUtils.equals(Reference.VERSION, "${version}")) {
 					final EntityPlayer player = FMLClientHandler.instance().getClient().thePlayer;
 					final String[] online = onlineVersion.split("\\.");

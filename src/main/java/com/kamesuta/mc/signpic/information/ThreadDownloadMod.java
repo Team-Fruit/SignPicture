@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Reference;
 
@@ -34,7 +35,7 @@ public class ThreadDownloadMod extends Thread {
 			final String stringurl = InformationChecker.onlineVersionRemote;
 			final String stringlocal = InformationChecker.onlineVersionLocal;
 			final String local;
-			if (stringlocal!=null && !stringlocal.isEmpty())
+			if (!StringUtils.isEmpty(stringlocal))
 				local = stringlocal;
 			else
 				local = stringurl.substring(stringurl.lastIndexOf("/")+1, stringurl.length());

@@ -129,7 +129,7 @@ public class MTextField extends WBase {
 			return;
 		} else if (c == '\026') {
 			final String s = GuiScreen.getClipboardString();
-			if ((s == null) || (s.isEmpty())) {
+			if (StringUtils.isEmpty(s)) {
 				return;
 			}
 			final StringBuilder stb = new StringBuilder(getText());
@@ -187,7 +187,7 @@ public class MTextField extends WBase {
 	public boolean canAddChar(final char c) {
 		if (this.allowedCharacters == null)
 			return ChatAllowedCharacters.isAllowedCharacter(c);
-		else if (this.allowedCharacters.isEmpty())
+		else if (StringUtils.isEmpty(this.allowedCharacters))
 			return true;
 		else
 			return this.allowedCharacters.indexOf(c) >= 0;
@@ -242,7 +242,7 @@ public class MTextField extends WBase {
 	}
 
 	protected void drawWatermark(final Area a) {
-		if (this.watermark!=null && !this.watermark.isEmpty() && getText().isEmpty() && !isFocused())
+		if (!StringUtils.isEmpty(this.watermark)&& StringUtils.isEmpty(getText()) && !isFocused())
 			drawString(this.watermark, a.x1() + 4, a.y1() + a.h() / 2 - 4, 0x777777);
 	}
 

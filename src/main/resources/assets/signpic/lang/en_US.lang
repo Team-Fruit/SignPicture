@@ -3,11 +3,12 @@
 signpic.over.picturemode=Place Sign and Apply Image
 
 ## F3
+signpic.over.sign=[§6Sign§r] §7[§r%s§7]
 signpic.over.id=[§6Sign-URL§r] %s
-signpic.over.size=[§6Sign-Size§r] §dSign:§7[[W:§r%s§7]×[H:§r%s§7]], §dImage:§7[[W:§r%s§7]×[H:§r%s§7]], §dView:§7[[W:§r%s§7]×[H:§r%s§7]]
+signpic.over.size=[§6Sign-Size§r] §7[§r%s§7] [§dSign:§7[§r%s§7×§r%s§7], §dImage:§7[§r%s§7×§r%s§7], §dView:§7[§r%s§7×§r%s§7]]
 signpic.over.status=[§6Sign-Status§r] %s
 signpic.over.advmsg=[§6Sign-Info§r] %s
-signpic.over.raw=[§6Sign-Raw§r] §7[§r%s§7]
+signpic.over.raw=[§6Sign-Raw§r] [[§r%s§7], [§r%s§7], [§r%s§7], [§r%s§7]]
 signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
 
 # Key

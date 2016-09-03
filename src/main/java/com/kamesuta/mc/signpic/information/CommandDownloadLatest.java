@@ -1,4 +1,6 @@
 package com.kamesuta.mc.signpic.information;
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentTranslation;
@@ -34,7 +36,7 @@ public class CommandDownloadLatest extends CommandBase {
 		if(!ENABLED)
 			var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.disabled").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 		else
-			if (InformationChecker.doneChecking && InformationChecker.onlineVersionRemote!=null && !InformationChecker.onlineVersionRemote.isEmpty())
+			if (InformationChecker.doneChecking && !StringUtils.isEmpty(InformationChecker.onlineVersionRemote))
 			{
 				if(InformationChecker.downloadedFile)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));

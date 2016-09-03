@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.guiwidget.WGui;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
@@ -37,10 +38,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
 			// Load Image
-			final Image image = this.manager.get(sign.id());
+			final Image image = this.manager.get(sign.id);
 
 			// Size
-			final ImageSize size = sign.size().getAspectSize(image.getSize());
+			final ImageSize size = sign.size.getAspectSize(image.getSize());
 
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
@@ -71,7 +72,13 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glEnable(GL_BLEND);
 			glPushMatrix();
 
-			glTranslatef(-size.width/2, size.height + .5f*((size.height>=0)?-1f:1f), 0f);
+			glPushMatrix();
+			WGui.drawRect(0, 0, 2, 2, 0x000000);
+			glPopMatrix();
+
+			glTranslatef(sign.offset.x, sign.offset.y, sign.offset.z);
+
+			glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 			glScalef(1f, -1f, 1f);
 
 			glPushMatrix();

@@ -67,21 +67,25 @@ public class RenderOverlay extends WGui {
 				if (block instanceof BlockSign) {
 					final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
 					if (tile instanceof TileEntitySign) {
-						final Sign sign = new Sign().parseSignEntity((TileEntitySign)tile);
+						final TileEntitySign tilesign = (TileEntitySign)tile;
+						final Sign sign = new Sign().parseSignEntity(tilesign);
 						if (sign.isVaild()) {
-							event.left.add("");
-							final String id = sign.id();
-							event.left.add(I18n.format("signpic.over.id", id));
-							final ImageSize signsize = sign.size();
+							final String id = sign.id;
+							final ImageSize signsize = sign.size;
 							final Image image = this.manager.get(id);
 							final ImageSize imagesize = image.getSize();
-							final ImageSize viewsize = sign.size().getAspectSize(imagesize);
-							event.left.add(I18n.format("signpic.over.size", signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
-							event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
+							final ImageSize viewsize = sign.size.getAspectSize(imagesize);
 							final String advmsg = image.advMessage();
+
+							event.left.add("");
+							event.left.add(I18n.format("signpic.over.sign", sign.text()));
+							event.left.add(I18n.format("signpic.over.id", id));
+							event.left.add(I18n.format("signpic.over.size", signsize.text(), signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
+							event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
 							if (advmsg != null)
 								event.left.add(I18n.format("signpic.over.advmsg", advmsg));
-							event.left.add(I18n.format("signpic.over.raw", sign.text()));
+							if (tilesign.signText != null)
+								event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
 							event.left.add(I18n.format("signpic.over.local", image.getLocal()));
 						}
 					}
