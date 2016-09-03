@@ -27,38 +27,36 @@ public class SignPictureLabel extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
-		glEnable(GL_BLEND);
-		glColor4f(0f, 0f, 0f, 0.3f);
-		glDisable(GL_TEXTURE_2D);
-		draw(a, GL_QUADS);
-		glEnable(GL_TEXTURE_2D);
 		final Sign s = getSign();
-		if (s != null && !StringUtils.isEmpty(s.id)) {
-			final Image image = this.manager.get(this.sign.id);
-			if (image != null) {
-				glDisable(GL_CULL_FACE);
-				glPushMatrix();
-				translate(a);
+		if (s.isVaild()) {
+			final String id = s.getURL();
+			if (s != null && !StringUtils.isEmpty(id)) {
+				final Image image = this.manager.get(id);
+				if (image != null) {
+					glDisable(GL_CULL_FACE);
+					glPushMatrix();
+					translate(a);
 
-				final ImageSize siz = image.getSize().getLimitSize(this.sign.size);
-				final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, new ImageSize(a));
+					final ImageSize siz = image.getSize().getLimitSize(this.sign.size);
+					final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, new ImageSize(a));
 
-				glPushMatrix();
-				glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-				glScalef(size.width, size.height, 1f);
-				image.getState().mainImage(this.manager, image);
-				glPopMatrix();
+					glPushMatrix();
+					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
+					glScalef(size.width, size.height, 1f);
+					image.getState().mainImage(this.manager, image);
+					glPopMatrix();
 
-				glPushMatrix();
-				glTranslatef(a.w()/2, a.h()/2, 0);
-				glScalef(size.width, size.height, 1f);
-				glScalef(25f, 25f, 1f);
-				image.getState().themeImage(this.manager, image);
-				image.getState().message(this.manager, image, font);
-				glPopMatrix();
+					glPushMatrix();
+					glTranslatef(a.w()/2, a.h()/2, 0);
+					//glScalef(size.width, size.height, 1f);
+					glScalef(25f, 25f, 1f);
+					image.getState().themeImage(this.manager, image);
+					image.getState().message(this.manager, image, font);
+					glPopMatrix();
 
-				glPopMatrix();
-				glEnable(GL_CULL_FACE);
+					glPopMatrix();
+					glEnable(GL_CULL_FACE);
+				}
 			}
 		}
 	}

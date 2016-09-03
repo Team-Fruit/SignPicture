@@ -2,12 +2,21 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.placer.GuiSignPicture;
 import com.kamesuta.mc.signpic.placer.PlacerMode;
+import com.kamesuta.mc.signpic.placer.PlacerMode.Mode;
+import com.kamesuta.mc.signpic.util.Sign;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSign;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiEditSign;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.MouseEvent;
 
 public class SignHandler {
 	static {
@@ -25,11 +34,12 @@ public class SignHandler {
 		}
 	}
 
+	protected Minecraft mc = FMLClientHandler.instance().getClient();
 	private static Field f;
 
 	@SubscribeEvent
 	public void onSign(final GuiOpenEvent event) {
-		if (PlacerMode.instance.isEnabled())
+		if (PlacerMode.instance.isMode(Mode.PLACE))
 			if (event.gui instanceof GuiEditSign) {
 				if (f != null) {
 					try {
@@ -37,11 +47,40 @@ public class SignHandler {
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
 						PlacerMode.instance.getSign().sendSign(tileSign);
 						event.setCanceled(true);
-						PlacerMode.instance.disable();
+						if (!PlacerMode.instance.isContinue())
+							PlacerMode.instance.setMode();
 					} catch (final IllegalArgumentException e) {
 					} catch (final IllegalAccessException e) {
 					}
 				}
 			}
+	}
+
+	@SubscribeEvent
+	public void onClick(final MouseEvent event) {
+		if (PlacerMode.instance.isMode(Mode.COPY)) {
+			if (event.buttonstate && this.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
+				if (this.mc.objectMouseOver != null) {
+					final int x = this.mc.objectMouseOver.blockX;
+					final int y = this.mc.objectMouseOver.blockY;
+					final int z = this.mc.objectMouseOver.blockZ;
+					final Block block = this.mc.theWorld.getBlock(x, y, z);
+					if (block instanceof BlockSign) {
+						final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
+						if (tile instanceof TileEntitySign) {
+							final TileEntitySign tilesign = (TileEntitySign)tile;
+							final Sign sign = new Sign().parseSignEntity(tilesign);
+							if (sign.isVaild()) {
+								PlacerMode.instance.setSign(sign);
+								event.setCanceled(true);
+								this.mc.displayGuiScreen(new GuiSignPicture());
+								if (!PlacerMode.instance.isContinue())
+									PlacerMode.instance.setMode();
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

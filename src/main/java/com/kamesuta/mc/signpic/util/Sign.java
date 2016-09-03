@@ -39,12 +39,7 @@ public class Sign {
 		return this;
 	}
 
-	public Sign setId(String id) {
-		if (!id.startsWith("!") && !StringUtils.isEmpty(id))
-			if (id.startsWith("$"))
-				id = "https://" + id.substring(1);
-			else if (!id.startsWith("http://") && !id.startsWith("https://"))
-				id = "http://" + id;
+	public Sign setId(final String id) {
 		this.id = id;
 		return this;
 	}
@@ -52,6 +47,16 @@ public class Sign {
 	public Sign setSize(final ImageSize size) {
 		this.size = size;
 		return this;
+	}
+
+	public String getURL() {
+		String id = this.id;
+		if (!id.startsWith("!") && !isEmpty(id))
+			if (id.startsWith("$"))
+				id = "https://" + id.substring(1);
+			else if (!id.startsWith("http://") && !id.startsWith("https://"))
+				id = "http://" + id;
+		return id;
 	}
 
 	public Sign parseSignText(final String[] sign) {
@@ -87,8 +92,20 @@ public class Sign {
 		return id + "[" + this.size.text() + this.offset.text() + "]";
 	}
 
+	public boolean isIdVaild() {
+		return !isEmpty(this.id);
+	}
+
+	public boolean isSizeVaild() {
+		return this.size!=null;
+	}
+
 	public boolean isVaild() {
-		return this.id!=null && this.size!=null;
+		return isIdVaild() && isSizeVaild();
+	}
+
+	public boolean isEmpty(final String s) {
+		return StringUtils.isEmpty(this.id) || StringUtils.containsOnly(this.id, "!") || StringUtils.containsOnly(this.id, "$");
 	}
 
 	public String[] toSignText() {

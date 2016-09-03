@@ -21,12 +21,10 @@ import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
 import com.kamesuta.mc.guiwidget.position.RArea;
-import com.kamesuta.mc.signpic.image.ImageSize;
+import com.kamesuta.mc.signpic.placer.PlacerMode.Mode;
 import com.kamesuta.mc.signpic.proxy.ClientProxy;
-import com.kamesuta.mc.signpic.util.Sign;
 
 public class GuiSignPicture extends WFrame {
-	private final Sign sign = new Sign().setSize(ImageSize.UnknownSize);
 	//	protected SignPictureLabel picture;
 
 	public GuiSignPicture() {
@@ -40,128 +38,6 @@ public class GuiSignPicture extends WFrame {
 
 	@Override
 	protected void initWidgets() {
-		//		add(new WBase(RArea.diff(0, 0, 0, 0)) {
-		//			MotionQueue m = new MotionQueue(0).add(Easings.linear.move(.5f, .5f)).start();
-		//			@Override
-		//			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
-		//				glColor4f(0f, 0f, 0f, this.m.get());
-		//				drawRect(getGuiPosition(pgp));
-		//			}
-		//
-		//			@Override
-		//			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-		//				this.m.stop().add(Easings.linear.move(.5f, 0f)).add(new BlankMotion(.2f)).start();
-		//			}
-		//
-		//			@Override
-		//			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-		//				return this.m.isFinished();
-		//			}
-		//		});
-		//
-		//		add(new MCheckBox(new RArea(Coord.top(5), Coord.left(5), Coord.height(15), Coord.width(15)), "aaaabbbccc"));
-		//
-		//		add(new MPanel(new RArea(Coord.top(5), Coord.right(5), Coord.height(80), Coord.width(100))));
-		//
-		//		add(new MNumber(new RArea(Coord.bottom(40), Coord.right(5), Coord.height(15), Coord.width(100)), 15));
-		//
-		//		final Coord s = Coord.left(-180).add(Easings.easeOutExpo.move(.5f, 5)).start();
-		//		this.picture = new SignPictureLabel(new RArea(s, Coord.height(180), Coord.width(180), Coord.bottom(20)), ClientProxy.manager) {
-		//			@Override
-		//			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
-		//				final Area a = getGuiPosition(pgp);
-		//				glColor4f(0f, 0f, 0f, 0.3f);
-		//				drawRect(a);
-		//				super.draw(ev, pgp, p, frame);
-		//			}
-		//
-		//			@Override
-		//			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-		//				s.motion.stop().add(Easings.easeOutExpo.move(.5f, -180)).start();
-		//			}
-		//
-		//			@Override
-		//			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-		//				return s.motion.isFinished();
-		//			}
-		//		};
-		//		add(this.picture);
-		//		final Coord d = Coord.bottom(-15).add(Easings.easeOutCirc.move(.5f, 5)).start();
-		//		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(5), Coord.height(15)), "aaaa") {
-		//			@Override
-		//			public void onFocusChanged() {
-		//				super.onFocusChanged();
-		//				final String url = getText();
-		//				GuiSignPicture.this.picture.setUrl(url);
-		//				for (int i=0; i<4; i++) {
-		//					if (16*i <= url.length())
-		//						GuiSignPicture.this.signurl[i] = url.substring(16*i, Math.min(16*i+15, url.length()));
-		//				}
-		//			}
-		//
-		//			@Override
-		//			public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-		//				d.motion.stop().add(Easings.easeOutCirc.move(1f, -15)).start();
-		//			}
-		//
-		//			@Override
-		//			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-		//				return d.motion.isFinished();
-		//			}
-		//		});
-		//		//add(new MButton(new LRArea(5, -21, 30, -6, true), "aaaa") {
-		//		final Coord c = Coord.left(-70);
-		//		add(new MButton(new RArea(Coord.top(20), c, Coord.width(80), Coord.height(20)), "aaaa") {
-		//			boolean hover;
-		//			@Override
-		//			public void mouseMoved(final WEvent ev, final Area pgp, final Point p, final int button) {
-		//				super.mouseMoved(ev, pgp, p, button);
-		//				final Area a = getGuiPosition(pgp);
-		//				final boolean h = a.pointInside(p);
-		//				if (h) {
-		//					if (!this.hover) {
-		//						this.hover = h;
-		//						c.motion.stop().add(Easings.easeOutBounce.move(.5f, 0)).start();
-		//					}
-		//				} else {
-		//					if (this.hover) {
-		//						this.hover = h;
-		//						c.motion.stop().add(Easings.easeOutBounce.move(.5f, -70)).start();
-		//					}
-		//				}
-		//			}
-		//
-		//			@Override
-		//			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-		//				//c.motion.stop().add(Easings.easeOutCirc.move(2f, c.motion.getLast() + 30));
-		//				return true;
-		//			}
-		//		});
-		//		add(new WBase(RArea.diff(0, 0, 0, 0)) {
-		//			@Override
-		//			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
-		//				final Area a = new Area(75, 75, 150, 150);
-		//				final Area b = new Area(85, 85, 160, 160);
-		//				clip.clipArea(b);
-		//				glColor4f(0f, 0f, 1f, 0.3f);
-		//				glDisable(GL_TEXTURE_2D);
-		//				draw(pgp, GL_QUADS);
-		//				glEnable(GL_TEXTURE_2D);
-		//				clip.end();
-		//				clip.clipArea(a);
-		//				glColor4f(1f, 0f, 0f, 0.3f);
-		//				glDisable(GL_TEXTURE_2D);
-		//				draw(pgp, GL_QUADS);
-		//				glEnable(GL_TEXTURE_2D);
-		//				clip.end();
-		//
-		//				glDisable(GL_TEXTURE_2D);
-		//				glColor4f(1f, 0f, 0f, 1f);
-		//				draw(a, GL_LINE_LOOP);
-		//				draw(b, GL_LINE_LOOP);
-		//				glEnable(GL_TEXTURE_2D);
-		//			}
-		//		});
 		add(new WBase(RArea.diff(0, 0, 0, 0)) {
 			MotionQueue m = new MotionQueue(0).add(Easings.linear.move(.2f, .5f)).start();
 			@Override
@@ -186,7 +62,7 @@ public class GuiSignPicture extends WFrame {
 			{
 				add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 					{
-						add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(GuiSignPicture.this.sign));
+						add(new SignPictureLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(PlacerMode.instance.getSign()));
 					}
 				});
 			}
@@ -205,27 +81,64 @@ public class GuiSignPicture extends WFrame {
 		final Coord p = Coord.right(-60).add(Easings.easeOutBounce.move(.5f, 0)).start();
 		add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
 			{
-				float i = 125;
+				float i = 175;
 
 				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Width"));
 				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
+					{
+						if (PlacerMode.instance.getSign().isSizeVaild())
+							setNumber(PlacerMode.instance.getSign().size.width);
+					}
+
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size.imageWidth(newText));
+						PlacerMode.instance.getSign().setSize(PlacerMode.instance.getSign().size.imageWidth(newText));
 					}
 				});
 				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Height"));
 				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
+					{
+						if (PlacerMode.instance.getSign().isSizeVaild())
+							setNumber(PlacerMode.instance.getSign().size.height);
+					}
+
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size.imageHeight(newText));
+						PlacerMode.instance.getSign().setSize(PlacerMode.instance.getSign().size.imageHeight(newText));
 					}
 				});
-				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Apply") {
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Continue") {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						if (GuiSignPicture.this.sign.isVaild()) {
-							PlacerMode.instance.enable(GuiSignPicture.this.sign);
+						PlacerMode.instance.setContinue(!PlacerMode.instance.isContinue());
+						return true;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						state(PlacerMode.instance.isContinue());
+						return true;
+					}
+				});
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Copy") {
+					@Override
+					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						PlacerMode.instance.setMode(Mode.COPY);
+						requestClose();
+						return true;
+					}
+
+					@Override
+					public boolean isEnabled() {
+						state(PlacerMode.instance.isMode(Mode.COPY));
+						return true;
+					}
+				});
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Place") {
+					@Override
+					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						if (PlacerMode.instance.getSign().isVaild()) {
+							PlacerMode.instance.setMode(Mode.PLACE);
 							requestClose();
 							return true;
 						}
@@ -234,14 +147,15 @@ public class GuiSignPicture extends WFrame {
 
 					@Override
 					public boolean isEnabled() {
-						return GuiSignPicture.this.sign.isVaild() && !PlacerMode.instance.isEnabled();
+						state(PlacerMode.instance.isMode(Mode.PLACE));
+						return PlacerMode.instance.getSign().isVaild() && !PlacerMode.instance.isMode(Mode.PLACE);
 					}
 				});
-				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Cancel") {
+				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Cancel") {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						if (PlacerMode.instance.isEnabled()) {
-							PlacerMode.instance.disable();
+						if (PlacerMode.instance.isMode()) {
+							PlacerMode.instance.setMode();
 							return true;
 						}
 						return false;
@@ -249,7 +163,7 @@ public class GuiSignPicture extends WFrame {
 
 					@Override
 					public boolean isEnabled() {
-						return PlacerMode.instance.isEnabled();
+						return PlacerMode.instance.isMode();
 					}
 				});
 			}
@@ -267,10 +181,15 @@ public class GuiSignPicture extends WFrame {
 
 		final Coord d = Coord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
 		add(new MTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15)), "URL Here") {
+			{
+				if (PlacerMode.instance.getSign().id != null)
+					setText(PlacerMode.instance.getSign().id);
+			}
+
 			@Override
 			public void onFocusChanged() {
 				super.onFocusChanged();
-				GuiSignPicture.this.sign.setId(getText());
+				PlacerMode.instance.getSign().setId(getText());
 			}
 
 			@Override
@@ -309,18 +228,19 @@ public class GuiSignPicture extends WFrame {
 		MotionQueue m = new MotionQueue(0);
 		MotionQueue s = new MotionQueue(1);
 
-		@Override
-		public void mouseMoved(final WEvent ev, final Area pgp, final Point p, final int button) {
-			final Area a = getGuiPosition(pgp);
-			if (a.pointInside(p) && !this.hover) {
-				this.hover = true;
-				this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
-				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
-			}
-			if (!a.pointInside(p) && this.hover) {
-				this.hover = false;
-				this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
-				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
+		protected void state(final boolean b) {
+			if (b) {
+				if (!this.hover) {
+					this.hover = true;
+					this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
+					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
+				}
+			} else {
+				if (this.hover) {
+					this.hover = false;
+					this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
+					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
+				}
 			}
 		}
 
