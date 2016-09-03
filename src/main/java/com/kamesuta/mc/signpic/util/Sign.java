@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.image.ImageOffset;
 import com.kamesuta.mc.signpic.image.ImageSize;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -17,6 +18,7 @@ import net.minecraft.tileentity.TileEntitySign;
 public class Sign {
 	public String id;
 	public ImageSize size;
+	public final ImageOffset offset = new ImageOffset();
 
 	public Sign() {
 	}
@@ -31,13 +33,14 @@ public class Sign {
 			final int start = text.lastIndexOf("[");
 			setId(text.substring(0, start));
 			final Map<String, String> meta = parseMeta(text.substring(start+1, text.length()-1));
-			this.size = ImageSize.parseSize(meta.containsKey("") ? meta.get("") : "");
+			this.size = ImageSize.parseSize(meta);
+			this.offset.parseOffset(meta);
 		}
 		return this;
 	}
 
 	public Sign setId(String id) {
-		if (!id.startsWith("!") && !id.isEmpty())
+		if (!id.startsWith("!") && !StringUtils.isEmpty(id))
 			if (id.startsWith("$"))
 				id = "https://" + id.substring(1);
 			else if (!id.startsWith("http://") && !id.startsWith("https://"))
@@ -59,7 +62,7 @@ public class Sign {
 		return parseSignText(tile.signText);
 	}
 
-	protected static final Pattern p = Pattern.compile("(?:([^\\dx]?)(\\d*x\\d*|\\d*))+?");
+	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
 	protected static Map<String, String> parseMeta(final String src) {
 		final Matcher m = p.matcher(src);
@@ -68,7 +71,7 @@ public class Sign {
 			if (2 <= m.groupCount()) {
 				final String key = m.group(1);
 				final String value = m.group(2);
-				if (!key.isEmpty() || !value.isEmpty())
+				if (!StringUtils.isEmpty(key) || !StringUtils.isEmpty(value))
 					map.put(key, value);
 			}
 		}
@@ -76,24 +79,16 @@ public class Sign {
 	}
 
 	public String text() {
-		String id = id();
+		String id = this.id;
 		if (id.contains("http://"))
 			id = id.replace("http://", "");
 		else if (id.contains("https://"))
 			id = id.replace("https://", "$");
-		return id + size().text();
+		return id + "[" + this.size.text() + this.offset.text() + "]";
 	}
 
 	public boolean isVaild() {
 		return this.id!=null && this.size!=null;
-	}
-
-	public String id() {
-		return this.id;
-	}
-
-	public ImageSize size() {
-		return this.size;
 	}
 
 	public String[] toSignText() {

@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.text.DecimalFormat;
+import java.util.Map;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -8,8 +9,9 @@ import com.kamesuta.mc.guiwidget.position.Area;
 
 public class ImageSize {
 	public static final float defaultSize = 1f;
+	public static final float unknownSize = Float.NaN;
 	public static final ImageSize DefaultSize = new ImageSize(defaultSize, defaultSize);
-	public static final ImageSize UnknownSize = new ImageSize(Float.NaN, Float.NaN);
+	public static final ImageSize UnknownSize = new ImageSize(unknownSize, unknownSize);
 	public static final DecimalFormat signformat = new DecimalFormat("0.#");
 
 	public final float width;
@@ -46,11 +48,11 @@ public class ImageSize {
 		else if (vaildWidth() && vaildHeight())
 			return this;
 		else if (vaildWidth())
-			return createSize(ImageSizes.WIDTH, availableaspect, this.width, Float.NaN);
+			return createSize(ImageSizes.WIDTH, availableaspect, this.width, unknownSize);
 		else if (vaildHeight())
-			return createSize(ImageSizes.HEIGHT, availableaspect, Float.NaN, this.height);
+			return createSize(ImageSizes.HEIGHT, availableaspect, unknownSize, this.height);
 		else
-			return createSize(ImageSizes.HEIGHT, availableaspect, Float.NaN, 1);
+			return createSize(ImageSizes.HEIGHT, availableaspect, unknownSize, 1);
 	}
 
 	public ImageSize getLimitSize(final ImageSize imagesize) {
@@ -81,16 +83,15 @@ public class ImageSize {
 		return createSize(s, raw.width, raw.height, max.width, max.height);
 	}
 
-	public static ImageSize parseSize(final String src) {
-		final String[] sp_size = src.split("x");
-		final float wid = (sp_size.length >= 1) ? NumberUtils.toFloat(sp_size[0], Float.NaN) : Float.NaN;
-		final float hei = (sp_size.length >= 2) ? NumberUtils.toFloat(sp_size[1], Float.NaN) : Float.NaN;
+	public static ImageSize parseSize(final Map<String, String> meta) {
+		final float wid = (meta.containsKey("")) ? NumberUtils.toFloat(meta.get(""), unknownSize) : unknownSize;
+		final float hei = (meta.containsKey("x")) ? NumberUtils.toFloat(meta.get("x"), unknownSize) : unknownSize;
 		return new ImageSize(wid, hei);
 	}
 
 	public static ImageSize parseSize(final String w, final String h) {
-		final float wid = NumberUtils.toFloat(w, Float.NaN);
-		final float hei = NumberUtils.toFloat(h, Float.NaN);
+		final float wid = NumberUtils.toFloat(w, unknownSize);
+		final float hei = NumberUtils.toFloat(h, unknownSize);
 		return new ImageSize(wid, hei);
 	}
 
@@ -103,11 +104,11 @@ public class ImageSize {
 	}
 
 	public ImageSize imageWidth(final String width) {
-		return new ImageSize(NumberUtils.toFloat(width, Float.NaN), this.height);
+		return new ImageSize(NumberUtils.toFloat(width, unknownSize), this.height);
 	}
 
 	public ImageSize imageHeight(final String height) {
-		return new ImageSize(this.width, NumberUtils.toFloat(height, Float.NaN));
+		return new ImageSize(this.width, NumberUtils.toFloat(height, unknownSize));
 	}
 
 	@Override
@@ -136,7 +137,7 @@ public class ImageSize {
 	}
 
 	public String text() {
-		return String.format("[%s%s]",
+		return String.format("%s%s",
 				vaildWidth() ? signformat.format(this.width) : "",
 						(vaildHeight() && this.width!=this.height) ? "x" + signformat.format(this.height) : "");
 	}

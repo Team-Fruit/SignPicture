@@ -19,6 +19,7 @@ import com.kamesuta.mc.guiwidget.component.MTextField;
 import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
+import com.kamesuta.mc.guiwidget.position.R;
 import com.kamesuta.mc.guiwidget.position.RArea;
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.proxy.ClientProxy;
@@ -210,17 +211,17 @@ public class GuiSignPicture extends WFrame {
 				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size().imageWidth(newText));
+						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size.imageWidth(newText));
 					}
 				});
 				add(new MLabel(new RArea(Coord.right(5), Coord.bottom(i-=20), Coord.left(5), Coord.height(15)), "Height"));
 				add(new MNumber(new RArea(Coord.right(5), Coord.bottom(i-=15), Coord.left(5), Coord.height(15)), 15) {
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size().imageHeight(newText));
+						GuiSignPicture.this.sign.setSize(GuiSignPicture.this.sign.size.imageHeight(newText));
 					}
 				});
-				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Apply") {
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Apply") {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 						if (GuiSignPicture.this.sign.isVaild()) {
@@ -236,7 +237,7 @@ public class GuiSignPicture extends WFrame {
 						return GuiSignPicture.this.sign.isVaild() && !PlacerMode.instance.isEnabled();
 					}
 				});
-				add(new MButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Cancel") {
+				add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(i-=25), Coord.left(5), Coord.height(15)), "Cancel") {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 						if (PlacerMode.instance.isEnabled()) {
@@ -297,5 +298,43 @@ public class GuiSignPicture extends WFrame {
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
+	}
+
+	public class FunnyButton extends MButton {
+		public FunnyButton(final R position, final String text) {
+			super(position, text);
+		}
+
+		boolean hover;
+		MotionQueue m = new MotionQueue(0);
+		MotionQueue s = new MotionQueue(1);
+
+		@Override
+		public void mouseMoved(final WEvent ev, final Area pgp, final Point p, final int button) {
+			final Area a = getGuiPosition(pgp);
+			if (a.pointInside(p) && !this.hover) {
+				this.hover = true;
+				this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
+				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
+			}
+			if (!a.pointInside(p) && this.hover) {
+				this.hover = false;
+				this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
+				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
+			}
+		}
+
+		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+			final Area a = getGuiPosition(pgp);
+			glPushMatrix();
+			glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
+			final float c = this.s.get();
+			glScalef(c, c, 1f);
+			glRotatef(this.m.get(), 0, 0, 1);
+			glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
+			super.draw(ev, pgp, p, frame);
+			glPopMatrix();
+		}
 	}
 }

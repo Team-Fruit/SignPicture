@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.placer;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.guiwidget.WBase;
 import com.kamesuta.mc.guiwidget.WEvent;
 import com.kamesuta.mc.guiwidget.position.Area;
@@ -31,14 +33,14 @@ public class SignPictureLabel extends WBase {
 		draw(a, GL_QUADS);
 		glEnable(GL_TEXTURE_2D);
 		final Sign s = getSign();
-		if (s != null && s.id()!=null && !s.id().isEmpty()) {
-			final Image image = this.manager.get(this.sign.id());
+		if (s != null && !StringUtils.isEmpty(s.id)) {
+			final Image image = this.manager.get(this.sign.id);
 			if (image != null) {
 				glDisable(GL_CULL_FACE);
 				glPushMatrix();
 				translate(a);
 
-				final ImageSize siz = image.getSize().getLimitSize(s.size());
+				final ImageSize siz = image.getSize().getLimitSize(this.sign.size);
 				final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, new ImageSize(a));
 
 				glPushMatrix();
