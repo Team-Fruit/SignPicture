@@ -81,7 +81,7 @@ public final class InformationChecker {
 								if(betaneedupdate || needupdate) {
 									if (!StringUtils.isEmpty(onlineVersion.message))
 										player.addChatComponentMessage(new ChatComponentText(onlineVersion.message));
-									player.addChatComponentMessage(new ChatComponentTranslation("signpic.versioning.outdated", Reference.VERSION, onlineVersion));
+									player.addChatComponentMessage(new ChatComponentTranslation("signpic.versioning.outdated", Reference.VERSION, onlineVersion.version));
 									final IChatComponent component = IChatComponent.Serializer.func_150699_a(StatCollector.translateToLocal("signpic.versioning.updateMessage"));
 									player.addChatComponentMessage(component);
 								}
@@ -89,7 +89,7 @@ public final class InformationChecker {
 						}
 					}
 				} catch (final NumberFormatException e) {
-					Reference.logger.warn(String.format("failed to check version: invaild version: client[%s], online[%s]", Reference.VERSION, onlineVersion));
+					Reference.logger.warn(String.format("failed to check version: invaild version: client[%s], online[%s]", Reference.VERSION, (onlineVersion!=null)?onlineVersion:"-"));
 				}
 			}
 			triedToWarnPlayer = true;
