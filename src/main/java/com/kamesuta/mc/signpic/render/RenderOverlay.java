@@ -10,12 +10,14 @@ import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class RenderOverlay extends WGui {
 	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
@@ -26,28 +28,30 @@ public class RenderOverlay extends WGui {
 		this.manager = manager;
 	}
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public void onDraw(final RenderGameOverlayEvent event) {
-		if (CurrentMode.instance.isMode()) {
-			if ((int)(System.currentTimeMillis()/500)%2==0) {
-				final FontRenderer fontrenderer = font;
+		if(event.type == ElementType.ALL)
+			if (CurrentMode.instance.isMode()) {
+				if ((int)(System.currentTimeMillis()/500)%2==0) {
+					final FontRenderer fontrenderer = font;
 
-				glPushMatrix();
-				glTranslatef(5f, 5f, 0f);
-				glScalef(2f, 2f, 1f);
+					RenderHelper.startTexture();
+					glPushMatrix();
+					glTranslatef(5f, 5f, 0f);
+					glScalef(2f, 2f, 1f);
 
-				glPushMatrix();
-				glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
-				this.manager.get(resSign).draw();
-				glPopMatrix();
+					glPushMatrix();
+					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					this.manager.get(resSign).draw();
+					glPopMatrix();
 
-				glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
-				final String str = I18n.format(CurrentMode.instance.getMode().message);
-				fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
+					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
+					final String str = I18n.format(CurrentMode.instance.getMode().message);
+					fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
-				glPopMatrix();
+					glPopMatrix();
+				}
 			}
-		}
 	}
 
 	@SubscribeEvent

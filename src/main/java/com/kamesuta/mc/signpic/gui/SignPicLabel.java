@@ -13,6 +13,7 @@ import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.image.ImageSizes;
+import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
 public class SignPicLabel extends WBase {
@@ -33,6 +34,7 @@ public class SignPicLabel extends WBase {
 			if (s != null && !StringUtils.isEmpty(id)) {
 				final Image image = this.manager.get(id);
 				if (image != null) {
+					RenderHelper.startTexture();
 					glDisable(GL_CULL_FACE);
 					glPushMatrix();
 					translate(a);

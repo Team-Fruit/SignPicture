@@ -7,6 +7,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.RenderHelper;
 
 public class MLabel extends WBase {
 	protected int textcolor = 14737632;
@@ -40,6 +41,7 @@ public class MLabel extends WBase {
 	}
 
 	protected void drawText(final Area a) {
+		RenderHelper.startTexture();
 		drawString(this.text, a.x1(), a.y1() + (a.h()-font.FONT_HEIGHT) / 2, this.textcolor);
 	}
 }

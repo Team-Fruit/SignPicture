@@ -35,6 +35,7 @@ public enum ImageState {
 	FAILED("signpic.state.failed", Color.DEFAULT, Speed.WAIT) {
 		@Override
 		public void themeImage(final ImageManager manager, final Image image) {
+			RenderHelper.startTexture();
 			glPushMatrix();
 			glTranslatef(-.5f, -.5f, 0f);
 			manager.get(CustomTileEntitySignRenderer.resWarning).draw();;
@@ -44,6 +45,7 @@ public enum ImageState {
 	ERROR("signpic.state.error", Color.DEFAULT, Speed.WAIT) {
 		@Override
 		public void themeImage(final ImageManager manager, final Image image) {
+			RenderHelper.startTexture();
 			glPushMatrix();
 			glTranslatef(-.5f, -.5f, 0f);
 			manager.get(CustomTileEntitySignRenderer.resError).draw();;
@@ -63,7 +65,7 @@ public enum ImageState {
 
 	public void themeImage(final ImageManager manager, final Image image) {
 		glLineWidth(3f);
-		glDisable(GL_TEXTURE_2D);
+		RenderHelper.startShape();
 
 		glPushMatrix();
 		glScalef(.5f, .5f, 1f);
@@ -82,11 +84,10 @@ public enum ImageState {
 		RenderHelper.drawProgressCircle(progress);
 
 		glPopMatrix();
-
-		glEnable(GL_TEXTURE_2D);
 	}
 
 	public void message(final ImageManager manager, final Image image, final FontRenderer fontrenderer) {
+		RenderHelper.startTexture();
 		final float f1 = 0.6666667F;
 		float f3 = 0.06666668F * f1;
 		glTranslatef(0f, 1f, 0f);
@@ -112,8 +113,8 @@ public enum ImageState {
 
 	public void mainImage(final ImageManager manager, final Image image) {
 		final Tessellator t = Tessellator.instance;
+		RenderHelper.startShape();
 		glLineWidth(1f);
-		glDisable(GL_TEXTURE_2D);
 		glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
 		t.startDrawing(GL_LINE_LOOP);
 		t.addVertex(0, 0, 0);
@@ -121,6 +122,5 @@ public enum ImageState {
 		t.addVertex(1, 1, 0);
 		t.addVertex(1, 0, 0);
 		t.draw();
-		glEnable(GL_TEXTURE_2D);
 	}
 }

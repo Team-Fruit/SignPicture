@@ -6,6 +6,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.RenderHelper;
 
 public class MCheckBox extends MLabel {
 	protected boolean checked = true;
@@ -44,12 +45,12 @@ public class MCheckBox extends MLabel {
 
 	protected void drawCheckBox(final Area out) {
 		final Area in = out.child(1, 1, -1, -1);
-		glDisable(GL_TEXTURE_2D);
+		RenderHelper.startShape();
 		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
 		drawRect(out);
 		glColor4f(0f, 0f, 0f, 1f);
 		drawRect(in);
-		glEnable(GL_TEXTURE_2D);
+		RenderHelper.startTexture();
 		if (this.checked) {
 			final String strcheck = "\u2713";
 			glPushMatrix();

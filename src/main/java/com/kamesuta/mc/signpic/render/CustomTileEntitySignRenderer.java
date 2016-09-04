@@ -36,11 +36,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
 			if (CurrentMode.instance.isSee()) {
-				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				glEnable(GL_BLEND);
+				RenderHelper.startTexture();
 				glColor4f(1f, 1f, 1f, .5f);
 				super.renderTileEntityAt(tile, x, y, z, color);
-				glDisable(GL_BLEND);
 			}
 
 			// Load Image
@@ -75,8 +73,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			// Draw Canvas
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_LIGHTING);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glEnable(GL_BLEND);
 			glPushMatrix();
 
 			glTranslatef(sign.offset.x, sign.offset.y, sign.offset.z);
@@ -100,7 +96,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPopMatrix();
 
-			glDisable(GL_BLEND);
 			glEnable(GL_LIGHTING);
 			glEnable(GL_CULL_FACE);
 

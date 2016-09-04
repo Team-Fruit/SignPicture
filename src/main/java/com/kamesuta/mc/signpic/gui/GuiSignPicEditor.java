@@ -24,6 +24,7 @@ import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.mode.Mode;
+import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.resources.I18n;
@@ -47,6 +48,7 @@ public class GuiSignPicEditor extends WFrame {
 					MotionQueue m = new MotionQueue(0).add(EasingMotion.easeLinear.move(.2f, .5f)).start();
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, this.m.get());
 						drawRect(getGuiPosition(pgp));
 					}

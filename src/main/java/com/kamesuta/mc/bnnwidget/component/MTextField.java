@@ -13,6 +13,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
@@ -233,24 +234,26 @@ public class MTextField extends WBase {
 	}
 
 	protected void drawBackground(final Area out, final Area in) {
-		glDisable(GL_TEXTURE_2D);
+		RenderHelper.startShape();
 		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
 		drawRect(out);
 		glColor4f(0f, 0f, 0f, 1f);
 		drawRect(in);
-		glEnable(GL_TEXTURE_2D);
 	}
 
 	protected void drawWatermark(final Area a) {
+		RenderHelper.startTexture();
 		if (!StringUtils.isEmpty(this.watermark)&& StringUtils.isEmpty(getText()) && !isFocused())
 			drawString(this.watermark, a.x1() + 4, a.y1() + a.h() / 2 - 4, 0x777777);
 	}
 
 	protected void drawText(final Area a) {
+		RenderHelper.startTexture();
 		drawString(getText(), a.x1() + 4, a.y1() + a.h() / 2 - 4, getTextColour());
 	}
 
 	protected void drawCursor(final Area a) {
+		RenderHelper.startTexture();
 		final String s = getText();
 		final int seek = getSeek();
 		final boolean blink = this.cursorCounter / 6 % 2 == 0;

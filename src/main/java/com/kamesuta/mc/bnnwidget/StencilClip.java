@@ -50,8 +50,6 @@ public class StencilClip {
 			// draw where pattern has been drawn
 			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
 			glStencilMask(0xff);
-
-			glEnable(GL_BLEND);
 		}
 	}
 
@@ -63,8 +61,6 @@ public class StencilClip {
 			// draw where pattern has been drawn
 			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
 			glStencilMask(0xff);
-
-			glEnable(GL_BLEND);
 		}
 		if (this.layer <= 0) {
 			glClear(GL_STENCIL_BUFFER_BIT);

@@ -18,7 +18,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.ResourceLocation;
 
 public class WGui extends Gui {
 	public static final Minecraft mc;
@@ -31,9 +30,6 @@ public class WGui extends Gui {
 		texture = mc.renderEngine;
 		font = mc.fontRenderer;
 	}
-
-	public static final ResourceLocation widget = new ResourceLocation("textures/gui/widgets.png");
-	public static final ResourceLocation background = new ResourceLocation("textures/gui/demo_background.png");
 
 	public static void drawHorizontalLine(final float x1, final float x2, final float y, final int color)
 	{
