@@ -15,11 +15,11 @@ import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.image.ImageSizes;
 import com.kamesuta.mc.signpic.util.Sign;
 
-public class SignPictureLabel extends WBase {
+public class SignPicLabel extends WBase {
 	protected Sign sign;
 	protected ImageManager manager;
 
-	public SignPictureLabel(final R position, final ImageManager manager) {
+	public SignPicLabel(final R position, final ImageManager manager) {
 		super(position);
 		this.manager = manager;
 	}
@@ -65,7 +65,7 @@ public class SignPictureLabel extends WBase {
 		return this.sign;
 	}
 
-	public SignPictureLabel setSign(final Sign sign) {
+	public SignPicLabel setSign(final Sign sign) {
 		this.sign = sign;
 		return this;
 	}

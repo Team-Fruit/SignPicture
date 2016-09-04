@@ -38,4 +38,9 @@ public class WComponent extends WGui implements WCommon {
 	public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 		return true;
 	}
+
+	@Override
+	public WCommon top(final WEvent ev, final Area pgp, final Point point) {
+		return null;
+	}
 }

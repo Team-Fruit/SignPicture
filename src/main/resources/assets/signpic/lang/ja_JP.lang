@@ -4,6 +4,7 @@ signpic.over.mode.place=看板を置いて画像を適用
 signpic.over.mode.copy=画像看板をクリックしてコピー
 
 # GUI
+signpic.gui.editor.see=実体表示
 signpic.gui.editor.width=幅
 signpic.gui.editor.height=高さ
 signpic.gui.editor.continue=連続

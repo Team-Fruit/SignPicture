@@ -17,6 +17,7 @@ signpic.key.category=Sign Picture
 signpic.key.gui=Open GUI
 
 # GUI
+signpic.gui.editor.see=View Sign
 signpic.gui.editor.width=Width
 signpic.gui.editor.height=Height
 signpic.gui.editor.continue=Continue

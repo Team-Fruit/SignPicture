@@ -12,6 +12,7 @@ public class CurrentMode {
 	protected Sign sign = new Sign().setSize(ImageSize.UnknownSize);
 	protected Mode mode = Mode.NONE;
 	protected boolean continueEnable;
+	protected boolean seeEnable;
 
 	public void setMode(final Mode mode) {
 		this.mode = mode;
@@ -19,14 +20,6 @@ public class CurrentMode {
 
 	public void setMode() {
 		this.mode = Mode.NONE;
-	}
-
-	public void setContinue(final boolean continueMode) {
-		this.continueEnable = continueMode;
-	}
-
-	public void setSign(final Sign sign) {
-		this.sign = sign;
 	}
 
 	public boolean isMode() {
@@ -41,8 +34,24 @@ public class CurrentMode {
 		return this.mode;
 	}
 
+	public void setContinue(final boolean continueMode) {
+		this.continueEnable = continueMode;
+	}
+
 	public boolean isContinue() {
 		return this.continueEnable;
+	}
+
+	public void setSee(final boolean seeEnable) {
+		this.seeEnable = seeEnable;
+	}
+
+	public boolean isSee() {
+		return this.seeEnable;
+	}
+
+	public void setSign(final Sign sign) {
+		this.sign = sign;
 	}
 
 	public Sign getSign() {

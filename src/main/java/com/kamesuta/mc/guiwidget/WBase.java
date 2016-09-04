@@ -1,6 +1,7 @@
 package com.kamesuta.mc.guiwidget;
 
 import com.kamesuta.mc.guiwidget.position.Area;
+import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
 
 public abstract class WBase extends WComponent {
@@ -17,5 +18,13 @@ public abstract class WBase extends WComponent {
 
 	public Area getGuiPosition(final Area pgp) {
 		return pgp.child(getGuiRelative());
+	}
+
+	@Override
+	public WCommon top(final WEvent ev, final Area pgp, final Point point) {
+		final Area a = getGuiPosition(pgp);
+		if (a.pointInside(point))
+			return this;
+		return null;
 	}
 }

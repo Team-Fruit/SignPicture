@@ -11,7 +11,7 @@ import com.kamesuta.mc.guiwidget.position.R;
 import net.minecraft.client.gui.GuiTextField;
 
 public class MChatTextField extends WBase {
-	protected GuiTextField t;
+	protected final GuiTextField t;
 
 	public MChatTextField(final R position) {
 		super(position);
@@ -21,19 +21,37 @@ public class MChatTextField extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
-		this.t.width = (int)a.w();
-		this.t.height = (int) a.h();
+		final int x = this.t.xPosition;
+		final int y = this.t.yPosition;
+		final int w = this.t.width;
+		final int h = this.t.height;
+		this.t.xPosition = 1;
+		this.t.yPosition = 1;
+		this.t.width = (int)a.w() - 2;
+		this.t.height = (int) a.h() - 2;
 		glPushMatrix();
 		glTranslatef(a.x1(), a.y1(), 0f);
 		this.t.drawTextBox();
 		glPopMatrix();
+		this.t.xPosition = x;
+		this.t.yPosition = y;
+		this.t.width = w;
+		this.t.height = h;
+	}
+
+	@Override
+	public void init(final WEvent ev, final Area pgp) {
+		final Area a = getGuiPosition(pgp);
+		updateArea(a);
 	}
 
 	@Override
 	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 		final Area a = getGuiPosition(pgp);
 		updateArea(a);
+		final boolean b = isFocused();
 		this.t.mouseClicked((int) p.x(), (int) p.y(), button);
+		if (b!=isFocused()) onFocusChanged();
 	}
 
 	@Override
@@ -46,15 +64,26 @@ public class MChatTextField extends WBase {
 		this.t.textboxKeyTyped(c, keycode);
 	}
 
+	@Override
+	public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+		setFocused(false);
+	}
+
 	protected void updateArea(final Area a) {
-		this.t.xPosition = (int) a.x1();
-		this.t.yPosition = (int) a.y1();
-		this.t.width = (int) a.w();
-		this.t.height = (int) a.h();
+		final Area b = a.child(1, 1, -1, -1);
+		this.t.xPosition = (int) b.x1();
+		this.t.yPosition = (int) b.y1();
+		this.t.width = (int) b.w();
+		this.t.height = (int) b.h();
 	}
 
 	public void setText(final String p_146180_1_) {
+		final String old = getText();
 		this.t.setText(p_146180_1_);
+		onTextChanged(old);
+	}
+
+	protected void onTextChanged(final String oldText) {
 	}
 
 	public String getText() {
@@ -66,7 +95,9 @@ public class MChatTextField extends WBase {
 	}
 
 	public void writeText(final String p_146191_1_) {
+		final String old = getText();
 		this.t.writeText(p_146191_1_);
+		onTextChanged(old);
 	}
 
 	@Override
@@ -79,7 +110,9 @@ public class MChatTextField extends WBase {
 	}
 
 	public void deleteFromCursor(final int p_146175_1_) {
+		final String old = getText();
 		this.t.deleteFromCursor(p_146175_1_);
+		onTextChanged(old);
 	}
 
 	public int getNthWordFromCursor(final int p_146187_1_) {
@@ -116,7 +149,9 @@ public class MChatTextField extends WBase {
 	}
 
 	public void setMaxStringLength(final int p_146203_1_) {
+		final String old = getText();
 		this.t.setMaxStringLength(p_146203_1_);
+		onTextChanged(old);
 	}
 
 	public int getMaxStringLength() {
@@ -144,7 +179,11 @@ public class MChatTextField extends WBase {
 	}
 
 	public void setFocused(final boolean p_146195_1_) {
+		if (p_146195_1_!=isFocused()) onFocusChanged();
 		this.t.setFocused(p_146195_1_);
+	}
+
+	protected void onFocusChanged() {
 	}
 
 	public boolean isFocused() {
