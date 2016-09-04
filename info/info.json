@@ -7,9 +7,9 @@
 			"message": ""
 		},
 		"1.7.10-beta": {
-			"version": "2.0.2.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.0.2/SignPicture-1.7.10-2.0.2.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.0.2.beta-universal.jar",
+			"version": "2.0.3.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.0.3/SignPicture-1.7.10-2.0.3.beta-universal.jar",
+			"local": "SignPicture-1.7.10-2.0.3.beta-universal.jar",
 			"message": ""
 		}
 	}
