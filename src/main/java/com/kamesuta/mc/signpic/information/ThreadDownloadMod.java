@@ -32,8 +32,8 @@ public class ThreadDownloadMod extends Thread {
 	@Override
 	public void run() {
 		try {
-			final String stringurl = InformationChecker.onlineVersionRemote;
-			final String stringlocal = InformationChecker.onlineVersionLocal;
+			final String stringurl = InformationChecker.onlineVersion.remote;
+			final String stringlocal = InformationChecker.onlineVersion.local;
 			final String local;
 			if (!StringUtils.isEmpty(stringlocal))
 				local = stringlocal;
@@ -44,7 +44,7 @@ public class ThreadDownloadMod extends Thread {
 
 			InformationChecker.startedDownload = true;
 
-			final URL url = new URL(InformationChecker.onlineVersionRemote);
+			final URL url = new URL(InformationChecker.onlineVersion.remote);
 			final InputStream webReader = url.openStream();
 
 			final File dir = new File(".", "mods");

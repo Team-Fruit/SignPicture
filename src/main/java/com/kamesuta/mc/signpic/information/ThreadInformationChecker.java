@@ -24,13 +24,8 @@ public class ThreadInformationChecker extends Thread {
 			final Info info = new Gson().fromJson(new JsonReader(new InputStreamReader(url.openStream())), Info.class);
 			if (info!=null)
 				if (info.versions!=null) {
-					final Info.Version version = info.versions.get(MinecraftForge.MC_VERSION);
-					if (version!=null) {
-						InformationChecker.onlineVersion = version.version;
-						InformationChecker.onlineVersionRemote = version.remote;
-						InformationChecker.onlineVersionLocal = version.local;
-						InformationChecker.onlineVersionMessage = version.message;
-					}
+					InformationChecker.stableVersion = info.versions.get(MinecraftForge.MC_VERSION);
+					InformationChecker.unstableVersion = info.versions.get(MinecraftForge.MC_VERSION + "-beta");
 				}
 		} catch(final Exception e) {
 			Reference.logger.warn("Could not check version information", e);
