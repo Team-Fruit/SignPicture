@@ -1,13 +1,16 @@
 package com.kamesuta.mc.signpic.util;
+import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
 
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
@@ -49,7 +52,21 @@ public class Downloader {
 			final SSLConnectionSocketFactory sslConnectionSocketFactory =
 					new SSLConnectionSocketFactory(
 							sslContext,
-							SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+							SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER) {
+				@Override
+				protected void prepareSocket(final SSLSocket socket) throws IOException {
+					final String[] enabledCipherSuites = socket.getEnabledCipherSuites();
+
+					final List<String> asList = new ArrayList<String>(Arrays.asList(enabledCipherSuites));
+
+					asList.remove("TLS_DHE_RSA_WITH_AES_128_CBC_SHA");
+					asList.remove("SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA");
+					asList.remove("TLS_DHE_RSA_WITH_AES_256_CBC_SHA");
+
+					final String[] array = asList.toArray(new String[0]);
+					socket.setEnabledCipherSuites(array);
+				};
+			};
 
 			registry =
 					RegistryBuilder.<ConnectionSocketFactory>create()
