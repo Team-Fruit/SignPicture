@@ -10,10 +10,10 @@ import java.util.concurrent.Executors;
 
 import org.lwjgl.util.Timer;
 
-import cpw.mods.fml.client.FMLClientHandler;
+import com.kamesuta.mc.signpic.Client;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageManager {
@@ -21,7 +21,6 @@ public class ImageManager {
 	public static final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 
-	protected Minecraft mc = FMLClientHandler.instance().getClient();
 	public ImageLocation location;
 
 	public ImageManager(final ImageLocation location) {
@@ -55,7 +54,7 @@ public class ImageManager {
 
 	@SubscribeEvent
 	public void renderTickProcess(final TickEvent.RenderTickEvent event) {
-		this.mc.mcProfiler.startSection("signpic-load");
+		Client.startSection("signpic-load");
 		Image textureload;
 		if ((textureload = ImageManager.lazyloadqueue.peek()) != null) {
 			if (textureload.processTexture()) {
@@ -74,6 +73,6 @@ public class ImageManager {
 		}
 
 		Timer.tick();
-		this.mc.mcProfiler.endSection();
+		Client.endSection();
 	}
 }

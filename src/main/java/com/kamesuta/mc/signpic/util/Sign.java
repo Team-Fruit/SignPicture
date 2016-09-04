@@ -16,6 +16,8 @@ import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class Sign {
+	public static int maxText = 15*4;
+
 	public String id;
 	public ImageSize size;
 	public final ImageOffset offset = new ImageOffset();
@@ -86,9 +88,9 @@ public class Sign {
 	public String text() {
 		String id = this.id;
 		if (id.contains("http://"))
-			id = id.replace("http://", "");
+			id = id.substring(7, id.length());
 		else if (id.contains("https://"))
-			id = id.replace("https://", "$");
+			id = "$" + id.substring(8, id.length());
 		return id + "[" + this.size.text() + this.offset.text() + "]";
 	}
 
@@ -98,6 +100,10 @@ public class Sign {
 
 	public boolean isSizeVaild() {
 		return this.size!=null;
+	}
+
+	public boolean isPlaceable() {
+		return StringUtils.length(text()) < maxText;
 	}
 
 	public boolean isVaild() {
@@ -113,7 +119,7 @@ public class Sign {
 		final String[] sign = new String[4];
 		for (int i=0; i<4; i++) {
 			if (16*i <= text.length())
-				sign[i] = text.substring(15*i, Math.min(15*i+15, text.length()));
+				sign[i] = text.substring(15*i, Math.min(15*(i+1), text.length()));
 			else
 				sign[i] = "";
 		}

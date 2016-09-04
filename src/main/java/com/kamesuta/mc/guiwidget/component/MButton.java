@@ -8,7 +8,6 @@ import com.kamesuta.mc.guiwidget.position.Area;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 
@@ -41,7 +40,7 @@ public class MButton extends WBase {
 			if (onClicked(ev, pgp, p, button)) {
 				if (this.actionCommand != null)
 					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
-				Minecraft.getMinecraft().getSoundHandler()
+				mc.getSoundHandler()
 				.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 			}
 		}

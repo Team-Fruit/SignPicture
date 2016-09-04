@@ -4,25 +4,25 @@ public enum ImageSizes {
 	RAW {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			return new ImageSize(w, h);
+			return ImageSize.size(w, h);
 		}
 	},
 	MAX {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			return new ImageSize(maxw, maxh);
+			return ImageSize.size(maxw, maxh);
 		}
 	},
 	WIDTH {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			return new ImageSize(maxw, h*maxw/w);
+			return ImageSize.size(maxw, h*maxw/w);
 		}
 	},
 	HEIGHT {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
-			return new ImageSize(w*maxh/h, maxh);
+			return ImageSize.size(w*maxh/h, maxh);
 		}
 	},
 	INNER {
@@ -31,7 +31,7 @@ public enum ImageSizes {
 			if (w<0) maxw*=-1;
 			if (h<0) maxh*=-1;
 			final boolean b = ((w/maxw)>(h/maxh));
-			return new ImageSize(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
+			return ImageSize.size(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
 		}
 	},
 	OUTER {
@@ -40,25 +40,25 @@ public enum ImageSizes {
 			if (w<0) maxw*=-1;
 			if (h<0) maxh*=-1;
 			final boolean b = ((w/maxw)<(h/maxh));
-			return new ImageSize(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
+			return ImageSize.size(b?maxw:w*maxh/h, b?h*maxw/w:maxh);
 		}
 	},
 	WIDTH_LIMIT {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
 			if (w<maxw)
-				return new ImageSize(w, h);
+				return ImageSize.size(w, h);
 			else
-				return new ImageSize(maxw, maxw*h/w);
+				return ImageSize.size(maxw, maxw*h/w);
 		}
 	},
 	HEIGHT_LIMIT {
 		@Override
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
 			if (h<maxh)
-				return new ImageSize(w, h);
+				return ImageSize.size(w, h);
 			else
-				return new ImageSize(maxh*w/h, maxh);
+				return ImageSize.size(maxh*w/h, maxh);
 		}
 	},
 	LIMIT {
@@ -66,14 +66,14 @@ public enum ImageSizes {
 		public ImageSize size(final float w, final float h, final float maxw, final float maxh) {
 			if (w>h)
 				if (w<maxw)
-					return new ImageSize(w, h);
+					return ImageSize.size(w, h);
 				else
-					return new ImageSize(maxw, maxw*h/w);
+					return ImageSize.size(maxw, maxw*h/w);
 			else
 				if (h<maxh)
-					return new ImageSize(w, h);
+					return ImageSize.size(w, h);
 				else
-					return new ImageSize(maxh*w/h, maxh);
+					return ImageSize.size(maxh*w/h, maxh);
 		}
 	},
 	;

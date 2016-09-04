@@ -51,7 +51,7 @@ public class ImageTexture implements IImageTexture {
 		if (this.id == -1) {
 			this.temp = image;
 			if (image != null)
-				this.size = new ImageSize(image.getWidth(), image.getHeight());
+				this.size = ImageSize.size(image.getWidth(), image.getHeight());
 			return true;
 		}
 		return false;

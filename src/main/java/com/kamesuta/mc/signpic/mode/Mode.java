@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.mode;
 
 public enum Mode {
 	PLACE("signpic.over.mode.place"),
-	COPY("signpic.over.mode.copy"),
+	LOAD("signpic.over.mode.load"),
 	NONE("signpic.over.mode.none"),
 	;
 

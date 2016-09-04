@@ -38,11 +38,11 @@ public class SignPicLabel extends WBase {
 					translate(a);
 
 					final ImageSize siz = image.getSize().getLimitSize(this.sign.size);
-					final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, new ImageSize(a));
+					final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, ImageSize.area(a));
 
 					glPushMatrix();
-					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-					glScalef(size.width, size.height, 1f);
+					glTranslatef((a.w()-size.width())/2, (a.h()-size.height())/2, 0);
+					glScalef(size.width(), size.height(), 1f);
 					image.getState().mainImage(this.manager, image);
 					glPopMatrix();
 

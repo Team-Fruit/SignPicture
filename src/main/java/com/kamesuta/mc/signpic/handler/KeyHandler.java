@@ -2,13 +2,11 @@ package com.kamesuta.mc.signpic.handler;
 
 import org.lwjgl.input.Keyboard;
 
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
+import com.kamesuta.mc.signpic.Client;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyHandler {
@@ -31,10 +29,9 @@ public class KeyHandler {
 
 	@SubscribeEvent
 	public void onKeyInput(final InputEvent event) {
-		final Minecraft mc = FMLClientHandler.instance().getClient();
-		if (mc.currentScreen == null) {
+		if (Client.mc.currentScreen == null) {
 			if (KEY_BINDING_GUI.isPressed()) {
-				mc.displayGuiScreen(new GuiSignPicEditor());
+				Client.openEditor();
 			}
 		}
 	}
