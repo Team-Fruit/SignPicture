@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.gui.GuiSignPicture;
+import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.mode.Mode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -73,7 +73,7 @@ public class SignHandler {
 							if (sign.isVaild()) {
 								CurrentMode.instance.setSign(sign);
 								event.setCanceled(true);
-								this.mc.displayGuiScreen(new GuiSignPicture());
+								this.mc.displayGuiScreen(new GuiSignPicEditor());
 								if (!CurrentMode.instance.isContinue())
 									CurrentMode.instance.setMode();
 							}

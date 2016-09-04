@@ -8,9 +8,11 @@ import java.util.Map;
 import org.apache.commons.lang3.Validate;
 
 public class WEvent {
+	public final Map<String, Object> data;
 	public final Map<String, List<WActionListener>> events;
 
 	public WEvent() {
+		this.data = new HashMap<String, Object>();
 		this.events = new HashMap<String, List<WActionListener>>();
 	}
 

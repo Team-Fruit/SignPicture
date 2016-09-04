@@ -25,4 +25,6 @@ public interface WCommon {
 	void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse);
 
 	boolean onClosing(WEvent ev, Area pgp, Point mouse);
+
+	WCommon top(WEvent ev, Area pgp, Point point);
 }

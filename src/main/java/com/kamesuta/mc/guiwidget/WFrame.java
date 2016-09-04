@@ -45,9 +45,6 @@ public class WFrame extends GuiScreen implements WContainer {
 
 	@Override
 	public void initGui() {
-		final Area gp = getAbsolute();
-		for (final WCommon widget : this.widgets)
-			widget.init(this.event, gp);
 		sInitGui();
 	}
 
@@ -55,13 +52,20 @@ public class WFrame extends GuiScreen implements WContainer {
 		super.initGui();
 	}
 
-	protected void initWidgets() {
+	protected void initWidget() {
+		final Area gp = getAbsolute();
+		for (final WCommon widget : this.widgets)
+			widget.init(this.event, gp);
+	}
+
+	protected void init() {
 	}
 
 	public void reset() {
 		this.widgets.clear();
 		initGui();
-		initWidgets();
+		init();
+		initWidget();
 	}
 
 	@Override
@@ -69,7 +73,8 @@ public class WFrame extends GuiScreen implements WContainer {
 		final boolean init = this.mc == null;
 		sSetWorldAndResolution(mc, i, j);
 		if (init) {
-			initWidgets();
+			init();
+			initWidget();
 		}
 	}
 

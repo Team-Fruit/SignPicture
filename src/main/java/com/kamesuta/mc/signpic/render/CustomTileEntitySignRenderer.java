@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -39,6 +40,13 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		this.mc.mcProfiler.startSection("signpic-render");
 		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
+			if (CurrentMode.instance.isSee()) {
+				glEnable(GL_BLEND);
+				glColor4f(1f, 1f, 1f, .5f);
+				super.renderTileEntityAt(tile, x, y, z, color);
+				glDisable(GL_BLEND);
+			}
+
 			// Load Image
 			final Image image = this.manager.get(sign.getURL());
 
@@ -101,10 +109,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPopMatrix();
 		} else {
-			glEnable(GL_BLEND);
-			glColor4f(1f, 1f, 1f, .5f);
 			super.renderTileEntityAt(tile, x, y, z, color);
-			glDisable(GL_BLEND);
 		}
 		this.mc.mcProfiler.endSection();
 	}
