@@ -37,22 +37,40 @@ public class ClientProxy extends CommonProxy {
 
 		// Occupy my cache directory
 		final File mcdir = getDataDirectory();
-		final File rootdir = new File(mcdir, "signpic");
-		if (rootdir.exists() && !rootdir.isDirectory()) {
+		final File signpicdir = new File(mcdir, "signpic");
+		boolean legacy = signpicdir.isDirectory();
+		securementDirectory(signpicdir);
+		final File cachedir = new File(signpicdir, "cache");
+		legacy = legacy && !cachedir.isDirectory();
+		securementDirectory(cachedir);
+
+		// Move legacy file
+		if (legacy) {
+			Reference.logger.info("moved legacy files");
+			for (final File f : signpicdir.listFiles())
+				if (f.isFile())
+					f.renameTo(new File(cachedir, f.getName()));
+		}
+
+		Client.manager = new ImageManager(new ImageLocation(cachedir));
+
+		KeyHandler.INSTANCE.init();
+	}
+
+	private boolean securementDirectory(final File cachedir) {
+		if (cachedir.exists() && !cachedir.isDirectory()) {
 			File to;
 			int i = 2;
 			do {
-				to = new File(mcdir, "signpic"+i);
+				to = new File(cachedir.getParent(), cachedir.getName()+i);
 				i++;
 			} while (to.exists());
-			rootdir.renameTo(to);
+			cachedir.renameTo(to);
 			Reference.logger.warn("non-directory conflicting file exists. renamed to " + to.getName());
+			return true;
 		}
-		rootdir.mkdir();
-
-		Client.manager = new ImageManager(new ImageLocation(rootdir));
-
-		KeyHandler.INSTANCE.init();
+		cachedir.mkdir();
+		return false;
 	}
 
 	public File getDataDirectory() {
