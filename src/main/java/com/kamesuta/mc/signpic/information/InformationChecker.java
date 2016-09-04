@@ -47,17 +47,17 @@ public final class InformationChecker {
 						boolean betaneedupdate = false;
 						if (unstableVersion!=null && unstableVersion.version!=null) {
 							if (client.length>=4 &&StringUtils.equals(client[3], "beta")) {
-								final String[] beta = unstableVersion.version.split("\\.");
-								betaneedupdate = true;
-								if (beta.length>=3) {
-									if (NumberUtils.isNumber(beta[0]) && NumberUtils.isNumber(beta[1])) {
-										final int betaBuild1 = NumberUtils.toInt(beta[0]);
-										final int betaBuild2 = NumberUtils.toInt(beta[1]);
-										if (betaBuild1 > clientBuild1 || (betaBuild1 == clientBuild1 && betaBuild2 > clientBuild2)) {
-											if (NumberUtils.isNumber(beta[2]) && NumberUtils.isNumber(client[2])) {
-												final int betaBuild3 = NumberUtils.toInt(beta[2]);
-												betaneedupdate = betaBuild3 > NumberUtils.toInt(client[2]);
-											}
+								if (NumberUtils.isNumber(client[2])) {
+									final int clientBuild3 = NumberUtils.toInt(client[2]);
+									final String[] beta = unstableVersion.version.split("\\.");
+									if (beta.length>=4 &&StringUtils.equals(beta[3], "beta")) {
+										if (NumberUtils.isNumber(beta[0]) && NumberUtils.isNumber(beta[1]) && NumberUtils.isNumber(beta[2])) {
+											final int betaBuild1 = NumberUtils.toInt(beta[0]);
+											final int betaBuild2 = NumberUtils.toInt(beta[1]);
+											final int betaBuild3 = NumberUtils.toInt(beta[2]);
+											betaneedupdate = (betaBuild1 > clientBuild1) ||
+													(betaBuild1 == clientBuild1 && betaBuild2 > clientBuild2) ||
+													(betaBuild1 == clientBuild1 && betaBuild2 == clientBuild2 && betaBuild3 > clientBuild3);
 										}
 									}
 								}
@@ -75,7 +75,7 @@ public final class InformationChecker {
 								if (!betaneedupdate) {
 									final int onlineBuild1 = Integer.parseInt(online[0]);
 									final int onlineBuild2 = Integer.parseInt(online[1]);
-									needupdate = onlineBuild1 > clientBuild1 || (onlineBuild1 == clientBuild1 && onlineBuild2 > clientBuild2);
+									needupdate = (onlineBuild1 > clientBuild1) || (onlineBuild1 == clientBuild1 && onlineBuild2 > clientBuild2);
 								}
 
 								if(betaneedupdate || needupdate) {
