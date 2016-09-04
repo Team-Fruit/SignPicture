@@ -2,13 +2,13 @@
 	"versions": {
 		"1.7.10": {
 			"version": "1.3.0",
-			"remote": "https://github.com/Kamesuta/SignPicture/releases/download/1.3.0/SignPicture-1.7.10-1.3.0-universal.jar",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.3.0/SignPicture-1.7.10-1.3.0-universal.jar",
 			"local": "SignPicture-1.7.10-1.3.0-universal.jar",
 			"message": ""
 		},
 		"1.7.10-beta": {
 			"version": "2.0.2.beta",
-			"remote": "https://github.com/Kamesuta/SignPicture/releases/download/2.0.2/SignPicture-1.7.10-2.0.2.beta-universal.jar",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.0.2/SignPicture-1.7.10-2.0.2.beta-universal.jar",
 			"local": "SignPicture-1.7.10-2.0.2.beta-universal.jar",
 			"message": ""
 		}

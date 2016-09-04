@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.kamesuta.mc.guiwidget.position.Area;
+import com.kamesuta.mc.bnnwidget.position.Area;
 
 public class ImageSize implements Cloneable {
 	public static final float defaultSize = 1f;

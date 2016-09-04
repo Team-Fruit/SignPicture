@@ -28,7 +28,7 @@ public class KeyHandler {
 	}
 
 	@SubscribeEvent
-	public void onKeyInput(final InputEvent event) {
+	public void onKeyInput(final InputEvent.KeyInputEvent event) {
 		if (Client.mc.currentScreen == null) {
 			if (KEY_BINDING_GUI.isPressed()) {
 				Client.openEditor();

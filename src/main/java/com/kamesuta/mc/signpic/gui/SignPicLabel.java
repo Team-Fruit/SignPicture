@@ -4,11 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.kamesuta.mc.guiwidget.WBase;
-import com.kamesuta.mc.guiwidget.WEvent;
-import com.kamesuta.mc.guiwidget.position.Area;
-import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.R;
+import com.kamesuta.mc.bnnwidget.WBase;
+import com.kamesuta.mc.bnnwidget.WEvent;
+import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.bnnwidget.position.Point;
+import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;

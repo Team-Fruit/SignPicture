@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import com.kamesuta.mc.guiwidget.StencilClip;
+import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.handler.KeyHandler;

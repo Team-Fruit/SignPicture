@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.guiwidget.WGui;
+import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;

@@ -4,23 +4,23 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.input.Keyboard;
 
-import com.kamesuta.mc.guiwidget.WBase;
-import com.kamesuta.mc.guiwidget.WEvent;
-import com.kamesuta.mc.guiwidget.WFrame;
-import com.kamesuta.mc.guiwidget.WPanel;
-import com.kamesuta.mc.guiwidget.animation.BlankMotion;
-import com.kamesuta.mc.guiwidget.animation.Easings;
-import com.kamesuta.mc.guiwidget.animation.MotionQueue;
-import com.kamesuta.mc.guiwidget.component.MButton;
-import com.kamesuta.mc.guiwidget.component.MChatTextField;
-import com.kamesuta.mc.guiwidget.component.MLabel;
-import com.kamesuta.mc.guiwidget.component.MNumber;
-import com.kamesuta.mc.guiwidget.component.MPanel;
-import com.kamesuta.mc.guiwidget.position.Area;
-import com.kamesuta.mc.guiwidget.position.Coord;
-import com.kamesuta.mc.guiwidget.position.Point;
-import com.kamesuta.mc.guiwidget.position.R;
-import com.kamesuta.mc.guiwidget.position.RArea;
+import com.kamesuta.mc.bnnwidget.WBase;
+import com.kamesuta.mc.bnnwidget.WEvent;
+import com.kamesuta.mc.bnnwidget.WFrame;
+import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.MButton;
+import com.kamesuta.mc.bnnwidget.component.MChatTextField;
+import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.MNumber;
+import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
+import com.kamesuta.mc.bnnwidget.motion.EasingMotion;
+import com.kamesuta.mc.bnnwidget.motion.MotionQueue;
+import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.bnnwidget.position.Coord;
+import com.kamesuta.mc.bnnwidget.position.Point;
+import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.mode.Mode;
@@ -41,9 +41,10 @@ public class GuiSignPicEditor extends WFrame {
 	@Override
 	protected void init() {
 		add(new WPanel(RArea.diff(0, 0, 0, 0)) {
-			{
+			@Override
+			protected void initWidget(final WEvent ev, final Area pgp) {
 				add(new WBase(RArea.diff(0, 0, 0, 0)) {
-					MotionQueue m = new MotionQueue(0).add(Easings.linear.move(.2f, .5f)).start();
+					MotionQueue m = new MotionQueue(0).add(EasingMotion.easeLinear.move(.2f, .5f)).start();
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 						glColor4f(0f, 0f, 0f, this.m.get());
@@ -52,7 +53,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						this.m.stop().add(Easings.linear.move(.2f, 0f)).add(new BlankMotion(.1f)).start();
+						this.m.stop().add(EasingMotion.easeLinear.move(.2f, 0f)).add(new BlankMotion(.1f)).start();
 					}
 
 					@Override
@@ -61,9 +62,10 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final Coord m = Coord.ptop(-1f).add(Easings.easeOutElastic.move(.5f, 0f)).start();
+				final Coord m = Coord.ptop(-1f).add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
 				add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
-					{
+					@Override
+					protected void initWidget(final WEvent ev, final Area pgp) {
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 							{
 								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), Client.manager).setSign(CurrentMode.instance.getSign()));
@@ -73,7 +75,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						m.motion.stop().add(Easings.easeOutElastic.move(.5f, -1f)).start();
+						m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
 					}
 
 					@Override
@@ -82,9 +84,10 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final Coord p = Coord.right(-60).add(Easings.easeOutBounce.move(.5f, 0)).start();
+				final Coord p = Coord.right(-60).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
 				add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
-					{
+					@Override
+					protected void initWidget(final WEvent ev, final Area pgp) {
 						float top = -20f;
 
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top+=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
@@ -190,7 +193,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						p.motion.stop().add(Easings.easeOutBounce.move(.5f, -60)).start();
+						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -60)).start();
 					}
 
 					@Override
@@ -199,7 +202,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final Coord d = Coord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
+				final Coord d = Coord.bottom(-15).add(EasingMotion.easeOutElastic.move(.5f, 5)).start();
 				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void init(final WEvent ev, final Area pgp) {
@@ -218,7 +221,7 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
 						super.onCloseRequest(ev, pgp, mouse);
-						d.motion.stop().add(Easings.easeOutElastic.move(1f, -15)).start();
+						d.motion.stop().add(EasingMotion.easeOutElastic.move(1f, -15)).start();
 					}
 
 					@Override
@@ -254,14 +257,14 @@ public class GuiSignPicEditor extends WFrame {
 			if (b) {
 				if (!this.hover) {
 					this.hover = true;
-					this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
-					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
+					this.m.stop().add(EasingMotion.easeOutElastic.move(.5f, 6f)).start();
+					this.s.stop().add(EasingMotion.easeOutElastic.move(.5f, 1.1f)).start();
 				}
 			} else {
 				if (this.hover) {
 					this.hover = false;
-					this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
-					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
+					this.m.stop().add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
+					this.s.stop().add(EasingMotion.easeOutElastic.move(.5f, 1f)).start();
 				}
 			}
 		}
