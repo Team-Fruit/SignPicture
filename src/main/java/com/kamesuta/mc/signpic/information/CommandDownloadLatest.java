@@ -36,7 +36,7 @@ public class CommandDownloadLatest extends CommandBase {
 		if(!ENABLED)
 			var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.disabled").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 		else
-			if (InformationChecker.doneChecking && !StringUtils.isEmpty(InformationChecker.onlineVersionRemote))
+			if (InformationChecker.doneChecking && InformationChecker.onlineVersion!=null && !StringUtils.isEmpty(InformationChecker.onlineVersion.remote))
 			{
 				if(InformationChecker.downloadedFile)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
