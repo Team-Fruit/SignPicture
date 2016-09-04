@@ -2,14 +2,13 @@ package com.kamesuta.mc.signpic.image;
 
 import org.apache.commons.lang3.StringUtils;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.client.Minecraft;
+import com.kamesuta.mc.signpic.Client;
+
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class McImageTexture implements IImageTexture {
-	protected static final Minecraft mc = FMLClientHandler.instance().getClient();
-	protected static final ResourceLocation Null = mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
+	protected static final ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
 	protected ResourceLocation location;
 
 	public McImageTexture(final ResourceLocation location) {
@@ -19,9 +18,9 @@ public class McImageTexture implements IImageTexture {
 	@Override
 	public void bind() {
 		if (!StringUtils.isEmpty(this.location.getResourcePath()))
-			mc.renderEngine.bindTexture(this.location);
+			Client.mc.renderEngine.bindTexture(this.location);
 		else {
-			mc.renderEngine.bindTexture(Null);
+			Client.mc.renderEngine.bindTexture(Null);
 		}
 	}
 

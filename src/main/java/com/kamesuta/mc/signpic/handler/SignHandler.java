@@ -1,19 +1,14 @@
 package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.mode.Mode;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockSign;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiEditSign;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
@@ -34,7 +29,6 @@ public class SignHandler {
 		}
 	}
 
-	protected Minecraft mc = FMLClientHandler.instance().getClient();
 	private static Field f;
 
 	@SubscribeEvent
@@ -58,26 +52,17 @@ public class SignHandler {
 
 	@SubscribeEvent
 	public void onClick(final MouseEvent event) {
-		if (CurrentMode.instance.isMode(Mode.COPY)) {
-			if (event.buttonstate && this.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
-				if (this.mc.objectMouseOver != null) {
-					final int x = this.mc.objectMouseOver.blockX;
-					final int y = this.mc.objectMouseOver.blockY;
-					final int z = this.mc.objectMouseOver.blockZ;
-					final Block block = this.mc.theWorld.getBlock(x, y, z);
-					if (block instanceof BlockSign) {
-						final TileEntity tile = this.mc.theWorld.getTileEntity(x, y, z);
-						if (tile instanceof TileEntitySign) {
-							final TileEntitySign tilesign = (TileEntitySign)tile;
-							final Sign sign = new Sign().parseSignEntity(tilesign);
-							if (sign.isVaild()) {
-								CurrentMode.instance.setSign(sign);
-								event.setCanceled(true);
-								this.mc.displayGuiScreen(new GuiSignPicEditor());
-								if (!CurrentMode.instance.isContinue())
-									CurrentMode.instance.setMode();
-							}
-						}
+		if (event.buttonstate && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
+			if (CurrentMode.instance.isMode(Mode.LOAD)) {
+				final TileEntitySign tilesign = Client.getTileSignLooking();
+				if (tilesign != null) {
+					final Sign sign = new Sign().parseSignEntity(tilesign);
+					if (sign.isVaild()) {
+						CurrentMode.instance.setSign(sign);
+						event.setCanceled(true);
+						Client.openEditor();
+						if (!CurrentMode.instance.isContinue())
+							CurrentMode.instance.setMode();
 					}
 				}
 			}

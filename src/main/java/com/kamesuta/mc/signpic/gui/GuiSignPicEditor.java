@@ -21,9 +21,10 @@ import com.kamesuta.mc.guiwidget.position.Coord;
 import com.kamesuta.mc.guiwidget.position.Point;
 import com.kamesuta.mc.guiwidget.position.R;
 import com.kamesuta.mc.guiwidget.position.RArea;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.mode.Mode;
-import com.kamesuta.mc.signpic.proxy.ClientProxy;
+import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.resources.I18n;
 
@@ -65,7 +66,7 @@ public class GuiSignPicEditor extends WFrame {
 					{
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 							{
-								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ClientProxy.manager).setSign(CurrentMode.instance.getSign()));
+								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), Client.manager).setSign(CurrentMode.instance.getSign()));
 							}
 						});
 					}
@@ -106,7 +107,7 @@ public class GuiSignPicEditor extends WFrame {
 						add(new MNumber(new RArea(Coord.right(5), Coord.bottom(bottom-=15), Coord.left(5), Coord.height(15)), 15) {
 							{
 								if (CurrentMode.instance.getSign().isSizeVaild())
-									setNumber(CurrentMode.instance.getSign().size.width);
+									setNumber(CurrentMode.instance.getSign().size.width());
 							}
 
 							@Override
@@ -118,7 +119,7 @@ public class GuiSignPicEditor extends WFrame {
 						add(new MNumber(new RArea(Coord.right(5), Coord.bottom(bottom-=15), Coord.left(5), Coord.height(15)), 15) {
 							{
 								if (CurrentMode.instance.getSign().isSizeVaild())
-									setNumber(CurrentMode.instance.getSign().size.height);
+									setNumber(CurrentMode.instance.getSign().size.height());
 							}
 
 							@Override
@@ -139,24 +140,24 @@ public class GuiSignPicEditor extends WFrame {
 								return true;
 							}
 						});
-						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.copy")) {
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.load")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								CurrentMode.instance.setMode(Mode.COPY);
+								CurrentMode.instance.setMode(Mode.LOAD);
 								requestClose();
 								return true;
 							}
 
 							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isMode(Mode.COPY));
+								state(CurrentMode.instance.isMode(Mode.LOAD));
 								return true;
 							}
 						});
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								if (CurrentMode.instance.getSign().isVaild()) {
+								if (CurrentMode.instance.getSign().isVaild() && CurrentMode.instance.getSign().isPlaceable()) {
 									CurrentMode.instance.setMode(Mode.PLACE);
 									requestClose();
 									return true;
@@ -167,7 +168,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							public boolean isEnabled() {
 								state(CurrentMode.instance.isMode(Mode.PLACE));
-								return CurrentMode.instance.getSign().isVaild() && !CurrentMode.instance.isMode(Mode.PLACE);
+								return CurrentMode.instance.getSign().isVaild() && CurrentMode.instance.getSign().isPlaceable() && !CurrentMode.instance.isMode(Mode.PLACE);
 							}
 						});
 						add(new MButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
@@ -203,6 +204,7 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public void init(final WEvent ev, final Area pgp) {
 						super.init(ev, pgp);
+						setMaxStringLength(Sign.maxText);
 						if (CurrentMode.instance.getSign().id != null) {
 							setText(CurrentMode.instance.getSign().id);
 						}

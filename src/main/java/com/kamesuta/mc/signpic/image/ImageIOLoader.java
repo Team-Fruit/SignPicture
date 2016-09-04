@@ -27,7 +27,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader {
-	public static final ImageSize MAX_SIZE = new ImageSize(512, 512);
+	public static final ImageSize MAX_SIZE = new ImageSize.UnmodifiableImageSize(512, 512);
 
 	protected RemoteImage image;
 	protected InputStream input;
@@ -120,8 +120,8 @@ public class ImageIOLoader {
 	}
 
 	protected BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
-		final int wid = (int)newsize.width;
-		final int hei = (int)newsize.height;
+		final int wid = (int)newsize.width();
+		final int hei = (int)newsize.height();
 		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
 		final Graphics g = thumb.getGraphics();
 		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);

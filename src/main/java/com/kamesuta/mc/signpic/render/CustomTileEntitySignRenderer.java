@@ -2,16 +2,14 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelSign;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
@@ -21,14 +19,11 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
-	protected Minecraft mc = FMLClientHandler.instance().getClient();
 	protected final ImageManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
 	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
-
-	private final ModelSign model = new ModelSign();
 
 	public CustomTileEntitySignRenderer(final ImageManager manager) {
 		this.manager = manager;
@@ -37,7 +32,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	@Override
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float color)
 	{
-		this.mc.mcProfiler.startSection("signpic-render");
+		Client.startSection("signpic-render");
 		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
 			if (CurrentMode.instance.isSee()) {
@@ -84,19 +79,19 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glTranslatef(sign.offset.x, sign.offset.y, sign.offset.z);
 
-			glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
+			glTranslatef(-size.width()/2, size.height() + ((size.height()>=0)?0:-size.height())-.5f, 0f);
 			glScalef(1f, -1f, 1f);
 
 			glPushMatrix();
-			glScalef(size.width, size.height, 1f);
+			glScalef(size.width(), size.height(), 1f);
 			image.getState().mainImage(this.manager, image);
 			glPopMatrix();
 
-			if (size.width<1.5f || size.height<1.5) {
+			if (size.width()<1.5f || size.height()<1.5) {
 				glScalef(.5f, .5f, .5f);
-				glTranslatef(size.width/2, size.height/4, 0);
+				glTranslatef(size.width()/2, size.height()/4, 0);
 			}
-			glTranslatef(size.width/2, size.height/2, 0);
+			glTranslatef(size.width()/2, size.height()/2, 0);
 			glScalef(.5f, .5f, 1f);
 			image.getState().themeImage(this.manager, image);
 			image.getState().message(this.manager, image, func_147498_b());
@@ -111,7 +106,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		} else {
 			super.renderTileEntityAt(tile, x, y, z, color);
 		}
-		this.mc.mcProfiler.endSection();
+		Client.endSection();
 	}
 
 	@Override

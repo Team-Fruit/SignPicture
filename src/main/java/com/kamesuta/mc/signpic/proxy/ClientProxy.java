@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.kamesuta.mc.guiwidget.StencilClip;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
@@ -27,8 +28,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
-	public static ImageManager manager;
-
 	@Override
 	public void preInit(final FMLPreInitializationEvent event) {
 		super.preInit(event);
@@ -51,7 +50,7 @@ public class ClientProxy extends CommonProxy {
 		}
 		rootdir.mkdir();
 
-		manager = new ImageManager(new ImageLocation(rootdir));
+		Client.manager = new ImageManager(new ImageLocation(rootdir));
 
 		KeyHandler.INSTANCE.init();
 	}
@@ -71,17 +70,17 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		final CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer(manager);
+		final CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer(Client.manager);
 		renderer.func_147497_a(TileEntityRendererDispatcher.instance);
 		@SuppressWarnings("unchecked")
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, renderer);
 
 		// Event Register
-		FMLCommonHandler.instance().bus().register(manager);
+		FMLCommonHandler.instance().bus().register(Client.manager);
 		FMLCommonHandler.instance().bus().register(KeyHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new SignHandler());
-		MinecraftForge.EVENT_BUS.register(new RenderOverlay(manager));
+		MinecraftForge.EVENT_BUS.register(new RenderOverlay(Client.manager));
 
 		// Versioning
 		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());
