@@ -76,6 +76,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glPushMatrix();
 
 			glTranslatef(sign.meta.offset.x, sign.meta.offset.y, sign.meta.offset.z);
+			sign.meta.rotation.rotate();
 
 			glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 			glScalef(1f, -1f, 1f);

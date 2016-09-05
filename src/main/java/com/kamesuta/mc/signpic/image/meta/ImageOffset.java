@@ -13,52 +13,59 @@ public class ImageOffset implements ImageMeta.MetaParser {
 	public float z = 0f;
 
 	/**
-	 * l=left
-	 * r=right
-	 * d=down
-	 * u=up
-	 * b=back
-	 * f=front
+	 * L=left
+	 * R=right
+	 * D=down
+	 * U=up
+	 * B=back
+	 * F=front
+	 * @param src
 	 */
-	public ImageOffset parseOffset(final Map<String, String> meta) {
-		if (meta.containsKey("l")) if (StringUtils.isEmpty(meta.get("l"))) this.x -= defaultOffset; else this.x -= NumberUtils.toFloat(meta.get("l"), 0f);
-		if (meta.containsKey("r")) if (StringUtils.isEmpty(meta.get("r"))) this.x += defaultOffset; else this.x += NumberUtils.toFloat(meta.get("r"), 0f);
-		if (meta.containsKey("d")) if (StringUtils.isEmpty(meta.get("d"))) this.y -= defaultOffset; else this.y -= NumberUtils.toFloat(meta.get("d"), 0f);
-		if (meta.containsKey("u")) if (StringUtils.isEmpty(meta.get("u"))) this.y += defaultOffset; else this.y += NumberUtils.toFloat(meta.get("u"), 0f);
-		if (meta.containsKey("b")) if (StringUtils.isEmpty(meta.get("b"))) this.z -= defaultOffset; else this.z -= NumberUtils.toFloat(meta.get("b"), 0f);
-		if (meta.containsKey("f")) if (StringUtils.isEmpty(meta.get("f"))) this.z += defaultOffset; else this.z += NumberUtils.toFloat(meta.get("f"), 0f);
+	public ImageOffset parseOffset(final Map<String, String> meta, final String src) {
+		float x = 0f;
+		float y = 0f;
+		float z = 0f;
+		if (meta.containsKey("L")) if (StringUtils.isEmpty(meta.get("L"))) x -= defaultOffset; else x -= NumberUtils.toFloat(meta.get("L"), 0f);
+		if (meta.containsKey("R")) if (StringUtils.isEmpty(meta.get("R"))) x += defaultOffset; else x += NumberUtils.toFloat(meta.get("R"), 0f);
+		if (meta.containsKey("D")) if (StringUtils.isEmpty(meta.get("D"))) y -= defaultOffset; else y -= NumberUtils.toFloat(meta.get("D"), 0f);
+		if (meta.containsKey("U")) if (StringUtils.isEmpty(meta.get("U"))) y += defaultOffset; else y += NumberUtils.toFloat(meta.get("U"), 0f);
+		if (meta.containsKey("B")) if (StringUtils.isEmpty(meta.get("B"))) z -= defaultOffset; else z -= NumberUtils.toFloat(meta.get("B"), 0f);
+		if (meta.containsKey("F")) if (StringUtils.isEmpty(meta.get("F"))) z += defaultOffset; else z += NumberUtils.toFloat(meta.get("F"), 0f);
+		this.x = x;
+		this.y = y;
+		this.z = z;
 		return this;
 	}
 
 	/**
-	 * l=left
-	 * r=right
-	 * d=down
-	 * u=up
-	 * b=back
-	 * f=front
+	 * L=left
+	 * R=right
+	 * D=down
+	 * U=up
+	 * B=back
+	 * F=front
 	 */
 	@Override
 	public String toString() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.x>0)
-			if (this.x==defaultOffset) stb.append("l");
-			else stb.append("l").append(signformat.format(this.x));
+			if (this.x==defaultOffset) stb.append("L");
+			else stb.append("L").append(signformat.format(this.x));
 		else if (this.x<0)
-			if (-this.x==defaultOffset) stb.append("r");
-			else stb.append("r").append(signformat.format(-this.x));
+			if (-this.x==defaultOffset) stb.append("R");
+			else stb.append("R").append(signformat.format(-this.x));
 		if (this.y>0)
-			if (this.y==defaultOffset) stb.append("d");
-			else stb.append("d").append(signformat.format(this.y));
+			if (this.y==defaultOffset) stb.append("D");
+			else stb.append("D").append(signformat.format(this.y));
 		else if (this.y<0)
-			if (-this.y==defaultOffset) stb.append("u");
-			else stb.append("u").append(signformat.format(-this.y));
+			if (-this.y==defaultOffset) stb.append("U");
+			else stb.append("U").append(signformat.format(-this.y));
 		if (this.z>0)
-			if (this.z==defaultOffset) stb.append("b");
-			else stb.append("b").append(signformat.format(this.z));
+			if (this.z==defaultOffset) stb.append("B");
+			else stb.append("B").append(signformat.format(this.z));
 		else if (this.z<0)
-			if (-this.z==defaultOffset) stb.append("f");
-			else stb.append("f").append(signformat.format(-this.z));
+			if (-this.z==defaultOffset) stb.append("F");
+			else stb.append("F").append(signformat.format(-this.z));
 		return stb.toString();
 	}
 }

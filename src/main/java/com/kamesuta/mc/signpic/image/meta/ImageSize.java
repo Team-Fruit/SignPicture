@@ -102,7 +102,7 @@ public class ImageSize implements Cloneable, ImageMeta.MetaParser {
 		return setSize(s, raw.width, raw.height, max.width, max.height);
 	}
 
-	public ImageSize parseSize(final Map<String, String> meta) {
+	public ImageSize parseSize(final Map<String, String> meta, final String src) {
 		this.width = (meta.containsKey("")) ? NumberUtils.toFloat(meta.get(""), unknownSize) : unknownSize;
 		this.height = (meta.containsKey("x")) ? NumberUtils.toFloat(meta.get("x"), unknownSize) : unknownSize;
 		return this;

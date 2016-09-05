@@ -23,9 +23,9 @@ public class ImageMeta {
 
 	public ImageMeta parseMeta(final String src) {
 		final Map<String, String> meta = parse(src);
-		this.size.parseSize(meta);
-		this.offset.parseOffset(meta);
-		this.rotation.parseRotation(meta);
+		this.size.parseSize(meta, src);
+		this.offset.parseOffset(meta, src);
+		this.rotation.parseRotation(meta, src);
 		return this;
 	}
 
