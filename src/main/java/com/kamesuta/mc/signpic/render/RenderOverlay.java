@@ -6,7 +6,7 @@ import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
-import com.kamesuta.mc.signpic.image.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -62,16 +62,16 @@ public class RenderOverlay extends WGui {
 				final Sign sign = new Sign().parseSignEntity(tilesign);
 				if (sign.isVaild()) {
 					final String id = sign.getURL();
-					final ImageSize signsize = sign.size;
+					final ImageSize signsize = sign.meta.size;
 					final Image image = this.manager.get(id);
 					final ImageSize imagesize = image.getSize();
-					final ImageSize viewsize = sign.size.getAspectSize(imagesize);
+					final ImageSize viewsize = new ImageSize().setAspectSize(sign.meta.size, imagesize);
 					final String advmsg = image.advMessage();
 
 					event.left.add("");
 					event.left.add(I18n.format("signpic.over.sign", sign.text()));
 					event.left.add(I18n.format("signpic.over.id", id));
-					event.left.add(I18n.format("signpic.over.size", signsize.text(), signsize.width(), signsize.height(), imagesize.width(), imagesize.height(), viewsize.width(), viewsize.height()));
+					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
 					event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
 					if (advmsg != null)
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));

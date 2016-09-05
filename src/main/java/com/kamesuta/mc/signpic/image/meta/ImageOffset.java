@@ -1,22 +1,25 @@
-package com.kamesuta.mc.signpic.image;
+package com.kamesuta.mc.signpic.image.meta;
 
-import java.text.DecimalFormat;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageOffset {
+public class ImageOffset implements ImageMeta.MetaParser {
 	public static final float defaultOffset = 0.5f;
-	public static final DecimalFormat signformat = new DecimalFormat("0.#");
 
-	public float x;
-	public float y;
-	public float z;
+	public float x = 0f;
+	public float y = 0f;
+	public float z = 0f;
 
-	public ImageOffset() {
-	}
-
+	/**
+	 * l=left
+	 * r=right
+	 * d=down
+	 * u=up
+	 * b=back
+	 * f=front
+	 */
 	public ImageOffset parseOffset(final Map<String, String> meta) {
 		if (meta.containsKey("l")) if (StringUtils.isEmpty(meta.get("l"))) this.x -= defaultOffset; else this.x -= NumberUtils.toFloat(meta.get("l"), 0f);
 		if (meta.containsKey("r")) if (StringUtils.isEmpty(meta.get("r"))) this.x += defaultOffset; else this.x += NumberUtils.toFloat(meta.get("r"), 0f);
@@ -27,7 +30,16 @@ public class ImageOffset {
 		return this;
 	}
 
-	public String text() {
+	/**
+	 * l=left
+	 * r=right
+	 * d=down
+	 * u=up
+	 * b=back
+	 * f=front
+	 */
+	@Override
+	public String toString() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.x>0)
 			if (this.x==defaultOffset) stb.append("l");
@@ -48,10 +60,5 @@ public class ImageOffset {
 			if (-this.z==defaultOffset) stb.append("f");
 			else stb.append("f").append(signformat.format(-this.z));
 		return stb.toString();
-	}
-
-	@Override
-	public String toString() {
-		return text();
 	}
 }

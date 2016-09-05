@@ -111,25 +111,25 @@ public class GuiSignPicEditor extends WFrame {
 						add(new MLabel(new RArea(Coord.right(5), Coord.bottom(bottom-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.width")));
 						add(new MNumber(new RArea(Coord.right(5), Coord.bottom(bottom-=15), Coord.left(5), Coord.height(15)), 15) {
 							{
-								if (CurrentMode.instance.getSign().isSizeVaild())
-									setNumber(CurrentMode.instance.getSign().size.width());
+								if (CurrentMode.instance.getSign().meta.size.vaildWidth())
+									setNumber(CurrentMode.instance.getSign().meta.size.width);
 							}
 
 							@Override
 							protected void onNumberChanged(final String oldText, final String newText) {
-								CurrentMode.instance.getSign().setSize(CurrentMode.instance.getSign().size.imageWidth(newText));
+								CurrentMode.instance.getSign().meta.size.setWidth(newText);
 							}
 						});
 						add(new MLabel(new RArea(Coord.right(5), Coord.bottom(bottom-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.height")));
 						add(new MNumber(new RArea(Coord.right(5), Coord.bottom(bottom-=15), Coord.left(5), Coord.height(15)), 15) {
 							{
-								if (CurrentMode.instance.getSign().isSizeVaild())
-									setNumber(CurrentMode.instance.getSign().size.height());
+								if (CurrentMode.instance.getSign().meta.size.vaildHeight())
+									setNumber(CurrentMode.instance.getSign().meta.size.height);
 							}
 
 							@Override
 							protected void onNumberChanged(final String oldText, final String newText) {
-								CurrentMode.instance.getSign().setSize(CurrentMode.instance.getSign().size.imageHeight(newText));
+								CurrentMode.instance.getSign().meta.size.setHeight(newText);
 							}
 						});
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
@@ -217,7 +217,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public void onFocusChanged() {
-						CurrentMode.instance.getSign().setId(getText());
+						CurrentMode.instance.getSign().id = getText();
 					}
 
 					@Override

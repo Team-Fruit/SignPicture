@@ -11,8 +11,8 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
-import com.kamesuta.mc.signpic.image.ImageSize;
-import com.kamesuta.mc.signpic.image.ImageSizes;
+import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -39,12 +39,12 @@ public class SignPicLabel extends WBase {
 					glPushMatrix();
 					translate(a);
 
-					final ImageSize siz = image.getSize().getLimitSize(this.sign.size);
-					final ImageSize size = ImageSize.createSize(ImageSizes.INNER, siz, ImageSize.area(a));
+					final ImageSize siz = new ImageSize().setAspectSize(this.sign.meta.size, image.getSize());
+					final ImageSize size = new ImageSize().setSize(ImageSizes.INNER, siz, new ImageSize().setArea(a));
 
 					glPushMatrix();
-					glTranslatef((a.w()-size.width())/2, (a.h()-size.height())/2, 0);
-					glScalef(size.width(), size.height(), 1f);
+					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
+					glScalef(size.width, size.height, 1f);
 					image.getState().mainImage(this.manager, image);
 					glPopMatrix();
 

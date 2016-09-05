@@ -19,6 +19,8 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
+import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
 
@@ -27,7 +29,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader {
-	public static final ImageSize MAX_SIZE = new ImageSize.UnmodifiableImageSize(512, 512);
+	public static final ImageSize MAX_SIZE = new ImageSize().setSize(512, 512);
 
 	protected RemoteImage image;
 	protected InputStream input;
@@ -91,7 +93,7 @@ public class ImageIOLoader {
 		final GifImage gifImage = GifDecoder.read(data);
 		final int width = gifImage.getWidth();
 		final int height = gifImage.getHeight();
-		final ImageSize newsize = ImageSize.createSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
+		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
 
 		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
 		final int frameCount = this.maxprogress = gifImage.getFrameCount();
@@ -115,13 +117,13 @@ public class ImageIOLoader {
 			reader.dispose();
 			imagestream.close();
 		}
-		final ImageSize newsize = ImageSize.createSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
+		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
 		this.image.texture = new ImageTextures(Lists.newArrayList(new ImageTexture(createResizedImage(canvas, newsize))));
 	}
 
 	protected BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
-		final int wid = (int)newsize.width();
-		final int hei = (int)newsize.height();
+		final int wid = (int) newsize.width;
+		final int hei = (int) newsize.height;
 		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
 		final Graphics g = thumb.getGraphics();
 		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);

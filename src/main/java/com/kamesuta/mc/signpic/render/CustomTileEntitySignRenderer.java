@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
-import com.kamesuta.mc.signpic.image.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -45,7 +45,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			final Image image = this.manager.get(sign.getURL());
 
 			// Size
-			final ImageSize size = sign.size.getAspectSize(image.getSize());
+			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, image.getSize());
 
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
@@ -75,21 +75,21 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glDisable(GL_LIGHTING);
 			glPushMatrix();
 
-			glTranslatef(sign.offset.x, sign.offset.y, sign.offset.z);
+			glTranslatef(sign.meta.offset.x, sign.meta.offset.y, sign.meta.offset.z);
 
-			glTranslatef(-size.width()/2, size.height() + ((size.height()>=0)?0:-size.height())-.5f, 0f);
+			glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 			glScalef(1f, -1f, 1f);
 
 			glPushMatrix();
-			glScalef(size.width(), size.height(), 1f);
+			glScalef(size.width, size.height, 1f);
 			image.getState().mainImage(this.manager, image);
 			glPopMatrix();
 
-			if (size.width()<1.5f || size.height()<1.5) {
+			if (size.width<1.5f || size.height<1.5) {
 				glScalef(.5f, .5f, .5f);
-				glTranslatef(size.width()/2, size.height()/4, 0);
+				glTranslatef(size.width/2, size.height/4, 0);
 			}
-			glTranslatef(size.width()/2, size.height()/2, 0);
+			glTranslatef(size.width/2, size.height/2, 0);
 			glScalef(.5f, .5f, 1f);
 			image.getState().themeImage(this.manager, image);
 			image.getState().message(this.manager, image, func_147498_b());

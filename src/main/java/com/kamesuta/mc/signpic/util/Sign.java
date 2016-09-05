@@ -1,14 +1,8 @@
 package com.kamesuta.mc.signpic.util;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang3.StringUtils;
 
-import com.kamesuta.mc.signpic.image.ImageOffset;
-import com.kamesuta.mc.signpic.image.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -18,45 +12,36 @@ import net.minecraft.tileentity.TileEntitySign;
 public class Sign {
 	public static int maxText = 15*4;
 
-	public String id;
-	public ImageSize size;
-	public final ImageOffset offset = new ImageOffset();
+	public String id = "";
+	public final ImageMeta meta = new ImageMeta();
 
 	public Sign() {
 	}
 
-	public Sign(final String id, final ImageSize size) {
-		this.id = id;
-		this.size = size;
-	}
-
 	public Sign parseText(final String text) {
-		if (text!=null && text.endsWith("]") && text.contains("[")) {
-			final int start = text.lastIndexOf("[");
-			setId(text.substring(0, start));
-			final Map<String, String> meta = parseMeta(text.substring(start+1, text.length()-1));
-			this.size = ImageSize.parseSize(meta);
-			this.offset.parseOffset(meta);
+		if (text!=null && StringUtils.endsWith(text, "]") && StringUtils.contains(text, "[")) {
+			final int start = StringUtils.lastIndexOf(text, "[");
+			this.id = StringUtils.substring(text, 0, start);
+			this.meta.parseMeta(StringUtils.substring(text, start+1, StringUtils.length(text)-1));
 		}
 		return this;
 	}
 
-	public Sign setId(final String id) {
-		this.id = id;
-		return this;
-	}
-
-	public Sign setSize(final ImageSize size) {
-		this.size = size;
-		return this;
+	public String getID() {
+		String id = this.id;
+		if (StringUtils.contains(id, "http://"))
+			id = StringUtils.substring(id, 7, StringUtils.length(id));
+		else if (StringUtils.contains(id, "https://"))
+			id = "$" + StringUtils.substring(id, 8, StringUtils.length(id));
+		return id;
 	}
 
 	public String getURL() {
 		String id = this.id;
-		if (!id.startsWith("!") && !isEmpty(id))
-			if (id.startsWith("$"))
-				id = "https://" + id.substring(1);
-			else if (!id.startsWith("http://") && !id.startsWith("https://"))
+		if (!StringUtils.startsWith(id, "!") && !isEmpty(id))
+			if (StringUtils.startsWith(id, "$"))
+				id = "https://" + StringUtils.substring(id, 1);
+			else if (!StringUtils.startsWith(id, "http://") && !StringUtils.startsWith(id, "https://"))
 				id = "http://" + id;
 		return id;
 	}
@@ -69,37 +54,8 @@ public class Sign {
 		return parseSignText(tile.signText);
 	}
 
-	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
-
-	protected static Map<String, String> parseMeta(final String src) {
-		final Matcher m = p.matcher(src);
-		final Map<String, String> map = new HashMap<String, String>();
-		while(m.find()){
-			if (2 <= m.groupCount()) {
-				final String key = m.group(1);
-				final String value = m.group(2);
-				if (!StringUtils.isEmpty(key) || !StringUtils.isEmpty(value))
-					map.put(key, value);
-			}
-		}
-		return map;
-	}
-
 	public String text() {
-		String id = this.id;
-		if (id.contains("http://"))
-			id = id.substring(7, id.length());
-		else if (id.contains("https://"))
-			id = "$" + id.substring(8, id.length());
-		return id + "[" + this.size.text() + this.offset.text() + "]";
-	}
-
-	public boolean isIdVaild() {
-		return !isEmpty(this.id);
-	}
-
-	public boolean isSizeVaild() {
-		return this.size!=null;
+		return getID() + this.meta;
 	}
 
 	public boolean isPlaceable() {
@@ -107,7 +63,7 @@ public class Sign {
 	}
 
 	public boolean isVaild() {
-		return isIdVaild() && isSizeVaild();
+		return !isEmpty(this.id);
 	}
 
 	public boolean isEmpty(final String s) {
@@ -118,8 +74,8 @@ public class Sign {
 		final String text = text();
 		final String[] sign = new String[4];
 		for (int i=0; i<4; i++) {
-			if (16*i <= text.length())
-				sign[i] = text.substring(15*i, Math.min(15*(i+1), text.length()));
+			if (16*i <= StringUtils.length(text))
+				sign[i] = StringUtils.substring(text, 15*i, Math.min(15*(i+1), text.length()));
 			else
 				sign[i] = "";
 		}
@@ -137,6 +93,6 @@ public class Sign {
 
 	@Override
 	public String toString() {
-		return String.format("Sign [id=%s, size=%s]", this.id, this.size);
+		return String.format("Sign [id=%s, meta=%s]", this.id, this.meta);
 	}
 }

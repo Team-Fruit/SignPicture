@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.mode;
 
-import com.kamesuta.mc.signpic.image.ImageSize;
 import com.kamesuta.mc.signpic.util.Sign;
 
 public class CurrentMode {
@@ -9,7 +8,7 @@ public class CurrentMode {
 	private CurrentMode() {
 	}
 
-	protected Sign sign = new Sign().setSize(ImageSize.UnknownSize);
+	protected Sign sign = new Sign();
 	protected Mode mode = Mode.NONE;
 	protected boolean continueEnable;
 	protected boolean seeEnable;

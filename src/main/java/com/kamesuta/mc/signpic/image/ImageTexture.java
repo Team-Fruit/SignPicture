@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.image.BufferedImage;
 
+import com.kamesuta.mc.signpic.image.meta.ImageSize;
+
 import net.minecraft.client.renderer.texture.TextureUtil;
 
 public class ImageTexture implements IImageTexture {
@@ -51,7 +53,7 @@ public class ImageTexture implements IImageTexture {
 		if (this.id == -1) {
 			this.temp = image;
 			if (image != null)
-				this.size = ImageSize.size(image.getWidth(), image.getHeight());
+				this.size = new ImageSize().setSize(image.getWidth(), image.getHeight());
 			return true;
 		}
 		return false;
