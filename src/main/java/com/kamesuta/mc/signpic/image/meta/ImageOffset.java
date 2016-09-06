@@ -49,24 +49,27 @@ public class ImageOffset implements ImageMeta.MetaParser {
 	@Override
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
-		if (this.x>0)
-			if (this.x==defaultOffset) stb.append("L");
-			else stb.append("L").append(signformat.format(this.x));
-		else if (this.x<0)
-			if (-this.x==defaultOffset) stb.append("R");
-			else stb.append("R").append(signformat.format(-this.x));
-		if (this.y>0)
-			if (this.y==defaultOffset) stb.append("D");
-			else stb.append("D").append(signformat.format(this.y));
-		else if (this.y<0)
-			if (-this.y==defaultOffset) stb.append("U");
-			else stb.append("U").append(signformat.format(-this.y));
-		if (this.z>0)
-			if (this.z==defaultOffset) stb.append("B");
-			else stb.append("B").append(signformat.format(this.z));
-		else if (this.z<0)
-			if (-this.z==defaultOffset) stb.append("F");
-			else stb.append("F").append(signformat.format(-this.z));
+		if (this.x!=0)
+			if (this.x<0)
+				if (-this.x==defaultOffset) stb.append("L");
+				else stb.append("L").append(signformat.format(this.x));
+			else
+				if (this.x==defaultOffset) stb.append("R");
+				else stb.append("R").append(signformat.format(-this.x));
+		if (this.y!=0)
+			if (this.y<0)
+				if (-this.y==defaultOffset) stb.append("D");
+				else stb.append("D").append(signformat.format(this.y));
+			else
+				if (this.y==defaultOffset) stb.append("U");
+				else stb.append("U").append(signformat.format(-this.y));
+		if (this.z!=0)
+			if (this.z<0)
+				if (-this.z==defaultOffset) stb.append("B");
+				else stb.append("B").append(signformat.format(this.z));
+			else
+				if (this.z==defaultOffset) stb.append("F");
+				else stb.append("F").append(signformat.format(-this.z));
 		return stb.toString();
 	}
 
