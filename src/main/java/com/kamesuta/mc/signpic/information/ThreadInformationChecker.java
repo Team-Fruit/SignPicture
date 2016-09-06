@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.information;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.apache.commons.lang3.CharEncoding;
+
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Reference;
@@ -21,7 +23,7 @@ public class ThreadInformationChecker extends Thread {
 	public void run() {
 		try {
 			final URL url = new URL("https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/info/info.json");
-			final Info info = new Gson().fromJson(new JsonReader(new InputStreamReader(url.openStream())), Info.class);
+			final Info info = new Gson().fromJson(new JsonReader(new InputStreamReader(url.openStream(), CharEncoding.UTF_8)), Info.class);
 			if (info!=null)
 				if (info.versions!=null) {
 					InformationChecker.stableVersion = info.versions.get(MinecraftForge.MC_VERSION);
