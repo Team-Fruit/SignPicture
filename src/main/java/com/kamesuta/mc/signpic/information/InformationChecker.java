@@ -76,8 +76,11 @@ public final class InformationChecker {
 								}
 
 								if(betaneedupdate || needupdate) {
-									if (!StringUtils.isEmpty(onlineVersion.message))
-										ChatBuilder.create(onlineVersion.message).useTranslation().chatClient();
+									final String lang = Client.mc.gameSettings.language;
+									if (onlineVersion.message_local!=null && onlineVersion.message_local.containsKey(lang))
+										ChatBuilder.create(onlineVersion.message_local.get(lang)).chatClient();
+									else if (!StringUtils.isEmpty(onlineVersion.message))
+										ChatBuilder.create(onlineVersion.message).chatClient();
 									ChatBuilder.create("signpic.versioning.outdated").setParams(Reference.VERSION, onlineVersion.version).useTranslation().chatClient();
 									ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson().chatClient();;
 								}

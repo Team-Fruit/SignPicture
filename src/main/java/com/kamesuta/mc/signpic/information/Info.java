@@ -9,5 +9,6 @@ public class Info {
 		public String remote;
 		public String local;
 		public String message;
+		public Map<String, String> message_local;
 	}
 }
