@@ -5,10 +5,12 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.mode.Mode;
+import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.inventory.GuiEditSign;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
@@ -25,7 +27,7 @@ public class SignHandler {
 				}
 			}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook TileEntitySign field included by GuiEditSign");
+			Reference.logger.error("Could not hook TileEntitySign field included by GuiEditSign", e);
 		}
 	}
 
@@ -43,9 +45,12 @@ public class SignHandler {
 						event.setCanceled(true);
 						if (!CurrentMode.instance.isContinue())
 							CurrentMode.instance.setMode();
-					} catch (final IllegalArgumentException e) {
-					} catch (final IllegalAccessException e) {
+					} catch (final Exception e) {
+						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+						ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 					}
+				} else {
+					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 				}
 			}
 	}

@@ -4,24 +4,28 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.OutputStream;
+import java.net.URI;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.util.ChatBuilder;
+import com.kamesuta.mc.signpic.util.Downloader;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
 
 public class ThreadDownloadMod extends Thread {
-
 	public ThreadDownloadMod() {
 		setName("Sign Picture Download File Thread");
 
@@ -40,23 +44,41 @@ public class ThreadDownloadMod extends Thread {
 			else
 				local = stringurl.substring(stringurl.lastIndexOf("/")+1, stringurl.length());
 
-			sendChat(IChatComponent.Serializer.func_150699_a(String.format(StatCollector.translateToLocal("signpic.versioning.startingDownload"), local)));
+			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
 			InformationChecker.startedDownload = true;
 
-			final URL url = new URL(InformationChecker.onlineVersion.remote);
-			final InputStream webReader = url.openStream();
+			final HttpUriRequest req = new HttpGet(new URI(InformationChecker.onlineVersion.remote));
+			final HttpResponse response = Downloader.downloader.client.execute(req);
+			final HttpEntity entity = response.getEntity();
+
+			final long size = entity.getContentLength();
+			final InputStream inputStream = entity.getContent();
 
 			final File dir = new File(".", "mods");
 			final File f = new File(dir, local + ".dl");
 			f.createNewFile();
 
-			final FileOutputStream outputStream = new FileOutputStream(f);
 
-			IOUtils.copy(webReader, outputStream);
+			final OutputStream outputStream = new CountingOutputStream(new FileOutputStream(f)) {
+				private long percent = 0;
+
+				@Override
+				protected synchronized void beforeWrite(final int n) {
+					super.beforeWrite(n);
+					final long now = getByteCount();
+					final long percent = now * 100 / size;
+					if (percent > this.percent) {
+						this.percent = percent;
+						ChatBuilder.create("signpic.versioning.downloading").setId(897).useTranslation().setParams(percent, now, size).chatClient();
+					}
+				}
+			};
+
+			IOUtils.copy(inputStream, outputStream);
 
 			outputStream.close();
-			webReader.close();
+			inputStream.close();
 
 			final File f1 = new File(dir, local);
 			if(!f1.exists())
@@ -70,9 +92,9 @@ public class ThreadDownloadMod extends Thread {
 					fname = m.getName();
 			}
 			if (fname != null)
-				sendChat(new ChatComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, fname).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, fname).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 			else
-				sendChat(new ChatComponentTranslation("signpic.versioning.doneDownloading", local).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloading", local).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 
 			Desktop.getDesktop().open(dir.getCanonicalFile());
 			InformationChecker.downloadedFile = true;
@@ -80,21 +102,12 @@ public class ThreadDownloadMod extends Thread {
 			finalize();
 		} catch(final Throwable e) {
 			Reference.logger.warn("Updater Downloading Error", e);
-			sendError();
+			new ChatBuilder().setChat(new ChatComponentTranslation("signpic.versioning.error").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))).chatClient();
 			try {
 				finalize();
 			} catch(final Throwable e1) {
 				Reference.logger.error("updater.finalizeerror", e1);
 			}
 		}
-	}
-
-	private void sendError() {
-		sendChat(new ChatComponentTranslation("signpic.versioning.error").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-	}
-
-	private void sendChat(final IChatComponent c) {
-		if(FMLClientHandler.instance().getClient().thePlayer != null)
-			FMLClientHandler.instance().getClient().thePlayer.addChatComponentMessage(c);
 	}
 }

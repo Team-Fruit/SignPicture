@@ -18,9 +18,6 @@ import com.kamesuta.mc.signpic.util.Downloader;
 import net.minecraft.client.resources.I18n;
 
 public class ImageDownloader {
-
-	public static Downloader downloader = new Downloader();
-
 	protected final ImageLocation location;
 	protected final RemoteImage image;
 
@@ -38,7 +35,7 @@ public class ImageDownloader {
 			final File local = this.location.localLocation(this.image);
 
 			final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.image));
-			final HttpResponse response = downloader.client.execute(req);
+			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 
 			this.maxsize = entity.getContentLength();

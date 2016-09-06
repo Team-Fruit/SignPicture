@@ -6,16 +6,13 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.information.Info.Version;
+import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
 
 public final class InformationChecker {
 
@@ -80,10 +77,9 @@ public final class InformationChecker {
 
 								if(betaneedupdate || needupdate) {
 									if (!StringUtils.isEmpty(onlineVersion.message))
-										player.addChatComponentMessage(new ChatComponentText(onlineVersion.message));
-									player.addChatComponentMessage(new ChatComponentTranslation("signpic.versioning.outdated", Reference.VERSION, onlineVersion.version));
-									final IChatComponent component = IChatComponent.Serializer.func_150699_a(StatCollector.translateToLocal("signpic.versioning.updateMessage"));
-									player.addChatComponentMessage(component);
+										ChatBuilder.create(onlineVersion.message).useTranslation().chatClient();
+									ChatBuilder.create("signpic.versioning.outdated").setParams(Reference.VERSION, onlineVersion.version).useTranslation().chatClient();
+									ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson().chatClient();;
 								}
 							}
 						}

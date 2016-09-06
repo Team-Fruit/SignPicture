@@ -30,6 +30,8 @@ import org.apache.http.message.BasicHeader;
 import com.kamesuta.mc.signpic.Reference;
 
 public class Downloader {
+	public static Downloader downloader = new Downloader();
+
 	public final PoolingHttpClientConnectionManager manager;
 	public HttpClient client;
 

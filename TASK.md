@@ -11,7 +11,7 @@ _If you have any idea for this project, please make an issue and post to this pr
 - [x] Load Faster
 - [ ] 画像個別設定(ブロック&削除、リロード、再ダウンロード)
 - [ ] signpic!Direct(ダウンロードGUI)
-- [ ] テキストボックスメタ情報優先化
-- [ ] 回転構文
-- [ ] PlaceModeリフレクションエラーの時のPlaceモード使用不可表示
+- [x] テキストボックスメタ情報優先化
+- [x] 回転構文
+- [x] PlaceModeリフレクションエラーの時のPlaceモード使用不可表示
 - [ ] Waila
