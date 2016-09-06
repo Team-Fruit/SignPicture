@@ -1,16 +1,22 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 public class ImageOffset implements ImageMeta.MetaParser {
 	public static final float defaultOffset = 0.5f;
 
-	public float x = 0f;
-	public float y = 0f;
-	public float z = 0f;
+	public float x;
+	public float y;
+	public float z;
+
+	@Override
+	public ImageOffset reset() {
+		this.x = 0f;
+		this.y = 0f;
+		this.z = 0f;
+		return this;
+	}
 
 	/**
 	 * L=left
@@ -21,19 +27,14 @@ public class ImageOffset implements ImageMeta.MetaParser {
 	 * F=front
 	 * @param src
 	 */
-	public ImageOffset parseOffset(final Map<String, String> meta, final String src) {
-		float x = 0f;
-		float y = 0f;
-		float z = 0f;
-		if (meta.containsKey("L")) if (StringUtils.isEmpty(meta.get("L"))) x -= defaultOffset; else x -= NumberUtils.toFloat(meta.get("L"), 0f);
-		if (meta.containsKey("R")) if (StringUtils.isEmpty(meta.get("R"))) x += defaultOffset; else x += NumberUtils.toFloat(meta.get("R"), 0f);
-		if (meta.containsKey("D")) if (StringUtils.isEmpty(meta.get("D"))) y -= defaultOffset; else y -= NumberUtils.toFloat(meta.get("D"), 0f);
-		if (meta.containsKey("U")) if (StringUtils.isEmpty(meta.get("U"))) y += defaultOffset; else y += NumberUtils.toFloat(meta.get("U"), 0f);
-		if (meta.containsKey("B")) if (StringUtils.isEmpty(meta.get("B"))) z -= defaultOffset; else z -= NumberUtils.toFloat(meta.get("B"), 0f);
-		if (meta.containsKey("F")) if (StringUtils.isEmpty(meta.get("F"))) z += defaultOffset; else z += NumberUtils.toFloat(meta.get("F"), 0f);
-		this.x = x;
-		this.y = y;
-		this.z = z;
+	@Override
+	public ImageOffset parse(final String src, final String key, final String value) {
+		if (StringUtils.equals(key, "L")) if (StringUtils.isEmpty(value)) this.x -= defaultOffset; else this.x -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "R")) if (StringUtils.isEmpty(value)) this.x += defaultOffset; else this.x += NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "D")) if (StringUtils.isEmpty(value)) this.y -= defaultOffset; else this.y -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "U")) if (StringUtils.isEmpty(value)) this.y += defaultOffset; else this.y += NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "B")) if (StringUtils.isEmpty(value)) this.z -= defaultOffset; else this.z -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "F")) if (StringUtils.isEmpty(value)) this.z += defaultOffset; else this.z += NumberUtils.toFloat(value, 0f);
 		return this;
 	}
 
@@ -46,7 +47,7 @@ public class ImageOffset implements ImageMeta.MetaParser {
 	 * F=front
 	 */
 	@Override
-	public String toString() {
+	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.x>0)
 			if (this.x==defaultOffset) stb.append("L");
@@ -67,5 +68,10 @@ public class ImageOffset implements ImageMeta.MetaParser {
 			if (-this.z==defaultOffset) stb.append("F");
 			else stb.append("F").append(signformat.format(-this.z));
 		return stb.toString();
+	}
+
+	@Override
+	public String toString() {
+		return compose();
 	}
 }

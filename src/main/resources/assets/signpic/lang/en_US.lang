@@ -24,6 +24,7 @@ signpic.gui.editor.continue=Continue
 signpic.gui.editor.load=Load
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
+signpic.gui.editor.textfield=Place URL Here!
 
 # Image State
 signpic.state.init=Waiting...

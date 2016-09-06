@@ -32,6 +32,15 @@ public class MTextField extends WBase {
 	protected Deque<String> back = new ArrayDeque<String>();
 	protected Deque<String> next = new ArrayDeque<String>();
 
+
+	public void setWatermark(final String watermark) {
+		this.watermark = watermark;
+	}
+
+	public String getWatermark() {
+		return this.watermark;
+	}
+
 	protected void log(final String s) {
 		if (!StringUtils.equals(s, this.back.peek())) {
 			final String t = this.next.poll();

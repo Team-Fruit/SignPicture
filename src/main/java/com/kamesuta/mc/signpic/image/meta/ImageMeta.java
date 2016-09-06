@@ -1,8 +1,6 @@
 package com.kamesuta.mc.signpic.image.meta;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,34 +19,45 @@ public class ImageMeta {
 		this.rotation = new ImageRotation();
 	}
 
-	public ImageMeta parseMeta(final String src) {
-		final Map<String, String> meta = parse(src);
-		this.size.parseSize(meta, src);
-		this.offset.parseOffset(meta, src);
-		this.rotation.parseRotation(meta, src);
+	protected ImageMeta parseMeta(final String src, final String key, final String value) {
+		this.size.parse(src, key, value);
+		this.offset.parse(src, key, value);
+		this.rotation.parse(src, key, value);
 		return this;
 	}
 
-	protected static Map<String, String> parse(final String src) {
+	public ImageMeta parse(final String src) {
+		this.size.reset();
+		this.offset.reset();
+		this.rotation.reset();
 		final Matcher m = p.matcher(src);
-		final Map<String, String> map = new HashMap<String, String>();
 		while(m.find()){
 			if (2 <= m.groupCount()) {
 				final String key = m.group(1);
 				final String value = m.group(2);
 				if (!StringUtils.isEmpty(key) || !StringUtils.isEmpty(value))
-					map.put(key, value);
+					parseMeta(src, key, value);
 			}
 		}
-		return map;
+		return this;
+	}
+
+	public String compose() {
+		return "[" + this.size + this.offset + this.rotation + "]";
 	}
 
 	@Override
 	public String toString() {
-		return "[" + this.size + this.offset + this.rotation + "]";
+		return compose();
 	}
 
 	public static interface MetaParser {
-		public static final DecimalFormat signformat = new DecimalFormat("0.#");
+		DecimalFormat signformat = new DecimalFormat("0.#");
+
+		MetaParser parse(String src, String key, String value);
+
+		MetaParser reset();
+
+		String compose();
 	}
 }

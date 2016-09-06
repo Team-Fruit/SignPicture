@@ -2,11 +2,9 @@ package com.kamesuta.mc.signpic.image.meta;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -14,61 +12,62 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class ImageRotation implements ImageMeta.MetaParser {
 	public static final float defaultOffset = 4f;
 
-	private final List<Rotate> rotateTypes = new ArrayList<Rotate>();
+	public final List<Rotate> rotates = new LinkedList<Rotate>();
 
-	private final float[] rotates = new float[3];
-
-	/**
-	 * h=phi
-	 * s=psi
-	 * t=theta
-	 * @param src
-	 */
-	public ImageRotation parseRotation(final Map<String, String> meta, final String src) {
-		final int[] indexes = new int[3];
-		indexes[0] = StringUtils.indexOf(src, "X");
-		indexes[1] = StringUtils.indexOf(src, "Y");
-		indexes[2] = StringUtils.indexOf(src, "Z");
-		Arrays.sort(indexes);
-		for (final int index : indexes) {
-			if (index != -1) {
-				final String key = StringUtils.substring(src, index, index+1);
-				final String value = meta.get(key);
-				final Rotate type = Rotate.valueOf(key);
-				final int o = this.rotateTypes.size();
-				this.rotateTypes.add(type);
-				this.rotates[o] = (StringUtils.isEmpty(value)) ? defaultOffset : NumberUtils.toFloat(value, 0f);
-			}
-		}
+	@Override
+	public ImageRotation reset() {
+		this.rotates.clear();
 		return this;
 	}
 
-	public void rotate() {
-		for (final ListIterator<Rotate> it = this.rotateTypes.listIterator(); it.hasNext();) {
-			final float rotate = this.rotates[it.nextIndex()];
-			final Rotate type = it.next();
-			type.rotate(rotate);
-		}
+	@Override
+	public ImageRotation parse(final String src, final String key, final String value) {
+		if (StringUtils.equals(key, RotateType.X.name())) this.rotates.add(new Rotate(RotateType.X, NumberUtils.toFloat(value, defaultOffset)));
+		else if (StringUtils.equals(key, RotateType.Y.name())) this.rotates.add(new Rotate(RotateType.Y, NumberUtils.toFloat(value, defaultOffset)));
+		else if (StringUtils.equals(key, RotateType.Z.name())) this.rotates.add(new Rotate(RotateType.Z, NumberUtils.toFloat(value, defaultOffset)));
+		return this;
 	}
 
-	/**
-	 * h=phi
-	 * s=psi
-	 * t=theta
-	 */
 	@Override
-	public String toString() {
+	public String compose() {
 		final StringBuilder stb = new StringBuilder();
-		for (final ListIterator<Rotate> it = this.rotateTypes.listIterator(); it.hasNext();) {
-			final float rotate = this.rotates[it.nextIndex()];
-			final Rotate type = it.next();
-			if (rotate==defaultOffset) stb.append(type.name());
-			else stb.append(type.name()).append(signformat.format(rotate));
-		}
+		for (final Rotate rotate : this.rotates)
+			stb.append(rotate.compose());
 		return stb.toString();
 	}
 
-	private enum Rotate {
+	@Override
+	public String toString() {
+		return compose();
+	}
+
+	public void rotate() {
+		for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
+			it.previous().rotate();
+	}
+
+	public static class Rotate {
+		public RotateType type;
+		public float rotate;
+
+		public Rotate(final RotateType type, final float rotate) {
+			this.type = type;
+			this.rotate = rotate;
+		}
+
+		public void rotate() {
+			this.type.rotate(this.rotate);
+		}
+
+		public String compose() {
+			if (this.rotate == defaultOffset)
+				return this.type.name();
+			else
+				return this.type.name() + signformat.format(this.rotate);
+		}
+	}
+
+	public static enum RotateType {
 		X {
 			@Override
 			public void rotate(final float f) {

@@ -30,7 +30,7 @@ public class MNumber extends WPanel {
 				onNumberChanged(oldText, getText());
 			}
 		};
-		this.field.setAllowedCharacters("-.0123456789");
+		this.field.setAllowedCharacters("+-.eE0123456789");
 		add(this.field);
 		this.pos = new MButton(new RArea(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "+") {
 			@Override

@@ -19,12 +19,27 @@ public class Sign {
 	}
 
 	public Sign parseText(final String text) {
-		if (text!=null && StringUtils.endsWith(text, "]") && StringUtils.contains(text, "[")) {
-			final int start = StringUtils.lastIndexOf(text, "[");
-			this.id = StringUtils.substring(text, 0, start);
-			this.meta.parseMeta(StringUtils.substring(text, start+1, StringUtils.length(text)-1));
+		if (hasMeta(text)) {
+			this.id = extractId(text);
+			this.meta.parse(extractMeta(text));
 		}
 		return this;
+	}
+
+	public static String extractMeta(final String src) {
+		return StringUtils.substring(src, StringUtils.lastIndexOf(src, "[")+1, StringUtils.length(src)-1);
+	}
+
+	public static String extractId(final String src) {
+		return StringUtils.substring(src, 0, StringUtils.lastIndexOf(src, "["));
+	}
+
+	public static boolean hasMeta(final String text) {
+		return text!=null && StringUtils.endsWith(text, "]") && StringUtils.contains(text, "[");
+	}
+
+	public static boolean hasId(final String id) {
+		return StringUtils.isEmpty(id) || StringUtils.containsOnly(id, "!") || StringUtils.containsOnly(id, "$");
 	}
 
 	public String getID() {
@@ -38,7 +53,7 @@ public class Sign {
 
 	public String getURL() {
 		String id = this.id;
-		if (!StringUtils.startsWith(id, "!") && !isEmpty(id))
+		if (!StringUtils.startsWith(id, "!") && !hasId(id))
 			if (StringUtils.startsWith(id, "$"))
 				id = "https://" + StringUtils.substring(id, 1);
 			else if (!StringUtils.startsWith(id, "http://") && !StringUtils.startsWith(id, "https://"))
@@ -63,11 +78,7 @@ public class Sign {
 	}
 
 	public boolean isVaild() {
-		return !isEmpty(this.id);
-	}
-
-	public boolean isEmpty(final String s) {
-		return StringUtils.isEmpty(this.id) || StringUtils.containsOnly(this.id, "!") || StringUtils.containsOnly(this.id, "$");
+		return !hasId(this.id);
 	}
 
 	public String[] toSignText() {

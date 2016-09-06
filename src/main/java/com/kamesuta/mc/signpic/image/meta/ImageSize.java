@@ -1,7 +1,6 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.util.Map;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -102,16 +101,28 @@ public class ImageSize implements Cloneable, ImageMeta.MetaParser {
 		return setSize(s, raw.width, raw.height, max.width, max.height);
 	}
 
-	public ImageSize parseSize(final Map<String, String> meta, final String src) {
-		this.width = (meta.containsKey("")) ? NumberUtils.toFloat(meta.get(""), unknownSize) : unknownSize;
-		this.height = (meta.containsKey("x")) ? NumberUtils.toFloat(meta.get("x"), unknownSize) : unknownSize;
+	@Override
+	public ImageSize reset() {
+		return unknownSize();
+	}
+
+	@Override
+	public ImageSize parse(final String src, final String key, final String value) {
+		if (StringUtils.equals(key, ""))
+			this.width = NumberUtils.toFloat(value, unknownSize);
+		else if (StringUtils.equals(key, "x"))
+			this.height = NumberUtils.toFloat(value, unknownSize);
 		return this;
 	}
 
-	public ImageSize parseSize(final String w, final String h) {
-		this.width = NumberUtils.toFloat(w, unknownSize);
-		this.height = NumberUtils.toFloat(h, unknownSize);
-		return this;
+	@Override
+	public String compose() {
+		return (vaildWidth() ? signformat.format(this.width) : "") + (vaildHeight() ? "x" + signformat.format(this.height) : "");
+	}
+
+	@Override
+	public String toString() {
+		return compose();
 	}
 
 	@Override
@@ -146,11 +157,6 @@ public class ImageSize implements Cloneable, ImageMeta.MetaParser {
 		if (Float.floatToIntBits(this.width) != Float.floatToIntBits(other.width))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return String.format("%s%s", vaildWidth() ? signformat.format(this.width) : "", vaildHeight() ? "x" + signformat.format(this.height) : "");
 	}
 
 	public static enum ImageSizes {

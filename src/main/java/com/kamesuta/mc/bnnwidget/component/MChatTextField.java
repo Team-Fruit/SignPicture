@@ -2,6 +2,8 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -13,9 +15,19 @@ import net.minecraft.client.gui.GuiTextField;
 public class MChatTextField extends WBase {
 	protected final GuiTextField t;
 
+	public String watermark;
+
 	public MChatTextField(final R position) {
 		super(position);
 		this.t = new GuiTextField(font, 0, 0, 0, 0);
+	}
+
+	public void setWatermark(final String watermark) {
+		this.watermark = watermark;
+	}
+
+	public String getWatermark() {
+		return this.watermark;
 	}
 
 	@Override
@@ -31,7 +43,14 @@ public class MChatTextField extends WBase {
 		this.t.height = (int) a.h() - 2;
 		glPushMatrix();
 		glTranslatef(a.x1(), a.y1(), 0f);
+
 		this.t.drawTextBox();
+		if (!StringUtils.isEmpty(this.watermark) && StringUtils.isEmpty(getText()) && !isFocused()) {
+			final int l = getEnableBackgroundDrawing() ? this.t.xPosition + 4 : this.t.xPosition;
+			final int i1 = getEnableBackgroundDrawing() ? this.t.yPosition + (this.t.height - 8) / 2 : this.t.yPosition;
+			font.drawStringWithShadow(this.watermark, l, i1, 0x777777);
+		}
+
 		glPopMatrix();
 		this.t.xPosition = x;
 		this.t.yPosition = y;

@@ -209,7 +209,8 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public void init(final WEvent ev, final Area pgp) {
 						super.init(ev, pgp);
-						setMaxStringLength(Sign.maxText);
+						setMaxStringLength(Integer.MAX_VALUE);
+						setWatermark(I18n.format("signpic.gui.editor.textfield"));
 						if (CurrentMode.instance.getSign().id != null) {
 							setText(CurrentMode.instance.getSign().id);
 						}
@@ -217,7 +218,11 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public void onFocusChanged() {
-						CurrentMode.instance.getSign().id = getText();
+						final String text = getText();
+						if (Sign.hasMeta(text))
+							CurrentMode.instance.getSign().parseText(text);
+						else
+							CurrentMode.instance.getSign().id = text;
 					}
 
 					@Override

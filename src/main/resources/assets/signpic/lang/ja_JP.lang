@@ -11,6 +11,7 @@ signpic.gui.editor.continue=連続
 signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
+signpic.gui.editor.textfield=ここにURLを入力!
 
 # Image State
 signpic.state.init=待機中...
