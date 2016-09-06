@@ -1,12 +1,12 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.0.4",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.0.4/SignPicture-1.7.10-2.0.4-universal.jar",
-			"local": "SignPicture-1.7.10-2.0.4-universal.jar",
-			"message": "遂にSignPictureにGUIが! SignPicture 2.0.4リリース!",
+			"version": "2.1.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.0/SignPicture-1.7.10-2.1.0-universal.jar",
+			"local": "SignPicture-1.7.10-2.1.0-universal.jar",
+			"message": "遂にSignPictureにGUIが! SignPicture 2.1.0リリース!",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.0.4リリース!!"
+				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.0リリース!!"
 			}
 		},
 		"1.7.10-beta-disable": {
