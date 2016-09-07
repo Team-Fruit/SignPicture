@@ -59,6 +59,7 @@ public class SignHandler {
 		if (event.buttonstate && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 				CurrentMode.instance.getSign().preview.capturePlace();
+				event.setCanceled(true);
 				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 					CurrentMode.instance.setMode();
 					Client.openEditor();

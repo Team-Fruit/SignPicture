@@ -9,11 +9,14 @@
 				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.0リリース!!"
 			}
 		},
-		"1.7.10-beta-disable": {
-			"version": "2.0.3.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.0.3/SignPicture-1.7.10-2.0.3.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.0.3.beta-universal.jar",
-			"message": ""
+		"1.7.10-beta": {
+			"version": "2.1.1.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.1/SignPicture-1.7.10-2.1.1.beta-universal.jar",
+			"local": "SignPicture-1.7.10-2.1.1.beta-universal.jar",
+			"message": "Preview Implements!",
+			"message_local": {
+				"ja_JP": "プレビュー機能実装! より視覚的に!"
+			}
 		}
 	}
 }
