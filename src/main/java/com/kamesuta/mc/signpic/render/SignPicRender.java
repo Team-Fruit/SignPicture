@@ -10,25 +10,35 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 
-public class RenderOverlay extends WGui {
+public class SignPicRender extends WGui {
 	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
 
 	protected final ImageManager manager;
 
-	public RenderOverlay(final ImageManager manager) {
+	public SignPicRender(final ImageManager manager) {
 		this.manager = manager;
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent
+	public void onRender(final RenderWorldLastEvent event) {
+		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
+			if (CurrentMode.instance.getSign().preview.isRenderable()) {
+				final TileEntitySign tile = CurrentMode.instance.getSign().updatePreview().preview.getRenderTileEntity();
+				Client.renderer.renderTileEntityAt(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks);
+			}
+	}
+
+	@SubscribeEvent()
 	public void onDraw(final RenderGameOverlayEvent event) {
 		if(event.type == ElementType.ALL)
 			if (CurrentMode.instance.isMode()) {

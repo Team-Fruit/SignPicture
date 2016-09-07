@@ -2,9 +2,9 @@ package com.kamesuta.mc.signpic.util;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.tileentity.TileEntitySign;
@@ -12,6 +12,7 @@ import net.minecraft.tileentity.TileEntitySign;
 public class Sign {
 	public static int maxText = 15*4;
 
+	public final SignEntity preview = new SignEntity();
 	public String id = "";
 	public final ImageMeta meta = new ImageMeta();
 
@@ -93,13 +94,23 @@ public class Sign {
 		return sign;
 	}
 
-	public void sendSign(final TileEntitySign sourceentity) {
-		sourceentity.signText = toSignText();
+	public Sign writeToEntity(final TileEntitySign tile) {
+		tile.signText = toSignText();
+		return this;
+	}
+
+	public Sign updatePreview() {
+		return writeToEntity(this.preview.getTileEntity());
+	}
+
+	public Sign sendSign(final TileEntitySign sourceentity) {
+		writeToEntity(sourceentity);
 		sourceentity.markDirty();
-		final NetHandlerPlayClient nethandlerplayclient = FMLClientHandler.instance().getClient().getNetHandler();
+		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
 		if (nethandlerplayclient != null)
 			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.xCoord, sourceentity.yCoord, sourceentity.zCoord, sourceentity.signText));
 		sourceentity.setEditable(true);
+		return this;
 	}
 
 	@Override

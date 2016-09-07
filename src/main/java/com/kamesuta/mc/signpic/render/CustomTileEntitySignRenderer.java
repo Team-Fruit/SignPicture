@@ -30,15 +30,15 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float color)
+	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks)
 	{
 		Client.startSection("signpic-render");
 		final Sign sign = new Sign().parseSignEntity(tile);
 		if (sign.isVaild()) {
-			if (CurrentMode.instance.isSee()) {
+			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
 				glColor4f(1f, 1f, 1f, .5f);
-				super.renderTileEntityAt(tile, x, y, z, color);
+				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
 
 			// Load Image
@@ -102,14 +102,14 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPopMatrix();
 		} else {
-			super.renderTileEntityAt(tile, x, y, z, color);
+			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
 		Client.endSection();
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity p_147500_1_, final double p_147500_2_, final double p_147500_4_, final double p_147500_6_, final float p_147500_8_)
+	public void renderTileEntityAt(final TileEntity tile, final double x, final double y, final double z, final float partialTicks)
 	{
-		this.renderTileEntityAt((TileEntitySign)p_147500_1_, p_147500_2_, p_147500_4_, p_147500_6_, p_147500_8_);
+		this.renderTileEntityAt((TileEntitySign)tile, x, y, z, partialTicks);
 	}
 }

@@ -23,7 +23,6 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.mode.Mode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -45,7 +44,7 @@ public class GuiSignPicEditor extends WFrame {
 			@Override
 			protected void initWidget(final WEvent ev, final Area pgp) {
 				add(new WBase(RArea.diff(0, 0, 0, 0)) {
-					MotionQueue m = new MotionQueue(0).add(EasingMotion.easeLinear.move(.2f, .5f)).start();
+					MotionQueue m = new MotionQueue(0);
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 						RenderHelper.startShape();
@@ -53,9 +52,26 @@ public class GuiSignPicEditor extends WFrame {
 						drawRect(getGuiPosition(pgp));
 					}
 
+					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+					@Override
+					public void update(final WEvent ev, final Area pgp, final Point p) {
+						if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
+							if (!this.b) {
+								this.b = true;
+								this.m.stop().add(EasingMotion.easeLinear.move(.2f, 0f)).start();
+							}
+						} else {
+							if (this.b) {
+								this.b = false;
+								this.m.stop().add(EasingMotion.easeLinear.move(.2f, .5f)).start();
+							}
+						}
+						super.update(ev, pgp, p);
+					}
+
 					@Override
 					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						this.m.stop().add(EasingMotion.easeLinear.move(.2f, 0f)).add(new BlankMotion(.1f)).start();
+						this.m.stop().add(EasingMotion.easeLinear.move(.2f, 0f)).start();
 					}
 
 					@Override
@@ -64,13 +80,30 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final Coord m = Coord.ptop(-1f).add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
+				final Coord m = Coord.ptop(-1f);
 				add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
 					@Override
 					protected void initWidget(final WEvent ev, final Area pgp) {
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 							{
 								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), Client.manager).setSign(CurrentMode.instance.getSign()));
+							}
+
+							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+							@Override
+							public void update(final WEvent ev, final Area pgp, final Point p) {
+								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
+									if (!this.b) {
+										this.b = true;
+										m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
+									}
+								} else {
+									if (this.b) {
+										this.b = false;
+										m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
+									}
+								}
+								super.update(ev, pgp, p);
 							}
 						});
 					}
@@ -86,7 +119,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final Coord p = Coord.right(-60).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
+				final Coord p = Coord.right(-65).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
 				add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
 					@Override
 					protected void initWidget(final WEvent ev, final Area pgp) {
@@ -95,13 +128,31 @@ public class GuiSignPicEditor extends WFrame {
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top+=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								CurrentMode.instance.setSee(!CurrentMode.instance.isSee());
+								CurrentMode.instance.setState(CurrentMode.State.SEE, !CurrentMode.instance.isState(CurrentMode.State.SEE));
 								return true;
 							}
 
 							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isSee());
+								state(CurrentMode.instance.isState(CurrentMode.State.SEE));
+								return true;
+							}
+						});
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top+=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
+							@Override
+							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								final boolean state = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+								CurrentMode.instance.setState(CurrentMode.State.PREVIEW, !state);
+								if (!state) {
+									CurrentMode.instance.setMode(CurrentMode.Mode.SETPREVIEW);
+									requestClose();
+								}
+								return true;
+							}
+
+							@Override
+							public boolean isEnabled() {
+								state(CurrentMode.instance.isState(CurrentMode.State.PREVIEW));
 								return true;
 							}
 						});
@@ -135,35 +186,35 @@ public class GuiSignPicEditor extends WFrame {
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								CurrentMode.instance.setContinue(!CurrentMode.instance.isContinue());
+								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
 								return true;
 							}
 
 							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isContinue());
+								state(CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
 								return true;
 							}
 						});
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.load")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								CurrentMode.instance.setMode(Mode.LOAD);
+								CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
 								requestClose();
 								return true;
 							}
 
 							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isMode(Mode.LOAD));
-								return true;
+								state(CurrentMode.instance.isMode(CurrentMode.Mode.LOAD));
+								return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
 							}
 						});
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								if (CurrentMode.instance.getSign().isVaild() && CurrentMode.instance.getSign().isPlaceable()) {
-									CurrentMode.instance.setMode(Mode.PLACE);
+									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									requestClose();
 									return true;
 								}
@@ -172,8 +223,8 @@ public class GuiSignPicEditor extends WFrame {
 
 							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isMode(Mode.PLACE));
-								return CurrentMode.instance.getSign().isVaild() && CurrentMode.instance.getSign().isPlaceable() && !CurrentMode.instance.isMode(Mode.PLACE);
+								state(CurrentMode.instance.isMode(CurrentMode.Mode.PLACE));
+								return CurrentMode.instance.getSign().isVaild() && CurrentMode.instance.getSign().isPlaceable() && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});
 						add(new MButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
@@ -195,7 +246,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -60)).start();
+						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).add(new BlankMotion(.1f)).start();
 					}
 
 					@Override

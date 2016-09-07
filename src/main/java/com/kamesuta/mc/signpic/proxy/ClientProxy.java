@@ -14,9 +14,8 @@ import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
-import com.kamesuta.mc.signpic.render.RenderOverlay;
+import com.kamesuta.mc.signpic.render.SignPicRender;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -53,6 +52,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		Client.manager = new ImageManager(new ImageLocation(cachedir));
+		Client.renderer = new CustomTileEntitySignRenderer(Client.manager);
 
 		KeyHandler.INSTANCE.init();
 	}
@@ -74,7 +74,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	public File getDataDirectory() {
-		final File file = FMLClientHandler.instance().getClient().mcDataDir;
+		final File file = Client.mc.mcDataDir;
 		try {
 			return file.getCanonicalFile();
 		} catch (final IOException e) {
@@ -88,17 +88,16 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		final CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer(Client.manager);
-		renderer.func_147497_a(TileEntityRendererDispatcher.instance);
+		Client.renderer.func_147497_a(TileEntityRendererDispatcher.instance);
 		@SuppressWarnings("unchecked")
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
-		renderers.put(TileEntitySign.class, renderer);
+		renderers.put(TileEntitySign.class, Client.renderer);
 
 		// Event Register
 		FMLCommonHandler.instance().bus().register(Client.manager);
 		FMLCommonHandler.instance().bus().register(KeyHandler.INSTANCE);
 		MinecraftForge.EVENT_BUS.register(new SignHandler());
-		MinecraftForge.EVENT_BUS.register(new RenderOverlay(Client.manager));
+		MinecraftForge.EVENT_BUS.register(new SignPicRender(Client.manager));
 
 		// Versioning
 		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());

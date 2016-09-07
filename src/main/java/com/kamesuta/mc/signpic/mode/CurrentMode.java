@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.mode;
 
+import java.util.EnumSet;
+
 import com.kamesuta.mc.signpic.util.Sign;
 
 public class CurrentMode {
@@ -8,10 +10,9 @@ public class CurrentMode {
 	private CurrentMode() {
 	}
 
-	protected Sign sign = new Sign();
-	protected Mode mode = Mode.NONE;
-	protected boolean continueEnable;
-	protected boolean seeEnable;
+	private Sign sign = new Sign();
+	private Mode mode = Mode.NONE;
+	private final EnumSet<State> states = EnumSet.noneOf(State.class);
 
 	public void setMode(final Mode mode) {
 		this.mode = mode;
@@ -33,20 +34,19 @@ public class CurrentMode {
 		return this.mode;
 	}
 
-	public void setContinue(final boolean continueMode) {
-		this.continueEnable = continueMode;
+	public void setState(final State state, final boolean enable) {
+		if (enable)
+			this.states.add(state);
+		else
+			this.states.remove(state);
 	}
 
-	public boolean isContinue() {
-		return this.continueEnable;
+	public boolean isState() {
+		return !this.states.isEmpty();
 	}
 
-	public void setSee(final boolean seeEnable) {
-		this.seeEnable = seeEnable;
-	}
-
-	public boolean isSee() {
-		return this.seeEnable;
+	public boolean isState(final State state) {
+		return this.states.contains(state);
 	}
 
 	public void setSign(final Sign sign) {
@@ -55,5 +55,25 @@ public class CurrentMode {
 
 	public Sign getSign() {
 		return this.sign;
+	}
+
+	public static enum Mode {
+		PLACE("signpic.over.mode.place"),
+		LOAD("signpic.over.mode.load"),
+		SETPREVIEW("signpic.over.mode.setpreview"),
+		NONE("signpic.over.mode.none"),
+		;
+
+		public final String message;
+		private Mode(final String message) {
+			this.message = message;
+		}
+	}
+
+	public static enum State {
+		CONTINUE,
+		SEE,
+		PREVIEW,
+		;
 	}
 }

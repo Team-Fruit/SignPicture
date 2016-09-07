@@ -2,12 +2,14 @@
 ## Overlay
 signpic.over.mode.place=看板を置いて画像を適用
 signpic.over.mode.load=画像看板をクリックしてロード
+signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位置を設定
 
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 
 # GUI
 signpic.gui.editor.see=実体表示
+signpic.gui.editor.preview=プレビュー
 signpic.gui.editor.width=幅
 signpic.gui.editor.height=高さ
 signpic.gui.editor.continue=連続

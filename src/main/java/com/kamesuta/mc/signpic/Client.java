@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic;
 
 import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.image.ImageManager;
+import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.tileentity.TileEntitySign;
 public class Client {
 	public final static Minecraft mc = FMLClientHandler.instance().getClient();
 	public static ImageManager manager;
+	public static CustomTileEntitySignRenderer renderer;
 
 	public static void openEditor() {
 		mc.displayGuiScreen(new GuiSignPicEditor());

@@ -54,25 +54,27 @@ public class ImageManager {
 
 	@SubscribeEvent
 	public void renderTickProcess(final TickEvent.RenderTickEvent event) {
-		Client.startSection("signpic-load");
-		Image textureload;
-		if ((textureload = ImageManager.lazyloadqueue.peek()) != null) {
-			if (textureload.processTexture()) {
-				ImageManager.lazyloadqueue.poll();
+		if (event.phase == TickEvent.Phase.END) {
+			Client.startSection("signpic-load");
+			Image textureload;
+			if ((textureload = ImageManager.lazyloadqueue.peek()) != null) {
+				if (textureload.processTexture()) {
+					ImageManager.lazyloadqueue.poll();
+				}
 			}
-		}
 
-		for (final Iterator<Entry<String, Image>> itr = this.pool.entrySet().iterator(); itr.hasNext();) {
-			final Entry<String, Image> entry = itr.next();
-			final Image image = entry.getValue();
-			image.process();
-			if (image.shouldCollect()) {
-				image.delete();
-				itr.remove();
+			for (final Iterator<Entry<String, Image>> itr = this.pool.entrySet().iterator(); itr.hasNext();) {
+				final Entry<String, Image> entry = itr.next();
+				final Image image = entry.getValue();
+				image.process();
+				if (image.shouldCollect()) {
+					image.delete();
+					itr.remove();
+				}
 			}
-		}
 
-		Timer.tick();
-		Client.endSection();
+			Timer.tick();
+			Client.endSection();
+		}
 	}
 }

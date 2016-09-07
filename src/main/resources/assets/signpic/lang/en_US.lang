@@ -2,6 +2,7 @@
 ## Overlay
 signpic.over.mode.place=Place Sign and Apply Image
 signpic.over.mode.load=Click Sign Picture and Load Image
+signpic.over.mode.setpreview=Click Block and Set Preview Location
 
 ## F3
 signpic.over.sign=[§6Sign§r] §7[§r%s§7]
@@ -21,6 +22,7 @@ signpic.key.gui=Open GUI
 
 # GUI
 signpic.gui.editor.see=View Sign
+signpic.gui.editor.preview=Preview
 signpic.gui.editor.width=Width
 signpic.gui.editor.height=Height
 signpic.gui.editor.continue=Continue
