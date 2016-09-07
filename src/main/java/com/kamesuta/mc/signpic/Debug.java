@@ -1,12 +1,19 @@
 package com.kamesuta.mc.signpic;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.File;
+import java.io.InputStream;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+
+import com.kamesuta.mc.signpic.util.Downloader;
 
 public class Debug {
-	public static void main(final String[] args) {
+	public static void main(final String[] args) throws Exception {
 		// Reference.logger.info(ImageSizes.LIMIT.size(32, 24, 10, 12));
 		//		final IPositionAbsolute abs1 = new PositionAbsolute(0, 0, 0, 0, 100, 100);
 		//		final GuiPosition gp = GuiPosition.createBase(abs1)
@@ -25,17 +32,47 @@ public class Debug {
 		//		Reference.logger.info(f2);
 		//		Reference.logger.info(f3);
 
-		final Pattern p = Pattern.compile("(?:([^\\dx]?)(\\d*x\\d*|\\d*))+?");
-		final Matcher m = p.matcher("7x7v5j3k4x3vx3");
-		final Map<String, String> map = new HashMap<String, String>();
-		while(m.find()){
-			if (2 <= m.groupCount()) {
-				final String key = m.group(1);
-				final String value = m.group(2);
-				if (!key.isEmpty() || !value.isEmpty())
-					map.put(key, value);
-			}
-		}
-		Reference.logger.info(map);
+		//		final Pattern p = Pattern.compile("(?:([^\\dx]?)(\\d*x\\d*|\\d*))+?");
+		//		final Matcher m = p.matcher("7x7v5j3k4x3vx3");
+		//		final Map<String, String> map = new HashMap<String, String>();
+		//		while(m.find()){
+		//			if (2 <= m.groupCount()) {
+		//				final String key = m.group(1);
+		//				final String value = m.group(2);
+		//				if (!key.isEmpty() || !value.isEmpty())
+		//					map.put(key, value);
+		//			}
+		//		}
+		//		Reference.logger.info(map);
+
+		PostData();
+	}
+
+	static String convertStreamToString(final java.io.InputStream is) {
+		final java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+		return s.hasNext() ? s.next() : "";
+	}
+	// TODO: Fix and test this method.
+	private static void PostData() throws Exception {
+		final String url = "https://upload.gyazo.com/api/upload";
+		final HttpClient httpclient = new Downloader().client;
+
+		// create the post request.
+		final HttpPost httppost = new HttpPost(url);
+		final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+		final File f = new File("./src/main/resources/logo.png");
+		builder.addBinaryBody("imagedata", f, ContentType.DEFAULT_BINARY, f.getName());
+		builder.addTextBody("access_token", "4d080e95be741beba0b74653a872668326a79526784d2daed9190dc584bffad7");
+		httppost.setEntity(builder .build());
+
+		// execute request
+		final HttpResponse response = httpclient.execute(httppost);
+		final HttpEntity resEntity = response.getEntity();
+		final InputStream stream = resEntity.getContent();
+
+		System.out.println(response.getStatusLine());
+		System.out.println(convertStreamToString(stream));
+
 	}
 }
