@@ -38,7 +38,7 @@ The sign tells us how beautiful it is!
 
 ## Downloads
 
-Downloads can be found on ~~CurseForge~~ (Not yet) or on the [github](https://github.com/Team-Fruit/SignPicture/releases).
+Downloads can be found on [CurseForge](https://minecraft.curseforge.com/projects/sign-picture) or on the [github](https://github.com/Team-Fruit/SignPicture/releases).
 
 ## Installation
 
