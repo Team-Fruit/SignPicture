@@ -15,6 +15,7 @@ import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.kamesuta.mc.signpic.render.SignPicRender;
+import com.mojang.util.UUIDTypeAdapter;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -31,10 +32,10 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(final FMLPreInitializationEvent event) {
 		super.preInit(event);
 
-		// Enable stencil clip
+		// Setup stencil clip
 		StencilClip.init();
 
-		// Occupy my cache directory
+		// Setup cache directory
 		final File mcdir = getDataDirectory();
 		final File signpicdir = new File(mcdir, "signpic");
 		boolean legacy = signpicdir.isDirectory();
@@ -51,9 +52,31 @@ public class ClientProxy extends CommonProxy {
 					f.renameTo(new File(cachedir, f.getName()));
 		}
 
-		Client.manager = new ImageManager(new ImageLocation(cachedir));
-		Client.renderer = new CustomTileEntitySignRenderer(Client.manager);
+		// Setup image
+		final ImageManager manager = new ImageManager(new ImageLocation(cachedir));
+		Client.manager = manager;
+		Client.renderer = new CustomTileEntitySignRenderer(manager);
 
+		// Setup location
+		Client.mcDir = mcdir;
+		Client.signpicDir = signpicdir;
+		Client.signpicCacheDir = cachedir;
+		Client.configDir = event.getModConfigurationDirectory();
+		Client.configFile = event.getSuggestedConfigurationFile();
+		Client.modDir = new File(mcdir, "mods");
+		Client.modFile = event.getSourceFile();
+
+		// Get Id
+		final String id = Client.mc.getSession().getPlayerID();
+		try {
+			final Object o = UUIDTypeAdapter.fromString(id);
+			if (o!=null) {
+				Client.id = id;
+				Client.name = Client.mc.getSession().getUsername();
+			}
+		} catch (final IllegalArgumentException e) {}
+
+		// Setup keybinding
 		KeyHandler.INSTANCE.init();
 	}
 

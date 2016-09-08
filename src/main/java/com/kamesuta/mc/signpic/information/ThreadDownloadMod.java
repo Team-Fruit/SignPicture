@@ -15,12 +15,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -55,8 +54,7 @@ public class ThreadDownloadMod extends Thread {
 			final long size = entity.getContentLength();
 			final InputStream inputStream = entity.getContent();
 
-			final File dir = new File(".", "mods");
-			final File f = new File(dir, local + ".dl");
+			final File f = new File(Client.modDir, local + ".dl");
 			f.createNewFile();
 
 
@@ -80,23 +78,16 @@ public class ThreadDownloadMod extends Thread {
 			outputStream.close();
 			inputStream.close();
 
-			final File f1 = new File(dir, local);
+			final File f1 = new File(Client.modDir, local);
 			if(!f1.exists())
 				f.renameTo(f1);
 
-			String fname = null;
-			final ModContainer c = Loader.instance().getIndexedModList().get(Reference.MODID);
-			if (c != null) {
-				final File m = c.getSource();
-				if (m.isFile())
-					fname = m.getName();
-			}
-			if (fname != null)
-				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, fname).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
+			if (Client.modFile.isFile())
+				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, Client.modFile.getName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 			else
 				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloading", local).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 
-			Desktop.getDesktop().open(dir.getCanonicalFile());
+			Desktop.getDesktop().open(Client.modDir.getCanonicalFile());
 			InformationChecker.downloadedFile = true;
 
 			finalize();

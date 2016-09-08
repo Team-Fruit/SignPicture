@@ -5,7 +5,6 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.information.Info.Version;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -18,9 +17,10 @@ public final class InformationChecker {
 
 	public static boolean doneChecking = false;
 	public static boolean triedToWarnPlayer = false;
-	public static Version onlineVersion;
-	public static Version stableVersion;
-	public static Version unstableVersion;
+	public static Info.Version onlineVersion;
+	public static Info.Version stableVersion;
+	public static Info.Version unstableVersion;
+	public static Info.PrivateMsg privateMsg;
 
 	public static boolean startedDownload = false;
 	public static boolean downloadedFile = false;
@@ -34,6 +34,7 @@ public final class InformationChecker {
 	public void onTick(final ClientTickEvent event) {
 		final EntityPlayer player = Client.mc.thePlayer;
 		if(doneChecking && event.phase == Phase.END && player != null && !triedToWarnPlayer) {
+			final String lang = Client.mc.gameSettings.language;
 			if (!StringUtils.equals(Reference.VERSION, "${version}")) {
 				try {
 					final String[] client = Reference.VERSION.split("\\.");
@@ -76,7 +77,6 @@ public final class InformationChecker {
 								}
 
 								if(betaneedupdate || needupdate) {
-									final String lang = Client.mc.gameSettings.language;
 									if (onlineVersion.message_local!=null && onlineVersion.message_local.containsKey(lang))
 										ChatBuilder.create(onlineVersion.message_local.get(lang)).chatClient();
 									else if (!StringUtils.isEmpty(onlineVersion.message))
@@ -90,6 +90,16 @@ public final class InformationChecker {
 				} catch (final NumberFormatException e) {
 					Reference.logger.warn(String.format("failed to check version: invaild version: client[%s], online[%s]", Reference.VERSION, (onlineVersion!=null)?onlineVersion:"-"));
 				}
+			}
+			if (privateMsg!=null) {
+				final ChatBuilder ctb = new ChatBuilder();
+				if (privateMsg.message_local!=null && privateMsg.message_local.containsKey(lang))
+					ctb.setText(privateMsg.message_local.get(lang));
+				else if (!StringUtils.isEmpty(privateMsg.message))
+					ctb.setText(privateMsg.message);
+				if (privateMsg.json)
+					ctb.useJson();
+				ctb.chatClient();
 			}
 			triedToWarnPlayer = true;
 		}
