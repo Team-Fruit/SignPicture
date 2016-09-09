@@ -7,7 +7,6 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
@@ -15,7 +14,9 @@ import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 
 public class SignHandler {
-	static {
+	private static Field f;
+
+	public static void init() {
 		try {
 			final Field[] fields = GuiEditSign.class.getDeclaredFields();
 			for (final Field field : fields) {
@@ -30,9 +31,7 @@ public class SignHandler {
 		}
 	}
 
-	private static Field f;
-
-	@SubscribeEvent
+	@CoreEvent
 	public void onSign(final GuiOpenEvent event) {
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
 			if (event.gui instanceof GuiEditSign) {
@@ -54,7 +53,7 @@ public class SignHandler {
 			}
 	}
 
-	@SubscribeEvent
+	@CoreEvent
 	public void onClick(final MouseEvent event) {
 		if (event.buttonstate && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {

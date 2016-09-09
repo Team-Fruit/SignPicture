@@ -18,8 +18,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-import net.minecraftforge.common.MinecraftForge;
-
 public class ThreadInformationChecker extends Thread {
 
 	public ThreadInformationChecker() {
@@ -40,13 +38,21 @@ public class ThreadInformationChecker extends Thread {
 			final Info info = gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
 			if (info!=null) {
 				if (info.versions!=null) {
-					InformationChecker.stableVersion = info.versions.get(MinecraftForge.MC_VERSION);
-					InformationChecker.unstableVersion = info.versions.get(MinecraftForge.MC_VERSION + "-beta");
+					InformationChecker.stableVersion = info.versions.get(Client.mcversion);
+					InformationChecker.unstableVersion = info.versions.get(Client.mcversion + "-beta");
 				}
 				if (!StringUtils.isEmpty(info.private_msg)) {
 					InputStream input1 = null;
 					try {
-						final HttpUriRequest req1 = new HttpGet(new URI(info.private_msg.replace("%name%", Client.name).replace("%id%", Client.id)));
+						final String msgurl = info.private_msg
+								.replace("%name%", Client.name)
+								.replace("%id%", Client.id)
+								.replace("%mcversion%", Client.mcversion)
+								.replace("%forgeversion%", Client.forgeversion)
+								.replace("%modmcversion%", Reference.MINECRAFT)
+								.replace("%modforgeversion%", Reference.FORGE)
+								.replace("%modversion%", Reference.VERSION);
+						final HttpUriRequest req1 = new HttpGet(new URI(msgurl));
 						final HttpResponse response1 = Downloader.downloader.client.execute(req1);
 						final HttpEntity entity1 = response1.getEntity();
 						input1 = entity1.getContent();

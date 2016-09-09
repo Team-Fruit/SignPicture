@@ -11,8 +11,8 @@ import java.util.concurrent.Executors;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.handler.CoreEvent;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.util.ResourceLocation;
 
@@ -52,8 +52,8 @@ public class ImageManager {
 		return image;
 	}
 
-	@SubscribeEvent
-	public void renderTickProcess(final TickEvent.RenderTickEvent event) {
+	@CoreEvent
+	public void onRenderTick(final TickEvent.RenderTickEvent event) {
 		if (event.phase == TickEvent.Phase.END) {
 			Client.startSection("signpic-load");
 			Image textureload;

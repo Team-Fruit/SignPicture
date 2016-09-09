@@ -5,10 +5,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,12 +24,11 @@ public final class InformationChecker {
 	public static boolean startedDownload = false;
 	public static boolean downloadedFile = false;
 
-	public void init() {
+	public static void init() {
 		new ThreadInformationChecker();
-		FMLCommonHandler.instance().bus().register(this);
 	}
 
-	@SubscribeEvent
+	@CoreEvent
 	public void onTick(final ClientTickEvent event) {
 		final EntityPlayer player = Client.mc.thePlayer;
 		if(doneChecking && event.phase == Phase.END && player != null && !triedToWarnPlayer) {

@@ -4,13 +4,13 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
@@ -29,7 +29,7 @@ public class SignPicRender extends WGui {
 		this.manager = manager;
 	}
 
-	@SubscribeEvent
+	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
 			if (CurrentMode.instance.getSign().preview.isRenderable()) {
@@ -38,7 +38,7 @@ public class SignPicRender extends WGui {
 			}
 	}
 
-	@SubscribeEvent()
+	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent event) {
 		if(event.type == ElementType.ALL)
 			if (CurrentMode.instance.isMode()) {
@@ -64,7 +64,7 @@ public class SignPicRender extends WGui {
 			}
 	}
 
-	@SubscribeEvent
+	@CoreEvent
 	public void onText(final RenderGameOverlayEvent.Text event) {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();

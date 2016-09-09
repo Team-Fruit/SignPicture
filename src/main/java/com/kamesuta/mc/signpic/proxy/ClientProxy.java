@@ -7,17 +7,13 @@ import java.util.Map;
 import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.handler.KeyHandler;
-import com.kamesuta.mc.signpic.handler.SignHandler;
+import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.image.ImageLocation;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
-import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
-import com.kamesuta.mc.signpic.render.SignPicRender;
 import com.mojang.util.UUIDTypeAdapter;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -25,6 +21,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
@@ -57,6 +54,9 @@ public class ClientProxy extends CommonProxy {
 		Client.manager = manager;
 		Client.renderer = new CustomTileEntitySignRenderer(manager);
 
+		Client.mcversion = MinecraftForge.MC_VERSION;
+		Client.forgeversion = ForgeVersion.getVersion();
+
 		// Setup location
 		Client.mcDir = mcdir;
 		Client.signpicDir = signpicdir;
@@ -76,8 +76,8 @@ public class ClientProxy extends CommonProxy {
 			}
 		} catch (final IllegalArgumentException e) {}
 
-		// Setup keybinding
-		KeyHandler.INSTANCE.init();
+		// Setup
+		Client.handler = new CoreHandler();
 	}
 
 	private boolean securementDirectory(final File cachedir) {
@@ -117,14 +117,8 @@ public class ClientProxy extends CommonProxy {
 		renderers.put(TileEntitySign.class, Client.renderer);
 
 		// Event Register
-		FMLCommonHandler.instance().bus().register(Client.manager);
-		FMLCommonHandler.instance().bus().register(KeyHandler.INSTANCE);
-		MinecraftForge.EVENT_BUS.register(new SignHandler());
-		MinecraftForge.EVENT_BUS.register(new SignPicRender(Client.manager));
-
-		// Versioning
+		Client.handler.init();
 		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());
-		new InformationChecker().init();
 	}
 
 	@Override

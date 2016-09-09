@@ -5,34 +5,39 @@ import org.lwjgl.input.Keyboard;
 import com.kamesuta.mc.signpic.Client;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyHandler {
-	public static KeyHandler INSTANCE = new KeyHandler();
+	public static enum Keys {
+		KEY_BINDING_GUI(new KeyBinding("signpic.key.gui", Keyboard.KEY_BACKSLASH, "signpic.key.category")) {
+			@Override
+			public void onKeyInput(final InputEvent event, final KeyBinding binding) {
+				if (Client.mc.currentScreen == null && binding.isPressed()) {
+					Client.openEditor();
+				}
+			}
+		},
+		;
 
-	private static final KeyBinding KEY_BINDING_GUI = new KeyBinding("signpic.key.gui", Keyboard.KEY_BACKSLASH, "signpic.key.category");
+		public final KeyBinding binding;
+		private Keys(final KeyBinding binding) {
+			this.binding = binding;
+		}
 
-	public static final KeyBinding[] KEY_BINDINGS = new KeyBinding[] {
-			KEY_BINDING_GUI
-	};
-
-	private KeyHandler() {
+		public abstract void onKeyInput(InputEvent event, KeyBinding binding);
 	}
 
-	public void init() {
-		for (final KeyBinding keyBinding : KEY_BINDINGS) {
-			ClientRegistry.registerKeyBinding(keyBinding);
+	public static void init() {
+		for (final Keys key : Keys.values()) {
+			ClientRegistry.registerKeyBinding(key.binding);
 		}
 	}
 
-	@SubscribeEvent
-	public void onKeyInput(final InputEvent.KeyInputEvent event) {
-		if (Client.mc.currentScreen == null) {
-			if (KEY_BINDING_GUI.isPressed()) {
-				Client.openEditor();
-			}
+	@CoreEvent
+	public void onKeyInput(final InputEvent event) {
+		for (final Keys key : Keys.values()) {
+			key.onKeyInput(event, key.binding);
 		}
 	}
 }
