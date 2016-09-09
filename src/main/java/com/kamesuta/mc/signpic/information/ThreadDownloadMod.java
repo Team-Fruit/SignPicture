@@ -34,9 +34,10 @@ public class ThreadDownloadMod extends Thread {
 
 	@Override
 	public void run() {
+		final InformationChecker.InfoState state = InformationChecker.state;
 		try {
-			final String stringurl = InformationChecker.onlineVersion.remote;
-			final String stringlocal = InformationChecker.onlineVersion.local;
+			final String stringurl = state.onlineVersion.remote;
+			final String stringlocal = state.onlineVersion.local;
 			final String local;
 			if (!StringUtils.isEmpty(stringlocal))
 				local = stringlocal;
@@ -45,9 +46,9 @@ public class ThreadDownloadMod extends Thread {
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
-			InformationChecker.startedDownload = true;
+			state.startedDownload = true;
 
-			final HttpUriRequest req = new HttpGet(new URI(InformationChecker.onlineVersion.remote));
+			final HttpUriRequest req = new HttpGet(new URI(state.onlineVersion.remote));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 
@@ -88,7 +89,7 @@ public class ThreadDownloadMod extends Thread {
 				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloading", local).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 
 			Desktop.getDesktop().open(Client.modDir.getCanonicalFile());
-			InformationChecker.downloadedFile = true;
+			state.downloadedFile = true;
 
 			finalize();
 		} catch(final Throwable e) {

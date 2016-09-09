@@ -28,6 +28,7 @@ public class ThreadInformationChecker extends Thread {
 
 	@Override
 	public void run() {
+		final InformationChecker.InfoState state = InformationChecker.state;
 		InputStream input = null;
 		final Gson gson = new Gson();
 		try {
@@ -38,8 +39,8 @@ public class ThreadInformationChecker extends Thread {
 			final Info info = gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
 			if (info!=null) {
 				if (info.versions!=null) {
-					InformationChecker.stableVersion = info.versions.get(Client.mcversion);
-					InformationChecker.unstableVersion = info.versions.get(Client.mcversion + "-beta");
+					state.stableVersion = info.versions.get(Client.mcversion);
+					state.unstableVersion = info.versions.get(Client.mcversion + "-beta");
 				}
 				if (!StringUtils.isEmpty(info.private_msg)) {
 					InputStream input1 = null;
@@ -56,7 +57,7 @@ public class ThreadInformationChecker extends Thread {
 						final HttpResponse response1 = Downloader.downloader.client.execute(req1);
 						final HttpEntity entity1 = response1.getEntity();
 						input1 = entity1.getContent();
-						InformationChecker.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, CharEncoding.UTF_8)), Info.PrivateMsg.class);
+						state.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, CharEncoding.UTF_8)), Info.PrivateMsg.class);
 					} catch(final Exception e1) {
 					} finally {
 						IOUtils.closeQuietly(input1);
@@ -68,6 +69,6 @@ public class ThreadInformationChecker extends Thread {
 		} finally {
 			IOUtils.closeQuietly(input);
 		}
-		InformationChecker.doneChecking = true;
+		state.doneChecking = true;
 	}
 }

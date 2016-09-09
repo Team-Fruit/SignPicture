@@ -33,16 +33,18 @@ public class CommandDownloadLatest extends CommandBase {
 
 	@Override
 	public void processCommand(final ICommandSender var1, final String[] var2) {
-		if(!ENABLED)
+		if(!ENABLED) {
 			var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.disabled").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-		else
-			if (InformationChecker.doneChecking && InformationChecker.onlineVersion!=null && !StringUtils.isEmpty(InformationChecker.onlineVersion.remote))
+		} else {
+			final InformationChecker.InfoState state = InformationChecker.state;
+			if (state.doneChecking && state.onlineVersion!=null && !StringUtils.isEmpty(state.onlineVersion.remote))
 			{
-				if(InformationChecker.downloadedFile)
+				if(state.downloadedFile)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				else if(InformationChecker.startedDownload)
+				else if(state.startedDownload)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadingAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 				else new ThreadDownloadMod();
 			}
+		}
 	}
 }
