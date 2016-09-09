@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.render;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
@@ -12,9 +10,11 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -31,35 +31,37 @@ public class SignPicRender extends WGui {
 
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
-		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
+		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 			if (CurrentMode.instance.getSign().preview.isRenderable()) {
 				final TileEntitySign tile = CurrentMode.instance.getSign().updatePreview().preview.getRenderTileEntity();
-				Client.renderer.renderTileEntityAt(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks);
+				final BlockPos pos = tile.getPos();
+				Client.renderer.func_180541_a(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1);
 			}
+		}
 	}
 
 	@CoreEvent
-	public void onDraw(final RenderGameOverlayEvent event) {
-		if(event.type == ElementType.ALL)
+	public void onDraw(final RenderGameOverlayEvent.Post event) {
+		if(event.type == ElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode()) {
 				if ((int)(System.currentTimeMillis()/500)%2==0) {
-					final FontRenderer fontrenderer = font;
+					final FontRenderer fontrenderer = font();
 
 					RenderHelper.startTexture();
-					glPushMatrix();
-					glTranslatef(5f, 5f, 0f);
-					glScalef(2f, 2f, 1f);
+					GlStateManager.pushMatrix();
+					GlStateManager.translate(5f, 5f, 0f);
+					GlStateManager.scale(2f, 2f, 1f);
 
-					glPushMatrix();
-					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					GlStateManager.pushMatrix();
+					GlStateManager.scale(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
 					this.manager.get(resSign).draw();
-					glPopMatrix();
+					GlStateManager.popMatrix();
 
-					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
+					GlStateManager.translate(fontrenderer.FONT_HEIGHT, 0f, 0f);
 					final String str = I18n.format(CurrentMode.instance.getMode().message);
 					fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
-					glPopMatrix();
+					GlStateManager.popMatrix();
 				}
 			}
 	}

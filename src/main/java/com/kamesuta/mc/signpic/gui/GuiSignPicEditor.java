@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -26,6 +24,7 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 public class GuiSignPicEditor extends WFrame {
@@ -48,7 +47,7 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 						RenderHelper.startShape();
-						glColor4f(0f, 0f, 0f, this.m.get());
+						GlStateManager.color(0f, 0f, 0f, this.m.get());
 						drawRect(getGuiPosition(pgp));
 					}
 
@@ -330,14 +329,14 @@ public class GuiSignPicEditor extends WFrame {
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 			final Area a = getGuiPosition(pgp);
-			glPushMatrix();
-			glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
 			final float c = this.s.get();
-			glScalef(c, c, 1f);
-			glRotatef(this.m.get(), 0, 0, 1);
-			glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
+			GlStateManager.scale(c, c, 1f);
+			GlStateManager.rotate(this.m.get(), 0, 0, 1);
+			GlStateManager.translate(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
 			super.draw(ev, pgp, p, frame);
-			glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 }

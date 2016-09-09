@@ -4,10 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
+import com.kamesuta.mc.signpic.preview.SignEntity;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 public class Sign {
 	public static int maxText = 15*4;
@@ -66,6 +69,13 @@ public class Sign {
 		return parseText(StringUtils.join(sign));
 	}
 
+	public Sign parseSignText(final IChatComponent[] sign) {
+		final StringBuilder stb = new StringBuilder();
+		for (final IChatComponent c : sign)
+			stb.append(c.getUnformattedText());
+		return parseText(stb.toString());
+	}
+
 	public Sign parseSignEntity(final TileEntitySign tile) {
 		return parseSignText(tile.signText);
 	}
@@ -94,8 +104,19 @@ public class Sign {
 		return sign;
 	}
 
+	public IChatComponent[] toSignChat(final IChatComponent[] sign) {
+		final String text = text();
+		for (int i=0; i<4; i++) {
+			if (16*i <= StringUtils.length(text))
+				sign[i] = new ChatComponentText(StringUtils.substring(text, 15*i, Math.min(15*(i+1), text.length())));
+			else
+				sign[i] = new ChatComponentText("");
+		}
+		return sign;
+	}
+
 	public Sign writeToEntity(final TileEntitySign tile) {
-		tile.signText = toSignText();
+		toSignChat(tile.signText);
 		return this;
 	}
 
@@ -108,7 +129,7 @@ public class Sign {
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
 		if (nethandlerplayclient != null)
-			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.xCoord, sourceentity.yCoord, sourceentity.zCoord, sourceentity.signText));
+			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.getPos(), sourceentity.signText));
 		sourceentity.setEditable(true);
 		return this;
 	}

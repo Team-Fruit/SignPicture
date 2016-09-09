@@ -3,9 +3,6 @@ package com.kamesuta.mc.signpic.util;
 import com.google.gson.JsonSyntaxException;
 import com.kamesuta.mc.signpic.Client;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.management.ServerConfigurationManager;
@@ -13,6 +10,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ChatBuilder {
 	public static final int DefaultId = 877;
@@ -41,7 +41,7 @@ public class ChatBuilder {
 
 				if (this.useJson)
 					try {
-						chat = IChatComponent.Serializer.func_150699_a(s);
+						chat = IChatComponent.Serializer.jsonToComponent(s);
 					} catch (final JsonSyntaxException e) {
 						chat = new ChatComponentText("Invaild Json: " + this.text);
 					}

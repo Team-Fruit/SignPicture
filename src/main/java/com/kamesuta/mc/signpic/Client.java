@@ -7,12 +7,13 @@ import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSign;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class Client {
 	public final static Minecraft mc = FMLClientHandler.instance().getClient();
@@ -49,12 +50,10 @@ public class Client {
 
 	public static TileEntitySign getTileSignLooking() {
 		if (mc.objectMouseOver != null) {
-			final int x = mc.objectMouseOver.blockX;
-			final int y = mc.objectMouseOver.blockY;
-			final int z = mc.objectMouseOver.blockZ;
-			final Block block = mc.theWorld.getBlock(x, y, z);
+			final BlockPos pos = mc.objectMouseOver.getBlockPos();
+			final Block block = mc.theWorld.getBlockState(pos).getBlock();
 			if (block instanceof BlockSign) {
-				final TileEntity tile = mc.theWorld.getTileEntity(x, y, z);
+				final TileEntity tile = mc.theWorld.getTileEntity(pos);
 				if (tile instanceof TileEntitySign)
 					return (TileEntitySign)tile;
 			}

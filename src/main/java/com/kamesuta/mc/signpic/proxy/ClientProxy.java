@@ -14,15 +14,15 @@ import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class ClientProxy extends CommonProxy {
 	@Override
@@ -111,7 +111,7 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		Client.renderer.func_147497_a(TileEntityRendererDispatcher.instance);
+		Client.renderer.setRendererDispatcher(TileEntityRendererDispatcher.instance);
 		@SuppressWarnings("unchecked")
 		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, Client.renderer);

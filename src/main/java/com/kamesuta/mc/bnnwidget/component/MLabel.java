@@ -42,6 +42,6 @@ public class MLabel extends WBase {
 
 	protected void drawText(final Area a) {
 		RenderHelper.startTexture();
-		drawString(this.text, a.x1(), a.y1() + (a.h()-font.FONT_HEIGHT) / 2, this.textcolor);
+		drawString(this.text, a.x1(), a.y1() + (a.h()-font().FONT_HEIGHT) / 2, this.textcolor);
 	}
 }

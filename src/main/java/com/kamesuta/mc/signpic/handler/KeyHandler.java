@@ -4,9 +4,9 @@ import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.signpic.Client;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 
 public class KeyHandler {
 	public static enum Keys {

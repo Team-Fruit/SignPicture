@@ -8,9 +8,9 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public final class InformationChecker {
 	public static InfoState state = new InfoState();

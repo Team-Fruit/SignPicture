@@ -5,16 +5,16 @@ import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class CoreHandler {
 	public final KeyHandler keyHandler = new KeyHandler();
@@ -57,7 +57,7 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent()
-	public void onDraw(final RenderGameOverlayEvent event) {
+	public void onDraw(final RenderGameOverlayEvent.Post event) {
 		this.renderHandler.onDraw(event);
 	}
 

@@ -1,7 +1,5 @@
 package com.kamesuta.mc.bnnwidget.component;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -11,6 +9,7 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class MChatTextField extends WBase {
 	protected final GuiTextField t;
@@ -19,7 +18,7 @@ public class MChatTextField extends WBase {
 
 	public MChatTextField(final R position) {
 		super(position);
-		this.t = new GuiTextField(font, 0, 0, 0, 0);
+		this.t = new GuiTextField(0, font(), 0, 0, 0, 0);
 	}
 
 	public void setWatermark(final String watermark) {
@@ -41,17 +40,17 @@ public class MChatTextField extends WBase {
 		this.t.yPosition = 1;
 		this.t.width = (int)a.w() - 2;
 		this.t.height = (int) a.h() - 2;
-		glPushMatrix();
-		glTranslatef(a.x1(), a.y1(), 0f);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(a.x1(), a.y1(), 0f);
 
 		this.t.drawTextBox();
 		if (!StringUtils.isEmpty(this.watermark) && StringUtils.isEmpty(getText()) && !isFocused()) {
 			final int l = getEnableBackgroundDrawing() ? this.t.xPosition + 4 : this.t.xPosition;
 			final int i1 = getEnableBackgroundDrawing() ? this.t.yPosition + (this.t.height - 8) / 2 : this.t.yPosition;
-			font.drawStringWithShadow(this.watermark, l, i1, 0x777777);
+			font().drawStringWithShadow(this.watermark, l, i1, 0x777777);
 		}
 
-		glPopMatrix();
+		GlStateManager.popMatrix();
 		this.t.xPosition = x;
 		this.t.yPosition = y;
 		this.t.width = w;

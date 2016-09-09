@@ -2,17 +2,7 @@ package com.kamesuta.mc.bnnwidget;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.util.BitSet;
-
-import org.lwjgl.opengl.EXTFramebufferObject;
-
 import com.kamesuta.mc.bnnwidget.position.Area;
-import com.kamesuta.mc.signpic.Reference;
-
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 public class StencilClip {
 	public static final StencilClip instance = new StencilClip();
@@ -75,16 +65,16 @@ public class StencilClip {
 	}
 
 	public static void init() {
-		if (!Boolean.parseBoolean(System.getProperty("forge.forceDisplayStencil", "false"))) {
-			try {
-				if (!(ReflectionHelper.findField(OpenGlHelper.class, "field_153212_w").getInt(null)==2 &&
-						EXTFramebufferObject.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT)!=EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT)) {
-					ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits").setInt(null, 8);
-					ReflectionHelper.<BitSet, MinecraftForgeClient>getPrivateValue(MinecraftForgeClient.class, null, "stencilBits").set(0, 8);
-				}
-			} catch (final Throwable e) {
-				Reference.logger.info("Failed to enable stencil buffer", e);
-			}
-		}
+		//		if (!Boolean.parseBoolean(System.getProperty("forge.forceDisplayStencil", "false"))) {
+		//			try {
+		//				if (!(ReflectionHelper.findField(OpenGlHelper.class, "field_153212_w").getInt(null)==2 &&
+		//						EXTFramebufferObject.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT)!=EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT)) {
+		//					ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits").setInt(null, 8);
+		//					ReflectionHelper.<BitSet, MinecraftForgeClient>getPrivateValue(MinecraftForgeClient.class, null, "stencilBits").set(0, 8);
+		//				}
+		//			} catch (final Throwable e) {
+		//				Reference.logger.info("Failed to enable stencil buffer", e);
+		//			}
+		//		}
 	}
 }

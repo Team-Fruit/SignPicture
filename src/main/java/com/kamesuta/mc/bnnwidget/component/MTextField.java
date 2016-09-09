@@ -1,7 +1,5 @@
 package com.kamesuta.mc.bnnwidget.component;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -16,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 
 public class MTextField extends WBase {
@@ -212,7 +211,7 @@ public class MTextField extends WBase {
 				setText("");
 			}
 			final Area in = getGuiPosition(pgp).child(1, 1, -1, -1);
-			this.seek = font.trimStringToWidth(getText(), (int) (p.x() - (in.x1() + 4))).length();
+			this.seek = font().trimStringToWidth(getText(), (int) (p.x() - (in.x1() + 4))).length();
 		} else {
 			setFocused(false);
 		}
@@ -244,9 +243,9 @@ public class MTextField extends WBase {
 
 	protected void drawBackground(final Area out, final Area in) {
 		RenderHelper.startShape();
-		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
+		GlStateManager.color(0.627451f, 0.627451f, 0.627451f, 1f);
 		drawRect(out);
-		glColor4f(0f, 0f, 0f, 1f);
+		GlStateManager.color(0f, 0f, 0f, 1f);
 		drawRect(in);
 	}
 
@@ -268,7 +267,7 @@ public class MTextField extends WBase {
 		final boolean blink = this.cursorCounter / 6 % 2 == 0;
 		if ((isEnabled()) && (isFocused())) {
 			if (blink)
-				drawCenteredString("\u2503", a.x1() + 4 + font.getStringWidth(s.substring(0, seek)), a.y1() + a.h() / 2 - 4, getTextColour());
+				drawCenteredString("\u2503", a.x1() + 4 + font().getStringWidth(s.substring(0, seek)), a.y1() + a.h() / 2 - 4, getTextColour());
 		}
 	}
 

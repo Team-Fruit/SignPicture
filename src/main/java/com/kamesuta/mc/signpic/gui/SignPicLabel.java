@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -15,6 +13,8 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 public class SignPicLabel extends WBase {
 	protected Sign sign;
@@ -35,29 +35,29 @@ public class SignPicLabel extends WBase {
 				final Image image = this.manager.get(id);
 				if (image != null) {
 					RenderHelper.startTexture();
-					glDisable(GL_CULL_FACE);
-					glPushMatrix();
+					GlStateManager.disableCull();
+					GlStateManager.pushMatrix();
 					translate(a);
 
 					final ImageSize siz = new ImageSize().setAspectSize(this.sign.meta.size, image.getSize());
 					final ImageSize size = new ImageSize().setSize(ImageSizes.INNER, siz, new ImageSize().setArea(a));
 
-					glPushMatrix();
-					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-					glScalef(size.width, size.height, 1f);
+					GlStateManager.pushMatrix();
+					GlStateManager.translate((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
+					GlStateManager.scale(size.width, size.height, 1f);
 					image.getState().mainImage(this.manager, image);
-					glPopMatrix();
+					GlStateManager.popMatrix();
 
-					glPushMatrix();
-					glTranslatef(a.w()/2, a.h()/2, 0);
+					GlStateManager.pushMatrix();
+					GlStateManager.translate(a.w()/2, a.h()/2, 0);
 					//glScalef(size.width, size.height, 1f);
-					glScalef(25f, 25f, 1f);
+					GlStateManager.scale(25f, 25f, 1f);
 					image.getState().themeImage(this.manager, image);
-					image.getState().message(this.manager, image, font);
-					glPopMatrix();
+					image.getState().message(this.manager, image, font());
+					GlStateManager.popMatrix();
 
-					glPopMatrix();
-					glEnable(GL_CULL_FACE);
+					GlStateManager.popMatrix();
+					GlStateManager.enableCull();
 				}
 			}
 		}

@@ -13,8 +13,8 @@ import org.lwjgl.util.Timer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public class ImageManager {
 	public static Deque<Image> lazyloadqueue = new ArrayDeque<Image>();

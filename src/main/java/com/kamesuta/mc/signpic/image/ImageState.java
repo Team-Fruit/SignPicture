@@ -8,7 +8,8 @@ import com.kamesuta.mc.signpic.render.StateRender.Color;
 import com.kamesuta.mc.signpic.render.StateRender.Speed;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.WorldRenderer;
 
 public enum ImageState {
 	INIT("signpic.state.init", Color.DEFAULT, Speed.WAIT),
@@ -36,20 +37,20 @@ public enum ImageState {
 		@Override
 		public void themeImage(final ImageManager manager, final Image image) {
 			RenderHelper.startTexture();
-			glPushMatrix();
-			glTranslatef(-.5f, -.5f, 0f);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(-.5f, -.5f, 0f);
 			manager.get(CustomTileEntitySignRenderer.resWarning).draw();;
-			glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	},
 	ERROR("signpic.state.error", Color.DEFAULT, Speed.WAIT) {
 		@Override
 		public void themeImage(final ImageManager manager, final Image image) {
 			RenderHelper.startTexture();
-			glPushMatrix();
-			glTranslatef(-.5f, -.5f, 0f);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(-.5f, -.5f, 0f);
 			manager.get(CustomTileEntitySignRenderer.resError).draw();;
-			glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	},
 	;
@@ -67,8 +68,8 @@ public enum ImageState {
 		glLineWidth(3f);
 		RenderHelper.startShape();
 
-		glPushMatrix();
-		glScalef(.5f, .5f, 1f);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(.5f, .5f, 1f);
 
 		// Loading Circle
 		this.color.loadingColor();
@@ -83,44 +84,44 @@ public enum ImageState {
 		final float progress = image.getProgress();
 		RenderHelper.drawProgressCircle(progress);
 
-		glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	public void message(final ImageManager manager, final Image image, final FontRenderer fontrenderer) {
 		RenderHelper.startTexture();
 		final float f1 = 0.6666667F;
 		float f3 = 0.06666668F * f1;
-		glTranslatef(0f, 1f, 0f);
-		glPushMatrix();
-		glScalef(f3, f3, 1f);
+		GlStateManager.translate(0f, 1f, 0f);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(f3, f3, 1f);
 		final String msg1 = image.getStatusMessage();
 		fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
-		glPopMatrix();
+		GlStateManager.popMatrix();
 		f3 = 0.036666668F * f1;
-		glPushMatrix();
-		glScalef(f3, f3, 1f);
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(f3, f3, 1f);
 		final String msg2 = image.getId();
 		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
-		glPopMatrix();
+		GlStateManager.popMatrix();
 		final String msg3 = image.advMessage();
 		if (msg3 != null) {
-			glPushMatrix();
-			glScalef(f3, f3, 1f);
+			GlStateManager.pushMatrix();
+			GlStateManager.scale(f3, f3, 1f);
 			fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
-			glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 	}
 
 	public void mainImage(final ImageManager manager, final Image image) {
-		final Tessellator t = Tessellator.instance;
+		final WorldRenderer t = RenderHelper.w;
 		RenderHelper.startShape();
 		glLineWidth(1f);
-		glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
+		GlStateManager.color(1.0F, 0.0F, 0.0F, 1.0F);
 		t.startDrawing(GL_LINE_LOOP);
 		t.addVertex(0, 0, 0);
 		t.addVertex(0, 1, 0);
 		t.addVertex(1, 1, 0);
 		t.addVertex(1, 0, 0);
-		t.draw();
+		RenderHelper.t.draw();
 	}
 }

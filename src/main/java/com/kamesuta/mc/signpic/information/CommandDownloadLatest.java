@@ -11,7 +11,7 @@ public class CommandDownloadLatest extends CommandBase {
 	private static final boolean ENABLED = true;
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "signpic-download-latest";
 	}
 
@@ -27,12 +27,12 @@ public class CommandDownloadLatest extends CommandBase {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(final ICommandSender p_71519_1_) {
+	public boolean canCommandSenderUse(final ICommandSender p_71519_1_) {
 		return true;
 	}
 
 	@Override
-	public void processCommand(final ICommandSender var1, final String[] var2) {
+	public void execute(final ICommandSender var1, final String[] var2) {
 		if(!ENABLED) {
 			var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.disabled").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 		} else {
