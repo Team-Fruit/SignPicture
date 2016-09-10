@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.render;
 
+import java.util.ArrayList;
+
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
@@ -14,8 +16,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -35,14 +37,14 @@ public class SignPicRender extends WGui {
 			if (CurrentMode.instance.getSign().preview.isRenderable()) {
 				final TileEntitySign tile = CurrentMode.instance.getSign().updatePreview().preview.getRenderTileEntity();
 				final BlockPos pos = tile.getPos();
-				Client.renderer.func_180541_a(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1);
+				Client.renderer.renderTileEntityAt(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.getPartialTicks(), -1);
 			}
 		}
 	}
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
-		if(event.type == ElementType.EXPERIENCE)
+		if(event.getType() == ElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode()) {
 				if ((int)(System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
@@ -80,16 +82,17 @@ public class SignPicRender extends WGui {
 					final ImageSize viewsize = new ImageSize().setAspectSize(sign.meta.size, imagesize);
 					final String advmsg = image.advMessage();
 
-					event.left.add("");
-					event.left.add(I18n.format("signpic.over.sign", sign.text()));
-					event.left.add(I18n.format("signpic.over.id", id));
-					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
-					event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
+					final ArrayList<String> left = event.getLeft();
+					left.add("");
+					left.add(I18n.format("signpic.over.sign", sign.text()));
+					left.add(I18n.format("signpic.over.id", id));
+					left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
+					left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
 					if (advmsg != null)
-						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
+						left.add(I18n.format("signpic.over.advmsg", advmsg));
 					if (tilesign.signText != null)
-						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
-					event.left.add(I18n.format("signpic.over.local", image.getLocal()));
+						left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
+					left.add(I18n.format("signpic.over.local", image.getLocal()));
 				}
 			}
 		}

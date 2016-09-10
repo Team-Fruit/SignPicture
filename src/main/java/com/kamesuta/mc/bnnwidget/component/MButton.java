@@ -9,6 +9,7 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
 public class MButton extends WBase {
@@ -43,7 +44,7 @@ public class MButton extends WBase {
 				if (this.actionCommand != null)
 					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
 				mc.getSoundHandler()
-				.playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+				.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
 			}
 		}
 	}

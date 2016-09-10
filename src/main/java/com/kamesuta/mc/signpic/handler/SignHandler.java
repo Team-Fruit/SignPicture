@@ -7,6 +7,7 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
@@ -33,11 +34,12 @@ public class SignHandler {
 
 	@CoreEvent
 	public void onSign(final GuiOpenEvent event) {
-		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
-			if (event.gui instanceof GuiEditSign) {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+			final GuiScreen gui = event.getGui();
+			if (gui instanceof GuiEditSign) {
 				if (f != null) {
 					try {
-						final GuiEditSign ges = (GuiEditSign) event.gui;
+						final GuiEditSign ges = (GuiEditSign) gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
 						CurrentMode.instance.getSign().sendSign(tileSign);
 						event.setCanceled(true);
@@ -51,11 +53,12 @@ public class SignHandler {
 					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 				}
 			}
+		}
 	}
 
 	@CoreEvent
 	public void onClick(final MouseEvent event) {
-		if (event.buttonstate && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
+		if (event.isButtonstate() && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.getButton() - 100) {
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 				CurrentMode.instance.getSign().preview.capturePlace();
 				event.setCanceled(true);

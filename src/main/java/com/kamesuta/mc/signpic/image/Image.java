@@ -1,10 +1,13 @@
 package com.kamesuta.mc.signpic.image;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 
 public abstract class Image {
@@ -61,15 +64,15 @@ public abstract class Image {
 
 	public void draw() {
 		if (this.state == ImageState.AVAILABLE) {
-			final WorldRenderer t = RenderHelper.w;
+			final VertexBuffer t = RenderHelper.w;
 			RenderHelper.startTexture();
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			getTexture().bind();
-			t.startDrawingQuads();
-			t.addVertexWithUV(0, 0, 0, 0, 0);
-			t.addVertexWithUV(0, 1, 0, 0, 1);
-			t.addVertexWithUV(1, 1, 0, 1, 1);
-			t.addVertexWithUV(1, 0, 0, 1, 0);
+			t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			t.pos(0, 0, 0).tex(0, 0).endVertex();
+			t.pos(0, 1, 0).tex(0, 1).endVertex();
+			t.pos(1, 1, 0).tex(1, 1).endVertex();
+			t.pos(1, 0, 0).tex(1, 0).endVertex();
 			RenderHelper.t.draw();
 		}
 	}

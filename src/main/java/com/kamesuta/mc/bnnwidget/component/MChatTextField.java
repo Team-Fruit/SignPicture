@@ -2,14 +2,18 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.base.Predicate;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiPageButtonList.GuiResponder;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
 public class MChatTextField extends WBase {
 	protected final GuiTextField t;
@@ -27,6 +31,16 @@ public class MChatTextField extends WBase {
 
 	public String getWatermark() {
 		return this.watermark;
+	}
+
+	public int getId() {
+		return this.t.getId();
+	}
+
+	@Override
+	public void drawTexturedModalRect(final int xCoord, final int yCoord, final TextureAtlasSprite textureSprite, final int widthIn,
+			final int heightIn) {
+		this.t.drawTexturedModalRect(xCoord, yCoord, textureSprite, widthIn, heightIn);
 	}
 
 	@Override
@@ -72,6 +86,9 @@ public class MChatTextField extends WBase {
 		if (b!=isFocused()) onFocusChanged();
 	}
 
+	protected void onFocusChanged() {
+	}
+
 	@Override
 	public void update(final WEvent ev, final Area pgp, final Point p) {
 		this.t.updateCursorCounter();
@@ -82,11 +99,6 @@ public class MChatTextField extends WBase {
 		this.t.textboxKeyTyped(c, keycode);
 	}
 
-	@Override
-	public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-		setFocused(false);
-	}
-
 	protected void updateArea(final Area a) {
 		final Area b = a.child(1, 1, -1, -1);
 		this.t.xPosition = (int) b.x1();
@@ -95,13 +107,49 @@ public class MChatTextField extends WBase {
 		this.t.height = (int) b.h();
 	}
 
+	protected void onTextChanged(final String old) {
+	}
+
 	public void setText(final String p_146180_1_) {
 		final String old = getText();
 		this.t.setText(p_146180_1_);
 		onTextChanged(old);
 	}
 
-	protected void onTextChanged(final String oldText) {
+	public void writeText(final String p_146191_1_) {
+		final String old = getText();
+		this.t.writeText(p_146191_1_);
+		onTextChanged(old);
+	}
+
+	public void deleteFromCursor(final int p_146175_1_) {
+		final String old = getText();
+		this.t.deleteFromCursor(p_146175_1_);
+		onTextChanged(old);
+	}
+
+	public void setMaxStringLength(final int p_146203_1_) {
+		final String old = getText();
+		this.t.setMaxStringLength(p_146203_1_);
+		onTextChanged(old);
+	}
+
+	public void setFocused(final boolean p_146195_1_) {
+		if (p_146195_1_!=isFocused()) onFocusChanged();
+		this.t.setFocused(p_146195_1_);
+	}
+
+	@Override
+	public int hashCode() {
+		return this.t.hashCode();
+	}
+
+	public void setGuiResponder(final GuiResponder guiResponderIn) {
+		this.t.setGuiResponder(guiResponderIn);
+	}
+
+	public void updateCursorCounter() {
+		this.t.updateCursorCounter();
 	}
 
 	public String getText() {
@@ -112,45 +160,62 @@ public class MChatTextField extends WBase {
 		return this.t.getSelectedText();
 	}
 
-	public void writeText(final String p_146191_1_) {
-		final String old = getText();
-		this.t.writeText(p_146191_1_);
-		onTextChanged(old);
-	}
-
 	@Override
 	public boolean equals(final Object obj) {
 		return this.t.equals(obj);
 	}
 
-	public void deleteWords(final int p_146177_1_) {
-		this.t.deleteWords(p_146177_1_);
+	public void setValidator(final Predicate<String> theValidator) {
+		this.t.setValidator(theValidator);
 	}
 
-	public void deleteFromCursor(final int p_146175_1_) {
-		final String old = getText();
-		this.t.deleteFromCursor(p_146175_1_);
-		onTextChanged(old);
+	@Override
+	public void drawCenteredString(final FontRenderer fontRendererIn, final String text, final int x, final int y, final int color) {
+		this.t.drawCenteredString(fontRendererIn, text, x, y, color);
 	}
 
-	public int getNthWordFromCursor(final int p_146187_1_) {
-		return this.t.getNthWordFromCursor(p_146187_1_);
+	public void deleteWords(final int num) {
+		this.t.deleteWords(num);
 	}
 
-	public int getNthWordFromPos(final int p_146183_1_, final int p_146183_2_) {
-		return this.t.getNthWordFromPos(p_146183_1_, p_146183_2_);
+	@Override
+	public void drawString(final FontRenderer fontRendererIn, final String text, final int x, final int y, final int color) {
+		this.t.drawString(fontRendererIn, text, x, y, color);
 	}
 
-	public int func_146197_a(final int p_146197_1_, final int p_146197_2_, final boolean p_146197_3_) {
-		return this.t.func_146197_a(p_146197_1_, p_146197_2_, p_146197_3_);
+	@Override
+	public void drawTexturedModalRect(final int x, final int y, final int textureX, final int textureY, final int width, final int height) {
+		this.t.drawTexturedModalRect(x, y, textureX, textureY, width, height);
 	}
 
-	public void moveCursorBy(final int p_146182_1_) {
-		this.t.moveCursorBy(p_146182_1_);
+	@Override
+	public void drawTexturedModalRect(final float xCoord, final float yCoord, final int minU, final int minV, final int maxU, final int maxV) {
+		this.t.drawTexturedModalRect(xCoord, yCoord, minU, minV, maxU, maxV);
 	}
 
-	public void setCursorPosition(final int p_146190_1_) {
-		this.t.setCursorPosition(p_146190_1_);
+	public int getNthWordFromCursor(final int numWords) {
+		return this.t.getNthWordFromCursor(numWords);
+	}
+
+	public int getNthWordFromPos(final int n, final int pos) {
+		return this.t.getNthWordFromPos(n, pos);
+	}
+
+	public int getNthWordFromPosWS(final int n, final int pos, final boolean skipWs) {
+		return this.t.getNthWordFromPosWS(n, pos, skipWs);
+	}
+
+	@Override
+	public String toString() {
+		return this.t.toString();
+	}
+
+	public void moveCursorBy(final int num) {
+		this.t.moveCursorBy(num);
+	}
+
+	public void setCursorPosition(final int pos) {
+		this.t.setCursorPosition(pos);
 	}
 
 	public void setCursorPositionZero() {
@@ -161,15 +226,16 @@ public class MChatTextField extends WBase {
 		this.t.setCursorPositionEnd();
 	}
 
-	@Override
-	public String toString() {
-		return this.t.toString();
+	public boolean textboxKeyTyped(final char typedChar, final int keyCode) {
+		return this.t.textboxKeyTyped(typedChar, keyCode);
 	}
 
-	public void setMaxStringLength(final int p_146203_1_) {
-		final String old = getText();
-		this.t.setMaxStringLength(p_146203_1_);
-		onTextChanged(old);
+	public void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
+		this.t.mouseClicked(mouseX, mouseY, mouseButton);
+	}
+
+	public void drawTextBox() {
+		this.t.drawTextBox();
 	}
 
 	public int getMaxStringLength() {
@@ -184,32 +250,24 @@ public class MChatTextField extends WBase {
 		return this.t.getEnableBackgroundDrawing();
 	}
 
-	public void setEnableBackgroundDrawing(final boolean p_146185_1_) {
-		this.t.setEnableBackgroundDrawing(p_146185_1_);
+	public void setEnableBackgroundDrawing(final boolean enableBackgroundDrawingIn) {
+		this.t.setEnableBackgroundDrawing(enableBackgroundDrawingIn);
 	}
 
-	public void setTextColor(final int p_146193_1_) {
-		this.t.setTextColor(p_146193_1_);
+	public void setTextColor(final int color) {
+		this.t.setTextColor(color);
 	}
 
-	public void setDisabledTextColour(final int p_146204_1_) {
-		this.t.setDisabledTextColour(p_146204_1_);
-	}
-
-	public void setFocused(final boolean p_146195_1_) {
-		if (p_146195_1_!=isFocused()) onFocusChanged();
-		this.t.setFocused(p_146195_1_);
-	}
-
-	protected void onFocusChanged() {
+	public void setDisabledTextColour(final int color) {
+		this.t.setDisabledTextColour(color);
 	}
 
 	public boolean isFocused() {
 		return this.t.isFocused();
 	}
 
-	public void setEnabled(final boolean p_146184_1_) {
-		this.t.setEnabled(p_146184_1_);
+	public void setEnabled(final boolean enabled) {
+		this.t.setEnabled(enabled);
 	}
 
 	public int getSelectionEnd() {
@@ -220,19 +278,19 @@ public class MChatTextField extends WBase {
 		return this.t.getWidth();
 	}
 
-	public void setSelectionPos(final int p_146199_1_) {
-		this.t.setSelectionPos(p_146199_1_);
+	public void setSelectionPos(final int position) {
+		this.t.setSelectionPos(position);
 	}
 
-	public void setCanLoseFocus(final boolean p_146205_1_) {
-		this.t.setCanLoseFocus(p_146205_1_);
+	public void setCanLoseFocus(final boolean canLoseFocusIn) {
+		this.t.setCanLoseFocus(canLoseFocusIn);
 	}
 
 	public boolean getVisible() {
 		return this.t.getVisible();
 	}
 
-	public void setVisible(final boolean p_146189_1_) {
-		this.t.setVisible(p_146189_1_);
+	public void setVisible(final boolean isVisible) {
+		this.t.setVisible(isVisible);
 	}
 }

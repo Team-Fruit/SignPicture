@@ -7,10 +7,10 @@ import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.play.client.CPacketUpdateSign;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 public class Sign {
 	public static int maxText = 15*4;
@@ -69,9 +69,9 @@ public class Sign {
 		return parseText(StringUtils.join(sign));
 	}
 
-	public Sign parseSignText(final IChatComponent[] sign) {
+	public Sign parseSignText(final ITextComponent[] sign) {
 		final StringBuilder stb = new StringBuilder();
-		for (final IChatComponent c : sign)
+		for (final ITextComponent c : sign)
 			stb.append(c.getUnformattedText());
 		return parseText(stb.toString());
 	}
@@ -104,13 +104,13 @@ public class Sign {
 		return sign;
 	}
 
-	public IChatComponent[] toSignChat(final IChatComponent[] sign) {
+	public ITextComponent[] toSignChat(final ITextComponent[] sign) {
 		final String text = text();
 		for (int i=0; i<4; i++) {
 			if (16*i <= StringUtils.length(text))
-				sign[i] = new ChatComponentText(StringUtils.substring(text, 15*i, Math.min(15*(i+1), text.length())));
+				sign[i] = new TextComponentString(StringUtils.substring(text, 15*i, Math.min(15*(i+1), text.length())));
 			else
-				sign[i] = new ChatComponentText("");
+				sign[i] = new TextComponentString("");
 		}
 		return sign;
 	}
@@ -129,7 +129,7 @@ public class Sign {
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
 		if (nethandlerplayclient != null)
-			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.getPos(), sourceentity.signText));
+			nethandlerplayclient.addToSendQueue(new CPacketUpdateSign(sourceentity.getPos(), sourceentity.signText));
 		sourceentity.setEditable(true);
 		return this;
 	}

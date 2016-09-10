@@ -5,19 +5,19 @@ import com.kamesuta.mc.signpic.Client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ChatBuilder {
 	public static final int DefaultId = 877;
 
-	private IChatComponent chat = null;
+	private ITextComponent chat = null;
+	private Style style = null;
 	private String text = "";
 	private Object[] params = new Object[0];
 	private boolean useTranslation = false;
@@ -27,30 +27,32 @@ public class ChatBuilder {
 
 	public ChatBuilder() {}
 
-	public IChatComponent build() {
-		IChatComponent chat;
+	public ITextComponent build() {
+		ITextComponent chat;
 		if (this.chat==null) {
 			if (this.useTranslation && !this.useJson)
-				chat = new ChatComponentTranslation(this.text, this.params);
+				chat = new TextComponentTranslation(this.text, this.params);
 			else {
 				String s;
 				if (this.useTranslation)
-					s = String.format(StatCollector.translateToLocal(this.text), this.params);
+					s = String.format(I18n.translateToLocal(this.text), this.params);
 				else
 					s = this.text;
 
 				if (this.useJson)
 					try {
-						chat = IChatComponent.Serializer.jsonToComponent(s);
+						chat = ITextComponent.Serializer.jsonToComponent(s);
 					} catch (final JsonSyntaxException e) {
-						chat = new ChatComponentText("Invaild Json: " + this.text);
+						chat = new TextComponentString("Invaild Json: " + this.text);
 					}
 				else
-					chat = new ChatComponentText(this.text);
+					chat = new TextComponentString(this.text);
 			}
 		} else {
 			chat = this.chat;
 		}
+		if (chat!=null && this.style!=null)
+			chat.setChatStyle(this.style);
 		return chat;
 	}
 
@@ -65,7 +67,7 @@ public class ChatBuilder {
 		return this;
 	}
 
-	public ChatBuilder setChat(final IChatComponent chat) {
+	public ChatBuilder setChat(final ITextComponent chat) {
 		this.chat = chat;
 		return this;
 	}
@@ -77,6 +79,11 @@ public class ChatBuilder {
 
 	public ChatBuilder setParams(final Object... params) {
 		this.params = params;
+		return this;
+	}
+
+	public ChatBuilder setStyle(final Style style) {
+		this.style = style;
 		return this;
 	}
 
@@ -103,7 +110,7 @@ public class ChatBuilder {
 	public static void chatClient(final ChatBuilder chat) {
 		final Minecraft mc = Client.mc;
 		if (mc.thePlayer!=null) {
-			final IChatComponent msg = chat.build();
+			final ITextComponent msg = chat.build();
 			if (chat.useId)
 				mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(msg, chat.id);
 			else
@@ -118,7 +125,8 @@ public class ChatBuilder {
 
 	@SideOnly(Side.SERVER)
 	public static void sendServerChat(final ChatBuilder chat) {
-		final ServerConfigurationManager sender = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager();
-		sender.sendChatMsg(chat.build());
+		// TODO
+		//		final ServerConfigurationManager sender = FMLCommonHandler.instance().getMinecraftServerInstance().();
+		//		sender.sendChatMsg(chat.build());
 	}
 }

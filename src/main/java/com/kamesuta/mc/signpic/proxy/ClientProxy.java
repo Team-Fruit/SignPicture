@@ -16,6 +16,7 @@ import com.mojang.util.UUIDTypeAdapter;
 
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.ForgeVersion;
@@ -112,8 +113,7 @@ public class ClientProxy extends CommonProxy {
 
 		// Replace Sign Renderer
 		Client.renderer.setRendererDispatcher(TileEntityRendererDispatcher.instance);
-		@SuppressWarnings("unchecked")
-		final Map<Class<?>, ? super TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
+		final Map<Class<? extends TileEntity>,TileEntitySpecialRenderer<? extends TileEntity>> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, Client.renderer);
 
 		// Event Register

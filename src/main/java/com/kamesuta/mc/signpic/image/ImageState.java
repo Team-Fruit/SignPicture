@@ -9,7 +9,8 @@ import com.kamesuta.mc.signpic.render.StateRender.Speed;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public enum ImageState {
 	INIT("signpic.state.init", Color.DEFAULT, Speed.WAIT),
@@ -113,15 +114,15 @@ public enum ImageState {
 	}
 
 	public void mainImage(final ImageManager manager, final Image image) {
-		final WorldRenderer t = RenderHelper.w;
+		final VertexBuffer t = RenderHelper.w;
 		RenderHelper.startShape();
 		glLineWidth(1f);
 		GlStateManager.color(1.0F, 0.0F, 0.0F, 1.0F);
-		t.startDrawing(GL_LINE_LOOP);
-		t.addVertex(0, 0, 0);
-		t.addVertex(0, 1, 0);
-		t.addVertex(1, 1, 0);
-		t.addVertex(1, 0, 0);
+		t.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+		t.pos(0, 0, 0).endVertex();
+		t.pos(0, 1, 0).endVertex();
+		t.pos(1, 1, 0).endVertex();
+		t.pos(1, 0, 0).endVertex();
 		RenderHelper.t.draw();
 	}
 }

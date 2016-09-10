@@ -14,16 +14,17 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class WGui extends Gui {
 	public static final Minecraft mc;
 	public static final Tessellator t = Tessellator.getInstance();
-	public static final WorldRenderer w = t.getWorldRenderer();
+	public static final VertexBuffer w = t.getBuffer();
 	public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
@@ -58,13 +59,13 @@ public class WGui extends Gui {
 		final float b = (color & 255) / 255.0F;
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 		GlStateManager.color(r, g, b, a);
-		w.startDrawingQuads();;
-		w.addVertex(Math.min(x1, x2), Math.max(y1, y2), 0.0D);
-		w.addVertex(Math.max(x1, x2), Math.max(y1, y2), 0.0D);
-		w.addVertex(Math.max(x1, x2), Math.min(y1, y2), 0.0D);
-		w.addVertex(Math.min(x1, x2), Math.min(y1, y2), 0.0D);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+		w.pos(Math.min(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
+		w.pos(Math.max(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
+		w.pos(Math.max(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
+		w.pos(Math.min(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -73,30 +74,28 @@ public class WGui extends Gui {
 	/**
 	 * Draws a rectangle with a vertical gradient between the specified colors.
 	 */
-	public static void drawGradientRect(final float x1, final float y1, final float x2, final float y2, final int color1, final int color2)
+	public static void drawGradientRect(final float left, final float top, final float right, final float bottom, final int startColor, final int endColor)
 	{
-		final float a1 = (color1 >> 24 & 255) / 255.0F;
-		final float r1 = (color1 >> 16 & 255) / 255.0F;
-		final float g1 = (color1 >> 8 & 255) / 255.0F;
-		final float b1 = (color1 & 255) / 255.0F;
-		final float a2 = (color2 >> 24 & 255) / 255.0F;
-		final float r2 = (color2 >> 16 & 255) / 255.0F;
-		final float g2 = (color2 >> 8 & 255) / 255.0F;
-		final float b2 = (color2 & 255) / 255.0F;
+		final float f = (startColor >> 24 & 255) / 255.0F;
+		final float f1 = (startColor >> 16 & 255) / 255.0F;
+		final float f2 = (startColor >> 8 & 255) / 255.0F;
+		final float f3 = (startColor & 255) / 255.0F;
+		final float f4 = (endColor >> 24 & 255) / 255.0F;
+		final float f5 = (endColor >> 16 & 255) / 255.0F;
+		final float f6 = (endColor >> 8 & 255) / 255.0F;
+		final float f7 = (endColor & 255) / 255.0F;
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
-		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		GlStateManager.shadeModel(GL_SMOOTH);
-		w.startDrawingQuads();
-		w.setColorRGBA_F(r1, g1, b1, a1);
-		w.addVertex(x2, y1, 0);
-		w.addVertex(x1, y1, 0);
-		w.setColorRGBA_F(r2, g2, b2, a2);
-		w.addVertex(x1, y2, 0);
-		w.addVertex(x2, y2, 0);
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.shadeModel(7425);
+		w.begin(7, DefaultVertexFormats.POSITION_COLOR);
+		w.pos(right, top, 0).color(f1, f2, f3, f).endVertex();
+		w.pos(left, top, 0).color(f1, f2, f3, f).endVertex();
+		w.pos(left, bottom, 0).color(f5, f6, f7, f4).endVertex();
+		w.pos(right, bottom, 0).color(f5, f6, f7, f4).endVertex();
 		t.draw();
-		GlStateManager.shadeModel(GL_FLAT);
+		GlStateManager.shadeModel(7424);
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableTexture2D();
@@ -131,21 +130,21 @@ public class WGui extends Gui {
 	{
 		final float f = 0.00390625F;
 		final float f1 = 0.00390625F;
-		w.startDrawingQuads();
-		w.addVertexWithUV(x + 0, y + height, 0, (u + 0) * f, (v + height) * f1);
-		w.addVertexWithUV(x + width, y + height, 0, (u + width) * f, (v + height) * f1);
-		w.addVertexWithUV(x + width, y + 0, 0, (u + width) * f, (v + 0) * f1);
-		w.addVertexWithUV(x + 0, y + 0, 0, (u + 0) * f, (v + 0) * f1);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x + 0, y + height, 0).tex((u + 0) * f, (v + height) * f1).endVertex();
+		w.pos(x + width, y + height, 0).tex((u + width) * f, (v + height) * f1).endVertex();
+		w.pos(x + width, y + 0, 0).tex((u + width) * f, (v + 0) * f1).endVertex();
+		w.pos(x + 0, y + 0, 0).tex((u + 0) * f, (v + 0) * f1).endVertex();
 		t.draw();
 	}
 
 	public static void drawTexturedModelRectFromIcon(final float x, final float y, final TextureAtlasSprite image, final float width, final float height)
 	{
-		w.startDrawingQuads();
-		w.addVertexWithUV(x + 0, y + height, 0, image.getMinU(), image.getMaxV());
-		w.addVertexWithUV(x + width, y + height, 0, image.getMaxU(), image.getMaxV());
-		w.addVertexWithUV(x + width, y + 0, 0, image.getMaxU(), image.getMinV());
-		w.addVertexWithUV(x + 0, y + 0, 0, image.getMinU(), image.getMinV());
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x + 0, y + height, 0).tex(image.getMinU(), image.getMaxV()).endVertex();
+		w.pos(x + width, y + height, 0).tex(image.getMaxU(), image.getMaxV()).endVertex();
+		w.pos(x + width, y + 0, 0).tex(image.getMaxU(), image.getMinV()).endVertex();
+		w.pos(x + 0, y + 0, 0).tex(image.getMinU(), image.getMinV()).endVertex();
 		t.draw();
 	}
 
@@ -153,11 +152,11 @@ public class WGui extends Gui {
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
-		w.startDrawingQuads();
-		w.addVertexWithUV(x, y + height, 0.0D, u * mulu, (v + height) * mulv);
-		w.addVertexWithUV(x + width, y + height, 0.0D, (u + width) * mulu, (v + height) * mulv);
-		w.addVertexWithUV(x + width, y, 0.0D, (u + width) * mulu, v * mulv);
-		w.addVertexWithUV(x, y, 0.0D, u * mulu, v * mulv);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x, y + height, 0.0D).tex(u * mulu, (v + height) * mulv).endVertex();
+		w.pos(x + width, y + height, 0.0D).tex((u + width) * mulu, (v + height) * mulv).endVertex();
+		w.pos(x + width, y, 0.0D).tex((u + width) * mulu, v * mulv).endVertex();
+		w.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
 		t.draw();
 	}
 
@@ -165,20 +164,20 @@ public class WGui extends Gui {
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
-		w.startDrawingQuads();
-		w.addVertexWithUV(x, y + height, 0.0D, u * mulu, (v + vheight) * mulv);
-		w.addVertexWithUV(x + width, y + height, 0.0D, (u + uwidth) * mulu, (v + vheight) * mulv);
-		w.addVertexWithUV(x + width, y, 0.0D, (u + uwidth) * mulu, v * mulv);
-		w.addVertexWithUV(x, y, 0.0D, u * mulu, v * mulv);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x, y + height, 0.0D).tex(u * mulu, (v + vheight) * mulv).endVertex();
+		w.pos(x + width, y + height, 0.0D).tex((u + uwidth) * mulu, (v + vheight) * mulv).endVertex();
+		w.pos(x + width, y, 0.0D).tex((u + uwidth) * mulu, v * mulv).endVertex();
+		w.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
 		t.draw();
 	}
 
 	public static void draw(final Area p, final int mode) {
-		w.startDrawing(mode);
-		w.addVertex(p.x1(), p.y1(), 0);
-		w.addVertex(p.x1(), p.y2(), 0);
-		w.addVertex(p.x2(), p.y2(), 0);
-		w.addVertex(p.x2(), p.y1(), 0);
+		w.begin(mode, DefaultVertexFormats.POSITION);
+		w.pos(p.x1(), p.y1(), 0);
+		w.pos(p.x1(), p.y2(), 0);
+		w.pos(p.x2(), p.y2(), 0);
+		w.pos(p.x2(), p.y1(), 0);
 		t.draw();
 	}
 
@@ -199,11 +198,11 @@ public class WGui extends Gui {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		w.startDrawingQuads();
-		w.addVertex(a.x1(), a.y2(), .0);
-		w.addVertex(a.x2(), a.y2(), .0);
-		w.addVertex(a.x2(), a.y1(), .0);
-		w.addVertex(a.x1(), a.y1(), .0);
+		w.begin(7, DefaultVertexFormats.POSITION);
+		w.pos(a.x1(), a.y2(), .0);
+		w.pos(a.x2(), a.y2(), .0);
+		w.pos(a.x2(), a.y1(), .0);
+		w.pos(a.x1(), a.y1(), .0);
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -253,11 +252,11 @@ public class WGui extends Gui {
 	{
 		final float f = 0.00390625F;
 		final float f1 = 0.00390625F;
-		w.startDrawingQuads();
-		w.addVertexWithUV(a.x1(), a.y2(), 0, texture.x1() * f, texture.y2() * f1);
-		w.addVertexWithUV(a.x2(), a.y2(), 0, texture.x2() * f, texture.y2() * f1);
-		w.addVertexWithUV(a.x2(), a.y1(), 0, texture.x2() * f, texture.y1() * f1);
-		w.addVertexWithUV(a.x1(), a.y1(), 0, texture.x1() * f, texture.y1() * f1);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(a.x1(), a.y2(), 0).tex(texture.x1() * f, texture.y2() * f1).endVertex();
+		w.pos(a.x2(), a.y2(), 0).tex(texture.x2() * f, texture.y2() * f1).endVertex();
+		w.pos(a.x2(), a.y1(), 0).tex(texture.x2() * f, texture.y1() * f1).endVertex();
+		w.pos(a.x1(), a.y1(), 0).tex(texture.x1() * f, texture.y1() * f1).endVertex();
 		t.draw();
 	}
 
@@ -308,6 +307,6 @@ public class WGui extends Gui {
 	public static int getStringWidth(final String s) {
 		if (StringUtils.isEmpty(s))
 			return 0;
-		return font().getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(s));
+		return font().getStringWidth(TextFormatting.getTextWithoutFormattingCodes(s));
 	}
 }
