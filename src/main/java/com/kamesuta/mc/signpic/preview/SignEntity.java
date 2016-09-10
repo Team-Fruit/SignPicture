@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.util;
+package com.kamesuta.mc.signpic.preview;
 
 import com.kamesuta.mc.signpic.Client;
 
@@ -11,16 +11,16 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class SignEntity {
-	private final TileEntitySign tileSign = new TileEntitySign();
+	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.standing_sign);
 	private boolean renderable = false;
 
-	private TileEntitySign onItemUse(final EntityPlayer player, final World world, int x, int y, int z, final int direction)
+	private PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, int x, int y, int z, final int direction)
 	{
 		if (direction == 0)
 		{
 			return null;
 		}
-		else if (!world.getBlock(x, y, z).getMaterial().isSolid())
+		else if (!worldIn.getBlock(x, y, z).getMaterial().isSolid())
 		{
 			return null;
 		}
@@ -51,29 +51,29 @@ public class SignEntity {
 				++x;
 			}
 
-			if (!Blocks.standing_sign.canPlaceBlockAt(world, x, y, z))
+			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, x, y, z))
 			{
 				return null;
 			}
 			else
 			{
-				this.renderable = true;
-
 				this.tileSign.xCoord = x;
 				this.tileSign.yCoord = y;
 				this.tileSign.zCoord = z;
 
 				if (direction == 1)
 				{
-					final int i1 = MathHelper.floor_double((player.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
-					this.tileSign.blockType = Blocks.standing_sign;
-					this.tileSign.blockMetadata = i1;
+					this.tileSign.setBlockType(Blocks.standing_sign);
+					final int i = MathHelper.floor_double((playerIn.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
+					this.tileSign.setBlockMetadata(i);
 				}
 				else
 				{
-					this.tileSign.blockType = Blocks.wall_sign;
-					this.tileSign.blockMetadata = direction;
+					this.tileSign.setBlockType(Blocks.wall_sign);
+					this.tileSign.setBlockMetadata(direction);
 				}
+
+				this.renderable = true;
 
 				return this.tileSign;
 			}

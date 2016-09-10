@@ -54,9 +54,9 @@ public class MCheckBox extends MLabel {
 		if (this.checked) {
 			final String strcheck = "\u2713";
 			glPushMatrix();
-			glTranslatef(in.x1()+(in.w()-font.getStringWidth(strcheck))/2, in.y1()+(in.h()-font.FONT_HEIGHT)/2, 0f);
+			glTranslatef(in.x1()+(in.w()-font().getStringWidth(strcheck))/2, in.y1()+(in.h()-font().FONT_HEIGHT)/2, 0f);
 			//glScalef(2f, 2f, 1f);
-			font.drawStringWithShadow(strcheck, 0, 0, 0xffffff);
+			font().drawStringWithShadow(strcheck, 0, 0, 0xffffff);
 			glPopMatrix();
 		}
 	}

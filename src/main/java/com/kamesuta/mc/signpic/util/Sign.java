@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
+import com.kamesuta.mc.signpic.preview.SignEntity;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.client.C12PacketUpdateSign;

@@ -19,7 +19,7 @@ public class MChatTextField extends WBase {
 
 	public MChatTextField(final R position) {
 		super(position);
-		this.t = new GuiTextField(font, 0, 0, 0, 0);
+		this.t = new GuiTextField(font(), 0, 0, 0, 0);
 	}
 
 	public void setWatermark(final String watermark) {
@@ -48,7 +48,7 @@ public class MChatTextField extends WBase {
 		if (!StringUtils.isEmpty(this.watermark) && StringUtils.isEmpty(getText()) && !isFocused()) {
 			final int l = getEnableBackgroundDrawing() ? this.t.xPosition + 4 : this.t.xPosition;
 			final int i1 = getEnableBackgroundDrawing() ? this.t.yPosition + (this.t.height - 8) / 2 : this.t.yPosition;
-			font.drawStringWithShadow(this.watermark, l, i1, 0x777777);
+			font().drawStringWithShadow(this.watermark, l, i1, 0x777777);
 		}
 
 		glPopMatrix();

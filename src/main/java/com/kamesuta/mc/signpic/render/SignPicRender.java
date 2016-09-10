@@ -39,11 +39,11 @@ public class SignPicRender extends WGui {
 	}
 
 	@CoreEvent
-	public void onDraw(final RenderGameOverlayEvent event) {
-		if(event.type == ElementType.ALL)
+	public void onDraw(final RenderGameOverlayEvent.Post event) {
+		if(event.type == ElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode()) {
 				if ((int)(System.currentTimeMillis()/500)%2==0) {
-					final FontRenderer fontrenderer = font;
+					final FontRenderer fontrenderer = font();
 
 					RenderHelper.startTexture();
 					glPushMatrix();

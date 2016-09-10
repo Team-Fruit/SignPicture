@@ -65,7 +65,7 @@ public class MButton extends WBase {
 		final Area a = getGuiPosition(pgp);
 		RenderHelper.startTexture();
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		texture.bindTexture(button);
+		texture().bindTexture(button);
 		final int state = getButtonTex(ev, pgp, p, frame);
 
 		drawTexturedModalRect(a.x1(), a.y1(), 0, state * 80, a.w() / 2, a.h() / 2);

@@ -21,14 +21,18 @@ import net.minecraft.util.IIcon;
 
 public class WGui extends Gui {
 	public static final Minecraft mc;
-	public static final TextureManager texture;
-	public static final FontRenderer font;
 	public static final Tessellator t = Tessellator.instance;
 	public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
-		texture = mc.renderEngine;
-		font = mc.fontRenderer;
+	}
+
+	public static TextureManager texture() {
+		return mc.renderEngine;
+	}
+
+	public static FontRenderer font() {
+		return mc.fontRenderer;
 	}
 
 	public static void drawHorizontalLine(final float x1, final float x2, final float y, final int color)
@@ -103,7 +107,7 @@ public class WGui extends Gui {
 	{
 		glPushMatrix();
 		glTranslatef(x, y, 0f);
-		font.drawStringWithShadow(text, - font.getStringWidth(text) / 2, 0, color);
+		font().drawStringWithShadow(text, - font().getStringWidth(text) / 2, 0, color);
 		glPopMatrix();
 	}
 
@@ -114,7 +118,7 @@ public class WGui extends Gui {
 	{
 		glPushMatrix();
 		glTranslatef(x, y, 0f);
-		font.drawStringWithShadow(text, 0, 0, color);
+		font().drawStringWithShadow(text, 0, 0, color);
 		glPopMatrix();
 	}
 
@@ -266,9 +270,9 @@ public class WGui extends Gui {
 
 	public static void drawString(final String text, final int x, final int y, final int colour, final boolean shadow) {
 		if (shadow)
-			font.drawStringWithShadow(text, x, y, colour);
+			font().drawStringWithShadow(text, x, y, colour);
 		else
-			font.drawString(text, x, y, colour);
+			font().drawString(text, x, y, colour);
 	}
 
 	public static void drawString(final String text, final int x, final int y, final int colour) {
@@ -302,6 +306,6 @@ public class WGui extends Gui {
 	public static int getStringWidth(final String s) {
 		if (StringUtils.isEmpty(s))
 			return 0;
-		return font.getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(s));
+		return font().getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(s));
 	}
 }

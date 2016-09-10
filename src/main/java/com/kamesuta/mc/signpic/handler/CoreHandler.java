@@ -57,7 +57,7 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent()
-	public void onDraw(final RenderGameOverlayEvent event) {
+	public void onDraw(final RenderGameOverlayEvent.Post event) {
 		this.renderHandler.onDraw(event);
 	}
 

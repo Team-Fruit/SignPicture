@@ -212,7 +212,7 @@ public class MTextField extends WBase {
 				setText("");
 			}
 			final Area in = getGuiPosition(pgp).child(1, 1, -1, -1);
-			this.seek = font.trimStringToWidth(getText(), (int) (p.x() - (in.x1() + 4))).length();
+			this.seek = font().trimStringToWidth(getText(), (int) (p.x() - (in.x1() + 4))).length();
 		} else {
 			setFocused(false);
 		}
@@ -268,7 +268,7 @@ public class MTextField extends WBase {
 		final boolean blink = this.cursorCounter / 6 % 2 == 0;
 		if ((isEnabled()) && (isFocused())) {
 			if (blink)
-				drawCenteredString("\u2503", a.x1() + 4 + font.getStringWidth(s.substring(0, seek)), a.y1() + a.h() / 2 - 4, getTextColour());
+				drawCenteredString("\u2503", a.x1() + 4 + font().getStringWidth(s.substring(0, seek)), a.y1() + a.h() / 2 - 4, getTextColour());
 		}
 	}
 

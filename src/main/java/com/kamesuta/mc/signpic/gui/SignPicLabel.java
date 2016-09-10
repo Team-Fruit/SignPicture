@@ -53,7 +53,7 @@ public class SignPicLabel extends WBase {
 					//glScalef(size.width, size.height, 1f);
 					glScalef(25f, 25f, 1f);
 					image.getState().themeImage(this.manager, image);
-					image.getState().message(this.manager, image, font);
+					image.getState().message(this.manager, image, font());
 					glPopMatrix();
 
 					glPopMatrix();

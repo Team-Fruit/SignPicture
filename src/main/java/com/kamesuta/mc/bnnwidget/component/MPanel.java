@@ -28,7 +28,7 @@ public class MPanel extends WPanel {
 		final Area a = getGuiPosition(pgp);
 		RenderHelper.startTexture();
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		texture.bindTexture(background);
+		texture().bindTexture(background);
 
 		drawTexturedModalRect(a.x1(), a.y1(), 0, 0, a.w() / 2, a.h() / 2);
 		drawTexturedModalRect(a.x1() + a.w() / 2, a.y1(), 256 - a.w() / 2, 0, a.w() / 2, a.h() / 2);
