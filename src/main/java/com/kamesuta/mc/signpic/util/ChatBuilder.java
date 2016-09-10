@@ -8,6 +8,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -18,6 +19,7 @@ public class ChatBuilder {
 	public static final int DefaultId = 877;
 
 	private IChatComponent chat = null;
+	private ChatStyle style = null;
 	private String text = "";
 	private Object[] params = new Object[0];
 	private boolean useTranslation = false;
@@ -51,6 +53,8 @@ public class ChatBuilder {
 		} else {
 			chat = this.chat;
 		}
+		if (chat!=null && this.style!=null)
+			chat.setChatStyle(this.style);
 		return chat;
 	}
 
@@ -77,6 +81,11 @@ public class ChatBuilder {
 
 	public ChatBuilder setParams(final Object... params) {
 		this.params = params;
+		return this;
+	}
+
+	public ChatBuilder setStyle(final ChatStyle style) {
+		this.style = style;
 		return this;
 	}
 

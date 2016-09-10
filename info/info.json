@@ -1,21 +1,30 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.1.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.0/SignPicture-1.7.10-2.1.0-universal.jar",
-			"local": "SignPicture-1.7.10-2.1.0-universal.jar",
-			"message": "GUI Update! SignPicture 2.1.0 Released!",
+			"version": "2.1.5",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.5/SignPicture-1.7.10-2.1.5-universal.jar",
+			"local": "SignPicture-1.7.10-2.1.5-universal.jar",
+			"message": "GUI Update! SignPicture 2.1.5 Released!",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.0リリース!!"
+				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
 			}
 		},
-		"1.7.10-beta": {
-			"version": "2.1.1.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.1/SignPicture-1.7.10-2.1.1.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.1.1.beta-universal.jar",
-			"message": "Preview Implements!",
+		"1.8": {
+			"version": "2.1.5",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.5/SignPicture-1.8-2.1.5-universal.jar",
+			"local": "SignPicture-1.8-2.1.5-universal.jar",
+			"message": "GUI Update! SignPicture 2.1.5 Released!",
 			"message_local": {
-				"ja_JP": "プレビュー機能実装! より視覚的に!"
+				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
+			}
+		},
+		"1.9": {
+			"version": "2.1.5",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.5/SignPicture-1.9-2.1.5-universal.jar",
+			"local": "SignPicture-1.9-2.1.5-universal.jar",
+			"message": "GUI Update! SignPicture 2.1.5 Released!",
+			"message_local": {
+				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
 			}
 		}
 	}
