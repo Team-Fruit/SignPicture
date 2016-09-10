@@ -51,7 +51,7 @@ public class SignHandler {
 					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 				}
 			}
-	}
+		}
 
 	@CoreEvent
 	public void onClick(final MouseEvent event) {
