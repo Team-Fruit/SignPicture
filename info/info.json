@@ -2,7 +2,7 @@
 	"versions": {
 		"1.7.10": {
 			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.5/SignPicture-1.7.10-2.1.5-universal.jar",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.1.5/SignPicture-1.7.10-2.1.5-universal.jar",
 			"local": "SignPicture-1.7.10-2.1.5-universal.jar",
 			"message": "GUI Update! SignPicture 2.1.5 Released!",
 			"message_local": {
@@ -11,7 +11,7 @@
 		},
 		"1.8": {
 			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.5/SignPicture-1.8-2.1.5-universal.jar",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8-2.1.5/SignPicture-1.8-2.1.5-universal.jar",
 			"local": "SignPicture-1.8-2.1.5-universal.jar",
 			"message": "GUI Update! SignPicture 2.1.5 Released!",
 			"message_local": {
@@ -20,7 +20,7 @@
 		},
 		"1.9": {
 			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/2.1.5/SignPicture-1.9-2.1.5-universal.jar",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9-2.1.5/SignPicture-1.9-2.1.5-universal.jar",
 			"local": "SignPicture-1.9-2.1.5-universal.jar",
 			"message": "GUI Update! SignPicture 2.1.5 Released!",
 			"message_local": {
