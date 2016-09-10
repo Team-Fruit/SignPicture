@@ -6,8 +6,6 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
-import net.minecraft.client.renderer.GlStateManager;
-
 public class MCheckBox extends MLabel {
 	protected boolean checked = true;
 
@@ -57,7 +55,7 @@ public class MCheckBox extends MLabel {
 			GlStateManager.translate(in.x1()+(in.w()-font().getStringWidth(strcheck))/2, in.y1()+(in.h()-font().FONT_HEIGHT)/2, 0f);
 			//glScalef(2f, 2f, 1f);
 			font().drawStringWithShadow(strcheck, 0, 0, 0xffffff);
-			GlStateManager.popAttrib();
+			GlStateManager.popMatrix();
 		}
 	}
 }
