@@ -27,5 +27,6 @@
 				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
 			}
 		}
-	}
+	},
+	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }
