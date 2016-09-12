@@ -9,6 +9,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -130,8 +131,6 @@ public class ChatBuilder {
 
 	@SideOnly(Side.SERVER)
 	public static void sendServerChat(final ChatBuilder chat) {
-		// TODO
-		//		final ServerConfigurationManager sender = FMLCommonHandler.instance().getMinecraftServerInstance().();
-		//		sender.sendChatMsg(chat.build());
+		FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(chat.build());
 	}
 }
