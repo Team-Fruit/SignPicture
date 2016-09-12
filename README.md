@@ -2,7 +2,9 @@
 [![Latest Release](https://img.shields.io/github/release/Team-Fruit/SignPicture.svg?label=Latest Release)](https://github.com/Team-Fruit/SignPicture/releases)
 
 # Sign Picture
-![Minecraft](https://img.shields.io/badge/Minecraft-1.7.10-yellow.svg)
+![Minecraft 1.7.10](https://img.shields.io/badge/Minecraft-1.7.10-yellow.svg)
+![Minecraft 1.8](https://img.shields.io/badge/Minecraft-1.8-green.svg)
+![Minecraft 1.9](https://img.shields.io/badge/Minecraft-1.9-green.svg)
 
 ## Table of Contents
 
@@ -29,7 +31,7 @@ The sign tells us how beautiful it is!
 
 * Sign Picture
   - (c) 2016 Kamesuta et al
-  - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/LICENSE)
+  - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/LICENSE.md)
 * Textures and Models
   - (c) 2016 Kamesuta et al
   - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%203.0-yellow.svg?style=flat)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
