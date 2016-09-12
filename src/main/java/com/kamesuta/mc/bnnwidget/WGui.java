@@ -59,7 +59,7 @@ public class WGui extends Gui {
 		final float b = (color & 255) / 255.0F;
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.color(r, g, b, a);
 		w.begin(GL_QUADS, DefaultVertexFormats.POSITION);
 		w.pos(Math.min(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
@@ -87,7 +87,7 @@ public class WGui extends Gui {
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.shadeModel(7425);
 		w.begin(7, DefaultVertexFormats.POSITION_COLOR);
 		w.pos(right, top, 0).color(f1, f2, f3, f).endVertex();

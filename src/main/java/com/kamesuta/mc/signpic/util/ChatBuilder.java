@@ -9,7 +9,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -34,9 +33,9 @@ public class ChatBuilder {
 				chat = new TextComponentTranslation(this.text, this.params);
 			else {
 				String s;
-				if (this.useTranslation)
-					s = String.format(I18n.translateToLocal(this.text), this.params);
-				else
+				if (this.useTranslation) {
+					s = String.format(translateToLocal(this.text), this.params);
+				} else
 					s = this.text;
 
 				if (this.useJson)
@@ -52,8 +51,14 @@ public class ChatBuilder {
 			chat = this.chat;
 		}
 		if (chat!=null && this.style!=null)
-			chat.setChatStyle(this.style);
+			chat.setStyle(this.style);
 		return chat;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("deprecation")
+	public static String translateToLocal(final String text) {
+		return net.minecraft.util.text.translation.I18n.translateToLocal(text);
 	}
 
 	public ChatBuilder setId(final int id) {

@@ -51,7 +51,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			final float f1 = 0.6666667F;
 			float f3;
 
-			if (block == Blocks.standing_sign) {
+			if (block == Blocks.STANDING_SIGN) {
 				GlStateManager.translate((float)x + 0.5F, (float)y + 0.75F * f1, (float)z + 0.5F);
 				final float f2 = te.getBlockMetadata() * 360 / 16.0F;
 				GlStateManager.rotate(-f2, 0.0F, 1.0F, 0.0F);
