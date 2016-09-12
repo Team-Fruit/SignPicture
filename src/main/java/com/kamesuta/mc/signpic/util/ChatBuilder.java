@@ -5,6 +5,7 @@ import com.kamesuta.mc.signpic.Client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -131,6 +132,7 @@ public class ChatBuilder {
 
 	@SideOnly(Side.SERVER)
 	public static void sendServerChat(final ChatBuilder chat) {
-		FMLCommonHandler.instance().getMinecraftServerInstance().addChatMessage(chat.build());
+		final PlayerList player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+		player.sendChatMsg(chat.build());
 	}
 }
