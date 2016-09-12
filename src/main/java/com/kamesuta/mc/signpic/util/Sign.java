@@ -127,9 +127,9 @@ public class Sign {
 	public Sign sendSign(final TileEntitySign sourceentity) {
 		writeToEntity(sourceentity);
 		sourceentity.markDirty();
-		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
+		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getConnection();
 		if (nethandlerplayclient != null)
-			nethandlerplayclient.addToSendQueue(new CPacketUpdateSign(sourceentity.getPos(), sourceentity.signText));
+			nethandlerplayclient.sendPacket(new CPacketUpdateSign(sourceentity.getPos(), sourceentity.signText));
 		sourceentity.setEditable(true);
 		return this;
 	}

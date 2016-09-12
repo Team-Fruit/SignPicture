@@ -35,15 +35,15 @@ public class CommandDownloadLatest extends CommandBase {
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender var1, final String[] var2) {
 		if(!ENABLED) {
-			var1.addChatMessage(new TextComponentTranslation("signpic.versioning.disabled").setChatStyle(new Style().setColor(TextFormatting.RED)));
+			var1.addChatMessage(new TextComponentTranslation("signpic.versioning.disabled").setStyle(new Style().setColor(TextFormatting.RED)));
 		} else {
 			final InformationChecker.InfoState state = InformationChecker.state;
 			if (state.doneChecking && state.onlineVersion!=null && !StringUtils.isEmpty(state.onlineVersion.remote))
 			{
 				if(state.downloadedFile)
-					var1.addChatMessage(new TextComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new Style().setColor(TextFormatting.RED)));
+					var1.addChatMessage(new TextComponentTranslation("signpic.versioning.downloadedAlready").setStyle(new Style().setColor(TextFormatting.RED)));
 				else if(state.startedDownload)
-					var1.addChatMessage(new TextComponentTranslation("signpic.versioning.downloadingAlready").setChatStyle(new Style().setColor(TextFormatting.RED)));
+					var1.addChatMessage(new TextComponentTranslation("signpic.versioning.downloadingAlready").setStyle(new Style().setColor(TextFormatting.RED)));
 				else new ThreadDownloadMod();
 			}
 		}

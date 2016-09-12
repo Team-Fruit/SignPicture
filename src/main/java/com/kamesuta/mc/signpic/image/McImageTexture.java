@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class McImageTexture implements IImageTexture {
-	protected static final ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
+	protected static final ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.MISSING_TEXTURE);
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected ResourceLocation location;
 

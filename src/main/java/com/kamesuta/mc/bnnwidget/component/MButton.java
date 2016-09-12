@@ -44,7 +44,7 @@ public class MButton extends WBase {
 				if (this.actionCommand != null)
 					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
 				mc.getSoundHandler()
-				.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.ui_button_click, 1.0F));
+				.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			}
 		}
 	}

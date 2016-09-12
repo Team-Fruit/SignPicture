@@ -14,7 +14,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class SignEntity {
-	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.standing_sign);
+	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.STANDING_SIGN);
 	private boolean renderable = false;
 
 	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing facing)
@@ -26,7 +26,7 @@ public class SignEntity {
 		{
 			pos = pos.offset(facing);
 
-			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, pos))
+			if (!Blocks.STANDING_SIGN.canPlaceBlockAt(worldIn, pos))
 			{
 				return null;
 			}
@@ -36,13 +36,13 @@ public class SignEntity {
 
 				if (facing == EnumFacing.UP)
 				{
-					this.tileSign.setBlockType(Blocks.standing_sign);
+					this.tileSign.setBlockType(Blocks.STANDING_SIGN);
 					final int i = MathHelper.floor_double((playerIn.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
 					this.tileSign.setBlockMetadata(i);
 				}
 				else
 				{
-					this.tileSign.setBlockType(Blocks.wall_sign);
+					this.tileSign.setBlockType(Blocks.WALL_SIGN);
 					this.tileSign.setBlockMetadata(facing.getIndex());
 				}
 
