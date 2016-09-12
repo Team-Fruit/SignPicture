@@ -35,7 +35,7 @@ public class SignPicRender extends WGui {
 			if (CurrentMode.instance.getSign().preview.isRenderable()) {
 				final TileEntitySign tile = CurrentMode.instance.getSign().updatePreview().preview.getRenderTileEntity();
 				final BlockPos pos = tile.getPos();
-				Client.renderer.func_180541_a(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1);
+				Client.renderer.renderTileEntityAt(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1);
 			}
 		}
 	}

@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
@@ -60,11 +61,11 @@ public class WGui extends Gui {
 		GlStateManager.disableTexture2D();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		GlStateManager.color(r, g, b, a);
-		w.startDrawingQuads();;
-		w.addVertex(Math.min(x1, x2), Math.max(y1, y2), 0.0D);
-		w.addVertex(Math.max(x1, x2), Math.max(y1, y2), 0.0D);
-		w.addVertex(Math.max(x1, x2), Math.min(y1, y2), 0.0D);
-		w.addVertex(Math.min(x1, x2), Math.min(y1, y2), 0.0D);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+		w.pos(Math.min(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
+		w.pos(Math.max(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
+		w.pos(Math.max(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
+		w.pos(Math.min(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -88,13 +89,13 @@ public class WGui extends Gui {
 		GlStateManager.disableAlpha();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		GlStateManager.shadeModel(GL_SMOOTH);
-		w.startDrawingQuads();
-		w.setColorRGBA_F(r1, g1, b1, a1);
-		w.addVertex(x2, y1, 0);
-		w.addVertex(x1, y1, 0);
-		w.setColorRGBA_F(r2, g2, b2, a2);
-		w.addVertex(x1, y2, 0);
-		w.addVertex(x2, y2, 0);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+		GlStateManager.color(r1, g1, b1, a1);
+		w.pos(x2, y1, 0).endVertex();;
+		w.pos(x1, y1, 0);
+		GlStateManager.color(r2, g2, b2, a2);
+		w.pos(x1, y2, 0);
+		w.pos(x2, y2, 0);
 		t.draw();
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.disableBlend();
@@ -131,21 +132,21 @@ public class WGui extends Gui {
 	{
 		final float f = 0.00390625F;
 		final float f1 = 0.00390625F;
-		w.startDrawingQuads();
-		w.addVertexWithUV(x + 0, y + height, 0, (u + 0) * f, (v + height) * f1);
-		w.addVertexWithUV(x + width, y + height, 0, (u + width) * f, (v + height) * f1);
-		w.addVertexWithUV(x + width, y + 0, 0, (u + width) * f, (v + 0) * f1);
-		w.addVertexWithUV(x + 0, y + 0, 0, (u + 0) * f, (v + 0) * f1);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x + 0, y + height, 0).tex((u + 0) * f, (v + height) * f1).endVertex();
+		w.pos(x + width, y + height, 0).tex((u + width) * f, (v + height) * f1).endVertex();
+		w.pos(x + width, y + 0, 0).tex((u + width) * f, (v + 0) * f1).endVertex();
+		w.pos(x + 0, y + 0, 0).tex((u + 0) * f, (v + 0) * f1).endVertex();
 		t.draw();
 	}
 
 	public static void drawTexturedModelRectFromIcon(final float x, final float y, final TextureAtlasSprite image, final float width, final float height)
 	{
-		w.startDrawingQuads();
-		w.addVertexWithUV(x + 0, y + height, 0, image.getMinU(), image.getMaxV());
-		w.addVertexWithUV(x + width, y + height, 0, image.getMaxU(), image.getMaxV());
-		w.addVertexWithUV(x + width, y + 0, 0, image.getMaxU(), image.getMinV());
-		w.addVertexWithUV(x + 0, y + 0, 0, image.getMinU(), image.getMinV());
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x + 0, y + height, 0).tex(image.getMinU(), image.getMaxV()).endVertex();
+		w.pos(x + width, y + height, 0).tex(image.getMaxU(), image.getMaxV()).endVertex();
+		w.pos(x + width, y + 0, 0).tex(image.getMaxU(), image.getMinV()).endVertex();
+		w.pos(x + 0, y + 0, 0).tex(image.getMinU(), image.getMinV()).endVertex();
 		t.draw();
 	}
 
@@ -153,11 +154,11 @@ public class WGui extends Gui {
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
-		w.startDrawingQuads();
-		w.addVertexWithUV(x, y + height, 0.0D, u * mulu, (v + height) * mulv);
-		w.addVertexWithUV(x + width, y + height, 0.0D, (u + width) * mulu, (v + height) * mulv);
-		w.addVertexWithUV(x + width, y, 0.0D, (u + width) * mulu, v * mulv);
-		w.addVertexWithUV(x, y, 0.0D, u * mulu, v * mulv);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x, y + height, 0.0D).tex(u * mulu, (v + height) * mulv).endVertex();
+		w.pos(x + width, y + height, 0.0D).tex((u + width) * mulu, (v + height) * mulv).endVertex();
+		w.pos(x + width, y, 0.0D).tex((u + width) * mulu, v * mulv).endVertex();
+		w.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
 		t.draw();
 	}
 
@@ -165,20 +166,20 @@ public class WGui extends Gui {
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
-		w.startDrawingQuads();
-		w.addVertexWithUV(x, y + height, 0.0D, u * mulu, (v + vheight) * mulv);
-		w.addVertexWithUV(x + width, y + height, 0.0D, (u + uwidth) * mulu, (v + vheight) * mulv);
-		w.addVertexWithUV(x + width, y, 0.0D, (u + uwidth) * mulu, v * mulv);
-		w.addVertexWithUV(x, y, 0.0D, u * mulu, v * mulv);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(x, y + height, 0.0D).tex(u * mulu, (v + vheight) * mulv).endVertex();
+		w.pos(x + width, y + height, 0.0D).tex((u + uwidth) * mulu, (v + vheight) * mulv).endVertex();
+		w.pos(x + width, y, 0.0D).tex((u + uwidth) * mulu, v * mulv).endVertex();
+		w.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
 		t.draw();
 	}
 
 	public static void draw(final Area p, final int mode) {
-		w.startDrawing(mode);
-		w.addVertex(p.x1(), p.y1(), 0);
-		w.addVertex(p.x1(), p.y2(), 0);
-		w.addVertex(p.x2(), p.y2(), 0);
-		w.addVertex(p.x2(), p.y1(), 0);
+		w.begin(mode, DefaultVertexFormats.POSITION);
+		w.pos(p.x1(), p.y1(), 0);
+		w.pos(p.x1(), p.y2(), 0);
+		w.pos(p.x2(), p.y2(), 0);
+		w.pos(p.x2(), p.y1(), 0);
 		t.draw();
 	}
 
@@ -199,11 +200,11 @@ public class WGui extends Gui {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		w.startDrawingQuads();
-		w.addVertex(a.x1(), a.y2(), .0);
-		w.addVertex(a.x2(), a.y2(), .0);
-		w.addVertex(a.x2(), a.y1(), .0);
-		w.addVertex(a.x1(), a.y1(), .0);
+		w.begin(7, DefaultVertexFormats.POSITION);
+		w.pos(a.x1(), a.y2(), .0);
+		w.pos(a.x2(), a.y2(), .0);
+		w.pos(a.x2(), a.y1(), .0);
+		w.pos(a.x1(), a.y1(), .0);
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -253,11 +254,11 @@ public class WGui extends Gui {
 	{
 		final float f = 0.00390625F;
 		final float f1 = 0.00390625F;
-		w.startDrawingQuads();
-		w.addVertexWithUV(a.x1(), a.y2(), 0, texture.x1() * f, texture.y2() * f1);
-		w.addVertexWithUV(a.x2(), a.y2(), 0, texture.x2() * f, texture.y2() * f1);
-		w.addVertexWithUV(a.x2(), a.y1(), 0, texture.x2() * f, texture.y1() * f1);
-		w.addVertexWithUV(a.x1(), a.y1(), 0, texture.x1() * f, texture.y1() * f1);
+		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		w.pos(a.x1(), a.y2(), 0).tex(texture.x1() * f, texture.y2() * f1).endVertex();
+		w.pos(a.x2(), a.y2(), 0).tex(texture.x2() * f, texture.y2() * f1).endVertex();
+		w.pos(a.x2(), a.y1(), 0).tex(texture.x2() * f, texture.y1() * f1).endVertex();
+		w.pos(a.x1(), a.y1(), 0).tex(texture.x1() * f, texture.y1() * f1).endVertex();
 		t.draw();
 	}
 
