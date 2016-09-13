@@ -72,7 +72,8 @@ public class Sign {
 	public Sign parseSignText(final ITextComponent[] sign) {
 		final StringBuilder stb = new StringBuilder();
 		for (final ITextComponent c : sign)
-			stb.append(c.getUnformattedText());
+			if (c != null)
+				stb.append(c.getUnformattedText());
 		return parseText(stb.toString());
 	}
 
