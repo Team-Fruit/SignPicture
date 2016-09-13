@@ -9,7 +9,6 @@ import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSign;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
@@ -52,9 +51,8 @@ public class Client {
 	public static TileEntitySign getTileSignLooking() {
 		if (mc.objectMouseOver != null) {
 			final BlockPos pos = mc.objectMouseOver.getBlockPos();
-			final IBlockState blockstate = mc.theWorld.getBlockState(pos);
-			if (blockstate!=null) {
-				final Block block = blockstate.getBlock();
+			if (pos!=null) {
+				final Block block = mc.theWorld.getBlockState(pos).getBlock();
 				if (block instanceof BlockSign) {
 					final TileEntity tile = mc.theWorld.getTileEntity(pos);
 					if (tile instanceof TileEntitySign)
