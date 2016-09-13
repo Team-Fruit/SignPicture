@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.JsonSyntaxException;
 import com.kamesuta.mc.signpic.Client;
 
@@ -19,7 +21,7 @@ public class ChatBuilder {
 	public static final int DefaultId = 877;
 
 	private IChatComponent chat = null;
-	private ChatStyle style = null;
+	private final ChatStyle style = null;
 	private String text = "";
 	private Object[] params = new Object[0];
 	private boolean useTranslation = false;
@@ -56,6 +58,10 @@ public class ChatBuilder {
 		if (chat!=null && this.style!=null)
 			chat.setChatStyle(this.style);
 		return chat;
+	}
+
+	public boolean isEmpty() {
+		return !StringUtils.isEmpty(this.text) || (this.chat!=null && !StringUtils.isEmpty(this.chat.getUnformattedText()));
 	}
 
 	public ChatBuilder setId(final int id) {
@@ -100,7 +106,8 @@ public class ChatBuilder {
 
 	@SideOnly(Side.CLIENT)
 	public void chatClient() {
-		chatClient(this);
+		if (!isEmpty())
+			chatClient(this);
 	}
 
 	@SideOnly(Side.CLIENT)
