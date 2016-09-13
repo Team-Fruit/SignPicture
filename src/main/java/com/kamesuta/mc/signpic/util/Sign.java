@@ -72,7 +72,8 @@ public class Sign {
 	public Sign parseSignText(final IChatComponent[] sign) {
 		final StringBuilder stb = new StringBuilder();
 		for (final IChatComponent c : sign)
-			stb.append(c.getUnformattedText());
+			if (c!=null)
+				stb.append(c.getUnformattedText());
 		return parseText(stb.toString());
 	}
 
