@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic;
 
 import java.io.File;
 
+import org.apache.commons.lang3.Validate;
+
 import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.image.ImageManager;
@@ -9,10 +11,12 @@ import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSign;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class Client {
@@ -49,17 +53,52 @@ public class Client {
 	}
 
 	public static TileEntitySign getTileSignLooking() {
-		if (mc.objectMouseOver != null) {
-			final BlockPos pos = mc.objectMouseOver.getBlockPos();
-			if (pos!=null) {
-				final Block block = mc.theWorld.getBlockState(pos).getBlock();
-				if (block instanceof BlockSign) {
-					final TileEntity tile = mc.theWorld.getTileEntity(pos);
-					if (tile instanceof TileEntitySign)
-						return (TileEntitySign)tile;
-				}
-			}
+		if (MovePos.getBlock() instanceof BlockSign) {
+			final TileEntity tile = MovePos.getTile();
+			if (tile instanceof TileEntitySign)
+				return (TileEntitySign)tile;
 		}
 		return null;
+	}
+
+	public static class MovePos {
+		public BlockPos pos;
+
+		public MovePos(final BlockPos pos) {
+			Validate.notNull(pos, "MovePos needs position");
+			this.pos = pos;
+		}
+
+		public static MovingObjectPosition getMovingPos() {
+			return mc.objectMouseOver;
+		}
+
+		public static MovePos getBlockPos() {
+			final MovingObjectPosition movingPos = getMovingPos();
+			if (movingPos != null)
+				return new MovePos(movingPos.getBlockPos());
+			return null;
+		}
+
+		public static IBlockState getBlockState() {
+			final MovePos movePos = getBlockPos();
+			if (movePos != null)
+				return mc.theWorld.getBlockState(movePos.pos);
+			return null;
+		}
+
+		public static TileEntity getTile() {
+			final MovePos movePos = getBlockPos();
+			if (movePos != null)
+				return mc.theWorld.getTileEntity(movePos.pos);
+			return null;
+		}
+
+		public static Block getBlock() {
+			final IBlockState blockState = getBlockState();
+			if (blockState != null)
+				return blockState.getBlock();
+			return null;
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.preview;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Client.MovePos;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -59,9 +60,11 @@ public class SignEntity {
 
 	public TileEntitySign capturePlace() {
 		final Minecraft mc = Client.mc;
-		final MovingObjectPosition over = mc.objectMouseOver;
-		if (over != null && mc.thePlayer != null) {
-			return onItemUse(mc.thePlayer, mc.theWorld, over.getBlockPos(), over.sideHit);
+		if (mc.thePlayer != null) {
+			final MovingObjectPosition m = MovePos.getMovingPos();
+			final MovePos p = MovePos.getBlockPos();
+			if (m!=null && p!=null)
+				return onItemUse(mc.thePlayer, mc.theWorld, p.pos, m.sideHit);
 		}
 		return null;
 	}
