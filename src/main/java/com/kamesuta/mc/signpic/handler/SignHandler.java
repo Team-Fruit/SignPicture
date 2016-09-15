@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -41,8 +42,18 @@ public class SignHandler {
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
 						CurrentMode.instance.getSign().sendSign(tileSign);
 						event.setCanceled(true);
-						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
+						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 							CurrentMode.instance.setMode();
+							final SignEntity se = CurrentMode.instance.getSign().preview;
+							if (se.isRenderable()) {
+								final TileEntitySign preview = se.getTileEntity();
+								if (preview.xCoord==tileSign.xCoord && preview.yCoord==tileSign.yCoord && preview.zCoord==tileSign.zCoord) {
+									CurrentMode.instance.getSign().preview.setVisible(false);
+									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+									CurrentMode.instance.setState(CurrentMode.State.SEE, false);
+								}
+							}
+						}
 					} catch (final Exception e) {
 						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
 						ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
@@ -51,7 +62,7 @@ public class SignHandler {
 					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 				}
 			}
-		}
+	}
 
 	@CoreEvent
 	public void onClick(final MouseEvent event) {

@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.preview;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Client.MovePos;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +14,7 @@ import net.minecraft.world.World;
 public class SignEntity {
 	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.standing_sign);
 	private boolean renderable = false;
+	private boolean visible = false;
 
 	private PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, int x, int y, int z, final int direction)
 	{
@@ -82,9 +84,13 @@ public class SignEntity {
 
 	public TileEntitySign capturePlace() {
 		final Minecraft mc = Client.mc;
-		final MovingObjectPosition over = mc.objectMouseOver;
-		if (over != null && mc.thePlayer != null) {
-			return onItemUse(mc.thePlayer, mc.theWorld, over.blockX, over.blockY, over.blockZ, over.sideHit);
+		if (mc.thePlayer != null) {
+			final MovingObjectPosition m = MovePos.getMovingPos();
+			final MovePos p = MovePos.getBlockPos();
+			if (m!=null && p!=null) {
+				setVisible(true);
+				return onItemUse(mc.thePlayer, mc.theWorld, p.x, p.y, p.z, m.sideHit);
+			}
 		}
 		return null;
 	}
@@ -100,5 +106,13 @@ public class SignEntity {
 
 	public boolean isRenderable() {
 		return this.renderable;
+	}
+
+	public boolean isVisible() {
+		return this.visible;
+	}
+
+	public void setVisible(final boolean visible) {
+		this.visible = visible;
 	}
 }

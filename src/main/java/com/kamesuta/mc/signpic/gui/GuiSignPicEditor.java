@@ -146,6 +146,8 @@ public class GuiSignPicEditor extends WFrame {
 								if (!state) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.SETPREVIEW);
 									requestClose();
+								} else {
+									CurrentMode.instance.getSign().preview.setVisible(false);
 								}
 								return true;
 							}

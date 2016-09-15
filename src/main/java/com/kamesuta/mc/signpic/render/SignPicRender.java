@@ -31,11 +31,14 @@ public class SignPicRender extends WGui {
 
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
-		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
-			if (CurrentMode.instance.getSign().preview.isRenderable()) {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW))
+			CurrentMode.instance.getSign().preview.capturePlace();
+		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
+			if (CurrentMode.instance.getSign().preview.isRenderable() && CurrentMode.instance.getSign().preview.isVisible()) {
 				final TileEntitySign tile = CurrentMode.instance.getSign().updatePreview().preview.getRenderTileEntity();
 				Client.renderer.renderTileEntityAt(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks);
 			}
+		}
 	}
 
 	@CoreEvent
