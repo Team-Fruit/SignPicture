@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.handler;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.SignEntryManager;
 import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.SignPicRender;
@@ -20,6 +21,7 @@ public class CoreHandler {
 	public final KeyHandler keyHandler = new KeyHandler();
 	public final SignHandler signHandler = new SignHandler();
 	public final ImageManager imageHandler = Client.manager;
+	public final SignEntryManager tickHandler = SignEntryManager.instance;
 	public final SignPicRender renderHandler = new SignPicRender(this.imageHandler);
 	public final InformationChecker informationHandler = new InformationChecker();
 
@@ -68,6 +70,7 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
+		this.tickHandler.onTick();
 		this.informationHandler.onTick(event);
 	}
 }
