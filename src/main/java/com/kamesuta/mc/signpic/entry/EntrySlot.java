@@ -1,13 +1,14 @@
 package com.kamesuta.mc.signpic.entry;
 
-class CollectableSignEntry<T extends ICollectableEntry> implements ICollectableEntry {
+class EntrySlot<T extends IInitableEntry & ICollectableEntry & ILoadEntry> implements IInitableEntry, ICollectableEntry, ILoadEntry {
 	public static int CollectTimes = 20 * 15;
 	public static long times = 0;
 
+	private boolean init = true;
 	private final T entry;
 	private long time = 0;
 
-	public CollectableSignEntry(final T entry) {
+	public EntrySlot(final T entry) {
 		this.entry = entry;
 		used();
 	}
@@ -17,9 +18,19 @@ class CollectableSignEntry<T extends ICollectableEntry> implements ICollectableE
 		return this.entry;
 	}
 
-	public CollectableSignEntry<T> used() {
+	public EntrySlot<T> used() {
 		this.time = times;
 		return this;
+	}
+
+	public boolean shouldInit() {
+		return this.init;
+	}
+
+	@Override
+	public void onInit() {
+		this.init = false;
+		this.entry.onInit();
 	}
 
 	public boolean shouldCollect() {
@@ -29,6 +40,11 @@ class CollectableSignEntry<T extends ICollectableEntry> implements ICollectableE
 	@Override
 	public void onCollect() {
 		this.entry.onCollect();
+	}
+
+	@Override
+	public void onProcess() {
+		this.entry.onProcess();
 	}
 
 	public static void Tick() {

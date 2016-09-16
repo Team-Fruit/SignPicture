@@ -13,15 +13,15 @@ public class SignEntryManager implements ITickEntry {
 	public static final SignEntryManager instance = new SignEntryManager();
 
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
-	private final Map<String, CollectableSignEntry<SignEntry>> registry = Maps.newHashMap();
+	private final Map<String, EntrySlot<SignEntry>> registry = Maps.newHashMap();
 
 	public SignEntry get(final String id) {
-		final CollectableSignEntry<SignEntry> entries = this.registry.get(id);
+		final EntrySlot<SignEntry> entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
 		else {
 			final SignEntry entry = new SignEntry(id);
-			this.registry.put(id, new CollectableSignEntry<SignEntry>(entry));
+			this.registry.put(id, new EntrySlot<SignEntry>(entry));
 			return entry;
 		}
 	}
@@ -29,14 +29,28 @@ public class SignEntryManager implements ITickEntry {
 	@CoreEvent
 	@Override
 	public void onTick() {
-		CollectableSignEntry.Tick();
-		for (final Iterator<Entry<String, CollectableSignEntry<SignEntry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
-			final Entry<String, CollectableSignEntry<SignEntry>> entry = itr.next();
-			final CollectableSignEntry<SignEntry> collectableSignEntry = entry.getValue();
+		EntrySlot.Tick();
+		for (final Iterator<Entry<String, EntrySlot<SignEntry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
+			final Entry<String, EntrySlot<SignEntry>> entry = itr.next();
+			final EntrySlot<SignEntry> collectableSignEntry = entry.getValue();
+
+			if (collectableSignEntry.shouldInit()) {
+				collectableSignEntry.onInit();
+				executeProcess(collectableSignEntry);
+			}
 			if (collectableSignEntry.shouldCollect()) {
 				collectableSignEntry.onCollect();
 				itr.remove();
 			}
 		}
+	}
+
+	private void executeProcess(final ILoadEntry entry) {
+		this.threadpool.execute(new Runnable() {
+			@Override
+			public void run() {
+				entry.onProcess();
+			}
+		});
 	}
 }
