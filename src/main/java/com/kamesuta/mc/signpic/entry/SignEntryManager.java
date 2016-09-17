@@ -13,9 +13,9 @@ public class SignEntryManager implements ITickEntry {
 	public static final SignEntryManager instance = new SignEntryManager();
 
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
-	private final Map<String, EntrySlot<SignEntry>> registry = Maps.newHashMap();
+	private final Map<EntryId, EntrySlot<SignEntry>> registry = Maps.newHashMap();
 
-	public SignEntry get(final String id) {
+	public SignEntry get(final EntryId id) {
 		final EntrySlot<SignEntry> entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
@@ -30,8 +30,8 @@ public class SignEntryManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		EntrySlot.Tick();
-		for (final Iterator<Entry<String, EntrySlot<SignEntry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
-			final Entry<String, EntrySlot<SignEntry>> entry = itr.next();
+		for (final Iterator<Entry<EntryId, EntrySlot<SignEntry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
+			final Entry<EntryId, EntrySlot<SignEntry>> entry = itr.next();
 			final EntrySlot<SignEntry> collectableSignEntry = entry.getValue();
 
 			if (collectableSignEntry.shouldInit()) {

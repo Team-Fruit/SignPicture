@@ -1,32 +1,40 @@
 package com.kamesuta.mc.signpic.entry;
 
+import net.minecraft.client.resources.I18n;
+
 public class SignEntry implements IInitableEntry, ICollectableEntry, ILoadEntry {
-	public final String id;
+	public final EntryId id;
 	public EntryState state = EntryState.INIT;
 
-	public SignEntry(final String id) {
+	public SignEntry(final EntryId id) {
 		this.id = id;
 	}
 
 	@Override
 	public void onInit() {
-		// TODO 自動生成されたメソッド・スタブ
-	
+		this.state = EntryState.INITALIZED;
 	}
 
 	@Override
 	public void onProcess() {
-		// TODO 自動生成されたメソッド・スタブ
 
 	}
 
 	@Override
-	public void onCollect() {
-		// TODO 自動生成されたメソッド・スタブ
-	
-	}
+	public void onCollect() {}
 
+	@Override
 	public EntryState getState() {
 		return this.state;
+	}
+
+	@Override
+	public float getProgress() {
+		return 0;
+	}
+
+	@Override
+	public String getStateMessage() {
+		return I18n.format(this.state.msg, (int) (getProgress()*100));
 	}
 }
