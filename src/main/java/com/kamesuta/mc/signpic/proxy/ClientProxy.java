@@ -9,7 +9,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
-import com.kamesuta.mc.signpic.image.ImageLocation;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
@@ -50,9 +49,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		// Setup image
-		final ContentManager manager = new ContentManager(new ImageLocation(cachedir));
-		Client.manager = manager;
-		Client.renderer = new CustomTileEntitySignRenderer(manager);
+		Client.renderer = new CustomTileEntitySignRenderer(ContentManager.instance);
 
 		Client.mcversion = MinecraftForge.MC_VERSION;
 		Client.forgeversion = ForgeVersion.getVersion();

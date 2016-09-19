@@ -9,8 +9,9 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -32,28 +33,28 @@ public class SignPicLabel extends WBase {
 		if (s.isVaild()) {
 			final String id = s.getURL();
 			if (s != null && !StringUtils.isEmpty(id)) {
-				final Image image = this.manager.get(id);
-				if (image != null) {
+				final Content content = this.manager.get(new ContentId(id));
+				if (content != null) {
 					RenderHelper.startTexture();
 					glDisable(GL_CULL_FACE);
 					glPushMatrix();
 					translate(a);
 
-					final ImageSize siz = new ImageSize().setAspectSize(this.sign.meta.size, image.getSize());
+					final ImageSize siz = new ImageSize().setAspectSize(this.sign.meta.size, content.image.getSize());
 					final ImageSize size = new ImageSize().setSize(ImageSizes.INNER, siz, new ImageSize().setArea(a));
 
 					glPushMatrix();
 					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
 					glScalef(size.width, size.height, 1f);
-					image.getState().mainImage(this.manager, image);
+					//content.state.mainImage(this.manager, content.image);
 					glPopMatrix();
 
 					glPushMatrix();
 					glTranslatef(a.w()/2, a.h()/2, 0);
 					//glScalef(size.width, size.height, 1f);
 					glScalef(25f, 25f, 1f);
-					image.getState().themeImage(this.manager, image);
-					image.getState().message(this.manager, image, font());
+					//content.state.themeImage(this.manager, content.image);
+					//content.state.message(this.manager, content.image, font());
 					glPopMatrix();
 
 					glPopMatrix();

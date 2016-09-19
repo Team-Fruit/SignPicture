@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.handler;
 
-import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.SignEntryManager;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -21,8 +20,9 @@ import net.minecraftforge.common.MinecraftForge;
 public class CoreHandler {
 	public final KeyHandler keyHandler = new KeyHandler();
 	public final SignHandler signHandler = new SignHandler();
-	public final ContentManager imageHandler = Client.manager;
-	public final SignEntryManager tickHandler = SignEntryManager.instance;
+	public final ContentManager imageHandler = ContentManager.instance;
+	public final SignEntryManager signEntryManager = SignEntryManager.instance;
+	public final ContentManager contentManager = ContentManager.instance;
 	public final SignPicRender renderHandler = new SignPicRender(this.imageHandler);
 	public final InformationChecker informationHandler = new InformationChecker();
 
@@ -41,7 +41,6 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onRenderTick(final TickEvent.RenderTickEvent event) {
-		this.imageHandler.onRenderTick(event);
 	}
 
 	@SubscribeEvent
@@ -71,8 +70,9 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
-		this.tickHandler.onTick();
-		EntrySlot.Tick();
+		this.signEntryManager.onTick();
+		this.contentManager.onTick();
 		this.informationHandler.onTick(event);
+		EntrySlot.Tick();
 	}
 }

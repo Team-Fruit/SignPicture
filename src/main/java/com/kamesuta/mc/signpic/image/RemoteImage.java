@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import org.lwjgl.util.Timer;
-
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -16,14 +14,10 @@ import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
-	public static final float ImageGarbageCollection = 15f;
-
 	protected final ContentLocation location;
 	protected ImageTextures texture;
 	protected ContentState state;
-	protected ImageIOLoader ioloading;
 	protected File local;
-	protected final Timer lastloaded = new Timer();
 	protected boolean isTextureLoaded;
 	protected boolean isAvailable;
 
@@ -34,33 +28,29 @@ public class RemoteImage extends Image {
 		this.local = location.localLocation(path);
 	}
 
-	public void load() {
-		new ImageLoader(this, this.location).onAsyncProcess();
-	}
-
-	protected void textureload() {
-		ContentManager.instance.divisionqueue.offer(this);
-	}
-
 	protected int processing = 0;
 	@Override
 	public boolean onDivisionProcess() {
-		final List<ImageTexture> texs = this.texture.getAll();
-		if (this.processing < texs.size()) {
-			final ImageTexture tex = texs.get(this.processing);
-			tex.load();
-			this.processing++;
-			return false;
-		} else {
-			this.isAvailable = true;
-			return true;
+		if (this.isTextureLoaded) {
+			final List<ImageTexture> texs = this.texture.getAll();
+			if (this.processing < texs.size()) {
+				final ImageTexture tex = texs.get(this.processing);
+				tex.load();
+				this.processing++;
+				return false;
+			} else {
+				this.isAvailable = true;
+				return true;
+			}
 		}
+		throw new IllegalStateException("No Texture Loaded");
 	}
 
 	@Override
 	public void onAsyncProcess() {
 		try {
 			new ImageIOLoader(this, this.local).load();
+			ContentManager.instance.divisionqueue.offer(this);
 		} catch (final InvaildImageException e) {
 			this.state.setType(ContentStateType.ERROR);
 			this.state.setMessage(I18n.format("signpic.advmsg.invaildimage"));
@@ -80,34 +70,12 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
-	public float getProgress() {
-		switch(this.state) {
-		case AVAILABLE:
-		case DOWNLOADED:
-		case IOLOADED:
-		case TEXTURELOADED:
-			return 1f;
-		case DOWNLOADING:
-			if (this.downloading != null)
-				return this.downloading.getProgress();
-		case IOLOADING:
-			if (this.ioloading != null)
-				return this.ioloading.getProgress();
-		case TEXTURELOADING:
-			if (this.texture != null && !this.texture.getAll().isEmpty())
-				return  (float)this.processing / this.texture.getAll().size();
-		default:
-			return 0;
-		}
-	}
-
-	@Override
 	public IImageTexture getTexture() throws IllegalStateException {
 		return getTextures().get();
 	}
 
 	public ImageTextures getTextures() {
-		if (this.state == ImageState.AVAILABLE)
+		if (this.isAvailable)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
@@ -116,7 +84,7 @@ public class RemoteImage extends Image {
 	@Override
 	public String getLocal() {
 		if (this.local != null)
-			return "File:"+this.local.getName();
+			return "File:" + this.local.getName();
 		else
 			return "None";
 	}

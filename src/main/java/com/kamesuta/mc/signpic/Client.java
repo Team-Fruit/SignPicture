@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic;
 
 import java.io.File;
 
-import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -18,7 +17,6 @@ import net.minecraft.util.MovingObjectPosition;
 public class Client {
 	public final static Minecraft mc = FMLClientHandler.instance().getClient();
 
-	public static ContentManager manager;
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
 

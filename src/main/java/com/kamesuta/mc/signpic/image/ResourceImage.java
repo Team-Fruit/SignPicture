@@ -16,15 +16,6 @@ public class ResourceImage extends Image {
 	}
 
 	@Override
-	public void process() {
-	}
-
-	@Override
-	public float getProgress() {
-		return 1f;
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -62,5 +53,18 @@ public class ResourceImage extends Image {
 	@Override
 	public IImageTexture getTexture() {
 		return this.texture;
+	}
+
+	@Override
+	public void onAsyncProcess() {
+	}
+
+	@Override
+	public boolean onDivisionProcess() {
+		return true;
+	}
+
+	@Override
+	public void onCollect() {
 	}
 }

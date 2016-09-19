@@ -3,8 +3,9 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -42,10 +43,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Load Image
-			final Image image = this.manager.get(sign.getURL());
+			final Content content = this.manager.get(new ContentId(sign.getURL()));
 
 			// Size
-			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, image.getSize());
+			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, content.image.getSize());
 
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
@@ -83,7 +84,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPushMatrix();
 			glScalef(size.width, size.height, 1f);
-			image.getState().mainImage(this.manager, image);
+			//content.state.getType().mainImage(this.manager, content.image);
 			glPopMatrix();
 
 			if (size.width<1.5f || size.height<1.5) {
@@ -92,8 +93,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 			glTranslatef(size.width/2, size.height/2, 0);
 			glScalef(.5f, .5f, 1f);
-			image.getState().themeImage(this.manager, image);
-			image.getState().message(this.manager, image, func_147498_b());
+			//image.getState().themeImage(this.manager, image);
+			//image.getState().message(this.manager, image, func_147498_b());
 
 			glPopMatrix();
 

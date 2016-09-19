@@ -4,9 +4,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
-import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -21,7 +22,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public class SignPicRender extends WGui {
-	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
+	public static final ContentId resSign = ContentId.fromResource(new ResourceLocation("textures/items/sign.png"));
 
 	protected final ContentManager manager;
 
@@ -55,7 +56,7 @@ public class SignPicRender extends WGui {
 
 					glPushMatrix();
 					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
-					this.manager.get(resSign).draw();
+					this.manager.get(resSign).image.draw();
 					glPopMatrix();
 
 					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
@@ -76,21 +77,21 @@ public class SignPicRender extends WGui {
 				if (sign.isVaild()) {
 					final String id = sign.getURL();
 					final ImageSize signsize = sign.meta.size;
-					final Image image = this.manager.get(id);
-					final ImageSize imagesize = image.getSize();
+					final Content content = this.manager.get(new ContentId(id));
+					final ImageSize imagesize = content.image.getSize();
 					final ImageSize viewsize = new ImageSize().setAspectSize(sign.meta.size, imagesize);
-					final String advmsg = image.advMessage();
+					final String advmsg = content.state.getMessage();
 
 					event.left.add("");
 					event.left.add(I18n.format("signpic.over.sign", sign.text()));
 					event.left.add(I18n.format("signpic.over.id", id));
 					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
-					event.left.add(I18n.format("signpic.over.status", image.getStatusMessage()));
+					event.left.add(I18n.format("signpic.over.status", content.state.getMessage()));
 					if (advmsg != null)
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
 					if (tilesign.signText != null)
 						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
-					event.left.add(I18n.format("signpic.over.local", image.getLocal()));
+					event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
 				}
 			}
 		}

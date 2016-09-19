@@ -15,13 +15,14 @@ public class Content implements IInitableEntry, ICollectableEntry, IAsyncProcess
 	public ContentState state;
 	public Image image;
 
+
 	public Content(final ContentId id) {
 		this.id = id;
 		this.state = new ContentState();
 		if (id.isResource())
 			this.image = new ResourceImage(id);
 		else
-			this.image = new RemoteImage(id, location);
+			this.image = new RemoteImage(location, id, this.state);
 	}
 
 	@Override
