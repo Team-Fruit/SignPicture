@@ -6,6 +6,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -84,7 +85,22 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPushMatrix();
 			glScalef(size.width, size.height, 1f);
-			//content.state.getType().mainImage(this.manager, content.image);
+			if (content.state.getType() == ContentStateType.AVAILABLE) {
+				content.image.draw();
+			} else {
+				final Tessellator t = Tessellator.instance;
+				RenderHelper.startShape();
+				glLineWidth(1f);
+				glColor4f(1.0F, 0.0F, 0.0F, 1.0F);
+				t.startDrawing(GL_LINE_LOOP);
+				t.addVertex(0, 0, 0);
+				t.addVertex(0, 1, 0);
+				t.addVertex(1, 1, 0);
+				t.addVertex(1, 0, 0);
+				t.draw();
+			}
+			// TODO
+			glEnable(GL_TEXTURE_2D);
 			glPopMatrix();
 
 			if (size.width<1.5f || size.height<1.5) {

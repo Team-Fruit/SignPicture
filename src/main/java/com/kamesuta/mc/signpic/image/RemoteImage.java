@@ -19,7 +19,6 @@ public class RemoteImage extends Image {
 	protected ContentState state;
 	protected File local;
 	protected boolean isTextureLoaded;
-	protected boolean isAvailable;
 
 	public RemoteImage(final ContentLocation location, final ContentId path, final ContentState state) {
 		super(path);
@@ -39,6 +38,7 @@ public class RemoteImage extends Image {
 				this.processing++;
 				return false;
 			} else {
+				this.state.setType(ContentStateType.AVAILABLE);
 				this.isAvailable = true;
 				return true;
 			}
@@ -87,31 +87,6 @@ public class RemoteImage extends Image {
 			return "File:" + this.local.getName();
 		else
 			return "None";
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof RemoteImage))
-			return false;
-		final Image other = (Image) obj;
-		if (this.path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!this.path.equals(other.path))
-			return false;
-		return true;
 	}
 
 	@Override

@@ -33,8 +33,11 @@ public class Content implements IInitableEntry, ICollectableEntry, IAsyncProcess
 	@Override
 	public void onAsyncProcess() {
 		new ContentDownloader(location, this.id, this.state).onAsyncProcess();
+		this.image.onAsyncProcess();
 	}
 
 	@Override
-	public void onCollect() {}
+	public void onCollect() {
+		this.image.onCollect();
+	}
 }

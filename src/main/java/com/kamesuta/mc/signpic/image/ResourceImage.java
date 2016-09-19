@@ -12,32 +12,6 @@ public class ResourceImage extends Image {
 		super(path);
 		this.location = path.getResource();
 		this.texture = new McImageTexture(this.location);
-		this.state = ImageState.AVAILABLE;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof RemoteImage))
-			return false;
-		final Image other = (Image) obj;
-		if (this.path == null) {
-			if (other.path != null)
-				return false;
-		} else if (!this.path.equals(other.path))
-			return false;
-		return true;
 	}
 
 	@Override

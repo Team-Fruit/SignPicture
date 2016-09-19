@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.Tessellator;
 public abstract class Image implements IAsyncProcessable, IDivisionProcessable, ICollectableEntry {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected final ContentId path;
-	protected ImageState state = ImageState.INIT;
+	protected boolean isAvailable;
 
 	public Image(final ContentId path) {
 		this.path = path;
@@ -29,14 +29,14 @@ public abstract class Image implements IAsyncProcessable, IDivisionProcessable, 
 	public abstract String getLocal();
 
 	public ImageSize getSize() {
-		if (this.state == ImageState.AVAILABLE)
+		if (this.isAvailable)
 			return getTexture().getSize();
 		else
 			return DefaultSize;
 	}
 
 	public void draw() {
-		if (this.state == ImageState.AVAILABLE) {
+		if (this.isAvailable) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
 			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
