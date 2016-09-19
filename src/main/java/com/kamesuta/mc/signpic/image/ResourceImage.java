@@ -1,6 +1,6 @@
 package com.kamesuta.mc.signpic.image;
 
-import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryPath;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -8,10 +8,10 @@ public class ResourceImage extends Image {
 	protected McImageTexture texture;
 	protected ResourceLocation location;
 
-	public ResourceImage(final ResourceLocation location) {
-		super(new EntryId("!" + location.toString()));
-		this.location = location;
-		this.texture = new McImageTexture(location);
+	public ResourceImage(final EntryPath path) {
+		super(path);
+		this.location = path.getResource();
+		this.texture = new McImageTexture(this.location);
 		this.state = ImageState.AVAILABLE;
 	}
 
@@ -28,7 +28,7 @@ public class ResourceImage extends Image {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
 		return result;
 	}
 
@@ -41,17 +41,17 @@ public class ResourceImage extends Image {
 		if (!(obj instanceof RemoteImage))
 			return false;
 		final Image other = (Image) obj;
-		if (this.id == null) {
-			if (other.id != null)
+		if (this.path == null) {
+			if (other.path != null)
 				return false;
-		} else if (!this.id.equals(other.id))
+		} else if (!this.path.equals(other.path))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("ResourceImage[%s]", this.id);
+		return String.format("ResourceImage[%s]", this.path);
 	}
 
 	@Override

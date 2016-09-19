@@ -16,12 +16,11 @@ import com.kamesuta.mc.signpic.entry.EntryPath;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
-import net.minecraft.util.ResourceLocation;
 
 public class ImageManager {
 	public static Deque<Image> lazyloadqueue = new ArrayDeque<Image>();
 	public static final ExecutorService threadpool = Executors.newFixedThreadPool(3);
-	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
+	protected final HashMap<EntryPath, Image> pool = new HashMap<EntryPath, Image>();
 
 	public EntryLocation location;
 
@@ -30,25 +29,13 @@ public class ImageManager {
 	}
 
 	public Image get(final EntryPath path) {
-		if (path.startsWith("!")) {
-			return get(new ResourceLocation(path.substring(1)));
-		} else {
-			Image image = this.pool.get(path);
-			if (image == null) {
-				image = new RemoteImage(path, this.location);
-				this.pool.put(path, image);
-			}
-			image.onImageUsed();
-			return image;
-		}
-	}
-
-	public Image get(final ResourceLocation location) {
-		final String id = "!" + location.toString();
-		Image image = this.pool.get(id);
+		Image image = this.pool.get(path);
 		if (image == null) {
-			image = new ResourceImage(location);
-			this.pool.put(id, image);
+			if (path.isResource())
+				image = new ResourceImage(path);
+			else
+				image = new RemoteImage(path, this.location);
+			this.pool.put(path, image);
 		}
 		image.onImageUsed();
 		return image;
@@ -65,8 +52,8 @@ public class ImageManager {
 				}
 			}
 
-			for (final Iterator<Entry<String, Image>> itr = this.pool.entrySet().iterator(); itr.hasNext();) {
-				final Entry<String, Image> entry = itr.next();
+			for (final Iterator<Entry<EntryPath, Image>> itr = this.pool.entrySet().iterator(); itr.hasNext();) {
+				final Entry<EntryPath, Image> entry = itr.next();
 				final Image image = entry.getValue();
 				image.process();
 				if (image.shouldCollect()) {

@@ -99,7 +99,7 @@ public enum ImageState {
 		f3 = 0.036666668F * f1;
 		glPushMatrix();
 		glScalef(f3, f3, 1f);
-		final String msg2 = image.getId().id();
+		final String msg2 = image.getPath().path();
 		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
 		glPopMatrix();
 		final String msg3 = image.advMessage();

@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryPath;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
@@ -11,15 +11,15 @@ import net.minecraft.client.resources.I18n;
 
 public abstract class Image {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
-	protected final EntryId id;
+	protected final EntryPath path;
 	protected ImageState state = ImageState.INIT;
 
-	public Image(final EntryId id) {
-		this.id = id;
+	public Image(final EntryPath path) {
+		this.path = path;
 	}
 
-	public EntryId getId() {
-		return this.id;
+	public EntryPath getPath() {
+		return this.path;
 	}
 
 	public abstract IImageTexture getTexture() throws IllegalStateException;

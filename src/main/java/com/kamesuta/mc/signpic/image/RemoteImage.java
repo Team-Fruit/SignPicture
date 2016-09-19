@@ -6,8 +6,8 @@ import java.util.List;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryLocation;
+import com.kamesuta.mc.signpic.entry.EntryPath;
 
 public class RemoteImage extends Image {
 	public static final float ImageGarbageCollection = 15f;
@@ -20,8 +20,8 @@ public class RemoteImage extends Image {
 	protected File local;
 	protected final Timer lastloaded = new Timer();
 
-	public RemoteImage(final EntryId id, final EntryLocation location) {
-		super(id);
+	public RemoteImage(final EntryPath path, final EntryLocation location) {
+		super(path);
 		this.location = location;
 	}
 
@@ -150,7 +150,7 @@ public class RemoteImage extends Image {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
 		return result;
 	}
 
@@ -163,16 +163,16 @@ public class RemoteImage extends Image {
 		if (!(obj instanceof RemoteImage))
 			return false;
 		final Image other = (Image) obj;
-		if (this.id == null) {
-			if (other.id != null)
+		if (this.path == null) {
+			if (other.path != null)
 				return false;
-		} else if (!this.id.equals(other.id))
+		} else if (!this.path.equals(other.path))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("RemoteImage[%s]", this.id);
+		return String.format("RemoteImage[%s]", this.path);
 	}
 }

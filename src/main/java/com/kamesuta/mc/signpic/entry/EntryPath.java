@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.entry;
 
+import net.minecraft.util.ResourceLocation;
+
 public class EntryPath {
 	private final String path;
 
@@ -9,6 +11,18 @@ public class EntryPath {
 
 	public String path() {
 		return this.path;
+	}
+
+	public boolean isResource() {
+		return this.path.startsWith("!");
+	}
+
+	public ResourceLocation getResource() {
+		return new ResourceLocation(this.path.substring(1));
+	}
+
+	public static EntryPath fromResource(final ResourceLocation location) {
+		return new EntryPath("!" + location.toString());
 	}
 
 	@Override
