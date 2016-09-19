@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
+import com.kamesuta.mc.signpic.entry.EntryId;
+
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImage extends Image {
@@ -7,7 +9,7 @@ public class ResourceImage extends Image {
 	protected ResourceLocation location;
 
 	public ResourceImage(final ResourceLocation location) {
-		super("!" + location.toString());
+		super(new EntryId("!" + location.toString()));
 		this.location = location;
 		this.texture = new McImageTexture(location);
 		this.state = ImageState.AVAILABLE;

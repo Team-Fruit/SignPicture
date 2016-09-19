@@ -13,18 +13,19 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
+import com.kamesuta.mc.signpic.entry.EntryLocation;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
 
 public class ImageDownloader {
-	protected final ImageLocation location;
+	protected final EntryLocation location;
 	protected final RemoteImage image;
 
 	protected long maxsize;
 	protected CountingOutputStream countoutput;
 
-	public ImageDownloader(final RemoteImage image, final ImageLocation location) {
+	public ImageDownloader(final RemoteImage image, final EntryLocation location) {
 		this.location = location;
 		this.image = image;
 	}

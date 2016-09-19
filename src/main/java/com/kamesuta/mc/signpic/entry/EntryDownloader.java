@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.entry;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 
@@ -17,55 +18,49 @@ import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
 
-public class EntryDownloader {
+public class EntryDownloader implements ILoadEntry {
 	protected final EntryLocation location;
-	protected final SignEntry entry;
+	protected final EntryId id;
+	protected final EntryState state;
 
-	protected long maxsize;
-	protected CountingOutputStream countoutput;
-
-	public EntryDownloader(final SignEntry entry, final EntryLocation location) {
+	public EntryDownloader(final EntryLocation location, final EntryId id, final EntryState state) {
 		this.location = location;
-		this.entry = entry;
+		this.id = id;
+		this.state = state;
 	}
 
-	public void load() {
+	@Override
+	public void onProcess() {
 		InputStream input = null;
-		this.entry.state = EntryState.LOADING;
+		CountingOutputStream countoutput = null;
+		this.state.setType(EntryStateType.LOADING);
 		try {
-			final File local = this.location.localLocation(this.entry.id);
+			final File local = this.location.localLocation(this.id);
+			if (!local.exists()) {
+				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.id));
+				final HttpResponse response = Downloader.downloader.client.execute(req);
+				final HttpEntity entity = response.getEntity();
 
-			final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.entry.id));
-			final HttpResponse response = Downloader.downloader.client.execute(req);
-			final HttpEntity entity = response.getEntity();
-
-			this.maxsize = entity.getContentLength();
-			input = entity.getContent();
-			this.countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local)));
-			IOUtils.copy(input, this.countoutput);
-
-			this.entry.state = EntryState.LOADED;
+				this.state.progress.overall = entity.getContentLength();
+				input = entity.getContent();
+				countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local))) {
+					@Override
+					protected void afterWrite(final int n) throws IOException {
+						EntryDownloader.this.state.progress.done = getByteCount();
+					}
+				};
+				IOUtils.copy(input, countoutput);
+			}
+			this.state.setType(EntryStateType.LOADED);
 		} catch (final URISyntaxException e) {
-			this.entry.state = EntryState.ERROR;
-			this.entry.advmsg = I18n.format("signpic.advmsg.invaildurl");
+			this.state.setType(EntryStateType.ERROR);
+			this.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
 		} catch (final Exception e) {
-			this.entry.state = EntryState.ERROR;
-			this.entry.advmsg = I18n.format("signpic.advmsg.dlerror", e);
+			this.state.setType(EntryStateType.ERROR);
+			this.state.setMessage(I18n.format("signpic.advmsg.dlerror", e));
 		} finally {
 			IOUtils.closeQuietly(input);
-			IOUtils.closeQuietly(this.countoutput);
+			IOUtils.closeQuietly(countoutput);
 		}
-	}
-
-	public float getProgress() {
-		if (this.maxsize > 0)
-			return Math.max(0, Math.min(1, (getRate() / (float) this.maxsize)));
-		return 0;
-	}
-
-	protected long getRate() {
-		if (this.countoutput != null)
-			return this.countoutput.getByteCount();
-		return 0;
 	}
 }

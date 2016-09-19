@@ -47,21 +47,6 @@ class EntrySlot<T extends IInitableEntry & ICollectableEntry & ILoadEntry> imple
 		this.entry.onProcess();
 	}
 
-	@Override
-	public float getProgress() {
-		return this.entry.getProgress();
-	}
-
-	@Override
-	public EntryState getState() {
-		return this.entry.getState();
-	}
-
-	@Override
-	public String getStateMessage() {
-		return this.entry.getStateMessage();
-	}
-
 	public static void Tick() {
 		times++;
 	}

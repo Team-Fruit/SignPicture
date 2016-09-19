@@ -1,40 +1,33 @@
 package com.kamesuta.mc.signpic.entry;
 
-import net.minecraft.client.resources.I18n;
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.image.Image;
+import com.kamesuta.mc.signpic.util.Sign;
 
 public class SignEntry implements IInitableEntry, ICollectableEntry, ILoadEntry {
+	public static final EntryLocation location = new EntryLocation(Client.signpicCacheDir);
 	public final EntryId id;
-	public EntryState state = EntryState.INIT;
+	public final Sign sign;
+	public EntryState state;
+	public Image image;
 
 	public SignEntry(final EntryId id) {
 		this.id = id;
+		this.sign = new Sign().parseText(id.id());
+		this.state = new EntryState();
+		this.image = Client.manager.get(this.sign.getID());
 	}
 
 	@Override
 	public void onInit() {
-		this.state = EntryState.INITALIZED;
+		this.state.setType(EntryStateType.INITALIZED);
 	}
 
 	@Override
 	public void onProcess() {
-
+		new EntryDownloader(location, this.id, this.state).onProcess();
 	}
 
 	@Override
 	public void onCollect() {}
-
-	@Override
-	public EntryState getState() {
-		return this.state;
-	}
-
-	@Override
-	public float getProgress() {
-		return 0;
-	}
-
-	@Override
-	public String getStateMessage() {
-		return I18n.format(this.state.msg, (int) (getProgress()*100));
-	}
 }

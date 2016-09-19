@@ -21,9 +21,9 @@ public class ImageManager {
 	public static final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	protected final HashMap<String, Image> pool = new HashMap<String, Image>();
 
-	public ImageLocation location;
+	public EntryLocation location;
 
-	public ImageManager(final ImageLocation location) {
+	public ImageManager(final EntryLocation location) {
 		this.location = location;
 	}
 
