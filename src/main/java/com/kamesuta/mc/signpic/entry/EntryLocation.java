@@ -12,11 +12,11 @@ public class EntryLocation {
 		this.localroot = localroot;
 	}
 
-	public URI remoteLocation(final EntryId id) throws URISyntaxException {
-		return new URI(id.id());
+	public URI remoteLocation(final EntryPath path) throws URISyntaxException {
+		return new URI(path.path());
 	}
 
-	public File localLocation(final EntryId id) {
-		return new File(this.localroot, DigestUtils.md5Hex(id.id()));
+	public File localLocation(final EntryPath path) {
+		return new File(this.localroot, DigestUtils.md5Hex(path.path()));
 	}
 }

@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.EntryLocation;
+import com.kamesuta.mc.signpic.entry.EntryPath;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -27,14 +29,14 @@ public class ImageManager {
 		this.location = location;
 	}
 
-	public Image get(final String id) {
-		if (id.startsWith("!")) {
-			return get(new ResourceLocation(id.substring(1)));
+	public Image get(final EntryPath path) {
+		if (path.startsWith("!")) {
+			return get(new ResourceLocation(path.substring(1)));
 		} else {
-			Image image = this.pool.get(id);
+			Image image = this.pool.get(path);
 			if (image == null) {
-				image = new RemoteImage(id, this.location);
-				this.pool.put(id, image);
+				image = new RemoteImage(path, this.location);
+				this.pool.put(path, image);
 			}
 			image.onImageUsed();
 			return image;

@@ -20,12 +20,12 @@ import net.minecraft.client.resources.I18n;
 
 public class EntryDownloader implements ILoadEntry {
 	protected final EntryLocation location;
-	protected final EntryId id;
+	protected final EntryPath path;
 	protected final EntryState state;
 
-	public EntryDownloader(final EntryLocation location, final EntryId id, final EntryState state) {
+	public EntryDownloader(final EntryLocation location, final EntryPath path, final EntryState state) {
 		this.location = location;
-		this.id = id;
+		this.path = path;
 		this.state = state;
 	}
 
@@ -35,9 +35,9 @@ public class EntryDownloader implements ILoadEntry {
 		CountingOutputStream countoutput = null;
 		this.state.setType(EntryStateType.LOADING);
 		try {
-			final File local = this.location.localLocation(this.id);
+			final File local = this.location.localLocation(this.path);
 			if (!local.exists()) {
-				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.id));
+				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.path));
 				final HttpResponse response = Downloader.downloader.client.execute(req);
 				final HttpEntity entity = response.getEntity();
 

@@ -9,13 +9,15 @@ public class SignEntry implements IInitableEntry, ICollectableEntry, ILoadEntry 
 	public final EntryId id;
 	public final Sign sign;
 	public EntryState state;
+	public EntryPath path;
 	public Image image;
 
 	public SignEntry(final EntryId id) {
 		this.id = id;
 		this.sign = new Sign().parseText(id.id());
 		this.state = new EntryState();
-		this.image = Client.manager.get(this.sign.getID());
+		this.path = new EntryPath(this.sign.getURL());
+		this.image = Client.manager.get(this.path);
 	}
 
 	@Override
@@ -25,7 +27,7 @@ public class SignEntry implements IInitableEntry, ICollectableEntry, ILoadEntry 
 
 	@Override
 	public void onProcess() {
-		new EntryDownloader(location, this.id, this.state).onProcess();
+		new EntryDownloader(location, this.path, this.state).onProcess();
 	}
 
 	@Override
