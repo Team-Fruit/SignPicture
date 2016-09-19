@@ -2,14 +2,16 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
+import com.kamesuta.mc.signpic.entry.ICollectableEntry;
+import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.I18n;
 
-public abstract class Image {
+public abstract class Image implements IAsyncProcessable, IDivisionProcessable, ICollectableEntry {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected final ContentId path;
 	protected ImageState state = ImageState.INIT;
@@ -24,35 +26,7 @@ public abstract class Image {
 
 	public abstract IImageTexture getTexture() throws IllegalStateException;
 
-	public ImageState getState() {
-		return this.state;
-	}
-
-	public abstract float getProgress();
-
-	public String getStatusMessage() {
-		return I18n.format(this.state.msg, (int) (getProgress()*100));
-	}
-
 	public abstract String getLocal();
-
-	public String advMessage() {
-		return null;
-	};
-
-	public void onImageUsed() {}
-
-	public boolean shouldCollect() {
-		return false;
-	}
-
-	public void delete() {}
-
-	public abstract void process();
-
-	public boolean processTexture() {
-		return true;
-	}
 
 	public ImageSize getSize() {
 		if (this.state == ImageState.AVAILABLE)

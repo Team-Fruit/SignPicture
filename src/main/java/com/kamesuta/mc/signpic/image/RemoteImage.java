@@ -1,96 +1,80 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.lwjgl.util.Timer;
 
-import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.entry.content.ContentState;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
+import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
+
+import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
 	public static final float ImageGarbageCollection = 15f;
 
 	protected final ContentLocation location;
 	protected ImageTextures texture;
-	protected String advmsg;
-	protected ImageDownloader downloading;
+	protected ContentState state;
 	protected ImageIOLoader ioloading;
 	protected File local;
 	protected final Timer lastloaded = new Timer();
+	protected boolean isTextureLoaded;
+	protected boolean isAvailable;
 
-	public RemoteImage(final ContentId path, final ContentLocation location) {
+	public RemoteImage(final ContentLocation location, final ContentId path, final ContentState state) {
 		super(path);
 		this.location = location;
+		this.state = state;
+		this.local = location.localLocation(path);
 	}
 
-	protected void init() {
-		this.state = ImageState.INITALIZED;
-	}
-
-	protected void load() {
-		this.state = ImageState.DOWNLOADING;
-		ContentManager.threadpool.execute(new ImageLoader(this, this.location));
+	public void load() {
+		new ImageLoader(this, this.location).onAsyncProcess();
 	}
 
 	protected void textureload() {
-		this.state = ImageState.TEXTURELOADING;
-		ContentManager.divisionqueue.offer(this);
+		ContentManager.instance.divisionqueue.offer(this);
 	}
 
 	protected int processing = 0;
 	@Override
-	public boolean processTexture() {
-		if (this.state == ImageState.TEXTURELOADING) {
-			final List<ImageTexture> texs = this.texture.getAll();
-			if (this.processing < texs.size()) {
-				final ImageTexture tex = texs.get(this.processing);
-				tex.load();
-				this.processing++;
-				return false;
-			} else {
-				this.state = ImageState.TEXTURELOADED;
-				return true;
-			}
+	public boolean onDivisionProcess() {
+		final List<ImageTexture> texs = this.texture.getAll();
+		if (this.processing < texs.size()) {
+			final ImageTexture tex = texs.get(this.processing);
+			tex.load();
+			this.processing++;
+			return false;
 		} else {
-			Reference.logger.warn("Image#loadTexture only must be called TEXTURELOADING phase");
+			this.isAvailable = true;
 			return true;
 		}
 	}
 
-	protected void complete() {
-		this.state = ImageState.AVAILABLE;
-	}
-
 	@Override
-	public void process() {
-		switch(this.state) {
-		case INIT:
-			init();
-			break;
-		case INITALIZED:
-			load();
-			break;
-		case IOLOADED:
-			textureload();
-			break;
-		case TEXTURELOADED:
-			complete();
-			break;
-		default:
-			break;
+	public void onAsyncProcess() {
+		try {
+			new ImageIOLoader(this, this.local).load();
+		} catch (final InvaildImageException e) {
+			this.state.setType(ContentStateType.ERROR);
+			this.state.setMessage(I18n.format("signpic.advmsg.invaildimage"));
+		} catch (final IOException e) {
+			this.state.setType(ContentStateType.ERROR);
+			this.state.setMessage(I18n.format("signpic.advmsg.ioerror", e));
+		} catch (final Exception e) {
+			this.state.setType(ContentStateType.ERROR);
+			this.state.setMessage(I18n.format("signpic.advmsg.unknown", e));
 		}
 	}
 
 	@Override
-	public boolean shouldCollect() {
-		return this.lastloaded.getTime() > ImageGarbageCollection;
-	}
-
-	@Override
-	public void delete() {
+	public void onCollect() {
 		if (this.texture!=null)
 			this.texture.delete();
 	}
@@ -127,16 +111,6 @@ public class RemoteImage extends Image {
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
-	}
-
-	@Override
-	public void onImageUsed() {
-		this.lastloaded.set(0);
-	}
-
-	@Override
-	public String advMessage() {
-		return this.advmsg;
 	}
 
 	@Override

@@ -1,12 +1,12 @@
 package com.kamesuta.mc.signpic.entry;
 
-public class EntrySlot<T extends IInitableEntry & ICollectableEntry & IAsyncProcessable> implements IInitableEntry, ICollectableEntry, IAsyncProcessable {
+public class EntrySlot<T> {
 	public static int CollectTimes = 20 * 15;
 	public static long times = 0;
 
-	private boolean init = true;
 	private final T entry;
 	private long time = 0;
+	private boolean init = true;
 
 	public EntrySlot(final T entry) {
 		this.entry = entry;
@@ -23,28 +23,17 @@ public class EntrySlot<T extends IInitableEntry & ICollectableEntry & IAsyncProc
 		return this;
 	}
 
-	public boolean shouldInit() {
-		return this.init;
-	}
-
-	@Override
-	public void onInit() {
-		this.init = false;
-		this.entry.onInit();
-	}
-
 	public boolean shouldCollect() {
 		return times - this.time > CollectTimes;
 	}
 
-	@Override
-	public void onCollect() {
-		this.entry.onCollect();
+	public EntrySlot<T> init() {
+		this.init = false;
+		return this;
 	}
 
-	@Override
-	public void onProcess() {
-		this.entry.onProcess();
+	public boolean shouldInit() {
+		return this.init;
 	}
 
 	public static void Tick() {

@@ -33,23 +33,9 @@ public class SignEntryManager implements ITickEntry {
 			final Entry<EntryId, EntrySlot<SignEntry>> entry = itr.next();
 			final EntrySlot<SignEntry> collectableSignEntry = entry.getValue();
 
-			if (collectableSignEntry.shouldInit()) {
-				collectableSignEntry.onInit();
-				executeProcess(collectableSignEntry);
-			}
 			if (collectableSignEntry.shouldCollect()) {
-				collectableSignEntry.onCollect();
 				itr.remove();
 			}
 		}
-	}
-
-	private void executeProcess(final IAsyncProcessable entry) {
-		this.threadpool.execute(new Runnable() {
-			@Override
-			public void run() {
-				entry.onProcess();
-			}
-		});
 	}
 }

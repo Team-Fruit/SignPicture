@@ -1,13 +1,13 @@
-package com.kamesuta.mc.signpic.entry;
+package com.kamesuta.mc.signpic.entry.content;
 
 import net.minecraft.client.resources.I18n;
 
-public class EntryState {
+public class ContentState {
 	public Progress progress = new Progress();
-	private EntryStateType type = EntryStateType.INIT;
+	private ContentStateType type = ContentStateType.INIT;
 	private String message = "";
 
-	public EntryState setMessage(final String message) {
+	public ContentState setMessage(final String message) {
 		this.message = message;
 		return this;
 	}
@@ -16,12 +16,12 @@ public class EntryState {
 		return this.message;
 	}
 
-	public EntryState setType(final EntryStateType type) {
+	public ContentState setType(final ContentStateType type) {
 		this.type = type;
 		return this;
 	}
 
-	public EntryStateType getType() {
+	public ContentStateType getType() {
 		return this.type;
 	}
 

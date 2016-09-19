@@ -1,6 +1,6 @@
-package com.kamesuta.mc.signpic.entry;
+package com.kamesuta.mc.signpic.entry.content;
 
-public enum EntryStateType {
+public enum ContentStateType {
 	INIT("signpic.state.init"),
 	INITALIZED("signpic.state.initalized"),
 	LOADING("signpic.state.loading"),
@@ -10,7 +10,7 @@ public enum EntryStateType {
 	;
 
 	public final String msg;
-	EntryStateType(final String s) {
+	ContentStateType(final String s) {
 		this.msg = s;
 	}
 }

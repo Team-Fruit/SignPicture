@@ -14,8 +14,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
-import com.kamesuta.mc.signpic.entry.EntryState;
-import com.kamesuta.mc.signpic.entry.EntryStateType;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
@@ -24,19 +22,19 @@ import net.minecraft.client.resources.I18n;
 public class ContentDownloader implements IAsyncProcessable {
 	protected final ContentLocation location;
 	protected final ContentId path;
-	protected final EntryState state;
+	protected final ContentState state;
 
-	public ContentDownloader(final ContentLocation location, final ContentId path, final EntryState state) {
+	public ContentDownloader(final ContentLocation location, final ContentId path, final ContentState state) {
 		this.location = location;
 		this.path = path;
 		this.state = state;
 	}
 
 	@Override
-	public void onProcess() {
+	public void onAsyncProcess() {
 		InputStream input = null;
 		CountingOutputStream countoutput = null;
-		this.state.setType(EntryStateType.LOADING);
+		this.state.setType(ContentStateType.LOADING);
 		try {
 			final File local = this.location.localLocation(this.path);
 			if (!local.exists()) {
@@ -54,12 +52,12 @@ public class ContentDownloader implements IAsyncProcessable {
 				};
 				IOUtils.copy(input, countoutput);
 			}
-			this.state.setType(EntryStateType.LOADED);
+			this.state.setType(ContentStateType.LOADED);
 		} catch (final URISyntaxException e) {
-			this.state.setType(EntryStateType.ERROR);
+			this.state.setType(ContentStateType.ERROR);
 			this.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
 		} catch (final Exception e) {
-			this.state.setType(EntryStateType.ERROR);
+			this.state.setType(ContentStateType.ERROR);
 			this.state.setMessage(I18n.format("signpic.advmsg.dlerror", e));
 		} finally {
 			IOUtils.closeQuietly(input);

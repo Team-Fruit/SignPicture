@@ -15,14 +15,13 @@ import com.kamesuta.mc.signpic.entry.ITickEntry;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 
 public class ContentManager implements ITickEntry {
-	public static Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
-	public static final ExecutorService threadpool = Executors.newFixedThreadPool(3);
+	public static ContentManager instance = new ContentManager();
+
+	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
+	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	protected final HashMap<ContentId, EntrySlot<Content>> registry = new HashMap<ContentId, EntrySlot<Content>>();
 
-	public ContentLocation location;
-
-	public ContentManager(final ContentLocation location) {
-		this.location = location;
+	public ContentManager() {
 	}
 
 	public Content get(final ContentId id) {
@@ -40,9 +39,9 @@ public class ContentManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		IDivisionProcessable divisionprocess;
-		if ((divisionprocess = ContentManager.divisionqueue.peek()) != null) {
-			if (divisionprocess.onProcess()) {
-				ContentManager.divisionqueue.poll();
+		if ((divisionprocess = this.divisionqueue.peek()) != null) {
+			if (divisionprocess.onDivisionProcess()) {
+				this.divisionqueue.poll();
 			}
 		}
 
@@ -51,21 +50,21 @@ public class ContentManager implements ITickEntry {
 			final EntrySlot<Content> collectableSignEntry = entry.getValue();
 
 			if (collectableSignEntry.shouldInit()) {
-				collectableSignEntry.onInit();
-				executeProcess(collectableSignEntry);
+				collectableSignEntry.init();
+				executeProcess(collectableSignEntry.get());
 			}
 			if (collectableSignEntry.shouldCollect()) {
-				collectableSignEntry.onCollect();
+				collectableSignEntry.get().onCollect();
 				itr.remove();
 			}
 		}
 	}
 
 	private void executeProcess(final IAsyncProcessable entry) {
-		ContentManager.threadpool.execute(new Runnable() {
+		this.threadpool.execute(new Runnable() {
 			@Override
 			public void run() {
-				entry.onProcess();
+				entry.onAsyncProcess();
 			}
 		});
 	}

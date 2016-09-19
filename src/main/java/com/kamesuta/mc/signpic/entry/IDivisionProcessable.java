@@ -5,5 +5,5 @@ public interface IDivisionProcessable {
 	 * called multiple
 	 * @return is finished
 	 */
-	boolean onProcess();
+	boolean onDivisionProcess();
 }

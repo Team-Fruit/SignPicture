@@ -24,7 +24,6 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
@@ -47,31 +46,20 @@ public class ImageIOLoader {
 		this(image, manager.getResource(location).getInputStream());
 	}
 
-	public void load() {
-		try {
-			final byte[] data = IOUtils.toByteArray(this.input);
+	public void load() throws IOException {
+		final byte[] data = IOUtils.toByteArray(this.input);
 
-			final ImageInputStream imagestream = ImageIO.createImageInputStream(new ByteArrayInputStream(data));
-			final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
-			if (!iter.hasNext()) throw new InvaildImageException();
-			final ImageReader reader = iter.next();
+		final ImageInputStream imagestream = ImageIO.createImageInputStream(new ByteArrayInputStream(data));
+		final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
+		if (!iter.hasNext()) throw new InvaildImageException();
+		final ImageReader reader = iter.next();
 
-			if (reader.getFormatName()=="gif") {
-				loadGif(data);
-			} else {
-				loadImage(reader, imagestream);
-			}
-			this.image.state = ImageState.IOLOADED;
-		} catch (final InvaildImageException e) {
-			this.image.state = ImageState.ERROR;
-			this.image.advmsg = I18n.format("signpic.advmsg.invaildimage");
-		} catch (final IOException e) {
-			this.image.state = ImageState.FAILED;
-			this.image.advmsg = I18n.format("signpic.advmsg.ioerror", e);
-		} catch (final Exception e) {
-			this.image.state = ImageState.FAILED;
-			this.image.advmsg = I18n.format("signpic.advmsg.unknown", e);
+		if (reader.getFormatName()=="gif") {
+			loadGif(data);
+		} else {
+			loadImage(reader, imagestream);
 		}
+		this.image.isTextureLoaded = true;
 	}
 
 	protected static final String[] imageatt = new String[] {
@@ -81,14 +69,6 @@ public class ImageIOLoader {
 			"imageHeight",
 	};
 
-	protected int maxprogress;
-	protected int progress;
-	public float getProgress() {
-		if (this.maxprogress > 0)
-			return Math.max(0, Math.min(1, (float)this.progress / this.maxprogress));
-		return 0;
-	}
-
 	protected void loadGif(final byte[] data) throws IOException {
 		final GifImage gifImage = GifDecoder.read(data);
 		final int width = gifImage.getWidth();
@@ -96,13 +76,14 @@ public class ImageIOLoader {
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
 
 		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
-		final int frameCount = this.maxprogress = gifImage.getFrameCount();
+		final int frameCount = gifImage.getFrameCount();
+		this.image.state.progress.overall = frameCount;
 		for (int i = 0; i < frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
 			final int delay = gifImage.getDelay(i);
 			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float)delay / 100);
 			textures.add(texture);
-			this.progress = i;
+			this.image.state.progress.done = i;
 		}
 		this.image.texture = new ImageTextures(textures);
 	}
