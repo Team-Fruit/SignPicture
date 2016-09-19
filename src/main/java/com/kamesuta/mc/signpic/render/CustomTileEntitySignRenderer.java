@@ -3,8 +3,8 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.Image;
-import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -19,13 +19,13 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
-	protected final ImageManager manager;
+	protected final ContentManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
 	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
-	public CustomTileEntitySignRenderer(final ImageManager manager) {
+	public CustomTileEntitySignRenderer(final ContentManager manager) {
 		this.manager = manager;
 	}
 

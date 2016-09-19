@@ -1,11 +1,11 @@
-package com.kamesuta.mc.signpic.entry;
+package com.kamesuta.mc.signpic.entry.content;
 
 import net.minecraft.util.ResourceLocation;
 
-public class EntryPath {
+public class ContentId {
 	private final String path;
 
-	public EntryPath(final String path) {
+	public ContentId(final String path) {
 		this.path = path;
 	}
 
@@ -21,8 +21,8 @@ public class EntryPath {
 		return new ResourceLocation(this.path.substring(1));
 	}
 
-	public static EntryPath fromResource(final ResourceLocation location) {
-		return new EntryPath("!" + location.toString());
+	public static ContentId fromResource(final ResourceLocation location) {
+		return new ContentId("!" + location.toString());
 	}
 
 	@Override
@@ -39,9 +39,9 @@ public class EntryPath {
 			return true;
 		if (obj == null)
 			return false;
-		if (!(obj instanceof EntryPath))
+		if (!(obj instanceof ContentId))
 			return false;
-		final EntryPath other = (EntryPath) obj;
+		final ContentId other = (ContentId) obj;
 		if (this.path == null) {
 			if (other.path != null)
 				return false;

@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender.Color;
@@ -21,20 +22,20 @@ public enum ImageState {
 	TEXTURELOADED("signpic.state.textureloaded", Color.TEXTURELOAD, Speed.WAIT),
 	AVAILABLE("signpic.state.available", Color.DEFAULT, Speed.RUN) {
 		@Override
-		public void themeImage(final ImageManager manager, final Image image) {}
+		public void themeImage(final ContentManager manager, final Image image) {}
 
 		@Override
-		public void mainImage(final ImageManager manager, final Image image) {
+		public void mainImage(final ContentManager manager, final Image image) {
 			image.draw();
 		}
 
 		@Override
-		public void message(final ImageManager manager, final Image image, final FontRenderer fontrenderer) {
+		public void message(final ContentManager manager, final Image image, final FontRenderer fontrenderer) {
 		}
 	},
 	FAILED("signpic.state.failed", Color.DEFAULT, Speed.WAIT) {
 		@Override
-		public void themeImage(final ImageManager manager, final Image image) {
+		public void themeImage(final ContentManager manager, final Image image) {
 			RenderHelper.startTexture();
 			glPushMatrix();
 			glTranslatef(-.5f, -.5f, 0f);
@@ -44,7 +45,7 @@ public enum ImageState {
 	},
 	ERROR("signpic.state.error", Color.DEFAULT, Speed.WAIT) {
 		@Override
-		public void themeImage(final ImageManager manager, final Image image) {
+		public void themeImage(final ContentManager manager, final Image image) {
 			RenderHelper.startTexture();
 			glPushMatrix();
 			glTranslatef(-.5f, -.5f, 0f);
@@ -63,7 +64,7 @@ public enum ImageState {
 		this.speed = speed;
 	}
 
-	public void themeImage(final ImageManager manager, final Image image) {
+	public void themeImage(final ContentManager manager, final Image image) {
 		glLineWidth(3f);
 		RenderHelper.startShape();
 
@@ -86,7 +87,7 @@ public enum ImageState {
 		glPopMatrix();
 	}
 
-	public void message(final ImageManager manager, final Image image, final FontRenderer fontrenderer) {
+	public void message(final ContentManager manager, final Image image, final FontRenderer fontrenderer) {
 		RenderHelper.startTexture();
 		final float f1 = 0.6666667F;
 		float f3 = 0.06666668F * f1;
@@ -111,7 +112,7 @@ public enum ImageState {
 		}
 	}
 
-	public void mainImage(final ImageManager manager, final Image image) {
+	public void mainImage(final ContentManager manager, final Image image) {
 		final Tessellator t = Tessellator.instance;
 		RenderHelper.startShape();
 		glLineWidth(1f);

@@ -6,13 +6,14 @@ import java.util.List;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.entry.EntryLocation;
-import com.kamesuta.mc.signpic.entry.EntryPath;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 
 public class RemoteImage extends Image {
 	public static final float ImageGarbageCollection = 15f;
 
-	protected final EntryLocation location;
+	protected final ContentLocation location;
 	protected ImageTextures texture;
 	protected String advmsg;
 	protected ImageDownloader downloading;
@@ -20,7 +21,7 @@ public class RemoteImage extends Image {
 	protected File local;
 	protected final Timer lastloaded = new Timer();
 
-	public RemoteImage(final EntryPath path, final EntryLocation location) {
+	public RemoteImage(final ContentId path, final ContentLocation location) {
 		super(path);
 		this.location = location;
 	}
@@ -31,12 +32,12 @@ public class RemoteImage extends Image {
 
 	protected void load() {
 		this.state = ImageState.DOWNLOADING;
-		ImageManager.threadpool.execute(new ImageLoader(this, this.location));
+		ContentManager.threadpool.execute(new ImageLoader(this, this.location));
 	}
 
 	protected void textureload() {
 		this.state = ImageState.TEXTURELOADING;
-		ImageManager.lazyloadqueue.offer(this);
+		ContentManager.divisionqueue.offer(this);
 	}
 
 	protected int processing = 0;

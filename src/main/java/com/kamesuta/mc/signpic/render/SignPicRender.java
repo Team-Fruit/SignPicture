@@ -4,9 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.image.Image;
-import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -23,9 +23,9 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 public class SignPicRender extends WGui {
 	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
 
-	protected final ImageManager manager;
+	protected final ContentManager manager;
 
-	public SignPicRender(final ImageManager manager) {
+	public SignPicRender(final ContentManager manager) {
 		this.manager = manager;
 	}
 

@@ -1,6 +1,6 @@
 package com.kamesuta.mc.signpic.entry;
 
-class EntrySlot<T extends IInitableEntry & ICollectableEntry & ILoadEntry> implements IInitableEntry, ICollectableEntry, ILoadEntry {
+public class EntrySlot<T extends IInitableEntry & ICollectableEntry & IAsyncProcessable> implements IInitableEntry, ICollectableEntry, IAsyncProcessable {
 	public static int CollectTimes = 20 * 15;
 	public static long times = 0;
 

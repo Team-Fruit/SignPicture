@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.entry;
+package com.kamesuta.mc.signpic.entry.content;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -14,16 +14,19 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
+import com.kamesuta.mc.signpic.entry.EntryState;
+import com.kamesuta.mc.signpic.entry.EntryStateType;
+import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
 
-public class EntryDownloader implements ILoadEntry {
-	protected final EntryLocation location;
-	protected final EntryPath path;
+public class ContentDownloader implements IAsyncProcessable {
+	protected final ContentLocation location;
+	protected final ContentId path;
 	protected final EntryState state;
 
-	public EntryDownloader(final EntryLocation location, final EntryPath path, final EntryState state) {
+	public ContentDownloader(final ContentLocation location, final ContentId path, final EntryState state) {
 		this.location = location;
 		this.path = path;
 		this.state = state;
@@ -46,7 +49,7 @@ public class EntryDownloader implements ILoadEntry {
 				countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local))) {
 					@Override
 					protected void afterWrite(final int n) throws IOException {
-						EntryDownloader.this.state.progress.done = getByteCount();
+						ContentDownloader.this.state.progress.done = getByteCount();
 					}
 				};
 				IOUtils.copy(input, countoutput);

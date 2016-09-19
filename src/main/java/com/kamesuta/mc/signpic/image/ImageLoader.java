@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.kamesuta.mc.signpic.entry.EntryLocation;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 
 import net.minecraft.client.resources.I18n;
 
 public class ImageLoader implements Runnable {
 	protected RemoteImage image;
-	protected EntryLocation remote;
+	protected ContentLocation remote;
 
-	public ImageLoader(final RemoteImage image, final EntryLocation remote) {
+	public ImageLoader(final RemoteImage image, final ContentLocation remote) {
 		this.image = image;
 		this.remote = remote;
 	}

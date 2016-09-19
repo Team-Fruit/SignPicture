@@ -9,8 +9,8 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.Image;
-import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -18,9 +18,9 @@ import com.kamesuta.mc.signpic.util.Sign;
 
 public class SignPicLabel extends WBase {
 	protected Sign sign;
-	protected ImageManager manager;
+	protected ContentManager manager;
 
-	public SignPicLabel(final R position, final ImageManager manager) {
+	public SignPicLabel(final R position, final ContentManager manager) {
 		super(position);
 		this.manager = manager;
 	}

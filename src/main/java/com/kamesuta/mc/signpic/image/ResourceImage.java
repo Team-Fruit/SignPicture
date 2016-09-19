@@ -1,6 +1,6 @@
 package com.kamesuta.mc.signpic.image;
 
-import com.kamesuta.mc.signpic.entry.EntryPath;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -8,7 +8,7 @@ public class ResourceImage extends Image {
 	protected McImageTexture texture;
 	protected ResourceLocation location;
 
-	public ResourceImage(final EntryPath path) {
+	public ResourceImage(final ContentId path) {
 		super(path);
 		this.location = path.getResource();
 		this.texture = new McImageTexture(this.location);

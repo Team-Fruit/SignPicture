@@ -1,5 +1,5 @@
 package com.kamesuta.mc.signpic.entry;
 
-interface ICollectableEntry {
+public interface ICollectableEntry {
 	void onCollect();
 }

@@ -29,7 +29,6 @@ public class SignEntryManager implements ITickEntry {
 	@CoreEvent
 	@Override
 	public void onTick() {
-		EntrySlot.Tick();
 		for (final Iterator<Entry<EntryId, EntrySlot<SignEntry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
 			final Entry<EntryId, EntrySlot<SignEntry>> entry = itr.next();
 			final EntrySlot<SignEntry> collectableSignEntry = entry.getValue();
@@ -45,7 +44,7 @@ public class SignEntryManager implements ITickEntry {
 		}
 	}
 
-	private void executeProcess(final ILoadEntry entry) {
+	private void executeProcess(final IAsyncProcessable entry) {
 		this.threadpool.execute(new Runnable() {
 			@Override
 			public void run() {
