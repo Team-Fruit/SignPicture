@@ -109,6 +109,36 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 			glTranslatef(size.width/2, size.height/2, 0);
 			glScalef(.5f, .5f, 1f);
+			if (content.state.getType() != ContentStateType.AVAILABLE) {
+				if (content.state.getType() == ContentStateType.ERROR) {
+					RenderHelper.startTexture();
+					glPushMatrix();
+					glTranslatef(-.5f, -.5f, 0f);
+					this.manager.get(ContentId.fromResource(CustomTileEntitySignRenderer.resError)).image.draw();
+					glPopMatrix();
+				} else {
+					glLineWidth(3f);
+					RenderHelper.startShape();
+
+					glPushMatrix();
+					glScalef(.5f, .5f, 1f);
+
+					// Loading Circle
+					this.color.loadingColor();
+					RenderHelper.drawLoadingCircle(this.speed.inner, this.speed.outer);
+
+					// Design Circle
+					this.color.designColor();
+					RenderHelper.drawDesignCircle();
+
+					// Progress Circle
+					this.color.progressColor();
+					final float progress = content.state.progress.getProgress();
+					RenderHelper.drawProgressCircle(progress);
+
+					glPopMatrix();
+				}
+			}
 			//image.getState().themeImage(this.manager, image);
 			//image.getState().message(this.manager, image, func_147498_b());
 

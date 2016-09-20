@@ -2,66 +2,81 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.util.Color;
+
+import com.kamesuta.mc.signpic.entry.content.Content;
+
 public class StateRender {
-	public static enum Color {
-		DOWNLOAD {
+	public static enum LoadingCircle {
+		INIT(new Color(0, 255, 255, 255), new Color(160, 160, 160, 255), new Color(120, 120, 120, 255)),
+		DOWNLOAD(new Color(0, 255, 255, 255), new Color(0, 102, 204, 255), new Color(23, 121, 232, 255)),
+		CONTENTLOAD(new Color(0, 255, 255, 255), new Color(238, 97, 35, 255), new Color(238, 134, 35, 255)),
+		DEFAULT(new Color(), new Color(), new Color()) {
 			@Override
-			public void progressColor() {
-				glColor4f(0f/256f, 102f/256f, 204f/256f, 1f);
+			public void drawLoading(final Content content, final LoadingCircleType speed) {
 			}
-
-			@Override
-			public void designColor() {
-				glColor4f(23f/256f, 121f/256f, 232f/256f, 1f);
-			}
-		},
-		IOLOAD {
-			@Override
-			public void progressColor() {
-				glColor4f(0f/256f, 144f/256f, 55f/256f, 1f);
-			}
-
-			@Override
-			public void designColor() {
-				glColor4f(23f/256f, 177f/256f, 55f/256f, 1f);
-			}
-		},
-		TEXTURELOAD {
-			@Override
-			public void progressColor() {
-				glColor4f(238f/256f, 97f/256f, 35f/256f, 1f);
-			}
-
-			@Override
-			public void designColor() {
-				glColor4f(238f/256f, 134f/256f, 35f/256f, 1f);
-			}
-		},
-		DEFAULT
+		}
 		;
 
+		private final Color loading;
+		private final Color progress;
+		private final Color design;
+		private LoadingCircle(final Color loading, final Color progress, final Color design) {
+			this.loading = loading;
+			this.progress = progress;
+			this.design = design;
+		}
+
 		public void loadingColor() {
-			glColor4f(0.0F, 1.0F, 1.0F, 1.0F);
+			color(this.loading);
 		}
 
 		public void progressColor() {
-			glColor4f(160/256f, 160f/256f, 160f/256f, 1f);
+			color(this.progress);
 		}
 
 		public void designColor() {
-			glColor4f(120/256f, 120f/256f, 120f/256f, 1f);
+			color(this.design);
+		}
+
+		private static void color(final Color color) {
+			glColor4b(color.getRedByte(), color.getGreenByte(), color.getBlueByte(), color.getAlphaByte());
+		}
+
+		public void drawLoading(final Content content, final LoadingCircleType speed) {
+			glLineWidth(3f);
+			RenderHelper.startShape();
+
+			glPushMatrix();
+			glScalef(.5f, .5f, 1f);
+
+			// Loading Circle
+			loadingColor();
+			RenderHelper.drawLoadingCircle(speed.inner, speed.outer);
+
+			// Design Circle
+			designColor();
+			RenderHelper.drawDesignCircle();
+
+			// Progress Circle
+			progressColor();
+			final float progress = content.state.progress.getProgress();
+			RenderHelper.drawProgressCircle(progress);
+
+			glPopMatrix();
 		}
 	}
 
-	public static enum Speed {
+	public static enum LoadingCircleType {
 		WAIT(627*-2, 893*-2),
 		RUN(627, 893),
+		DEFAULT(-1, -1),
 		;
 
 		public final int inner;
 		public final int outer;
 
-		Speed(final int inner, final int outer) {
+		LoadingCircleType(final int inner, final int outer) {
 			this.inner = inner;
 			this.outer = outer;
 		}
