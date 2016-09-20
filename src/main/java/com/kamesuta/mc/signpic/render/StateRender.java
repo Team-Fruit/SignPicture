@@ -39,7 +39,7 @@ public class StateRender {
 		}
 
 		private static void color(final Color color) {
-			glColor4b(color.getRedByte(), color.getGreenByte(), color.getBlueByte(), color.getAlphaByte());
+			glColor4ub(color.getRedByte(), color.getGreenByte(), color.getBlueByte(), color.getAlphaByte());
 		}
 	}
 

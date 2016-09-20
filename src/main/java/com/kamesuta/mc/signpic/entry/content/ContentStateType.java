@@ -5,11 +5,11 @@ import com.kamesuta.mc.signpic.render.StateRender.LoadingCircleType;
 
 public enum ContentStateType {
 	INIT("signpic.state.init", LoadingCircle.INIT, LoadingCircleType.WAIT),
-	INITALIZED("signpic.state.initalized", LoadingCircle.INIT, LoadingCircleType.RUN),
-	DOWNLOADING("signpic.state.downloading", LoadingCircle.DOWNLOAD, LoadingCircleType.WAIT),
-	DOWNLOADED("signpic.state.downloaded", LoadingCircle.DOWNLOAD, LoadingCircleType.RUN),
-	LOADING("signpic.state.loading", LoadingCircle.CONTENTLOAD, LoadingCircleType.WAIT),
-	LOADED("signpic.state.loaded", LoadingCircle.CONTENTLOAD, LoadingCircleType.RUN),
+	INITALIZED("signpic.state.initalized", LoadingCircle.INIT, LoadingCircleType.WAIT),
+	DOWNLOADING("signpic.state.downloading", LoadingCircle.DOWNLOAD, LoadingCircleType.RUN),
+	DOWNLOADED("signpic.state.downloaded", LoadingCircle.DOWNLOAD, LoadingCircleType.WAIT),
+	LOADING("signpic.state.loading", LoadingCircle.CONTENTLOAD, LoadingCircleType.RUN),
+	LOADED("signpic.state.loaded", LoadingCircle.CONTENTLOAD, LoadingCircleType.WAIT),
 	AVAILABLE("signpic.state.available"),
 	ERROR("signpic.state.error"),
 	;

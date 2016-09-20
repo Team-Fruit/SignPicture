@@ -12,11 +12,9 @@ public class ResourceImage extends Image {
 	protected ResourceImageTexture texture;
 
 	public ResourceImage(final ContentLocation location, final ContentId id, final ContentState state) {
-		super(location, id, state);
+		super(location, id, state.setType(ContentStateType.AVAILABLE));
 		this.resource = id.getResource();
 		this.texture = new ResourceImageTexture(this.resource);
-		state.setType(ContentStateType.AVAILABLE);
-		this.isAvailable = true;
 	}
 
 	@Override

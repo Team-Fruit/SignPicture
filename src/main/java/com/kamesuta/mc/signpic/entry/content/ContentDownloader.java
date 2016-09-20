@@ -34,7 +34,7 @@ public class ContentDownloader implements IAsyncProcessable {
 	public void onAsyncProcess() {
 		InputStream input = null;
 		CountingOutputStream countoutput = null;
-		this.state.setType(ContentStateType.LOADING);
+		this.state.setType(ContentStateType.DOWNLOADING);
 		try {
 			final File local = this.location.localLocation(this.path);
 			if (!local.exists()) {
@@ -52,7 +52,7 @@ public class ContentDownloader implements IAsyncProcessable {
 				};
 				IOUtils.copy(input, countoutput);
 			}
-			this.state.setType(ContentStateType.LOADED);
+			this.state.setType(ContentStateType.DOWNLOADED);
 		} catch (final URISyntaxException e) {
 			this.state.setType(ContentStateType.ERROR);
 			this.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));

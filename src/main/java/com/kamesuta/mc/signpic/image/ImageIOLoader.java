@@ -18,6 +18,7 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
@@ -77,6 +78,7 @@ public class ImageIOLoader {
 
 		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
 		final int frameCount = gifImage.getFrameCount();
+		this.image.state.setType(ContentStateType.LOADING);
 		this.image.state.progress.overall = frameCount;
 		for (int i = 0; i < frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
@@ -86,6 +88,7 @@ public class ImageIOLoader {
 			this.image.state.progress.done = i;
 		}
 		this.image.texture = new ImageTextures(textures);
+		this.image.state.setType(ContentStateType.LOADED);
 	}
 
 	protected void loadImage(final ImageReader reader, final ImageInputStream imagestream) throws IOException {

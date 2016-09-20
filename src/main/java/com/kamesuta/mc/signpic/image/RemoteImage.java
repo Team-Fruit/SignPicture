@@ -24,19 +24,21 @@ public class RemoteImage extends Image {
 		this.local = location.localLocation(id);
 	}
 
-	protected int processing = 0;
+	private int processing = 0;
 	@Override
 	public boolean onDivisionProcess() {
 		if (this.isTextureLoaded) {
 			final List<ImageTexture> texs = this.texture.getAll();
-			if (this.processing < texs.size()) {
+			if (this.processing < (this.state.progress.overall = texs.size())) {
 				final ImageTexture tex = texs.get(this.processing);
 				tex.load();
 				this.processing++;
+				this.state.setType(ContentStateType.LOADING);
+				this.state.progress.done = this.processing;
 				return false;
 			} else {
 				this.state.setType(ContentStateType.AVAILABLE);
-				this.isAvailable = true;
+				this.state.progress.done = this.state.progress.overall;
 				return true;
 			}
 		}
@@ -73,7 +75,7 @@ public class RemoteImage extends Image {
 	}
 
 	public ImageTextures getTextures() {
-		if (this.isAvailable)
+		if (this.state.getType() == ContentStateType.AVAILABLE)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");

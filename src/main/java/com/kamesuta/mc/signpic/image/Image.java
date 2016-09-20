@@ -8,6 +8,7 @@ import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentState;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
@@ -18,7 +19,6 @@ public abstract class Image implements IAsyncProcessable, IDivisionProcessable, 
 	protected final ContentLocation location;
 	protected final ContentId id;
 	protected final ContentState state;
-	protected boolean isAvailable;
 
 	public Image(final ContentLocation location, final ContentId id, final ContentState state) {
 		this.location = location;
@@ -35,14 +35,14 @@ public abstract class Image implements IAsyncProcessable, IDivisionProcessable, 
 	public abstract String getLocal();
 
 	public ImageSize getSize() {
-		if (this.isAvailable)
+		if (this.state.getType() == ContentStateType.AVAILABLE)
 			return getTexture().getSize();
 		else
 			return DefaultSize;
 	}
 
 	public void draw() {
-		if (this.isAvailable) {
+		if (this.state.getType() == ContentStateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
 			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

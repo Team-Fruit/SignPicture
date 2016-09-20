@@ -118,8 +118,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);
 				StateRender.drawMessage(content, func_147498_b());
 			}
-			//image.getState().themeImage(this.manager, image);
-			//image.getState().message(this.manager, image, func_147498_b());
 
 			glPopMatrix();
 
