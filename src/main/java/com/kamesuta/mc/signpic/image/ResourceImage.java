@@ -3,21 +3,20 @@ package com.kamesuta.mc.signpic.image;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentState;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImage extends Image {
-	protected final ContentLocation location;
-	protected final ContentState state;
 	protected ResourceLocation resource;
-	protected McImageTexture texture;
+	protected ResourceImageTexture texture;
 
 	public ResourceImage(final ContentLocation location, final ContentId id, final ContentState state) {
-		super(id);
-		this.location = location;
-		this.state = state;
+		super(location, id, state);
 		this.resource = id.getResource();
-		this.texture = new McImageTexture(this.resource);
+		this.texture = new ResourceImageTexture(this.resource);
+		state.setType(ContentStateType.AVAILABLE);
+		this.isAvailable = true;
 	}
 
 	@Override

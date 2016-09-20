@@ -6,6 +6,8 @@ import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectableEntry;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
+import com.kamesuta.mc.signpic.entry.content.ContentState;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
@@ -13,11 +15,15 @@ import net.minecraft.client.renderer.Tessellator;
 
 public abstract class Image implements IAsyncProcessable, IDivisionProcessable, ICollectableEntry {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
+	protected final ContentLocation location;
 	protected final ContentId id;
+	protected final ContentState state;
 	protected boolean isAvailable;
 
-	public Image(final ContentId path) {
-		this.id = path;
+	public Image(final ContentLocation location, final ContentId id, final ContentState state) {
+		this.location = location;
+		this.id = id;
+		this.state = state;
 	}
 
 	public ContentId getPath() {

@@ -15,16 +15,12 @@ import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
-	protected final ContentLocation location;
-	protected final ContentState state;
 	protected ImageTextures texture;
 	protected File local;
 	protected boolean isTextureLoaded;
 
 	public RemoteImage(final ContentLocation location, final ContentId id, final ContentState state) {
-		super(id);
-		this.location = location;
-		this.state = state;
+		super(location, id, state);
 		this.local = location.localLocation(id);
 	}
 
