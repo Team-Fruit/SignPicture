@@ -45,7 +45,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Load Image
-			final Content content = entry.content;
+			final Content content = entry.content();
 
 			// Size
 			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, content.image.getSize());

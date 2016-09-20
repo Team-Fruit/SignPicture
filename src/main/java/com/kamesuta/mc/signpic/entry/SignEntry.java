@@ -9,12 +9,14 @@ public class SignEntry {
 	public final EntryId id;
 	public final Sign sign;
 	public final ContentId contentId;
-	public final Content content;
 
 	public SignEntry(final EntryId id) {
 		this.id = id;
 		this.sign = new Sign().parseText(id.id());
 		this.contentId = new ContentId(this.sign.getURL());
-		this.content = ContentManager.instance.get(contentId);
+	}
+
+	public Content content() {
+		return ContentManager.instance.get(this.contentId);
 	}
 }
