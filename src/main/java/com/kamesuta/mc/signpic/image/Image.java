@@ -13,15 +13,15 @@ import net.minecraft.client.renderer.Tessellator;
 
 public abstract class Image implements IAsyncProcessable, IDivisionProcessable, ICollectableEntry {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
-	protected final ContentId path;
+	protected final ContentId id;
 	protected boolean isAvailable;
 
 	public Image(final ContentId path) {
-		this.path = path;
+		this.id = path;
 	}
 
 	public ContentId getPath() {
-		return this.path;
+		return this.id;
 	}
 
 	public abstract IImageTexture getTexture() throws IllegalStateException;

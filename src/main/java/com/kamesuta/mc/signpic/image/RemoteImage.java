@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -15,16 +16,16 @@ import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
 	protected final ContentLocation location;
+	protected final ContentState state;
 	protected ImageTextures texture;
-	protected ContentState state;
 	protected File local;
 	protected boolean isTextureLoaded;
 
-	public RemoteImage(final ContentLocation location, final ContentId path, final ContentState state) {
-		super(path);
+	public RemoteImage(final ContentLocation location, final ContentId id, final ContentState state) {
+		super(id);
 		this.location = location;
 		this.state = state;
-		this.local = location.localLocation(path);
+		this.local = location.localLocation(id);
 	}
 
 	protected int processing = 0;
@@ -49,6 +50,7 @@ public class RemoteImage extends Image {
 	@Override
 	public void onAsyncProcess() {
 		try {
+			new ContentDownloader(this.location, this.id, this.state).onAsyncProcess();
 			new ImageIOLoader(this, this.local).load();
 			ContentManager.instance.divisionqueue.offer(this);
 		} catch (final InvaildImageException e) {
@@ -91,6 +93,6 @@ public class RemoteImage extends Image {
 
 	@Override
 	public String toString() {
-		return String.format("RemoteImage[%s]", this.path);
+		return String.format("RemoteImage[%s]", this.id);
 	}
 }

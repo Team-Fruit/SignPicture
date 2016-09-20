@@ -4,7 +4,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.Color;
 
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentState.Progress;
+
+import net.minecraft.client.gui.FontRenderer;
 
 public class StateRender {
 	public static enum LoadingCircle {
@@ -62,6 +65,31 @@ public class StateRender {
 			final float p = progress.getProgress();
 			RenderHelper.drawProgressCircle(p);
 
+			glPopMatrix();
+		}
+	}
+
+	public static void drawMessage(final Content content, final FontRenderer fontrenderer) {
+		RenderHelper.startTexture();
+		final float f1 = 0.6666667F;
+		float f3 = 0.06666668F * f1;
+		glTranslatef(0f, 1f, 0f);
+		glPushMatrix();
+		glScalef(f3, f3, 1f);
+		final String msg1 = content.state.getStateMessage();
+		fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1) / 2, -fontrenderer.FONT_HEIGHT, 0xffffff);
+		glPopMatrix();
+		f3 = 0.036666668F * f1;
+		glPushMatrix();
+		glScalef(f3, f3, 1f);
+		final String msg2 = content.id.path();
+		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
+		glPopMatrix();
+		final String msg3 = content.state.getMessage();
+		if (msg3 != null) {
+			glPushMatrix();
+			glScalef(f3, f3, 1f);
+			fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3) / 2, fontrenderer.FONT_HEIGHT, 0xffffff);
 			glPopMatrix();
 		}
 	}

@@ -12,7 +12,7 @@ public class Content implements IInitableEntry, ICollectableEntry, IAsyncProcess
 	public static final ContentLocation location = new ContentLocation(Client.signpicCacheDir);
 
 	public final ContentId id;
-	public ContentState state;
+	public final ContentState state;
 	public Image image;
 
 
@@ -20,7 +20,7 @@ public class Content implements IInitableEntry, ICollectableEntry, IAsyncProcess
 		this.id = id;
 		this.state = new ContentState();
 		if (id.isResource())
-			this.image = new ResourceImage(id);
+			this.image = new ResourceImage(location, id, this.state);
 		else
 			this.image = new RemoteImage(location, id, this.state);
 	}
@@ -32,7 +32,6 @@ public class Content implements IInitableEntry, ICollectableEntry, IAsyncProcess
 
 	@Override
 	public void onAsyncProcess() {
-		new ContentDownloader(location, this.id, this.state).onAsyncProcess();
 		this.image.onAsyncProcess();
 	}
 

@@ -43,6 +43,7 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onRenderTick(final TickEvent.RenderTickEvent event) {
+		Timer.tick();
 	}
 
 	@SubscribeEvent
@@ -75,7 +76,6 @@ public class CoreHandler {
 		this.signEntryManager.onTick();
 		this.contentManager.onTick();
 		this.informationHandler.onTick(event);
-		Timer.tick();
 		EntrySlot.Tick();
 	}
 }

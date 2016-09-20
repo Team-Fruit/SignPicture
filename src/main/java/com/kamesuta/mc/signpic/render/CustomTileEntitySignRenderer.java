@@ -99,8 +99,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				t.addVertex(1, 0, 0);
 				t.draw();
 			}
-			// TODO
-			glEnable(GL_TEXTURE_2D);
 			glPopMatrix();
 
 			if (size.width<1.5f || size.height<1.5) {
@@ -111,13 +109,14 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glScalef(.5f, .5f, 1f);
 			if (content.state.getType() != ContentStateType.AVAILABLE) {
 				if (content.state.getType() == ContentStateType.ERROR) {
-					RenderHelper.startTexture();
+					RenderHelper.startShape();
 					glPushMatrix();
 					glTranslatef(-.5f, -.5f, 0f);
 					this.manager.get(ContentId.fromResource(CustomTileEntitySignRenderer.resError)).image.draw();
 					glPopMatrix();
 				}
 				StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);
+				StateRender.drawMessage(content, func_147498_b());
 			}
 			//image.getState().themeImage(this.manager, image);
 			//image.getState().message(this.manager, image, func_147498_b());
