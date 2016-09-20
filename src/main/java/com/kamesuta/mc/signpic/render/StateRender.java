@@ -4,18 +4,14 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.Color;
 
-import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentState.Progress;
 
 public class StateRender {
 	public static enum LoadingCircle {
 		INIT(new Color(0, 255, 255, 255), new Color(160, 160, 160, 255), new Color(120, 120, 120, 255)),
 		DOWNLOAD(new Color(0, 255, 255, 255), new Color(0, 102, 204, 255), new Color(23, 121, 232, 255)),
 		CONTENTLOAD(new Color(0, 255, 255, 255), new Color(238, 97, 35, 255), new Color(238, 134, 35, 255)),
-		DEFAULT(new Color(), new Color(), new Color()) {
-			@Override
-			public void drawLoading(final Content content, final LoadingCircleType speed) {
-			}
-		}
+		DEFAULT(new Color(), new Color(), new Color())
 		;
 
 		private final Color loading;
@@ -42,8 +38,11 @@ public class StateRender {
 		private static void color(final Color color) {
 			glColor4b(color.getRedByte(), color.getGreenByte(), color.getBlueByte(), color.getAlphaByte());
 		}
+	}
 
-		public void drawLoading(final Content content, final LoadingCircleType speed) {
+
+	public static void drawLoading(final Progress progress, final LoadingCircle type, final LoadingCircleType speed) {
+		if (type != LoadingCircle.DEFAULT) {
 			glLineWidth(3f);
 			RenderHelper.startShape();
 
@@ -51,17 +50,17 @@ public class StateRender {
 			glScalef(.5f, .5f, 1f);
 
 			// Loading Circle
-			loadingColor();
+			type.loadingColor();
 			RenderHelper.drawLoadingCircle(speed.inner, speed.outer);
 
 			// Design Circle
-			designColor();
+			type.designColor();
 			RenderHelper.drawDesignCircle();
 
 			// Progress Circle
-			progressColor();
-			final float progress = content.state.progress.getProgress();
-			RenderHelper.drawProgressCircle(progress);
+			type.progressColor();
+			final float p = progress.getProgress();
+			RenderHelper.drawProgressCircle(p);
 
 			glPopMatrix();
 		}

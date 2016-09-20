@@ -15,8 +15,8 @@ public enum ContentStateType {
 	;
 
 	public final String msg;
-	protected final LoadingCircle circle;
-	protected final LoadingCircleType speed;
+	public final LoadingCircle circle;
+	public final LoadingCircleType speed;
 	private ContentStateType(final String s, final LoadingCircle circle, final LoadingCircleType speed) {
 		this.msg = s;
 		this.circle = circle;
