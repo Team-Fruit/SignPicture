@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryManager;
+import com.kamesuta.mc.signpic.entry.SignEntry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -21,21 +24,19 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
-	protected final ContentManager manager;
 	protected final Tessellator t = Tessellator.instance;
 
 	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
-	public CustomTileEntitySignRenderer(final ContentManager manager) {
-		this.manager = manager;
-	}
+	public CustomTileEntitySignRenderer() {}
 
 	@Override
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks)
 	{
 		Client.startSection("signpic-render");
-		final Sign sign = new Sign().parseSignEntity(tile);
+		final SignEntry entry = EntryManager.instance.get(EntryId.fromTile(tile));
+		final Sign sign = entry.sign;
 		if (sign.isVaild()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
@@ -44,7 +45,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Load Image
-			final Content content = this.manager.get(new ContentId(sign.getURL()));
+			final Content content = entry.content;
 
 			// Size
 			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, content.image.getSize());
@@ -112,7 +113,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 					RenderHelper.startShape();
 					glPushMatrix();
 					glTranslatef(-.5f, -.5f, 0f);
-					this.manager.get(ContentId.fromResource(CustomTileEntitySignRenderer.resError)).image.draw();
+					ContentManager.instance.get(ContentId.fromResource(CustomTileEntitySignRenderer.resError)).image.draw();
 					glPopMatrix();
 				}
 				StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);

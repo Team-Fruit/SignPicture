@@ -9,8 +9,8 @@ import java.util.concurrent.Executors;
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 
-public class SignEntryManager implements ITickEntry {
-	public static final SignEntryManager instance = new SignEntryManager();
+public class EntryManager implements ITickEntry {
+	public static final EntryManager instance = new EntryManager();
 
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	private final Map<EntryId, EntrySlot<SignEntry>> registry = Maps.newHashMap();

@@ -7,7 +7,6 @@ import java.util.Map;
 import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -49,7 +48,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		// Setup image
-		Client.renderer = new CustomTileEntitySignRenderer(ContentManager.instance);
+		Client.renderer = new CustomTileEntitySignRenderer();
 
 		Client.mcversion = MinecraftForge.MC_VERSION;
 		Client.forgeversion = ForgeVersion.getVersion();

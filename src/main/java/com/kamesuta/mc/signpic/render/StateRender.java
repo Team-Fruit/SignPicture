@@ -13,7 +13,7 @@ public class StateRender {
 	public static enum LoadingCircle {
 		INIT(new Color(0, 255, 255, 255), new Color(160, 160, 160, 255), new Color(120, 120, 120, 255)),
 		DOWNLOAD(new Color(0, 255, 255, 255), new Color(0, 102, 204, 255), new Color(23, 121, 232, 255)),
-		CONTENTLOAD(new Color(0, 255, 255, 255), new Color(238, 97, 35, 255), new Color(238, 134, 35, 255)),
+		CONTENTLOAD(new Color(0, 255, 255, 255), new Color(0, 144, 55), new Color(23, 177, 55, 255)),
 		DEFAULT(new Color(), new Color(), new Color())
 		;
 

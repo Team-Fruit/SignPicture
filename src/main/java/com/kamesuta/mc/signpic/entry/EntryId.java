@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
@@ -52,6 +53,10 @@ public class EntryId {
 
 	public static EntryId fromStrings(final String[] strings) {
 		return new EntryId(StringUtils.join(strings));
+	}
+
+	public static EntryId fromTile(final TileEntitySign tile) {
+		return fromStrings(tile.signText);
 	}
 
 	public static EntryId fromChats(final IChatComponent[] chats) {
