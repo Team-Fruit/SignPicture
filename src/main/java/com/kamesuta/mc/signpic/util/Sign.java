@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.util;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 
@@ -14,7 +15,7 @@ public class Sign {
 	public static int maxText = 15*4;
 
 	public final SignEntity preview = new SignEntity();
-	public String id = "";
+	public EntryId id = null;
 	public final ImageMeta meta = new ImageMeta();
 
 	public Sign() {
@@ -28,21 +29,6 @@ public class Sign {
 		return this;
 	}
 
-	public static String extractMeta(final String src) {
-		return StringUtils.substring(src, StringUtils.lastIndexOf(src, "[")+1, StringUtils.length(src)-1);
-	}
-
-	public static String extractId(final String src) {
-		return StringUtils.substring(src, 0, StringUtils.lastIndexOf(src, "["));
-	}
-
-	public static boolean hasMeta(final String text) {
-		return text!=null && StringUtils.endsWith(text, "]") && StringUtils.contains(text, "[");
-	}
-
-	public static boolean hasId(final String id) {
-		return StringUtils.isEmpty(id) || StringUtils.containsOnly(id, "!") || StringUtils.containsOnly(id, "$");
-	}
 
 	public String getID() {
 		String id = this.id;
@@ -63,14 +49,6 @@ public class Sign {
 		return id;
 	}
 
-	public Sign parseSignText(final String[] sign) {
-		return parseText(StringUtils.join(sign));
-	}
-
-	public Sign parseSignEntity(final TileEntitySign tile) {
-		return parseSignText(tile.signText);
-	}
-
 	public String text() {
 		return getID() + this.meta;
 	}
@@ -80,24 +58,7 @@ public class Sign {
 	}
 
 	public boolean isVaild() {
-		return !hasId(this.id);
-	}
-
-	public String[] toSignText() {
-		final String text = text();
-		final String[] sign = new String[4];
-		for (int i=0; i<4; i++) {
-			if (16*i <= StringUtils.length(text))
-				sign[i] = StringUtils.substring(text, 15*i, Math.min(15*(i+1), text.length()));
-			else
-				sign[i] = "";
-		}
-		return sign;
-	}
-
-	public Sign writeToEntity(final TileEntitySign tile) {
-		tile.signText = toSignText();
-		return this;
+		return !hasContentId(this.id);
 	}
 
 	public Sign updatePreview() {

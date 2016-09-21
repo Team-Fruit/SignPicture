@@ -1,24 +1,43 @@
 package com.kamesuta.mc.signpic.entry.content;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.util.ResourceLocation;
 
 public class ContentId {
-	private final String path;
+	private final String id;
 
 	public ContentId(final String path) {
-		this.path = path;
+		this.id = path;
+	}
+
+	public String getID() {
+		if (StringUtils.contains(this.id, "http://"))
+			return StringUtils.substring(this.id, 7, StringUtils.length(this.id));
+		else if (StringUtils.contains(this.id, "https://"))
+			return "$" + StringUtils.substring(this.id, 8, StringUtils.length(this.id));
+		return this.id;
+	}
+
+	public String getURL() {
+		if (!StringUtils.startsWith(this.id, "!"))
+			if (StringUtils.startsWith(this.id, "$"))
+				return "https://" + StringUtils.substring(this.id, 1);
+			else if (!StringUtils.startsWith(this.id, "http://") && !StringUtils.startsWith(this.id, "https://"))
+				return "http://" + this.id;
+		return this.id;
 	}
 
 	public String path() {
-		return this.path;
+		return this.id;
 	}
 
 	public boolean isResource() {
-		return this.path.startsWith("!");
+		return this.id.startsWith("!");
 	}
 
 	public ResourceLocation getResource() {
-		return new ResourceLocation(this.path.substring(1));
+		return new ResourceLocation(this.id.substring(1));
 	}
 
 	public static ContentId fromResource(final ResourceLocation location) {
@@ -29,7 +48,7 @@ public class ContentId {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((this.path == null) ? 0 : this.path.hashCode());
+		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
 		return result;
 	}
 
@@ -42,16 +61,16 @@ public class ContentId {
 		if (!(obj instanceof ContentId))
 			return false;
 		final ContentId other = (ContentId) obj;
-		if (this.path == null) {
-			if (other.path != null)
+		if (this.id == null) {
+			if (other.id != null)
 				return false;
-		} else if (!this.path.equals(other.path))
+		} else if (!this.id.equals(other.id))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("EntryPath [path=%s]", this.path);
+		return String.format("EntryPath [path=%s]", this.id);
 	}
 }

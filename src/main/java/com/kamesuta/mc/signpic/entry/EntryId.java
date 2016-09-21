@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.entry.content.ContentId;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
+
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
@@ -59,6 +62,22 @@ public class EntryId {
 		return fromStrings(tile.signText);
 	}
 
+	public boolean hasContentId() {
+		return StringUtils.isEmpty(this.id) || StringUtils.containsOnly(this.id, "!") || StringUtils.containsOnly(this.id, "$");
+	}
+
+	public boolean hasMeta() {
+		return this.id!=null && StringUtils.endsWith(this.id, "]") && StringUtils.contains(this.id, "[");
+	}
+
+	public ContentId getContentId() {
+		return new ContentId(StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "[")));
+	}
+
+	public ImageMeta getMeta() {
+		return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
+	}
+
 	public static EntryId fromChats(final IChatComponent[] chats) {
 		final StringBuilder stb = new StringBuilder();
 		for (final IChatComponent chat : chats) {
@@ -66,5 +85,25 @@ public class EntryId {
 				stb.append(chat.getFormattedText());new ChatComponentText("").getUnformattedText();
 		}
 		return new EntryId(stb.toString());
+	}
+
+	public void toStrings(final String[] sign) {
+		for (int i=0; i<4; i++) {
+			if (16*i <= StringUtils.length(this.id))
+				sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), this.id.length()));
+			else
+				sign[i] = "";
+		}
+	}
+
+	public void toEntity(final TileEntitySign tile) {
+		toStrings(tile.signText);
+	}
+
+	@Deprecated
+	public String[] toStrings() {
+		final String[] strings = new String[4];
+		toStrings(strings);
+		return strings;
 	}
 }
