@@ -17,7 +17,6 @@ import net.minecraft.client.resources.I18n;
 public class RemoteImage extends Image {
 	protected ImageTextures texture;
 	protected File local;
-	protected boolean isTextureLoaded;
 
 	public RemoteImage(final Content content) {
 		super(content);
@@ -54,22 +53,19 @@ public class RemoteImage extends Image {
 
 	@Override
 	public boolean onDivisionProcess() {
-		if (this.isTextureLoaded) {
-			final List<ImageTexture> texs = this.texture.getAll();
-			if (this.processing < (this.content.state.progress.overall = texs.size())) {
-				final ImageTexture tex = texs.get(this.processing);
-				tex.load();
-				this.processing++;
-				this.content.state.setType(ContentStateType.LOADING);
-				this.content.state.progress.done = this.processing;
-				return false;
-			} else {
-				this.content.state.setType(ContentStateType.AVAILABLE);
-				this.content.state.progress.done = this.content.state.progress.overall;
-				return true;
-			}
+		final List<ImageTexture> texs = this.texture.getAll();
+		if (this.processing < (this.content.state.progress.overall = texs.size())) {
+			final ImageTexture tex = texs.get(this.processing);
+			tex.load();
+			this.processing++;
+			this.content.state.setType(ContentStateType.LOADING);
+			this.content.state.progress.done = this.processing;
+			return false;
+		} else {
+			this.content.state.setType(ContentStateType.AVAILABLE);
+			this.content.state.progress.done = this.content.state.progress.overall;
+			return true;
 		}
-		throw new IllegalStateException("No Texture Loaded");
 	}
 
 	@Override

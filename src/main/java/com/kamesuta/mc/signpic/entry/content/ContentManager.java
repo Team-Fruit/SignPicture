@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
@@ -18,7 +17,7 @@ public class ContentManager implements ITickEntry {
 	public static ContentManager instance = new ContentManager();
 
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
-	protected final HashMap<ContentId, EntrySlot<Content>> registry = new HashMap<ContentId, EntrySlot<Content>>();
+	protected final HashMap<ContentId, ContentSlot<Content>> registry = new HashMap<ContentId, ContentSlot<Content>>();
 	public Deque<IAsyncProcessable> asyncqueue = new ArrayDeque<IAsyncProcessable>();
 	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
 
@@ -26,12 +25,12 @@ public class ContentManager implements ITickEntry {
 	}
 
 	public Content get(final ContentId id) {
-		final EntrySlot<Content> entries = this.registry.get(id);
+		final ContentSlot<Content> entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
 		else {
 			final Content entry = new Content(id);
-			this.registry.put(id, new EntrySlot<Content>(entry));
+			this.registry.put(id, new ContentSlot<Content>(entry));
 			return entry;
 		}
 	}
@@ -40,7 +39,7 @@ public class ContentManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		IAsyncProcessable asyncprocess;
-		if ((asyncprocess = this.asyncqueue.peek()) != null) {
+		if ((asyncprocess = this.asyncqueue.poll()) != null) {
 			final IAsyncProcessable asyncprocessexec = asyncprocess;
 			this.threadpool.execute(new Runnable() {
 				@Override
@@ -64,12 +63,12 @@ public class ContentManager implements ITickEntry {
 			}
 		}
 
-		for (final Iterator<Entry<ContentId, EntrySlot<Content>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
-			final Entry<ContentId, EntrySlot<Content>> entry = itr.next();
-			final EntrySlot<Content> collectableSignEntry = entry.getValue();
+		for (final Iterator<Entry<ContentId, ContentSlot<Content>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
+			final Entry<ContentId, ContentSlot<Content>> entry = itr.next();
+			final ContentSlot<Content> collectableSignEntry = entry.getValue();
 
 			if (collectableSignEntry.shouldInit()) {
-				collectableSignEntry.init();
+				collectableSignEntry.onInit();
 			}
 			if (collectableSignEntry.shouldCollect()) {
 				collectableSignEntry.get().onCollect();
