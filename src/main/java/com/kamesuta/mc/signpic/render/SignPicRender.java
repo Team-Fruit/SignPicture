@@ -91,7 +91,7 @@ public class SignPicRender extends WGui {
 					event.left.add(I18n.format("signpic.over.sign", entry.id.id()));
 					event.left.add(I18n.format("signpic.over.id", uri));
 					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
-					event.left.add(I18n.format("signpic.over.status", content.state.getMessage()));
+					event.left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
 					if (advmsg != null)
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
 					if (tilesign.signText != null)

@@ -30,11 +30,10 @@ signpic.state.failed=読み込み失敗... (%d%%)
 signpic.state.error=エラー
 
 # Image State Additional Message
-signpic.advmsg.invaildurl=不正なURL
-signpic.advmsg.invaildimage=不正な画像
-signpic.advmsg.unknown=不明なエラー: §7%s
+signpic.advmsg.invalidurl=不正なURL
+signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
-signpic.advmsg.dlerror=ダウンロード失敗: §7%s
+signpic.advmsg.unknown=不明なエラー: §7%s
 
 # Version Checking
 signpic.versioning.outdated=[§6SignPicture§r] 現在のSignPictureのバージョンは %s です。新しいバージョン %s がご利用可能です！

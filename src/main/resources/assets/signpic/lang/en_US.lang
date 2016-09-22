@@ -43,11 +43,10 @@ signpic.state.failed=Loading Failed... (%d%%)
 signpic.state.error=ERROR
 
 # Image State Additional Message
-signpic.advmsg.invaildurl=Invaild URL
-signpic.advmsg.invaildimage=Invaild Image
-signpic.advmsg.unknown=Unknown Error: §7%s
+signpic.advmsg.invalidurl=Invalid URL
+signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
-signpic.advmsg.dlerror=Failed to Download: §7%s
+signpic.advmsg.unknown=Unknown Error: §7%s
 
 # Version Checking
 signpic.versioning.outdated=[§6SignPicture§r] You are running Sign Picture %s, the latest is %s.

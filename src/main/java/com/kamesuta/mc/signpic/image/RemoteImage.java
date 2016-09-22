@@ -38,10 +38,10 @@ public class RemoteImage extends Image {
 			ContentManager.instance.divisionqueue.offer(this);
 		} catch (final URISyntaxException e) {
 			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
+			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidurl"));
 		} catch (final InvaildImageException e) {
 			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.invaildimage"));
+			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidimage"));
 		} catch (final IOException e) {
 			this.content.state.setType(ContentStateType.ERROR);
 			this.content.state.setMessage(I18n.format("signpic.advmsg.ioerror", e));

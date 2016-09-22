@@ -4,8 +4,8 @@ import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryManager;
+import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.entry.content.ContentSlot;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
@@ -73,11 +73,11 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
-		Client.startSection("signpic-load");
+		Client.startSection("signpic_load");
 		this.signEntryManager.onTick();
 		this.contentManager.onTick();
 		this.informationHandler.onTick(event);
-		ContentSlot.Tick();
+		EntrySlot.Tick();
 		Client.endSection();
 	}
 }

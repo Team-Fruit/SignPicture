@@ -52,7 +52,7 @@ public class ImageMeta {
 	}
 
 	public static interface MetaParser {
-		DecimalFormat signformat = new DecimalFormat("0.#");
+		DecimalFormat signformat = new DecimalFormat(".#");
 
 		MetaParser parse(String src, String key, String value);
 
