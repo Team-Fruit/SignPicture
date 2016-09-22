@@ -67,7 +67,7 @@ public class ContentId {
 	}
 
 	public ResourceLocation getResource() {
-		return new ResourceLocation(this.id.substring(1));
+		return new ResourceLocation(StringUtils.substring(this.id, 1));
 	}
 
 	public Content content() {

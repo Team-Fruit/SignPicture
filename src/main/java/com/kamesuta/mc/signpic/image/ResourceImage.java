@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 
@@ -22,7 +24,7 @@ public class ResourceImage extends Image {
 
 	@Override
 	public String getLocal() {
-		return "Resource:" + this.content.id;
+		return "Resource:" + StringUtils.substring(this.content.id.id(), 1);
 	}
 
 	@Override
