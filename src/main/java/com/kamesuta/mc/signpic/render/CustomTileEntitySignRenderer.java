@@ -130,6 +130,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 			glPopMatrix();
 		} else {
+			if (opacity < 1f) {
+				RenderHelper.startTexture();
+				glColor4f(1f, 1f, 1f, opacity);
+			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
 	}

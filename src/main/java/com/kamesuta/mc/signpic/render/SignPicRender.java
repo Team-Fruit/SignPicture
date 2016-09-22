@@ -7,7 +7,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -30,12 +29,15 @@ public class SignPicRender extends WGui {
 
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
-		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW))
+		float opacity = 0.7f;
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 			Sign.preview.capturePlace();
+			opacity *= 0.7f;
+		}
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 			if (Sign.preview.isRenderable() && Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
-				Client.renderer.renderTileEntityAt(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks);
+				Client.renderer.renderSignPictureBase(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity);
 			}
 		}
 	}
@@ -56,7 +58,7 @@ public class SignPicRender extends WGui {
 					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
 					glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-					ContentId.fromResource(resSign).content().image.getTexture().bind();
+					texture().bindTexture(resSign);
 					RenderHelper.startTexture();
 					RenderHelper.drawRectTexture(GL_QUADS);
 
