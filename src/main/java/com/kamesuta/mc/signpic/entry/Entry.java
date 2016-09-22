@@ -10,7 +10,7 @@ public class Entry {
 	public final ContentId contentId;
 	public final ImageMeta meta;
 
-	public Entry(final EntryId id) {
+	protected Entry(final EntryId id) {
 		this.id = id;
 		this.contentId = id.getContentId();
 		this.meta = id.getMeta();
@@ -21,6 +21,6 @@ public class Entry {
 	}
 
 	public boolean isValid() {
-		return this.id!=null && this.meta!=null;
+		return this.contentId!=null && this.meta!=null;
 	}
 }

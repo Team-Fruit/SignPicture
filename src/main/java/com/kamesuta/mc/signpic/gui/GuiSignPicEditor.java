@@ -33,7 +33,7 @@ import com.kamesuta.mc.signpic.util.Sign;
 import net.minecraft.client.resources.I18n;
 
 public class GuiSignPicEditor extends WFrame {
-	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getSign());
+	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getEntryId());
 
 	public GuiSignPicEditor() {
 	}
@@ -92,7 +92,7 @@ public class GuiSignPicEditor extends WFrame {
 					protected void initWidget(final WEvent ev, final Area pgp) {
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 							{
-								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance).setEntryId(CurrentMode.instance.getSign()));
+								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance).setEntryId(CurrentMode.instance.getEntryId()));
 							}
 
 							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
@@ -177,7 +177,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							protected void onNumberChanged(final String oldText, final String newText) {
 								GuiSignPicEditor.this.signbuilder.getMeta().size.setWidth(newText);
-								CurrentMode.instance.setSign(GuiSignPicEditor.this.signbuilder.build());
+								CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
 							}
 						});
 						add(new MLabel(new RArea(Coord.right(5), Coord.bottom(bottom-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.height")));
@@ -190,7 +190,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							protected void onNumberChanged(final String oldText, final String newText) {
 								GuiSignPicEditor.this.signbuilder.getMeta().size.setHeight(newText);
-								CurrentMode.instance.setSign(GuiSignPicEditor.this.signbuilder.build());
+								CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
 							}
 						});
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
@@ -223,7 +223,7 @@ public class GuiSignPicEditor extends WFrame {
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								final Entry entry = EntryManager.instance.get(CurrentMode.instance.getSign());
+								final Entry entry = EntryManager.instance.get(CurrentMode.instance.getEntryId());
 								if (entry.isValid() && Sign.isPlaceable(entry.id)) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									requestClose();
@@ -235,7 +235,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							public boolean isEnabled() {
 								state(CurrentMode.instance.isMode(CurrentMode.Mode.PLACE));
-								final Entry entry = EntryManager.instance.get(CurrentMode.instance.getSign());
+								final Entry entry = EntryManager.instance.get(CurrentMode.instance.getEntryId());
 								return entry.isValid() && Sign.isPlaceable(entry.id) && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});
@@ -274,7 +274,7 @@ public class GuiSignPicEditor extends WFrame {
 						super.init(ev, pgp);
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
-						final String id = GuiSignPicEditor.this.signbuilder.getID();
+						final String id = GuiSignPicEditor.this.signbuilder.getURI();
 						if (id != null) {
 							setText(id);
 						}
@@ -285,7 +285,9 @@ public class GuiSignPicEditor extends WFrame {
 						final EntryId entryId = new EntryId(getText());
 						if (entryId.hasMeta())
 							GuiSignPicEditor.this.signbuilder.setMeta(entryId.getMeta());
-						GuiSignPicEditor.this.signbuilder.setURI(entryId.getContentId().getURI());
+						if (entryId.hasContentId())
+							GuiSignPicEditor.this.signbuilder.setURI(entryId.getContentId().getURI());
+						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
 					}
 
 					@Override

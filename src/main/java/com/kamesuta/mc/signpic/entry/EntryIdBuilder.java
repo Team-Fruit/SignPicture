@@ -1,7 +1,6 @@
 package com.kamesuta.mc.signpic.entry;
 
-import org.apache.commons.lang3.StringUtils;
-
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
 public class EntryIdBuilder {
@@ -9,8 +8,11 @@ public class EntryIdBuilder {
 	private String uri;
 
 	public EntryIdBuilder(final EntryId source) {
-		this.meta = source.getMeta();
-		this.uri = source.getContentId().getURI();
+		if (source != null) {
+			this.meta = source.getMeta();
+			if (source.hasContentId())
+				this.uri = source.getContentId().getURI();
+		}
 	}
 
 	public EntryIdBuilder() {
@@ -38,16 +40,7 @@ public class EntryIdBuilder {
 			return this.uri;
 	}
 
-	public String getID() {
-		String uri = getURI();
-		if (StringUtils.contains(uri, "http://"))
-			uri = StringUtils.substring(uri, 7, StringUtils.length(uri));
-		else if (StringUtils.contains(uri, "https://"))
-			uri = "$" + StringUtils.substring(uri, 8, StringUtils.length(uri));
-		return uri;
-	}
-
 	public EntryId build() {
-		return new EntryId(getID() + getMeta());
+		return new EntryId(new ContentId(getURI()).getID() + getMeta());
 	}
 }

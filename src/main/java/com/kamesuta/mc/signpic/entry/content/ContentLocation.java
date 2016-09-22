@@ -13,10 +13,10 @@ public class ContentLocation {
 	}
 
 	public URI remoteLocation(final ContentId path) throws URISyntaxException {
-		return new URI(path.id());
+		return new URI(path.getURI());
 	}
 
 	public File localLocation(final ContentId path) {
-		return new File(this.localroot, DigestUtils.md5Hex(path.id()));
+		return new File(this.localroot, DigestUtils.md5Hex(path.getURI()));
 	}
 }

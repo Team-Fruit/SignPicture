@@ -21,12 +21,12 @@ import net.minecraft.client.resources.I18n;
 
 public class ContentDownloader implements IAsyncProcessable {
 	protected final ContentLocation location;
-	protected final ContentId path;
+	protected final ContentId id;
 	protected final ContentState state;
 
-	public ContentDownloader(final ContentLocation location, final ContentId path, final ContentState state) {
+	public ContentDownloader(final ContentLocation location, final ContentId id, final ContentState state) {
 		this.location = location;
-		this.path = path;
+		this.id = id;
 		this.state = state;
 	}
 
@@ -36,9 +36,9 @@ public class ContentDownloader implements IAsyncProcessable {
 		CountingOutputStream countoutput = null;
 		this.state.setType(ContentStateType.DOWNLOADING);
 		try {
-			final File local = this.location.localLocation(this.path);
+			final File local = this.location.localLocation(this.id);
 			if (!local.exists()) {
-				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.path));
+				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.id));
 				final HttpResponse response = Downloader.downloader.client.execute(req);
 				final HttpEntity entity = response.getEntity();
 

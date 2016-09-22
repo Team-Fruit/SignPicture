@@ -72,18 +72,23 @@ public class EntryId {
 	}
 
 	public boolean hasContentId() {
-		return StringUtils.isEmpty(this.id) || StringUtils.containsOnly(this.id, "!") || StringUtils.containsOnly(this.id, "$");
+		return !(StringUtils.isEmpty(this.id) || StringUtils.containsOnly(this.id, "!") || StringUtils.containsOnly(this.id, "$"));
 	}
 
 	public boolean hasMeta() {
-		return this.id!=null && StringUtils.endsWith(this.id, "]") && StringUtils.contains(this.id, "[");
+		return StringUtils.endsWith(this.id, "]") && StringUtils.contains(this.id, "[");
 	}
 
 	public ContentId getContentId() {
-		if (hasContentId())
-			return new ContentId(StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "[")));
-		else
-			return null;
+		if (hasContentId()) {
+			String id;
+			if (StringUtils.contains(this.id, "["))
+				id = StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "["));
+			else
+				id = this.id;
+			return new ContentId(id);
+		}
+		return null;
 	}
 
 	public ImageMeta getMeta() {

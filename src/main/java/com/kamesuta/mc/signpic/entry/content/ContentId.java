@@ -7,8 +7,12 @@ import net.minecraft.util.ResourceLocation;
 public class ContentId {
 	private final String id;
 
-	public ContentId(final String path) {
-		this.id = path;
+	public ContentId(String uri) {
+		if (StringUtils.contains(uri, "http://"))
+			uri = StringUtils.substring(uri, 7, StringUtils.length(uri));
+		else if (StringUtils.contains(uri, "https://"))
+			uri = "$" + StringUtils.substring(uri, 8, StringUtils.length(uri));
+		this.id = uri;
 	}
 
 	public String getID() {
@@ -67,6 +71,6 @@ public class ContentId {
 
 	@Override
 	public String toString() {
-		return String.format("EntryPath [path=%s]", this.id);
+		return String.format("ContentId [id=%s]", this.id);
 	}
 }
