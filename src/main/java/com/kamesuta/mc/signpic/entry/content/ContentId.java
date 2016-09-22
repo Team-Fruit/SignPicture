@@ -32,18 +32,6 @@ public class ContentId {
 		return this.id;
 	}
 
-	public boolean isResource() {
-		return this.id.startsWith("!");
-	}
-
-	public ResourceLocation getResource() {
-		return new ResourceLocation(this.id.substring(1));
-	}
-
-	public static ContentId fromResource(final ResourceLocation location) {
-		return new ContentId("!" + location.toString());
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -72,5 +60,21 @@ public class ContentId {
 	@Override
 	public String toString() {
 		return String.format("ContentId [id=%s]", this.id);
+	}
+
+	public boolean isResource() {
+		return this.id.startsWith("!");
+	}
+
+	public ResourceLocation getResource() {
+		return new ResourceLocation(this.id.substring(1));
+	}
+
+	public Content content() {
+		return ContentManager.instance.get(this);
+	}
+
+	public static ContentId fromResource(final ResourceLocation location) {
+		return new ContentId("!" + location.toString());
 	}
 }

@@ -101,6 +101,12 @@ public class ImageSize implements Cloneable, ImageMeta.MetaParser {
 		return setSize(s, raw.width, raw.height, max.width, max.height);
 	}
 
+	public ImageSize scale(final float scale) {
+		this.width *= scale;
+		this.height *= scale;
+		return this;
+	}
+
 	@Override
 	public ImageSize reset() {
 		return unknownSize();

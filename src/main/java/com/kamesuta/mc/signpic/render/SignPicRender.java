@@ -59,6 +59,7 @@ public class SignPicRender extends WGui {
 
 					glPushMatrix();
 					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					this.manager.get(resSign).image.draw();
 					glPopMatrix();
 

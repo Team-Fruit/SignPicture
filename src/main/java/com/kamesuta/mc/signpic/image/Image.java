@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.image;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectableEntry;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
@@ -45,7 +43,6 @@ public abstract class Image implements IAsyncProcessable, IDivisionProcessable, 
 		if (this.state.getType() == ContentStateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
-			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			getTexture().bind();
 			t.startDrawingQuads();
 			t.addVertexWithUV(0, 0, 0, 0, 0);

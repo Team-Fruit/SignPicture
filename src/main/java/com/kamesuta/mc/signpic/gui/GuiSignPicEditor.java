@@ -92,7 +92,12 @@ public class GuiSignPicEditor extends WFrame {
 					protected void initWidget(final WEvent ev, final Area pgp) {
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 							{
-								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance).setEntryId(CurrentMode.instance.getEntryId()));
+								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
+									@Override
+									public EntryId getEntryId() {
+										return CurrentMode.instance.getEntryId();
+									}
+								});
 							}
 
 							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);

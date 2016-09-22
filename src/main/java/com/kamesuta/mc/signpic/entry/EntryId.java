@@ -111,6 +111,10 @@ public class EntryId {
 		toStrings(tile.signText);
 	}
 
+	public Entry Entry() {
+		return EntryManager.instance.get(this);
+	}
+
 	@Deprecated
 	public String[] toStrings() {
 		final String[] strings = new String[4];

@@ -7,6 +7,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryManager;
@@ -14,7 +15,6 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 public class SignPicLabel extends WBase {
 	protected EntryId entryId;
@@ -34,27 +34,17 @@ public class SignPicLabel extends WBase {
 			if (entry.isValid()) {
 				final Content content = entry.content();
 				if (content != null) {
-					RenderHelper.startTexture();
 					glDisable(GL_CULL_FACE);
 					glPushMatrix();
+
+					final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
+					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
+					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/50f);
+
 					translate(a);
-
-					final ImageSize siz = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
-					final ImageSize size = new ImageSize().setSize(ImageSizes.INNER, siz, new ImageSize().setArea(a));
-
-					glPushMatrix();
-					glTranslatef((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-					glScalef(size.width, size.height, 1f);
-					//content.state.mainImage(this.manager, content.image);
-					glPopMatrix();
-
-					glPushMatrix();
-					glTranslatef(a.w()/2, a.h()/2, 0);
-					//glScalef(size.width, size.height, 1f);
-					glScalef(25f, 25f, 1f);
-					//content.state.themeImage(this.manager, content.image);
-					//content.state.message(this.manager, content.image, font());
-					glPopMatrix();
+					glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
+					glScalef(50, 50, 1f);
+					Client.renderer.renderImage(content, size, 1f);
 
 					glPopMatrix();
 					glEnable(GL_CULL_FACE);
