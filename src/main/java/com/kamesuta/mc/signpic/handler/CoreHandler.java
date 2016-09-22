@@ -2,8 +2,9 @@ package com.kamesuta.mc.signpic.handler;
 
 import org.lwjgl.util.Timer;
 
-import com.kamesuta.mc.signpic.entry.EntrySlot;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryManager;
+import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.SignPicRender;
@@ -22,10 +23,9 @@ import net.minecraftforge.common.MinecraftForge;
 public class CoreHandler {
 	public final KeyHandler keyHandler = new KeyHandler();
 	public final SignHandler signHandler = new SignHandler();
-	public final ContentManager imageHandler = ContentManager.instance;
 	public final EntryManager signEntryManager = EntryManager.instance;
 	public final ContentManager contentManager = ContentManager.instance;
-	public final SignPicRender renderHandler = new SignPicRender(this.imageHandler);
+	public final SignPicRender renderHandler = new SignPicRender();
 	public final InformationChecker informationHandler = new InformationChecker();
 
 	public void init() {
@@ -73,9 +73,11 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
+		Client.startSection("signpic-load");
 		this.signEntryManager.onTick();
 		this.contentManager.onTick();
 		this.informationHandler.onTick(event);
 		EntrySlot.Tick();
+		Client.endSection();
 	}
 }

@@ -5,7 +5,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
@@ -80,7 +79,7 @@ public class SignHandler {
 			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				if (tilesign != null) {
-					final Entry entry = EntryManager.instance.get(EntryId.fromTile(tilesign));
+					final Entry entry = EntryId.fromTile(tilesign).entry();
 					if (entry.isValid()) {
 						CurrentMode.instance.setEntryId(entry.id);
 						event.setCanceled(true);

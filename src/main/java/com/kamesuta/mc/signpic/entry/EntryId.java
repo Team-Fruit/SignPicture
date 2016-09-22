@@ -79,6 +79,10 @@ public class EntryId {
 		return StringUtils.endsWith(this.id, "]") && StringUtils.contains(this.id, "[");
 	}
 
+	public boolean isValid() {
+		return hasContentId() && hasMeta();
+	}
+
 	public ContentId getContentId() {
 		if (hasContentId()) {
 			String id;
@@ -111,7 +115,7 @@ public class EntryId {
 		toStrings(tile.signText);
 	}
 
-	public Entry Entry() {
+	public Entry entry() {
 		return EntryManager.instance.get(this);
 	}
 

@@ -9,7 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.kamesuta.mc.signpic.entry.EntrySlot;
-import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
@@ -51,21 +50,17 @@ public class ContentManager implements ITickEntry {
 
 			if (collectableSignEntry.shouldInit()) {
 				collectableSignEntry.init();
-				executeProcess(collectableSignEntry.get());
+				this.threadpool.execute(new Runnable() {
+					@Override
+					public void run() {
+						collectableSignEntry.get().onAsyncProcess();
+					}
+				});
 			}
 			if (collectableSignEntry.shouldCollect()) {
 				collectableSignEntry.get().onCollect();
 				itr.remove();
 			}
 		}
-	}
-
-	private void executeProcess(final IAsyncProcessable entry) {
-		this.threadpool.execute(new Runnable() {
-			@Override
-			public void run() {
-				entry.onAsyncProcess();
-			}
-		});
 	}
 }

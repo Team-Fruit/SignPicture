@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.entry;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
 public class Entry {
@@ -17,7 +16,7 @@ public class Entry {
 	}
 
 	public Content content() {
-		return ContentManager.instance.get(this.contentId);
+		return this.contentId.content();
 	}
 
 	public boolean isValid() {

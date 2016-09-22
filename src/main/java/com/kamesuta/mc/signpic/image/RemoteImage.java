@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
@@ -51,6 +52,9 @@ public class RemoteImage extends Image {
 			new ContentDownloader(this.location, this.id, this.state).onAsyncProcess();
 			new ImageIOLoader(this, this.local).load();
 			ContentManager.instance.divisionqueue.offer(this);
+		} catch (final URISyntaxException e) {
+			this.state.setType(ContentStateType.ERROR);
+			this.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
 		} catch (final InvaildImageException e) {
 			this.state.setType(ContentStateType.ERROR);
 			this.state.setMessage(I18n.format("signpic.advmsg.invaildimage"));

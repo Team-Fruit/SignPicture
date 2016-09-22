@@ -10,7 +10,6 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
@@ -30,7 +29,7 @@ public class SignPicLabel extends WBase {
 		final Area a = getGuiPosition(pgp);
 		final EntryId entrtId = getEntryId();
 		if (entrtId != null) {
-			final Entry entry = EntryManager.instance.get(entrtId);
+			final Entry entry = entrtId.entry();
 			if (entry.isValid()) {
 				final Content content = entry.content();
 				if (content != null) {

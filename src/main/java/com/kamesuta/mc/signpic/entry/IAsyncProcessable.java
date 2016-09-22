@@ -4,5 +4,5 @@ public interface IAsyncProcessable {
 	/**
 	 * called once, do process at once
 	 */
-	void onAsyncProcess();
+	void onAsyncProcess() throws Exception;
 }

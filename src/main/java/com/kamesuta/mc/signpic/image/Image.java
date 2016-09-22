@@ -32,6 +32,9 @@ public abstract class Image implements IAsyncProcessable, IDivisionProcessable, 
 
 	public abstract String getLocal();
 
+	@Override
+	public abstract void onAsyncProcess();
+
 	public ImageSize getSize() {
 		if (this.state.getType() == ContentStateType.AVAILABLE)
 			return getTexture().getSize();

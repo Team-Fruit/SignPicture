@@ -5,10 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -25,7 +22,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
 	protected final Tessellator t = Tessellator.instance;
 
-	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
 	public CustomTileEntitySignRenderer() {}
@@ -61,7 +57,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				RenderHelper.startShape();
 				glPushMatrix();
 				glTranslatef(-.5f, -.5f, 0f);
-				ContentManager.instance.get(ContentId.fromResource(CustomTileEntitySignRenderer.resError)).image.draw();
+				RenderHelper.startTexture();
+				bindTexture(resError);
+				RenderHelper.drawRectTexture(GL_QUADS);
 				glPopMatrix();
 			}
 			StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);
@@ -90,7 +88,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	}
 
 	public void renderSignPictureBase(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
-		final Entry entry = EntryManager.instance.get(EntryId.fromTile(tile));
+		final Entry entry = EntryId.fromTile(tile).entry();
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();

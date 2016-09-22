@@ -17,8 +17,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-import net.minecraft.client.resources.I18n;
-
 public class ContentDownloader implements IAsyncProcessable {
 	protected final ContentLocation location;
 	protected final ContentId id;
@@ -31,7 +29,7 @@ public class ContentDownloader implements IAsyncProcessable {
 	}
 
 	@Override
-	public void onAsyncProcess() {
+	public void onAsyncProcess() throws URISyntaxException, IllegalStateException, IOException {
 		InputStream input = null;
 		CountingOutputStream countoutput = null;
 		this.state.setType(ContentStateType.DOWNLOADING);
@@ -53,12 +51,6 @@ public class ContentDownloader implements IAsyncProcessable {
 				IOUtils.copy(input, countoutput);
 			}
 			this.state.setType(ContentStateType.DOWNLOADED);
-		} catch (final URISyntaxException e) {
-			this.state.setType(ContentStateType.ERROR);
-			this.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
-		} catch (final Exception e) {
-			this.state.setType(ContentStateType.ERROR);
-			this.state.setMessage(I18n.format("signpic.advmsg.dlerror", e));
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(countoutput);

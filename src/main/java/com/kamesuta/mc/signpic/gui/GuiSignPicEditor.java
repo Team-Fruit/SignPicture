@@ -24,7 +24,6 @@ import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
-import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -228,7 +227,7 @@ public class GuiSignPicEditor extends WFrame {
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								final Entry entry = EntryManager.instance.get(CurrentMode.instance.getEntryId());
+								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								if (entry.isValid() && Sign.isPlaceable(entry.id)) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									requestClose();
@@ -240,7 +239,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							public boolean isEnabled() {
 								state(CurrentMode.instance.isMode(CurrentMode.Mode.PLACE));
-								final Entry entry = EntryManager.instance.get(CurrentMode.instance.getEntryId());
+								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								return entry.isValid() && Sign.isPlaceable(entry.id) && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});

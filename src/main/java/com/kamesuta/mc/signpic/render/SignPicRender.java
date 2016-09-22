@@ -6,10 +6,8 @@ import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -25,12 +23,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public class SignPicRender extends WGui {
-	public static final ContentId resSign = ContentId.fromResource(new ResourceLocation("textures/items/sign.png"));
+	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
 
-	protected final ContentManager manager;
-
-	public SignPicRender(final ContentManager manager) {
-		this.manager = manager;
+	public SignPicRender() {
 	}
 
 	@CoreEvent
@@ -60,7 +55,11 @@ public class SignPicRender extends WGui {
 					glPushMatrix();
 					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
 					glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					this.manager.get(resSign).image.draw();
+
+					ContentId.fromResource(resSign).content().image.getTexture().bind();
+					RenderHelper.startTexture();
+					RenderHelper.drawRectTexture(GL_QUADS);
+
 					glPopMatrix();
 
 					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
@@ -77,11 +76,11 @@ public class SignPicRender extends WGui {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
 			if (tilesign != null) {
-				final Entry entry = EntryManager.instance.get(EntryId.fromTile(tilesign));
+				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
 					final ImageSize signsize = entry.meta.size;
-					final Content content = this.manager.get(new ContentId(uri));
+					final Content content = entry.content();
 					final ImageSize imagesize = content.image.getSize();
 					final ImageSize viewsize = new ImageSize().setAspectSize(entry.meta.size, imagesize);
 					final String advmsg = content.state.getMessage();
