@@ -5,5 +5,5 @@ public interface IDivisionProcessable {
 	 * called multiple
 	 * @return is finished
 	 */
-	boolean onDivisionProcess();
+	boolean onDivisionProcess() throws Exception;
 }

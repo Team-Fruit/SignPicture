@@ -18,39 +18,37 @@ import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownloader implements IAsyncProcessable {
+	protected final Content content;
 	protected final ContentLocation location;
-	protected final ContentId id;
-	protected final ContentState state;
 
-	public ContentDownloader(final ContentLocation location, final ContentId id, final ContentState state) {
+	public ContentDownloader(final Content content, final ContentLocation location) {
+		this.content = content;
 		this.location = location;
-		this.id = id;
-		this.state = state;
 	}
 
 	@Override
 	public void onAsyncProcess() throws URISyntaxException, IllegalStateException, IOException {
 		InputStream input = null;
 		CountingOutputStream countoutput = null;
-		this.state.setType(ContentStateType.DOWNLOADING);
+		this.content.state.setType(ContentStateType.DOWNLOADING);
 		try {
-			final File local = this.location.localLocation(this.id);
+			final File local = this.location.localLocation(this.content.id);
 			if (!local.exists()) {
-				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.id));
+				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.content.id));
 				final HttpResponse response = Downloader.downloader.client.execute(req);
 				final HttpEntity entity = response.getEntity();
 
-				this.state.progress.overall = entity.getContentLength();
+				this.content.state.progress.overall = entity.getContentLength();
 				input = entity.getContent();
 				countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local))) {
 					@Override
 					protected void afterWrite(final int n) throws IOException {
-						ContentDownloader.this.state.progress.done = getByteCount();
+						ContentDownloader.this.content.state.progress.done = getByteCount();
 					}
 				};
 				IOUtils.copy(input, countoutput);
 			}
-			this.state.setType(ContentStateType.DOWNLOADED);
+			this.content.state.setType(ContentStateType.DOWNLOADED);
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(countoutput);

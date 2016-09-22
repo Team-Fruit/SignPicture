@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic;
 
 import java.io.File;
 
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -19,6 +20,7 @@ public class Client {
 
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
+	public static ContentLocation location;
 
 	public static File mcDir;
 	public static File signpicDir;

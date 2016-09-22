@@ -1,49 +1,37 @@
 package com.kamesuta.mc.signpic.image;
 
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
-import com.kamesuta.mc.signpic.entry.ICollectableEntry;
+import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
-import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
-import com.kamesuta.mc.signpic.entry.content.ContentState;
+import com.kamesuta.mc.signpic.entry.IInitable;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.renderer.Tessellator;
 
-public abstract class Image implements IAsyncProcessable, IDivisionProcessable, ICollectableEntry {
+public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
-	protected final ContentLocation location;
-	protected final ContentId id;
-	protected final ContentState state;
+	protected final Content content;
 
-	public Image(final ContentLocation location, final ContentId id, final ContentState state) {
-		this.location = location;
-		this.id = id;
-		this.state = state;
-	}
-
-	public ContentId getPath() {
-		return this.id;
+	public Image(final Content content) {
+		this.content = content;
 	}
 
 	public abstract IImageTexture getTexture() throws IllegalStateException;
 
 	public abstract String getLocal();
 
-	@Override
-	public abstract void onAsyncProcess();
-
 	public ImageSize getSize() {
-		if (this.state.getType() == ContentStateType.AVAILABLE)
+		if (this.content.state.getType() == ContentStateType.AVAILABLE)
 			return getTexture().getSize();
 		else
 			return DefaultSize;
 	}
 
 	public void draw() {
-		if (this.state.getType() == ContentStateType.AVAILABLE) {
+		if (this.content.state.getType() == ContentStateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
 			getTexture().bind();

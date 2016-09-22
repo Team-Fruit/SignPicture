@@ -1,5 +1,5 @@
 package com.kamesuta.mc.signpic.entry;
 
-public interface IInitableEntry {
+public interface IInitable {
 	void onInit();
 }

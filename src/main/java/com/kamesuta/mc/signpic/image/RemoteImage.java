@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
-import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.entry.content.ContentState;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 
@@ -20,51 +19,57 @@ public class RemoteImage extends Image {
 	protected File local;
 	protected boolean isTextureLoaded;
 
-	public RemoteImage(final ContentLocation location, final ContentId id, final ContentState state) {
-		super(location, id, state);
-		this.local = location.localLocation(id);
+	public RemoteImage(final Content content) {
+		super(content);
+		this.local = Client.location.localLocation(content.id);
 	}
 
 	private int processing = 0;
+
 	@Override
-	public boolean onDivisionProcess() {
-		if (this.isTextureLoaded) {
-			final List<ImageTexture> texs = this.texture.getAll();
-			if (this.processing < (this.state.progress.overall = texs.size())) {
-				final ImageTexture tex = texs.get(this.processing);
-				tex.load();
-				this.processing++;
-				this.state.setType(ContentStateType.LOADING);
-				this.state.progress.done = this.processing;
-				return false;
-			} else {
-				this.state.setType(ContentStateType.AVAILABLE);
-				this.state.progress.done = this.state.progress.overall;
-				return true;
-			}
-		}
-		throw new IllegalStateException("No Texture Loaded");
+	public void onInit() {
+		ContentManager.instance.asyncqueue.offer(this);
 	}
 
 	@Override
 	public void onAsyncProcess() {
 		try {
-			new ContentDownloader(this.location, this.id, this.state).onAsyncProcess();
-			new ImageIOLoader(this, this.local).load();
+			new ContentDownloader(this.content, Client.location).onAsyncProcess();
+			this.texture = new ImageIOLoader(this.content, Client.location).load();
 			ContentManager.instance.divisionqueue.offer(this);
 		} catch (final URISyntaxException e) {
-			this.state.setType(ContentStateType.ERROR);
-			this.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.invaildurl"));
 		} catch (final InvaildImageException e) {
-			this.state.setType(ContentStateType.ERROR);
-			this.state.setMessage(I18n.format("signpic.advmsg.invaildimage"));
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.invaildimage"));
 		} catch (final IOException e) {
-			this.state.setType(ContentStateType.ERROR);
-			this.state.setMessage(I18n.format("signpic.advmsg.ioerror", e));
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.ioerror", e));
 		} catch (final Exception e) {
-			this.state.setType(ContentStateType.ERROR);
-			this.state.setMessage(I18n.format("signpic.advmsg.unknown", e));
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.unknown", e));
 		}
+	}
+
+	@Override
+	public boolean onDivisionProcess() {
+		if (this.isTextureLoaded) {
+			final List<ImageTexture> texs = this.texture.getAll();
+			if (this.processing < (this.content.state.progress.overall = texs.size())) {
+				final ImageTexture tex = texs.get(this.processing);
+				tex.load();
+				this.processing++;
+				this.content.state.setType(ContentStateType.LOADING);
+				this.content.state.progress.done = this.processing;
+				return false;
+			} else {
+				this.content.state.setType(ContentStateType.AVAILABLE);
+				this.content.state.progress.done = this.content.state.progress.overall;
+				return true;
+			}
+		}
+		throw new IllegalStateException("No Texture Loaded");
 	}
 
 	@Override
@@ -79,7 +84,7 @@ public class RemoteImage extends Image {
 	}
 
 	public ImageTextures getTextures() {
-		if (this.state.getType() == ContentStateType.AVAILABLE)
+		if (this.content.state.getType() == ContentStateType.AVAILABLE)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
@@ -95,6 +100,6 @@ public class RemoteImage extends Image {
 
 	@Override
 	public String toString() {
-		return String.format("RemoteImage[%s]", this.id);
+		return String.format("RemoteImage[%s]", this.content.id);
 	}
 }

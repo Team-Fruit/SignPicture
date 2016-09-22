@@ -7,6 +7,7 @@ import java.util.Map;
 import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -61,6 +62,8 @@ public class ClientProxy extends CommonProxy {
 		Client.configFile = event.getSuggestedConfigurationFile();
 		Client.modDir = new File(mcdir, "mods");
 		Client.modFile = event.getSourceFile();
+
+		Client.location = new ContentLocation(Client.signpicCacheDir);
 
 		// Get Id
 		final String id = Client.mc.getSession().getPlayerID();

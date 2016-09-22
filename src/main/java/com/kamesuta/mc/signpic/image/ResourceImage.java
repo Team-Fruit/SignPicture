@@ -1,8 +1,6 @@
 package com.kamesuta.mc.signpic.image;
 
-import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
-import com.kamesuta.mc.signpic.entry.content.ContentState;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 
 import net.minecraft.util.ResourceLocation;
@@ -11,25 +9,30 @@ public class ResourceImage extends Image {
 	protected ResourceLocation resource;
 	protected ResourceImageTexture texture;
 
-	public ResourceImage(final ContentLocation location, final ContentId id, final ContentState state) {
-		super(location, id, state.setType(ContentStateType.AVAILABLE));
-		this.resource = id.getResource();
+	public ResourceImage(final Content content) {
+		super(content);
+		this.resource = content.id.getResource();
 		this.texture = new ResourceImageTexture(this.resource);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("ResourceImage[%s]", this.id);
+		return String.format("ResourceImage[%s]", this.content.id);
 	}
 
 	@Override
 	public String getLocal() {
-		return "Resource:" + this.location;
+		return "Resource:" + this.content.id;
 	}
 
 	@Override
 	public IImageTexture getTexture() {
 		return this.texture;
+	}
+
+	@Override
+	public void onInit() {
+		this.content.state.setType(ContentStateType.AVAILABLE);
 	}
 
 	@Override

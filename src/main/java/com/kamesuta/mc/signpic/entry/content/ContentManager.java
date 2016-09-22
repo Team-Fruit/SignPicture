@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.kamesuta.mc.signpic.entry.EntrySlot;
+import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
@@ -16,9 +17,10 @@ import com.kamesuta.mc.signpic.handler.CoreEvent;
 public class ContentManager implements ITickEntry {
 	public static ContentManager instance = new ContentManager();
 
-	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
 	protected final HashMap<ContentId, EntrySlot<Content>> registry = new HashMap<ContentId, EntrySlot<Content>>();
+	public Deque<IAsyncProcessable> asyncqueue = new ArrayDeque<IAsyncProcessable>();
+	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
 
 	public ContentManager() {
 	}
@@ -37,10 +39,28 @@ public class ContentManager implements ITickEntry {
 	@CoreEvent
 	@Override
 	public void onTick() {
+		IAsyncProcessable asyncprocess;
+		if ((asyncprocess = this.asyncqueue.peek()) != null) {
+			final IAsyncProcessable asyncprocessexec = asyncprocess;
+			this.threadpool.execute(new Runnable() {
+				@Override
+				public void run() {
+					try {
+						asyncprocessexec.onAsyncProcess();
+					} catch (final Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
+		}
 		IDivisionProcessable divisionprocess;
 		if ((divisionprocess = this.divisionqueue.peek()) != null) {
-			if (divisionprocess.onDivisionProcess()) {
-				this.divisionqueue.poll();
+			try {
+				if (divisionprocess.onDivisionProcess()) {
+					this.divisionqueue.poll();
+				}
+			} catch (final Exception e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -50,12 +70,6 @@ public class ContentManager implements ITickEntry {
 
 			if (collectableSignEntry.shouldInit()) {
 				collectableSignEntry.init();
-				this.threadpool.execute(new Runnable() {
-					@Override
-					public void run() {
-						collectableSignEntry.get().onAsyncProcess();
-					}
-				});
 			}
 			if (collectableSignEntry.shouldCollect()) {
 				collectableSignEntry.get().onCollect();
