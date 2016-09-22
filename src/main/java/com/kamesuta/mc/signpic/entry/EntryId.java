@@ -62,6 +62,15 @@ public class EntryId {
 		return fromStrings(tile.signText);
 	}
 
+	public static EntryId fromChats(final IChatComponent[] chats) {
+		final StringBuilder stb = new StringBuilder();
+		for (final IChatComponent chat : chats) {
+			if (chat!=null)
+				stb.append(chat.getFormattedText());new ChatComponentText("").getUnformattedText();
+		}
+		return new EntryId(stb.toString());
+	}
+
 	public boolean hasContentId() {
 		return StringUtils.isEmpty(this.id) || StringUtils.containsOnly(this.id, "!") || StringUtils.containsOnly(this.id, "$");
 	}
@@ -71,20 +80,17 @@ public class EntryId {
 	}
 
 	public ContentId getContentId() {
-		return new ContentId(StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "[")));
+		if (hasContentId())
+			return new ContentId(StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "[")));
+		else
+			return null;
 	}
 
 	public ImageMeta getMeta() {
-		return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
-	}
-
-	public static EntryId fromChats(final IChatComponent[] chats) {
-		final StringBuilder stb = new StringBuilder();
-		for (final IChatComponent chat : chats) {
-			if (chat!=null)
-				stb.append(chat.getFormattedText());new ChatComponentText("").getUnformattedText();
-		}
-		return new EntryId(stb.toString());
+		if (hasMeta())
+			return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
+		else
+			return null;
 	}
 
 	public void toStrings(final String[] sign) {

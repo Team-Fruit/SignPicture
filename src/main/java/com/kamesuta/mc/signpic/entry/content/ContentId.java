@@ -12,14 +12,10 @@ public class ContentId {
 	}
 
 	public String getID() {
-		if (StringUtils.contains(this.id, "http://"))
-			return StringUtils.substring(this.id, 7, StringUtils.length(this.id));
-		else if (StringUtils.contains(this.id, "https://"))
-			return "$" + StringUtils.substring(this.id, 8, StringUtils.length(this.id));
 		return this.id;
 	}
 
-	public String getURL() {
+	public String getURI() {
 		if (!StringUtils.startsWith(this.id, "!"))
 			if (StringUtils.startsWith(this.id, "$"))
 				return "https://" + StringUtils.substring(this.id, 1);
@@ -28,7 +24,7 @@ public class ContentId {
 		return this.id;
 	}
 
-	public String path() {
+	public String id() {
 		return this.id;
 	}
 

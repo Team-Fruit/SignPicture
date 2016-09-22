@@ -2,23 +2,22 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
-import com.kamesuta.mc.signpic.util.Sign;
 
 public class SignPicLabel extends WBase {
-	protected Sign sign;
+	protected EntryId entryId;
 	protected ContentManager manager;
 
 	public SignPicLabel(final R position, final ContentManager manager) {
@@ -29,18 +28,18 @@ public class SignPicLabel extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
-		final Sign s = getSign();
-		if (s.isVaild()) {
-			final String id = s.getURL();
-			if (s != null && !StringUtils.isEmpty(id)) {
-				final Content content = this.manager.get(new ContentId(id));
+		final EntryId entrtId = getEntryId();
+		if (entrtId != null) {
+			final Entry entry = EntryManager.instance.get(entrtId);
+			if (entry.isValid()) {
+				final Content content = entry.content();
 				if (content != null) {
 					RenderHelper.startTexture();
 					glDisable(GL_CULL_FACE);
 					glPushMatrix();
 					translate(a);
 
-					final ImageSize siz = new ImageSize().setAspectSize(this.sign.meta.size, content.image.getSize());
+					final ImageSize siz = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 					final ImageSize size = new ImageSize().setSize(ImageSizes.INNER, siz, new ImageSize().setArea(a));
 
 					glPushMatrix();
@@ -64,12 +63,12 @@ public class SignPicLabel extends WBase {
 		}
 	}
 
-	public Sign getSign() {
-		return this.sign;
+	public EntryId getEntryId() {
+		return this.entryId;
 	}
 
-	public SignPicLabel setSign(final Sign sign) {
-		this.sign = sign;
+	public SignPicLabel setEntryId(final EntryId entryId) {
+		this.entryId = entryId;
 		return this;
 	}
 }

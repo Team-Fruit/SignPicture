@@ -3,20 +3,24 @@ package com.kamesuta.mc.signpic.entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.util.Sign;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
-public class SignEntry {
+public class Entry {
 	public final EntryId id;
-	public final Sign sign;
 	public final ContentId contentId;
+	public final ImageMeta meta;
 
-	public SignEntry(final EntryId id) {
+	public Entry(final EntryId id) {
 		this.id = id;
-		this.sign = new Sign().parseText(id.id());
-		this.contentId = new ContentId(this.sign.getURL());
+		this.contentId = id.getContentId();
+		this.meta = id.getMeta();
 	}
 
 	public Content content() {
 		return ContentManager.instance.get(this.contentId);
+	}
+
+	public boolean isValid() {
+		return this.id!=null && this.meta!=null;
 	}
 }

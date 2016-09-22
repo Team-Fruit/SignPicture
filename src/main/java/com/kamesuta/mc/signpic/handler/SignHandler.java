@@ -3,6 +3,9 @@ import java.lang.reflect.Field;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
@@ -40,15 +43,15 @@ public class SignHandler {
 					try {
 						final GuiEditSign ges = (GuiEditSign) event.gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-						CurrentMode.instance.getSign().sendSign(tileSign);
+						Sign.sendSign(CurrentMode.instance.getSign(), tileSign);
 						event.setCanceled(true);
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 							CurrentMode.instance.setMode();
-							final SignEntity se = CurrentMode.instance.getSign().preview;
+							final SignEntity se = Sign.preview;
 							if (se.isRenderable()) {
 								final TileEntitySign preview = se.getTileEntity();
 								if (preview.xCoord==tileSign.xCoord && preview.yCoord==tileSign.yCoord && preview.zCoord==tileSign.zCoord) {
-									CurrentMode.instance.getSign().preview.setVisible(false);
+									Sign.preview.setVisible(false);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 									CurrentMode.instance.setState(CurrentMode.State.SEE, false);
 								}
@@ -68,7 +71,7 @@ public class SignHandler {
 	public void onClick(final MouseEvent event) {
 		if (event.buttonstate && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
-				CurrentMode.instance.getSign().preview.capturePlace();
+				Sign.preview.capturePlace();
 				event.setCanceled(true);
 				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 					CurrentMode.instance.setMode();
@@ -77,9 +80,9 @@ public class SignHandler {
 			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				if (tilesign != null) {
-					final Sign sign = new Sign().parseSignEntity(tilesign);
-					if (sign.isVaild()) {
-						CurrentMode.instance.setSign(sign);
+					final Entry entry = EntryManager.instance.get(EntryId.fromTile(tilesign));
+					if (entry.isValid()) {
+						CurrentMode.instance.setSign(entry.id);
 						event.setCanceled(true);
 						Client.openEditor();
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))

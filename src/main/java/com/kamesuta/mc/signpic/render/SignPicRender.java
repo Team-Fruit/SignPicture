@@ -4,6 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -33,10 +36,10 @@ public class SignPicRender extends WGui {
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW))
-			CurrentMode.instance.getSign().preview.capturePlace();
+			Sign.preview.capturePlace();
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
-			if (CurrentMode.instance.getSign().preview.isRenderable() && CurrentMode.instance.getSign().preview.isVisible()) {
-				final TileEntitySign tile = CurrentMode.instance.getSign().updatePreview().preview.getRenderTileEntity();
+			if (Sign.preview.isRenderable() && Sign.preview.isVisible()) {
+				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
 				Client.renderer.renderTileEntityAt(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks);
 			}
 		}
@@ -73,18 +76,18 @@ public class SignPicRender extends WGui {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
 			if (tilesign != null) {
-				final Sign sign = new Sign().parseSignEntity(tilesign);
-				if (sign.isVaild()) {
-					final String id = sign.getURL();
-					final ImageSize signsize = sign.meta.size;
-					final Content content = this.manager.get(new ContentId(id));
+				final Entry entry = EntryManager.instance.get(EntryId.fromTile(tilesign));
+				if (entry.isValid()) {
+					final String uri = entry.contentId.getURI();
+					final ImageSize signsize = entry.meta.size;
+					final Content content = this.manager.get(new ContentId(uri));
 					final ImageSize imagesize = content.image.getSize();
-					final ImageSize viewsize = new ImageSize().setAspectSize(sign.meta.size, imagesize);
+					final ImageSize viewsize = new ImageSize().setAspectSize(entry.meta.size, imagesize);
 					final String advmsg = content.state.getMessage();
 
 					event.left.add("");
-					event.left.add(I18n.format("signpic.over.sign", sign.text()));
-					event.left.add(I18n.format("signpic.over.id", id));
+					event.left.add(I18n.format("signpic.over.sign", entry.id.id()));
+					event.left.add(I18n.format("signpic.over.id", uri));
 					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
 					event.left.add(I18n.format("signpic.over.status", content.state.getMessage()));
 					if (advmsg != null)

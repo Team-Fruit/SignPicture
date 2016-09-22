@@ -3,16 +3,15 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryManager;
-import com.kamesuta.mc.signpic.entry.SignEntry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
@@ -35,9 +34,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks)
 	{
 		Client.startSection("signpic-render");
-		final SignEntry entry = EntryManager.instance.get(EntryId.fromTile(tile));
-		final Sign sign = entry.sign;
-		if (sign.isVaild()) {
+		final Entry entry = EntryManager.instance.get(EntryId.fromTile(tile));
+		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
 				glColor4f(1f, 1f, 1f, .5f);
@@ -48,7 +46,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			final Content content = entry.content();
 
 			// Size
-			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, content.image.getSize());
+			final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
@@ -78,8 +76,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			glDisable(GL_LIGHTING);
 			glPushMatrix();
 
-			glTranslatef(sign.meta.offset.x, sign.meta.offset.y, sign.meta.offset.z);
-			sign.meta.rotation.rotate();
+			glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
+			entry.meta.rotation.rotate();
 
 			glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 			glScalef(1f, -1f, 1f);

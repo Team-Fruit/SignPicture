@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.mode;
 
 import java.util.EnumSet;
 
-import com.kamesuta.mc.signpic.util.Sign;
+import com.kamesuta.mc.signpic.entry.EntryId;
 
 public class CurrentMode {
 	public static final CurrentMode instance = new CurrentMode();
@@ -10,7 +10,7 @@ public class CurrentMode {
 	private CurrentMode() {
 	}
 
-	private Sign sign = new Sign();
+	private EntryId sign;
 	private Mode mode = Mode.NONE;
 	private final EnumSet<State> states = EnumSet.noneOf(State.class);
 
@@ -49,11 +49,11 @@ public class CurrentMode {
 		return this.states.contains(state);
 	}
 
-	public void setSign(final Sign sign) {
+	public void setSign(final EntryId sign) {
 		this.sign = sign;
 	}
 
-	public Sign getSign() {
+	public EntryId getSign() {
 		return this.sign;
 	}
 

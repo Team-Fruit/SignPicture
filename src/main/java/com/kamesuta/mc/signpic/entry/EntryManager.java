@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.entry;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,15 +12,15 @@ public class EntryManager implements ITickEntry {
 	public static final EntryManager instance = new EntryManager();
 
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
-	private final Map<EntryId, EntrySlot<SignEntry>> registry = Maps.newHashMap();
+	private final Map<EntryId, EntrySlot<Entry>> registry = Maps.newHashMap();
 
-	public SignEntry get(final EntryId id) {
-		final EntrySlot<SignEntry> entries = this.registry.get(id);
+	public Entry get(final EntryId id) {
+		final EntrySlot<Entry> entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
 		else {
-			final SignEntry entry = new SignEntry(id);
-			this.registry.put(id, new EntrySlot<SignEntry>(entry));
+			final Entry entry = new Entry(id);
+			this.registry.put(id, new EntrySlot<Entry>(entry));
 			return entry;
 		}
 	}
@@ -29,9 +28,9 @@ public class EntryManager implements ITickEntry {
 	@CoreEvent
 	@Override
 	public void onTick() {
-		for (final Iterator<Entry<EntryId, EntrySlot<SignEntry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
-			final Entry<EntryId, EntrySlot<SignEntry>> entry = itr.next();
-			final EntrySlot<SignEntry> collectableSignEntry = entry.getValue();
+		for (final Iterator<Map.Entry<EntryId, EntrySlot<Entry>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
+			final Map.Entry<EntryId, EntrySlot<Entry>> entry = itr.next();
+			final EntrySlot<Entry> collectableSignEntry = entry.getValue();
 
 			if (collectableSignEntry.shouldCollect()) {
 				itr.remove();

@@ -82,7 +82,7 @@ public class StateRender {
 		f3 = 0.036666668F * f1;
 		glPushMatrix();
 		glScalef(f3, f3, 1f);
-		final String msg2 = content.id.path();
+		final String msg2 = content.id.id();
 		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2) / 2, 0, 0xffffff);
 		glPopMatrix();
 		final String msg3 = content.state.getMessage();
