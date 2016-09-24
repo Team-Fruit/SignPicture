@@ -6,7 +6,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
-import com.kamesuta.mc.bnnwidget.motion.EasingMotion;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -25,7 +25,7 @@ public class GuiOffset extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final MCoord x = MCoord.pleft(-1f).add(EasingMotion.easeOutBack.move(.25f, 0f)).start();
+		final MCoord x = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		add(new OffsetElement(new RArea(x, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), x, "X") {
 			@Override
 			protected void set(final float f) {
@@ -38,7 +38,7 @@ public class GuiOffset extends WPanel {
 				return GuiOffset.this.offset.x;
 			}
 		});
-		final MCoord y = MCoord.pleft(-1f).add(EasingMotion.easeOutBack.move(.25f, 0f)).start();
+		final MCoord y = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		add(new OffsetElement(new RArea(y, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), y, "Y") {
 			@Override
 			protected void set(final float f) {
@@ -51,7 +51,7 @@ public class GuiOffset extends WPanel {
 				return GuiOffset.this.offset.y;
 			}
 		});
-		final MCoord z = MCoord.pleft(-1f).add(EasingMotion.easeOutBack.move(.25f, 0f)).start();
+		final MCoord z = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		add(new OffsetElement(new RArea(z, Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), z, "Z") {
 			@Override
 			protected void set(final float f) {
@@ -98,7 +98,7 @@ public class GuiOffset extends WPanel {
 
 		@Override
 		public boolean onCloseRequest() {
-			this.left.stop()/*.add(new BlankMotion(this.top.get()/15*.025f))*/.add(EasingMotion.easeInBack.move(.25f, -1f)).start();
+			this.left.stop()/*.add(new BlankMotion(this.top.get()/15*.025f))*/.add(Easings.easeInBack.move(.25f, -1f)).start();
 			return false;
 		}
 

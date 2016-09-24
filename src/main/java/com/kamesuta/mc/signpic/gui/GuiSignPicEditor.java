@@ -13,7 +13,7 @@ import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.bnnwidget.motion.EasingMotion;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -62,12 +62,12 @@ public class GuiSignPicEditor extends WFrame {
 						if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 							if (!this.b) {
 								this.b = true;
-								this.m.stop().add(EasingMotion.easeLinear.move(.2f, 0f)).start();
+								this.m.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
 							}
 						} else {
 							if (this.b) {
 								this.b = false;
-								this.m.stop().add(EasingMotion.easeLinear.move(.2f, .5f)).start();
+								this.m.stop().add(Easings.easeLinear.move(.2f, .5f)).start();
 							}
 						}
 						super.update(ev, pgp, p);
@@ -75,7 +75,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						this.m.stop().add(EasingMotion.easeLinear.move(.25f, 0f)).start();
+						this.m.stop().add(Easings.easeLinear.move(.25f, 0f)).start();
 						return false;
 					}
 
@@ -121,12 +121,12 @@ public class GuiSignPicEditor extends WFrame {
 								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 									if (!this.b) {
 										this.b = true;
-										m.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
+										m.stop().add(Easings.easeOutElastic.move(.5f, -1f)).start();
 									}
 								} else {
 									if (this.b) {
 										this.b = false;
-										m.stop().add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
+										m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
 									}
 								}
 								super.update(ev, pgp, p);
@@ -136,7 +136,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						m.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
+						m.stop().add(Easings.easeOutElastic.move(.5f, -1f)).start();
 						return false;
 					}
 
@@ -146,7 +146,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final MCoord p = MCoord.right(-65).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
+				final MCoord p = MCoord.right(-65).add(Easings.easeOutBounce.move(.5f, 0)).start();
 				add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
 					@Override
 					protected void initWidget() {
@@ -279,7 +279,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						p.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).start();
+						p.stop().add(Easings.easeOutBounce.move(.5f, -65)).start();
 						return false;
 					}
 
@@ -289,7 +289,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final MCoord d = MCoord.bottom(-15).add(EasingMotion.easeOutElastic.move(.5f, 5)).start();
+				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
 				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
@@ -315,7 +315,7 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public boolean onCloseRequest() {
 						super.onCloseRequest();
-						d.stop().add(EasingMotion.easeOutElastic.move(1f, -15)).start();
+						d.stop().add(Easings.easeOutElastic.move(1f, -15)).start();
 						return false;
 					}
 
@@ -352,14 +352,14 @@ public class GuiSignPicEditor extends WFrame {
 			if (b) {
 				if (!this.hover) {
 					this.hover = true;
-					this.m.stop().add(EasingMotion.easeOutElastic.move(.5f, 6f)).start();
-					this.s.stop().add(EasingMotion.easeOutElastic.move(.5f, 1.1f)).start();
+					this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
+					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
 				}
 			} else {
 				if (this.hover) {
 					this.hover = false;
-					this.m.stop().add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
-					this.s.stop().add(EasingMotion.easeOutElastic.move(.5f, 1f)).start();
+					this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
+					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
 				}
 			}
 		}
