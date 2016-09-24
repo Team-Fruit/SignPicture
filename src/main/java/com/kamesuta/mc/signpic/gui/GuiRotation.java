@@ -117,7 +117,7 @@ public class GuiRotation extends WPanel {
 
 		public void add(final Rotate rotate) {
 			final int n = this.rotation.rotates.size();
-			if (n < 10) {
+			if (n < 3) {
 				this.rotation.rotates.add(rotate);
 				addWidget(rotate, n);
 			}

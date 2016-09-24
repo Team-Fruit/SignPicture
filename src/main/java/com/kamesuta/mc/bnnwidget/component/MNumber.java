@@ -9,6 +9,9 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.position.RArea;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta.MetaParser;
+
+import net.minecraft.client.gui.GuiScreen;
 
 public class MNumber extends WPanel {
 	public MButton neg;
@@ -20,7 +23,14 @@ public class MNumber extends WPanel {
 		this.neg = new MButton(new RArea(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "-") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				MNumber.this.field.setText(Float.toString(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-1f));
+				float f;
+				if (GuiScreen.isShiftKeyDown())
+					f = .1f;
+				else if (GuiScreen.isCtrlKeyDown())
+					f = .01f;
+				else
+					f = 1f;
+				MNumber.this.field.setText(MetaParser.format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-f));
 				return true;
 			}
 		};
@@ -35,7 +45,14 @@ public class MNumber extends WPanel {
 		this.pos = new MButton(new RArea(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "+") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				MNumber.this.field.setText(Float.toString(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+1f));
+				float f;
+				if (GuiScreen.isShiftKeyDown())
+					f = .1f;
+				else if (GuiScreen.isCtrlKeyDown())
+					f = .01f;
+				else
+					f = 1f;
+				MNumber.this.field.setText(MetaParser.format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+f));
 				return true;
 			}
 		};

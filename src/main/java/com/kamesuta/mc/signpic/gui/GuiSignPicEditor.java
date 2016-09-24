@@ -85,7 +85,15 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				add(new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.width(15*8), Coord.bottom(15)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
+				add(new GuiRotation(new RArea(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.bottom(15*4)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
+					@Override
+					protected void onUpdate() {
+						super.onUpdate();
+						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+					}
+				});
+
+				add(new GuiOffset(new RArea(Coord.top(5+15*4+5), Coord.left(5), Coord.width(15*8), Coord.bottom(15)), GuiSignPicEditor.this.signbuilder.getMeta().offset) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
