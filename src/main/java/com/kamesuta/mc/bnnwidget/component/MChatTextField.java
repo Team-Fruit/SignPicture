@@ -11,6 +11,7 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public class MChatTextField extends WBase {
 	protected final GuiTextField t;
@@ -25,6 +26,8 @@ public class MChatTextField extends WBase {
 
 	public boolean canAddChar(final char c) {
 		if (StringUtils.isEmpty(this.allowedCharacters))
+			return true;
+		else if (!ChatAllowedCharacters.isAllowedCharacter(c))
 			return true;
 		else
 			return this.allowedCharacters.indexOf(c) >= 0;
