@@ -5,7 +5,10 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 
 public class WComponent extends WGui implements WCommon {
 	@Override
-	public void init() {}
+	public void onAdded() {}
+
+	@Override
+	public void onInit(final WEvent ev, final Area pgp, final Point p) {}
 
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {}

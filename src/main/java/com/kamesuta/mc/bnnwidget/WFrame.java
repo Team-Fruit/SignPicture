@@ -54,7 +54,7 @@ public class WFrame extends GuiScreen implements WContainer {
 
 	protected void initWidget() {
 		for (final WCommon widget : this.widgets)
-			widget.init();
+			widget.onAdded();
 	}
 
 	protected void init() {

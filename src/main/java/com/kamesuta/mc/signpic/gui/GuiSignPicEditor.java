@@ -13,7 +13,6 @@ import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.EasingMotion;
 import com.kamesuta.mc.bnnwidget.motion.MotionQueue;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -76,7 +75,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						this.m.stop().add(EasingMotion.easeLinear.move(.25f, 0f)).add(new BlankMotion(.75f)).start();
+						this.m.stop().add(EasingMotion.easeLinear.move(.25f, 0f)).start();
 						return false;
 					}
 
@@ -86,11 +85,11 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				add(new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.right(70), Coord.bottom(15)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
+				add(new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.width(15*8), Coord.bottom(15)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						Sign.updatePreview(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
 					}
 				});
 
@@ -129,7 +128,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).add(new BlankMotion(.5f)).start();
+						m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
 						return false;
 					}
 
@@ -272,7 +271,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).add(new BlankMotion(.5f)).start();
+						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).start();
 						return false;
 					}
 
@@ -285,8 +284,8 @@ public class GuiSignPicEditor extends WFrame {
 				final Coord d = Coord.bottom(-15).add(EasingMotion.easeOutElastic.move(.5f, 5)).start();
 				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
-					public void init() {
-						super.init();
+					public void onAdded() {
+						super.onAdded();
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
 						final String id = GuiSignPicEditor.this.signbuilder.getURI();

@@ -114,8 +114,8 @@ public class MotionQueue {
 
 	public boolean isFinished() {
 		final IMotion a = getAnimationLast();
-		if (a != null)
-			return a.isFinished();
+		if ((this.current!=null && !this.current.isFinished()) || (a!=null && !a.isFinished()))
+			return false;
 		else
 			return true;
 	}

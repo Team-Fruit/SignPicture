@@ -59,7 +59,7 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public void init() {
+	public void onAdded() {
 		updateArea(new Area(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
 

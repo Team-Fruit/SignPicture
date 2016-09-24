@@ -25,8 +25,9 @@ public class WPanel extends WBase implements WContainer {
 
 	@Override
 	public boolean add(final WCommon widget) {
-		widget.init();
-		return this.widgets.add(widget);
+		final boolean b = this.widgets.add(widget);
+		widget.onAdded();
+		return b;
 	}
 
 	@Override
@@ -41,11 +42,18 @@ public class WPanel extends WBase implements WContainer {
 	}
 
 	@Override
-	public void init() {
+	public void onAdded() {
 		initWidget();
 	}
 
 	protected void initWidget() {
+	}
+
+	@Override
+	public void onInit(final WEvent ev, final Area pgp, final Point p) {
+		final Area gp = getGuiPosition(pgp);
+		for (final WCommon widget : this.widgets)
+			widget.onInit(ev, gp, p);
 	}
 
 	@Override
