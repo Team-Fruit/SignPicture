@@ -27,7 +27,7 @@ public class GuiRotation extends WPanel {
 
 	public GuiRotation(final R position, final ImageRotation rotation) {
 		super(position);
-		this.editor = new RotationEditor(new RArea(Coord.left(0), Coord.top(0), Coord.right(0), Coord.height(15)));
+		this.editor = new RotationEditor(new RArea(Coord.pleft(0).start(), Coord.top(0), Coord.pwidth(1f), Coord.height(15)));
 		this.panel = new RotationPanel(new RArea(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation);
 	}
 
@@ -56,18 +56,35 @@ public class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MButton(new RArea(Coord.left(15), Coord.top(0), Coord.width(15), Coord.bottom(0)), "\u25cb") {
+			final Coord top = Coord.ptop(-1f).add(EasingMotion.easeInBack.move(.25f, 0f)).start();
+			add(new MButton(new RArea(Coord.left(15), top, Coord.width(15), Coord.pheight(1f)), "\u25cb") {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.add(new Rotate(RotateType.X, 0));
 					return true;
 				}
+
+				@Override
+				public boolean onCloseRequest() {
+					top.motion.stop().add(EasingMotion.easeInBack.move(.25f, -1f));
+					return false;
+				}
+
+				@Override
+				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+					return top.motion.isFinished();
+				}
 			});
-			add(new MButton(new RArea(Coord.left(0), Coord.top(0), Coord.width(15), Coord.bottom(0)), "\u00d7") {
+			add(new MButton(new RArea(Coord.left(0), top, Coord.width(15), Coord.pheight(1f)), "\u00d7") {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.remove();
 					return true;
+				}
+
+				@Override
+				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+					return top.motion.isFinished();
 				}
 			});
 		}
