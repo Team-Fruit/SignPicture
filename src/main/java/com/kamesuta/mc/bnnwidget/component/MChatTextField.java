@@ -15,19 +15,33 @@ import net.minecraft.client.gui.GuiTextField;
 public class MChatTextField extends WBase {
 	protected final GuiTextField t;
 
-	public String watermark;
+	protected String watermark;
+	protected String allowedCharacters;
 
 	public MChatTextField(final R position) {
 		super(position);
 		this.t = new GuiTextField(font(), 0, 0, 0, 0);
 	}
 
-	public void setWatermark(final String watermark) {
+	public boolean canAddChar(final char c) {
+		if (StringUtils.isEmpty(this.allowedCharacters))
+			return true;
+		else
+			return this.allowedCharacters.indexOf(c) >= 0;
+	}
+
+	public MChatTextField setWatermark(final String watermark) {
 		this.watermark = watermark;
+		return this;
 	}
 
 	public String getWatermark() {
 		return this.watermark;
+	}
+
+	public MChatTextField setAllowedCharacters(final String s) {
+		this.allowedCharacters = s;
+		return this;
 	}
 
 	@Override
@@ -68,6 +82,8 @@ public class MChatTextField extends WBase {
 		final Area a = getGuiPosition(pgp);
 		updateArea(a);
 		final boolean b = isFocused();
+		if (button == 1 && a.pointInside(p))
+			setText("");
 		this.t.mouseClicked((int) p.x(), (int) p.y(), button);
 		if (b!=isFocused()) onFocusChanged();
 	}
@@ -79,7 +95,8 @@ public class MChatTextField extends WBase {
 
 	@Override
 	public void keyTyped(final WEvent ev, final Area pgp, final Point p, final char c, final int keycode) {
-		this.t.textboxKeyTyped(c, keycode);
+		if (canAddChar(c))
+			this.t.textboxKeyTyped(c, keycode);
 	}
 
 	@Override

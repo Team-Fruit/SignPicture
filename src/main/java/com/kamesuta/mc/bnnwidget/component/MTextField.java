@@ -18,6 +18,7 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;
 
+@Deprecated
 public class MTextField extends WBase {
 	protected String text = "";
 	public String watermark;

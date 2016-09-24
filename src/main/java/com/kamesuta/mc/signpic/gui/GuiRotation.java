@@ -84,6 +84,11 @@ public class GuiRotation extends WPanel {
 				}
 
 				@Override
+				public boolean onCloseRequest() {
+					return false;
+				}
+
+				@Override
 				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 					return top.isFinished();
 				}
