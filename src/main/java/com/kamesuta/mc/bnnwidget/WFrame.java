@@ -197,10 +197,8 @@ public class WFrame extends GuiScreen implements WContainer {
 	}
 
 	public void requestClose() {
-		final Area gp = getAbsolute();
-		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
-			widget.onCloseRequest(this.event, gp, p);
+			widget.onCloseRequest();
 		this.closeRequest = true;
 	}
 

@@ -83,8 +83,9 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+	public boolean onCloseRequest() {
 		setFocused(false);
+		return true;
 	}
 
 	protected void updateArea(final Area a) {

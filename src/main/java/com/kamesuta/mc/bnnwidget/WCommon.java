@@ -22,7 +22,7 @@ public interface WCommon {
 
 	void mouseReleased(WEvent ev, Area pgp, Point mouse, int button);
 
-	void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse);
+	boolean onCloseRequest();
 
 	boolean onClosing(WEvent ev, Area pgp, Point mouse);
 

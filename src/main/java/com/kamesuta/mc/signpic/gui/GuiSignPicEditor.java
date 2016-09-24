@@ -75,8 +75,9 @@ public class GuiSignPicEditor extends WFrame {
 					}
 
 					@Override
-					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						this.m.stop().add(EasingMotion.easeLinear.move(.2f, 0f)).start();
+					public boolean onCloseRequest() {
+						this.m.stop().add(EasingMotion.easeLinear.move(.25f, 0f)).add(new BlankMotion(.75f)).start();
+						return false;
 					}
 
 					@Override
@@ -127,8 +128,9 @@ public class GuiSignPicEditor extends WFrame {
 					}
 
 					@Override
-					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
+					public boolean onCloseRequest() {
+						m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).add(new BlankMotion(.5f)).start();
+						return false;
 					}
 
 					@Override
@@ -269,8 +271,9 @@ public class GuiSignPicEditor extends WFrame {
 					}
 
 					@Override
-					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).add(new BlankMotion(.1f)).start();
+					public boolean onCloseRequest() {
+						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).add(new BlankMotion(.5f)).start();
+						return false;
 					}
 
 					@Override
@@ -303,9 +306,10 @@ public class GuiSignPicEditor extends WFrame {
 					}
 
 					@Override
-					public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
-						super.onCloseRequest(ev, pgp, mouse);
+					public boolean onCloseRequest() {
+						super.onCloseRequest();
 						d.motion.stop().add(EasingMotion.easeOutElastic.move(1f, -15)).start();
+						return false;
 					}
 
 					@Override
