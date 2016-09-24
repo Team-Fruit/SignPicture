@@ -3,18 +3,25 @@ package com.kamesuta.mc.bnnwidget.motion;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class MotionQueue {
+import com.kamesuta.mc.bnnwidget.position.Coord;
+
+public class MCoord extends Coord {
 	protected boolean paused = true;
 	protected final Deque<IMotion> queue;
 	protected IMotion current;
 	protected float coord;
 
-	public MotionQueue(final float coord) {
+	public MCoord(final float coord, final CoordSide side, final CoordType type) {
+		super(coord, side, type);
 		this.queue = new ArrayDeque<IMotion>();
 		this.coord = coord;
 	}
 
-	public MotionQueue add(final IMotion animation) {
+	public MCoord(final float coord) {
+		this(coord, CoordSide.Top, CoordType.Absolute);
+	}
+
+	public MCoord add(final IMotion animation) {
 		this.queue.offer(animation);
 		return this;
 	}
@@ -25,41 +32,41 @@ public class MotionQueue {
 		this.current = current;
 	}
 
-	public MotionQueue stop() {
+	public MCoord stop() {
 		this.coord = get();
 		this.queue.clear();
 		setCurrent(null);
 		return this;
 	}
 
-	public MotionQueue stopLast() {
+	public MCoord stopLast() {
 		this.coord = getLast();
 		this.queue.clear();
 		setCurrent(null);
 		return stop();
 	}
 
-	public MotionQueue pause() {
+	public MCoord pause() {
 		this.paused = true;
 		if (this.current != null)
 			this.current.pause();
 		return this;
 	}
 
-	public MotionQueue start() {
+	public MCoord start() {
 		this.paused = false;
 		if (this.current != null)
 			this.current.resume();
 		return this;
 	}
 
-	public MotionQueue next() {
+	public MCoord next() {
 		setCurrent(this.queue.poll());
 		start();
 		return this;
 	}
 
-	public MotionQueue stopNext() {
+	public MCoord stopNext() {
 		if (this.current != null)
 			this.coord = this.current.getEnd(this.coord);
 		setCurrent(this.queue.poll());
@@ -77,6 +84,7 @@ public class MotionQueue {
 		return this.queue.peekLast();
 	}
 
+	@Override
 	public float get() {
 		final IMotion a = getAnimation();
 		if (a != null)
@@ -93,7 +101,7 @@ public class MotionQueue {
 			return this.coord;
 	}
 
-	public MotionQueue addAfter(final MotionQueue q) {
+	public MCoord addAfter(final MCoord q) {
 		final IMotion a = getAnimationLast();
 		if (a != null)
 			a.after(new Runnable() {
@@ -105,7 +113,7 @@ public class MotionQueue {
 		return this;
 	}
 
-	public MotionQueue addAfter(final Runnable r) {
+	public MCoord addAfter(final Runnable r) {
 		final IMotion a = getAnimationLast();
 		if (a != null)
 			a.after(r);
@@ -118,5 +126,53 @@ public class MotionQueue {
 			return false;
 		else
 			return true;
+	}
+
+	public static MCoord top(final float n) {
+		return new MCoord(n, CoordSide.Top, CoordType.Absolute);
+	}
+
+	public static MCoord ptop(final float n) {
+		return new MCoord(n, CoordSide.Top, CoordType.Percent);
+	}
+
+	public static MCoord left(final float n) {
+		return new MCoord(n, CoordSide.Left, CoordType.Absolute);
+	}
+
+	public static MCoord pleft(final float n) {
+		return new MCoord(n, CoordSide.Left, CoordType.Percent);
+	}
+
+	public static MCoord bottom(final float n) {
+		return new MCoord(n, CoordSide.Bottom, CoordType.Absolute);
+	}
+
+	public static MCoord pbottom(final float n) {
+		return new MCoord(n, CoordSide.Bottom, CoordType.Percent);
+	}
+
+	public static MCoord right(final float n) {
+		return new MCoord(n, CoordSide.Right, CoordType.Absolute);
+	}
+
+	public static MCoord pright(final float n) {
+		return new MCoord(n, CoordSide.Right, CoordType.Percent);
+	}
+
+	public static MCoord width(final float n) {
+		return new MCoord(n, CoordSide.Width, CoordType.Absolute);
+	}
+
+	public static MCoord pwidth(final float n) {
+		return new MCoord(n, CoordSide.Width, CoordType.Percent);
+	}
+
+	public static MCoord height(final float n) {
+		return new MCoord(n, CoordSide.Height, CoordType.Absolute);
+	}
+
+	public static MCoord pheight(final float n) {
+		return new MCoord(n, CoordSide.Height, CoordType.Percent);
 	}
 }

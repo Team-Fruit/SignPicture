@@ -12,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.EasingMotion;
+import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -27,7 +28,7 @@ public class GuiRotation extends WPanel {
 
 	public GuiRotation(final R position, final ImageRotation rotation) {
 		super(position);
-		this.editor = new RotationEditor(new RArea(Coord.pleft(0).start(), Coord.top(0), Coord.pwidth(1f), Coord.height(15)));
+		this.editor = new RotationEditor(new RArea(MCoord.pleft(0).start(), Coord.top(0), Coord.pwidth(1f), Coord.height(15)));
 		this.panel = new RotationPanel(new RArea(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation);
 	}
 
@@ -56,7 +57,7 @@ public class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			final Coord top = Coord.ptop(-1f).add(EasingMotion.easeInBack.move(.25f, 0f)).start();
+			final MCoord top = MCoord.ptop(-1f).add(EasingMotion.easeInBack.move(.25f, 0f)).start();
 			add(new MButton(new RArea(Coord.left(15), top, Coord.width(15), Coord.pheight(1f)), "\u25cb") {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -66,13 +67,13 @@ public class GuiRotation extends WPanel {
 
 				@Override
 				public boolean onCloseRequest() {
-					top.motion.stop().add(EasingMotion.easeInBack.move(.25f, -1f));
+					top.stop().add(EasingMotion.easeInBack.move(.25f, -1f));
 					return false;
 				}
 
 				@Override
 				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-					return top.motion.isFinished();
+					return top.isFinished();
 				}
 			});
 			add(new MButton(new RArea(Coord.left(0), top, Coord.width(15), Coord.pheight(1f)), "\u00d7") {
@@ -84,7 +85,7 @@ public class GuiRotation extends WPanel {
 
 				@Override
 				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-					return top.motion.isFinished();
+					return top.isFinished();
 				}
 			});
 		}
@@ -146,8 +147,8 @@ public class GuiRotation extends WPanel {
 
 		private void addWidget(final Rotate rotate, final int n) {
 			final float t = n*15;
-			final Coord left = Coord.pleft(-1f).add(new BlankMotion(t/15f*.025f)).add(EasingMotion.easeOutBack.move(.25f, 0f)).start();
-			final Coord top = Coord.top(t);
+			final MCoord left = MCoord.pleft(-1f).add(new BlankMotion(t/15f*.025f)).add(EasingMotion.easeOutBack.move(.25f, 0f)).start();
+			final MCoord top = MCoord.top(t);
 			final RotationElement element = new RotationElement(new RArea(left, top, Coord.pwidth(1f), Coord.height(15)), left, top, rotate);
 			this.map.put(rotate, element);
 			add(element);
@@ -157,17 +158,17 @@ public class GuiRotation extends WPanel {
 			int i = 0;
 			for (final Rotate rotate : this.rotation.rotates) {
 				final RotationElement element = this.map.get(rotate);
-				element.top.motion.stop().add(EasingMotion.easeInCirc.move(.25f, i++*15)).start();
+				element.top.stop().add(EasingMotion.easeInCirc.move(.25f, i++*15)).start();
 			}
 			onUpdate();
 		}
 
 		protected class RotationElement extends WPanel {
 			protected Rotate rotate;
-			protected Coord left;
-			protected Coord top;
+			protected MCoord left;
+			protected MCoord top;
 
-			public RotationElement(final R position, final Coord left, final Coord top, final Rotate rotate) {
+			public RotationElement(final R position, final MCoord left, final MCoord top, final Rotate rotate) {
 				super(position);
 				this.left = left;
 				this.top = top;
@@ -204,13 +205,13 @@ public class GuiRotation extends WPanel {
 
 			@Override
 			public boolean onCloseRequest() {
-				this.left.motion.stop().add(new BlankMotion(this.top.get()/15*.025f)).add(EasingMotion.easeInBack.move(.25f, -1f)).start();
+				this.left.stop().add(new BlankMotion(this.top.get()/15*.025f)).add(EasingMotion.easeInBack.move(.25f, -1f)).start();
 				return false;
 			}
 
 			@Override
 			public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-				return this.left.motion.isFinished();
+				return this.left.isFinished();
 			}
 
 			protected class Type extends MButton {

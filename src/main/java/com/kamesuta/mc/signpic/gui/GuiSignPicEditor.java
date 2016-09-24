@@ -14,7 +14,7 @@ import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.EasingMotion;
-import com.kamesuta.mc.bnnwidget.motion.MotionQueue;
+import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -48,7 +48,7 @@ public class GuiSignPicEditor extends WFrame {
 			@Override
 			protected void initWidget() {
 				add(new WBase(RArea.diff(0, 0, 0, 0)) {
-					MotionQueue m = new MotionQueue(0);
+					MCoord m = new MCoord(0);
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 						RenderHelper.startShape();
@@ -93,7 +93,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final Coord m = Coord.ptop(-1f);
+				final MCoord m = MCoord.ptop(-1f);
 				add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
 					@Override
 					protected void initWidget() {
@@ -113,12 +113,12 @@ public class GuiSignPicEditor extends WFrame {
 								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 									if (!this.b) {
 										this.b = true;
-										m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
+										m.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
 									}
 								} else {
 									if (this.b) {
 										this.b = false;
-										m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
+										m.stop().add(EasingMotion.easeOutElastic.move(.5f, 0f)).start();
 									}
 								}
 								super.update(ev, pgp, p);
@@ -128,17 +128,17 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						m.motion.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
+						m.stop().add(EasingMotion.easeOutElastic.move(.5f, -1f)).start();
 						return false;
 					}
 
 					@Override
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-						return m.motion.isFinished();
+						return m.isFinished();
 					}
 				});
 
-				final Coord p = Coord.right(-65).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
+				final MCoord p = MCoord.right(-65).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
 				add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
 					@Override
 					protected void initWidget() {
@@ -271,17 +271,17 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						p.motion.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).start();
+						p.stop().add(EasingMotion.easeOutBounce.move(.5f, -65)).start();
 						return false;
 					}
 
 					@Override
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-						return p.motion.isFinished();
+						return p.isFinished();
 					}
 				});
 
-				final Coord d = Coord.bottom(-15).add(EasingMotion.easeOutElastic.move(.5f, 5)).start();
+				final MCoord d = MCoord.bottom(-15).add(EasingMotion.easeOutElastic.move(.5f, 5)).start();
 				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
@@ -307,13 +307,13 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public boolean onCloseRequest() {
 						super.onCloseRequest();
-						d.motion.stop().add(EasingMotion.easeOutElastic.move(1f, -15)).start();
+						d.stop().add(EasingMotion.easeOutElastic.move(1f, -15)).start();
 						return false;
 					}
 
 					@Override
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-						return d.motion.isFinished();
+						return d.isFinished();
 					}
 				});
 			}
@@ -337,8 +337,8 @@ public class GuiSignPicEditor extends WFrame {
 		}
 
 		boolean hover;
-		MotionQueue m = new MotionQueue(0);
-		MotionQueue s = new MotionQueue(1);
+		MCoord m = new MCoord(0);
+		MCoord s = new MCoord(1);
 
 		protected void state(final boolean b) {
 			if (b) {
