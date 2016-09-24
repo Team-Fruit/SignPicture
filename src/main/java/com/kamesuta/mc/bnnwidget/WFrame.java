@@ -53,9 +53,8 @@ public class WFrame extends GuiScreen implements WContainer {
 	}
 
 	protected void initWidget() {
-		final Area gp = getAbsolute();
 		for (final WCommon widget : this.widgets)
-			widget.init(this.event, gp);
+			widget.init();
 	}
 
 	protected void init() {

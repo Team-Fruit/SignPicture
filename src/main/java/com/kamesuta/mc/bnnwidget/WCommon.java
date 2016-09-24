@@ -4,7 +4,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 
 public interface WCommon {
-	void init(WEvent ev, Area pgp);
+	void init();
 
 	void draw(WEvent ev, Area pgp, Point mouse, float frame);
 

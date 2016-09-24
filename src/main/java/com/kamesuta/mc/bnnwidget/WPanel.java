@@ -30,18 +30,17 @@ public class WPanel extends WBase implements WContainer {
 	}
 
 	@Override
-	public void init(final WEvent ev, final Area pgp) {
-		initWidget(ev, pgp);
-		initWidgets(ev, pgp);
+	public void init() {
+		initWidget();
+		initWidgets();
 	}
 
-	protected void initWidget(final WEvent ev, final Area pgp) {
+	protected void initWidget() {
 	}
 
-	protected void initWidgets(final WEvent ev, final Area pgp) {
-		final Area gp = getGuiPosition(pgp);
+	protected void initWidgets() {
 		for (final WCommon widget : this.widgets)
-			widget.init(ev, gp);
+			widget.init();
 	}
 
 	@Override

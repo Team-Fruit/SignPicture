@@ -59,9 +59,8 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public void init(final WEvent ev, final Area pgp) {
-		final Area a = getGuiPosition(pgp);
-		updateArea(a);
+	public void init() {
+		updateArea(new Area(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
 
 	@Override

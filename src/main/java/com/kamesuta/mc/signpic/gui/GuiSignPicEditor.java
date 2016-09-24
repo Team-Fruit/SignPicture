@@ -47,7 +47,7 @@ public class GuiSignPicEditor extends WFrame {
 	protected void init() {
 		add(new WPanel(RArea.diff(0, 0, 0, 0)) {
 			@Override
-			protected void initWidget(final WEvent ev, final Area pgp) {
+			protected void initWidget() {
 				add(new WBase(RArea.diff(0, 0, 0, 0)) {
 					MotionQueue m = new MotionQueue(0);
 					@Override
@@ -85,14 +85,20 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final GuiRotation guiRotation = new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.right(70), Coord.bottom(15)));
-				add(guiRotation);
+				final GuiRotation guiRotation = new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.right(70), Coord.bottom(15))) {
+					@Override
+					protected void onUpdate() {
+						super.onUpdate();
+						Sign.updatePreview(GuiSignPicEditor.this.signbuilder.build());
+					}
+				};
 				guiRotation.setRotation(GuiSignPicEditor.this.signbuilder.getMeta().rotation);
+				add(guiRotation);
 
 				final Coord m = Coord.ptop(-1f);
 				add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
 					@Override
-					protected void initWidget(final WEvent ev, final Area pgp) {
+					protected void initWidget() {
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
 							{
 								add(new SignPicLabel(new RArea(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
@@ -136,7 +142,7 @@ public class GuiSignPicEditor extends WFrame {
 				final Coord p = Coord.right(-65).add(EasingMotion.easeOutBounce.move(.5f, 0)).start();
 				add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
 					@Override
-					protected void initWidget(final WEvent ev, final Area pgp) {
+					protected void initWidget() {
 						float top = -20f;
 
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top+=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
@@ -278,8 +284,8 @@ public class GuiSignPicEditor extends WFrame {
 				final Coord d = Coord.bottom(-15).add(EasingMotion.easeOutElastic.move(.5f, 5)).start();
 				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
-					public void init(final WEvent ev, final Area pgp) {
-						super.init(ev, pgp);
+					public void init() {
+						super.init();
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
 						final String id = GuiSignPicEditor.this.signbuilder.getURI();
