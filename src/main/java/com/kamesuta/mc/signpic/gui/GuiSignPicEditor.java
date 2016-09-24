@@ -85,15 +85,13 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final GuiRotation guiRotation = new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.right(70), Coord.bottom(15))) {
+				add(new GuiRotation(new RArea(Coord.top(0), Coord.left(0), Coord.right(70), Coord.bottom(15)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
 						Sign.updatePreview(GuiSignPicEditor.this.signbuilder.build());
 					}
-				};
-				guiRotation.setRotation(GuiSignPicEditor.this.signbuilder.getMeta().rotation);
-				add(guiRotation);
+				});
 
 				final Coord m = Coord.ptop(-1f);
 				add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
