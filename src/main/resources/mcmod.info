@@ -1,17 +1,24 @@
-[
-	{
-		"modid": "signpic",
-		"name": "SignPicture",
-		"description": "The sign tells us how beautiful it is!",
-		"version": "${version}",
-		"mcversion": "${mcversion}",
-		"logoFile": "assets/signpic/textures/logo.png",
-		"url": "https://github.com/Team-Fruit/SignPicture/releases",
-		"updateUrl": "https://github.com/Team-Fruit/SignPicture/releases",
-		"authors": ["Kamesuta"],
-		"credits": "@2016 Kamesuta",
-		"parent": "",
-		"screenshots": [],
-		"dependencies": []
-	}
-]
+{
+	"modListVersion": 2,
+	"modList": [
+		{
+			"modid": "signpic",
+			"name": "SignPicture",
+			"description": "The sign tells us how beautiful it is!",
+			"mcversion": "${mcversion}",
+			"version": "${version}",
+			"authorList": [
+				"Kamesuta"
+			],
+			"credits": "@2016 Kamesuta",
+			"dependants": [],
+			"dependencies": ["Forge@[${minforgeversion},)"],
+			"parent": "",
+			"logoFile": "logo.png",
+			"screenshots": [],
+			"updateUrl": "https://github.com/Team-Fruit/SignPicture/releases",
+			"url": "https://github.com/Team-Fruit/SignPicture/releases",
+			"useDependencyInformation": true
+		}
+	]
+}
