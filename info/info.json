@@ -1,21 +1,12 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.1.5/SignPicture-1.7.10-2.1.5-universal.jar",
-			"local": "SignPicture-1.7.10-2.1.5-universal.jar",
-			"message": "GUI Update! SignPicture 2.1.5 Released!",
+			"version": "2.2.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.2.1/SignPicture-1.7.10-2.2.1-universal.jar",
+			"local": "SignPicture-1.7.10-2.2.1-universal.jar",
+			"message": "Offset And Rotations! More freely images! SignPicture 2.2.1 Released!",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!"
-			}
-		},
-		"1.7.10-beta": {
-			"version": "2.2.0.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.2.0/SignPicture-1.7.10-2.2.0.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.2.0.beta-universal.jar",
-			"message": "Offset And Rotations! More freely images! SignPicture 2.2.0.beta Pre-Released!",
-			"message_local": {
-				"ja_JP": "オフセットと回転機能実装! さらに自由自在に画像を貼ろう! SignPicture 2.2.0.beta プレリリース!"
+				"ja_JP": "オフセットと回転機能実装! さらに自由自在に画像を貼ろう! SignPicture 2.2.1 リリース!"
 			}
 		},
 		"1.8": {
