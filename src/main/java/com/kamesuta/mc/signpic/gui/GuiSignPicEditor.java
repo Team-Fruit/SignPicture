@@ -8,6 +8,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
@@ -16,7 +17,6 @@ import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
-import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -127,12 +127,12 @@ public class GuiSignPicEditor extends WFrame {
 								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 									if (!this.b) {
 										this.b = true;
-										m.stop().add(Easings.easeOutElastic.move(.5f, -1f)).start();
+										m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
 									}
 								} else {
 									if (this.b) {
 										this.b = false;
-										m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
+										m.stop().add(Easings.easeOutBack.move(.25f, 0f)).start();
 									}
 								}
 								super.update(ev, pgp, p);
@@ -142,7 +142,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						m.stop().add(Easings.easeOutElastic.move(.5f, -1f)).start();
+						m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
 						return false;
 					}
 
@@ -152,7 +152,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final MCoord p = MCoord.right(-65).add(Easings.easeOutBounce.move(.5f, 0)).start();
+				final MCoord p = MCoord.right(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
 				add(new WPanel(new RArea(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
 					@Override
 					protected void initWidget() {
@@ -259,7 +259,7 @@ public class GuiSignPicEditor extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						p.stop().add(Easings.easeOutBounce.move(.5f, -65)).start();
+						p.stop().add(Easings.easeInBack.move(.25f, -65)).start();
 						return false;
 					}
 
@@ -269,7 +269,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutElastic.move(.5f, 5)).start();
+				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
 				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
@@ -295,7 +295,7 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public boolean onCloseRequest() {
 						super.onCloseRequest();
-						d.stop().add(Easings.easeOutElastic.move(1f, -15)).start();
+						d.stop().add(Easings.easeInBack.move(.25f, -15)).start();
 						return false;
 					}
 
@@ -317,44 +317,5 @@ public class GuiSignPicEditor extends WFrame {
 	@Override
 	public boolean doesGuiPauseGame() {
 		return false;
-	}
-
-	public class FunnyButton extends MButton {
-		public FunnyButton(final R position, final String text) {
-			super(position, text);
-		}
-
-		boolean hover;
-		MCoord m = new MCoord(0);
-		MCoord s = new MCoord(1);
-
-		protected void state(final boolean b) {
-			if (b) {
-				if (!this.hover) {
-					this.hover = true;
-					this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
-					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
-				}
-			} else {
-				if (this.hover) {
-					this.hover = false;
-					this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
-					this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
-				}
-			}
-		}
-
-		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
-			final Area a = getGuiPosition(pgp);
-			glPushMatrix();
-			glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
-			final float c = this.s.get();
-			glScalef(c, c, 1f);
-			glRotatef(this.m.get(), 0, 0, 1);
-			glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
-			super.draw(ev, pgp, p, frame);
-			glPopMatrix();
-		}
 	}
 }
