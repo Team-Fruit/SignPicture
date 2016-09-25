@@ -64,6 +64,16 @@ public class MNumber extends WPanel {
 		return this;
 	}
 
+	public MNumber setPosLabel(final String s) {
+		this.pos.setText(s);
+		return this;
+	}
+
+	public MNumber setNegLabel(final String s) {
+		this.neg.setText(s);
+		return this;
+	}
+
 	protected void onNumberChanged(final String oldText, final String newText) {
 	}
 }

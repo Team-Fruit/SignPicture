@@ -10,8 +10,6 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
-import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
@@ -85,7 +83,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				add(new GuiRotation(new RArea(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.bottom(15*4)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
+				add(new GuiSize(new RArea(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2)), GuiSignPicEditor.this.signbuilder.getMeta().size) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
@@ -93,7 +91,15 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				add(new GuiOffset(new RArea(Coord.top(5+15*4+5), Coord.left(5), Coord.width(15*8), Coord.bottom(15)), GuiSignPicEditor.this.signbuilder.getMeta().offset) {
+				add(new GuiOffset(new RArea(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiSignPicEditor.this.signbuilder.getMeta().offset) {
+					@Override
+					protected void onUpdate() {
+						super.onUpdate();
+						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+					}
+				});
+
+				add(new GuiRotation(new RArea(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
@@ -102,7 +108,7 @@ public class GuiSignPicEditor extends WFrame {
 				});
 
 				final MCoord m = MCoord.ptop(-1f);
-				add(new WPanel(new RArea(m, Coord.left(0), Coord.right(0), Coord.pheight(1f))) {
+				add(new WPanel(new RArea(m, Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
 					@Override
 					protected void initWidget() {
 						add(new MPanel(new RArea(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
@@ -186,34 +192,8 @@ public class GuiSignPicEditor extends WFrame {
 							}
 						});
 
-						float bottom = 175;
+						float bottom = 25*4+5;
 
-						add(new MLabel(new RArea(Coord.right(5), Coord.bottom(bottom-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.width")));
-						add(new MNumber(new RArea(Coord.right(5), Coord.bottom(bottom-=15), Coord.left(5), Coord.height(15)), 15) {
-							{
-								if (GuiSignPicEditor.this.signbuilder.getMeta().size.vaildWidth())
-									setNumber(GuiSignPicEditor.this.signbuilder.getMeta().size.width);
-							}
-
-							@Override
-							protected void onNumberChanged(final String oldText, final String newText) {
-								GuiSignPicEditor.this.signbuilder.getMeta().size.setWidth(newText);
-								CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
-							}
-						});
-						add(new MLabel(new RArea(Coord.right(5), Coord.bottom(bottom-=20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.height")));
-						add(new MNumber(new RArea(Coord.right(5), Coord.bottom(bottom-=15), Coord.left(5), Coord.height(15)), 15) {
-							{
-								if (GuiSignPicEditor.this.signbuilder.getMeta().size.vaildHeight())
-									setNumber(GuiSignPicEditor.this.signbuilder.getMeta().size.height);
-							}
-
-							@Override
-							protected void onNumberChanged(final String oldText, final String newText) {
-								GuiSignPicEditor.this.signbuilder.getMeta().size.setHeight(newText);
-								CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
-							}
-						});
 						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {

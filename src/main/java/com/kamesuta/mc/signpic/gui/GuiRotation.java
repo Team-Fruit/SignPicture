@@ -9,6 +9,7 @@ import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
+import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
@@ -28,12 +29,37 @@ public class GuiRotation extends WPanel {
 
 	public GuiRotation(final R position, final ImageRotation rotation) {
 		super(position);
-		this.editor = new RotationEditor(new RArea(MCoord.pleft(0).start(), Coord.top(0), Coord.pwidth(1f), Coord.height(15)));
+		final MCoord left = MCoord.pleft(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
+		this.editor = new RotationEditor(new RArea(left, Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
+			@Override
+			public boolean onCloseRequest() {
+				left.stop().add(Easings.easeInBack.move(.25f, -1f));
+				return false;
+			}
+
+			@Override
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return left.isFinished();
+			}
+		};
 		this.panel = new RotationPanel(new RArea(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation);
 	}
 
 	@Override
 	protected void initWidget() {
+		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
+		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), "Rotation") {
+			@Override
+			public boolean onCloseRequest() {
+				label.stop().add(Easings.easeInBack.move(.25f, -1f));
+				return false;
+			}
+
+			@Override
+			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+				return label.isFinished();
+			}
+		});
 		add(this.editor);
 		add(this.panel);
 	}
@@ -57,40 +83,18 @@ public class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			final MCoord top = MCoord.ptop(-1f).add(Easings.easeInBack.move(.25f, 0f)).start();
-			add(new MButton(new RArea(Coord.left(15), top, Coord.width(15), Coord.pheight(1f)), "\u25cb") {
+			add(new MButton(new RArea(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f)), "\u25cb") {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.add(new Rotate(RotateType.X, 0));
 					return true;
 				}
-
-				@Override
-				public boolean onCloseRequest() {
-					top.stop().add(Easings.easeInBack.move(.25f, -1f));
-					return false;
-				}
-
-				@Override
-				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-					return top.isFinished();
-				}
 			});
-			add(new MButton(new RArea(Coord.left(0), top, Coord.width(15), Coord.pheight(1f)), "\u00d7") {
+			add(new MButton(new RArea(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f)), "\u00d7") {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.remove();
 					return true;
-				}
-
-				@Override
-				public boolean onCloseRequest() {
-					return false;
-				}
-
-				@Override
-				public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-					return top.isFinished();
 				}
 			});
 		}

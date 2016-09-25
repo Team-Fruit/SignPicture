@@ -14,20 +14,20 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.position.RArea;
-import com.kamesuta.mc.signpic.image.meta.ImageOffset;
+import com.kamesuta.mc.signpic.image.meta.ImageSize;
 
-public class GuiOffset extends WPanel {
-	protected ImageOffset offset;
+public class GuiSize extends WPanel {
+	protected ImageSize size;
 
-	public GuiOffset(final R position, final ImageOffset offset) {
+	public GuiSize(final R position, final ImageSize size) {
 		super(position);
-		this.offset = offset;
+		this.size = size;
 	}
 
 	@Override
 	protected void initWidget() {
 		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), "Offset") {
+		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), "Size") {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -39,8 +39,8 @@ public class GuiOffset extends WPanel {
 				return label.isFinished();
 			}
 		});
-		final MCoord x = MCoord.pleft(-1f);
-		add(new OffsetElement(new RArea(x, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), x, 0, "X", "⇦", "⇨") {
+		final MCoord w = MCoord.pleft(-1f);
+		add(new OffsetElement(new RArea(w, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0, "W", "-", "+") {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -49,13 +49,13 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected void set(final float f) {
-				GuiOffset.this.offset.x = f;
+				GuiSize.this.size.width = f;
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiOffset.this.offset.x;
+				return GuiSize.this.size.width;
 			}
 
 			@Override
@@ -63,8 +63,8 @@ public class GuiOffset extends WPanel {
 				return c.add(new BlankMotion(1*.025f));
 			}
 		});
-		final MCoord y = MCoord.pleft(-1f);
-		add(new OffsetElement(new RArea(y, Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), y, 1, "Y", "⇩", "⇧") {
+		final MCoord h = MCoord.pleft(-1f);
+		add(new OffsetElement(new RArea(h, Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1, "H", "-", "+") {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -73,42 +73,18 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected void set(final float f) {
-				GuiOffset.this.offset.y = f;
+				GuiSize.this.size.height = f;
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiOffset.this.offset.y;
+				return GuiSize.this.size.height;
 			}
 
 			@Override
 			protected MCoord addDelay(final MCoord c) {
 				return c.add(new BlankMotion(2*.025f));
-			}
-		});
-		final MCoord z = MCoord.pleft(-1f);
-		add(new OffsetElement(new RArea(z, Coord.pwidth(1f), Coord.top(15*3), Coord.height(15)), z, 2, "Z", "↗", "↙") {
-			@Override
-			protected void initWidget() {
-				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
-				super.initWidget();
-			}
-
-			@Override
-			protected void set(final float f) {
-				GuiOffset.this.offset.z = f;
-				onUpdate();
-			}
-
-			@Override
-			protected final float get() {
-				return GuiOffset.this.offset.z;
-			}
-
-			@Override
-			protected MCoord addDelay(final MCoord c) {
-				return c.add(new BlankMotion(3*.025f));
 			}
 		});
 	}
