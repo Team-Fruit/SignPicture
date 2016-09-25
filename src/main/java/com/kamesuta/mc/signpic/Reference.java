@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 public class Reference {
 	public static final String MODID = "signpic";
-	public static final String NAME = "signpic";
+	public static final String NAME = "SignPicture";
 	public static final String VERSION = "${version}";
 	public static final String FORGE = "${forgeversion}";
 	public static final String MINECRAFT = "${mcversion}";
