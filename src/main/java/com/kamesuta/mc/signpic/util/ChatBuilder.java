@@ -61,7 +61,7 @@ public class ChatBuilder {
 	}
 
 	public boolean isEmpty() {
-		return !StringUtils.isEmpty(this.text) || (this.chat!=null && !StringUtils.isEmpty(this.chat.getUnformattedText()));
+		return StringUtils.isEmpty(this.text) && (this.chat==null || StringUtils.isEmpty(this.chat.getUnformattedText()));
 	}
 
 	public ChatBuilder setId(final int id) {
