@@ -16,6 +16,8 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 
+import net.minecraft.client.resources.I18n;
+
 public class GuiSize extends WPanel {
 	protected ImageSize size;
 
@@ -27,7 +29,7 @@ public class GuiSize extends WPanel {
 	@Override
 	protected void initWidget() {
 		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), "Size") {
+		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.size.category")) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -40,7 +42,7 @@ public class GuiSize extends WPanel {
 			}
 		});
 		final MCoord w = MCoord.pleft(-1f);
-		add(new OffsetElement(new RArea(w, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0, "W", "-", "+") {
+		add(new OffsetElement(new RArea(w, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0, I18n.format("signpic.gui.editor.size.width"), I18n.format("signpic.gui.editor.size.width.neg"), I18n.format("signpic.gui.editor.size.width.pos")) {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -64,7 +66,7 @@ public class GuiSize extends WPanel {
 			}
 		});
 		final MCoord h = MCoord.pleft(-1f);
-		add(new OffsetElement(new RArea(h, Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1, "H", "-", "+") {
+		add(new OffsetElement(new RArea(h, Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1, I18n.format("signpic.gui.editor.size.height"), I18n.format("signpic.gui.editor.size.height.neg"), I18n.format("signpic.gui.editor.size.height.pos")) {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();

@@ -23,13 +23,41 @@ signpic.key.gui=Open GUI
 # GUI
 signpic.gui.editor.see=View Sign
 signpic.gui.editor.preview=Preview
-signpic.gui.editor.width=Width
-signpic.gui.editor.height=Height
 signpic.gui.editor.continue=Continue
 signpic.gui.editor.load=Load
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.textfield=Place URL Here!
+## Size
+signpic.gui.editor.size.category=Size
+signpic.gui.editor.size.width=W
+signpic.gui.editor.size.height=H
+signpic.gui.editor.size.width.neg=-
+signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.height.neg=-
+signpic.gui.editor.size.height.pos=+
+## Offset
+signpic.gui.editor.offset.category=Offset
+signpic.gui.editor.offset.x=X
+signpic.gui.editor.offset.x.neg=⇦
+signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.y=Y
+signpic.gui.editor.offset.y.neg=⇩
+signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.z=Z
+signpic.gui.editor.offset.z.neg=⇗
+signpic.gui.editor.offset.z.pos=⇙
+## Rotation
+signpic.gui.editor.rotation.category=Rotation
+signpic.gui.editor.rotation.up=↑
+signpic.gui.editor.rotation.down=↓
+signpic.gui.editor.rotation.x=X
+signpic.gui.editor.rotation.y=Y
+signpic.gui.editor.rotation.z=Z
+signpic.gui.editor.rotation.remove=-
+signpic.gui.editor.rotation.add=+
+signpic.gui.editor.rotation.neg=-
+signpic.gui.editor.rotation.pos=+
 
 # Image State
 signpic.state.init=Waiting...

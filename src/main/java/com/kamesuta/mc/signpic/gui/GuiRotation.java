@@ -23,6 +23,8 @@ import com.kamesuta.mc.signpic.image.meta.ImageRotation;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.Rotate;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.RotateType;
 
+import net.minecraft.client.resources.I18n;
+
 public class GuiRotation extends WPanel {
 	protected RotationEditor editor;
 	protected RotationPanel panel;
@@ -48,7 +50,7 @@ public class GuiRotation extends WPanel {
 	@Override
 	protected void initWidget() {
 		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), "Rotation") {
+		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.rotation.category")) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -83,14 +85,14 @@ public class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MButton(new RArea(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f)), "\u25cb") {
+			add(new MButton(new RArea(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.add")) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.add(new Rotate(RotateType.X, 0));
 					return true;
 				}
 			});
-			add(new MButton(new RArea(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f)), "\u00d7") {
+			add(new MButton(new RArea(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.remove")) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.remove();
@@ -186,22 +188,8 @@ public class GuiRotation extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				add(new MButton(new RArea(Coord.left(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), "\u2191") {
-					@Override
-					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						up(RotationElement.this.rotate);
-						return true;
-					}
-				});
-				add(new MButton(new RArea(Coord.left(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0)), "\u2193") {
-					@Override
-					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						down(RotationElement.this.rotate);
-						return true;
-					}
-				});
-				add(new Type(new RArea(Coord.left(15*2), Coord.top(0), Coord.width(15), Coord.bottom(0)), this.rotate));
-				add(new MNumber(new RArea(Coord.left(15*3), Coord.top(0), Coord.right(0), Coord.bottom(0)), 15) {
+				add(new Type(new RArea(Coord.left(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), this.rotate));
+				add(new MNumber(new RArea(Coord.left(15*1), Coord.top(0), Coord.right(15*2), Coord.bottom(0)), 15) {
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
 						if (NumberUtils.isNumber(newText)) {
@@ -209,7 +197,21 @@ public class GuiRotation extends WPanel {
 							onUpdate();
 						}
 					}
-				}.setNumber(this.rotate.rotate));
+				}.setNumber(this.rotate.rotate).setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")));
+				add(new MButton(new RArea(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.up")) {
+					@Override
+					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						up(RotationElement.this.rotate);
+						return true;
+					}
+				});
+				add(new MButton(new RArea(Coord.right(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.down")) {
+					@Override
+					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						down(RotationElement.this.rotate);
+						return true;
+					}
+				});
 			}
 
 			@Override

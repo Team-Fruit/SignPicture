@@ -10,13 +10,19 @@ signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエ�
 # GUI
 signpic.gui.editor.see=実体表示
 signpic.gui.editor.preview=プレビュー
-signpic.gui.editor.width=幅
-signpic.gui.editor.height=高さ
 signpic.gui.editor.continue=連続
 signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.textfield=ここにURLを入力!
+## Size
+signpic.gui.editor.size.category=サイズ
+signpic.gui.editor.size.width=幅
+signpic.gui.editor.size.height=高さ
+## Offset
+signpic.gui.editor.offset.category=オフセット
+## Rotation
+signpic.gui.editor.rotation.category=回転
 
 # Image State
 signpic.state.init=待機中...
