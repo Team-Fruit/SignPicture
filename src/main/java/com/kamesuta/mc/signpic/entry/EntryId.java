@@ -102,6 +102,10 @@ public class EntryId {
 			return null;
 	}
 
+	public boolean isPlaceable() {
+		return StringUtils.length(this.id) <= 15*4;
+	}
+
 	public void toStrings(final String[] sign) {
 		final int length = StringUtils.length(this.id);
 		for (int i=0; i<4; i++)

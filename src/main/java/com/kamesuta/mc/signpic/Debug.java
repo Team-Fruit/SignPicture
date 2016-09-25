@@ -35,9 +35,10 @@ public class Debug {
 		//			}
 		//		}
 		//		Reference.logger.info(map);
-
+		final String s = "123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef";
 		final String[] ids = new String[4];
-		toStrings(ids, "123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef");
+		toStrings(ids, s);
+		Reference.logger.info(isPlaceable(s));
 		Reference.logger.info(ArrayUtils.toString(ids));
 	}
 
@@ -47,4 +48,7 @@ public class Debug {
 			sign[i] = StringUtils.substring(id, 15*i, Math.min(15*(i+1), length));
 	}
 
+	public static boolean isPlaceable(final String entryId) {
+		return StringUtils.length(entryId) <= 15*4;
+	}
 }

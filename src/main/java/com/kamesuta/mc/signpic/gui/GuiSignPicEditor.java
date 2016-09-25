@@ -225,7 +225,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								if (entry.isValid() && Sign.isPlaceable(entry.id)) {
+								if (entry.isValid() && entry.id.isPlaceable()) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									requestClose();
 									return true;
@@ -237,7 +237,7 @@ public class GuiSignPicEditor extends WFrame {
 							public boolean isEnabled() {
 								state(CurrentMode.instance.isMode(CurrentMode.Mode.PLACE));
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								return entry.isValid() && Sign.isPlaceable(entry.id) && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+								return entry.isValid() && entry.id.isPlaceable() && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});
 						add(new MButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
