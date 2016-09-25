@@ -289,6 +289,8 @@ public class GuiSignPicEditor extends WFrame {
 							GuiSignPicEditor.this.signbuilder.setMeta(entryId.getMeta());
 						if (entryId.hasContentId())
 							GuiSignPicEditor.this.signbuilder.setURI(entryId.getContentId().getURI());
+						else
+							GuiSignPicEditor.this.signbuilder.setURI("");
 						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
 					}
 

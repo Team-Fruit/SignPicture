@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -14,8 +16,12 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.render.RenderHelper;
+
+import net.minecraft.util.ResourceLocation;
 
 public class SignPicLabel extends WBase {
+	public static final ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
 	protected EntryId entryId;
 	protected ContentManager manager;
 
@@ -27,12 +33,17 @@ public class SignPicLabel extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
-		final EntryId entrtId = getEntryId();
-		if (entrtId != null) {
-			final Entry entry = entrtId.entry();
+		final EntryId entryId = getEntryId();
+		if (entryId != null) {
+			final Entry entry = entryId.entry();
 			if (entry.isValid()) {
 				final Content content = entry.content();
-				if (content != null) {
+				if (content == null || StringUtils.isEmpty(content.id.id())) {
+					RenderHelper.startTexture();
+					glColor4f(1f, 1f, 1f, .2f);
+					texture().bindTexture(defaultTexture);
+					drawTexturedModalRect(a);
+				} else {
 					glDisable(GL_CULL_FACE);
 					glPushMatrix();
 

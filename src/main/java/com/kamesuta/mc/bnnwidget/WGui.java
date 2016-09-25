@@ -137,7 +137,7 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final float x, final float y, final IIcon image, final float width, final float height)
+	public static void drawTexturedModalRectFromIcon(final float x, final float y, final IIcon image, final float width, final float height)
 	{
 		t.startDrawingQuads();
 		t.addVertexWithUV(x + 0, y + height, 0, image.getMinU(), image.getMaxV());
@@ -147,7 +147,7 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRect(final float x, final float y, final float u, final float v, final float width, final float height, final float divu, final float divv)
+	public static void drawTexturedModalRect(final float x, final float y, final float u, final float v, final float width, final float height, final float divu, final float divv)
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
@@ -159,7 +159,7 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRect(final float x, final float y, final float u, final float v, final float uwidth, final float vheight, final float width, final float height, final float divu, final float divv)
+	public static void drawTexturedModalRect(final float x, final float y, final float u, final float v, final float uwidth, final float vheight, final float width, final float height, final float divu, final float divv)
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
@@ -244,6 +244,11 @@ public class WGui extends Gui {
 		drawTexturedModalRect(a.x1(), a.y1(), u, v, a.w(), a.h());
 	}
 
+	public static void drawTexturedModalRect(final Area a)
+	{
+		drawTexturedModalRect(a.x1(), a.y1(), 0, 0, 1, 1, a.w(), a.h(), 1, 1);
+	}
+
 	/**
 	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
 	 */
@@ -259,9 +264,9 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final Area a, final IIcon icon)
+	public static void drawTexturedModalRectFromIcon(final Area a, final IIcon icon)
 	{
-		drawTexturedModelRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
+		drawTexturedModalRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
 	}
 
 	public static void translate(final Area p) {
