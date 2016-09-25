@@ -103,12 +103,9 @@ public class EntryId {
 	}
 
 	public void toStrings(final String[] sign) {
-		for (int i=0; i<4; i++) {
-			if (16*i <= StringUtils.length(this.id))
-				sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), this.id.length()));
-			else
-				sign[i] = "";
-		}
+		final int length = StringUtils.length(this.id);
+		for (int i=0; i<4; i++)
+			sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
 	}
 
 	public void toEntity(final TileEntitySign tile) {

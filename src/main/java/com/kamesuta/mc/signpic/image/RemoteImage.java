@@ -10,7 +10,6 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
-import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
 
 import net.minecraft.client.resources.I18n;
 

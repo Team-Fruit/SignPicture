@@ -18,7 +18,7 @@ public class Sign {
 	public static EntryIdBuilder builder = new EntryIdBuilder();
 
 	public static boolean isPlaceable(final EntryId entryId) {
-		return StringUtils.length(entryId.id()) < maxText;
+		return StringUtils.length(entryId.id()) <= maxText;
 	}
 
 	public static void updatePreview(final EntryId entryId) {
