@@ -9,7 +9,7 @@ import java.util.ListIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageRotation implements ImageMeta.MetaParser {
+public class ImageRotation extends ImageMeta.MetaParser {
 	public static final float defaultOffset = 4f;
 
 	public final List<Rotate> rotates = new LinkedList<Rotate>();
@@ -60,10 +60,13 @@ public class ImageRotation implements ImageMeta.MetaParser {
 		}
 
 		public String compose() {
-			if (this.rotate == defaultOffset)
+			final float rotate = ((this.rotate%8)+8)%8;
+			if (rotate == 0)
+				return "";
+			else if (rotate == defaultOffset)
 				return this.type.name();
 			else
-				return this.type.name() + signformat.format(this.rotate);
+				return this.type.name() + format(rotate);
 		}
 	}
 

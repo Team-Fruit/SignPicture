@@ -23,33 +23,58 @@ signpic.key.gui=Open GUI
 # GUI
 signpic.gui.editor.see=View Sign
 signpic.gui.editor.preview=Preview
-signpic.gui.editor.width=Width
-signpic.gui.editor.height=Height
 signpic.gui.editor.continue=Continue
 signpic.gui.editor.load=Load
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.textfield=Place URL Here!
+## Size
+signpic.gui.editor.size.category=Size
+signpic.gui.editor.size.width=W
+signpic.gui.editor.size.height=H
+signpic.gui.editor.size.width.neg=-
+signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.height.neg=-
+signpic.gui.editor.size.height.pos=+
+## Offset
+signpic.gui.editor.offset.category=Offset
+signpic.gui.editor.offset.x=X
+signpic.gui.editor.offset.x.neg=⇦
+signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.y=Y
+signpic.gui.editor.offset.y.neg=⇩
+signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.z=Z
+signpic.gui.editor.offset.z.neg=⇗
+signpic.gui.editor.offset.z.pos=⇙
+## Rotation
+signpic.gui.editor.rotation.category=Rotation
+signpic.gui.editor.rotation.up=↑
+signpic.gui.editor.rotation.down=↓
+signpic.gui.editor.rotation.x=X
+signpic.gui.editor.rotation.y=Y
+signpic.gui.editor.rotation.z=Z
+signpic.gui.editor.rotation.remove=-
+signpic.gui.editor.rotation.add=+
+signpic.gui.editor.rotation.neg=-
+signpic.gui.editor.rotation.pos=+
 
 # Image State
 signpic.state.init=Waiting...
 signpic.state.initalized=Initalized!
 signpic.state.downloading=Downloading... (%d%%)
 signpic.state.downloaded=Finished Downloading!
-signpic.state.ioloading=File Loading... (%d%%)
-signpic.state.ioloaded=Finished File Loading!
-signpic.state.textureloading=Texture Loading... (%d%%)
-signpic.state.textureloaded=Finished Texture Loading!
+signpic.state.loading=Loading... (%d%%)
+signpic.state.loaded=Finished Loading!
 signpic.state.available=Available! (%d%%)
 signpic.state.failed=Loading Failed... (%d%%)
 signpic.state.error=ERROR
 
 # Image State Additional Message
-signpic.advmsg.invaildurl=Invaild URL
-signpic.advmsg.invaildimage=Invaild Image
-signpic.advmsg.unknown=Unknown Error: §7%s
+signpic.advmsg.invalidurl=Invalid URL
+signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
-signpic.advmsg.dlerror=Failed to Download: §7%s
+signpic.advmsg.unknown=Unknown Error: §7%s
 
 # Version Checking
 signpic.versioning.outdated=[§6SignPicture§r] You are running Sign Picture %s, the latest is %s.

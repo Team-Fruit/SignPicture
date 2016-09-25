@@ -5,7 +5,10 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 
 public class WComponent extends WGui implements WCommon {
 	@Override
-	public void init(final WEvent ev, final Area pgp) {}
+	public void onAdded() {}
+
+	@Override
+	public void onInit(final WEvent ev, final Area pgp, final Point p) {}
 
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {}
@@ -32,7 +35,9 @@ public class WComponent extends WGui implements WCommon {
 	public void mouseReleased(final WEvent ev, final Area pgp, final Point mouse, final int button) {}
 
 	@Override
-	public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {}
+	public boolean onCloseRequest() {
+		return true;
+	}
 
 	@Override
 	public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
