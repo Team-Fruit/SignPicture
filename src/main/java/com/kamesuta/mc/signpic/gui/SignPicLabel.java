@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -18,6 +16,7 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class SignPicLabel extends WBase {
@@ -40,24 +39,24 @@ public class SignPicLabel extends WBase {
 				final Content content = entry.content();
 				if (content == null || StringUtils.isEmpty(content.id.id())) {
 					RenderHelper.startTexture();
-					glColor4f(1f, 1f, 1f, .2f);
+					GlStateManager.color(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
 					drawTexturedModalRect(a);
 				} else {
-					glDisable(GL_CULL_FACE);
-					glPushMatrix();
+					GlStateManager.disableCull();
+					GlStateManager.pushMatrix();
 
 					final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
 					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
 
 					translate(a);
-					glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
-					glScalef(100, 100, 1f);
+					GlStateManager.translate((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
+					GlStateManager.scale(100, 100, 1f);
 					Client.renderer.renderImage(content, size, 1f);
 
-					glPopMatrix();
-					glEnable(GL_CULL_FACE);
+					GlStateManager.popMatrix();
+					GlStateManager.enableCull();
 				}
 			}
 		}
