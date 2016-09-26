@@ -75,8 +75,11 @@ public class Client {
 
 		public static MovePos getBlockPos() {
 			final MovingObjectPosition movingPos = getMovingPos();
-			if (movingPos != null)
-				return new MovePos(movingPos.getBlockPos());
+			if (movingPos != null) {
+				final BlockPos pos = movingPos.getBlockPos();
+				if (pos!=null)
+					return new MovePos(pos);
+			}
 			return null;
 		}
 

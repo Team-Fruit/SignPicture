@@ -25,6 +25,7 @@ public class WGui extends Gui {
 	public static final Minecraft mc;
 	public static final Tessellator t = Tessellator.getInstance();
 	public static final WorldRenderer w = t.getWorldRenderer();
+	@SuppressWarnings("deprecation")
 	public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();

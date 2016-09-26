@@ -66,7 +66,7 @@ public class EntryId {
 		final StringBuilder stb = new StringBuilder();
 		for (final IChatComponent chat : chats) {
 			if (chat!=null)
-				stb.append(chat.getFormattedText());new ChatComponentText("").getUnformattedText();
+				stb.append(chat.getUnformattedText());
 		}
 		return new EntryId(stb.toString());
 	}

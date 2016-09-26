@@ -1,13 +1,13 @@
 package com.kamesuta.mc.bnnwidget.component;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 public class FunnyButton extends MButton {
 	public FunnyButton(final R position, final String text) {
@@ -37,13 +37,13 @@ public class FunnyButton extends MButton {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
-		glPushMatrix();
-		glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
 		final float c = this.s.get();
-		glScalef(c, c, 1f);
-		glRotatef(this.m.get(), 0, 0, 1);
-		glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
+		GlStateManager.scale(c, c, 1f);
+		GlStateManager.rotate(this.m.get(), 0, 0, 1);
+		GlStateManager.translate(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
 		super.draw(ev, pgp, p, frame);
-		glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 }

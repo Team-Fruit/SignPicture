@@ -113,10 +113,11 @@ public class GuiSize extends WPanel {
 			final MNumber n = new MNumber(new RArea(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
 				@Override
 				protected void onNumberChanged(final String oldText, final String newText) {
-					if (NumberUtils.isNumber(newText)) {
+					if (NumberUtils.isNumber(newText))
 						set(NumberUtils.toFloat(newText));
-						onUpdate();
-					}
+					else
+						set(ImageSize.unknownSize);
+					onUpdate();
 				}
 			}.setNumber(get());
 			n.neg.setText(this.neg);

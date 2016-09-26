@@ -1,11 +1,10 @@
 package com.kamesuta.mc.signpic.image;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.awt.image.BufferedImage;
 
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 
 public class ImageTexture implements IImageTexture {
@@ -74,7 +73,7 @@ public class ImageTexture implements IImageTexture {
 	@Override
 	public void bind() {
 		if (this.id != -1)
-			glBindTexture(GL_TEXTURE_2D, this.id);
+			GlStateManager.bindTexture(this.id);
 	}
 
 	public void delete() {

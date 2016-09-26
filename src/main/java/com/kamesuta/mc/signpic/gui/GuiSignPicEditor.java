@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -26,6 +24,7 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
 public class GuiSignPicEditor extends WFrame {
@@ -50,7 +49,7 @@ public class GuiSignPicEditor extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 						RenderHelper.startShape();
-						glColor4f(0f, 0f, 0f, this.m.get());
+						GlStateManager.color(0f, 0f, 0f, this.m.get());
 						drawRect(getGuiPosition(pgp));
 					}
 

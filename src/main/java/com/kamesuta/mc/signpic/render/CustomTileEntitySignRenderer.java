@@ -37,7 +37,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			RenderHelper.startShape();
 			glLineWidth(1f);
 			GlStateManager.color(1.0F, 0.0F, 0.0F, opacity * 1.0F);
-			this.t.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_TEX);
+			this.t.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 			this.t.pos(0, 0, 0).endVertex();
 			this.t.pos(0, 1, 0).endVertex();
 			this.t.pos(1, 1, 0).endVertex();
@@ -149,7 +149,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				RenderHelper.startTexture();
 				GlStateManager.color(1f, 1f, 1f, opacity);
 			}
-			super.renderTileEntityAt(tile, x, y, z, partialTicks, (int)opacity);
+			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}
 	}
 
