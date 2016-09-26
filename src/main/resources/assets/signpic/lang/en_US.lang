@@ -45,8 +45,8 @@ signpic.gui.editor.offset.y=Y
 signpic.gui.editor.offset.y.neg=⇩
 signpic.gui.editor.offset.y.pos=⇧
 signpic.gui.editor.offset.z=Z
-signpic.gui.editor.offset.z.neg=⇗
-signpic.gui.editor.offset.z.pos=⇙
+signpic.gui.editor.offset.z.neg=↗
+signpic.gui.editor.offset.z.pos=↙
 ## Rotation
 signpic.gui.editor.rotation.category=Rotation
 signpic.gui.editor.rotation.up=↑
