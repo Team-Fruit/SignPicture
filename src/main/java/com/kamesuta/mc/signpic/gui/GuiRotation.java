@@ -192,10 +192,11 @@ public class GuiRotation extends WPanel {
 				add(new MNumber(new RArea(Coord.left(15*1), Coord.top(0), Coord.right(15*2), Coord.bottom(0)), 15) {
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
-						if (NumberUtils.isNumber(newText)) {
+						if (NumberUtils.isNumber(newText))
 							RotationElement.this.rotate.rotate = NumberUtils.toFloat(newText);
+						else
+							RotationElement.this.rotate.rotate = 0;
 							onUpdate();
-						}
 					}
 				}.setNumber(this.rotate.rotate).setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")));
 				add(new MButton(new RArea(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.up")) {
