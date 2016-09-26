@@ -149,7 +149,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				RenderHelper.startTexture();
 				GlStateManager.color(1f, 1f, 1f, opacity);
 			}
-			super.renderTileEntityAt(tile, x, y, z, partialTicks, (int)opacity);
+			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}
 	}
 
