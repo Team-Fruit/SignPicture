@@ -180,6 +180,8 @@ public class GuiSignPicEditor extends WFrame {
 									CurrentMode.instance.setMode(CurrentMode.Mode.SETPREVIEW);
 									requestClose();
 								} else {
+									if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW))
+										CurrentMode.instance.setMode();
 									Sign.preview.setVisible(false);
 								}
 								return true;
@@ -227,6 +229,7 @@ public class GuiSignPicEditor extends WFrame {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								if (entry.isValid() && entry.id.isPlaceable()) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
+									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 									requestClose();
 									return true;
 								}
