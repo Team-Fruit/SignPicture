@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -14,9 +16,9 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 
+@Deprecated
 public class MTextField extends WBase {
 	protected String text = "";
 	public String watermark;
@@ -243,9 +245,9 @@ public class MTextField extends WBase {
 
 	protected void drawBackground(final Area out, final Area in) {
 		RenderHelper.startShape();
-		GlStateManager.color(0.627451f, 0.627451f, 0.627451f, 1f);
+		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
 		drawRect(out);
-		GlStateManager.color(0f, 0f, 0f, 1f);
+		glColor4f(0f, 0f, 0f, 1f);
 		drawRect(in);
 	}
 

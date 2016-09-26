@@ -1,40 +1,22 @@
 package com.kamesuta.mc.bnnwidget.position;
 
-import com.kamesuta.mc.bnnwidget.motion.IMotion;
-import com.kamesuta.mc.bnnwidget.motion.MotionQueue;
-
 public class Coord {
-	public final MotionQueue motion;
+	private final float coord;
 	public CoordSide side;
 	public CoordType type;
 
 	public Coord(final float coord, final CoordSide side, final CoordType type) {
-		this.motion = new MotionQueue(coord);
+		this.coord = coord;
 		this.side = side;
 		this.type = type;
 	}
 
 	public float get() {
-		return this.motion.get();
+		return this.coord;
 	}
 
 	public float getAbsCoord(final float abslength) {
 		return this.type.calc(abslength, get());
-	}
-
-	public Coord add(final IMotion motion) {
-		this.motion.add(motion);
-		return this;
-	}
-
-	public Coord addAfter(final MotionQueue q) {
-		this.motion.addAfter(q);
-		return this;
-	}
-
-	public Coord start() {
-		this.motion.start();
-		return this;
 	}
 
 	@Override

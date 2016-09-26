@@ -91,11 +91,11 @@ public class WGui extends Gui {
 		GlStateManager.shadeModel(GL_SMOOTH);
 		w.begin(GL_QUADS, DefaultVertexFormats.POSITION);
 		GlStateManager.color(r1, g1, b1, a1);
-		w.pos(x2, y1, 0).endVertex();;
-		w.pos(x1, y1, 0);
+		w.pos(x2, y1, 0).endVertex();
+		w.pos(x1, y1, 0).endVertex();
 		GlStateManager.color(r2, g2, b2, a2);
-		w.pos(x1, y2, 0);
-		w.pos(x2, y2, 0);
+		w.pos(x1, y2, 0).endVertex();
+		w.pos(x2, y2, 0).endVertex();
 		t.draw();
 		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.disableBlend();
@@ -140,7 +140,7 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final float x, final float y, final TextureAtlasSprite image, final float width, final float height)
+	public static void drawTexturedModalRectFromIcon(final float x, final float y, final TextureAtlasSprite image, final float width, final float height)
 	{
 		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		w.pos(x + 0, y + height, 0).tex(image.getMinU(), image.getMaxV()).endVertex();
@@ -150,7 +150,7 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRect(final float x, final float y, final float u, final float v, final float width, final float height, final float divu, final float divv)
+	public static void drawTexturedModalRect(final float x, final float y, final float u, final float v, final float width, final float height, final float divu, final float divv)
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
@@ -176,10 +176,10 @@ public class WGui extends Gui {
 
 	public static void draw(final Area p, final int mode) {
 		w.begin(mode, DefaultVertexFormats.POSITION);
-		w.pos(p.x1(), p.y1(), 0);
-		w.pos(p.x1(), p.y2(), 0);
-		w.pos(p.x2(), p.y2(), 0);
-		w.pos(p.x2(), p.y1(), 0);
+		w.pos(p.x1(), p.y1(), 0).endVertex();
+		w.pos(p.x1(), p.y2(), 0).endVertex();
+		w.pos(p.x2(), p.y2(), 0).endVertex();
+		w.pos(p.x2(), p.y1(), 0).endVertex();
 		t.draw();
 	}
 
@@ -201,10 +201,10 @@ public class WGui extends Gui {
 		GlStateManager.disableTexture2D();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		w.begin(7, DefaultVertexFormats.POSITION);
-		w.pos(a.x1(), a.y2(), .0);
-		w.pos(a.x2(), a.y2(), .0);
-		w.pos(a.x2(), a.y1(), .0);
-		w.pos(a.x1(), a.y1(), .0);
+		w.pos(a.x1(), a.y2(), .0).endVertex();
+		w.pos(a.x2(), a.y2(), .0).endVertex();
+		w.pos(a.x2(), a.y1(), .0).endVertex();
+		w.pos(a.x1(), a.y1(), .0).endVertex();
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -247,6 +247,11 @@ public class WGui extends Gui {
 		drawTexturedModalRect(a.x1(), a.y1(), u, v, a.w(), a.h());
 	}
 
+	public static void drawTexturedModalRect(final Area a)
+	{
+		drawModalRectWithCustomSizedTexture(a.x1(), a.y1(), 0, 0, 1, 1, a.w(), a.h(), 1, 1);
+	}
+
 	/**
 	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
 	 */
@@ -262,9 +267,9 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final Area a, final TextureAtlasSprite icon)
+	public static void drawTexturedModalRectFromIcon(final Area a, final TextureAtlasSprite icon)
 	{
-		drawTexturedModelRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
+		drawTexturedModalRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
 	}
 
 	public static void translate(final Area p) {

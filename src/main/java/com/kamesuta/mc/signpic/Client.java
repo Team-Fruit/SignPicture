@@ -4,9 +4,9 @@ import java.io.File;
 
 import org.apache.commons.lang3.Validate;
 
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
-import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import net.minecraft.block.Block;
@@ -22,9 +22,9 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 public class Client {
 	public final static Minecraft mc = FMLClientHandler.instance().getClient();
 
-	public static ImageManager manager;
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
+	public static ContentLocation location;
 
 	public static File mcDir;
 	public static File signpicDir;

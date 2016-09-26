@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 public class SignEntity {
 	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.standing_sign);
 	private boolean renderable = false;
+	private boolean visible = false;
 
 	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side)
 	{
@@ -58,13 +59,16 @@ public class SignEntity {
 		}
 	}
 
+
 	public TileEntitySign capturePlace() {
 		final Minecraft mc = Client.mc;
 		if (mc.thePlayer != null) {
 			final MovingObjectPosition m = MovePos.getMovingPos();
 			final MovePos p = MovePos.getBlockPos();
-			if (m!=null && p!=null)
+			if (m!=null && p!=null) {
+				setVisible(true);
 				return onItemUse(mc.thePlayer, mc.theWorld, p.pos, m.sideHit);
+			}
 		}
 		return null;
 	}
@@ -80,5 +84,13 @@ public class SignEntity {
 
 	public boolean isRenderable() {
 		return this.renderable;
+	}
+
+	public boolean isVisible() {
+		return this.visible;
+	}
+
+	public void setVisible(final boolean visible) {
+		this.visible = visible;
 	}
 }

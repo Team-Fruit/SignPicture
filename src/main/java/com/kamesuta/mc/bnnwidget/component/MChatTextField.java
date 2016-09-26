@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -9,24 +11,40 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ChatAllowedCharacters;
 
 public class MChatTextField extends WBase {
 	protected final GuiTextField t;
 
-	public String watermark;
+	protected String watermark;
+	protected String allowedCharacters;
 
 	public MChatTextField(final R position) {
 		super(position);
 		this.t = new GuiTextField(0, font(), 0, 0, 0, 0);
 	}
 
-	public void setWatermark(final String watermark) {
+	public boolean canAddChar(final char c) {
+		if (StringUtils.isEmpty(this.allowedCharacters))
+			return true;
+		else if (!ChatAllowedCharacters.isAllowedCharacter(c))
+			return true;
+		else
+			return this.allowedCharacters.indexOf(c) >= 0;
+	}
+
+	public MChatTextField setWatermark(final String watermark) {
 		this.watermark = watermark;
+		return this;
 	}
 
 	public String getWatermark() {
 		return this.watermark;
+	}
+
+	public MChatTextField setAllowedCharacters(final String s) {
+		this.allowedCharacters = s;
+		return this;
 	}
 
 	@Override
@@ -40,8 +58,8 @@ public class MChatTextField extends WBase {
 		this.t.yPosition = 1;
 		this.t.width = (int)a.w() - 2;
 		this.t.height = (int) a.h() - 2;
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(a.x1(), a.y1(), 0f);
+		glPushMatrix();
+		glTranslatef(a.x1(), a.y1(), 0f);
 
 		this.t.drawTextBox();
 		if (!StringUtils.isEmpty(this.watermark) && StringUtils.isEmpty(getText()) && !isFocused()) {
@@ -50,7 +68,7 @@ public class MChatTextField extends WBase {
 			font().drawStringWithShadow(this.watermark, l, i1, 0x777777);
 		}
 
-		GlStateManager.popMatrix();
+		glPopMatrix();
 		this.t.xPosition = x;
 		this.t.yPosition = y;
 		this.t.width = w;
@@ -58,9 +76,8 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public void init(final WEvent ev, final Area pgp) {
-		final Area a = getGuiPosition(pgp);
-		updateArea(a);
+	public void onAdded() {
+		updateArea(new Area(0, 0, Integer.MAX_VALUE, Integer.MAX_VALUE));
 	}
 
 	@Override
@@ -68,6 +85,8 @@ public class MChatTextField extends WBase {
 		final Area a = getGuiPosition(pgp);
 		updateArea(a);
 		final boolean b = isFocused();
+		if (button == 1 && a.pointInside(p))
+			setText("");
 		this.t.mouseClicked((int) p.x(), (int) p.y(), button);
 		if (b!=isFocused()) onFocusChanged();
 	}
@@ -79,12 +98,14 @@ public class MChatTextField extends WBase {
 
 	@Override
 	public void keyTyped(final WEvent ev, final Area pgp, final Point p, final char c, final int keycode) {
-		this.t.textboxKeyTyped(c, keycode);
+		if (canAddChar(c))
+			this.t.textboxKeyTyped(c, keycode);
 	}
 
 	@Override
-	public void onCloseRequest(final WEvent ev, final Area pgp, final Point mouse) {
+	public boolean onCloseRequest() {
 		setFocused(false);
+		return true;
 	}
 
 	protected void updateArea(final Area a) {

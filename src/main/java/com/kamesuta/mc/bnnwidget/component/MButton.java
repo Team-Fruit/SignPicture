@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -8,7 +10,6 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class MButton extends WBase {
@@ -63,7 +64,7 @@ public class MButton extends WBase {
 	protected void drawButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
 		RenderHelper.startTexture();
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		texture().bindTexture(button);
 		final int state = getButtonTex(ev, pgp, p, frame);
 

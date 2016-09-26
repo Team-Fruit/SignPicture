@@ -4,7 +4,7 @@ package com.kamesuta.mc.bnnwidget.motion;
  * Easing functions.
  * @author Kamesuta
  */
-public enum EasingMotion implements Easing {
+public enum Easings implements Easing {
 	easeLinear {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
