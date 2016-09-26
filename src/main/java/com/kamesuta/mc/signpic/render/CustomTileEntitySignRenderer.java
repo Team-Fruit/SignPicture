@@ -27,7 +27,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 	public CustomTileEntitySignRenderer() {}
 
-	public void renderImage(final Content content, final ImageSize size, final float opacity) {
+	public void renderImage(final Content content, final ImageSize size, final int destroy, final float opacity) {
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(size.width, size.height, 1f);
 		if (content.state.getType() == ContentStateType.AVAILABLE) {
@@ -44,6 +44,22 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			this.t.pos(1, 0, 0).endVertex();
 			RenderHelper.t.draw();
 		}
+
+		if (destroy>= 0) {
+			GlStateManager.pushMatrix();
+			RenderHelper.startTexture();
+			bindTexture(DESTROY_STAGES[destroy]);
+			GlStateManager.translate(0f, 0f, .01f);
+			this.t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.addRectVertex(0, 0, 1, 1);
+			RenderHelper.t.draw();
+			GlStateManager.translate(0f, 0f, -.02f);
+			this.t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.addRectVertex(0, 0, 1, 1);
+			RenderHelper.t.draw();
+			GlStateManager.popMatrix();
+		}
+
 		GlStateManager.popMatrix();
 
 		if (size.width<1.5f || size.height<1.5) {
@@ -82,22 +98,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		GlStateManager.translate(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 		GlStateManager.scale(1f, -1f, 1f);
 
-		if (destroy>= 0) {
-			GlStateManager.pushMatrix();
-			RenderHelper.startTexture();
-			bindTexture(DESTROY_STAGES[destroy]);
-			GlStateManager.translate(0f, 0f, .01f);
-			this.t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.addRectVertex(0, 0, 1, 1);
-			RenderHelper.t.draw();
-			GlStateManager.translate(0f, 0f, -.02f);
-			this.t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			RenderHelper.addRectVertex(0, 0, 1, 1);
-			RenderHelper.t.draw();
-			GlStateManager.popMatrix();
-		}
-
-		renderImage(content, size, opacity);
+		renderImage(content, size, destroy, opacity);
 
 		GlStateManager.popMatrix();
 	}
@@ -108,7 +109,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
 				GlStateManager.color(1f, 1f, 1f, opacity * .5f);
-				super.renderTileEntityAt(tile, x, y, z, partialTicks, (int)opacity);
+				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 
 			// Vanilla Translate

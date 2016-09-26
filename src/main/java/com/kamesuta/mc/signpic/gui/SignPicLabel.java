@@ -53,7 +53,7 @@ public class SignPicLabel extends WBase {
 					translate(a);
 					GlStateManager.translate((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
 					GlStateManager.scale(100, 100, 1f);
-					Client.renderer.renderImage(content, size, 1f);
+					Client.renderer.renderImage(content, size, -1, 1f);
 
 					GlStateManager.popMatrix();
 					GlStateManager.enableCull();
