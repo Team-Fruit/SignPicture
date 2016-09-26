@@ -1,6 +1,6 @@
 {
 	"versions": {
-		"1.7.10": {
+		"1.7.10-disabled": {
 			"version": "2.2.1",
 			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.2.1/SignPicture-1.7.10-2.2.1-universal.jar",
 			"local": "SignPicture-1.7.10-2.2.1-universal.jar",
