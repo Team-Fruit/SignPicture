@@ -7,20 +7,24 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
-import com.kamesuta.mc.signpic.image.Image;
-import com.kamesuta.mc.signpic.image.ImageManager;
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.render.RenderHelper;
-import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 
 public class SignPicLabel extends WBase {
-	protected Sign sign;
-	protected ImageManager manager;
+	public static final ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
+	protected EntryId entryId;
+	protected ContentManager manager;
 
-	public SignPicLabel(final R position, final ImageManager manager) {
+	public SignPicLabel(final R position, final ContentManager manager) {
 		super(position);
 		this.manager = manager;
 	}
@@ -28,33 +32,28 @@ public class SignPicLabel extends WBase {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 		final Area a = getGuiPosition(pgp);
-		final Sign s = getSign();
-		if (s.isVaild()) {
-			final String id = s.getURL();
-			if (s != null && !StringUtils.isEmpty(id)) {
-				final Image image = this.manager.get(id);
-				if (image != null) {
+		final EntryId entryId = getEntryId();
+		if (entryId != null) {
+			final Entry entry = entryId.entry();
+			if (entry.isValid()) {
+				final Content content = entry.content();
+				if (content == null || StringUtils.isEmpty(content.id.id())) {
 					RenderHelper.startTexture();
+					GlStateManager.color(1f, 1f, 1f, .2f);
+					texture().bindTexture(defaultTexture);
+					drawTexturedModalRect(a);
+				} else {
 					GlStateManager.disableCull();
 					GlStateManager.pushMatrix();
+
+					final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
+					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
+					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
+
 					translate(a);
-
-					final ImageSize siz = new ImageSize().setAspectSize(this.sign.meta.size, image.getSize());
-					final ImageSize size = new ImageSize().setSize(ImageSizes.INNER, siz, new ImageSize().setArea(a));
-
-					GlStateManager.pushMatrix();
-					GlStateManager.translate((a.w()-size.width)/2, (a.h()-size.height)/2, 0);
-					GlStateManager.scale(size.width, size.height, 1f);
-					image.getState().mainImage(this.manager, image);
-					GlStateManager.popMatrix();
-
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(a.w()/2, a.h()/2, 0);
-					//glScalef(size.width, size.height, 1f);
-					GlStateManager.scale(25f, 25f, 1f);
-					image.getState().themeImage(this.manager, image);
-					image.getState().message(this.manager, image, font());
-					GlStateManager.popMatrix();
+					GlStateManager.translate((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
+					GlStateManager.scale(100, 100, 1f);
+					Client.renderer.renderImage(content, size, -1, 1f);
 
 					GlStateManager.popMatrix();
 					GlStateManager.enableCull();
@@ -63,12 +62,12 @@ public class SignPicLabel extends WBase {
 		}
 	}
 
-	public Sign getSign() {
-		return this.sign;
+	public EntryId getEntryId() {
+		return this.entryId;
 	}
 
-	public SignPicLabel setSign(final Sign sign) {
-		this.sign = sign;
+	public SignPicLabel setEntryId(final EntryId entryId) {
+		this.entryId = entryId;
 		return this;
 	}
 }

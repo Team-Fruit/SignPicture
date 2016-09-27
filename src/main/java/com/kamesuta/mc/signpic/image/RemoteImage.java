@@ -1,117 +1,76 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
-import org.lwjgl.util.Timer;
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 
-import com.kamesuta.mc.signpic.Reference;
+import net.minecraft.client.resources.I18n;
 
 public class RemoteImage extends Image {
-	public static final float ImageGarbageCollection = 15f;
-
-	protected final ImageLocation location;
 	protected ImageTextures texture;
-	protected String advmsg;
-	protected ImageDownloader downloading;
-	protected ImageIOLoader ioloading;
 	protected File local;
-	protected final Timer lastloaded = new Timer();
 
-	public RemoteImage(final String id, final ImageLocation location) {
-		super(id);
-		this.location = location;
+	public RemoteImage(final Content content) {
+		super(content);
+		this.local = Client.location.localLocation(content.id);
 	}
 
-	protected void init() {
-		this.state = ImageState.INITALIZED;
-	}
+	private int processing = 0;
 
-	protected void load() {
-		this.state = ImageState.DOWNLOADING;
-		ImageManager.threadpool.execute(new ImageLoader(this, this.location));
-	}
-
-	protected void textureload() {
-		this.state = ImageState.TEXTURELOADING;
-		ImageManager.lazyloadqueue.offer(this);
-	}
-
-	protected int processing = 0;
 	@Override
-	public boolean processTexture() {
-		if (this.state == ImageState.TEXTURELOADING) {
-			final List<ImageTexture> texs = this.texture.getAll();
-			if (this.processing < texs.size()) {
-				final ImageTexture tex = texs.get(this.processing);
-				tex.load();
-				this.processing++;
-				return false;
-			} else {
-				this.state = ImageState.TEXTURELOADED;
-				return true;
-			}
+	public void onInit() {
+		ContentManager.instance.asyncqueue.offer(this);
+	}
+
+	@Override
+	public void onAsyncProcess() {
+		try {
+			new ContentDownloader(this.content, Client.location).onAsyncProcess();
+			this.texture = new ImageIOLoader(this.content, Client.location).load();
+			ContentManager.instance.divisionqueue.offer(this);
+		} catch (final URISyntaxException e) {
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidurl"));
+		} catch (final InvaildImageException e) {
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidimage"));
+		} catch (final IOException e) {
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.ioerror", e));
+		} catch (final Exception e) {
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.unknown", e));
+		}
+	}
+
+	@Override
+	public boolean onDivisionProcess() {
+		final List<ImageTexture> texs = this.texture.getAll();
+		if (this.processing < (this.content.state.progress.overall = texs.size())) {
+			final ImageTexture tex = texs.get(this.processing);
+			tex.load();
+			this.processing++;
+			this.content.state.setType(ContentStateType.LOADING);
+			this.content.state.progress.done = this.processing;
+			return false;
 		} else {
-			Reference.logger.warn("Image#loadTexture only must be called TEXTURELOADING phase");
+			this.content.state.setType(ContentStateType.AVAILABLE);
+			this.content.state.progress.done = this.content.state.progress.overall;
 			return true;
 		}
 	}
 
-	protected void complete() {
-		this.state = ImageState.AVAILABLE;
-	}
-
 	@Override
-	public void process() {
-		switch(this.state) {
-		case INIT:
-			init();
-			break;
-		case INITALIZED:
-			load();
-			break;
-		case IOLOADED:
-			textureload();
-			break;
-		case TEXTURELOADED:
-			complete();
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public boolean shouldCollect() {
-		return this.lastloaded.getTime() > ImageGarbageCollection;
-	}
-
-	@Override
-	public void delete() {
+	public void onCollect() {
 		if (this.texture!=null)
 			this.texture.delete();
-	}
-
-	@Override
-	public float getProgress() {
-		switch(this.state) {
-		case AVAILABLE:
-		case DOWNLOADED:
-		case IOLOADED:
-		case TEXTURELOADED:
-			return 1f;
-		case DOWNLOADING:
-			if (this.downloading != null)
-				return this.downloading.getProgress();
-		case IOLOADING:
-			if (this.ioloading != null)
-				return this.ioloading.getProgress();
-		case TEXTURELOADING:
-			if (this.texture != null && !this.texture.getAll().isEmpty())
-				return  (float)this.processing / this.texture.getAll().size();
-		default:
-			return 0;
-		}
 	}
 
 	@Override
@@ -120,57 +79,22 @@ public class RemoteImage extends Image {
 	}
 
 	public ImageTextures getTextures() {
-		if (this.state == ImageState.AVAILABLE)
+		if (this.content.state.getType() == ContentStateType.AVAILABLE)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
 	}
 
 	@Override
-	public void onImageUsed() {
-		this.lastloaded.set(0);
-	}
-
-	@Override
-	public String advMessage() {
-		return this.advmsg;
-	}
-
-	@Override
 	public String getLocal() {
 		if (this.local != null)
-			return "File:"+this.local.getName();
+			return "File:" + this.local.getName();
 		else
 			return "None";
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof RemoteImage))
-			return false;
-		final Image other = (Image) obj;
-		if (this.id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!this.id.equals(other.id))
-			return false;
-		return true;
-	}
-
-	@Override
 	public String toString() {
-		return String.format("RemoteImage[%s]", this.id);
+		return String.format("RemoteImage[%s]", this.content.id);
 	}
 }

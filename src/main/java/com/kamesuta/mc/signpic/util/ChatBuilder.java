@@ -5,10 +5,12 @@ import com.kamesuta.mc.signpic.Client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -130,8 +132,7 @@ public class ChatBuilder {
 
 	@SideOnly(Side.SERVER)
 	public static void sendServerChat(final ChatBuilder chat) {
-		// TODO
-		//		final ServerConfigurationManager sender = FMLCommonHandler.instance().getMinecraftServerInstance().();
-		//		sender.sendChatMsg(chat.build());
+		final PlayerList player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
+		player.sendChatMsg(chat.build());
 	}
 }

@@ -10,33 +10,36 @@ signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエ�
 # GUI
 signpic.gui.editor.see=実体表示
 signpic.gui.editor.preview=プレビュー
-signpic.gui.editor.width=幅
-signpic.gui.editor.height=高さ
 signpic.gui.editor.continue=連続
 signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.textfield=ここにURLを入力!
+## Size
+signpic.gui.editor.size.category=サイズ
+signpic.gui.editor.size.width=幅
+signpic.gui.editor.size.height=高さ
+## Offset
+signpic.gui.editor.offset.category=オフセット
+## Rotation
+signpic.gui.editor.rotation.category=回転
 
 # Image State
 signpic.state.init=待機中...
 signpic.state.initalized=初期化完了！
 signpic.state.downloading=ダウンロード中... (%d%%)
 signpic.state.downloaded=ダウンロード完了!
-signpic.state.ioloading=ファイル読み込み中... (%d%%)
-signpic.state.ioloaded=ファイル読み込み完了!
-signpic.state.textureloading=テクスチャ読み込み中... (%d%%)
-signpic.state.textureloaded=テクスチャ読み込み完了!
+signpic.state.loading=読み込み中... (%d%%)
+signpic.state.loaded=読み込み完了!
 signpic.state.available=正常 (%d%%)
 signpic.state.failed=読み込み失敗... (%d%%)
 signpic.state.error=エラー
 
 # Image State Additional Message
-signpic.advmsg.invaildurl=不正なURL
-signpic.advmsg.invaildimage=不正な画像
-signpic.advmsg.unknown=不明なエラー: §7%s
+signpic.advmsg.invalidurl=不正なURL
+signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
-signpic.advmsg.dlerror=ダウンロード失敗: §7%s
+signpic.advmsg.unknown=不明なエラー: §7%s
 
 # Version Checking
 signpic.versioning.outdated=[§6SignPicture§r] 現在のSignPictureのバージョンは %s です。新しいバージョン %s がご利用可能です！

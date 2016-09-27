@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.image.exception;
+package com.kamesuta.mc.signpic.image;
 
 import java.io.IOException;
 

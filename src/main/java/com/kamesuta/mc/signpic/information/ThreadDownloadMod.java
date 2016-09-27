@@ -21,6 +21,7 @@ import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 public class ThreadDownloadMod extends Thread {
@@ -83,9 +84,9 @@ public class ThreadDownloadMod extends Thread {
 				f.renameTo(f1);
 
 			if (Client.modFile.isFile())
-				ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").setId(897).useTranslation().setParams(local, Client.modFile.getName()).setStyle(new Style().setColor(TextFormatting.GREEN)).chatClient();
+				new ChatBuilder().setId(897).setChat(new TextComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, Client.modFile.getName()).setStyle(new Style().setColor(TextFormatting.GREEN))).chatClient();
 			else
-				ChatBuilder.create("signpic.versioning.doneDownloading").setId(897).useTranslation().setParams(local).setStyle(new Style().setColor(TextFormatting.GREEN)).chatClient();
+				new ChatBuilder().setId(897).setChat(new TextComponentTranslation("signpic.versioning.doneDownloading", local).setStyle(new Style().setColor(TextFormatting.GREEN))).chatClient();
 
 			Desktop.getDesktop().open(Client.modDir.getCanonicalFile());
 			state.downloadedFile = true;
@@ -93,7 +94,7 @@ public class ThreadDownloadMod extends Thread {
 			finalize();
 		} catch(final Throwable e) {
 			Reference.logger.warn("Updater Downloading Error", e);
-			ChatBuilder.create("signpic.versioning.error").useTranslation().setStyle(new Style().setColor(TextFormatting.RED)).chatClient();
+			new ChatBuilder().setChat(new TextComponentTranslation("signpic.versioning.error").setStyle(new Style().setColor(TextFormatting.RED))).chatClient();
 			try {
 				finalize();
 			} catch(final Throwable e1) {

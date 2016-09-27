@@ -15,6 +15,8 @@
 			"dependencies": ["Forge@[${minforgeversion},)"],
 			"parent": "",
 			"logoFile": "logo.png",
+			"requiredMods": ["Forge@[${minforgeversion},)"],
+			"logoFile": "assets/signpic/textures/logo.png",
 			"screenshots": [],
 			"updateUrl": "https://github.com/Team-Fruit/SignPicture/releases",
 			"url": "https://github.com/Team-Fruit/SignPicture/releases",

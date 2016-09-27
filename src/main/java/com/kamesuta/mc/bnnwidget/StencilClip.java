@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 
+@Deprecated
 public class StencilClip {
 	public static final StencilClip instance = new StencilClip();
 	private int layer = 0;

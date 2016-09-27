@@ -5,7 +5,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 
-public class ImageSize implements Cloneable, ImageMeta.MetaParser {
+public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 	public static final float defaultSize = 1f;
 	public static final float unknownSize = Float.NaN;
 
@@ -101,6 +101,12 @@ public class ImageSize implements Cloneable, ImageMeta.MetaParser {
 		return setSize(s, raw.width, raw.height, max.width, max.height);
 	}
 
+	public ImageSize scale(final float scale) {
+		this.width *= scale;
+		this.height *= scale;
+		return this;
+	}
+
 	@Override
 	public ImageSize reset() {
 		return unknownSize();
@@ -117,7 +123,7 @@ public class ImageSize implements Cloneable, ImageMeta.MetaParser {
 
 	@Override
 	public String compose() {
-		return (vaildWidth() ? signformat.format(this.width) : "") + (vaildHeight() ? "x" + signformat.format(this.height) : "");
+		return (vaildWidth() ? format(this.width) : "") + (vaildHeight() ? "x" + format(this.height) : "");
 	}
 
 	@Override

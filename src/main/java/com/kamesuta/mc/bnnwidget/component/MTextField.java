@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 
+@Deprecated
 public class MTextField extends WBase {
 	protected String text = "";
 	public String watermark;

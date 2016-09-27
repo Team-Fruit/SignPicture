@@ -1,9 +1,7 @@
 package com.kamesuta.mc.signpic;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class Debug {
 	public static void main(final String[] args) {
@@ -25,17 +23,32 @@ public class Debug {
 		//		Reference.logger.info(f2);
 		//		Reference.logger.info(f3);
 
-		final Pattern p = Pattern.compile("(?:([^\\dx]?)(\\d*x\\d*|\\d*))+?");
-		final Matcher m = p.matcher("7x7v5j3k4x3vx3");
-		final Map<String, String> map = new HashMap<String, String>();
-		while(m.find()){
-			if (2 <= m.groupCount()) {
-				final String key = m.group(1);
-				final String value = m.group(2);
-				if (!key.isEmpty() || !value.isEmpty())
-					map.put(key, value);
-			}
-		}
-		Reference.logger.info(map);
+		//		final Pattern p = Pattern.compile("(?:([^\\dx]?)(\\d*x\\d*|\\d*))+?");
+		//		final Matcher m = p.matcher("7x7v5j3k4x3vx3");
+		//		final Map<String, String> map = new HashMap<String, String>();
+		//		while(m.find()){
+		//			if (2 <= m.groupCount()) {
+		//				final String key = m.group(1);
+		//				final String value = m.group(2);
+		//				if (!key.isEmpty() || !value.isEmpty())
+		//					map.put(key, value);
+		//			}
+		//		}
+		//		Reference.logger.info(map);
+		final String s = "123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef";
+		final String[] ids = new String[4];
+		toStrings(ids, s);
+		Reference.logger.info(isPlaceable(s));
+		Reference.logger.info(ArrayUtils.toString(ids));
+	}
+
+	public static void toStrings(final String[] sign, final String id) {
+		final int length = StringUtils.length(id);
+		for (int i=0; i<4; i++)
+			sign[i] = StringUtils.substring(id, 15*i, Math.min(15*(i+1), length));
+	}
+
+	public static boolean isPlaceable(final String entryId) {
+		return StringUtils.length(entryId) <= 15*4;
 	}
 }

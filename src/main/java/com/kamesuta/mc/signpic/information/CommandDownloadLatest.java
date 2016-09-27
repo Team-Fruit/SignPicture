@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.information;
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.Style;
@@ -33,7 +34,7 @@ public class CommandDownloadLatest extends CommandBase {
 	}
 
 	@Override
-	public void execute(final MinecraftServer server, final ICommandSender var1, final String[] var2) {
+	public void execute(final MinecraftServer server, final ICommandSender var1, final String[] var2) throws CommandException {
 		if(!ENABLED) {
 			var1.addChatMessage(new TextComponentTranslation("signpic.versioning.disabled").setStyle(new Style().setColor(TextFormatting.RED)));
 		} else {
