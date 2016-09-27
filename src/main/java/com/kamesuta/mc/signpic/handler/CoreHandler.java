@@ -14,6 +14,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -73,11 +74,14 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
-		Client.startSection("signpic_load");
-		this.signEntryManager.onTick();
-		this.contentManager.onTick();
-		this.informationHandler.onTick(event);
-		EntrySlot.Tick();
-		Client.endSection();
+		if (event.phase == Phase.END) {
+			Client.startSection("signpic_load");
+			this.signEntryManager.onTick();
+			this.signHandler.onTick();
+			this.contentManager.onTick();
+			this.informationHandler.onTick(event);
+			EntrySlot.Tick();
+			Client.endSection();
+		}
 	}
 }
