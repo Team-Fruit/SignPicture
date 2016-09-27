@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class CoreHandler {
 	public final KeyHandler keyHandler = new KeyHandler();
@@ -71,11 +72,14 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
-		Client.startSection("signpic_load");
-		this.signEntryManager.onTick();
-		this.contentManager.onTick();
-		this.informationHandler.onTick(event);
-		EntrySlot.Tick();
-		Client.endSection();
+		if (event.phase == Phase.END) {
+			Client.startSection("signpic_load");
+			this.signEntryManager.onTick();
+			this.signHandler.onTick();
+			this.contentManager.onTick();
+			this.informationHandler.onTick(event);
+			EntrySlot.Tick();
+			Client.endSection();
+		}
 	}
 }

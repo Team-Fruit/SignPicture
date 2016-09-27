@@ -76,7 +76,13 @@ public class EntryId {
 	}
 
 	public boolean hasMeta() {
-		return StringUtils.endsWith(this.id, "]") && StringUtils.contains(this.id, "[");
+		return (StringUtils.endsWith(this.id, "]") && StringUtils.contains(this.id, "[")) ||
+				(hasPrefix() && StringUtils.endsWith(this.id, "}") && StringUtils.contains(this.id, "{"));
+	}
+
+	public boolean hasPrefix() {
+		final int i = StringUtils.indexOf(this.id, "#");
+		return 0 <= i && i < 2;
 	}
 
 	public boolean isValid() {
@@ -88,6 +94,8 @@ public class EntryId {
 			String id;
 			if (StringUtils.contains(this.id, "["))
 				id = StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "["));
+			else if (hasPrefix() && StringUtils.contains(this.id, "{"))
+				id = StringUtils.substring(this.id, StringUtils.indexOf(this.id, "#")+1, StringUtils.lastIndexOf(this.id, "{"));
 			else
 				id = this.id;
 			return new ContentId(id);
@@ -97,7 +105,10 @@ public class EntryId {
 
 	public ImageMeta getMeta() {
 		if (hasMeta())
-			return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
+			if (StringUtils.endsWith(this.id, "}"))
+				return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1));
+			else
+				return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
 		else
 			return null;
 	}

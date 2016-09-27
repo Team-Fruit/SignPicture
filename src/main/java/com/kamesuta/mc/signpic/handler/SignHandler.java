@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
@@ -35,6 +37,44 @@ public class SignHandler {
 		}
 	}
 
+	private class SendPacketTask {
+		private int count;
+		private final EntryId id;
+		private final TileEntitySign entity;
+
+		public SendPacketTask(final EntryId id, final TileEntitySign entity) {
+			this.count = 0;
+			this.id = id;
+			this.entity = entity;
+		}
+
+		private void sendPacket() {
+			Sign.sendSign(this.id, this.entity);
+		}
+
+		public boolean tick() {
+			this.count++;
+			if (this.count > sendPacketDelayTick) {
+				sendPacket();
+				return true;
+			}
+			return false;
+		}
+	}
+
+	public static final int sendPacketDelayTick = 1 * 20;
+
+	private final Deque<SendPacketTask> sendPacketQueue = new ArrayDeque<SendPacketTask>();
+
+	@CoreEvent
+	public void onTick() {
+		final SendPacketTask task = this.sendPacketQueue.peek();
+		if (task!=null) {
+			if (task.tick())
+				this.sendPacketQueue.poll();
+		}
+	}
+
 	@CoreEvent
 	public void onSign(final GuiOpenEvent event) {
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
@@ -43,7 +83,7 @@ public class SignHandler {
 					try {
 						final GuiEditSign ges = (GuiEditSign) event.gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-						Sign.sendSign(CurrentMode.instance.getEntryId(), tileSign);
+						this.sendPacketQueue.offer(new SendPacketTask(CurrentMode.instance.getEntryId(), tileSign));
 						event.setCanceled(true);
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 							CurrentMode.instance.setMode();
