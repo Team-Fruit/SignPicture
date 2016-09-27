@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.gson.JsonSyntaxException;
 import com.kamesuta.mc.signpic.Client;
 
@@ -58,6 +60,10 @@ public class ChatBuilder {
 		return chat;
 	}
 
+	public boolean isEmpty() {
+		return StringUtils.isEmpty(this.text) && (this.chat==null || StringUtils.isEmpty(this.chat.getUnformattedText()));
+	}
+
 	public ChatBuilder setId(final int id) {
 		this.useId = true;
 		this.id = id;
@@ -105,7 +111,8 @@ public class ChatBuilder {
 
 	@SideOnly(Side.CLIENT)
 	public void chatClient() {
-		chatClient(this);
+		if (!isEmpty())
+			chatClient(this);
 	}
 
 	@SideOnly(Side.CLIENT)
