@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Locations;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -31,23 +31,6 @@ public class ClientProxy extends CommonProxy {
 		// Setup stencil clip
 		StencilClip.init();
 
-		// Setup cache directory
-		final File mcdir = getDataDirectory();
-		final File signpicdir = new File(mcdir, "signpic");
-		boolean legacy = signpicdir.isDirectory();
-		securementDirectory(signpicdir);
-		final File cachedir = new File(signpicdir, "cache");
-		legacy = legacy && !cachedir.isDirectory();
-		securementDirectory(cachedir);
-
-		// Move legacy file
-		if (legacy) {
-			Reference.logger.info("moved legacy files");
-			for (final File f : signpicdir.listFiles())
-				if (f.isFile())
-					f.renameTo(new File(cachedir, f.getName()));
-		}
-
 		// Setup image
 		Client.renderer = new CustomTileEntitySignRenderer();
 
@@ -55,15 +38,7 @@ public class ClientProxy extends CommonProxy {
 		Client.forgeversion = ForgeVersion.getVersion();
 
 		// Setup location
-		Client.mcDir = mcdir;
-		Client.signpicDir = signpicdir;
-		Client.signpicCacheDir = cachedir;
-		Client.configDir = event.getModConfigurationDirectory();
-		Client.configFile = event.getSuggestedConfigurationFile();
-		Client.modDir = new File(mcdir, "mods");
-		Client.modFile = event.getSourceFile();
-
-		Client.location = new ContentLocation(Client.signpicCacheDir);
+		Client.location = new Locations(event, getDataDirectory());
 
 		// Get Id
 		final String id = Client.mc.getSession().getPlayerID();
@@ -77,22 +52,6 @@ public class ClientProxy extends CommonProxy {
 
 		// Setup
 		Client.handler = new CoreHandler();
-	}
-
-	private boolean securementDirectory(final File cachedir) {
-		if (cachedir.exists() && !cachedir.isDirectory()) {
-			File to;
-			int i = 2;
-			do {
-				to = new File(cachedir.getParent(), cachedir.getName()+i);
-				i++;
-			} while (to.exists());
-			cachedir.renameTo(to);
-			Reference.logger.warn("non-directory conflicting file exists. renamed to " + to.getName());
-			return true;
-		}
-		cachedir.mkdir();
-		return false;
 	}
 
 	public File getDataDirectory() {

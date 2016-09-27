@@ -19,6 +19,7 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ThreadInformationChecker extends Thread {
+	private static final Gson gson = new Gson();
 
 	public ThreadInformationChecker() {
 		setName("Sign Picture Information Checker Thread");
@@ -30,13 +31,12 @@ public class ThreadInformationChecker extends Thread {
 	public void run() {
 		final InformationChecker.InfoState state = InformationChecker.state;
 		InputStream input = null;
-		final Gson gson = new Gson();
 		try {
 			final HttpUriRequest req = new HttpGet(new URI("https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/info/info.json"));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 			input = entity.getContent();
-			final Info info = gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
+			final Info info = ThreadInformationChecker.gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
 			if (info!=null) {
 				if (info.versions!=null) {
 					state.stableVersion = info.versions.get(Client.mcversion);
@@ -58,7 +58,7 @@ public class ThreadInformationChecker extends Thread {
 							final HttpResponse response1 = Downloader.downloader.client.execute(req1);
 							final HttpEntity entity1 = response1.getEntity();
 							input1 = entity1.getContent();
-							state.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, CharEncoding.UTF_8)), Info.PrivateMsg.class);
+							state.privateMsg = ThreadInformationChecker.gson.fromJson(new JsonReader(new InputStreamReader(input1, CharEncoding.UTF_8)), Info.PrivateMsg.class);
 						}
 					} catch(final Exception e1) {
 					} finally {

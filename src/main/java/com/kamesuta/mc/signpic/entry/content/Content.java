@@ -9,11 +9,12 @@ import com.kamesuta.mc.signpic.image.ResourceImage;
 public class Content implements IInitable, ICollectable {
 	public final ContentId id;
 	public final ContentState state;
+	public final ContentLocation location;
 	public Image image;
-
 
 	public Content(final ContentId id) {
 		this.id = id;
+		this.location = new ContentLocation(id);
 		this.state = new ContentState();
 		if (id.isResource())
 			this.image = new ResourceImage(this);

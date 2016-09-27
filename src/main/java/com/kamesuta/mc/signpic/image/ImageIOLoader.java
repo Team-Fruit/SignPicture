@@ -19,7 +19,6 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
@@ -48,8 +47,8 @@ public class ImageIOLoader {
 		this(content, manager.getResource(location).getInputStream());
 	}
 
-	public ImageIOLoader(final Content content, final ContentLocation location) throws IOException {
-		this(content, location.localLocation(content.id));
+	public ImageIOLoader(final Content content) throws IOException {
+		this(content, content.location.createCacheLocation());
 	}
 
 	public ImageTextures load() throws IOException {

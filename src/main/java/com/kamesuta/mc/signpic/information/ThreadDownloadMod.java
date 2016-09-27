@@ -55,7 +55,7 @@ public class ThreadDownloadMod extends Thread {
 			final long size = entity.getContentLength();
 			final InputStream inputStream = entity.getContent();
 
-			final File f = new File(Client.modDir, local + ".dl");
+			final File f = new File(Client.location.modDir, local + ".dl");
 			f.createNewFile();
 
 
@@ -79,16 +79,16 @@ public class ThreadDownloadMod extends Thread {
 			outputStream.close();
 			inputStream.close();
 
-			final File f1 = new File(Client.modDir, local);
+			final File f1 = new File(Client.location.modDir, local);
 			if(!f1.exists())
 				f.renameTo(f1);
 
-			if (Client.modFile.isFile())
-				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, Client.modFile.getName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
+			if (Client.location.modFile.isFile())
+				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloadingWithFile", local, Client.location.modFile.getName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 			else
 				new ChatBuilder().setId(897).setChat(new ChatComponentTranslation("signpic.versioning.doneDownloading", local).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))).chatClient();
 
-			Desktop.getDesktop().open(Client.modDir.getCanonicalFile());
+			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloadedFile = true;
 
 			finalize();

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -19,7 +18,6 @@ public class RemoteImage extends Image {
 
 	public RemoteImage(final Content content) {
 		super(content);
-		this.local = Client.location.localLocation(content.id);
 	}
 
 	private int processing = 0;
@@ -32,8 +30,8 @@ public class RemoteImage extends Image {
 	@Override
 	public void onAsyncProcess() {
 		try {
-			new ContentDownloader(this.content, Client.location).onAsyncProcess();
-			this.texture = new ImageIOLoader(this.content, Client.location).load();
+			new ContentDownloader(this.content).onAsyncProcess();
+			this.texture = new ImageIOLoader(this.content).load();
 			ContentManager.instance.divisionqueue.offer(this);
 		} catch (final URISyntaxException e) {
 			this.content.state.setType(ContentStateType.ERROR);
