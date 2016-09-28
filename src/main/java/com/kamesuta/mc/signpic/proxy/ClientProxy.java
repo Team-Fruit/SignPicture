@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
-import com.kamesuta.mc.signpic.image.ImageLocation;
-import com.kamesuta.mc.signpic.image.ImageManager;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
@@ -31,7 +29,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		// Setup stencil clip
-		StencilClip.init();
+		//StencilClip.init();
 
 		// Setup cache directory
 		final File mcdir = getDataDirectory();
@@ -51,9 +49,7 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		// Setup image
-		final ImageManager manager = new ImageManager(new ImageLocation(cachedir));
-		Client.manager = manager;
-		Client.renderer = new CustomTileEntitySignRenderer(manager);
+		Client.renderer = new CustomTileEntitySignRenderer();
 
 		Client.mcversion = MinecraftForge.MC_VERSION;
 		Client.forgeversion = ForgeVersion.getVersion();
@@ -66,6 +62,8 @@ public class ClientProxy extends CommonProxy {
 		Client.configFile = event.getSuggestedConfigurationFile();
 		Client.modDir = new File(mcdir, "mods");
 		Client.modFile = event.getSourceFile();
+
+		Client.location = new ContentLocation(Client.signpicCacheDir);
 
 		// Get Id
 		final String id = Client.mc.getSession().getPlayerID();
@@ -113,7 +111,7 @@ public class ClientProxy extends CommonProxy {
 
 		// Replace Sign Renderer
 		Client.renderer.setRendererDispatcher(TileEntityRendererDispatcher.instance);
-		final Map<Class<? extends TileEntity>,TileEntitySpecialRenderer<? extends TileEntity>> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
+		final Map<Class<? extends TileEntity>, TileEntitySpecialRenderer<? extends TileEntity>> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, Client.renderer);
 
 		// Event Register

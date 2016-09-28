@@ -3,14 +3,16 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.image.Image;
-import com.kamesuta.mc.signpic.image.ImageManager;
+import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
@@ -19,44 +21,109 @@ import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 {
-	protected final ImageManager manager;
-	public static final ResourceLocation resWarning = new ResourceLocation("signpic", "textures/state/warning.png");
+	protected final VertexBuffer v = RenderHelper.v;
+
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
-	public CustomTileEntitySignRenderer(final ImageManager manager) {
-		this.manager = manager;
+	public CustomTileEntitySignRenderer() {}
+
+	public void renderImage(final Content content, final ImageSize size, final int destroy, final float opacity) {
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(size.width, size.height, 1f);
+		if (content.state.getType() == ContentStateType.AVAILABLE) {
+			GlStateManager.color(1.0F, 1.0F, 1.0F, opacity * 1.0F);
+			content.image.draw();
+		} else {
+			RenderHelper.startShape();
+			glLineWidth(1f);
+			GlStateManager.color(1.0F, 0.0F, 0.0F, opacity * 1.0F);
+			this.v.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+			this.v.pos(0, 0, 0).endVertex();
+			this.v.pos(0, 1, 0).endVertex();
+			this.v.pos(1, 1, 0).endVertex();
+			this.v.pos(1, 0, 0).endVertex();
+			RenderHelper.t.draw();
+		}
+
+		if (destroy>= 0) {
+			GlStateManager.pushMatrix();
+			RenderHelper.startTexture();
+			bindTexture(DESTROY_STAGES[destroy]);
+			GlStateManager.translate(0f, 0f, .01f);
+			this.v.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.addRectVertex(0, 0, 1, 1);
+			RenderHelper.t.draw();
+			GlStateManager.translate(0f, 0f, -.02f);
+			this.v.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.addRectVertex(0, 0, 1, 1);
+			RenderHelper.t.draw();
+			GlStateManager.popMatrix();
+		}
+
+		GlStateManager.popMatrix();
+
+		if (size.width<1.5f || size.height<1.5) {
+			GlStateManager.scale(.5f, .5f, .5f);
+			GlStateManager.translate(size.width/2, size.height/4, 0);
+		}
+		GlStateManager.translate(size.width/2, size.height/2, 0);
+		GlStateManager.scale(.5f, .5f, 1f);
+		if (content.state.getType() != ContentStateType.AVAILABLE) {
+			if (content.state.getType() == ContentStateType.ERROR) {
+				RenderHelper.startShape();
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(-.5f, -.5f, 0f);
+				RenderHelper.startTexture();
+				bindTexture(resError);
+				RenderHelper.drawRectTexture(GL_QUADS);
+				GlStateManager.popMatrix();
+			}
+			StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);
+			StateRender.drawMessage(content, getFontRenderer());
+		}
 	}
 
-	@Override
-	public void renderTileEntityAt(final TileEntitySign te, final double x, final double y, final double z, final float partialTicks, final int destroyStage)
-	{
-		Client.startSection("signpic-render");
-		final Sign sign = new Sign().parseSignEntity(te);
-		if (sign.isVaild()) {
+	public void renderSignPicture(final Entry entry, final int destroy, final float opacity) {
+		// Load Image
+		final Content content = entry.content();
+
+		// Size
+		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
+
+		GlStateManager.pushMatrix();
+
+		GlStateManager.translate(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
+		entry.meta.rotation.rotate();
+
+		GlStateManager.translate(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
+		GlStateManager.scale(1f, -1f, 1f);
+
+		renderImage(content, size, destroy, opacity);
+
+		GlStateManager.popMatrix();
+	}
+
+	public void renderSignPictureBase(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float opacity) {
+		final Entry entry = EntryId.fromTile(tile).entry();
+		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, .5f);
-				super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+				GlStateManager.color(1f, 1f, 1f, opacity * .5f);
+				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 
-			// Load Image
-			final Image image = this.manager.get(sign.getURL());
-
-			// Size
-			final ImageSize size = new ImageSize().setAspectSize(sign.meta.size, image.getSize());
-
 			// Vanilla Translate
-			final Block block = te.getBlockType();
+			final Block block = tile.getBlockType();
 			GlStateManager.pushMatrix();
 			final float f1 = 0.6666667F;
 			float f3;
 
 			if (block == Blocks.STANDING_SIGN) {
 				GlStateManager.translate((float)x + 0.5F, (float)y + 0.75F * f1, (float)z + 0.5F);
-				final float f2 = te.getBlockMetadata() * 360 / 16.0F;
+				final float f2 = tile.getBlockMetadata() * 360 / 16.0F;
 				GlStateManager.rotate(-f2, 0.0F, 1.0F, 0.0F);
 			} else {
-				final int j = te.getBlockMetadata();
+				final int j = tile.getBlockMetadata();
 				f3 = 0.0F;
 
 				if (j == 2) f3 = 180.0F;
@@ -69,53 +136,30 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			}
 
 			// Draw Canvas
-			GlStateManager.disableCull();;
-			GlStateManager.disableLighting();;
-			GlStateManager.pushMatrix();
+			GlStateManager.disableCull();
+			GlStateManager.disableLighting();
 
-			GlStateManager.translate(sign.meta.offset.x, sign.meta.offset.y, sign.meta.offset.z);
-			sign.meta.rotation.rotate();
+			renderSignPicture(entry, destroy, opacity);
 
-			GlStateManager.translate(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
-			GlStateManager.scale(1f, -1f, 1f);
-
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(size.width, size.height, 1f);
-			if (destroyStage>= 0) {
-				GlStateManager.pushMatrix();
-				RenderHelper.startTexture();
-				bindTexture(DESTROY_STAGES[destroyStage]);
-				GlStateManager.translate(0f, 0f, .01f);
-				RenderHelper.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.addRectVertex(0, 0, 1, 1);
-				RenderHelper.t.draw();
-				GlStateManager.translate(0f, 0f, -.02f);
-				RenderHelper.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-				RenderHelper.addRectVertex(0, 0, 1, 1);
-				RenderHelper.t.draw();
-				GlStateManager.popMatrix();
-			}
-			image.getState().mainImage(this.manager, image);
-			GlStateManager.popMatrix();
-
-			if (size.width<1.5f || size.height<1.5) {
-				GlStateManager.scale(.5f, .5f, .5f);
-				GlStateManager.translate(size.width/2, size.height/4, 0);
-			}
-			GlStateManager.translate(size.width/2, size.height/2, 0);
-			GlStateManager.scale(.5f, .5f, 1f);
-			image.getState().themeImage(this.manager, image);
-			image.getState().message(this.manager, image, getFontRenderer());
-
-			GlStateManager.popMatrix();
-
-			GlStateManager.enableLighting();;
-			GlStateManager.enableCull();;
+			GlStateManager.enableLighting();
+			GlStateManager.enableCull();
 
 			GlStateManager.popMatrix();
 		} else {
-			super.renderTileEntityAt(te, x, y, z, partialTicks, destroyStage);
+			if (opacity < 1f) {
+				RenderHelper.startTexture();
+				GlStateManager.color(1f, 1f, 1f, opacity);
+			}
+			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}
+	}
+
+	@Override
+	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy)
+	{
+		Client.startSection("signpic-render");
+		renderSignPictureBase(tile, x, y, z, partialTicks, destroy, 1f);
 		Client.endSection();
 	}
+
 }

@@ -1,6 +1,9 @@
 package com.kamesuta.mc.bnnwidget;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -9,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 
 public class WPanel extends WBase implements WContainer {
 	protected final ArrayList<WCommon> widgets = new ArrayList<WCommon>();
+	protected final Deque<WCommon> removelist = new ArrayDeque<WCommon>();
 
 	public WPanel(final R position) {
 		super(position);
@@ -21,23 +25,35 @@ public class WPanel extends WBase implements WContainer {
 
 	@Override
 	public boolean add(final WCommon widget) {
-		return this.widgets.add(widget);
+		final boolean b = this.widgets.add(widget);
+		widget.onAdded();
+		return b;
 	}
 
 	@Override
 	public boolean remove(final WCommon widget) {
-		return this.widgets.remove(widget);
+		if (widget.onCloseRequest()) {
+			this.widgets.remove(widget);
+			return true;
+		} else {
+			this.removelist.offer(widget);
+			return false;
+		}
 	}
 
 	@Override
-	public void init(final WEvent ev, final Area pgp) {
-		initWidget(ev, pgp);
-		final Area gp = getGuiPosition(pgp);
-		for (final WCommon widget : this.widgets)
-			widget.init(ev, gp);
+	public void onAdded() {
+		initWidget();
 	}
 
-	protected void initWidget(final WEvent ev, final Area pgp) {
+	protected void initWidget() {
+	}
+
+	@Override
+	public void onInit(final WEvent ev, final Area pgp, final Point p) {
+		final Area gp = getGuiPosition(pgp);
+		for (final WCommon widget : this.widgets)
+			widget.onInit(ev, gp, p);
 	}
 
 	@Override
@@ -52,6 +68,13 @@ public class WPanel extends WBase implements WContainer {
 		final Area gp = getGuiPosition(pgp);
 		for (final WCommon widget : this.widgets)
 			widget.update(ev, gp, p);
+		for (final Iterator<WCommon> itr = this.removelist.iterator(); itr.hasNext();) {
+			final WCommon widget = itr.next();
+			if (widget.onClosing(ev, gp, p)) {
+				this.widgets.remove(widget);
+				itr.remove();
+			}
+		}
 	}
 
 	@Override
@@ -97,18 +120,32 @@ public class WPanel extends WBase implements WContainer {
 	}
 
 	@Override
-	public void onCloseRequest(final WEvent ev, final Area pgp, final Point p) {
-		final Area gp = getGuiPosition(pgp);
-		for (final WCommon widget : this.widgets)
-			widget.onCloseRequest(ev, gp, p);
+	public boolean onCloseRequest() {
+		boolean closable = true;
+		for (final Iterator<WCommon> itr = this.widgets.iterator(); itr.hasNext();) {
+			final WCommon widget = itr.next();
+			if (widget.onCloseRequest())
+				itr.remove();
+			else {
+				this.removelist.offer(widget);
+				closable = false;
+			}
+		}
+		return closable;
 	}
 
 	@Override
 	public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
 		final Area gp = getGuiPosition(pgp);
 		boolean closable = true;
-		for (final WCommon widget : this.widgets)
-			closable = closable && widget.onClosing(ev, gp, p);
+		for (final Iterator<WCommon> itr = this.removelist.iterator(); itr.hasNext();) {
+			final WCommon widget = itr.next();
+			if (widget.onClosing(ev, gp, p)) {
+				this.widgets.remove(widget);
+				itr.remove();
+			} else
+				closable = false;
+		}
 		return closable;
 	}
 

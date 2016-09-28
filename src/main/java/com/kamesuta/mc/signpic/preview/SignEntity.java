@@ -1,8 +1,8 @@
 package com.kamesuta.mc.signpic.preview;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Client.MovePos;
 
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -16,15 +16,21 @@ import net.minecraft.world.World;
 public class SignEntity {
 	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.STANDING_SIGN);
 	private boolean renderable = false;
+	private boolean visible = false;
 
-	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing facing)
+	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side)
 	{
-		final IBlockState iblockstate = worldIn.getBlockState(pos);
-		final boolean flag = iblockstate.getBlock().isReplaceable(worldIn, pos);
-
-		if (facing != EnumFacing.DOWN && (iblockstate.getMaterial().isSolid() || flag) && (!flag || facing == EnumFacing.UP))
+		if (side == EnumFacing.DOWN)
 		{
-			pos = pos.offset(facing);
+			return null;
+		}
+		else if (!worldIn.getBlockState(pos).getMaterial().isSolid())
+		{
+			return null;
+		}
+		else
+		{
+			pos = pos.offset(side);
 
 			if (!Blocks.STANDING_SIGN.canPlaceBlockAt(worldIn, pos))
 			{
@@ -34,7 +40,7 @@ public class SignEntity {
 			{
 				this.tileSign.setPos(pos);
 
-				if (facing == EnumFacing.UP)
+				if (side == EnumFacing.UP)
 				{
 					this.tileSign.setBlockType(Blocks.STANDING_SIGN);
 					final int i = MathHelper.floor_double((playerIn.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
@@ -43,7 +49,7 @@ public class SignEntity {
 				else
 				{
 					this.tileSign.setBlockType(Blocks.WALL_SIGN);
-					this.tileSign.setBlockMetadata(facing.getIndex());
+					this.tileSign.setBlockMetadata(side.getIndex());
 				}
 
 				this.renderable = true;
@@ -51,14 +57,18 @@ public class SignEntity {
 				return this.tileSign;
 			}
 		}
-		return null;
 	}
+
 
 	public TileEntitySign capturePlace() {
 		final Minecraft mc = Client.mc;
-		final RayTraceResult over = mc.objectMouseOver;
-		if (over != null && mc.thePlayer != null) {
-			return onItemUse(mc.thePlayer, mc.theWorld, over.getBlockPos(), over.sideHit);
+		if (mc.thePlayer != null) {
+			final RayTraceResult m = MovePos.getMovingPos();
+			final MovePos p = MovePos.getBlockPos();
+			if (m!=null && p!=null) {
+				setVisible(true);
+				return onItemUse(mc.thePlayer, mc.theWorld, p.pos, m.sideHit);
+			}
 		}
 		return null;
 	}
@@ -74,5 +84,13 @@ public class SignEntity {
 
 	public boolean isRenderable() {
 		return this.renderable;
+	}
+
+	public boolean isVisible() {
+		return this.visible;
+	}
+
+	public void setVisible(final boolean visible) {
+		this.visible = visible;
 	}
 }

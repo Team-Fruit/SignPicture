@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image.meta;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -7,9 +9,7 @@ import java.util.ListIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import net.minecraft.client.renderer.GlStateManager;
-
-public class ImageRotation implements ImageMeta.MetaParser {
+public class ImageRotation extends ImageMeta.MetaParser {
 	public static final float defaultOffset = 4f;
 
 	public final List<Rotate> rotates = new LinkedList<Rotate>();
@@ -60,10 +60,13 @@ public class ImageRotation implements ImageMeta.MetaParser {
 		}
 
 		public String compose() {
-			if (this.rotate == defaultOffset)
+			final float rotate = ((this.rotate%8)+8)%8;
+			if (rotate == 0)
+				return "";
+			else if (rotate == defaultOffset)
 				return this.type.name();
 			else
-				return this.type.name() + signformat.format(this.rotate);
+				return this.type.name() + format(rotate);
 		}
 	}
 
@@ -71,19 +74,19 @@ public class ImageRotation implements ImageMeta.MetaParser {
 		X {
 			@Override
 			public void rotate(final float f) {
-				GlStateManager.rotate(f*360f/8f, 1f, 0f, 0f);
+				glRotatef(f*360f/8f, 1f, 0f, 0f);
 			}
 		},
 		Y {
 			@Override
 			public void rotate(final float f) {
-				GlStateManager.rotate(f*360f/8f, 0f, 1f, 0f);
+				glRotatef(f*360f/8f, 0f, 1f, 0f);
 			}
 		},
 		Z {
 			@Override
 			public void rotate(final float f) {
-				GlStateManager.rotate(f*360f/8f, 0f, 0f, 1f);
+				glRotatef(f*360f/8f, 0f, 0f, 1f);
 			}
 		},
 		;

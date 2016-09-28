@@ -18,96 +18,79 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.signpic.image.exception.InvaildImageException;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
+import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader {
 	public static final ImageSize MAX_SIZE = new ImageSize().setSize(512, 512);
 
-	protected RemoteImage image;
+	protected Content content;
 	protected InputStream input;
 
-	public ImageIOLoader(final RemoteImage image, final InputStream in) throws IOException {
-		this.image = image;
+	public ImageIOLoader(final Content content, final InputStream in) throws IOException {
+		this.content = content;
 		this.input = in;
 	}
 
-	public ImageIOLoader(final RemoteImage image, final File file) throws IOException {
-		this(image, new FileInputStream(file));
+	public ImageIOLoader(final Content content, final File file) throws IOException {
+		this(content, new FileInputStream(file));
 	}
 
-	public ImageIOLoader(final RemoteImage image, final IResourceManager manager, final ResourceLocation location) throws IOException {
-		this(image, manager.getResource(location).getInputStream());
+	public ImageIOLoader(final Content content, final IResourceManager manager, final ResourceLocation location) throws IOException {
+		this(content, manager.getResource(location).getInputStream());
 	}
 
-	public void load() {
-		try {
-			final byte[] data = IOUtils.toByteArray(this.input);
+	public ImageIOLoader(final Content content, final ContentLocation location) throws IOException {
+		this(content, location.localLocation(content.id));
+	}
 
-			final ImageInputStream imagestream = ImageIO.createImageInputStream(new ByteArrayInputStream(data));
-			final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
-			if (!iter.hasNext()) throw new InvaildImageException();
-			final ImageReader reader = iter.next();
+	public ImageTextures load() throws IOException {
+		final byte[] data = IOUtils.toByteArray(this.input);
 
-			if (reader.getFormatName()=="gif") {
-				loadGif(data);
-			} else {
-				loadImage(reader, imagestream);
-			}
-			this.image.state = ImageState.IOLOADED;
-		} catch (final InvaildImageException e) {
-			this.image.state = ImageState.ERROR;
-			this.image.advmsg = I18n.format("signpic.advmsg.invaildimage");
-		} catch (final IOException e) {
-			this.image.state = ImageState.FAILED;
-			this.image.advmsg = I18n.format("signpic.advmsg.ioerror", e);
-		} catch (final Exception e) {
-			this.image.state = ImageState.FAILED;
-			this.image.advmsg = I18n.format("signpic.advmsg.unknown", e);
+		final ImageInputStream imagestream = ImageIO.createImageInputStream(new ByteArrayInputStream(data));
+		final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
+		if (!iter.hasNext()) throw new InvaildImageException();
+		final ImageReader reader = iter.next();
+
+		this.content.state.setType(ContentStateType.LOADING);
+		ImageTextures textures;
+		if (reader.getFormatName()=="gif") {
+			textures = loadGif(data);
+		} else {
+			textures = loadImage(reader, imagestream);
 		}
+		this.content.state.setType(ContentStateType.LOADED);
+		return textures;
 	}
 
-	protected static final String[] imageatt = new String[] {
-			"imageLeftPosition",
-			"imageTopPosition",
-			"imageWidth",
-			"imageHeight",
-	};
-
-	protected int maxprogress;
-	protected int progress;
-	public float getProgress() {
-		if (this.maxprogress > 0)
-			return Math.max(0, Math.min(1, (float)this.progress / this.maxprogress));
-		return 0;
-	}
-
-	protected void loadGif(final byte[] data) throws IOException {
+	private ImageTextures loadGif(final byte[] data) throws IOException {
 		final GifImage gifImage = GifDecoder.read(data);
 		final int width = gifImage.getWidth();
 		final int height = gifImage.getHeight();
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
 
 		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
-		final int frameCount = this.maxprogress = gifImage.getFrameCount();
+		final int frameCount = gifImage.getFrameCount();
+		this.content.state.progress.overall = frameCount;
 		for (int i = 0; i < frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
 			final int delay = gifImage.getDelay(i);
 			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float)delay / 100);
 			textures.add(texture);
-			this.progress = i;
+			this.content.state.progress.done = i;
 		}
-		this.image.texture = new ImageTextures(textures);
+		return new ImageTextures(textures);
 	}
 
-	protected void loadImage(final ImageReader reader, final ImageInputStream imagestream) throws IOException {
+	private ImageTextures loadImage(final ImageReader reader, final ImageInputStream imagestream) throws IOException {
 		final ImageReadParam param = reader.getDefaultReadParam();
 		reader.setInput(imagestream, true, true);
 		BufferedImage canvas;
@@ -118,10 +101,10 @@ public class ImageIOLoader {
 			imagestream.close();
 		}
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
-		this.image.texture = new ImageTextures(Lists.newArrayList(new ImageTexture(createResizedImage(canvas, newsize))));
+		return new ImageTextures(Lists.newArrayList(new ImageTexture(createResizedImage(canvas, newsize))));
 	}
 
-	protected BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
+	private BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
 		final int wid = (int) newsize.width;
 		final int hei = (int) newsize.height;
 		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());

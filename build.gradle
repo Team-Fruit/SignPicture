@@ -23,7 +23,7 @@ apply plugin: 'com.matthewprenger.cursegradle'
 // ext.build = System.getenv().BUILD_NUMBER ?: 'git'
 ext.modversion = "${project.version_major}.${project.version_minor}.${project.version_micro}"
 
-group = 'com.kamesuta.mc'
+group = project.group
 version = "${project.version_minecraft}-${modversion}"
 compileJava.options.encoding = 'UTF-8'
 
@@ -43,9 +43,11 @@ minecraft {
     if (!project.hasProperty('run_location'))
         runDir = 'run'
     else
-        runDir = run_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft)
+        runDir = run_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft)
 
     replaceIn 'Reference.java'
+    replace '${modid}', project.modid
+    replace '${modname}', project.modname
     replace '${version}', modversion
     replace '${mcversion}', project.version_minecraft
     replace '${forgeversion}', project.version_forge
@@ -60,7 +62,8 @@ processResources {
         include 'mcmod.info'
 
         expand([
-                'modid'          : project.name,
+                'modid'          : project.modid,
+                'modname'        : project.modname,
                 'version'        : modversion,
                 'mcversion'      : project.version_minecraft,
                 'forgeversion'   : project.version_forge,
@@ -92,6 +95,13 @@ sourceJar {
     from sourceSets.api.allSource
 }
 
+task devJar(dependsOn: 'classes', type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.api.output
+    classifier = 'dev'
+    manifest commonManifest
+}
+
 task apiJar(dependsOn: 'classes', type: Jar) {
     from sourceSets.api.output
     classifier = 'api'
@@ -99,6 +109,7 @@ task apiJar(dependsOn: 'classes', type: Jar) {
 }
 
 artifacts {
+    archives devJar
     archives sourceJar
     archives apiJar
 }
@@ -143,7 +154,7 @@ task signJars(dependsOn: ['reobf', 'devJar', 'sourceJar', 'apiJar']) {
 if (!project.hasProperty('release_location'))
     ext.release_location = '.'
 else
-    ext.release_location = release_location.replace('{modid}', project.name).replace('{mcversion}', project.version_minecraft).replace('{version}', version)
+    ext.release_location = release_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft).replace('{version}', version)
 
 task release(dependsOn: 'signJars', type: Copy) {
     from project.tasks.jar.destinationDir

@@ -24,7 +24,8 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 public class WGui extends Gui {
 	public static final Minecraft mc;
 	public static final Tessellator t = Tessellator.getInstance();
-	public static final VertexBuffer w = t.getBuffer();
+	public static final VertexBuffer vb = t.getBuffer();
+	@SuppressWarnings("deprecation")
 	public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
@@ -59,13 +60,13 @@ public class WGui extends Gui {
 		final float b = (color & 255) / 255.0F;
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
 		GlStateManager.color(r, g, b, a);
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION);
-		w.pos(Math.min(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
-		w.pos(Math.max(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
-		w.pos(Math.max(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
-		w.pos(Math.min(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+		vb.pos(Math.min(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
+		vb.pos(Math.max(x1, x2), Math.max(y1, y2), 0.0D).endVertex();
+		vb.pos(Math.max(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
+		vb.pos(Math.min(x1, x2), Math.min(y1, y2), 0.0D).endVertex();
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -74,28 +75,30 @@ public class WGui extends Gui {
 	/**
 	 * Draws a rectangle with a vertical gradient between the specified colors.
 	 */
-	public static void drawGradientRect(final float left, final float top, final float right, final float bottom, final int startColor, final int endColor)
+	public static void drawGradientRect(final float x1, final float y1, final float x2, final float y2, final int color1, final int color2)
 	{
-		final float f = (startColor >> 24 & 255) / 255.0F;
-		final float f1 = (startColor >> 16 & 255) / 255.0F;
-		final float f2 = (startColor >> 8 & 255) / 255.0F;
-		final float f3 = (startColor & 255) / 255.0F;
-		final float f4 = (endColor >> 24 & 255) / 255.0F;
-		final float f5 = (endColor >> 16 & 255) / 255.0F;
-		final float f6 = (endColor >> 8 & 255) / 255.0F;
-		final float f7 = (endColor & 255) / 255.0F;
+		final float a1 = (color1 >> 24 & 255) / 255.0F;
+		final float r1 = (color1 >> 16 & 255) / 255.0F;
+		final float g1 = (color1 >> 8 & 255) / 255.0F;
+		final float b1 = (color1 & 255) / 255.0F;
+		final float a2 = (color2 >> 24 & 255) / 255.0F;
+		final float r2 = (color2 >> 16 & 255) / 255.0F;
+		final float g2 = (color2 >> 8 & 255) / 255.0F;
+		final float b2 = (color2 & 255) / 255.0F;
 		GlStateManager.disableTexture2D();
 		GlStateManager.enableBlend();
 		GlStateManager.disableAlpha();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		GlStateManager.shadeModel(7425);
-		w.begin(7, DefaultVertexFormats.POSITION_COLOR);
-		w.pos(right, top, 0).color(f1, f2, f3, f).endVertex();
-		w.pos(left, top, 0).color(f1, f2, f3, f).endVertex();
-		w.pos(left, bottom, 0).color(f5, f6, f7, f4).endVertex();
-		w.pos(right, bottom, 0).color(f5, f6, f7, f4).endVertex();
+		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GlStateManager.shadeModel(GL_SMOOTH);
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION);
+		GlStateManager.color(r1, g1, b1, a1);
+		vb.pos(x2, y1, 0).endVertex();
+		vb.pos(x1, y1, 0).endVertex();
+		GlStateManager.color(r2, g2, b2, a2);
+		vb.pos(x1, y2, 0).endVertex();
+		vb.pos(x2, y2, 0).endVertex();
 		t.draw();
-		GlStateManager.shadeModel(7424);
+		GlStateManager.shadeModel(GL_FLAT);
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.enableTexture2D();
@@ -130,33 +133,33 @@ public class WGui extends Gui {
 	{
 		final float f = 0.00390625F;
 		final float f1 = 0.00390625F;
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		w.pos(x + 0, y + height, 0).tex((u + 0) * f, (v + height) * f1).endVertex();
-		w.pos(x + width, y + height, 0).tex((u + width) * f, (v + height) * f1).endVertex();
-		w.pos(x + width, y + 0, 0).tex((u + width) * f, (v + 0) * f1).endVertex();
-		w.pos(x + 0, y + 0, 0).tex((u + 0) * f, (v + 0) * f1).endVertex();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(x + 0, y + height, 0).tex((u + 0) * f, (v + height) * f1).endVertex();
+		vb.pos(x + width, y + height, 0).tex((u + width) * f, (v + height) * f1).endVertex();
+		vb.pos(x + width, y + 0, 0).tex((u + width) * f, (v + 0) * f1).endVertex();
+		vb.pos(x + 0, y + 0, 0).tex((u + 0) * f, (v + 0) * f1).endVertex();
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final float x, final float y, final TextureAtlasSprite image, final float width, final float height)
+	public static void drawTexturedModalRectFromIcon(final float x, final float y, final TextureAtlasSprite image, final float width, final float height)
 	{
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		w.pos(x + 0, y + height, 0).tex(image.getMinU(), image.getMaxV()).endVertex();
-		w.pos(x + width, y + height, 0).tex(image.getMaxU(), image.getMaxV()).endVertex();
-		w.pos(x + width, y + 0, 0).tex(image.getMaxU(), image.getMinV()).endVertex();
-		w.pos(x + 0, y + 0, 0).tex(image.getMinU(), image.getMinV()).endVertex();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(x + 0, y + height, 0).tex(image.getMinU(), image.getMaxV()).endVertex();
+		vb.pos(x + width, y + height, 0).tex(image.getMaxU(), image.getMaxV()).endVertex();
+		vb.pos(x + width, y + 0, 0).tex(image.getMaxU(), image.getMinV()).endVertex();
+		vb.pos(x + 0, y + 0, 0).tex(image.getMinU(), image.getMinV()).endVertex();
 		t.draw();
 	}
 
-	public static void drawTexturedModelRect(final float x, final float y, final float u, final float v, final float width, final float height, final float divu, final float divv)
+	public static void drawTexturedModalRect(final float x, final float y, final float u, final float v, final float width, final float height, final float divu, final float divv)
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		w.pos(x, y + height, 0.0D).tex(u * mulu, (v + height) * mulv).endVertex();
-		w.pos(x + width, y + height, 0.0D).tex((u + width) * mulu, (v + height) * mulv).endVertex();
-		w.pos(x + width, y, 0.0D).tex((u + width) * mulu, v * mulv).endVertex();
-		w.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(x, y + height, 0.0D).tex(u * mulu, (v + height) * mulv).endVertex();
+		vb.pos(x + width, y + height, 0.0D).tex((u + width) * mulu, (v + height) * mulv).endVertex();
+		vb.pos(x + width, y, 0.0D).tex((u + width) * mulu, v * mulv).endVertex();
+		vb.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
 		t.draw();
 	}
 
@@ -164,20 +167,20 @@ public class WGui extends Gui {
 	{
 		final float mulu = 1.0F / divu;
 		final float mulv = 1.0F / divv;
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		w.pos(x, y + height, 0.0D).tex(u * mulu, (v + vheight) * mulv).endVertex();
-		w.pos(x + width, y + height, 0.0D).tex((u + uwidth) * mulu, (v + vheight) * mulv).endVertex();
-		w.pos(x + width, y, 0.0D).tex((u + uwidth) * mulu, v * mulv).endVertex();
-		w.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(x, y + height, 0.0D).tex(u * mulu, (v + vheight) * mulv).endVertex();
+		vb.pos(x + width, y + height, 0.0D).tex((u + uwidth) * mulu, (v + vheight) * mulv).endVertex();
+		vb.pos(x + width, y, 0.0D).tex((u + uwidth) * mulu, v * mulv).endVertex();
+		vb.pos(x, y, 0.0D).tex(u * mulu, v * mulv).endVertex();
 		t.draw();
 	}
 
 	public static void draw(final Area p, final int mode) {
-		w.begin(mode, DefaultVertexFormats.POSITION);
-		w.pos(p.x1(), p.y1(), 0);
-		w.pos(p.x1(), p.y2(), 0);
-		w.pos(p.x2(), p.y2(), 0);
-		w.pos(p.x2(), p.y1(), 0);
+		vb.begin(mode, DefaultVertexFormats.POSITION);
+		vb.pos(p.x1(), p.y1(), 0).endVertex();
+		vb.pos(p.x1(), p.y2(), 0).endVertex();
+		vb.pos(p.x2(), p.y2(), 0).endVertex();
+		vb.pos(p.x2(), p.y1(), 0).endVertex();
 		t.draw();
 	}
 
@@ -198,11 +201,11 @@ public class WGui extends Gui {
 		GlStateManager.enableBlend();
 		GlStateManager.disableTexture2D();
 		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-		w.begin(7, DefaultVertexFormats.POSITION);
-		w.pos(a.x1(), a.y2(), .0);
-		w.pos(a.x2(), a.y2(), .0);
-		w.pos(a.x2(), a.y1(), .0);
-		w.pos(a.x1(), a.y1(), .0);
+		vb.begin(7, DefaultVertexFormats.POSITION);
+		vb.pos(a.x1(), a.y2(), .0).endVertex();
+		vb.pos(a.x2(), a.y2(), .0).endVertex();
+		vb.pos(a.x2(), a.y1(), .0).endVertex();
+		vb.pos(a.x1(), a.y1(), .0).endVertex();
 		t.draw();
 		GlStateManager.enableTexture2D();
 		GlStateManager.disableBlend();
@@ -245,6 +248,11 @@ public class WGui extends Gui {
 		drawTexturedModalRect(a.x1(), a.y1(), u, v, a.w(), a.h());
 	}
 
+	public static void drawTexturedModalRect(final Area a)
+	{
+		drawModalRectWithCustomSizedTexture(a.x1(), a.y1(), 0, 0, 1, 1, a.w(), a.h(), 1, 1);
+	}
+
 	/**
 	 * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
 	 */
@@ -252,17 +260,17 @@ public class WGui extends Gui {
 	{
 		final float f = 0.00390625F;
 		final float f1 = 0.00390625F;
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		w.pos(a.x1(), a.y2(), 0).tex(texture.x1() * f, texture.y2() * f1).endVertex();
-		w.pos(a.x2(), a.y2(), 0).tex(texture.x2() * f, texture.y2() * f1).endVertex();
-		w.pos(a.x2(), a.y1(), 0).tex(texture.x2() * f, texture.y1() * f1).endVertex();
-		w.pos(a.x1(), a.y1(), 0).tex(texture.x1() * f, texture.y1() * f1).endVertex();
+		vb.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		vb.pos(a.x1(), a.y2(), 0).tex(texture.x1() * f, texture.y2() * f1).endVertex();
+		vb.pos(a.x2(), a.y2(), 0).tex(texture.x2() * f, texture.y2() * f1).endVertex();
+		vb.pos(a.x2(), a.y1(), 0).tex(texture.x2() * f, texture.y1() * f1).endVertex();
+		vb.pos(a.x1(), a.y1(), 0).tex(texture.x1() * f, texture.y1() * f1).endVertex();
 		t.draw();
 	}
 
-	public static void drawTexturedModelRectFromIcon(final Area a, final TextureAtlasSprite icon)
+	public static void drawTexturedModalRectFromIcon(final Area a, final TextureAtlasSprite icon)
 	{
-		drawTexturedModelRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
+		drawTexturedModalRectFromIcon(a.x1(), a.y1(), icon, a.w(), a.h());
 	}
 
 	public static void translate(final Area p) {
