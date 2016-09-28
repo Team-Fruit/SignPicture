@@ -77,7 +77,6 @@ public class CoreHandler {
 		if (event.phase == Phase.END) {
 			Client.startSection("signpic_load");
 			this.signEntryManager.onTick();
-			this.signHandler.onTick();
 			this.contentManager.onTick();
 			this.informationHandler.onTick(event);
 			EntrySlot.Tick();

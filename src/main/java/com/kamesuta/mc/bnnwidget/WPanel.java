@@ -124,9 +124,7 @@ public class WPanel extends WBase implements WContainer {
 		boolean closable = true;
 		for (final Iterator<WCommon> itr = this.widgets.iterator(); itr.hasNext();) {
 			final WCommon widget = itr.next();
-			if (widget.onCloseRequest())
-				itr.remove();
-			else {
+			if (!widget.onCloseRequest()) {
 				this.removelist.offer(widget);
 				closable = false;
 			}

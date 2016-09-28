@@ -87,6 +87,30 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		glPopMatrix();
 	}
 
+	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z, final float rotateratio) {
+		// Vanilla Translate
+		final Block block = tile.getBlockType();
+		final float f1 = 0.6666667F;
+		float f3;
+
+		if (block == Blocks.standing_sign) {
+			glTranslatef((float)x + 0.5F, (float)y + 0.75F * f1, (float)z + 0.5F);
+			final float f2 = tile.getBlockMetadata() * 360 / 16.0F;
+			glRotatef(-f2 * rotateratio, 0.0F, 1.0F, 0.0F);
+		} else {
+			final int j = tile.getBlockMetadata();
+			f3 = 0.0F;
+
+			if (j == 2) f3 = 180.0F;
+			if (j == 4) f3 = 90.0F;
+			if (j == 5) f3 = -90.0F;
+
+			glTranslatef((float)x + 0.5F, (float)y + 0.75F * f1, (float)z + 0.5F);
+			glRotatef(-f3 * rotateratio, 0.0F, 1.0F, 0.0F);
+			glTranslatef(0.0F, 0.0F, -0.4375F);
+		}
+	}
+
 	public void renderSignPictureBase(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
 		final Entry entry = EntryId.fromTile(tile).entry();
 		if (entry.isValid()) {
@@ -96,28 +120,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
 
-			// Vanilla Translate
-			final Block block = tile.getBlockType();
 			glPushMatrix();
-			final float f1 = 0.6666667F;
-			float f3;
-
-			if (block == Blocks.standing_sign) {
-				glTranslatef((float)x + 0.5F, (float)y + 0.75F * f1, (float)z + 0.5F);
-				final float f2 = tile.getBlockMetadata() * 360 / 16.0F;
-				glRotatef(-f2, 0.0F, 1.0F, 0.0F);
-			} else {
-				final int j = tile.getBlockMetadata();
-				f3 = 0.0F;
-
-				if (j == 2) f3 = 180.0F;
-				if (j == 4) f3 = 90.0F;
-				if (j == 5) f3 = -90.0F;
-
-				glTranslatef((float)x + 0.5F, (float)y + 0.75F * f1, (float)z + 0.5F);
-				glRotatef(-f3, 0.0F, 1.0F, 0.0F);
-				glTranslatef(0.0F, 0.0F, -0.4375F);
-			}
+			translateBase(tile, x, y, z, 1f);
 
 			// Draw Canvas
 			glDisable(GL_CULL_FACE);

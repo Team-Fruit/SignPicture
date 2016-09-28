@@ -122,6 +122,10 @@ public class EntryId {
 			sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
 	}
 
+	public int getLastLine() {
+		return StringUtils.length(this.id)/15;
+	}
+
 	public void toEntity(final TileEntitySign tile) {
 		toStrings(tile.signText);
 	}
