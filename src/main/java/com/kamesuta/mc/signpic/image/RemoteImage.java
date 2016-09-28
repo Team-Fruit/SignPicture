@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
@@ -38,6 +39,9 @@ public class RemoteImage extends Image {
 		} catch (final URISyntaxException e) {
 			this.content.state.setType(ContentStateType.ERROR);
 			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidurl"));
+		} catch (final ContentCapacityOverException e) {
+			this.content.state.setType(ContentStateType.ERROR);
+			this.content.state.setMessage(I18n.format("signpic.advmsg.capacityover"));
 		} catch (final InvaildImageException e) {
 			this.content.state.setType(ContentStateType.ERROR);
 			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidimage"));

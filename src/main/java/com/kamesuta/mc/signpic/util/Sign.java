@@ -3,8 +3,10 @@ package com.kamesuta.mc.signpic.util;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.gui.GuiPAAS;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -28,6 +30,13 @@ public class Sign {
 		if (nethandlerplayclient != null)
 			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.xCoord, sourceentity.yCoord, sourceentity.zCoord, sourceentity.signText));
 		sourceentity.setEditable(true);
+	}
+
+	public static void placeSign(final EntryId entryId, final TileEntitySign sourceentity) {
+		if (Config.instance.multiplayPAAS && !Client.mc.isSingleplayer())
+			Client.mc.displayGuiScreen(new GuiPAAS(new SendPacketTask(entryId, sourceentity)));
+		else
+			sendSign(entryId, sourceentity);
 	}
 
 	public static class SendPacketTask {
@@ -58,15 +67,8 @@ public class Sign {
 			return false;
 		}
 
-		/** Fastest time "possible" estimate for an empty sign. */
-		private static long minEditTime = 150;
-		/** Minimum time needed to add one extra line (not the first). */
-		private static long minLineTime = 50;
-		/** Minimum time needed to type a character. */
-		private static long minCharTime = 50;
-
-		public static long getExpectedEditTime(final String[] lines, final boolean skipEmpty) {
-			long expected = minEditTime;
+		private static long getExpectedEditTime(final String[] lines, final boolean skipEmpty) {
+			long expected = Config.instance.multiplayPAASMinEditTime;
 			int n = 0;
 			for (String line : lines){
 				if (line != null){
@@ -74,7 +76,7 @@ public class Sign {
 					if (!line.isEmpty()){
 						final int chars = line.length();
 						n += 1;
-						expected += minCharTime * chars;
+						expected += Config.instance.multiplayPAASMinCharTime * chars;
 					}
 				}
 			}
@@ -82,7 +84,7 @@ public class Sign {
 				return 0;
 			}
 			if (n > 1){
-				expected += minLineTime * n;
+				expected += Config.instance.multiplayPAASMinLineTime * n;
 			}
 			return expected;
 		}

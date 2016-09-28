@@ -5,12 +5,10 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.gui.GuiPacketWait;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Sign;
-import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
@@ -44,7 +42,7 @@ public class SignHandler {
 					try {
 						final GuiEditSign ges = (GuiEditSign) event.gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-						Client.mc.displayGuiScreen(new GuiPacketWait(new SendPacketTask(CurrentMode.instance.getEntryId(), tileSign)));
+						Sign.placeSign(CurrentMode.instance.getEntryId(), tileSign);
 						event.setCanceled(true);
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 							CurrentMode.instance.setMode();

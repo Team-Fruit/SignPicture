@@ -25,8 +25,6 @@ public class Client {
 	public static File mcDir;
 	public static File signpicDir;
 	public static File signpicCacheDir;
-	public static File configDir;
-	public static File configFile;
 	public static File modDir;
 	public static File modFile;
 
