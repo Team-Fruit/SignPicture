@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
@@ -30,29 +31,25 @@ public final class InformationChecker {
 			final EntityPlayer player = Client.mc.thePlayer;
 			if(this.doneChecking && player != null && !this.triedToWarnPlayer) {
 				final String lang = Client.mc.gameSettings.language;
-				if (!StringUtils.equals(Reference.VERSION, "${version}")) {
+				if (Config.instance.informationNotice && !StringUtils.equals(Reference.VERSION, "${version}")) {
 					try {
 						final String[] client = Reference.VERSION.split("\\.");
-						if (client.length>=2) {
+						if (client.length>=3) {
 							final int clientBuild1 = Integer.parseInt(client[0]);
 							final int clientBuild2 = Integer.parseInt(client[1]);
+							final int clientBuild3 = Integer.parseInt(client[2]);
 
 							boolean betaneedupdate = false;
-							if (this.unstableVersion!=null && this.unstableVersion.version!=null) {
-								if (client.length>=4 &&StringUtils.equals(client[3], "beta")) {
-									if (NumberUtils.isNumber(client[2])) {
-										final int clientBuild3 = NumberUtils.toInt(client[2]);
-										final String[] beta = this.unstableVersion.version.split("\\.");
-										if (beta.length>=4 &&StringUtils.equals(beta[3], "beta")) {
-											if (NumberUtils.isNumber(beta[0]) && NumberUtils.isNumber(beta[1]) && NumberUtils.isNumber(beta[2])) {
-												final int betaBuild1 = NumberUtils.toInt(beta[0]);
-												final int betaBuild2 = NumberUtils.toInt(beta[1]);
-												final int betaBuild3 = NumberUtils.toInt(beta[2]);
-												betaneedupdate = (betaBuild1 > clientBuild1) ||
-														(betaBuild1 == clientBuild1 && betaBuild2 > clientBuild2) ||
-														(betaBuild1 == clientBuild1 && betaBuild2 == clientBuild2 && betaBuild3 > clientBuild3);
-											}
-										}
+							if (Config.instance.informationJoinBeta && this.unstableVersion!=null && this.unstableVersion.version!=null) {
+								final String[] beta = this.unstableVersion.version.split("\\.");
+								if (beta.length>=4 &&StringUtils.equals(beta[3], "beta")) {
+									if (NumberUtils.isNumber(beta[0]) && NumberUtils.isNumber(beta[1]) && NumberUtils.isNumber(beta[2])) {
+										final int betaBuild1 = NumberUtils.toInt(beta[0]);
+										final int betaBuild2 = NumberUtils.toInt(beta[1]);
+										final int betaBuild3 = NumberUtils.toInt(beta[2]);
+										betaneedupdate = (betaBuild1 > clientBuild1) ||
+												(betaBuild1 == clientBuild1 && betaBuild2 > clientBuild2) ||
+												(betaBuild1 == clientBuild1 && betaBuild2 == clientBuild2 && betaBuild3 > clientBuild3);
 									}
 								}
 							}
@@ -63,12 +60,15 @@ public final class InformationChecker {
 
 							if (this.onlineVersion!=null && this.onlineVersion.version!=null) {
 								final String[] online = this.onlineVersion.version.split("\\.");
-								if (online.length>=2) {
+								if (online.length>=3) {
 									boolean needupdate = false;
 									if (!betaneedupdate) {
 										final int onlineBuild1 = Integer.parseInt(online[0]);
 										final int onlineBuild2 = Integer.parseInt(online[1]);
-										needupdate = (onlineBuild1 > clientBuild1) || (onlineBuild1 == clientBuild1 && onlineBuild2 > clientBuild2);
+										final int onlineBuild3 = Integer.parseInt(online[2]);
+										needupdate = (onlineBuild1 > clientBuild1) ||
+												(onlineBuild1 == clientBuild1 && onlineBuild2 > clientBuild2) ||
+												(onlineBuild1 == clientBuild1 && onlineBuild2 == clientBuild2 && onlineBuild3 > clientBuild3);
 									}
 
 									if(betaneedupdate || needupdate) {

@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.handler;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -14,6 +15,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -21,6 +23,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class CoreHandler {
+	public final Config configHandler = Config.instance;
 	public final KeyHandler keyHandler = new KeyHandler();
 	public final SignHandler signHandler = new SignHandler();
 	public final EntryManager signEntryManager = EntryManager.instance;
@@ -71,11 +74,15 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent
+	public void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+		this.configHandler.onConfigChanged(eventArgs);
+	}
+
+	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
 		if (event.phase == Phase.END) {
 			Client.startSection("signpic_load");
 			this.signEntryManager.onTick();
-			this.signHandler.onTick();
 			this.contentManager.onTick();
 			this.informationHandler.onTick(event);
 			EntrySlot.Tick();

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
@@ -16,15 +17,17 @@ import com.kamesuta.mc.signpic.handler.CoreEvent;
 public class ContentManager implements ITickEntry {
 	public static ContentManager instance = new ContentManager();
 
-	public final ExecutorService threadpool = Executors.newFixedThreadPool(3);
+	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads);
 	protected final HashMap<ContentId, ContentSlot<Content>> registry = new HashMap<ContentId, ContentSlot<Content>>();
 	public Deque<IAsyncProcessable> asyncqueue = new ArrayDeque<IAsyncProcessable>();
 	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
+	private int asynctick = 0;
+	private int divisiontick = 0;
 
-	public ContentManager() {
+	private ContentManager() {
 	}
 
-	public Content get(final ContentId id) {
+	protected Content get(final ContentId id) {
 		final ContentSlot<Content> entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
@@ -38,28 +41,36 @@ public class ContentManager implements ITickEntry {
 	@CoreEvent
 	@Override
 	public void onTick() {
-		IAsyncProcessable asyncprocess;
-		if ((asyncprocess = this.asyncqueue.poll()) != null) {
-			final IAsyncProcessable asyncprocessexec = asyncprocess;
-			this.threadpool.execute(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						asyncprocessexec.onAsyncProcess();
-					} catch (final Exception e) {
-						e.printStackTrace();
+		this.asynctick++;
+		if (this.asynctick > Config.instance.contentAsyncTick) {
+			this.asynctick = 0;
+			IAsyncProcessable asyncprocess;
+			if ((asyncprocess = this.asyncqueue.poll()) != null) {
+				final IAsyncProcessable asyncprocessexec = asyncprocess;
+				this.threadpool.execute(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							asyncprocessexec.onAsyncProcess();
+						} catch (final Exception e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			});
+				});
+			}
 		}
-		IDivisionProcessable divisionprocess;
-		if ((divisionprocess = this.divisionqueue.peek()) != null) {
-			try {
-				if (divisionprocess.onDivisionProcess()) {
-					this.divisionqueue.poll();
+		this.divisiontick++;
+		if (this.divisiontick > Config.instance.contentAsyncTick) {
+			this.divisiontick = 0;
+			IDivisionProcessable divisionprocess;
+			if ((divisionprocess = this.divisionqueue.peek()) != null) {
+				try {
+					if (divisionprocess.onDivisionProcess()) {
+						this.divisionqueue.poll();
+					}
+				} catch (final Exception e) {
+					e.printStackTrace();
 				}
-			} catch (final Exception e) {
-				e.printStackTrace();
 			}
 		}
 

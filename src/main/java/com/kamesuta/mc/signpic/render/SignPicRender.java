@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -31,10 +32,10 @@ public class SignPicRender extends WGui {
 
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
-		float opacity = 0.7f;
+		float opacity = Config.instance.renderPreviewFixedOpacity;
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW) || CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
-			opacity *= 0.7f;
+			opacity = Config.instance.renderPreviewFloatedOpacity;
 		}
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 			if (Sign.preview.isRenderable() && Sign.preview.isVisible()) {
@@ -98,7 +99,7 @@ public class SignPicRender extends WGui {
 					if (advmsg != null)
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
 					if (tilesign.signText != null)
-						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
+						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0].getUnformattedText(), tilesign.signText[1].getUnformattedText(), tilesign.signText[2].getUnformattedText(), tilesign.signText[3].getUnformattedText()));
 					event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
 				}
 			}

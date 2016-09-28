@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION)
+@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY)
 public class SignPicture {
 	@Instance(Reference.MODID)
 	public static SignPicture instance;
@@ -29,6 +29,7 @@ public class SignPicture {
 
 	@EventHandler
 	public void preInit(final FMLPreInitializationEvent event) {
+		Config.instance = new Config(event.getSuggestedConfigurationFile());
 		proxy.preInit(event);
 	}
 
@@ -40,5 +41,6 @@ public class SignPicture {
 	@EventHandler
 	public void postInit(final FMLPostInitializationEvent event) {
 		proxy.postInit(event);
+		Config.instance.save();
 	}
 }

@@ -14,6 +14,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
@@ -37,6 +38,11 @@ public class ContentDownloader implements IAsyncProcessable {
 				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.content.id));
 				final HttpResponse response = Downloader.downloader.client.execute(req);
 				final HttpEntity entity = response.getEntity();
+
+				final long max = Config.instance.contentMaxByte;
+				final long size = entity.getContentLength();
+				if (max > 0 && (size < 0 || size > max))
+					throw new ContentCapacityOverException();
 
 				this.content.state.progress.overall = entity.getContentLength();
 				input = entity.getContent();
