@@ -56,7 +56,14 @@ public final class Config extends Configuration {
 		addCustomCategoryComment("Content", "Content Data Management");
 
 		this.informationNotice = get( "Version", "Notice", this.informationNotice ).setRequiresMcRestart(true).getBoolean( this.informationNotice );
-		this.informationJoinBeta = get( "Version", "JoinBeta", this.informationJoinBeta ).setRequiresMcRestart(true).getBoolean( this.informationJoinBeta );
+
+		final Property joinBeta = get( "Version", "JoinBeta", this.informationJoinBeta );
+		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
+		if (v.length>=4 &&StringUtils.equals(v[3], "beta")) {
+			this.informationJoinBeta = true;
+			joinBeta.set(true);
+		}
+		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean( this.informationJoinBeta );
 
 		addCustomCategoryComment("MultiplayPreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
 
