@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.image;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
@@ -12,7 +10,6 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
@@ -38,11 +35,11 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			final WorldRenderer t = RenderHelper.w;
 			RenderHelper.startTexture();
 			getTexture().bind();
-			t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			t.pos(0, 0, 0).tex(0, 0).endVertex();
-			t.pos(0, 1, 0).tex(0, 1).endVertex();
-			t.pos(1, 1, 0).tex(1, 1).endVertex();
-			t.pos(1, 0, 0).tex(1, 0).endVertex();
+			t.startDrawingQuads();
+			t.addVertexWithUV(0, 0, 0, 0, 0);
+			t.addVertexWithUV(0, 1, 0, 0, 1);
+			t.addVertexWithUV(1, 1, 0, 1, 1);
+			t.addVertexWithUV(1, 0, 0, 1, 0);
 			RenderHelper.t.draw();
 		}
 	}

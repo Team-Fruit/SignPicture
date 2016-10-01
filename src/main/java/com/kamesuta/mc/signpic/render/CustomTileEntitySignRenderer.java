@@ -14,7 +14,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
@@ -37,11 +36,11 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			RenderHelper.startShape();
 			glLineWidth(1f);
 			GlStateManager.color(1.0F, 0.0F, 0.0F, opacity * 1.0F);
-			this.t.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
-			this.t.pos(0, 0, 0).endVertex();
-			this.t.pos(0, 1, 0).endVertex();
-			this.t.pos(1, 1, 0).endVertex();
-			this.t.pos(1, 0, 0).endVertex();
+			this.t.startDrawing(GL_LINE_LOOP);
+			this.t.addVertex(0, 0, 0);
+			this.t.addVertex(0, 1, 0);
+			this.t.addVertex(1, 1, 0);
+			this.t.addVertex(1, 0, 0);
 			RenderHelper.t.draw();
 		}
 
@@ -50,11 +49,11 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			RenderHelper.startTexture();
 			bindTexture(DESTROY_STAGES[destroy]);
 			GlStateManager.translate(0f, 0f, .01f);
-			this.t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			this.t.startDrawingQuads();;
 			RenderHelper.addRectVertex(0, 0, 1, 1);
 			RenderHelper.t.draw();
 			GlStateManager.translate(0f, 0f, -.02f);
-			this.t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			this.t.startDrawingQuads();;
 			RenderHelper.addRectVertex(0, 0, 1, 1);
 			RenderHelper.t.draw();
 			GlStateManager.popMatrix();
@@ -133,7 +132,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
 				GlStateManager.color(1f, 1f, 1f, opacity * .5f);
-				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
+				super.func_180541_a(tile, x, y, z, partialTicks, destroy);
 			}
 
 			GlStateManager.pushMatrix();
@@ -154,12 +153,12 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				RenderHelper.startTexture();
 				GlStateManager.color(1f, 1f, 1f, opacity);
 			}
-			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
+			super.func_180541_a(tile, x, y, z, partialTicks, destroy);
 		}
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy)
+	public void func_180541_a(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy)
 	{
 		Client.startSection("signpic-render");
 		renderSignPictureBase(tile, x, y, z, partialTicks, destroy, 1f);

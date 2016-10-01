@@ -109,7 +109,8 @@ public class ClientProxy extends CommonProxy {
 
 		// Replace Sign Renderer
 		Client.renderer.setRendererDispatcher(TileEntityRendererDispatcher.instance);
-		final Map<Class<? extends TileEntity>, TileEntitySpecialRenderer<? extends TileEntity>> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
+		@SuppressWarnings("unchecked")
+		final Map<Class<? extends TileEntity>, TileEntitySpecialRenderer> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
 		renderers.put(TileEntitySign.class, Client.renderer);
 
 		// Event Register
