@@ -118,6 +118,17 @@ public class WGui extends Gui {
 	/**
 	 * Renders the specified text to the screen.
 	 */
+	public static void drawStringWithShadow(final String text, final float x, final float y, final int color)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(x, y, 0f);
+		font().drawStringWithShadow(text, 0, 0, color);
+		GlStateManager.popMatrix();
+	}
+
+	/**
+	 * Renders the specified text to the screen.
+	 */
 	public static void drawString(final String text, final float x, final float y, final int color)
 	{
 		GlStateManager.pushMatrix();
@@ -237,7 +248,7 @@ public class WGui extends Gui {
 	 */
 	public static void drawString(final String text, final Area a, final int color)
 	{
-		drawString(text, a.x1(), a.y1(), color);
+		drawStringWithShadow(text, a.x1(), a.y1(), color);
 	}
 
 	/**
@@ -277,38 +288,34 @@ public class WGui extends Gui {
 		GlStateManager.translate(p.x1(), p.y1(), 0f);
 	}
 
-	public static void drawString(final String text, final int x, final int y, final int colour, final boolean shadow) {
+	public static void drawString(final String text, final float x, final float y, final int colour, final boolean shadow) {
 		if (shadow)
-			font().drawStringWithShadow(text, x, y, colour);
+			drawStringWithShadow(text, x, y, colour);
 		else
-			font().drawString(text, x, y, colour);
+			drawString(text, x, y, colour);
 	}
 
-	public static void drawString(final String text, final int x, final int y, final int colour) {
-		drawString(text, x, y, colour, true);
-	}
-
-	public static void drawStringC(final String text, final int x, final int y, final int w, final int h, final int colour, final boolean shadow) {
+	public static void drawStringC(final String text, final float x, final float y, final float w, final float h, final int colour, final boolean shadow) {
 		drawString(text, x + (w - getStringWidth(text)) / 2, y + (h - 8) / 2, colour, shadow);
 	}
 
-	public static void drawStringC(final String text, final int x, final int y, final int w, final int h, final int colour) {
+	public static void drawStringC(final String text, final float x, final float y, final float w, final float h, final int colour) {
 		drawStringC(text, x, y, w, h, colour, true);
 	}
 
-	public static void drawStringC(final String text, final int x, final int y, final int colour, final boolean shadow) {
+	public static void drawStringC(final String text, final float x, final float y, final int colour, final boolean shadow) {
 		drawString(text, x - getStringWidth(text) / 2, y, colour, shadow);
 	}
 
-	public static void drawStringC(final String text, final int x, final int y, final int colour) {
-		drawStringC(text, x, y, colour, true);
+	public static void drawStringC(final String text, final float f, final float g, final int colour) {
+		drawStringC(text, f, g, colour, true);
 	}
 
-	public static void drawStringR(final String text, final int x, final int y, final int colour, final boolean shadow) {
+	public static void drawStringR(final String text, final float x, final float y, final int colour, final boolean shadow) {
 		drawString(text, x - getStringWidth(text), y, colour, shadow);
 	}
 
-	public static void drawStringR(final String text, final int x, final int y, final int colour) {
+	public static void drawStringR(final String text, final float x, final float y, final int colour) {
 		drawStringR(text, x, y, colour, true);
 	}
 

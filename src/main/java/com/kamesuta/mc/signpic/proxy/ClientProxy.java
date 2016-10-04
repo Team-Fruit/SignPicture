@@ -58,8 +58,6 @@ public class ClientProxy extends CommonProxy {
 		Client.mcDir = mcdir;
 		Client.signpicDir = signpicdir;
 		Client.signpicCacheDir = cachedir;
-		Client.configDir = event.getModConfigurationDirectory();
-		Client.configFile = event.getSuggestedConfigurationFile();
 		Client.modDir = new File(mcdir, "mods");
 		Client.modFile = event.getSourceFile();
 
