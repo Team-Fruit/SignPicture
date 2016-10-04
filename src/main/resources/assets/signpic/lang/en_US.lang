@@ -21,6 +21,7 @@ signpic.key.category=Sign Picture
 signpic.key.gui=Open GUI
 
 # GUI
+## Sign Editor
 signpic.gui.editor.see=View Sign
 signpic.gui.editor.preview=Preview
 signpic.gui.editor.continue=Continue
@@ -28,7 +29,7 @@ signpic.gui.editor.load=Load
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.textfield=Place URL Here!
-## Size
+### Size
 signpic.gui.editor.size.category=Size
 signpic.gui.editor.size.width=W
 signpic.gui.editor.size.height=H
@@ -36,7 +37,7 @@ signpic.gui.editor.size.width.neg=-
 signpic.gui.editor.size.width.pos=+
 signpic.gui.editor.size.height.neg=-
 signpic.gui.editor.size.height.pos=+
-## Offset
+### Offset
 signpic.gui.editor.offset.category=Offset
 signpic.gui.editor.offset.x=X
 signpic.gui.editor.offset.x.neg=⇦
@@ -47,7 +48,7 @@ signpic.gui.editor.offset.y.pos=⇧
 signpic.gui.editor.offset.z=Z
 signpic.gui.editor.offset.z.neg=↗
 signpic.gui.editor.offset.z.pos=↙
-## Rotation
+### Rotation
 signpic.gui.editor.rotation.category=Rotation
 signpic.gui.editor.rotation.up=↑
 signpic.gui.editor.rotation.down=↓
@@ -58,6 +59,9 @@ signpic.gui.editor.rotation.remove=-
 signpic.gui.editor.rotation.add=+
 signpic.gui.editor.rotation.neg=-
 signpic.gui.editor.rotation.pos=+
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=Please Wait ( %d / %d letters )
+signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
 
 # Image State
 signpic.state.init=Waiting...
@@ -72,6 +76,7 @@ signpic.state.error=ERROR
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=Invalid URL
+signpic.advmsg.capacityover=CapacityOver
 signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s

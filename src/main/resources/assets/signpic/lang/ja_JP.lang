@@ -8,6 +8,7 @@ signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 
 # GUI
+## Sign Editor
 signpic.gui.editor.see=実体表示
 signpic.gui.editor.preview=プレビュー
 signpic.gui.editor.continue=連続
@@ -15,14 +16,17 @@ signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.textfield=ここにURLを入力!
-## Size
+### Size
 signpic.gui.editor.size.category=サイズ
 signpic.gui.editor.size.width=幅
 signpic.gui.editor.size.height=高さ
-## Offset
+### Offset
 signpic.gui.editor.offset.category=オフセット
-## Rotation
+### Rotation
 signpic.gui.editor.rotation.category=回転
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
+signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
 
 # Image State
 signpic.state.init=待機中...
@@ -37,6 +41,7 @@ signpic.state.error=エラー
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=不正なURL
+signpic.advmsg.capacityover=容量オーバー
 signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s

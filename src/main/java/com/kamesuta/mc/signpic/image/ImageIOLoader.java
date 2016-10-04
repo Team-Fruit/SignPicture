@@ -18,6 +18,7 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentStateType;
@@ -30,7 +31,9 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader {
-	public static final ImageSize MAX_SIZE = new ImageSize().setSize(512, 512);
+	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
+			((Config.instance.imageWidthLimit > 0) ? Config.instance.imageWidthLimit : ImageSize.unknownSize),
+			((Config.instance.imageHeightLimit > 0) ? Config.instance.imageHeightLimit : ImageSize.unknownSize));
 
 	protected Content content;
 	protected InputStream input;
@@ -62,7 +65,7 @@ public class ImageIOLoader {
 
 		this.content.state.setType(ContentStateType.LOADING);
 		ImageTextures textures;
-		if (reader.getFormatName()=="gif") {
+		if (Config.instance.imageAnimationGif && reader.getFormatName()=="gif") {
 			textures = loadGif(data);
 		} else {
 			textures = loadImage(reader, imagestream);

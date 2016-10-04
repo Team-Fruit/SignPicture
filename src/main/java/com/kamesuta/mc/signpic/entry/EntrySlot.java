@@ -1,7 +1,8 @@
 package com.kamesuta.mc.signpic.entry;
 
+import com.kamesuta.mc.signpic.Config;
+
 public class EntrySlot<T> {
-	public static final int CollectTimes = 20 * 15;
 	protected static long times = 0;
 
 	protected final T entry;
@@ -23,10 +24,14 @@ public class EntrySlot<T> {
 	}
 
 	public boolean shouldCollect() {
-		return times - this.time > CollectTimes;
+		return times - this.time > getCollectTimes();
 	}
 
 	public static void Tick() {
 		times++;
+	}
+
+	protected int getCollectTimes() {
+		return Config.instance.entryGCtick;
 	}
 }

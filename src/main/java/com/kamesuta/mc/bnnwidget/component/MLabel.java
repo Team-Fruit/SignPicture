@@ -19,15 +19,15 @@ public class MLabel extends WBase {
 	}
 
 	public void setText(final String s) {
-		if (StringUtils.equals(s, this.text)) {
+		if (StringUtils.equals(s, getText())) {
 			return;
 		}
-		final String oldText = this.text;
+		final String oldText = getText();
 		this.text = s;
 		onTextChanged(oldText);
 	}
 
-	public final String getText() {
+	public String getText() {
 		return this.text;
 	}
 
@@ -42,6 +42,6 @@ public class MLabel extends WBase {
 
 	protected void drawText(final Area a) {
 		RenderHelper.startTexture();
-		drawString(this.text, a.x1(), a.y1() + (a.h()-font().FONT_HEIGHT) / 2, this.textcolor);
+		drawStringC(getText(), a.x1()+a.w()/2, a.y1() + (a.h()-font().FONT_HEIGHT) / 2, this.textcolor);
 	}
 }

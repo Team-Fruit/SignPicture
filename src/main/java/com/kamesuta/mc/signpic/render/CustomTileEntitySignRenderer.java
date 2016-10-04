@@ -103,15 +103,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		GlStateManager.popMatrix();
 	}
 
-	public void renderSignPictureBase(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float opacity) {
-		final Entry entry = EntryId.fromTile(tile).entry();
-		if (entry.isValid()) {
-			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
-				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, opacity * .5f);
-				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
-			}
-
+	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z, final float rotateratio) {
 			// Vanilla Translate
 			final Block block = tile.getBlockType();
 			GlStateManager.pushMatrix();
@@ -134,6 +126,19 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				GlStateManager.rotate(-f3, 0.0F, 1.0F, 0.0F);
 				GlStateManager.translate(0.0F, 0.0F, -0.4375F);
 			}
+	}
+
+	public void renderSignPictureBase(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float opacity) {
+		final Entry entry = EntryId.fromTile(tile).entry();
+		if (entry.isValid()) {
+			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
+				RenderHelper.startTexture();
+				GlStateManager.color(1f, 1f, 1f, opacity * .5f);
+				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
+			}
+
+			GlStateManager.pushMatrix();
+			translateBase(tile, x, y, z, 1f);
 
 			// Draw Canvas
 			GlStateManager.disableCull();
