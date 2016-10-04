@@ -17,6 +17,7 @@ public final class InformationChecker {
 	public static InfoState state = new InfoState();
 
 	public static class InfoState {
+		public Info info;
 		public Info.Version onlineVersion;
 		public Info.Version stableVersion;
 		public Info.Version unstableVersion;
@@ -31,8 +32,13 @@ public final class InformationChecker {
 			final EntityPlayer player = Client.mc.thePlayer;
 			if(this.doneChecking && player != null && !this.triedToWarnPlayer) {
 				final String lang = Client.mc.gameSettings.language;
-				if (Config.instance.informationNotice && !StringUtils.equals(Reference.VERSION, "${version}")) {
+				if (this.info!=null && Config.instance.informationNotice && !StringUtils.equals(Reference.VERSION, "${version}")) {
 					try {
+						if (this.info.versions!=null) {
+							this.stableVersion = this.info.versions.get(Client.mcversion);
+							this.unstableVersion = this.info.versions.get(Client.mcversion + "-beta");
+						}
+
 						final String[] client = Reference.VERSION.split("\\.");
 						if (client.length>=3) {
 							final int clientBuild1 = Integer.parseInt(client[0]);
@@ -72,12 +78,27 @@ public final class InformationChecker {
 									}
 
 									if(betaneedupdate || needupdate) {
+										ChatBuilder.create("signpic.versioning.outdated").setParams(Reference.VERSION, this.onlineVersion.version).useTranslation().chatClient();
 										if (this.onlineVersion.message_local!=null && this.onlineVersion.message_local.containsKey(lang))
 											ChatBuilder.create(this.onlineVersion.message_local.get(lang)).chatClient();
 										else if (!StringUtils.isEmpty(this.onlineVersion.message))
 											ChatBuilder.create(this.onlineVersion.message).chatClient();
-										ChatBuilder.create("signpic.versioning.outdated").setParams(Reference.VERSION, this.onlineVersion.version).useTranslation().chatClient();
-										ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson().chatClient();;
+
+										final String website;
+										if (this.onlineVersion.website!=null) website = this.onlineVersion.website;
+										else if (this.info.website!=null) website = this.info.website;
+										else website = "https://github.com/Kamesuta/SignPicture/";
+
+										final String changelog;
+										if (this.onlineVersion.changelog!=null) changelog = this.onlineVersion.changelog;
+										else if (this.info.changelog!=null) changelog = this.info.changelog;
+										else changelog = "https://github.com/Kamesuta/SignPicture/releases";
+
+										ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson()
+										.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic-download-latest\"}")
+										.replace("$website$", "{\"action\":\"open_url\",\"value\":\"" + website + "\"}")
+										.replace("$changelog$", "{\"action\":\"open_url\",\"value\":\"" + changelog + "\"}")
+										.chatClient();
 									}
 								}
 							}

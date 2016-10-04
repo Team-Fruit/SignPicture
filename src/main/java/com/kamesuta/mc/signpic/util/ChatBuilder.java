@@ -1,9 +1,12 @@
 package com.kamesuta.mc.signpic.util;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.gson.JsonSyntaxException;
+import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Reference;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -27,6 +30,7 @@ public class ChatBuilder {
 	private boolean useTranslation = false;
 	private boolean useJson = false;
 	private boolean useId = false;
+	private final Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
 	public ChatBuilder() {}
@@ -39,14 +43,21 @@ public class ChatBuilder {
 			else {
 				String s;
 				if (this.useTranslation)
-					s = String.format(StatCollector.translateToLocal(this.text), this.params);
+					s = StatCollector.translateToLocal(this.text);
 				else
 					s = this.text;
+
+				for (final Map.Entry<String, String> entry: this.replace.entrySet())
+					s = StringUtils.replace(s, entry.getKey(), entry.getValue());
+
+				if (this.params.length>0)
+					s = String.format(s, this.params);
+				Reference.logger.info(s);
 
 				if (this.useJson)
 					try {
 						chat = IChatComponent.Serializer.func_150699_a(s);
-					} catch (final JsonSyntaxException e) {
+					} catch (final Exception e) {
 						chat = new ChatComponentText("Invaild Json: " + this.text);
 					}
 				else
@@ -97,6 +108,11 @@ public class ChatBuilder {
 
 	public ChatBuilder useJson() {
 		this.useJson = true;
+		return this;
+	}
+
+	public ChatBuilder replace(final String from, final String to) {
+		this.replace.put(from, to);
 		return this;
 	}
 

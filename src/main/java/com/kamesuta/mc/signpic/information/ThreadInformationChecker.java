@@ -36,17 +36,13 @@ public class ThreadInformationChecker extends Thread {
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 			input = entity.getContent();
-			final Info info = gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
-			if (info!=null) {
-				if (info.versions!=null) {
-					state.stableVersion = info.versions.get(Client.mcversion);
-					state.unstableVersion = info.versions.get(Client.mcversion + "-beta");
-				}
-				if (!StringUtils.isEmpty(info.private_msg)) {
+			state.info = gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
+			if (state.info!=null) {
+				if (!StringUtils.isEmpty(state.info.private_msg)) {
 					InputStream input1 = null;
 					try {
 						if (!StringUtils.isEmpty(Client.name) && !StringUtils.isEmpty(Client.id)) {
-							final String msgurl = info.private_msg
+							final String msgurl = state.info.private_msg
 									.replace("%name%", Client.name)
 									.replace("%id%", Client.id)
 									.replace("%mcversion%", Client.mcversion)
