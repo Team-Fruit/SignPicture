@@ -52,7 +52,6 @@ public class ChatBuilder {
 
 				if (this.params.length>0)
 					s = String.format(s, this.params);
-				Reference.logger.info(s);
 
 				if (this.useJson)
 					try {
@@ -98,6 +97,11 @@ public class ChatBuilder {
 
 	public ChatBuilder setParams(final Object... params) {
 		this.params = params;
+		return this;
+	}
+
+	public ChatBuilder setStyle(final ChatStyle style) {
+		this.style = style;
 		return this;
 	}
 
