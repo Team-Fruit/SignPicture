@@ -6,7 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Reference;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -24,7 +23,7 @@ public class ChatBuilder {
 	public static final int DefaultId = 877;
 
 	private IChatComponent chat = null;
-	private final ChatStyle style = null;
+	private ChatStyle style = null;
 	private String text = "";
 	private Object[] params = new Object[0];
 	private boolean useTranslation = false;

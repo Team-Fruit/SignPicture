@@ -19,21 +19,21 @@
 			}
 		},
 		"1.9.4": {
-			"version": "2.3.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.3.0/SignPicture-1.9.4-2.3.0-universal.jar",
-			"local": "SignPicture-1.9.4-2.3.0-universal.jar",
-			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.0 Released.",
+			"version": "2.3.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.3.1/SignPicture-1.9.4-2.3.1-universal.jar",
+			"local": "SignPicture-1.9.4-2.3.1-universal.jar",
+			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.1 Released.",
 			"message_local": {
-				"ja_JP": "Anti-AutoSign回避モードとコンフィグの追加 SignPicture 2.3.0 リリース!"
+				"ja_JP": "Fix Rendering Bug! SignPicture 2.3.1 リリース!"
 			}
 		},
 		"1.10.2": {
-			"version": "2.3.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.3.0/SignPicture-1.10.2-2.3.0-universal.jar",
-			"local": "SignPicture-1.10.2-2.3.0-universal.jar",
-			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.0 Released.",
+			"version": "2.3.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.3.1/SignPicture-1.10.2-2.3.1-universal.jar",
+			"local": "SignPicture-1.10.2-2.3.1-universal.jar",
+			"message": "Fix Rendering Bug! SignPicture 2.3.1 Released.",
 			"message_local": {
-				"ja_JP": "Anti-AutoSign回避モードとコンフィグの追加 SignPicture 2.3.0 リリース!"
+				"ja_JP": "描画バグ修正! SignPicture 2.3.1 リリース!"
 			}
 		}
 	},
