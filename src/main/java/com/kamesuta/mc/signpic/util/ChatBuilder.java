@@ -1,6 +1,10 @@
 package com.kamesuta.mc.signpic.util;
 
-import com.google.gson.JsonSyntaxException;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Client;
 
 import net.minecraft.client.Minecraft;
@@ -24,6 +28,7 @@ public class ChatBuilder {
 	private boolean useTranslation = false;
 	private boolean useJson = false;
 	private boolean useId = false;
+	private final Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
 	public ChatBuilder() {}
@@ -36,14 +41,20 @@ public class ChatBuilder {
 			else {
 				String s;
 				if (this.useTranslation) {
-					s = String.format(translateToLocal(this.text), this.params);
+					s = translateToLocal(this.text);
 				} else
 					s = this.text;
+
+				for (final Map.Entry<String, String> entry: this.replace.entrySet())
+					s = StringUtils.replace(s, entry.getKey(), entry.getValue());
+
+				if (this.params.length>0)
+					s = String.format(s, this.params);
 
 				if (this.useJson)
 					try {
 						chat = ITextComponent.Serializer.jsonToComponent(s);
-					} catch (final JsonSyntaxException e) {
+					} catch (final Exception e) {
 						chat = new TextComponentString("Invaild Json: " + this.text);
 					}
 				else
@@ -61,6 +72,10 @@ public class ChatBuilder {
 	@SuppressWarnings("deprecation")
 	public static String translateToLocal(final String text) {
 		return net.minecraft.util.text.translation.I18n.translateToLocal(text);
+	}
+
+	public boolean isEmpty() {
+		return StringUtils.isEmpty(this.text) && (this.chat==null || StringUtils.isEmpty(this.chat.getUnformattedText()));
 	}
 
 	public ChatBuilder setId(final int id) {
@@ -104,13 +119,19 @@ public class ChatBuilder {
 		return this;
 	}
 
+	public ChatBuilder replace(final String from, final String to) {
+		this.replace.put(from, to);
+		return this;
+	}
+
 	public static ChatBuilder create(final String text) {
 		return new ChatBuilder().setText(text);
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void chatClient() {
-		chatClient(this);
+		if (!isEmpty())
+			chatClient(this);
 	}
 
 	@SideOnly(Side.CLIENT)

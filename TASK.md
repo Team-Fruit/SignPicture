@@ -5,7 +5,7 @@ _If you have any idea for this project, please make an issue and post to this pr
 - [x] Auto Sign Create GUI
 - [ ] Auto Image Upload to online such as Gyazo
 - [ ] 短縮URL bitly, goo.gl...
-- [ ] Config
+- [x] Config
 - [x] Blend func problem (transparent png, playernames...)
 - [x] Thread Pool
 - [x] Load Faster
@@ -15,3 +15,8 @@ _If you have any idea for this project, please make an issue and post to this pr
 - [x] 回転構文
 - [x] PlaceModeリフレクションエラーの時のPlaceモード使用不可表示
 - [ ] Waila
+- [ ] ロードリトライ
+- [ ] 制限プラグイン
+- [ ] 曲
+- [ ] チャット画像
+- [ ] アイテム画像変更

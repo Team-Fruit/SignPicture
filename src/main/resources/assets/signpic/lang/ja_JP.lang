@@ -48,7 +48,7 @@ signpic.advmsg.unknown=不明なエラー: §7%s
 
 # Version Checking
 signpic.versioning.outdated=[§6SignPicture§r] 現在のSignPictureのバージョンは %s です。新しいバージョン %s がご利用可能です！
-signpic.versioning.updateMessage=["[",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":{"action":"run_command","value":"/signpic-download-latest"}},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":{"action":"open_url","value":"https://github.com/Kamesuta/SignPicture/"}},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":{"action":"open_url","value":"https://github.com/Kamesuta/SignPicture/releases"}},"]"]
+signpic.versioning.updateMessage=["[",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
 signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
 signpic.versioning.downloading=ダウンロード中... %s%% (%s / %s バイト)
 signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください

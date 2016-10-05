@@ -10,32 +10,34 @@
 			}
 		},
 		"1.8.9": {
-			"version": "2.2.2",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.2.2/SignPicture-1.8.9-2.2.2-universal.jar",
-			"local": "SignPicture-1.8.9-2.2.2-universal.jar",
-			"message": "Offset And Rotations! More freely images! SignPicture 2.2.2 Released!",
+			"version": "2.3.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.3.0/SignPicture-1.8.9-2.3.0-universal.jar",
+			"local": "SignPicture-1.8.9-2.3.0-universal.jar",
+			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.0 Released.",
 			"message_local": {
-				"ja_JP": "オフセットと回転機能実装! さらに自由自在に画像を貼ろう! SignPicture 2.2.2 リリース!"
+				"ja_JP": "Anti-AutoSign回避モードとコンフィグの追加 SignPicture 2.3.0 リリース!"
 			}
 		},
 		"1.9.4": {
-			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.1.5/SignPicture-1.9.4-2.1.5-universal.jar",
-			"local": "SignPicture-1.9.4-2.1.5-universal.jar",
-			"message": "GUI Update! SignPicture 2.1.5 Released!",
+			"version": "2.3.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.3.0/SignPicture-1.9.4-2.3.0-universal.jar",
+			"local": "SignPicture-1.9.4-2.3.0-universal.jar",
+			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.0 Released.",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
+				"ja_JP": "Anti-AutoSign回避モードとコンフィグの追加 SignPicture 2.3.0 リリース!"
 			}
 		},
 		"1.10.2": {
-			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.1.5/SignPicture-1.10.2-2.1.5-universal.jar",
-			"local": "SignPicture-1.10.2-2.1.5-universal.jar",
-			"message": "GUI Update! SignPicture 2.1.5 Released!",
+			"version": "2.3.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.3.0/SignPicture-1.10.2-2.3.0-universal.jar",
+			"local": "SignPicture-1.10.2-2.3.0-universal.jar",
+			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.0 Released.",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
+				"ja_JP": "Anti-AutoSign回避モードとコンフィグの追加 SignPicture 2.3.0 リリース!"
 			}
 		}
 	},
+	"website": "https://github.com/Kamesuta/SignPicture/",
+	"changelog": "https://github.com/Kamesuta/SignPicture/releases",
 	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }

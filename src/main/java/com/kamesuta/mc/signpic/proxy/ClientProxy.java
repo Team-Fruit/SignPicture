@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.proxy;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
@@ -12,13 +11,11 @@ import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -108,9 +105,7 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		Client.renderer.setRendererDispatcher(TileEntityRendererDispatcher.instance);
-		final Map<Class<? extends TileEntity>, TileEntitySpecialRenderer<? extends TileEntity>> renderers = TileEntityRendererDispatcher.instance.mapSpecialRenderers;
-		renderers.put(TileEntitySign.class, Client.renderer);
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.renderer);
 
 		// Event Register
 		Client.handler.init();
