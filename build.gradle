@@ -11,7 +11,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath project.forgegradle
     }
 }
 
@@ -32,7 +32,15 @@ idea {
     }
 }
 
+configurations {
+    shade
+    compile.extendsFrom shade
+}
+
 minecraft {
+    srgExtra "PK: org/apache/http/entity/mime com/kamesuta/mc/signpic/lib/org/apache/http/entity/mime"
+    srgExtra "PK: org/apache/http/entity/mime/content com/kamesuta/mc/signpic/lib/org/apache/http/entity/mime/content"
+
     version = "${project.version_minecraft}-${project.version_forge}"
 
     if (project.hasProperty('version_mappings'))
@@ -75,6 +83,7 @@ processResources {
 }
 
 dependencies {
+	shade('org.apache.httpcomponents:httpmime:4.3.3'){transitive=false}
 }
 
 def commonManifest = {
@@ -85,6 +94,11 @@ def commonManifest = {
 
 jar {
     from sourceSets.api.output
+    configurations.shade.each { dep ->
+        from(project.zipTree(dep)){
+            exclude 'META-INF', 'META-INF/**'
+        }
+    }
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
     manifest commonManifest
 }
