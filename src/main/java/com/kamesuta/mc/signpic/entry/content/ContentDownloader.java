@@ -21,11 +21,9 @@ import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownloader implements IAsyncProcessable {
 	protected final Content content;
-	protected final ContentLocation location;
 
-	public ContentDownloader(final Content content, final ContentLocation location) {
+	public ContentDownloader(final Content content) {
 		this.content = content;
-		this.location = location;
 	}
 
 	@Override
@@ -34,9 +32,9 @@ public class ContentDownloader implements IAsyncProcessable {
 		CountingOutputStream countoutput = null;
 		this.content.state.setType(ContentStateType.DOWNLOADING);
 		try {
-			final File local = this.location.localLocation(this.content.id);
+			final File local = this.content.location.createCacheLocation();
 			if (!local.exists()) {
-				final HttpUriRequest req = new HttpGet(this.location.remoteLocation(this.content.id));
+				final HttpUriRequest req = new HttpGet(this.content.location.remoteLocation());
 				final HttpResponse response = Downloader.downloader.client.execute(req);
 				final HttpEntity entity = response.getEntity();
 

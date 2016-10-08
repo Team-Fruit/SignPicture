@@ -20,6 +20,7 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ThreadInformationChecker extends Thread {
+	private static final Gson gson = new Gson();
 
 	public ThreadInformationChecker() {
 		setName("Sign Picture Information Checker Thread");
@@ -31,7 +32,6 @@ public class ThreadInformationChecker extends Thread {
 	public void run() {
 		final InformationChecker.InfoState state = InformationChecker.state;
 		InputStream input = null;
-		final Gson gson = new Gson();
 		try {
 			final HttpUriRequest req = new HttpGet(new URI("https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/info/info.json"));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
