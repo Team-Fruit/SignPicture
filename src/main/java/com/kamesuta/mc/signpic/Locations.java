@@ -9,8 +9,6 @@ public class Locations {
 	public File signpicDir;
 	public File cacheDir;
 	public File metaDir;
-	public File configDir;
-	public File configFile;
 	public File modDir;
 	public File modFile;
 
@@ -22,8 +20,6 @@ public class Locations {
 		this.metaDir = new File(this.signpicDir, "meta");
 		securementDirectory(this.metaDir);
 
-		this.configDir = event.getModConfigurationDirectory();
-		this.configFile = event.getSuggestedConfigurationFile();
 		this.modDir = new File(mcdir, "mods");
 		this.modFile = event.getSourceFile();
 	}

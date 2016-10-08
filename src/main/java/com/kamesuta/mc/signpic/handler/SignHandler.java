@@ -42,7 +42,7 @@ public class SignHandler {
 					try {
 						final GuiEditSign ges = (GuiEditSign) event.gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-						Sign.sendSign(CurrentMode.instance.getEntryId(), tileSign);
+						Sign.placeSign(CurrentMode.instance.getEntryId(), tileSign);
 						event.setCanceled(true);
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 							CurrentMode.instance.setMode();
@@ -72,10 +72,8 @@ public class SignHandler {
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 				Sign.preview.capturePlace();
 				event.setCanceled(true);
-				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-					CurrentMode.instance.setMode();
-					Client.openEditor();
-				}
+				CurrentMode.instance.setMode();
+				Client.openEditor();
 			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				if (tilesign != null) {

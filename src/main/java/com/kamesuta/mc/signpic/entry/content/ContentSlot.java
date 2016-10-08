@@ -1,13 +1,11 @@
 package com.kamesuta.mc.signpic.entry.content;
 
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 
 public class ContentSlot<T extends IInitable & ICollectable> extends EntrySlot<T> implements IInitable, ICollectable {
-	public static int CollectTimes = 20 * 15;
-	public static long times = 0;
-
 	private boolean init = true;
 
 	public ContentSlot(final T entry) {
@@ -27,5 +25,10 @@ public class ContentSlot<T extends IInitable & ICollectable> extends EntrySlot<T
 	@Override
 	public void onCollect() {
 		this.entry.onCollect();
+	}
+
+	@Override
+	protected int getCollectTimes() {
+		return Config.instance.contentGCtick;
 	}
 }
