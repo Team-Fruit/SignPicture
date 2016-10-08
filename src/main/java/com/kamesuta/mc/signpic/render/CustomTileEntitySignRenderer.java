@@ -9,7 +9,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.state.ContentStateType;
+import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,7 +30,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	public void renderImage(final Content content, final ImageSize size, final float opacity) {
 		glPushMatrix();
 		glScalef(size.width, size.height, 1f);
-		if (content.state.getType() == ContentStateType.AVAILABLE) {
+		if (content.state.getType() == StateType.AVAILABLE) {
 			glColor4f(1.0F, 1.0F, 1.0F, opacity * 1.0F);
 			content.image.draw();
 		} else {
@@ -53,8 +53,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		}
 		glTranslatef(size.width/2, size.height/2, 0);
 		glScalef(.5f, .5f, 1f);
-		if (content.state.getType() != ContentStateType.AVAILABLE) {
-			if (content.state.getType() == ContentStateType.ERROR) {
+		if (content.state.getType() != StateType.AVAILABLE) {
+			if (content.state.getType() == StateType.ERROR) {
 				RenderHelper.startShape();
 				glPushMatrix();
 				glTranslatef(-.5f, -.5f, 0f);

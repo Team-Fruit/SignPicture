@@ -16,9 +16,10 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
-import com.kamesuta.mc.signpic.state.ContentStateType;
+import com.kamesuta.mc.signpic.state.StateType;
 import com.kamesuta.mc.signpic.util.Downloader;
 
+@Deprecated
 public class ContentDownloader implements IAsyncProcessable {
 	protected final Content content;
 
@@ -30,7 +31,7 @@ public class ContentDownloader implements IAsyncProcessable {
 	public void onAsyncProcess() throws URISyntaxException, IllegalStateException, IOException {
 		InputStream input = null;
 		CountingOutputStream countoutput = null;
-		this.content.state.setType(ContentStateType.DOWNLOADING);
+		this.content.state.setType(StateType.DOWNLOADING);
 		try {
 			final File local = this.content.location.createCacheLocation();
 			if (!local.exists()) {
@@ -53,7 +54,7 @@ public class ContentDownloader implements IAsyncProcessable {
 				};
 				IOUtils.copy(input, countoutput);
 			}
-			this.content.state.setType(ContentStateType.DOWNLOADED);
+			this.content.state.setType(StateType.DOWNLOADED);
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(countoutput);

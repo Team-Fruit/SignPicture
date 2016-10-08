@@ -10,11 +10,11 @@ public class Communicator {
 
 	private final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads);
 
-	public <RES> void upload(final ICommunicate<RES> upload, final ICommunicateCallback<RES> callback) {
+	public <RES> void communicate(final ICommunicate<RES> communicate, final ICommunicateCallback<RES> callback) {
 		this.threadpool.execute(new Runnable() {
 			@Override
 			public void run() {
-				callback.onDone(upload.communicate());
+				callback.onDone(communicate.communicate());
 			}
 		});
 	}

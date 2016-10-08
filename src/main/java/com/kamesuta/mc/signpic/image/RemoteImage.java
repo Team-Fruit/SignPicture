@@ -1,17 +1,17 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
-import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.state.ContentStateType;
-
-import net.minecraft.client.resources.I18n;
+import com.kamesuta.mc.signpic.http.Communicator;
+import com.kamesuta.mc.signpic.http.ICommunicateCallback;
+import com.kamesuta.mc.signpic.http.ICommunicateResponse;
+import com.kamesuta.mc.signpic.http.download.ContentDownload;
+import com.kamesuta.mc.signpic.http.download.ContentDownload.ContentDLResult;
+import com.kamesuta.mc.signpic.state.StateType;
 
 public class RemoteImage extends Image {
 	protected ImageTextures texture;
@@ -25,30 +25,35 @@ public class RemoteImage extends Image {
 
 	@Override
 	public void onInit() {
-		ContentManager.instance.asyncqueue.offer(this);
+		final File local = this.content.location.createCacheLocation();
+		if (!local.exists()) {
+			this.content.state.setType(StateType.DOWNLOADING);
+			try {
+				Communicator.instance.<ContentDLResult>communicate(new ContentDownload(this.content.location, this.content.state.getProgress()), new ICommunicateCallback<ContentDLResult>() {
+					@Override
+					public void onDone(final ICommunicateResponse<ContentDLResult> res) {
+						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
+						if (res.isSuccess())
+							ContentManager.instance.asyncqueue.offer(RemoteImage.this);
+						else if (res.getError()!=null) {
+							RemoteImage.this.content.state.setErrorMessage(res.getError());
+						}
+					}
+				});
+			} catch (final URISyntaxException e) {
+				this.content.state.setErrorMessage(e);
+			}
+		} else
+			ContentManager.instance.asyncqueue.offer(this);
 	}
 
 	@Override
 	public void onAsyncProcess() {
 		try {
-			new ContentDownloader(this.content).onAsyncProcess();
 			this.texture = new ImageIOLoader(this.content).load();
 			ContentManager.instance.divisionqueue.offer(this);
-		} catch (final URISyntaxException e) {
-			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidurl"));
-		} catch (final ContentCapacityOverException e) {
-			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.capacityover"));
-		} catch (final InvaildImageException e) {
-			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.invalidimage"));
-		} catch (final IOException e) {
-			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.ioerror", e));
 		} catch (final Exception e) {
-			this.content.state.setType(ContentStateType.ERROR);
-			this.content.state.setMessage(I18n.format("signpic.advmsg.unknown", e));
+			this.content.state.setErrorMessage(e);
 		}
 	}
 
@@ -59,11 +64,11 @@ public class RemoteImage extends Image {
 			final ImageTexture tex = texs.get(this.processing);
 			tex.load();
 			this.processing++;
-			this.content.state.setType(ContentStateType.LOADING);
+			this.content.state.setType(StateType.LOADING);
 			this.content.state.getProgress().done = this.processing;
 			return false;
 		} else {
-			this.content.state.setType(ContentStateType.AVAILABLE);
+			this.content.state.setType(StateType.AVAILABLE);
 			this.content.state.getProgress().done = this.content.state.getProgress().overall;
 			return true;
 		}
@@ -81,7 +86,7 @@ public class RemoteImage extends Image {
 	}
 
 	public ImageTextures getTextures() {
-		if (this.content.state.getType() == ContentStateType.AVAILABLE)
+		if (this.content.state.getType() == StateType.AVAILABLE)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");

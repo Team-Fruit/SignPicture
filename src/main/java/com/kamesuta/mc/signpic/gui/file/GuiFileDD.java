@@ -66,7 +66,7 @@ public class GuiFileDD extends WBase {
 					for (final Object file : files){
 						if (file instanceof File) {
 							final File f = (File) file;
-							Communicator.instance.upload(new GyazoUpload(f, new Progress()), new ICommunicateCallback<GyazoResult>() {
+							Communicator.instance.communicate(new GyazoUpload(f, new Progress()), new ICommunicateCallback<GyazoResult>() {
 								@Override
 								public void onDone(final ICommunicateResponse<GyazoResult> res) {
 									if (res.isSuccess()) {

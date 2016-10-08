@@ -24,7 +24,7 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
-import com.kamesuta.mc.signpic.state.ContentStateType;
+import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -62,14 +62,14 @@ public class ImageIOLoader {
 		if (!iter.hasNext()) throw new InvaildImageException();
 		final ImageReader reader = iter.next();
 
-		this.content.state.setType(ContentStateType.LOADING);
+		this.content.state.setType(StateType.LOADING);
 		ImageTextures textures;
 		if (Config.instance.imageAnimationGif && reader.getFormatName()=="gif") {
 			textures = loadGif(data);
 		} else {
 			textures = loadImage(reader, imagestream);
 		}
-		this.content.state.setType(ContentStateType.LOADED);
+		this.content.state.setType(StateType.LOADED);
 		return textures;
 	}
 

@@ -22,9 +22,10 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.state.Progress;
+import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult> {
+public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progressable {
 	public static final Gson gson = new Gson();
 
 	private final String name;
@@ -39,6 +40,11 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult> {
 
 	public GyazoUpload(final File file, final Progress progress) throws FileNotFoundException {
 		this(file.getName(), new FileInputStream(file), progress.setOverall(file.length()));
+	}
+
+	@Override
+	public Progress getProgress() {
+		return this.progress;
 	}
 
 	@Override
