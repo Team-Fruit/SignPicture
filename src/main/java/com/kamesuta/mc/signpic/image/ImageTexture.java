@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.image.BufferedImage;
 
+import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
 
@@ -38,14 +39,16 @@ public class ImageTexture implements IImageTexture {
 		this(null, DefaultDelay);
 	}
 
-	private static final boolean SupportGL30 = GLContext.getCapabilities().OpenGL30;
+	private static ContextCapabilities capabilities;
 
 	public ImageTexture load() {
 		if (this.id == -1 && this.temp != null) {
 			this.id = TextureUtil.glGenTextures();
 			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
 			TextureUtil.uploadTextureImage(this.id, this.temp);
-			if (SupportGL30 && Config.instance.renderUseMipmap) {
+			if (capabilities==null)
+				capabilities = GLContext.getCapabilities();
+			if (capabilities.OpenGL30 && Config.instance.renderUseMipmap) {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
