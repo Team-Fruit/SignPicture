@@ -3,7 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
+import com.kamesuta.mc.signpic.state.ContentStateType;
 
 import net.minecraft.util.ResourceLocation;
 

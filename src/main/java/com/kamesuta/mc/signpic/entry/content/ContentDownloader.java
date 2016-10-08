@@ -16,6 +16,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
+import com.kamesuta.mc.signpic.state.ContentStateType;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownloader implements IAsyncProcessable {
@@ -44,12 +45,12 @@ public class ContentDownloader implements IAsyncProcessable {
 				if (max > 0 && (size < 0 || size > max))
 					throw new ContentCapacityOverException();
 
-				this.content.state.progress.overall = entity.getContentLength();
+				this.content.state.getProgress().overall = entity.getContentLength();
 				input = entity.getContent();
 				countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(local))) {
 					@Override
 					protected void afterWrite(final int n) throws IOException {
-						ContentDownloader.this.content.state.progress.done = getByteCount();
+						ContentDownloader.this.content.state.getProgress().done = getByteCount();
 					}
 				};
 				IOUtils.copy(input, countoutput);

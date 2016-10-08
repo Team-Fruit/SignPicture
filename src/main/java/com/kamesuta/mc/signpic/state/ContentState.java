@@ -1,11 +1,16 @@
-package com.kamesuta.mc.signpic.entry.content;
+package com.kamesuta.mc.signpic.state;
 
 import net.minecraft.client.resources.I18n;
 
-public class ContentState {
-	public Progress progress = new Progress();
+public class ContentState implements Progressable {
+	private final Progress progress = new Progress();
 	private ContentStateType type = ContentStateType.INIT;
 	private String message = "";
+
+	@Override
+	public Progress getProgress() {
+		return this.progress;
+	}
 
 	public ContentState setMessage(final String message) {
 		this.message = message;
@@ -27,20 +32,5 @@ public class ContentState {
 
 	public String getStateMessage() {
 		return I18n.format(this.type.msg, (int) (this.progress.getProgress()*100));
-	}
-
-	public static class Progress {
-		public long overall;
-		public long done;
-
-		float per() {
-			return (float) this.done / (float) this.overall;
-		}
-
-		public float getProgress() {
-			if (this.overall > 0)
-				return Math.max(0, Math.min(1, per()));
-			return 0;
-		}
 	}
 }

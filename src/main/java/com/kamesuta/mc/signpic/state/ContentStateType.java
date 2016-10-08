@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.entry.content;
+package com.kamesuta.mc.signpic.state;
 
 import com.kamesuta.mc.signpic.render.StateRender.LoadingCircle;
 import com.kamesuta.mc.signpic.render.StateRender.LoadingCircleType;

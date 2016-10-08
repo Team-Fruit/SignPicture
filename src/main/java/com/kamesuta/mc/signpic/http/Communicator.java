@@ -1,20 +1,20 @@
-package com.kamesuta.mc.signpic.upload;
+package com.kamesuta.mc.signpic.http;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.kamesuta.mc.signpic.Config;
 
-public class Uploader {
-	public static Uploader instance = new Uploader();
+public class Communicator {
+	public static Communicator instance = new Communicator();
 
 	private final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads);
 
-	public <RES extends IUploadResponse<? extends IUploadResult>> void upload(final IUpload<RES> upload, final IUploadCallback<RES> callback) {
+	public <RES> void upload(final ICommunicate<RES> upload, final ICommunicateCallback<RES> callback) {
 		this.threadpool.execute(new Runnable() {
 			@Override
 			public void run() {
-				callback.onDone(upload.upload());
+				callback.onDone(upload.communicate());
 			}
 		});
 	}

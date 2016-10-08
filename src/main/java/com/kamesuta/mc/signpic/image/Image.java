@@ -5,9 +5,9 @@ import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
+import com.kamesuta.mc.signpic.state.ContentStateType;
 
 import net.minecraft.client.renderer.Tessellator;
 

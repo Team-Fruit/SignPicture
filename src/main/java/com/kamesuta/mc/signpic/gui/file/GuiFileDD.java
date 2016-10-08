@@ -19,12 +19,13 @@ import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.http.Communicator;
+import com.kamesuta.mc.signpic.http.ICommunicateCallback;
+import com.kamesuta.mc.signpic.http.ICommunicateResponse;
+import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
+import com.kamesuta.mc.signpic.http.upload.GyazoUpload.GyazoResult;
 import com.kamesuta.mc.signpic.render.RenderHelper;
-import com.kamesuta.mc.signpic.upload.GyazoUpload;
-import com.kamesuta.mc.signpic.upload.GyazoUpload.GyazoResponse;
-import com.kamesuta.mc.signpic.upload.IUploadCallback;
-import com.kamesuta.mc.signpic.upload.IUploadResult;
-import com.kamesuta.mc.signpic.upload.Uploader;
+import com.kamesuta.mc.signpic.state.Progress;
 
 public class GuiFileDD extends WBase {
 	protected final JDialog overlay;
@@ -65,12 +66,12 @@ public class GuiFileDD extends WBase {
 					for (final Object file : files){
 						if (file instanceof File) {
 							final File f = (File) file;
-							Uploader.instance.<GyazoResponse>upload(new GyazoUpload<IUploadResult>(f), new IUploadCallback<GyazoResponse>() {
+							Communicator.instance.upload(new GyazoUpload(f, new Progress()), new ICommunicateCallback<GyazoResult>() {
 								@Override
-								public void onDone(final GyazoResponse res) {
+								public void onDone(final ICommunicateResponse<GyazoResult> res) {
 									if (res.isSuccess()) {
 										textField.setFocused(false);
-										textField.setText(res.getResult().getLink());
+										textField.setText(res.getResult().url);
 										textField.setFocused(true);
 									}
 								}

@@ -21,11 +21,11 @@ import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
+import com.kamesuta.mc.signpic.state.ContentStateType;
 
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -82,13 +82,13 @@ public class ImageIOLoader {
 
 		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
 		final int frameCount = gifImage.getFrameCount();
-		this.content.state.progress.overall = frameCount;
+		this.content.state.getProgress().overall = frameCount;
 		for (int i = 0; i < frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
 			final int delay = gifImage.getDelay(i);
 			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float)delay / 100);
 			textures.add(texture);
-			this.content.state.progress.done = i;
+			this.content.state.getProgress().done = i;
 		}
 		return new ImageTextures(textures);
 	}

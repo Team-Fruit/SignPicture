@@ -5,6 +5,8 @@ import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.RemoteImage;
 import com.kamesuta.mc.signpic.image.ResourceImage;
+import com.kamesuta.mc.signpic.state.ContentState;
+import com.kamesuta.mc.signpic.state.ContentStateType;
 
 public class Content implements IInitable, ICollectable {
 	public final ContentId id;

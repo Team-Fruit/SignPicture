@@ -10,7 +10,7 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentDownloader;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
+import com.kamesuta.mc.signpic.state.ContentStateType;
 
 import net.minecraft.client.resources.I18n;
 
@@ -57,16 +57,16 @@ public class RemoteImage extends Image {
 	@Override
 	public boolean onDivisionProcess() {
 		final List<ImageTexture> texs = this.texture.getAll();
-		if (this.processing < (this.content.state.progress.overall = texs.size())) {
+		if (this.processing < (this.content.state.getProgress().overall = texs.size())) {
 			final ImageTexture tex = texs.get(this.processing);
 			tex.load();
 			this.processing++;
 			this.content.state.setType(ContentStateType.LOADING);
-			this.content.state.progress.done = this.processing;
+			this.content.state.getProgress().done = this.processing;
 			return false;
 		} else {
 			this.content.state.setType(ContentStateType.AVAILABLE);
-			this.content.state.progress.done = this.content.state.progress.overall;
+			this.content.state.getProgress().done = this.content.state.getProgress().overall;
 			return true;
 		}
 	}
