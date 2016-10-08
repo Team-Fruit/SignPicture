@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
@@ -17,7 +18,8 @@ import com.kamesuta.mc.signpic.handler.CoreEvent;
 public class ContentManager implements ITickEntry {
 	public static ContentManager instance = new ContentManager();
 
-	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads);
+	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads,
+			new ThreadFactoryBuilder().setNameFormat("signpic-content-%d").build());
 	protected final HashMap<ContentId, ContentSlot<Content>> registry = new HashMap<ContentId, ContentSlot<Content>>();
 	public Deque<IAsyncProcessable> asyncqueue = new ArrayDeque<IAsyncProcessable>();
 	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
@@ -60,7 +62,7 @@ public class ContentManager implements ITickEntry {
 			}
 		}
 		this.divisiontick++;
-		if (this.divisiontick > Config.instance.contentAsyncTick) {
+		if (this.divisiontick > Config.instance.contentSyncTick) {
 			this.divisiontick = 0;
 			IDivisionProcessable divisionprocess;
 			if ((divisionprocess = this.divisionqueue.peek()) != null) {

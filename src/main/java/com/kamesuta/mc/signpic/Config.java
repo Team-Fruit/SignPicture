@@ -22,6 +22,8 @@ public final class Config extends Configuration {
 
 	public int entryGCtick = 15;
 
+	public int communicateThreads = 3;
+
 	public int contentLoadThreads = 3;
 	public int contentMaxByte = 0;
 	public int contentGCtick = 15 * 20;
@@ -75,7 +77,9 @@ public final class Config extends Configuration {
 	private void changeableSync() {
 		this.entryGCtick = get( "Entry", "GCDelayTick", this.entryGCtick ).getInt( this.entryGCtick );
 
-		this.contentLoadThreads = addComment(get( "Content", "LoadThreads", this.contentLoadThreads ), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt( this.contentLoadThreads );
+		this.communicateThreads = addComment(get( "Http", "HttpThreads", this.communicateThreads ), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt( this.communicateThreads );
+
+		this.contentLoadThreads = addComment(get( "Content", "LoadThreads", this.contentLoadThreads ), "parallel processing number such as Image Loading").setRequiresMcRestart(true).getInt( this.contentLoadThreads );
 		this.contentMaxByte = addComment(get( "Content", "MaxByte", this.contentMaxByte ), "limit of size before downloading").getInt( this.contentMaxByte );
 		this.contentGCtick = addComment(get( "Content", "GCDelayTick", this.contentGCtick ), "delay ticks of Garbage Collection").getInt( this.contentGCtick );
 		this.contentAsyncTick = addComment(get( "Content", "AsyncLoadDelayTick", this.contentAsyncTick ), "ticks of Async process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt( this.contentAsyncTick );
