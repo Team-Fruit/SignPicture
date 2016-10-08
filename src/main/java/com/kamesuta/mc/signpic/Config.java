@@ -39,6 +39,8 @@ public final class Config extends Configuration {
 	/** Minimum time needed to type a character. */
 	public int multiplayPAASMinCharTime = 50;
 
+	public boolean renderUseMipmap = true;
+	public boolean renderMipmapTypeNearest = false;
 	public float renderSeeOpacity = .5f;
 	public float renderPreviewFixedOpacity = .7f;
 	public float renderPreviewFloatedOpacity = .7f;
@@ -65,7 +67,7 @@ public final class Config extends Configuration {
 		}
 		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean( this.informationJoinBeta );
 
-		addCustomCategoryComment("MultiplayPreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
+		addCustomCategoryComment("Multiplay.PreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
 
 		changeableSync();
 
@@ -81,14 +83,16 @@ public final class Config extends Configuration {
 		this.contentAsyncTick = addComment(get( "Content", "AsyncLoadDelayTick", this.contentAsyncTick ), "ticks of Async process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt( this.contentAsyncTick );
 		this.contentSyncTick = addComment(get( "Content", "SyncLoadIntervalTick", this.contentSyncTick ), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt( this.contentSyncTick );
 
-		this.multiplayPAAS = get( "MultiplayPreventAntiAutoSign", "Enable", this.multiplayPAAS ).getBoolean( this.multiplayPAAS );
-		this.multiplayPAASMinEditTime = get( "MultiplayPreventAntiAutoSign", "minEditTime", this.multiplayPAASMinEditTime ).getInt( this.multiplayPAASMinEditTime );
-		this.multiplayPAASMinLineTime = get( "MultiplayPreventAntiAutoSign", "minLineTime", this.multiplayPAASMinLineTime ).getInt( this.multiplayPAASMinLineTime );
-		this.multiplayPAASMinCharTime = get( "MultiplayPreventAntiAutoSign", "minCharTime", this.multiplayPAASMinCharTime ).getInt( this.multiplayPAASMinCharTime );
+		this.multiplayPAAS = get( "Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS ).getBoolean( this.multiplayPAAS );
+		this.multiplayPAASMinEditTime = get( "Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime ).getInt( this.multiplayPAASMinEditTime );
+		this.multiplayPAASMinLineTime = get( "Multiplay.PreventAntiAutoSign.Time", "minLineTime", this.multiplayPAASMinLineTime ).getInt( this.multiplayPAASMinLineTime );
+		this.multiplayPAASMinCharTime = get( "Multiplay.PreventAntiAutoSign.Time", "minCharTime", this.multiplayPAASMinCharTime ).getInt( this.multiplayPAASMinCharTime );
 
-		this.renderSeeOpacity = (float) get( "Render", "ViewSignOpacity", this.renderSeeOpacity ).getDouble( this.renderSeeOpacity );
-		this.renderPreviewFixedOpacity = (float) get( "Render", "PreviewFixedSignOpacity", this.renderPreviewFixedOpacity ).getDouble( this.renderPreviewFixedOpacity );
-		this.renderPreviewFloatedOpacity = (float) get( "Render", "PreviewFloatedSignOpacity", this.renderPreviewFloatedOpacity ).getDouble( this.renderPreviewFloatedOpacity );
+		this.renderUseMipmap = addComment(get( "Render", "Mipmap", this.renderUseMipmap ), "Require OpenGL 3.0 or later").getBoolean( this.renderUseMipmap );
+		this.renderMipmapTypeNearest = addComment(get( "Render", "MipmapTypeNearest", this.renderMipmapTypeNearest ), "true = Nearest, false = Linear").getBoolean( this.renderMipmapTypeNearest );
+		this.renderSeeOpacity = (float) get( "Render.Opacity", "ViewSign", this.renderSeeOpacity ).getDouble( this.renderSeeOpacity );
+		this.renderPreviewFixedOpacity = (float) get( "Render.Opacity", "PreviewFixedSign", this.renderPreviewFixedOpacity ).getDouble( this.renderPreviewFixedOpacity );
+		this.renderPreviewFloatedOpacity = (float) get( "Render.Opacity", "PreviewFloatedSign", this.renderPreviewFloatedOpacity ).getDouble( this.renderPreviewFloatedOpacity );
 	}
 
 	private Property addComment(final Property prop, final String comment) {
