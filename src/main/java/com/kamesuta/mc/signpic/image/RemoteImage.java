@@ -34,7 +34,7 @@ public class RemoteImage extends Image {
 					public void onDone(final ICommunicateResponse<ContentDLResult> res) {
 						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
 						if (res.isSuccess())
-							ContentManager.instance.asyncqueue.offer(RemoteImage.this);
+							ContentManager.instance.enqueueAsync(RemoteImage.this);
 						else if (res.getError()!=null) {
 							RemoteImage.this.content.state.setErrorMessage(res.getError());
 						}
@@ -44,14 +44,14 @@ public class RemoteImage extends Image {
 				this.content.state.setErrorMessage(e);
 			}
 		} else
-			ContentManager.instance.asyncqueue.offer(this);
+			ContentManager.instance.enqueueAsync(this);
 	}
 
 	@Override
 	public void onAsyncProcess() {
 		try {
 			this.texture = new ImageIOLoader(this.content).load();
-			ContentManager.instance.divisionqueue.offer(this);
+			ContentManager.instance.enqueueDivision(this);
 		} catch (final Exception e) {
 			this.content.state.setErrorMessage(e);
 		}

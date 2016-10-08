@@ -20,13 +20,32 @@ public class ContentManager implements ITickEntry {
 
 	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads,
 			new ThreadFactoryBuilder().setNameFormat("signpic-content-%d").build());
-	protected final HashMap<ContentId, ContentSlot<Content>> registry = new HashMap<ContentId, ContentSlot<Content>>();
-	public Deque<IAsyncProcessable> asyncqueue = new ArrayDeque<IAsyncProcessable>();
-	public Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
-	private int asynctick = 0;
+	private final HashMap<ContentId, ContentSlot<Content>> registry = new HashMap<ContentId, ContentSlot<Content>>();
+	private final Deque<ContentSlot<Content>> loadqueue = new ArrayDeque<ContentSlot<Content>>();
+	private final Deque<IDivisionProcessable> divisionqueue = new ArrayDeque<IDivisionProcessable>();
+	private int loadtick = 0;
 	private int divisiontick = 0;
 
 	private ContentManager() {
+	}
+
+	public void enqueueAsync(final IAsyncProcessable asyncProcessable) {
+		this.threadpool.execute(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					asyncProcessable.onAsyncProcess();
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	public void enqueueDivision(final IDivisionProcessable divisionProcessable) {
+		synchronized (this.divisionqueue) {
+			this.divisionqueue.offer(divisionProcessable);
+		}
 	}
 
 	protected Content get(final ContentId id) {
@@ -35,7 +54,9 @@ public class ContentManager implements ITickEntry {
 			return entries.get();
 		else {
 			final Content entry = new Content(id);
-			this.registry.put(id, new ContentSlot<Content>(entry));
+			final ContentSlot<Content> slot = new ContentSlot<Content>(entry);
+			this.registry.put(id, slot);
+			this.loadqueue.offer(slot);
 			return entry;
 		}
 	}
@@ -43,24 +64,14 @@ public class ContentManager implements ITickEntry {
 	@CoreEvent
 	@Override
 	public void onTick() {
-		this.asynctick++;
-		if (this.asynctick > Config.instance.contentAsyncTick) {
-			this.asynctick = 0;
-			IAsyncProcessable asyncprocess;
-			if ((asyncprocess = this.asyncqueue.poll()) != null) {
-				final IAsyncProcessable asyncprocessexec = asyncprocess;
-				this.threadpool.execute(new Runnable() {
-					@Override
-					public void run() {
-						try {
-							asyncprocessexec.onAsyncProcess();
-						} catch (final Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			}
+		this.loadtick++;
+		if (this.loadtick > Config.instance.contentLoadTick) {
+			this.loadtick = 0;
+			final ContentSlot<Content> loadprogress = this.loadqueue.poll();
+			if (loadprogress != null)
+				loadprogress.onInit();
 		}
+
 		this.divisiontick++;
 		if (this.divisiontick > Config.instance.contentSyncTick) {
 			this.divisiontick = 0;
@@ -68,7 +79,9 @@ public class ContentManager implements ITickEntry {
 			if ((divisionprocess = this.divisionqueue.peek()) != null) {
 				try {
 					if (divisionprocess.onDivisionProcess()) {
-						this.divisionqueue.poll();
+						synchronized (this.divisionqueue) {
+							this.divisionqueue.poll();
+						}
 					}
 				} catch (final Exception e) {
 					e.printStackTrace();
@@ -80,10 +93,8 @@ public class ContentManager implements ITickEntry {
 			final Entry<ContentId, ContentSlot<Content>> entry = itr.next();
 			final ContentSlot<Content> collectableSignEntry = entry.getValue();
 
-			if (collectableSignEntry.shouldInit()) {
-				collectableSignEntry.onInit();
-			}
 			if (collectableSignEntry.shouldCollect()) {
+				this.loadqueue.remove(collectableSignEntry);
 				collectableSignEntry.get().onCollect();
 				itr.remove();
 			}

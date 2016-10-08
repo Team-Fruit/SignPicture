@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.http;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,6 +11,7 @@ import com.kamesuta.mc.signpic.Config;
 public class Communicator {
 	public static Communicator instance = new Communicator();
 
+	private final Deque<ICommunicate<?>> tasks = new ArrayDeque<ICommunicate<?>>();
 	private final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.communicateThreads,
 			new ThreadFactoryBuilder().setNameFormat("signpic-http-%d").build());
 
