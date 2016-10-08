@@ -80,7 +80,7 @@ public class Debug {
 		final HttpPost httppost = new HttpPost(url);
 		final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-		final File f = new File("./src/main/resources/logo.png");
+		final File f = new File("./src/main/resources/assets/signpic/textures/logo.png");
 		builder.addBinaryBody("imagedata", f, ContentType.DEFAULT_BINARY, f.getName());
 		builder.addTextBody("access_token", "4d080e95be741beba0b74653a872668326a79526784d2daed9190dc584bffad7");
 		httppost.setEntity(builder .build());

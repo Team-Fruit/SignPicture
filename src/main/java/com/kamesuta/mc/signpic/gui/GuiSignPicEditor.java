@@ -22,6 +22,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.file.GuiFileDD;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -273,7 +274,7 @@ public class GuiSignPicEditor extends WFrame {
 				});
 
 				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				add(new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
+				final MChatTextField field = new MChatTextField(new RArea(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
 						super.onAdded();
@@ -308,7 +309,10 @@ public class GuiSignPicEditor extends WFrame {
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 						return d.isFinished();
 					}
-				});
+				};
+				add(field);
+
+				add(new GuiFileDD(new RArea(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
 			}
 		});
 	}

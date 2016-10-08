@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +55,7 @@ public class ThreadInformationChecker extends Thread {
 							final HttpResponse response1 = Downloader.downloader.client.execute(req1);
 							final HttpEntity entity1 = response1.getEntity();
 							input1 = entity1.getContent();
-							state.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, CharEncoding.UTF_8)), Info.PrivateMsg.class);
+							state.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, Charsets.UTF_8)), Info.PrivateMsg.class);
 						}
 					} catch(final Exception e1) {
 					} finally {
