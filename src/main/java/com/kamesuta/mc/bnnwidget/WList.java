@@ -1,4 +1,4 @@
-package com.kamesuta.mc.bnnwidget.component;
+package com.kamesuta.mc.bnnwidget;
 
 import java.util.List;
 import java.util.Map;
@@ -6,18 +6,15 @@ import java.util.Set;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.kamesuta.mc.bnnwidget.WCommon;
-import com.kamesuta.mc.bnnwidget.WEvent;
-import com.kamesuta.mc.bnnwidget.WTypedPanel;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.util.NotifyCollections.IModCount;
 
-public abstract class MList<T, W extends WCommon> extends WTypedPanel<W> {
+public abstract class WList<T, W extends WCommon> extends WTypedPanel<W> {
 	protected IModCount<T> check;
 
-	public MList(final R position, final IModCount<T> check) {
+	public WList(final R position, final IModCount<T> check) {
 		super(position);
 		this.check = check;
 	}
@@ -79,11 +76,13 @@ public abstract class MList<T, W extends WCommon> extends WTypedPanel<W> {
 		}
 		for (final W w : this.cws) {
 			final T t = this.toT.get(w);
-			super.remove(w);
-			onRemove(t, w);
-			this.toT.remove(t);
-			this.toW.remove(w);
-			this.Tindex.remove(t);
+			if (t!=null) {
+				super.remove(w);
+				onRemove(t, w);
+				this.toT.remove(t);
+				this.toW.remove(w);
+				this.Tindex.remove(t);
+			}
 		}
 	}
 
