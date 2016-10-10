@@ -17,7 +17,7 @@ public class Content implements IInitable, ICollectable {
 	public Content(final ContentId id) {
 		this.id = id;
 		this.location = new ContentLocation(id);
-		this.state = new State();
+		this.state = new State(id.id());
 		if (id.isResource())
 			this.image = new ResourceImage(this);
 		else

@@ -20,7 +20,7 @@ public final class Config extends Configuration {
 	public int imageHeightLimit = 512;
 	public boolean imageAnimationGif = true;
 
-	public int entryGCtick = 15;
+	public int entryGCtick = 15 * 20;
 
 	public int communicateThreads = 3;
 

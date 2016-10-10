@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import com.kamesuta.mc.signpic.Client;
 
 public class ContentLocation {
-	private final ContentId id;
+	public final ContentId id;
 
 	public ContentLocation(final ContentId id) {
 		this.id = id;

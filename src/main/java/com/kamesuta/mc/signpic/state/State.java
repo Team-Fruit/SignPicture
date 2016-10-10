@@ -9,9 +9,19 @@ import com.kamesuta.mc.signpic.image.InvaildImageException;
 import net.minecraft.client.resources.I18n;
 
 public class State implements Progressable {
+	private final String name;
 	private final Progress progress = new Progress();
 	private StateType type = StateType.INIT;
 	private String message = "";
+
+	public State(final String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
 
 	@Override
 	public Progress getProgress() {

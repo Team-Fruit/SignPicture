@@ -26,18 +26,25 @@ import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownload implements ICommunicate<ContentDownload.ContentDLResult>, Progressable {
+	protected final String name;
 	protected final URI remote;
 	protected final File local;
 	protected final Progress progress;
 
-	public ContentDownload(final URI remote, final File local, final Progress progress) {
+	public ContentDownload(final String name, final URI remote, final File local, final Progress progress) {
+		this.name = name;
 		this.remote = remote;
 		this.local = local;
 		this.progress = progress;
 	}
 
 	public ContentDownload(final ContentLocation location, final Progress progress) throws URISyntaxException {
-		this(location.remoteLocation(), location.createCacheLocation(), progress);
+		this(location.id.id(), location.remoteLocation(), location.createCacheLocation(), progress);
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 	@Override

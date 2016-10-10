@@ -28,10 +28,13 @@ public class MCheckBox extends MLabel {
 	}
 
 	@Override
-	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 		final Area a = getGuiPosition(pgp);
-		if (a.pointInside(p))
+		if (a.pointInside(p)) {
 			check(!this.checked);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

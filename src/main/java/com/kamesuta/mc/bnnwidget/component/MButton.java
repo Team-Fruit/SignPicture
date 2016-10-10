@@ -37,16 +37,20 @@ public class MButton extends WBase {
 	}
 
 	@Override
-	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 		final Area abs = getGuiPosition(pgp);
-		if ((isEnabled()) && (abs.pointInside(p))) {
-			if (onClicked(ev, pgp, p, button)) {
-				if (this.actionCommand != null)
-					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
-				mc.getSoundHandler()
-				.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+		if (abs.pointInside(p)) {
+			if (isEnabled()) {
+				if (onClicked(ev, pgp, p, button)) {
+					if (this.actionCommand != null)
+						ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
+					mc.getSoundHandler()
+					.playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+				}
 			}
+			return true;
 		}
+		return false;
 	}
 
 	protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {

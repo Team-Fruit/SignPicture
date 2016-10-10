@@ -22,7 +22,6 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.gui.file.GuiFileDD;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -312,7 +311,9 @@ public class GuiSignPicEditor extends WFrame {
 				};
 				add(field);
 
-				add(new GuiFileDD(new RArea(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
+				// add(new GuiFileDD(new RArea(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
+
+				add(new GuiTask(new RArea(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
 			}
 		});
 	}

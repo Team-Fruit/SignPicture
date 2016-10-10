@@ -43,6 +43,11 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 	}
 
 	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
 	public Progress getProgress() {
 		return this.progress;
 	}
