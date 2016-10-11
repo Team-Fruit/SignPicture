@@ -43,7 +43,7 @@ public final class Config extends Configuration {
 	public boolean renderMipmapTypeNearest = false;
 	public float renderSeeOpacity = .5f;
 	public float renderPreviewFixedOpacity = .7f;
-	public float renderPreviewFloatedOpacity = .7f;
+	public float renderPreviewFloatedOpacity = .7f*.7f;
 
 	public Config( final File configFile ) {
 		super( configFile );

@@ -35,7 +35,7 @@ public class MLabel extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area out = getGuiPosition(pgp);
 		drawText(out);
 	}

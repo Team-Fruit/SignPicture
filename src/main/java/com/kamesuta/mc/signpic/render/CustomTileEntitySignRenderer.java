@@ -7,7 +7,6 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
@@ -27,47 +26,6 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 
 	public CustomTileEntitySignRenderer() {}
 
-	public void renderImage(final Content content, final ImageSize size, final float opacity) {
-		glPushMatrix();
-		glScalef(size.width, size.height, 1f);
-		if (content.state.getType() == ContentStateType.AVAILABLE) {
-			glColor4f(1.0F, 1.0F, 1.0F, opacity * 1.0F);
-			content.image.draw();
-		} else {
-			final Tessellator t = Tessellator.instance;
-			RenderHelper.startShape();
-			glLineWidth(1f);
-			glColor4f(1.0F, 0.0F, 0.0F, opacity * 1.0F);
-			t.startDrawing(GL_LINE_LOOP);
-			t.addVertex(0, 0, 0);
-			t.addVertex(0, 1, 0);
-			t.addVertex(1, 1, 0);
-			t.addVertex(1, 0, 0);
-			t.draw();
-		}
-		glPopMatrix();
-
-		if (size.width<1.5f || size.height<1.5) {
-			glScalef(.5f, .5f, .5f);
-			glTranslatef(size.width/2, size.height/4, 0);
-		}
-		glTranslatef(size.width/2, size.height/2, 0);
-		glScalef(.5f, .5f, 1f);
-		if (content.state.getType() != ContentStateType.AVAILABLE) {
-			if (content.state.getType() == ContentStateType.ERROR) {
-				RenderHelper.startShape();
-				glPushMatrix();
-				glTranslatef(-.5f, -.5f, 0f);
-				RenderHelper.startTexture();
-				bindTexture(resError);
-				RenderHelper.drawRectTexture(GL_QUADS);
-				glPopMatrix();
-			}
-			StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);
-			StateRender.drawMessage(content, func_147498_b());
-		}
-	}
-
 	public void renderSignPicture(final Entry entry, final float opacity) {
 		// Load Image
 		final Content content = entry.content();
@@ -83,7 +41,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 		glScalef(1f, -1f, 1f);
 
-		renderImage(content, size, opacity);
+		content.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
 		glPopMatrix();
 	}

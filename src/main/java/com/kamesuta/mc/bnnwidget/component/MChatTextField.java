@@ -48,7 +48,7 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		final int x = this.t.xPosition;
 		final int y = this.t.yPosition;

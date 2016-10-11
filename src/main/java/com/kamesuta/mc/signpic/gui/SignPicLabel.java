@@ -9,7 +9,6 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
-import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -31,7 +30,7 @@ public class SignPicLabel extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		final EntryId entryId = getEntryId();
 		if (entryId != null) {
@@ -54,7 +53,7 @@ public class SignPicLabel extends WBase {
 					translate(a);
 					glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
 					glScalef(100, 100, 1f);
-					Client.renderer.renderImage(content, size, 1f);
+					content.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
 					glPopMatrix();
 					glEnable(GL_CULL_FACE);

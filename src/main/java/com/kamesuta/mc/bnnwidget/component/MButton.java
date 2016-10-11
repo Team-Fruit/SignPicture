@@ -54,7 +54,7 @@ public class MButton extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		drawButtonTex(ev, pgp, p, frame);
 		if (this.text != null) {
 			drawText(ev, pgp, p, frame);
