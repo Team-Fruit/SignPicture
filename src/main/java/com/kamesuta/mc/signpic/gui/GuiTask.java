@@ -29,12 +29,12 @@ public class GuiTask extends WPanel {
 		this.right.start();
 		add(new WPanel(new RArea(this.right, Coord.pwidth(1f), Coord.top(0f), Coord.bottom(0f))) {
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 				final Area a = getGuiPosition(pgp);
 				RenderHelper.startShape();
 				glColor4f(0f, 0f, 0f, .5f);
 				drawRect(a);
-				super.draw(ev, pgp, p, frame);
+				super.draw(ev, pgp, p, frame, opacity);
 			}
 
 			@Override
@@ -92,7 +92,7 @@ public class GuiTask extends WPanel {
 				}
 
 				@Override
-				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 					final Area a = getGuiPosition(pgp);
 					glPushMatrix();
 					glTranslatef(a.x1(), a.y1(), 0f);

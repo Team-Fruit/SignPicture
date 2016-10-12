@@ -11,7 +11,7 @@ public class WComponent extends WGui implements WCommon {
 	public void onInit(final WEvent ev, final Area pgp, final Point p) {}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {}
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {}
 
 	@Override
 	public void update(final WEvent ev, final Area pgp, final Point p) {}

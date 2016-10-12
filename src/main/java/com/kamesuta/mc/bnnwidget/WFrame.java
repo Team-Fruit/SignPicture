@@ -12,20 +12,46 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-public class WFrame extends GuiScreen implements WContainer {
+public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected final ArrayList<WCommon> widgets = new ArrayList<WCommon>();
 	protected final WEvent event = new WEvent();
+	public float width;
+	public float height;
+
+	public WFrame setWidth(final float width) {
+		this.width = width;
+		super.width = (int) width;
+		return this;
+	}
+
+	public WFrame setHeight(final float height) {
+		this.height = height;
+		super.height = (int) height;
+		return this;
+	}
+
+	public float width() {
+		if (super.width != (int) this.width)
+			this.width = super.width;
+		return this.width;
+	}
+
+	public float height() {
+		if (super.height != (int) this.height)
+			this.height = super.height;
+		return this.height;
+	}
 
 	public WFrame() {
 	}
 
 	public Area getAbsolute() {
-		return new Area(0, 0, this.width, this.height);
+		return new Area(0, 0, width(), height());
 	}
 
 	public Point getMouseAbsolute() {
-		return new Point((float) Mouse.getX() * this.width / this.mc.displayWidth,
-				this.height - (float) Mouse.getY() * this.height / this.mc.displayHeight - 1);
+		return new Point(Mouse.getX() * width() / this.mc.displayWidth,
+				height() - Mouse.getY() * height() / this.mc.displayHeight - 1);
 	}
 
 	@Override
@@ -81,13 +107,21 @@ public class WFrame extends GuiScreen implements WContainer {
 		super.setWorldAndResolution(mc, i, j);
 	}
 
-	@Override
-	public void drawScreen(final int mousex, final int mousey, final float f) {
+	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity) {
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
 		for (final WCommon widget : this.widgets)
-			widget.draw(this.event, gp, p, f);
+			widget.draw(this.event, gp, p, f, opacity);
 		sDrawScreen(mousex, mousey, f);
+	}
+
+	@Override
+	public void drawScreen(final int mousex, final int mousey, final float f) {
+		drawScreen(mousex, mousey, f, getOpacity());
+	}
+
+	protected float getOpacity() {
+		return 1f;
 	}
 
 	protected void sDrawScreen(final int mousex, final int mousey, final float f) {

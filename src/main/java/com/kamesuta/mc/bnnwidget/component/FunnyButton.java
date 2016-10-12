@@ -35,7 +35,7 @@ public class FunnyButton extends MButton {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		glPushMatrix();
 		glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
@@ -43,7 +43,7 @@ public class FunnyButton extends MButton {
 		glScalef(c, c, 1f);
 		glRotatef(this.m.get(), 0, 0, 1);
 		glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0);
-		super.draw(ev, pgp, p, frame);
+		super.draw(ev, pgp, p, frame, opacity);
 		glPopMatrix();
 	}
 }

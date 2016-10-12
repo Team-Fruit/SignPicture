@@ -50,7 +50,7 @@ public class GuiPAAS extends WFrame {
 					MCoord c = new MCoord(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, this.c.get());
 						drawRect(getGuiPosition(pgp));
@@ -60,7 +60,7 @@ public class GuiPAAS extends WFrame {
 				final float f1 = 93.75F;
 				add(new WBase(new RArea(Coord.right(15), Coord.top(15), Coord.width(f1), Coord.height(f1))) {
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						final Area a = getGuiPosition(pgp);
 
 						RenderHelper.startTexture();

@@ -83,7 +83,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		glTranslatef(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 		glScalef(1f, -1f, 1f);
 
-		renderImage(content, size, opacity);
+		content.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
 		glPopMatrix();
 	}

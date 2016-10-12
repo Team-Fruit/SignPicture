@@ -94,7 +94,7 @@ public class GuiFileDD extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		RenderHelper.startShape();
 		glColor4f(0f, 0f, 0f, .8f);
 		drawRect(getGuiPosition(pgp));
