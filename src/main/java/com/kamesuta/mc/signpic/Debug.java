@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.io.InputStream;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -47,16 +46,23 @@ public class Debug {
 		//		}
 		//		Reference.logger.info(map);
 
-		final String s = "123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef";
-		final String[] ids = new String[4];
-		toStrings(ids, s);
-		Reference.logger.info(isPlaceable(s));
-		Reference.logger.info(ArrayUtils.toString(ids));
+		//		final String s = "123456789abcdef123456789abcdef123456789abcdef123456789abcdef123456789abcdef";
+		//		final String[] ids = new String[4];
+		//		toStrings(ids, s);
+		//		Reference.logger.info(isPlaceable(s));
+		//		Reference.logger.info(ArrayUtils.toString(ids));
+		//
+		//		PostData();
 
-		PostData();
+		final int color = 0xffffff;
+		final float a = (color >> 24 & 255) / 255.0F;
+		final float r = (color >> 16 & 255) / 255.0F;
+		final float g = (color >> 8 & 255) / 255.0F;
+		final float b = (color & 255) / 255.0F;
+		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
 	}
 
-	public static void toStrings(final String[] sign, final String id) {
+	static void toStrings(final String[] sign, final String id) {
 		final int length = StringUtils.length(id);
 		for (int i=0; i<4; i++)
 			sign[i] = StringUtils.substring(id, 15*i, Math.min(15*(i+1), length));
@@ -67,12 +73,12 @@ public class Debug {
 		return s.hasNext() ? s.next() : "";
 	}
 
-	public static boolean isPlaceable(final String entryId) {
+	static boolean isPlaceable(final String entryId) {
 		return StringUtils.length(entryId) <= 15*4;
 	}
 
 	// TODO: Fix and test this method.
-	private static void PostData() throws Exception {
+	static void PostData() throws Exception {
 		final String url = "https://upload.gyazo.com/api/upload";
 		final HttpClient httpclient = new Downloader().client;
 
