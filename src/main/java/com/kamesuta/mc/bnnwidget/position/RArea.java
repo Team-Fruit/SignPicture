@@ -1,16 +1,20 @@
 package com.kamesuta.mc.bnnwidget.position;
 
 public class RArea implements R {
-	protected Coord x1;
-	protected Coord y1;
-	protected Coord x2;
-	protected Coord y2;
+	public static final Coord default_x1 = Coord.left(0f);
+	public static final Coord default_y1 = Coord.top(0f);
+	public static final Coord default_x2 = Coord.pwidth(1f);
+	public static final Coord default_y2 = Coord.pheight(1f);
 
-	public RArea(final Coord a, final Coord b, final Coord c, final Coord d) {
-		set(a);
-		set(b);
-		set(c);
-		set(d);
+	protected Coord x1 = default_x1;
+	protected Coord y1 = default_y1;
+	protected Coord x2 = default_x2;
+	protected Coord y2 = default_y2;
+
+	public RArea(final Coord... a) {
+		for (final Coord c : a) {
+			set(c);
+		}
 	}
 
 	public static RArea diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
@@ -18,7 +22,6 @@ public class RArea implements R {
 	}
 
 	public Area build(final Area a) {
-		if (!check_x() || !check_y()) throw new IllegalStateException(String.format("insufficient coors [%s]", this));
 		final float tx1 = this.x1.base(a);
 		final float ty1 = this.y1.base(a);
 		final float tx2 = this.x2.next(a, this.x1);
@@ -30,39 +33,34 @@ public class RArea implements R {
 		return new Area(rx1, ry1, rx2, ry2);
 	}
 
-	protected boolean exists(final Coord c) {
-		return c!=null;
-	}
-
-	protected boolean hasAbs(final Coord a, final Coord b) {
-		return a.side.isAbs || b.side.isAbs;
-	}
-
 	protected void set(final Coord n) {
 		if (n==null) throw new IllegalStateException(String.format("null coord [%s]", this));
 		if (n.side==null) throw new IllegalStateException(String.format("invaild coord [%s]", this));
 		switch(n.side) {
-		case Right:
 		case Left:
+		case Right:
+			if (this.x1 == default_x1) {
+				this.x1 = n;
+				break;
+			}
 		case Width:
-			if (this.x1 == null) this.x1 = n;
-			else if (this.x2 == null) this.x2 = n;
-			break;
+			if (this.x2 == default_x2) {
+				this.x2 = n;
+				break;
+			}
 		case Top:
 		case Bottom:
+			if (this.y1 == default_y1) {
+				this.y1 = n;
+				break;
+			}
 		case Height:
-			if (this.y1 == null) this.y1 = n;
-			else if (this.y2 == null) this.y2 = n;
-			break;
+			if (this.y2 == default_y2) {
+				this.y2 = n;
+				break;
+			}
+			throw new IllegalStateException(String.format("conflic coord [%s]", this));
 		}
-	}
-
-	protected boolean check_x() {
-		return exists(this.x1) && (exists(this.x2));
-	}
-
-	protected boolean check_y() {
-		return exists(this.y1) && (exists(this.y2));
 	}
 
 	@Override
@@ -77,9 +75,6 @@ public class RArea implements R {
 
 	@Override
 	public String toString() {
-		if (check_x() && check_y())
-			return String.format("RArea[x1=%s, y1=%s, x2=%s, y2=%s]", this.x1, this.y1, this.x2, this.y2);
-		else
-			return String.format("RArea(Invaild)[x1=%s, y1=%s, x2=%s, y2=%s]", this.x1, this.y1, this.x2, this.y2);
+		return String.format("RArea[x1=%s, y1=%s, x2=%s, y2=%s]", this.x1, this.y1, this.x2, this.y2);
 	}
 }

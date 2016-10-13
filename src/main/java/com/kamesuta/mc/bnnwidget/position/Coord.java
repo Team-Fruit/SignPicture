@@ -102,48 +102,6 @@ public class Coord implements R {
 			}
 		},
 		;
-		//		protected float next_x(final Area a, final float base) {
-		//			if (exists(this.w)) {
-		//				switch(this.x1.side) {
-		//				case Left:
-		//					return base + this.w.getAbsCoord(a.w());
-		//				case Right:
-		//					return base - this.w.getAbsCoord(a.w());
-		//				default:
-		//					return 0;
-		//				}
-		//			}
-		//			switch (this.x2.side) {
-		//			case Left:
-		//				return a.x1() + this.x2.getAbsCoord(a.w());
-		//			case Right:
-		//				return a.x2() - this.x2.getAbsCoord(a.w());
-		//			default:
-		//				return 0;
-		//			}
-		//		}
-		//
-		//		protected float next_y(final Area a, final float base) {
-		//			if (exists(this.h)) {
-		//				switch(this.y1.side) {
-		//				case Top:
-		//					return base + this.h.getAbsCoord(a.h());
-		//				case Bottom:
-		//					return base - this.h.getAbsCoord(a.h());
-		//				default:
-		//					return 0;
-		//				}
-		//			}
-		//			switch (this.y2.side) {
-		//			case Top:
-		//				return a.y1() + this.y2.getAbsCoord(a.h());
-		//			case Bottom:
-		//				return a.y2() - this.y2.getAbsCoord(a.h());
-		//			default:
-		//				return 0;
-		//			}
-		//		}
-
 
 		public float base(final Area a, final Coord c) {
 			return 0;
@@ -228,14 +186,15 @@ public class Coord implements R {
 		return new Coord(n, CoordSide.Height, CoordType.Percent);
 	}
 
+	@Deprecated
 	@Override
 	public boolean isVaild() {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
+		return this.side.isAbs;
 	}
 
+	@Deprecated
 	@Override
 	public Area getAbsolute(final Area parent) {
-		return null;
+		return new RArea(new Coord(this.side.base(parent, this), this.side, this.type)).getAbsolute(parent);
 	}
 }
