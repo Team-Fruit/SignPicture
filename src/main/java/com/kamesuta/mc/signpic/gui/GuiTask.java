@@ -40,7 +40,7 @@ public class GuiTask extends WPanel {
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 				final Area a = getGuiPosition(pgp);
 				RenderHelper.startShape();
-				glColor4f(0f, 0f, 0f, .5f);
+				glColor4f(0f, 0f, 0f, .7f);
 				drawRect(a);
 				super.draw(ev, pgp, p, frame, opacity);
 			}
@@ -50,11 +50,11 @@ public class GuiTask extends WPanel {
 				final Area a = getGuiPosition(pgp);
 				if (a.pointInside(p)) {
 					if (!this.show)
-						this.right.add(Easings.easeOutCirc.move(.5f, 0f)).start();
+						this.right.stop().add(Easings.easeLinear.move(.35f, 0f)).start();
 					this.show = true;
 				} else {
 					if (this.show)
-						this.right.add(Easings.easeOutCirc.move(.5f, -.95f)).start();
+						this.right.stop().add(Easings.easeLinear.move(.35f, -.95f)).start();
 					this.show = false;
 				}
 				super.update(ev, pgp, p);
@@ -84,7 +84,7 @@ public class GuiTask extends WPanel {
 					@Override
 					protected TaskElement createWidget(final Progressable t, final int i) {
 						final MCoord top = MCoord.top(i*15);
-						return new TaskElement(new RArea(top, Coord.height(10), Coord.left(0), right), top, t);
+						return new TaskElement(new RArea(top, Coord.height(15)), top, t);
 					}
 
 					@Override
@@ -137,21 +137,72 @@ public class GuiTask extends WPanel {
 
 				@Override
 				protected void initWidget() {
-					add(new WBase(new RArea(Coord.left(2f), Coord.top(2), Coord.height(font().FONT_HEIGHT/2), Coord.right(2))) {
+					add(new WPanel(RArea.diff(1, 1, -1, 0)) {
+						@Override
+						protected void initWidget() {
+							add(new WBase(new RArea(Coord.left(1f), Coord.top(1), Coord.height(font().FONT_HEIGHT), Coord.right(0))) {
+								@Override
+								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+									final Area a = getGuiPosition(pgp);
+									glPushMatrix();
+									glTranslatef(a.x1(), a.y1(), 0f);
+									glScalef(.5f, .5f, .5f);
+									final String cont = "...";
+									final int contwidth = font().getStringWidth(cont);
+									final String name = TaskElement.this.progressable.getName();
+									final int namewidth = font().getStringWidth(name);
+									String res;
+									final float prefwidth = a.w()*2;
+									if (namewidth < prefwidth) {
+										res = name + cont;
+									} else {
+										res = font().trimStringToWidth(name, (int)(prefwidth-contwidth)) + cont;
+									}
+									drawString(res, 0f, 0f, 0xffffff);
+									glPopMatrix();
+								}
+							});
+
+							add(new WPanel(new RArea(Coord.left(1f), Coord.top(font().FONT_HEIGHT/2+2), Coord.bottom(1), Coord.right(0))) {
+								protected MCoord progresscoord = MCoord.pleft(0f);
+
+								@Override
+								protected void initWidget() {
+									add(new WBase(new RArea(Coord.pleft(0f), this.progresscoord)) {
+										@Override
+										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+											final Area a = getGuiPosition(pgp);
+											RenderHelper.startShape();
+											glColor4f(0f, 78f/256f, 192f/256f, 1f);
+											drawRect(a);
+											super.draw(ev, pgp, p, frame, opacity);
+										}
+									});
+								}
+
+								@Override
+								public void update(final WEvent ev, final Area pgp, final Point p) {
+									this.progresscoord.stop().add(Easings.easeInOutCirc.move(.1f, TaskElement.this.progressable.getProgress().getProgress())).start();
+								}
+
+								@Override
+								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+									final Area a = getGuiPosition(pgp);
+									RenderHelper.startShape();
+									glColor4f(0f, 0f, 0f, 0.8f);
+									drawRect(a);
+									super.draw(ev, pgp, p, frame, opacity);
+								}
+							});
+						}
+
 						@Override
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-							final Area a = getGuiPosition(pgp);
-							glPushMatrix();
-							glTranslatef(a.x1(), a.y1(), 0f);
-							glScalef(.5f, .5f, .5f);
-							final int contwidth = font().getStringWidth("...");
-							final String name = TaskElement.this.progressable.getName();
-							final int trimwidth = (int) (a.w()-contwidth)*2;
-							String name2 = font().trimStringToWidth(name, trimwidth);
-							if (trimwidth < font().getStringWidth(name))
-								name2 += "...";
-							drawString(name2, 0f, 0f, 0xffffff);
-							glPopMatrix();
+							final Area area = getGuiPosition(pgp);
+							RenderHelper.startShape();
+							glColor4f(.5f, .5f, .5f, 0.2f);
+							drawRect(area);
+							super.draw(ev, pgp, p, frame, opacity);
 						}
 					});
 				}
