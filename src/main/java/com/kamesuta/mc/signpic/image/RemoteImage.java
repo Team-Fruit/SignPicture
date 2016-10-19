@@ -27,7 +27,7 @@ public class RemoteImage extends Image {
 
 	@Override
 	public void onInit() {
-		final File local = this.content.location.createCacheLocation();
+		final File local = this.content.location.cacheLocation();
 		if (!local.exists()) {
 			this.content.state.setType(StateType.DOWNLOADING);
 			try {
@@ -80,7 +80,7 @@ public class RemoteImage extends Image {
 	@Override
 	public void onCollect() {
 		if (this.downloader!=null)
-			this.downloader.requestStop();
+			this.downloader.cancel();
 		if (this.texture!=null)
 			this.texture.delete();
 	}

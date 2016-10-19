@@ -27,9 +27,12 @@ public class Communicator {
 		this.threadpool.execute(new Runnable() {
 			@Override
 			public void run() {
-				callback.onDone(communicate.communicate());
-				synchronized (Communicator.this.tasks) {
-					Communicator.this.tasks.remove(communicate);
+				try {
+					callback.onDone(communicate.communicate());
+				} finally {
+					synchronized (Communicator.this.tasks) {
+						Communicator.this.tasks.remove(communicate);
+					}
 				}
 			}
 		});

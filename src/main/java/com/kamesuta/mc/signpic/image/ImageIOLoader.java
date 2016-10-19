@@ -51,7 +51,7 @@ public class ImageIOLoader {
 	}
 
 	public ImageIOLoader(final Content content) throws IOException {
-		this(content, content.location.createCacheLocation());
+		this(content, content.location.cacheLocation());
 	}
 
 	public ImageTextures load() throws IOException {

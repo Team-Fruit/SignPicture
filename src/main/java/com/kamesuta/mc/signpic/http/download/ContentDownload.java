@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.http.download;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -18,8 +17,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
+import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.CommunicateStoppedException;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progress;
@@ -29,19 +28,21 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class ContentDownload implements ICommunicate<ContentDownload.ContentDLResult>, Progressable {
 	protected final String name;
 	protected final URI remote;
+	protected final File temp;
 	protected final File local;
 	protected final Progress progress;
-	protected boolean stopreq;
+	protected boolean canceled;
 
-	public ContentDownload(final String name, final URI remote, final File local, final Progress progress) {
+	public ContentDownload(final String name, final URI remote, final File temp, final File local, final Progress progress) {
 		this.name = name;
 		this.remote = remote;
+		this.temp = temp;
 		this.local = local;
 		this.progress = progress;
 	}
 
 	public ContentDownload(final ContentLocation location, final Progress progress) throws URISyntaxException {
-		this(location.id.id(), location.remoteLocation(), location.createCacheLocation(), progress);
+		this(location.id.id(), location.remoteLocation(), location.tempLocation(), location.cacheLocation(), progress);
 	}
 
 	@Override
@@ -70,15 +71,18 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 
 			this.progress.overall = entity.getContentLength();
 			input = entity.getContent();
-			countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(this.local))) {
+			countoutput = new CountingOutputStream(new FileOutputStream(this.temp)) {
 				@Override
 				protected void afterWrite(final int n) throws IOException {
-					if (ContentDownload.this.stopreq)
-						throw new CommunicateStoppedException();
+					if (ContentDownload.this.canceled) {
+						req.abort();
+						throw new CommunicateCanceledException();
+					}
 					ContentDownload.this.progress.done = getByteCount();
 				}
 			};
 			IOUtils.copyLarge(input, countoutput);
+			this.temp.renameTo(this.local);
 			return new CommunicateResponse<ContentDLResult>(new ContentDLResult());
 		} catch (final Exception e) {
 			return new CommunicateResponse<ContentDLResult>(e);
@@ -89,8 +93,8 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 	}
 
 	@Override
-	public void requestStop() {
-		this.stopreq = true;
+	public void cancel() {
+		this.canceled = true;
 	}
 
 	public static class ContentDLResult {

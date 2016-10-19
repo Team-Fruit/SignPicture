@@ -20,8 +20,8 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.CommunicateStoppedException;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -33,7 +33,7 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 	private final String name;
 	private final InputStream upstream;
 	private final Progress progress;
-	protected boolean stopreq;
+	protected boolean canceled;
 
 	public GyazoUpload(final String name, final InputStream stream, final Progress progress) {
 		this.name = name;
@@ -70,8 +70,10 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 			countupstream = new CountingInputStream(this.upstream) {
 				@Override
 				protected void beforeRead(final int n) throws IOException {
-					if (GyazoUpload.this.stopreq)
-						throw new CommunicateStoppedException();
+					if (GyazoUpload.this.canceled) {
+						httppost.abort();
+						throw new CommunicateCanceledException();
+					}
 				}
 
 				@Override
@@ -106,8 +108,8 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 	}
 
 	@Override
-	public void requestStop() {
-		this.stopreq = true;
+	public void cancel() {
+		this.canceled = true;
 	}
 
 	public static class GyazoResult {

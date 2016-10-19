@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
-import com.kamesuta.mc.signpic.http.CommunicateStoppedException;
+import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.image.InvaildImageException;
 
 import net.minecraft.client.resources.I18n;
@@ -41,7 +41,7 @@ public class State implements Progressable {
 				throw throwable;
 			} catch (final URISyntaxException e) {
 				setMessage(I18n.format("signpic.advmsg.invalidurl"));
-			} catch (final CommunicateStoppedException e) {
+			} catch (final CommunicateCanceledException e) {
 				setMessage(I18n.format("signpic.advmsg.dlstopped"));
 			} catch (final ContentCapacityOverException e) {
 				setMessage(I18n.format("signpic.advmsg.capacityover"));

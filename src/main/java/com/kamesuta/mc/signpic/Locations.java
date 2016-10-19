@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 public class Locations {
 	public File mcDir;
 	public File signpicDir;
+	public File tempDir;
 	public File cacheDir;
 	public File metaDir;
 	public File modDir;
@@ -15,6 +16,8 @@ public class Locations {
 	public Locations(final FMLPreInitializationEvent event, final File mcdir) {
 		this.signpicDir = new File(mcdir, "signpic");
 		securementDirectory(this.signpicDir);
+		this.tempDir = new File(this.signpicDir, "temp");
+		securementDirectory(this.tempDir);
 		this.cacheDir = new File(this.signpicDir, "cache");
 		securementDirectory(this.cacheDir);
 		this.metaDir = new File(this.signpicDir, "meta");
@@ -25,7 +28,7 @@ public class Locations {
 	}
 
 	private boolean securementDirectory(final File cachedir) {
-		if (cachedir.exists() && !cachedir.isDirectory()) {
+		if (cachedir.exists()&&!cachedir.isDirectory()) {
 			File to;
 			int i = 2;
 			do {
@@ -33,7 +36,7 @@ public class Locations {
 				i++;
 			} while (to.exists());
 			cachedir.renameTo(to);
-			Reference.logger.warn("non-directory conflicting file exists. renamed to " + to.getName());
+			Reference.logger.warn("non-directory conflicting file exists. renamed to "+to.getName());
 			return true;
 		}
 		cachedir.mkdir();
