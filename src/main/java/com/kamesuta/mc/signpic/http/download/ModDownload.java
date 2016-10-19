@@ -65,6 +65,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 
 			final File f = new File(Client.location.modDir, local+".dl");
 			f.createNewFile();
+			final File f1 = new File(Client.location.modDir, local);
 
 			output = new CountingOutputStream(new FileOutputStream(f)) {
 				@Override
@@ -79,8 +80,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
-
-			final File f1 = new File(Client.location.modDir, local);
+			FileUtils.deleteQuietly(f1);
 			if (!f1.exists())
 				FileUtils.moveFile(f, f1);
 

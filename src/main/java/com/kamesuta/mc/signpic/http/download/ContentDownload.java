@@ -83,10 +83,10 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 					ContentDownload.this.progress.setDone(getByteCount());
 				}
 			};
+			FileUtils.deleteQuietly(this.temp);
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
-			if (this.local.exists())
-				this.local.delete();
+			FileUtils.deleteQuietly(this.local);
 			FileUtils.moveFile(this.temp, this.local);
 			return new CommunicateResponse<ContentDLResult>(new ContentDLResult());
 		} catch (final Exception e) {
@@ -94,6 +94,7 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
+			FileUtils.deleteQuietly(this.temp);
 		}
 	}
 
