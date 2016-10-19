@@ -41,6 +41,7 @@ signpic.state.error=エラー
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=不正なURL
+signpic.advmsg.dlstopped=ダウンロード中止
 signpic.advmsg.capacityover=容量オーバー
 signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s

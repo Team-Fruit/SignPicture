@@ -7,6 +7,7 @@ import java.util.List;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.http.Communicator;
+import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
@@ -16,6 +17,7 @@ import com.kamesuta.mc.signpic.state.StateType;
 public class RemoteImage extends Image {
 	protected ImageTextures texture;
 	protected File local;
+	private ICommunicate<ContentDLResult> downloader;
 
 	public RemoteImage(final Content content) {
 		super(content);
@@ -29,15 +31,16 @@ public class RemoteImage extends Image {
 		if (!local.exists()) {
 			this.content.state.setType(StateType.DOWNLOADING);
 			try {
-				Communicator.instance.<ContentDLResult>communicate(new ContentDownload(this.content.location, this.content.state.getProgress()), new ICommunicateCallback<ContentDLResult>() {
+				this.downloader = new ContentDownload(this.content.location, this.content.state.getProgress());
+				Communicator.instance.<ContentDLResult> communicate(this.downloader, new ICommunicateCallback<ContentDLResult>() {
 					@Override
 					public void onDone(final ICommunicateResponse<ContentDLResult> res) {
 						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
 						if (res.isSuccess())
 							ContentManager.instance.enqueueAsync(RemoteImage.this);
-						else if (res.getError()!=null) {
+						else if (res.getError()!=null)
 							RemoteImage.this.content.state.setErrorMessage(res.getError());
-						}
+						RemoteImage.this.downloader = null;
 					}
 				});
 			} catch (final URISyntaxException e) {
@@ -52,7 +55,7 @@ public class RemoteImage extends Image {
 		try {
 			this.texture = new ImageIOLoader(this.content).load();
 			ContentManager.instance.enqueueDivision(this);
-		} catch (final Exception e) {
+		} catch (final Throwable e) {
 			this.content.state.setErrorMessage(e);
 		}
 	}
@@ -60,7 +63,7 @@ public class RemoteImage extends Image {
 	@Override
 	public boolean onDivisionProcess() {
 		final List<ImageTexture> texs = this.texture.getAll();
-		if (this.processing < (this.content.state.getProgress().overall = texs.size())) {
+		if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
 			final ImageTexture tex = texs.get(this.processing);
 			tex.load();
 			this.processing++;
@@ -76,6 +79,8 @@ public class RemoteImage extends Image {
 
 	@Override
 	public void onCollect() {
+		if (this.downloader!=null)
+			this.downloader.requestStop();
 		if (this.texture!=null)
 			this.texture.delete();
 	}
@@ -86,7 +91,7 @@ public class RemoteImage extends Image {
 	}
 
 	public ImageTextures getTextures() {
-		if (this.content.state.getType() == StateType.AVAILABLE)
+		if (this.content.state.getType()==StateType.AVAILABLE)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
@@ -94,8 +99,8 @@ public class RemoteImage extends Image {
 
 	@Override
 	public String getLocal() {
-		if (this.local != null)
-			return "File:" + this.local.getName();
+		if (this.local!=null)
+			return "File:"+this.local.getName();
 		else
 			return "None";
 	}

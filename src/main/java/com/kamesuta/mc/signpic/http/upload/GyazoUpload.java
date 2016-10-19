@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.http.upload;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -20,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
+import com.kamesuta.mc.signpic.http.CommunicateStoppedException;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -31,6 +33,7 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 	private final String name;
 	private final InputStream upstream;
 	private final Progress progress;
+	protected boolean stopreq;
 
 	public GyazoUpload(final String name, final InputStream stream, final Progress progress) {
 		this.name = name;
@@ -66,6 +69,12 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 
 			countupstream = new CountingInputStream(this.upstream) {
 				@Override
+				protected void beforeRead(final int n) throws IOException {
+					if (GyazoUpload.this.stopreq)
+						throw new CommunicateStoppedException();
+				}
+
+				@Override
 				protected void afterRead(final int n) {
 					super.afterRead(n);
 					GyazoUpload.this.progress.done = getByteCount();
@@ -83,7 +92,7 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 				final HttpEntity resEntity = response.getEntity();
 				if (this.upstream!=null) {
 					resstream = resEntity.getContent();
-					return new CommunicateResponse<GyazoResult>(gson.<GyazoResult>fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), GyazoResult.class));
+					return new CommunicateResponse<GyazoResult>(gson.<GyazoResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), GyazoResult.class));
 				}
 			}
 		} catch (final Exception e) {
@@ -94,6 +103,11 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 			Reference.logger.info("upload finish");
 		}
 		return new CommunicateResponse<GyazoResult>();
+	}
+
+	@Override
+	public void requestStop() {
+		this.stopreq = true;
 	}
 
 	public static class GyazoResult {

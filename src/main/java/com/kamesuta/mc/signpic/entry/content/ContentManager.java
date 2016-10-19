@@ -35,7 +35,7 @@ public class ContentManager implements ITickEntry {
 			public void run() {
 				try {
 					asyncProcessable.onAsyncProcess();
-				} catch (final Exception e) {
+				} catch (final Throwable e) {
 					e.printStackTrace();
 				}
 			}
@@ -65,28 +65,26 @@ public class ContentManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		this.loadtick++;
-		if (this.loadtick > Config.instance.contentLoadTick) {
+		if (this.loadtick>Config.instance.contentLoadTick) {
 			this.loadtick = 0;
 			final ContentSlot<Content> loadprogress = this.loadqueue.poll();
-			if (loadprogress != null)
+			if (loadprogress!=null)
 				loadprogress.onInit();
 		}
 
 		this.divisiontick++;
-		if (this.divisiontick > Config.instance.contentSyncTick) {
+		if (this.divisiontick>Config.instance.contentSyncTick) {
 			this.divisiontick = 0;
 			IDivisionProcessable divisionprocess;
-			if ((divisionprocess = this.divisionqueue.peek()) != null) {
+			if ((divisionprocess = this.divisionqueue.peek())!=null)
 				try {
-					if (divisionprocess.onDivisionProcess()) {
+					if (divisionprocess.onDivisionProcess())
 						synchronized (this.divisionqueue) {
 							this.divisionqueue.poll();
 						}
-					}
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}
-			}
 		}
 
 		for (final Iterator<Entry<ContentId, ContentSlot<Content>>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {

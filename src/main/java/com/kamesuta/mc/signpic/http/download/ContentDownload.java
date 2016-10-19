@@ -19,6 +19,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
+import com.kamesuta.mc.signpic.http.CommunicateStoppedException;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progress;
@@ -30,6 +31,7 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 	protected final URI remote;
 	protected final File local;
 	protected final Progress progress;
+	protected boolean stopreq;
 
 	public ContentDownload(final String name, final URI remote, final File local, final Progress progress) {
 		this.name = name;
@@ -63,7 +65,7 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 
 			final long max = Config.instance.contentMaxByte;
 			final long size = entity.getContentLength();
-			if (max > 0 && (size < 0 || size > max))
+			if (max>0&&(size<0||size>max))
 				throw new ContentCapacityOverException();
 
 			this.progress.overall = entity.getContentLength();
@@ -71,10 +73,12 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 			countoutput = new CountingOutputStream(new BufferedOutputStream(new FileOutputStream(this.local))) {
 				@Override
 				protected void afterWrite(final int n) throws IOException {
+					if (ContentDownload.this.stopreq)
+						throw new CommunicateStoppedException();
 					ContentDownload.this.progress.done = getByteCount();
 				}
 			};
-			IOUtils.copy(input, countoutput);
+			IOUtils.copyLarge(input, countoutput);
 			return new CommunicateResponse<ContentDLResult>(new ContentDLResult());
 		} catch (final Exception e) {
 			return new CommunicateResponse<ContentDLResult>(e);
@@ -82,6 +86,11 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(countoutput);
 		}
+	}
+
+	@Override
+	public void requestStop() {
+		this.stopreq = true;
 	}
 
 	public static class ContentDLResult {
