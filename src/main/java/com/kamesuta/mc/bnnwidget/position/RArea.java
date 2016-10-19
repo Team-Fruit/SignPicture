@@ -1,10 +1,12 @@
 package com.kamesuta.mc.bnnwidget.position;
 
 public class RArea implements R {
-	public static final Coord default_x1 = Coord.left(0f);
-	public static final Coord default_y1 = Coord.top(0f);
-	public static final Coord default_x2 = Coord.pwidth(1f);
-	public static final Coord default_y2 = Coord.pheight(1f);
+	private static final Coord default_x1 = Coord.left(0f);
+	private static final Coord default_y1 = Coord.top(0f);
+	private static final Coord default_x2 = Coord.pwidth(1f);
+	private static final Coord default_y2 = Coord.pheight(1f);
+
+	protected RArea parent;
 
 	protected Coord x1 = default_x1;
 	protected Coord y1 = default_y1;
@@ -12,16 +14,31 @@ public class RArea implements R {
 	protected Coord y2 = default_y2;
 
 	public RArea(final Coord... a) {
-		for (final Coord c : a) {
+		for (final Coord c : a)
 			set(c);
-		}
+	}
+
+	public RArea(final RArea parent, final Coord... a) {
+		this(a);
+		setParent(parent);
+	}
+
+	public RArea(final RArea a) {
+		set(a);
+	}
+
+	public RArea(final RArea parent, final RArea a) {
+		this(a);
+		setParent(parent);
 	}
 
 	public static RArea diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
 		return new RArea(Coord.left(diff_x1), Coord.top(diff_y1), Coord.right(-diff_x2), Coord.bottom(-diff_y2));
 	}
 
-	public Area build(final Area a) {
+	public Area build(Area a) {
+		if (this.parent!=null)
+			a = this.parent.build(a);
 		final float tx1 = this.x1.base(a);
 		final float ty1 = this.y1.base(a);
 		final float tx2 = this.x2.next(a, this.x1);
@@ -33,34 +50,51 @@ public class RArea implements R {
 		return new Area(rx1, ry1, rx2, ry2);
 	}
 
+	protected void setParent(final RArea parent) {
+		this.parent = parent;
+	}
+
+	protected void set(final RArea a) {
+		this.x1 = a.x1;
+		this.y1 = a.y1;
+		this.x2 = a.x2;
+		this.y2 = a.y2;
+	}
+
 	protected void set(final Coord n) {
-		if (n==null) throw new IllegalStateException(String.format("null coord [%s]", this));
-		if (n.side==null) throw new IllegalStateException(String.format("invaild coord [%s]", this));
-		switch(n.side) {
-		case Left:
-		case Right:
-			if (this.x1 == default_x1) {
-				this.x1 = n;
-				break;
-			}
-		case Width:
-			if (this.x2 == default_x2) {
-				this.x2 = n;
-				break;
-			}
-		case Top:
-		case Bottom:
-			if (this.y1 == default_y1) {
-				this.y1 = n;
-				break;
-			}
-		case Height:
-			if (this.y2 == default_y2) {
-				this.y2 = n;
-				break;
-			}
-			throw new IllegalStateException(String.format("conflic coord [%s]", this));
+		if (n==null)
+			throw new IllegalStateException(String.format("null coord [%s]", this));
+		if (n.side==null)
+			throw new IllegalStateException(String.format("invaild coord [%s]", this));
+		switch (n.side) {
+			case Left:
+			case Right:
+				if (this.x1==default_x1) {
+					this.x1 = n;
+					break;
+				}
+			case Width:
+				if (this.x2==default_x2) {
+					this.x2 = n;
+					break;
+				}
+			case Top:
+			case Bottom:
+				if (this.y1==default_y1) {
+					this.y1 = n;
+					break;
+				}
+			case Height:
+				if (this.y2==default_y2) {
+					this.y2 = n;
+					break;
+				}
+				throw new IllegalStateException(String.format("conflic coord [%s]", this));
 		}
+	}
+
+	public RArea child(final RArea a) {
+		return new RArea(this, a);
 	}
 
 	@Override
