@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.commons.lang3.StringUtils;
@@ -77,16 +78,17 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 			};
 
 			IOUtils.copyLarge(input, output);
+			IOUtils.closeQuietly(output);
 
 			final File f1 = new File(Client.location.modDir, local);
 			if (!f1.exists())
-				f.renameTo(f1);
+				FileUtils.moveFile(f, f1);
 
 			IChatComponent chat;
 			if (Client.location.modFile.isFile())
-				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
+				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 			else
-				chat = ChatBuilder.create("signpic.versioning.doneDownloading").setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
+				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloadedFile = true;

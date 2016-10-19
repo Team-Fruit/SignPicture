@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
 import org.apache.http.HttpEntity;
@@ -83,9 +84,10 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 				}
 			};
 			IOUtils.copyLarge(input, output);
+			IOUtils.closeQuietly(output);
 			if (this.local.exists())
 				this.local.delete();
-			this.temp.renameTo(this.local);
+			FileUtils.moveFile(this.temp, this.local);
 			return new CommunicateResponse<ContentDLResult>(new ContentDLResult());
 		} catch (final Exception e) {
 			return new CommunicateResponse<ContentDLResult>(e);
