@@ -8,19 +8,21 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public abstract class Communicate<T> implements ICommunicate<T> {
 	protected abstract HttpUriRequest request() throws Exception;
 
-	protected abstract ICommunicateResponse<T> response(HttpResponse response) throws Exception;
+	protected abstract ICommunicateResponse<T> response(HttpResponse response) throws Throwable;
 
-	protected void before() {}
+	protected void before() {
+	}
 
-	protected void after() {}
+	protected void after() {
+	}
 
 	@Override
 	public ICommunicateResponse<T> communicate() {
 		before();
 		try {
 			return response(Downloader.downloader.client.execute(request()));
-		} catch (final Exception e) {
-			return new CommunicateResponse<T>(e);
+		} catch (final Throwable e) {
+			return new CommunicateResponse<T>().setError(e);
 		} finally {
 			after();
 		}

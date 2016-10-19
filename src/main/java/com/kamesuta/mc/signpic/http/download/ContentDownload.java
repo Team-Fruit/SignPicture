@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -58,7 +59,7 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 	@Override
 	public ICommunicateResponse<ContentDLResult> communicate() {
 		InputStream input = null;
-		CountingOutputStream countoutput = null;
+		OutputStream output = null;
 		try {
 			final HttpUriRequest req = new HttpGet(this.remote);
 			final HttpResponse response = Downloader.downloader.client.execute(req);
@@ -69,26 +70,28 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 			if (max>0&&(size<0||size>max))
 				throw new ContentCapacityOverException();
 
-			this.progress.overall = entity.getContentLength();
+			this.progress.setOverall(entity.getContentLength());
 			input = entity.getContent();
-			countoutput = new CountingOutputStream(new FileOutputStream(this.temp)) {
+			output = new CountingOutputStream(new FileOutputStream(this.temp)) {
 				@Override
 				protected void afterWrite(final int n) throws IOException {
 					if (ContentDownload.this.canceled) {
 						req.abort();
 						throw new CommunicateCanceledException();
 					}
-					ContentDownload.this.progress.done = getByteCount();
+					ContentDownload.this.progress.setDone(getByteCount());
 				}
 			};
-			IOUtils.copyLarge(input, countoutput);
+			IOUtils.copyLarge(input, output);
+			if (this.local.exists())
+				this.local.delete();
 			this.temp.renameTo(this.local);
 			return new CommunicateResponse<ContentDLResult>(new ContentDLResult());
 		} catch (final Exception e) {
 			return new CommunicateResponse<ContentDLResult>(e);
 		} finally {
 			IOUtils.closeQuietly(input);
-			IOUtils.closeQuietly(countoutput);
+			IOUtils.closeQuietly(output);
 		}
 	}
 
