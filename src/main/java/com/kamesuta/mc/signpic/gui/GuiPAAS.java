@@ -34,7 +34,7 @@ public class GuiPAAS extends WFrame {
 	}
 
 	@Override
-	protected void init() {
+	protected void initWidget() {
 		this.preview = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 		CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 

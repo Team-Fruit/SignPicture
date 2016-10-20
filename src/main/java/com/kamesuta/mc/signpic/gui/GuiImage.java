@@ -28,7 +28,7 @@ public class GuiImage extends WFrame {
 	}
 
 	@Override
-	protected void init() {
+	protected void initWidget() {
 		add(new WPanel(R.diff(0, 0, 0, 0)) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {

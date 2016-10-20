@@ -41,7 +41,7 @@ public class GuiSignPicEditor extends WFrame {
 	}
 
 	@Override
-	protected void init() {
+	protected void initWidget() {
 		add(new WPanel(R.diff(0, 0, 0, 0)) {
 			@Override
 			protected void initWidget() {

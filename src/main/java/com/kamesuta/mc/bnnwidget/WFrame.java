@@ -78,19 +78,19 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		super.initGui();
 	}
 
-	protected void initWidget() {
+	protected void init() {
 		for (final WCommon widget : this.widgets)
 			widget.onAdded();
 	}
 
-	protected void init() {
+	protected void initWidget() {
 	}
 
 	public void reset() {
 		this.widgets.clear();
 		initGui();
-		init();
 		initWidget();
+		init();
 	}
 
 	@Override
@@ -98,8 +98,8 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		final boolean init = this.mc == null;
 		sSetWorldAndResolution(mc, i, j);
 		if (init) {
-			init();
 			initWidget();
+			init();
 		}
 	}
 

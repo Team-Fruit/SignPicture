@@ -8,7 +8,6 @@ public class GuiAlways extends WPanel {
 
 	public GuiAlways(final R position) {
 		super(position);
-		// TODO 自動生成されたコンストラクター・スタブ
 	}
 
 }
