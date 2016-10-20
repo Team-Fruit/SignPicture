@@ -1,6 +1,6 @@
 package com.kamesuta.mc.bnnwidget.position;
 
-public class Coord implements R {
+public class Coord {
 	private final float coord;
 	public CoordSide side;
 	public CoordType type;
@@ -36,57 +36,57 @@ public class Coord implements R {
 		Top(true, 1) {
 			@Override
 			public float base(final Area a, final Coord c) {
-				return a.y1() + c.getAbsCoord(a.h());
+				return a.y1()+c.getAbsCoord(a.h());
 			}
 
 			@Override
 			public float next(final Area a, final Coord base, final Coord c) {
 				if (c.side.isAbs)
-					return a.y1() + c.getAbsCoord(a.h());
+					return a.y1()+c.getAbsCoord(a.h());
 				else
-					return base.base(a) + base.side.calc * c.getAbsCoord(a.h());
+					return base.base(a)+base.side.calc*c.getAbsCoord(a.h());
 			}
 		},
 		Left(true, 1) {
 			@Override
 			public float base(final Area a, final Coord c) {
-				return a.x1() + c.getAbsCoord(a.w());
+				return a.x1()+c.getAbsCoord(a.w());
 			}
 
 			@Override
 			public float next(final Area a, final Coord base, final Coord c) {
 				if (c.side.isAbs)
-					return a.x1() + c.getAbsCoord(a.w());
+					return a.x1()+c.getAbsCoord(a.w());
 				else
-					return base.base(a) + base.side.calc * c.getAbsCoord(a.w());
+					return base.base(a)+base.side.calc*c.getAbsCoord(a.w());
 			}
 		},
 		Bottom(true, -1) {
 			@Override
 			public float base(final Area a, final Coord c) {
-				return a.y2() - c.getAbsCoord(a.h());
+				return a.y2()-c.getAbsCoord(a.h());
 			}
 
 			@Override
 			public float next(final Area a, final Coord base, final Coord c) {
 				if (c.side.isAbs)
-					return a.y2() - c.getAbsCoord(a.h());
+					return a.y2()-c.getAbsCoord(a.h());
 				else
-					return base.base(a) + base.side.calc * c.getAbsCoord(a.h());
+					return base.base(a)+base.side.calc*c.getAbsCoord(a.h());
 			}
 		},
 		Right(true, -1) {
 			@Override
 			public float base(final Area a, final Coord c) {
-				return a.x2() - c.getAbsCoord(a.w());
+				return a.x2()-c.getAbsCoord(a.w());
 			}
 
 			@Override
 			public float next(final Area a, final Coord base, final Coord c) {
 				if (c.side.isAbs)
-					return a.x2() - c.getAbsCoord(a.w());
+					return a.x2()-c.getAbsCoord(a.w());
 				else
-					return base.base(a) + base.side.calc * c.getAbsCoord(a.w());
+					return base.base(a)+base.side.calc*c.getAbsCoord(a.w());
 			}
 		},
 		Width(false, 1) {
@@ -130,7 +130,7 @@ public class Coord implements R {
 		Percent {
 			@Override
 			public float calc(final float all, final float c) {
-				return all * c;
+				return all*c;
 			}
 		},
 		;
@@ -184,17 +184,5 @@ public class Coord implements R {
 
 	public static Coord pheight(final float n) {
 		return new Coord(n, CoordSide.Height, CoordType.Percent);
-	}
-
-	@Deprecated
-	@Override
-	public boolean isVaild() {
-		return this.side.isAbs;
-	}
-
-	@Deprecated
-	@Override
-	public Area getAbsolute(final Area parent) {
-		return new RArea(new Coord(this.side.base(parent, this), this.side, this.type)).getAbsolute(parent);
 	}
 }

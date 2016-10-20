@@ -12,13 +12,16 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
-import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
 
+import net.minecraft.util.ResourceLocation;
+
 public class GuiTask extends WPanel {
+	public static final ResourceLocation panel = new ResourceLocation("signpic", "textures/gui/panel.png");
+
 	static {
 		Communicator.instance.getTasks().add(new Progressable() {
 			@Override
@@ -39,18 +42,16 @@ public class GuiTask extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		add(new WPanel(new RArea()) {
+		add(new WPanel(new R()) {
 			protected boolean oshow;
-			protected MCoord oright = MCoord.right(1f);
-			protected RArea oarea = new RArea(this.oright);
+			protected MCoord oright;
 
 			protected boolean show;
-			protected MCoord right = MCoord.pright(-1f);
-			protected RArea area = new RArea(this.right);
+			protected MCoord right;
 
 			@Override
-			public Area getGuiPosition(final Area pgp) {
-				return super.getGuiPosition(pgp).child(this.oarea).child(this.area);
+			protected void initRelative(final R position) {
+				super.initRelative(position.child(this.oright = MCoord.right(2f)).child(this.right = MCoord.pright(-1f)));
 			}
 
 			@Override
@@ -76,7 +77,7 @@ public class GuiTask extends WPanel {
 				}
 				if (!Communicator.instance.getTasks().isEmpty()&&!a.pointInside(p)) {
 					if (!this.oshow)
-						this.oright.stop().add(Easings.easeOutQuart.move(.5f, 1f)).start();
+						this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
 					this.oshow = true;
 				} else {
 					if (this.oshow)
@@ -94,11 +95,22 @@ public class GuiTask extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				add(new WList<Progressable, TaskElement>(new RArea(), Communicator.instance.getTasks()) {
+				add(new WBase(new R(Coord.top(1), Coord.left(1), Coord.width(80), Coord.height(16))) {
+					@Override
+					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+						final Area a = getGuiPosition(pgp);
+						texture().bindTexture(panel);
+						glColor4f(1, 1, 1, 1);
+						RenderHelper.startTexture();
+						drawTexturedModalRect(a);
+					}
+				});
+
+				add(new WList<Progressable, TaskElement>(new R(Coord.top(16)), Communicator.instance.getTasks()) {
 					@Override
 					protected TaskElement createWidget(final Progressable t, final int i) {
 						final MCoord top = MCoord.top(i*15);
-						return new TaskElement(new RArea(top, Coord.height(15)), top, t);
+						return new TaskElement(new R(top, Coord.height(15)), top, t);
 					}
 
 					@Override
@@ -123,7 +135,7 @@ public class GuiTask extends WPanel {
 				public final MCoord top;
 
 				protected MCoord right = MCoord.pright(-1f).add(Easings.easeInOutCirc.move(.5f, 0f)).start();
-				protected RArea area = new RArea(this.right);
+				protected R area = new R(this.right);
 
 				@Override
 				public Area getGuiPosition(final Area pgp) {
@@ -151,10 +163,10 @@ public class GuiTask extends WPanel {
 
 				@Override
 				protected void initWidget() {
-					add(new WPanel(RArea.diff(1, 1, 0, 0)) {
+					add(new WPanel(R.diff(1, 1, 0, 0)) {
 						@Override
 						protected void initWidget() {
-							add(new WBase(new RArea(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
+							add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
 								@Override
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 									final Area a = getGuiPosition(pgp);
@@ -177,12 +189,12 @@ public class GuiTask extends WPanel {
 								}
 							});
 
-							add(new WPanel(new RArea(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
+							add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
 								protected MCoord progresscoord = MCoord.pleft(0f);
 
 								@Override
 								protected void initWidget() {
-									add(new WBase(new RArea(Coord.pleft(0f), this.progresscoord)) {
+									add(new WBase(new R(Coord.pleft(0f), this.progresscoord)) {
 										@Override
 										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 											final Area a = getGuiPosition(pgp);

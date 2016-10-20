@@ -9,6 +9,10 @@ public abstract class WBase extends WComponent {
 	protected R position;
 
 	public WBase(final R position) {
+		initRelative(position);
+	}
+
+	protected void initRelative(final R position) {
 		this.position = position;
 	}
 

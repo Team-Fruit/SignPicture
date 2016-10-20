@@ -7,7 +7,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
-import com.kamesuta.mc.bnnwidget.position.RArea;
+import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -29,21 +29,21 @@ public class GuiImage extends WFrame {
 
 	@Override
 	protected void init() {
-		add(new WPanel(RArea.diff(0, 0, 0, 0)) {
+		add(new WPanel(R.diff(0, 0, 0, 0)) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 				final Area a = getGuiPosition(pgp);
 
 				glPushMatrix();
 				glScalef(a.w(), a.h(), 1f);
-				if (GuiImage.this.content.state.getType() == StateType.AVAILABLE) {
-					glColor4f(1.0F, 1.0F, 1.0F, opacity * 1.0F);
+				if (GuiImage.this.content.state.getType()==StateType.AVAILABLE) {
+					glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
 					GuiImage.this.content.image.draw();
 				} else {
 					final Tessellator t = Tessellator.instance;
 					RenderHelper.startShape();
 					glLineWidth(1f);
-					glColor4f(1.0F, 0.0F, 0.0F, opacity * 1.0F);
+					glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
 
 					t.startDrawing(GL_LINE_LOOP);
 					t.addVertex(0, 0, 0);
@@ -54,14 +54,14 @@ public class GuiImage extends WFrame {
 				}
 				glPopMatrix();
 
-				if (a.w()<1.5f || a.h()<1.5) {
+				if (a.w()<1.5f||a.h()<1.5) {
 					glScalef(.5f, .5f, .5f);
 					glTranslatef(a.w()/2, a.h()/4, 0);
 				}
 				glTranslatef(a.w()/2, a.h()/2, 0);
 				glScalef(.5f, .5f, 1f);
-				if (GuiImage.this.content.state.getType() != StateType.AVAILABLE) {
-					if (GuiImage.this.content.state.getType() == StateType.ERROR) {
+				if (GuiImage.this.content.state.getType()!=StateType.AVAILABLE) {
+					if (GuiImage.this.content.state.getType()==StateType.ERROR) {
 						RenderHelper.startShape();
 						glPushMatrix();
 						glTranslatef(-.5f, -.5f, 0f);
