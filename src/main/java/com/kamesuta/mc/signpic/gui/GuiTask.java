@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.util.Timer;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
@@ -17,6 +19,7 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
 
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTask extends WPanel {
@@ -43,10 +46,12 @@ public class GuiTask extends WPanel {
 	@Override
 	protected void initWidget() {
 		add(new WPanel(new R()) {
+			protected Timer showtime = new Timer();
+
 			protected boolean oshow;
 			protected MCoord oright;
 
-			protected boolean show;
+			protected boolean show = true;
 			protected MCoord right;
 
 			@Override
@@ -66,16 +71,20 @@ public class GuiTask extends WPanel {
 			@Override
 			public void update(final WEvent ev, final Area pgp, final Point p) {
 				final Area a = getGuiPosition(pgp);
-				if (a.pointInside(p)) {
-					if (!this.show)
+				if (a.pointInside(p))
+					this.showtime.reset();
+				if (this.showtime.getTime()<1f) {
+					if (!this.show) {
 						this.right.stop().add(Easings.easeOutQuart.move(.7f, 0f)).start();
+						mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
+					}
 					this.show = true;
 				} else {
 					if (this.show)
 						this.right.stop().add(Easings.easeOutQuart.move(.7f, -1f)).start();
 					this.show = false;
 				}
-				if (!Communicator.instance.getTasks().isEmpty()&&!a.pointInside(p)) {
+				if (!Communicator.instance.getTasks().isEmpty()&&this.showtime.getTime()>=1f) {
 					if (!this.oshow)
 						this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
 					this.oshow = true;
@@ -180,7 +189,7 @@ public class GuiTask extends WPanel {
 									String res;
 									final float prefwidth = a.w()*2;
 									if (namewidth<prefwidth)
-										res = name+cont;
+										res = name;
 									else
 										res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
 									RenderHelper.startTexture();
