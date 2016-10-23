@@ -14,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.Progress;
@@ -63,7 +64,7 @@ public class GuiTask extends WPanel {
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 				final Area a = getGuiPosition(pgp);
 				RenderHelper.startShape();
-				glColor4f(0f, 0f, 0f, .8f);
+				glColor4f(0f, 0f, 0f, .6f);
 				drawRect(a);
 				super.draw(ev, pgp, p, frame, opacity);
 			}
@@ -73,7 +74,8 @@ public class GuiTask extends WPanel {
 				final Area a = getGuiPosition(pgp);
 				if (a.pointInside(p))
 					this.showtime.reset();
-				if (this.showtime.getTime()<1f) {
+				final boolean b = this.showtime.getTime()<1f;
+				if (b) {
 					if (!this.show) {
 						this.right.stop().add(Easings.easeOutQuart.move(.7f, 0f)).start();
 						mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
@@ -84,7 +86,7 @@ public class GuiTask extends WPanel {
 						this.right.stop().add(Easings.easeOutQuart.move(.7f, -1f)).start();
 					this.show = false;
 				}
-				if (!Communicator.instance.getTasks().isEmpty()&&this.showtime.getTime()>=1f) {
+				if (Client.mc.currentScreen!=null&&!Communicator.instance.getTasks().isEmpty()&&!b) {
 					if (!this.oshow)
 						this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
 					this.oshow = true;
@@ -127,17 +129,6 @@ public class GuiTask extends WPanel {
 						w.top.stop().add(Easings.easeInCirc.move(.25f, to*15)).start();
 					};
 				});
-			}
-
-			@Override
-			public boolean onCloseRequest() {
-				this.right.add(Easings.easeOutCirc.move(.5f, -1f));
-				return false;
-			}
-
-			@Override
-			public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-				return this.right.isFinished();
 			}
 
 			class TaskElement extends WPanel {
@@ -207,7 +198,7 @@ public class GuiTask extends WPanel {
 										@Override
 										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 											final Area a = getGuiPosition(pgp);
-											glColor4f(0f, 78f/256f, 192f/256f, 1f);
+											glColor4f(0f, 78f/256f, 192f/256f, opacity*1f);
 											RenderHelper.startShape();
 											drawRect(a);
 
@@ -215,7 +206,7 @@ public class GuiTask extends WPanel {
 											final String prog = String.format("%.1f%%", TaskElement.this.progressable.getProgress().getProgress()*100);
 											final int progwidth = font().getStringWidth(prog);
 											final float maxx = pgp.x2()*2-progwidth;
-											glColor4f(1f, 1f, 1f, 1f);
+											glColor4f(1f, 1f, 1f, opacity*1f);
 											glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
 											glScalef(.5f, .5f, .5f);
 											RenderHelper.startTexture();
@@ -236,7 +227,7 @@ public class GuiTask extends WPanel {
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 									final Area a = getGuiPosition(pgp);
 									RenderHelper.startShape();
-									glColor4f(0f, 0f, 0f, 0.8f);
+									glColor4f(0f, 0f, 0f, opacity*0.8f);
 									drawRect(a);
 									super.draw(ev, pgp, p, frame, opacity);
 								}
@@ -247,7 +238,7 @@ public class GuiTask extends WPanel {
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 							final Area area = getGuiPosition(pgp);
 							RenderHelper.startShape();
-							glColor4f(.5f, .5f, .5f, .2f);
+							glColor4f(.5f, .5f, .5f, opacity*.11f);
 							drawRect(area);
 							super.draw(ev, pgp, p, frame, opacity);
 						}

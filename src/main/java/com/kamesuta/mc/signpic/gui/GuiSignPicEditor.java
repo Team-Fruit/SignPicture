@@ -311,7 +311,7 @@ public class GuiSignPicEditor extends WFrame {
 
 				// add(new GuiFileDD(new R(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
 
-				add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+				add(OverlayFrame.instance.delegate());
 			}
 		});
 	}
@@ -320,6 +320,7 @@ public class GuiSignPicEditor extends WFrame {
 	public void onGuiClosed() {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
+		OverlayFrame.instance.release();
 	}
 
 	@Override

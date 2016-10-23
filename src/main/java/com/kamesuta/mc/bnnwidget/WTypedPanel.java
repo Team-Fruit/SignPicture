@@ -14,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 public abstract class WTypedPanel<W extends WCommon> extends WBase implements WContainer<W> {
 	private final List<W> widgets = new ArrayList<W>();
 	protected final Deque<W> removelist = new ArrayDeque<W>();
+	protected boolean initialized;
 
 	public WTypedPanel(final R position) {
 		super(position);
@@ -44,7 +45,10 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 
 	@Override
 	public void onAdded() {
-		initWidget();
+		if (!this.initialized) {
+			initWidget();
+			this.initialized = true;
+		}
 	}
 
 	protected void initWidget() {
@@ -163,10 +167,10 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 		boolean closable = true;
 		for (final Iterator<W> itr = this.removelist.iterator(); itr.hasNext();) {
 			final W widget = itr.next();
-			if (widget.onClosing(ev, gp, p)) {
-				getContainer().remove(widget);
+			if (widget.onClosing(ev, gp, p))
+				// getContainer().remove(widget);
 				itr.remove();
-			} else
+			else
 				closable = false;
 		}
 		return closable;
@@ -179,7 +183,7 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 			WCommon topwidget = null;
 			for (final W widget : getContainer()) {
 				final WCommon top = widget.top(ev, gp, point);
-				if (top != null)
+				if (top!=null)
 					topwidget = top;
 			}
 			return topwidget;

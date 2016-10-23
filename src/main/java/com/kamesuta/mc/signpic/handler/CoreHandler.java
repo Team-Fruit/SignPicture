@@ -7,6 +7,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.information.InformationChecker;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
@@ -18,6 +19,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -30,6 +32,7 @@ public class CoreHandler {
 	public final EntryManager signEntryManager = EntryManager.instance;
 	public final ContentManager contentManager = ContentManager.instance;
 	public final SignPicRender renderHandler = new SignPicRender();
+	public final OverlayFrame overlayHandler = OverlayFrame.instance;
 	public final InformationChecker informationHandler = new InformationChecker();
 
 	public void init() {
@@ -68,6 +71,12 @@ public class CoreHandler {
 	@SubscribeEvent()
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
 		this.renderHandler.onDraw(event);
+		this.overlayHandler.onDraw(event);
+	}
+
+	@SubscribeEvent()
+	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
+		this.overlayHandler.onDraw(event);
 	}
 
 	@SubscribeEvent
@@ -82,10 +91,11 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onTick(final ClientTickEvent event) {
-		if (event.phase == Phase.END) {
+		if (event.phase==Phase.END) {
 			Client.startSection("signpic_load");
 			this.signEntryManager.onTick();
 			this.contentManager.onTick();
+			this.overlayHandler.onTick(event);
 			this.informationHandler.onTick(event);
 			EntrySlot.Tick();
 			Client.endSection();

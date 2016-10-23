@@ -1,6 +1,5 @@
 package com.kamesuta.mc.bnnwidget;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -8,12 +7,13 @@ import org.lwjgl.input.Mouse;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
+import com.kamesuta.mc.bnnwidget.position.R;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class WFrame extends GuiScreen implements WContainer<WCommon> {
-	protected final ArrayList<WCommon> widgets = new ArrayList<WCommon>();
+	protected WPanel contentPane = new WPanel(new R());
 	protected final WEvent event = new WEvent();
 	public float width;
 	public float height;
@@ -31,13 +31,13 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	public float width() {
-		if (super.width != (int) this.width)
+		if (super.width!=(int) this.width)
 			this.width = super.width;
 		return this.width;
 	}
 
 	public float height() {
-		if (super.height != (int) this.height)
+		if (super.height!=(int) this.height)
 			this.height = super.height;
 		return this.height;
 	}
@@ -50,23 +50,31 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	public Point getMouseAbsolute() {
-		return new Point(Mouse.getX() * width() / this.mc.displayWidth,
-				height() - Mouse.getY() * height() / this.mc.displayHeight - 1);
+		return new Point(Mouse.getX()*width()/this.mc.displayWidth,
+				height()-Mouse.getY()*height()/this.mc.displayHeight-1);
 	}
 
 	@Override
 	public List<WCommon> getContainer() {
-		return this.widgets;
+		return getContentPane().getContainer();
 	}
 
 	@Override
 	public boolean add(final WCommon widget) {
-		return this.widgets.add(widget);
+		return getContentPane().add(widget);
 	}
 
 	@Override
 	public boolean remove(final WCommon widget) {
-		return this.widgets.remove(widget);
+		return getContentPane().remove(widget);
+	}
+
+	public WPanel getContentPane() {
+		return this.contentPane;
+	}
+
+	public void setContentPane(final WPanel panel) {
+		this.contentPane = panel;
 	}
 
 	@Override
@@ -79,27 +87,21 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	protected void init() {
-		for (final WCommon widget : this.widgets)
-			widget.onAdded();
+		final Area gp = getAbsolute();
+		final Point p = getMouseAbsolute();
+		getContentPane().onInit(this.event, gp, p);
 	}
 
 	protected void initWidget() {
 	}
 
-	public void reset() {
-		this.widgets.clear();
-		initGui();
-		initWidget();
-		init();
-	}
-
 	@Override
 	public void setWorldAndResolution(final Minecraft mc, final int i, final int j) {
-		final boolean init = this.mc == null;
+		final boolean init = this.mc==null;
 		sSetWorldAndResolution(mc, i, j);
 		if (init) {
-			initWidget();
 			init();
+			initWidget();
 		}
 	}
 
@@ -110,8 +112,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity) {
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
-		for (final WCommon widget : this.widgets)
-			widget.draw(this.event, gp, p, f, opacity);
+		getContentPane().draw(this.event, gp, p, f, opacity);
 		sDrawScreen(mousex, mousey, f);
 	}
 
@@ -135,8 +136,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		this.mousebutton = button;
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
-		for (final WCommon widget : this.widgets)
-			widget.mouseClicked(this.event, gp, p, button);
+		getContentPane().mouseClicked(this.event, gp, p, button);
 		sMouseClicked(x, y, button);
 	}
 
@@ -157,8 +157,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected void mouseClickMove(final int x, final int y, final int button, final long time) {
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
-		for (final WCommon widget : this.widgets)
-			widget.mouseDragged(this.event, gp, p, button, time);
+		getContentPane().mouseDragged(this.event, gp, p, button, time);
 		sMouseClickMove(x, y, button, time);
 	}
 
@@ -167,31 +166,24 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	protected Point mouselast;
+
 	@Override
 	public void updateScreen() {
 		final Point p = getMouseAbsolute();
-		if (this.mc.currentScreen == this) {
-			final Area gp = getAbsolute();
-			for (final WCommon widget : this.widgets)
-				widget.update(this.event, gp, p);
-		}
+		final Area gp = getAbsolute();
+		getContentPane().update(this.event, gp, p);
 		final int m = Mouse.getEventButton();
-		if (this.mousebutton != m) {
-			final Area gp = getAbsolute();
-			for (final WCommon widget : this.widgets)
-				widget.mouseReleased(this.event, gp, p, this.mousebutton);
-			if (m >= 0)
+		if (this.mousebutton!=m) {
+			getContentPane().mouseReleased(this.event, gp, p, this.mousebutton);
+			if (m>=0)
 				this.mousebutton = m;
 		}
 		if (!p.equals(this.mouselast)) {
 			this.mouselast = p;
-			final Area gp = getAbsolute();
-			for (final WCommon widget : this.widgets)
-				widget.mouseMoved(this.event, gp, p, this.mousebutton);
+			getContentPane().mouseMoved(this.event, gp, p, this.mousebutton);
 		}
-		if (this.closeRequest) {
+		if (this.closeRequest)
 			onCloseRequest();
-		}
 		sUpdateScreen();
 	}
 
@@ -203,36 +195,31 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected void keyTyped(final char c, final int keycode) {
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
-		for (final WCommon widget : this.widgets)
-			widget.keyTyped(this.event, gp, p, c, keycode);
+		getContentPane().keyTyped(this.event, gp, p, c, keycode);
 		sKeyTyped(c, keycode);
 	}
 
 	protected void sKeyTyped(final char c, final int keycode) {
-		if (keycode == Keyboard.KEY_ESCAPE) {
+		if (keycode==Keyboard.KEY_ESCAPE)
 			requestClose();
-		}
 	}
 
 	protected boolean closeRequest;
+
 	protected void onCloseRequest() {
 		final Area gp = getAbsolute();
 		final Point p = getMouseAbsolute();
-		boolean closable = true;
-		for (final WCommon widget : this.widgets)
-			closable = closable && widget.onClosing(this.event, gp, p);
-		if (closable)
+		if (getContentPane().onClosing(this.event, gp, p))
 			close();
 	}
 
 	protected void close() {
-		this.mc.displayGuiScreen((GuiScreen)null);
+		this.mc.displayGuiScreen((GuiScreen) null);
 		this.mc.setIngameFocus();
 	}
 
 	public void requestClose() {
-		for (final WCommon widget : this.widgets)
-			widget.onCloseRequest();
+		getContentPane().onCloseRequest();
 		this.closeRequest = true;
 	}
 
@@ -243,11 +230,10 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	@Override
 	public void handleMouseInput() {
 		final int i = Mouse.getEventDWheel();
-		if (i != 0) {
+		if (i!=0) {
 			final Area gp = getAbsolute();
 			final Point p = getMouseAbsolute();
-			for (final WCommon widget : this.widgets)
-				widget.mouseScrolled(this.event, gp, p, i);
+			getContentPane().mouseScrolled(this.event, gp, p, i);
 		}
 		sHandleMouseInput();
 	}
