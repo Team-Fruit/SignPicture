@@ -25,7 +25,7 @@ import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload.GyazoResult;
 import com.kamesuta.mc.signpic.render.RenderHelper;
-import com.kamesuta.mc.signpic.state.Progress;
+import com.kamesuta.mc.signpic.state.State;
 
 public class GuiFileDD extends WBase {
 	protected final JDialog overlay;
@@ -35,14 +35,13 @@ public class GuiFileDD extends WBase {
 		super(position);
 		this.overlay = new JDialog();
 		this.overlay.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		this.overlay.setBounds((Display.getX()+Display.getWidth()-200), (Display.getY()+Display.getHeight()-200), (200), (200));
+		this.overlay.setBounds(Display.getX()+Display.getWidth()-200, Display.getY()+Display.getHeight()-200, 200, 200);
 		this.overlay.setTransferHandler(new TransferHandler() {
 			@Override
 			public boolean canImport(final TransferSupport support) {
-				if (!support.isDrop()) {
+				if (!support.isDrop())
 					// ドロップ操作でない場合は受け取らない
 					return false;
-				}
 				return support.isDataFlavorSupported(DataFlavor.javaFileListFlavor);
 			}
 
@@ -52,9 +51,8 @@ public class GuiFileDD extends WBase {
 			@Override
 			public boolean importData(final TransferSupport support) {
 				// 受け取っていいものか確認する
-				if (!canImport(support)) {
+				if (!canImport(support))
 					return false;
-				}
 
 				// ドロップ処理
 				final Transferable t = support.getTransferable();
@@ -63,10 +61,10 @@ public class GuiFileDD extends WBase {
 					final List<?> files = (List<?>) t.getTransferData(DataFlavor.javaFileListFlavor);
 
 					// テキストエリアに表示するファイル名リストを作成する
-					for (final Object file : files){
+					for (final Object file : files)
 						if (file instanceof File) {
 							final File f = (File) file;
-							Communicator.instance.communicate(new GyazoUpload(f, new Progress()), new ICommunicateCallback<GyazoResult>() {
+							Communicator.instance.communicate(new GyazoUpload(f, new State("up")), new ICommunicateCallback<GyazoResult>() {
 								@Override
 								public void onDone(final ICommunicateResponse<GyazoResult> res) {
 									if (res.isSuccess()) {
@@ -77,7 +75,6 @@ public class GuiFileDD extends WBase {
 								}
 							});
 						}
-					}
 				} catch (final Exception e) {
 					e.printStackTrace();
 				}

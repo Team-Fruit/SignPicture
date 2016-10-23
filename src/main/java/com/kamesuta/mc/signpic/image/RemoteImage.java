@@ -12,6 +12,7 @@ import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
 import com.kamesuta.mc.signpic.http.download.ContentDownload.ContentDLResult;
+import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
 
 public class RemoteImage extends Image {
@@ -30,8 +31,9 @@ public class RemoteImage extends Image {
 		final File local = this.content.location.cacheLocation();
 		if (!local.exists()) {
 			this.content.state.setType(StateType.DOWNLOADING);
+			this.content.state.setProgress(new Progress());
 			try {
-				this.downloader = new ContentDownload(this.content.location, this.content.state.getProgress());
+				this.downloader = new ContentDownload(this.content.location, this.content.state);
 				Communicator.instance.<ContentDLResult> communicate(this.downloader, new ICommunicateCallback<ContentDLResult>() {
 					@Override
 					public void onDone(final ICommunicateResponse<ContentDLResult> res) {
@@ -54,6 +56,8 @@ public class RemoteImage extends Image {
 	public void onAsyncProcess() {
 		try {
 			this.texture = new ImageIOLoader(this.content).load();
+			this.content.state.setType(StateType.LOADING);
+			this.content.state.setProgress(new Progress());
 			ContentManager.instance.enqueueDivision(this);
 		} catch (final Throwable e) {
 			this.content.state.setErrorMessage(e);
@@ -67,7 +71,6 @@ public class RemoteImage extends Image {
 			final ImageTexture tex = texs.get(this.processing);
 			tex.load();
 			this.processing++;
-			this.content.state.setType(StateType.LOADING);
 			this.content.state.getProgress().done = this.processing;
 			return false;
 		} else {

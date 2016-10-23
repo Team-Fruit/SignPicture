@@ -311,7 +311,8 @@ public class GuiSignPicEditor extends WFrame {
 
 				// add(new GuiFileDD(new R(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
 
-				add(OverlayFrame.instance.delegate());
+				OverlayFrame.instance.delegate();
+				add(OverlayFrame.instance.pane);
 			}
 		});
 	}

@@ -2,29 +2,40 @@ package com.kamesuta.mc.signpic.state;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Map;
 
+import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.image.InvaildImageException;
 
 import net.minecraft.client.resources.I18n;
 
-public class State implements Progressable {
-	private final String name;
-	private final Progress progress = new Progress();
+public class State {
+	private String name;
+	private Progress progress = new Progress();
 	private StateType type = StateType.INIT;
 	private String message = "";
+	private Map<String, Object> map = Maps.newHashMap();
 
 	public State(final String name) {
 		this.name = name;
 	}
 
-	@Override
+	public State setName(final String name) {
+		this.name = name;
+		return this;
+	}
+
 	public String getName() {
 		return this.name;
 	}
 
-	@Override
+	public State setProgress(final Progress progress) {
+		this.progress = progress;
+		return this;
+	}
+
 	public Progress getProgress() {
 		return this.progress;
 	}
@@ -32,6 +43,10 @@ public class State implements Progressable {
 	public State setMessage(final String message) {
 		this.message = message;
 		return this;
+	}
+
+	public Map<String, Object> getMeta() {
+		return this.map;
 	}
 
 	public State setErrorMessage(final Throwable throwable) {

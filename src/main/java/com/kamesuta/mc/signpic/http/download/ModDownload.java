@@ -19,13 +19,14 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.information.InformationChecker;
-import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
+import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Downloader;
 
@@ -36,7 +37,7 @@ import net.minecraft.util.IChatComponent;
 
 public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progressable {
 	protected boolean canceled;
-	protected Progress progress = new Progress();
+	protected State status = new State("§6SignPicture Mod Update");
 
 	@Override
 	public ICommunicateResponse<ModDLResult> communicate() {
@@ -54,13 +55,17 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
+			OverlayFrame.instance.pane.addNotice1("Downloading "+local, 2f);
+			this.status.getMeta().put("gui.highlight", true);
+			this.status.getMeta().put("gui.showpanel", 3f);
+
 			state.startedDownload = true;
 
 			final HttpUriRequest req = new HttpGet(new URI(state.onlineVersion.remote));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 
-			this.progress.overall = entity.getContentLength();
+			this.status.getProgress().overall = entity.getContentLength();
 			input = entity.getContent();
 
 			final File f = new File(Client.location.modDir, local+".dl");
@@ -74,7 +79,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 						req.abort();
 						throw new CommunicateCanceledException();
 					}
-					ModDownload.this.progress.setDone(getByteCount());
+					ModDownload.this.status.getProgress().setDone(getByteCount());
 				}
 			};
 
@@ -89,6 +94,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
+			OverlayFrame.instance.pane.addNotice1("Finished downloading "+local, 2f);
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloadedFile = true;
@@ -105,13 +111,8 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 	}
 
 	@Override
-	public String getName() {
-		return "§6SignPicture Mod Update";
-	}
-
-	@Override
-	public Progress getProgress() {
-		return this.progress;
+	public State getState() {
+		return this.status;
 	}
 
 	@Override

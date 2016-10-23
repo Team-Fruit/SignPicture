@@ -168,10 +168,10 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 		boolean closable = true;
 		for (final Iterator<W> itr = this.removelist.iterator(); itr.hasNext();) {
 			final W widget = itr.next();
-			if (widget.onClosing(ev, gp, p))
-				// getContainer().remove(widget);
+			if (widget.onClosing(ev, gp, p)) {
+				getContainer().remove(widget);
 				itr.remove();
-			else
+			} else
 				closable = false;
 		}
 		return closable;

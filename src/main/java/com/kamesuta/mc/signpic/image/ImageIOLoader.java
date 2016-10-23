@@ -24,6 +24,7 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
+import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.resources.IResourceManager;
@@ -31,8 +32,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader {
 	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
-			((Config.instance.imageWidthLimit > 0) ? Config.instance.imageWidthLimit : ImageSize.unknownSize),
-			((Config.instance.imageHeightLimit > 0) ? Config.instance.imageHeightLimit : ImageSize.unknownSize));
+			Config.instance.imageWidthLimit>0 ? Config.instance.imageWidthLimit : ImageSize.unknownSize,
+			Config.instance.imageHeightLimit>0 ? Config.instance.imageHeightLimit : ImageSize.unknownSize);
 
 	protected Content content;
 	protected InputStream input;
@@ -59,16 +60,17 @@ public class ImageIOLoader {
 
 		final ImageInputStream imagestream = ImageIO.createImageInputStream(new ByteArrayInputStream(data));
 		final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
-		if (!iter.hasNext()) throw new InvaildImageException();
+		if (!iter.hasNext())
+			throw new InvaildImageException();
 		final ImageReader reader = iter.next();
 
 		this.content.state.setType(StateType.LOADING);
+		this.content.state.setProgress(new Progress());
 		ImageTextures textures;
-		if (Config.instance.imageAnimationGif && reader.getFormatName()=="gif") {
+		if (Config.instance.imageAnimationGif&&reader.getFormatName()=="gif")
 			textures = loadGif(data);
-		} else {
+		else
 			textures = loadImage(reader, imagestream);
-		}
 		this.content.state.setType(StateType.LOADED);
 		return textures;
 	}
@@ -82,10 +84,10 @@ public class ImageIOLoader {
 		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
 		final int frameCount = gifImage.getFrameCount();
 		this.content.state.getProgress().overall = frameCount;
-		for (int i = 0; i < frameCount; i++) {
+		for (int i = 0; i<frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
 			final int delay = gifImage.getDelay(i);
-			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float)delay / 100);
+			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float) delay/100);
 			textures.add(texture);
 			this.content.state.getProgress().done = i;
 		}

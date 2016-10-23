@@ -28,7 +28,7 @@ public abstract class WBase extends WComponent {
 	}
 
 	protected void initOpacity() {
-		setOpacity(new Coord(1f, null, Coord.CoordType.Percent));
+		setOpacity(new Coord(1f));
 	}
 
 	public R getGuiPosition() {

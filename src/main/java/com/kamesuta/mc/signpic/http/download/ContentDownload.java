@@ -25,6 +25,7 @@ import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
+import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownload implements ICommunicate<ContentDownload.ContentDLResult>, Progressable {
@@ -32,29 +33,24 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 	protected final URI remote;
 	protected final File temp;
 	protected final File local;
-	protected final Progress progress;
+	protected final State state;
 	protected boolean canceled;
 
-	public ContentDownload(final String name, final URI remote, final File temp, final File local, final Progress progress) {
+	public ContentDownload(final String name, final URI remote, final File temp, final File local, final State state) {
 		this.name = name;
 		this.remote = remote;
 		this.temp = temp;
 		this.local = local;
-		this.progress = progress;
+		this.state = state;
 	}
 
-	public ContentDownload(final ContentLocation location, final Progress progress) throws URISyntaxException {
-		this(location.id.id(), location.remoteLocation(), location.tempLocation(), location.cacheLocation(), progress);
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
+	public ContentDownload(final ContentLocation location, final State state) throws URISyntaxException {
+		this(location.id.id(), location.remoteLocation(), location.tempLocation(), location.cacheLocation(), state);
 	}
 
 	@Override
-	public Progress getProgress() {
-		return this.progress;
+	public State getState() {
+		return this.state;
 	}
 
 	@Override
@@ -71,7 +67,8 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 			if (max>0&&(size<0||size>max))
 				throw new ContentCapacityOverException();
 
-			this.progress.setOverall(entity.getContentLength());
+			final Progress progress = this.state.getProgress();
+			progress.setOverall(entity.getContentLength());
 			input = entity.getContent();
 			output = new CountingOutputStream(new FileOutputStream(this.temp)) {
 				@Override
@@ -80,7 +77,7 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 						req.abort();
 						throw new CommunicateCanceledException();
 					}
-					ContentDownload.this.progress.setDone(getByteCount());
+					progress.setDone(getByteCount());
 				}
 			};
 			FileUtils.deleteQuietly(this.temp);

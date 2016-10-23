@@ -11,6 +11,10 @@ public class Coord {
 		this.type = type;
 	}
 
+	public Coord(final float coord) {
+		this(coord, CoordSide.Top, CoordType.Percent);
+	}
+
 	public float get() {
 		return this.coord;
 	}

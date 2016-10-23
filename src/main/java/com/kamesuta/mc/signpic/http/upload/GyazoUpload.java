@@ -23,8 +23,8 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.http.ICommunicate;
-import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
+import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progressable {
@@ -32,27 +32,26 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 
 	private final String name;
 	private final InputStream upstream;
-	private final Progress progress;
+	private final State state;
 	protected boolean canceled;
 
-	public GyazoUpload(final String name, final InputStream stream, final Progress progress) {
+	protected GyazoUpload(final String name, final InputStream stream, final State state) {
 		this.name = name;
 		this.upstream = stream;
-		this.progress = progress;
+		this.state = state;
 	}
 
-	public GyazoUpload(final File file, final Progress progress) throws FileNotFoundException {
-		this(file.getName(), new FileInputStream(file), progress.setOverall(file.length()));
+	public GyazoUpload(final File file, final State state) throws FileNotFoundException {
+		this.name = file.getName();
+		this.upstream = new FileInputStream(file);
+		state.setName(this.name);
+		state.getProgress().setOverall(file.length());
+		this.state = state;
 	}
 
 	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public Progress getProgress() {
-		return this.progress;
+	public State getState() {
+		return this.state;
 	}
 
 	@Override
@@ -79,7 +78,7 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 				@Override
 				protected void afterRead(final int n) {
 					super.afterRead(n);
-					GyazoUpload.this.progress.done = getByteCount();
+					GyazoUpload.this.state.getProgress().done = getByteCount();
 				}
 			};
 
