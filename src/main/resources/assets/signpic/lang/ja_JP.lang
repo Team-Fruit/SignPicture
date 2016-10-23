@@ -48,12 +48,12 @@ signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s
 
 # Version Checking
-signpic.versioning.outdated=[§6SignPicture§r] 現在のSignPictureのバージョンは %s です。新しいバージョン %s がご利用可能です！
-signpic.versioning.updateMessage=["[",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
 signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
-signpic.versioning.downloading=ダウンロード中... %s%% (%s / %s バイト)
+signpic.versioning.downloading=ダウンロード開始 %s
 signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.doneDownloadingWithFile=ダウンロード完了 %s 適用するためには %s を消し、Minecraftを再起動してください
+signpic.versioning.finishdownloading=ダウンロード完了 %s
 signpic.versioning.downloadedAlready=すでに最新版をダウンロードしました 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.downloadingAlready=すでにダウンロードは開始されています 少々お待ちください
 signpic.versioning.error=SignPictureのアップデートに問題が発生したようです。

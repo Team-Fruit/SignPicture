@@ -30,21 +30,6 @@ import net.minecraft.util.ResourceLocation;
 public class GuiTask extends WPanel {
 	public static final ResourceLocation panel = new ResourceLocation("signpic", "textures/gui/panel.png");
 
-	static {
-		Communicator.instance.getTasks().add(new Progressable() {
-			protected State state;
-			{
-				this.state = new State("com.kamesuta.mc.signpic.gui.GuiSignPicEditor");
-				this.state.getProgress().setOverall(100).setDone(95);
-			}
-
-			@Override
-			public State getState() {
-				return this.state;
-			}
-		});
-	}
-
 	public GuiTask(final R position) {
 		super(position);
 	}
@@ -66,7 +51,7 @@ public class GuiTask extends WPanel {
 
 			@Override
 			protected void initPosition(final R position) {
-				super.initPosition(position.child(this.oright = MCoord.right(2f)).child(this.right = MCoord.pright(-1f)));
+				super.initPosition(position.child(this.oright = MCoord.right(0f)).child(this.right = MCoord.pright(-1f)));
 			}
 
 			@Override

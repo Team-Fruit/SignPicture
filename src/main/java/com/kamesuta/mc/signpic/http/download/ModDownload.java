@@ -30,6 +30,7 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Downloader;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -55,7 +56,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
-			OverlayFrame.instance.pane.addNotice1("Downloading "+local, 2f);
+			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.versioning.downloading", local), 2f);
 			this.status.getMeta().put("gui.highlight", true);
 			this.status.getMeta().put("gui.showpanel", 3f);
 
@@ -94,7 +95,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
-			OverlayFrame.instance.pane.addNotice1("Finished downloading "+local, 2f);
+			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.versioning.finishdownloading", local), 2f);
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloadedFile = true;
