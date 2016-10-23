@@ -8,7 +8,7 @@ public interface WCommon {
 
 	void onInit(WEvent ev, Area pgp, Point mouse);
 
-	void draw(WEvent ev, Area pgp, Point mouse, float frame, float opacity);
+	void draw(WEvent ev, Area pgp, Point mouse, float frame, float popacity);
 
 	void update(WEvent ev, Area pgp, Point mouse);
 

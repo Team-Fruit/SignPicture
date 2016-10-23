@@ -56,8 +56,8 @@ public class GuiTask extends WPanel {
 			protected MCoord right;
 
 			@Override
-			protected void initRelative(final R position) {
-				super.initRelative(position.child(this.oright = MCoord.right(2f)).child(this.right = MCoord.pright(-1f)));
+			protected void initPosition(final R position) {
+				super.initPosition(position.child(this.oright = MCoord.right(2f)).child(this.right = MCoord.pright(-1f)));
 			}
 
 			@Override
@@ -198,7 +198,7 @@ public class GuiTask extends WPanel {
 										@Override
 										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 											final Area a = getGuiPosition(pgp);
-											glColor4f(0f, 78f/256f, 192f/256f, opacity*1f);
+											glColor4f(0f, 78f/256f, 192f/256f, getGuiOpacity(opacity)*1f);
 											RenderHelper.startShape();
 											drawRect(a);
 
@@ -206,7 +206,7 @@ public class GuiTask extends WPanel {
 											final String prog = String.format("%.1f%%", TaskElement.this.progressable.getProgress().getProgress()*100);
 											final int progwidth = font().getStringWidth(prog);
 											final float maxx = pgp.x2()*2-progwidth;
-											glColor4f(1f, 1f, 1f, opacity*1f);
+											glColor4f(1f, 1f, 1f, getGuiOpacity(opacity)*1f);
 											glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
 											glScalef(.5f, .5f, .5f);
 											RenderHelper.startTexture();
@@ -227,7 +227,7 @@ public class GuiTask extends WPanel {
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 									final Area a = getGuiPosition(pgp);
 									RenderHelper.startShape();
-									glColor4f(0f, 0f, 0f, opacity*0.8f);
+									glColor4f(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
 									drawRect(a);
 									super.draw(ev, pgp, p, frame, opacity);
 								}
@@ -238,7 +238,7 @@ public class GuiTask extends WPanel {
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 							final Area area = getGuiPosition(pgp);
 							RenderHelper.startShape();
-							glColor4f(.5f, .5f, .5f, opacity*.11f);
+							glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.11f);
 							drawRect(area);
 							super.draw(ev, pgp, p, frame, opacity);
 						}
