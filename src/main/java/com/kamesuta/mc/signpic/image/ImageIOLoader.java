@@ -2,13 +2,15 @@ package com.kamesuta.mc.signpic.image;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -18,6 +20,7 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
@@ -36,29 +39,15 @@ public class ImageIOLoader {
 			Config.instance.imageHeightLimit>0 ? Config.instance.imageHeightLimit : ImageSize.unknownSize);
 
 	protected Content content;
-	protected InputStream input;
+	protected InputFactory input;
 
-	public ImageIOLoader(final Content content, final InputStream in) throws IOException {
+	public ImageIOLoader(final Content content, final InputFactory inputFactory) throws IOException {
 		this.content = content;
-		this.input = in;
-	}
-
-	public ImageIOLoader(final Content content, final File file) throws IOException {
-		this(content, new FileInputStream(file));
-	}
-
-	public ImageIOLoader(final Content content, final IResourceManager manager, final ResourceLocation location) throws IOException {
-		this(content, manager.getResource(location).getInputStream());
-	}
-
-	public ImageIOLoader(final Content content) throws IOException {
-		this(content, content.location.cacheLocation());
+		this.input = inputFactory;
 	}
 
 	public ImageTextures load() throws IOException {
-		final byte[] data = IOUtils.toByteArray(this.input);
-
-		final ImageInputStream imagestream = ImageIO.createImageInputStream(new ByteArrayInputStream(data));
+		final ImageInputStream imagestream = ImageIO.createImageInputStream(this.input.createInput());
 		final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
 		if (!iter.hasNext())
 			throw new InvaildImageException();
@@ -68,15 +57,16 @@ public class ImageIOLoader {
 		this.content.state.setProgress(new Progress());
 		ImageTextures textures;
 		if (Config.instance.imageAnimationGif&&reader.getFormatName()=="gif")
-			textures = loadGif(data);
+			textures = loadGif();
 		else
 			textures = loadImage(reader, imagestream);
 		this.content.state.setType(StateType.LOADED);
+		this.input.close();
 		return textures;
 	}
 
-	private ImageTextures loadGif(final byte[] data) throws IOException {
-		final GifImage gifImage = GifDecoder.read(data);
+	private ImageTextures loadGif() throws IOException {
+		final GifImage gifImage = GifDecoder.read(this.input.createInput());
 		final int width = gifImage.getWidth();
 		final int height = gifImage.getHeight();
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
@@ -116,5 +106,60 @@ public class ImageIOLoader {
 		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);
 		g.dispose();
 		return thumb;
+	}
+
+	public static interface InputFactory extends Closeable {
+		InputStream createInput() throws IOException;
+
+		@Override
+		void close();
+
+		public static abstract class AbstractInputFactory implements InputFactory {
+			protected Set<Closeable> closables = Sets.newHashSet();
+
+			@Override
+			public void close() {
+				for (final Closeable closable : closables)
+					IOUtils.closeQuietly(closable);
+			}
+		}
+
+		public static class FileInputFactory extends AbstractInputFactory {
+			private File file;
+
+			public FileInputFactory(final File file) {
+				this.file = file;
+			}
+
+			@Override
+			public InputStream createInput() throws FileNotFoundException {
+				final InputStream stream = new FileInputStream(file);
+				closables.add(stream);
+				return stream;
+			}
+		}
+
+		public static class ContentInputFactory extends FileInputFactory {
+			public ContentInputFactory(final Content content) {
+				super(content.location.cacheLocation());
+			}
+		}
+
+		public static class ResourceInputFactory extends AbstractInputFactory {
+			private IResourceManager manager;
+			private ResourceLocation location;
+
+			public ResourceInputFactory(final IResourceManager manager, final ResourceLocation location) {
+				this.manager = manager;
+				this.location = location;
+			}
+
+			@Override
+			public InputStream createInput() throws IOException {
+				final InputStream stream = manager.getResource(location).getInputStream();
+				closables.add(stream);
+				return stream;
+			}
+		}
 	}
 }

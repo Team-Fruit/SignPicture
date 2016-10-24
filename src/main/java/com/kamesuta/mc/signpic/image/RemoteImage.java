@@ -55,7 +55,7 @@ public class RemoteImage extends Image {
 	@Override
 	public void onAsyncProcess() {
 		try {
-			this.texture = new ImageIOLoader(this.content).load();
+			this.texture = new ImageIOLoader(this.content, new ImageIOLoader.InputFactory.ContentInputFactory(this.content)).load();
 			this.content.state.setType(StateType.LOADING);
 			this.content.state.setProgress(new Progress());
 			ContentManager.instance.enqueueDivision(this);
