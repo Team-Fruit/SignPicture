@@ -22,6 +22,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.file.GuiFileDD;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -30,6 +31,7 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiSignPicEditor extends WFrame {
 	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getEntryId());
+	private MChatTextField field;
 
 	public GuiSignPicEditor() {
 	}
@@ -165,9 +167,8 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							@Override
-							public boolean isEnabled() {
-								state(CurrentMode.instance.isState(CurrentMode.State.SEE));
-								return true;
+							public boolean isHighlight() {
+								return CurrentMode.instance.isState(CurrentMode.State.SEE);
 							}
 						});
 						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
@@ -187,9 +188,20 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							@Override
-							public boolean isEnabled() {
-								state(CurrentMode.instance.isState(CurrentMode.State.PREVIEW));
+							public boolean isHighlight() {
+								return CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+							}
+						});
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), "DD") {
+							@Override
+							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								GuiFileDD.instance.setVisible(!GuiFileDD.instance.isVisible());
 								return true;
+							}
+
+							@Override
+							public boolean isHighlight() {
+								return GuiFileDD.instance.isVisible();
 							}
 						});
 
@@ -203,9 +215,8 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							@Override
-							public boolean isEnabled() {
-								state(CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
-								return true;
+							public boolean isHighlight() {
+								return CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 							}
 						});
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.load")) {
@@ -217,8 +228,12 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							@Override
+							public boolean isHighlight() {
+								return CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
+							}
+
+							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isMode(CurrentMode.Mode.LOAD));
 								return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
 							}
 						});
@@ -236,8 +251,12 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							@Override
+							public boolean isHighlight() {
+								return CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+							}
+
+							@Override
 							public boolean isEnabled() {
-								state(CurrentMode.instance.isMode(CurrentMode.Mode.PLACE));
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								return entry.isValid()&&entry.id.isPlaceable()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
@@ -272,7 +291,7 @@ public class GuiSignPicEditor extends WFrame {
 				});
 
 				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				final MChatTextField field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
+				GuiSignPicEditor.this.field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
 						super.onAdded();
@@ -307,7 +326,7 @@ public class GuiSignPicEditor extends WFrame {
 						return d.isFinished();
 					}
 				};
-				add(field);
+				add(GuiSignPicEditor.this.field);
 
 				// add(new GuiFileDD(new R(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
 

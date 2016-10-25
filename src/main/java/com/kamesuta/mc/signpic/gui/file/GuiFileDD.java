@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui.file;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.io.File;
@@ -11,31 +9,24 @@ import javax.swing.JDialog;
 import javax.swing.TransferHandler;
 import javax.swing.WindowConstants;
 
-import org.lwjgl.opengl.Display;
-
-import com.kamesuta.mc.bnnwidget.WBase;
-import com.kamesuta.mc.bnnwidget.WEvent;
-import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.position.Area;
-import com.kamesuta.mc.bnnwidget.position.Point;
-import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload.GyazoResult;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.State;
 
-public class GuiFileDD extends WBase {
+public class GuiFileDD {
+	public static final GuiFileDD instance = new GuiFileDD();
+
 	protected final JDialog overlay;
 	protected Area location;
 
-	public GuiFileDD(final R position, final MChatTextField textField) {
-		super(position);
+	private GuiFileDD() {
 		this.overlay = new JDialog();
 		this.overlay.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		this.overlay.setBounds(Display.getX()+Display.getWidth()-200, Display.getY()+Display.getHeight()-200, 200, 200);
+		this.overlay.setName("SignPictureGui");
 		this.overlay.setTransferHandler(new TransferHandler() {
 			@Override
 			public boolean canImport(final TransferSupport support) {
@@ -64,13 +55,16 @@ public class GuiFileDD extends WBase {
 					for (final Object file : files)
 						if (file instanceof File) {
 							final File f = (File) file;
-							Communicator.instance.communicate(new GyazoUpload(f, new State("up")), new ICommunicateCallback<GyazoResult>() {
+							final GyazoUpload upload = new GyazoUpload(f, new State("up"));
+							upload.getState().getMeta().put("gui.showbar", 3);
+							upload.getState().getMeta().put("gui.highlight", true);
+							Communicator.instance.communicate(upload, new ICommunicateCallback<GyazoResult>() {
 								@Override
 								public void onDone(final ICommunicateResponse<GyazoResult> res) {
 									if (res.isSuccess()) {
-										textField.setFocused(false);
-										textField.setText(res.getResult().url);
-										textField.setFocused(true);
+										//										textField.setFocused(false);
+										//										textField.setText(res.getResult().url);
+										//										textField.setFocused(true);
 									}
 								}
 							});
@@ -81,25 +75,18 @@ public class GuiFileDD extends WBase {
 				return true;
 			}
 		});
-	}
-
-	@Override
-	public void onAdded() {
-		this.overlay.setVisible(true);
 		this.overlay.setAlwaysOnTop(true);
-		this.overlay.setAlwaysOnTop(false);
+		this.overlay.setSize(200, 200);
+		this.overlay.setLocationRelativeTo(null);
 	}
 
-	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-		RenderHelper.startShape();
-		glColor4f(0f, 0f, 0f, .8f);
-		drawRect(getGuiPosition(pgp));
+	public boolean isVisible() {
+		return this.overlay.isVisible();
 	}
 
-	@Override
-	public boolean onCloseRequest() {
-		this.overlay.dispose();
-		return true;
+	public void setVisible(final boolean b) {
+		if (b)
+			this.overlay.setSize(200, 200);
+		this.overlay.setVisible(b);
 	}
 }

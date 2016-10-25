@@ -14,23 +14,31 @@ public class FunnyButton extends MButton {
 		super(position, text);
 	}
 
-	boolean hover;
+	private boolean isHighlight = true;
+	private boolean highlighted;
 	MCoord m = new MCoord(0);
 	MCoord s = new MCoord(1);
 
-	protected void state(final boolean b) {
-		if (b) {
-			if (!this.hover) {
-				this.hover = true;
+	public boolean isHighlight() {
+		return this.isHighlight;
+	}
+
+	public void setHighlight(final boolean b) {
+		this.isHighlight = b;
+	}
+
+	@Override
+	public void update(final WEvent ev, final Area pgp, final Point p) {
+		if (isHighlight()) {
+			if (!this.highlighted) {
+				this.highlighted = true;
 				this.m.stop().add(Easings.easeOutElastic.move(.5f, 6f)).start();
 				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1.1f)).start();
 			}
-		} else {
-			if (this.hover) {
-				this.hover = false;
-				this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
-				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
-			}
+		} else if (this.highlighted) {
+			this.highlighted = false;
+			this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
+			this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
 		}
 	}
 
