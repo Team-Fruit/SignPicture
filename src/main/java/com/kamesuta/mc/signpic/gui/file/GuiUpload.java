@@ -4,10 +4,13 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -27,6 +30,8 @@ import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import com.kamesuta.mc.signpic.lib.ComponentResizer;
 
 public class GuiUpload {
 
@@ -61,16 +66,22 @@ public class GuiUpload {
 	 */
 	private void initialize() {
 		this.frame = new JFrame();
-		this.frame.setLocation(100, 100);
+		this.frame.setLocationRelativeTo(null);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setUndecorated(true);
 
-		final JPanel panel = new JPanel();
-		this.frame.getContentPane().add(panel, BorderLayout.CENTER);
-		panel.setLayout(new BorderLayout(0, 0));
+		final ComponentResizer cr = new ComponentResizer();
+		cr.registerComponent(this.frame);
+		cr.setSnapSize(new Dimension(10, 10));
 
-		final JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(45, 45, 45));
-		panel.add(panel_1, BorderLayout.NORTH);
+		final JPanel base = new JPanel();
+		base.setBorder(new LineBorder(new Color(128, 128, 128)));
+		this.frame.getContentPane().add(base, BorderLayout.CENTER);
+		base.setLayout(new BorderLayout(0, 0));
+
+		final JPanel title = new JPanel();
+		title.setBackground(new Color(45, 45, 45));
+		base.add(title, BorderLayout.NORTH);
 
 		final UiImage settings = new UiImage();
 		try {
@@ -90,124 +101,133 @@ public class GuiUpload {
 		} catch (final IOException e) {
 		}
 
-		final JLabel lblSignpicture = new JLabel("SignPicture!File");
-		lblSignpicture.setForeground(new Color(154, 202, 71));
-		lblSignpicture.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
+		final JLabel lbltitle = new JLabel("SignPicture!File");
+		lbltitle.setForeground(new Color(154, 202, 71));
+		lbltitle.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
 
-		final JLabel lblDragdropUploadFile = new JLabel("A File Uploader!");
-		lblDragdropUploadFile.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
-		lblDragdropUploadFile.setForeground(new Color(0, 255, 255));
-		final GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(
-				gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_1.createSequentialGroup()
+		final JLabel lbldiscription = new JLabel("A File Uploader!");
+		lbldiscription.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+		lbldiscription.setForeground(new Color(0, 255, 255));
+		final GroupLayout gl_title = new GroupLayout(title);
+		gl_title.setHorizontalGroup(
+				gl_title.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_title.createSequentialGroup()
 								.addGap(12)
 								.addComponent(icon, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
-								.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-												.addGroup(gl_panel_1.createSequentialGroup()
+								.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
+												.addGroup(gl_title.createSequentialGroup()
 														.addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
 														.addComponent(settings, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 														.addGap(4)
 														.addComponent(close, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 														.addGap(4))
-												.addGroup(gl_panel_1.createSequentialGroup()
+												.addGroup(gl_title.createSequentialGroup()
 														.addPreferredGap(ComponentPlacement.RELATED)
-														.addComponent(lblSignpicture)
+														.addComponent(lbltitle)
 														.addGap(16)))
-										.addGroup(gl_panel_1.createSequentialGroup()
+										.addGroup(gl_title.createSequentialGroup()
 												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(lblDragdropUploadFile)
-												.addContainerGap()))));
-		gl_panel_1.setVerticalGroup(
-				gl_panel_1.createParallelGroup(Alignment.TRAILING)
-						.addGroup(gl_panel_1.createSequentialGroup()
+												.addComponent(lbldiscription)))));
+		gl_title.setVerticalGroup(
+				gl_title.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_title.createSequentialGroup()
 								.addGap(4)
-								.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
 										.addComponent(settings, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 										.addComponent(close, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel_1.createSequentialGroup()
-												.addComponent(lblSignpicture)
+								.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_title.createSequentialGroup()
+												.addComponent(lbltitle)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(lblDragdropUploadFile))
+												.addComponent(lbldiscription))
 										.addComponent(icon, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))
 								.addContainerGap(20, Short.MAX_VALUE)));
-		panel_1.setLayout(gl_panel_1);
+		title.setLayout(gl_title);
 
-		final JPanel panel_2 = new JPanel();
-		panel_2.setBackground(new Color(255, 255, 255));
-		panel.add(panel_2, BorderLayout.CENTER);
+		final JPanel drop = new JPanel();
+		drop.setBackground(new Color(255, 255, 255));
+		base.add(drop, BorderLayout.CENTER);
 
-		final JPanel panel_3 = new JPanel();
-		panel_3.setBackground(new Color(255, 255, 255));
-		panel_3.setBorder(new DashedBorder());
-		final GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(
-				gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2.createSequentialGroup()
+		final JPanel droparea = new JPanel();
+		droparea.setBackground(new Color(255, 255, 255));
+		droparea.setBorder(new DashedBorder());
+		final GroupLayout gl_drop = new GroupLayout(drop);
+		gl_drop.setHorizontalGroup(
+				gl_drop.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_drop.createSequentialGroup()
 								.addContainerGap()
-								.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+								.addComponent(droparea, GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
 								.addContainerGap()));
-		gl_panel_2.setVerticalGroup(
-				gl_panel_2.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_2.createSequentialGroup()
+		gl_drop.setVerticalGroup(
+				gl_drop.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_drop.createSequentialGroup()
 								.addContainerGap()
-								.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+								.addComponent(droparea, GroupLayout.DEFAULT_SIZE, 16, Short.MAX_VALUE)
 								.addContainerGap()));
-		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.Y_AXIS));
+		droparea.setLayout(new BoxLayout(droparea, BoxLayout.Y_AXIS));
 
-		final Component verticalGlue_1 = Box.createVerticalGlue();
-		panel_3.add(verticalGlue_1);
+		final Component glue1 = Box.createVerticalGlue();
+		droparea.add(glue1);
 
-		final JLabel lblDragImageHere = new JLabel("Drop images here");
-		panel_3.add(lblDragImageHere);
-		lblDragImageHere.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblDragImageHere.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		final JLabel lblimagehere = new JLabel("Drop images here");
+		droparea.add(lblimagehere);
+		lblimagehere.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblimagehere.setFont(new Font("Tahoma", Font.PLAIN, 25));
 
 		final JLabel lblOr = new JLabel("or");
 		lblOr.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel_3.add(lblOr);
+		droparea.add(lblOr);
 
 		final Component verticalStrut = Box.createVerticalStrut(5);
-		panel_3.add(verticalStrut);
+		droparea.add(verticalStrut);
 
-		final JButton btnClickToSelect = new JButton("Select Images for Upload");
-		btnClickToSelect.setForeground(Color.BLACK);
-		btnClickToSelect.setBackground(Color.WHITE);
+		final JButton btnselect = new JButton("Select Images for Upload");
+		btnselect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(final ActionEvent e) {
+			}
+		});
+		btnselect.setForeground(Color.BLACK);
+		btnselect.setBackground(Color.WHITE);
 		final Border line = new LineBorder(Color.BLACK);
 		final Border margin = new EmptyBorder(5, 15, 5, 15);
 		final Border compound = new CompoundBorder(line, margin);
-		btnClickToSelect.setBorder(compound);
-		btnClickToSelect.setFocusPainted(false);
-		btnClickToSelect.addMouseListener(new MouseAdapter() {
+		btnselect.setBorder(compound);
+		btnselect.setFocusPainted(false);
+		btnselect.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(final MouseEvent evt) {
-				btnClickToSelect.setBackground(Color.CYAN);
+				btnselect.setBackground(Color.CYAN);
 			}
 
 			@Override
 			public void mouseExited(final MouseEvent evt) {
-				btnClickToSelect.setBackground(Color.WHITE);
+				btnselect.setBackground(Color.WHITE);
 			}
 		});
-		btnClickToSelect.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel_3.add(btnClickToSelect);
+		btnselect.setAlignmentX(Component.CENTER_ALIGNMENT);
+		droparea.add(btnselect);
 
-		final Component verticalGlue = Box.createVerticalGlue();
-		panel_3.add(verticalGlue);
-		panel_2.setLayout(gl_panel_2);
+		final Component glue2 = Box.createVerticalGlue();
+		droparea.add(glue2);
+		drop.setLayout(gl_drop);
 
 		this.frame.pack();
+		final Dimension minsize = new Dimension(this.frame.getSize());
+		this.frame.setMinimumSize(minsize);
+		cr.setMinimumSize(minsize);
+		this.frame.setSize(400, 400);
 	}
 
 	static class DashedBorder extends AbstractBorder {
 		@Override
 		public void paintBorder(final Component comp, final Graphics g, final int x, final int y, final int w, final int h) {
-			final Graphics2D gg = (Graphics2D) g;
+			final Graphics2D gg = (Graphics2D) g.create();
 			gg.setColor(Color.GRAY);
 			gg.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 6 }, 0));
 			gg.drawRect(x, y, w-1, h-1);
+			gg.dispose();
 		}
 	}
 }
