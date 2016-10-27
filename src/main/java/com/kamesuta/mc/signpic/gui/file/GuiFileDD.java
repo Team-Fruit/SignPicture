@@ -9,6 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.TransferHandler;
 import javax.swing.WindowConstants;
 
+import org.lwjgl.opengl.Display;
+
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
@@ -85,6 +87,7 @@ public class GuiFileDD {
 	}
 
 	public void setVisible(final boolean b) {
+		this.overlay.setLocation(Display.getX(), Display.getY()+Display.getHeight());
 		if (b)
 			this.overlay.setSize(200, 200);
 		this.overlay.setVisible(b);
