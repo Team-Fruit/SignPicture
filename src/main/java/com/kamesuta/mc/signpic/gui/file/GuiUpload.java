@@ -8,9 +8,13 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -19,6 +23,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.AbstractBorder;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class GuiUpload {
 
@@ -147,32 +155,47 @@ public class GuiUpload {
 								.addContainerGap()
 								.addComponent(panel_3, GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
 								.addContainerGap()));
+		panel_3.setLayout(new BoxLayout(panel_3, BoxLayout.Y_AXIS));
 
-		final JPanel panel_4 = new JPanel();
-		final GroupLayout gl_panel_3 = new GroupLayout(panel_3);
-		gl_panel_3.setHorizontalGroup(
-				gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_3.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(388, Short.MAX_VALUE)));
-		gl_panel_3.setVerticalGroup(
-				gl_panel_3.createParallelGroup(Alignment.LEADING)
-						.addGroup(Alignment.TRAILING, gl_panel_3.createSequentialGroup()
-								.addContainerGap(117, Short.MAX_VALUE)
-								.addComponent(panel_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap()));
+		final Component verticalGlue_1 = Box.createVerticalGlue();
+		panel_3.add(verticalGlue_1);
 
-		final JLabel lblDragImageHere = new JLabel("Drop image here");
-		panel_4.add(lblDragImageHere);
+		final JLabel lblDragImageHere = new JLabel("Drop images here");
+		panel_3.add(lblDragImageHere);
+		lblDragImageHere.setAlignmentX(Component.CENTER_ALIGNMENT);
 		lblDragImageHere.setFont(new Font("Tahoma", Font.PLAIN, 25));
 
 		final JLabel lblOr = new JLabel("or");
-		panel_4.add(lblOr);
+		lblOr.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel_3.add(lblOr);
 
-		final JButton button = new JButton("New button");
-		panel_4.add(button);
-		panel_3.setLayout(gl_panel_3);
+		final Component verticalStrut = Box.createVerticalStrut(5);
+		panel_3.add(verticalStrut);
+
+		final JButton btnClickToSelect = new JButton("Select Images for Upload");
+		btnClickToSelect.setForeground(Color.BLACK);
+		btnClickToSelect.setBackground(Color.WHITE);
+		final Border line = new LineBorder(Color.BLACK);
+		final Border margin = new EmptyBorder(5, 15, 5, 15);
+		final Border compound = new CompoundBorder(line, margin);
+		btnClickToSelect.setBorder(compound);
+		btnClickToSelect.setFocusPainted(false);
+		btnClickToSelect.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(final MouseEvent evt) {
+				btnClickToSelect.setBackground(Color.CYAN);
+			}
+
+			@Override
+			public void mouseExited(final MouseEvent evt) {
+				btnClickToSelect.setBackground(Color.WHITE);
+			}
+		});
+		btnClickToSelect.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel_3.add(btnClickToSelect);
+
+		final Component verticalGlue = Box.createVerticalGlue();
+		panel_3.add(verticalGlue);
 		panel_2.setLayout(gl_panel_2);
 
 		this.frame.pack();
