@@ -38,6 +38,7 @@ public class ComponentResizer extends MouseAdapter {
 
 	private Insets dragInsets;
 	private Dimension snapSize;
+	private Insets edgeInsets = new Insets(0, 0, 0, 0);
 
 	private int direction;
 	protected static final int NORTH = 1;
@@ -123,6 +124,27 @@ public class ComponentResizer extends MouseAdapter {
 		validateMinimumAndInsets(this.minimumSize, dragInsets);
 
 		this.dragInsets = dragInsets;
+	}
+
+	/**
+	 *  Get the bounds insets
+	 *
+	 *  @return  the bounds insets
+	 */
+	public Insets getEdgeInsets() {
+		return this.edgeInsets;
+	}
+
+	/**
+	 *  Set the edge insets. The insets specify how close to each edge of the parent
+	 *  component that the child component can be moved. Positive values means the
+	 *  component must be contained within the parent. Negative values means the
+	 *  component can be moved outside the parent.
+	 *
+	 *  @param  edgeInsets
+	 */
+	public void setEdgeInsets(final Insets edgeInsets) {
+		this.edgeInsets = edgeInsets;
 	}
 
 	/**
@@ -349,8 +371,11 @@ public class ComponentResizer extends MouseAdapter {
 
 		if (WEST==(direction&WEST)) {
 			int drag = getDragDistance(pressed.x, current.x, this.snapSize.width);
-			final int maximum = Math.min(width+x, this.maximumSize.width);
-			drag = getDragBounded(drag, this.snapSize.width, width, this.minimumSize.width, maximum);
+			if (this.edgeInsets!=null) {
+				final int maximum = Math.min(width+x, this.maximumSize.width);
+				drag = getDragBounded(drag, this.snapSize.width, width+this.edgeInsets.left, this.minimumSize.width, maximum);
+			} else
+				drag = getDragBounded(drag, this.snapSize.width, width, this.minimumSize.width, this.maximumSize.width);
 
 			x -= drag;
 			width += drag;
@@ -358,8 +383,11 @@ public class ComponentResizer extends MouseAdapter {
 
 		if (NORTH==(direction&NORTH)) {
 			int drag = getDragDistance(pressed.y, current.y, this.snapSize.height);
-			final int maximum = Math.min(height+y, this.maximumSize.height);
-			drag = getDragBounded(drag, this.snapSize.height, height, this.minimumSize.height, maximum);
+			if (this.edgeInsets!=null) {
+				final int maximum = Math.min(height+y, this.maximumSize.height);
+				drag = getDragBounded(drag, this.snapSize.height, height+this.edgeInsets.top, this.minimumSize.height, maximum);
+			} else
+				drag = getDragBounded(drag, this.snapSize.height, height, this.minimumSize.height, this.maximumSize.height);
 
 			y -= drag;
 			height += drag;
@@ -370,16 +398,24 @@ public class ComponentResizer extends MouseAdapter {
 		if (EAST==(direction&EAST)) {
 			int drag = getDragDistance(current.x, pressed.x, this.snapSize.width);
 			final Dimension boundingSize = getBoundingSize(source);
-			final int maximum = Math.min(boundingSize.width-x, this.maximumSize.width);
-			drag = getDragBounded(drag, this.snapSize.width, width, this.minimumSize.width, maximum);
+			if (this.edgeInsets!=null) {
+				final int maximum = Math.min(boundingSize.width-x, this.maximumSize.width);
+				drag = getDragBounded(drag, this.snapSize.width, width+this.edgeInsets.right, this.minimumSize.width, maximum);
+			} else
+				drag = getDragBounded(drag, this.snapSize.width, width, this.minimumSize.width, this.maximumSize.width);
+
 			width += drag;
 		}
 
 		if (SOUTH==(direction&SOUTH)) {
 			int drag = getDragDistance(current.y, pressed.y, this.snapSize.height);
 			final Dimension boundingSize = getBoundingSize(source);
-			final int maximum = Math.min(boundingSize.height-y, this.maximumSize.height);
-			drag = getDragBounded(drag, this.snapSize.height, height, this.minimumSize.height, maximum);
+			if (this.edgeInsets!=null) {
+				final int maximum = Math.min(boundingSize.height-y, this.maximumSize.height);
+				drag = getDragBounded(drag, this.snapSize.height, height+this.edgeInsets.bottom, this.minimumSize.height, maximum);
+			} else
+				drag = getDragBounded(drag, this.snapSize.height, height, this.minimumSize.height, this.maximumSize.height);
+
 			height += drag;
 		}
 

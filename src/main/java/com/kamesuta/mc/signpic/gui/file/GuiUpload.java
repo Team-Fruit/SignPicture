@@ -6,14 +6,24 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -31,6 +41,9 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import com.google.common.collect.Maps;
+import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.lib.ComponentMover;
 import com.kamesuta.mc.signpic.lib.ComponentResizer;
 
 public class GuiUpload {
@@ -66,13 +79,10 @@ public class GuiUpload {
 	 */
 	private void initialize() {
 		this.frame = new JFrame();
+		this.frame.setTitle(getString("signpic.ui.title"));
 		this.frame.setLocationRelativeTo(null);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setUndecorated(true);
-
-		final ComponentResizer cr = new ComponentResizer();
-		cr.registerComponent(this.frame);
-		cr.setSnapSize(new Dimension(10, 10));
 
 		final JPanel base = new JPanel();
 		base.setBorder(new LineBorder(new Color(128, 128, 128)));
@@ -83,31 +93,28 @@ public class GuiUpload {
 		title.setBackground(new Color(45, 45, 45));
 		base.add(title, BorderLayout.NORTH);
 
-		final UiImage settings = new UiImage();
-		try {
-			settings.setImage(ImageIO.read(GuiUpload.class.getResource("/assets/signpic/textures/ui/setting.png")));
-		} catch (final IOException e) {
-		}
+		//		final UiImage settings = new UiImage();
+		//		settings.setImage(getImage("textures/ui/setting.png"));
 
 		final UiImage close = new UiImage();
-		try {
-			close.setImage(ImageIO.read(GuiUpload.class.getResource("/assets/signpic/textures/ui/close.png")));
-		} catch (final IOException e) {
-		}
+		close.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(final MouseEvent e) {
+				System.exit(0);
+			}
+		});
+		close.setImage(getImage("textures/ui/close.png"));
 
 		final UiImage icon = new UiImage();
-		try {
-			icon.setImage(ImageIO.read(GuiUpload.class.getResource("/assets/signpic/textures/logo.png")));
-		} catch (final IOException e) {
-		}
+		icon.setImage(getImage("/textures/logo.png"));
 
-		final JLabel lbltitle = new JLabel("SignPicture!File");
+		final JLabel lbltitle = new JLabel(getString("signpic.ui.title"));
 		lbltitle.setForeground(new Color(154, 202, 71));
 		lbltitle.setFont(new Font(Font.DIALOG, Font.BOLD, 30));
 
-		final JLabel lbldiscription = new JLabel("A File Uploader!");
-		lbldiscription.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
-		lbldiscription.setForeground(new Color(0, 255, 255));
+		final JLabel lbldescription = new JLabel(getString("signpic.ui.description"));
+		lbldescription.setFont(new Font(Font.DIALOG, Font.PLAIN, 12));
+		lbldescription.setForeground(new Color(0, 255, 255));
 		final GroupLayout gl_title = new GroupLayout(title);
 		gl_title.setHorizontalGroup(
 				gl_title.createParallelGroup(Alignment.TRAILING)
@@ -117,36 +124,50 @@ public class GuiUpload {
 								.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
 												.addGroup(gl_title.createSequentialGroup()
-														.addPreferredGap(ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-														.addComponent(settings, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+														.addPreferredGap(ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
+														//														.addComponent(settings, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 														.addGap(4)
 														.addComponent(close, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 														.addGap(4))
 												.addGroup(gl_title.createSequentialGroup()
-														.addPreferredGap(ComponentPlacement.RELATED)
 														.addComponent(lbltitle)
 														.addGap(16)))
 										.addGroup(gl_title.createSequentialGroup()
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(lbldiscription)))));
+												.addGap(16)
+												.addComponent(lbldescription)))));
 		gl_title.setVerticalGroup(
 				gl_title.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_title.createSequentialGroup()
 								.addGap(4)
 								.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
-										.addComponent(settings, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+										//										.addComponent(settings, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
 										.addComponent(close, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_title.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_title.createSequentialGroup()
 												.addComponent(lbltitle)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(lbldiscription))
+												.addComponent(lbldescription))
 										.addComponent(icon, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE))
 								.addContainerGap(20, Short.MAX_VALUE)));
 		title.setLayout(gl_title);
 
 		final JPanel drop = new JPanel();
 		drop.setBackground(new Color(255, 255, 255));
+		drop.setDropTarget(new DropTarget() {
+			@Override
+			public synchronized void drop(final DropTargetDropEvent evt) {
+				try {
+					evt.acceptDrop(DnDConstants.ACTION_COPY);
+					final List<?> droppedFiles = (List<?>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+					for (final Object obj : droppedFiles) {
+						final File file = (File) obj;
+						Reference.logger.info(file.getAbsolutePath());
+					}
+				} catch (final Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 		base.add(drop, BorderLayout.CENTER);
 
 		final JPanel droparea = new JPanel();
@@ -170,22 +191,25 @@ public class GuiUpload {
 		final Component glue1 = Box.createVerticalGlue();
 		droparea.add(glue1);
 
-		final JLabel lblimagehere = new JLabel("Drop images here");
+		final JLabel lblimagehere = new JLabel(getString("signpic.ui.drop"));
 		droparea.add(lblimagehere);
 		lblimagehere.setAlignmentX(Component.CENTER_ALIGNMENT);
-		lblimagehere.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		lblimagehere.setFont(new Font(Font.DIALOG, Font.PLAIN, 25));
 
-		final JLabel lblOr = new JLabel("or");
+		final JLabel lblOr = new JLabel(getString("signpic.ui.or"));
 		lblOr.setAlignmentX(Component.CENTER_ALIGNMENT);
 		droparea.add(lblOr);
 
 		final Component verticalStrut = Box.createVerticalStrut(5);
 		droparea.add(verticalStrut);
 
-		final JButton btnselect = new JButton("Select Images for Upload");
+		final JButton btnselect = new JButton(getString("signpic.ui.select"));
 		btnselect.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent e) {
+			public void actionPerformed(final ActionEvent ev) {
+				final FileDialog fileDialog = new FileDialog(GuiUpload.this.frame, getString("signpic.ui.title.file"), FileDialog.LOAD);
+				fileDialog.setVisible(true);
+				Reference.logger.info(fileDialog.getFile());
 			}
 		});
 		btnselect.setForeground(Color.BLACK);
@@ -216,8 +240,41 @@ public class GuiUpload {
 		this.frame.pack();
 		final Dimension minsize = new Dimension(this.frame.getSize());
 		this.frame.setMinimumSize(minsize);
+
+		final ComponentResizer cr = new ComponentResizer();
+		cr.registerComponent(this.frame);
 		cr.setMinimumSize(minsize);
+		cr.setEdgeInsets(null);
+
+		final ComponentMover cm = new ComponentMover(this.frame);
+		cm.registerComponent(title);
+		cm.setChangeCursor(false);
+		cm.setEdgeInsets(null);
+
 		this.frame.setSize(400, 400);
+	}
+
+	protected BufferedImage getImage(final String path) {
+		try {
+			return ImageIO.read(GuiUpload.class.getResource("/assets/signpic/"+path));
+		} catch (final IOException e) {
+		}
+		return null;
+	}
+
+	protected String getString(final String id) {
+		final Map<String, String> map = Maps.newHashMap();
+		map.put("signpic.ui.title", "SignPicture!File");
+		map.put("signpic.ui.description", "A File Uploader!");
+		map.put("signpic.ui.drop", "Drop images here");
+		map.put("signpic.ui.select", "Select Images for Upload");
+		map.put("signpic.ui.or", "or");
+		map.put("signpic.ui.title.file", "SignPicture!File");
+		return map.get(id);
+	}
+
+	protected Point getPosition() {
+		return null;
 	}
 
 	static class DashedBorder extends AbstractBorder {
