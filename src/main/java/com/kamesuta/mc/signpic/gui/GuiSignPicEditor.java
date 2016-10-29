@@ -22,7 +22,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.gui.file.GuiFileDD;
+import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -192,16 +192,16 @@ public class GuiSignPicEditor extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 							}
 						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), "DD") {
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.file")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								GuiFileDD.instance.setVisible(!GuiFileDD.instance.isVisible());
+								McUiUpload.instance.setVisible(!McUiUpload.instance.isVisible());
 								return true;
 							}
 
 							@Override
 							public boolean isHighlight() {
-								return GuiFileDD.instance.isVisible();
+								return McUiUpload.instance.isVisible();
 							}
 						});
 
@@ -334,6 +334,10 @@ public class GuiSignPicEditor extends WFrame {
 				add(OverlayFrame.instance.pane);
 			}
 		});
+	}
+
+	public MChatTextField getTextField() {
+		return this.field;
 	}
 
 	@Override

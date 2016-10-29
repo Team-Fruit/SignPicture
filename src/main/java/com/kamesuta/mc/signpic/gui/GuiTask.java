@@ -29,6 +29,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiTask extends WPanel {
 	public static final ResourceLocation panel = new ResourceLocation("signpic", "textures/gui/panel.png");
+	public static final String ShowPanel = "gui.showpanel";
+	public static final String HighlightPanel = "gui.highlight";
 
 	public GuiTask(final R position) {
 		super(position);
@@ -114,9 +116,9 @@ public class GuiTask extends WPanel {
 				add(new WList<Progressable, TaskElement>(new R(Coord.top(16)), Communicator.instance.getTasks()) {
 					@Override
 					protected TaskElement createWidget(final Progressable t, final int i) {
-						final Object j = t.getState().getMeta().get("gui.showpanel");
-						if (j instanceof Float)
-							show((Float) j);
+						final Object j = t.getState().getMeta().get(ShowPanel);
+						if (j instanceof Number)
+							show(((Number) j).floatValue());
 						final MCoord top = MCoord.top(i*15);
 						return new TaskElement(new R(top, Coord.height(15)), top, t);
 					}
@@ -157,7 +159,7 @@ public class GuiTask extends WPanel {
 
 				@Override
 				public boolean onCloseRequest() {
-					if (!show&&this.state.getMeta().get("gui.highlight")!=null)
+					if (!show&&this.state.getMeta().get(HighlightPanel)!=null)
 						this.right.stop().add(Easings.easeOutQuart.move(2f, 1f)).start();
 					this.opacity.stop().add(Easings.easeLinear.move(1f, 0f)).start();
 					return false;

@@ -28,6 +28,17 @@ signpic.gui.editor.rotation.category=回転
 signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
 signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
 
+# Notice
+signpic.gui.notice.uploading=アップロード開始 %s
+signpic.gui.notice.uploaded=アップロード完了 %s
+signpic.gui.notice.downloading=ダウンロード開始 %s
+signpic.gui.notice.downloaded=ダウンロード完了 %s
+
+# Upload UI
+signpic.ui.description=ファイルアップローダー!
+signpic.ui.drop=アップロードしたい画像をここにドラッグ＆ドロップ
+signpic.ui.select=またはファイルを選択
+
 # Image State
 signpic.state.init=待機中...
 signpic.state.initalized=初期化完了！
@@ -50,10 +61,8 @@ signpic.advmsg.unknown=不明なエラー: §7%s
 # Version Checking
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
 signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
-signpic.versioning.downloading=ダウンロード開始 %s
 signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.doneDownloadingWithFile=ダウンロード完了 %s 適用するためには %s を消し、Minecraftを再起動してください
-signpic.versioning.finishdownloading=ダウンロード完了 %s
 signpic.versioning.downloadedAlready=すでに最新版をダウンロードしました 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.downloadingAlready=すでにダウンロードは開始されています 少々お待ちください
 signpic.versioning.error=SignPictureのアップデートに問題が発生したようです。
