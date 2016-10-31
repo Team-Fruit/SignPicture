@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
@@ -42,12 +43,14 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 
 	@Override
 	public ICommunicateResponse<ModDLResult> communicate() {
-		final InformationChecker.InfoState state = InformationChecker.state;
+		final InformationChecker.InfoState state = InformationChecker.instance.getState();
+		final InformationChecker.InfoSource source = InformationChecker.instance.getSource();
+		final InformationChecker.InfoVersion online = source.onlineVersion();
 		InputStream input = null;
 		OutputStream output = null;
 		try {
-			final String stringurl = state.onlineVersion.remote;
-			final String stringlocal = state.onlineVersion.local;
+			final String stringurl = online.version.remote;
+			final String stringlocal = online.version.local;
 			final String local;
 			if (!StringUtils.isEmpty(stringlocal))
 				local = stringlocal;
@@ -57,12 +60,12 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
 			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.downloading", local), 2f);
-			this.status.getMeta().put("gui.highlight", true);
-			this.status.getMeta().put("gui.showpanel", 3f);
+			this.status.getMeta().put(GuiTask.HighlightPanel, true);
+			this.status.getMeta().put(GuiTask.ShowPanel, 3f);
 
 			state.startedDownload = true;
 
-			final HttpUriRequest req = new HttpGet(new URI(state.onlineVersion.remote));
+			final HttpUriRequest req = new HttpGet(new URI(online.version.remote));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 

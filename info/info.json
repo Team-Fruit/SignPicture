@@ -29,6 +29,24 @@
 			}
 		}
 	},
+	"apis": {
+		"image": {
+			"gyazo": {
+				"config": [
+					{
+						"clientid": "6dceb988be0fad140e544f9e2ec830bb83014b6cde9766049d03d88bdf3884f1"
+					}
+				]
+			},
+			"imgur": {
+				"config": [
+					{
+						"clientid": "7896a166a54f0bc"
+					}
+				]
+			}
+		}
+	},
 	"website": "https://github.com/Kamesuta/SignPicture/",
 	"changelog": "https://github.com/Kamesuta/SignPicture/releases",
 	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"

@@ -43,8 +43,10 @@ public class CommandDownloadLatest extends CommandBase {
 		if (!ENABLED)
 			var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.disabled").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 		else {
-			final InformationChecker.InfoState state = InformationChecker.state;
-			if (state.doneChecking&&state.onlineVersion!=null&&!StringUtils.isEmpty(state.onlineVersion.remote))
+			final InformationChecker.InfoState state = InformationChecker.instance.getState();
+			final InformationChecker.InfoSource source = InformationChecker.instance.getSource();
+			final InformationChecker.InfoVersion online = source.onlineVersion();
+			if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
 				if (state.downloadedFile)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 				else if (state.startedDownload)

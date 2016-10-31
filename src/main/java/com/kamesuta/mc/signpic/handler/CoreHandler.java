@@ -33,14 +33,14 @@ public class CoreHandler {
 	public final ContentManager contentManager = ContentManager.instance;
 	public final SignPicRender renderHandler = new SignPicRender();
 	public final OverlayFrame overlayHandler = OverlayFrame.instance;
-	public final InformationChecker informationHandler = new InformationChecker();
+	public final InformationChecker informationHandler = InformationChecker.instance;
 
 	public void init() {
 		FMLCommonHandler.instance().bus().register(this);
 		MinecraftForge.EVENT_BUS.register(this);
 		KeyHandler.init();
 		SignHandler.init();
-		InformationChecker.init();
+		this.informationHandler.init();
 	}
 
 	@SubscribeEvent
