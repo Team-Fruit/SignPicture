@@ -94,70 +94,75 @@ public class OverlayFrame extends WFrame {
 		}
 
 		public void addNotice1(final String string, final float showtime) {
-			add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
-				protected Timer timer;
-
-				{
-					this.timer = new Timer();
-					this.timer.set(-showtime);
-				}
-
-				protected MCoord opacity;
-
+			invokeLater(new Runnable() {
 				@Override
-				protected void initOpacity() {
-					super.setOpacity(this.opacity = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start());
-				}
+				public void run() {
+					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
+						protected Timer timer;
 
-				@Override
-				protected void initWidget() {
-					final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
+						{
+							this.timer = new Timer();
+							this.timer.set(-showtime);
+						}
+
+						protected MCoord opacity;
+
 						@Override
-						public float getScaleWidth(final Area a) {
-							final float f1 = a.w()/font().getStringWidth(string);
-							final float f2 = a.h()/font().FONT_HEIGHT;
-							return Math.min(f1, f2);
+						protected void initOpacity() {
+							super.setOpacity(this.opacity = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start());
 						}
 
 						@Override
-						public float getScaleHeight(final Area a) {
-							final float f1 = a.w()/font().getStringWidth(string);
-							final float f2 = a.h()/font().FONT_HEIGHT;
-							return Math.min(f1, f2);
+						protected void initWidget() {
+							final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
+								@Override
+								public float getScaleWidth(final Area a) {
+									final float f1 = a.w()/font().getStringWidth(string);
+									final float f2 = a.h()/font().FONT_HEIGHT;
+									return Math.min(f1, f2);
+								}
+
+								@Override
+								public float getScaleHeight(final Area a) {
+									final float f1 = a.w()/font().getStringWidth(string);
+									final float f2 = a.h()/font().FONT_HEIGHT;
+									return Math.min(f1, f2);
+								}
+							};
+							add(label);
 						}
-					};
-					add(label);
-				}
 
-				private boolean removed;
+						private boolean removed;
 
-				@Override
-				public void update(final WEvent ev, final Area pgp, final Point p) {
-					if (this.timer.getTime()>0f)
-						if (!this.removed) {
-							GuiOverlay.this.remove(this);
-							this.removed = true;
+						@Override
+						public void update(final WEvent ev, final Area pgp, final Point p) {
+							if (this.timer.getTime()>0f)
+								if (!this.removed) {
+									GuiOverlay.this.remove(this);
+									this.removed = true;
+								}
 						}
-				}
 
-				@Override
-				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-					final Area a = getGuiPosition(pgp);
-					RenderHelper.startShape();
-					glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
-					drawRect(a);
-					super.draw(ev, pgp, p, frame, popacity);
-				}
+						@Override
+						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+							final Area a = getGuiPosition(pgp);
+							RenderHelper.startShape();
+							glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
+							drawRect(a);
+							super.draw(ev, pgp, p, frame, popacity);
+						}
 
-				@Override
-				public boolean onCloseRequest() {
-					this.opacity.stop().add(Easings.easeOutQuart.move(.25f, 0f)).start();
-					return false;
-				}
+						@Override
+						public boolean onCloseRequest() {
+							this.opacity.stop().add(Easings.easeOutQuart.move(.25f, 0f)).start();
+							return false;
+						}
 
-				@Override
-				public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-					return this.opacity.isFinished();
+						@Override
+						public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+							return this.opacity.isFinished();
+						}
+					});
 				}
 			});
 		}

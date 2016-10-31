@@ -47,9 +47,9 @@ public class CommandDownloadLatest extends CommandBase {
 			final InformationChecker.InfoSource source = InformationChecker.instance.getSource();
 			final InformationChecker.InfoVersion online = source.onlineVersion();
 			if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
-				if (state.downloadedFile)
+				if (state.isDownloaded())
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				else if (state.startedDownload)
+				else if (state.downloading)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadingAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 				else
 					Communicator.instance.communicate(new ModDownload(), new ICommunicateCallback<ModDLResult>() {

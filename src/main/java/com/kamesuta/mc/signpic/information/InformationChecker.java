@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.information;
 
+import java.io.File;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -62,8 +64,14 @@ public final class InformationChecker {
 
 	public static class InfoState {
 		public boolean triedToWarnPlayer = false;
-		public boolean startedDownload = false;
-		public boolean downloadedFile = false;
+		public boolean downloading = false;
+		public File downloadedFile;
+
+		public boolean isDownloaded() {
+			if (this.downloadedFile!=null)
+				return this.downloadedFile.exists();
+			return false;
+		}
 	}
 
 	private InfoSource source;

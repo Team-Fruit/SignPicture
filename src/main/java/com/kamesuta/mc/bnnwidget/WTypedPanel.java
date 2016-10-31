@@ -15,9 +15,14 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 	private final List<W> widgets = new ArrayList<W>();
 	protected final Deque<W> removelist = new ArrayDeque<W>();
 	protected boolean initialized;
+	protected Deque<Runnable> eventQueue = new ArrayDeque<Runnable>();
 
 	public WTypedPanel(final R position) {
 		super(position);
+	}
+
+	public void invokeLater(final Runnable doRun) {
+		this.eventQueue.push(doRun);
 	}
 
 	@Override
@@ -71,6 +76,10 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 
 	@Override
 	public void update(final WEvent ev, final Area pgp, final Point p) {
+		Runnable doRun;
+		while ((doRun = this.eventQueue.poll())!=null)
+			doRun.run();
+
 		final Area gp = getGuiPosition(pgp);
 		for (final W widget : getContainer())
 			widget.update(ev, gp, p);

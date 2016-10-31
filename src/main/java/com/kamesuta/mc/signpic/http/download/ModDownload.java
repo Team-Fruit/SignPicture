@@ -63,7 +63,7 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 			this.status.getMeta().put(GuiTask.HighlightPanel, true);
 			this.status.getMeta().put(GuiTask.ShowPanel, 3f);
 
-			state.startedDownload = true;
+			state.downloading = true;
 
 			final HttpUriRequest req = new HttpGet(new URI(online.version.remote));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
@@ -101,7 +101,8 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.downloaded", local), 2f);
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
-			state.downloadedFile = true;
+			state.downloading = false;
+			state.downloadedFile = f1;
 
 			return new CommunicateResponse<ModDLResult>(new ModDLResult(chat));
 		} catch (final Throwable e) {
