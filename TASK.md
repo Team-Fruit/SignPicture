@@ -20,3 +20,13 @@ _If you have any idea for this project, please make an issue and post to this pr
 - [ ] 曲
 - [ ] チャット画像
 - [ ] アイテム画像変更
+- [ ] 設置モード: 2点指定オフセット指定
+- [ ] ViewSignモード: 枠だけDepthTest無効
+- [ ] ViewSignモード: 本体の看板へ線
+- [ ] ViewSignモード: 古い構文からの更新を促す
+- [ ] チャット、画像表示(おまけ)
+- [ ] 不明な看板パラメータで更新を促す
+- [ ] u, v = テクスチャオフセット
+- [ ] w, h = テクスチャサイズ
+- [ ] キャッシュフォルダをconfigで変更可能に
+- [ ] bnnwidget、ParentScreen対応に
