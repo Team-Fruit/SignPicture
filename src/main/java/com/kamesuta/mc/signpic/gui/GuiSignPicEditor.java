@@ -27,11 +27,16 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class GuiSignPicEditor extends WFrame {
 	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getEntryId());
 	private MChatTextField field;
+
+	public GuiSignPicEditor(final GuiScreen parent) {
+		super(parent);
+	}
 
 	public GuiSignPicEditor() {
 	}
@@ -349,6 +354,6 @@ public class GuiSignPicEditor extends WFrame {
 
 	@Override
 	public boolean doesGuiPauseGame() {
-		return false;
+		return super.sDoesGuiPauseGame();
 	}
 }

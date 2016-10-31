@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.handler;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
@@ -93,6 +94,7 @@ public class CoreHandler {
 	public void onTick(final ClientTickEvent event) {
 		if (event.phase==Phase.END) {
 			Client.startSection("signpic_load");
+			debugKey();
 			this.signEntryManager.onTick();
 			this.contentManager.onTick();
 			this.overlayHandler.onTick(event);
@@ -100,5 +102,20 @@ public class CoreHandler {
 			EntrySlot.Tick();
 			Client.endSection();
 		}
+	}
+
+	boolean debugKey;
+
+	void debugKey() {
+		if (Keyboard.isKeyDown(Keyboard.KEY_I)&&Keyboard.isKeyDown(Keyboard.KEY_O)&&Keyboard.isKeyDown(Keyboard.KEY_P)) {
+			if (!this.debugKey)
+				debug();
+			this.debugKey = true;
+		} else
+			this.debugKey = false;
+	}
+
+	void debug() {
+		Client.openEditor();
 	}
 }
