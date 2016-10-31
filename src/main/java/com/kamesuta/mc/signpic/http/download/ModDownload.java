@@ -25,7 +25,7 @@ import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
-import com.kamesuta.mc.signpic.information.InformationChecker;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
@@ -43,9 +43,9 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 
 	@Override
 	public ICommunicateResponse<ModDLResult> communicate() {
-		final InformationChecker.InfoState state = InformationChecker.instance.getState();
-		final InformationChecker.InfoSource source = InformationChecker.instance.getSource();
-		final InformationChecker.InfoVersion online = source.onlineVersion();
+		final Informations.InfoState state = Informations.instance.getState();
+		final Informations.InfoSource source = Informations.instance.getSource();
+		final Informations.InfoVersion online = source.onlineVersion();
 		InputStream input = null;
 		OutputStream output = null;
 		try {

@@ -8,7 +8,7 @@ import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
-import com.kamesuta.mc.signpic.information.InformationChecker;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
@@ -33,7 +33,7 @@ public class CoreHandler {
 	public final ContentManager contentManager = ContentManager.instance;
 	public final SignPicRender renderHandler = new SignPicRender();
 	public final OverlayFrame overlayHandler = OverlayFrame.instance;
-	public final InformationChecker informationHandler = InformationChecker.instance;
+	public final Informations informationHandler = Informations.instance;
 
 	public void init() {
 		FMLCommonHandler.instance().bus().register(this);

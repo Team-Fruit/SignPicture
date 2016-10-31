@@ -19,10 +19,10 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.entity.player.EntityPlayer;
 
-public final class InformationChecker {
-	public static final InformationChecker instance = new InformationChecker();
+public final class Informations {
+	public static final Informations instance = new Informations();
 
-	private InformationChecker() {
+	private Informations() {
 	}
 
 	public static class InfoSource {

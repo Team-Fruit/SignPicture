@@ -41,7 +41,7 @@ public class InformationCheck implements ICommunicate<InformationCheck.Informati
 			this.status.getProgress().setDone(2);
 			final Info info = gson.fromJson(new JsonReader(new InputStreamReader(input = entity.getContent(), CharEncoding.UTF_8)), Info.class);
 			if (info!=null) {
-				final InformationChecker.InfoSource source = new InformationChecker.InfoSource(info);
+				final Informations.InfoSource source = new Informations.InfoSource(info);
 				if (!StringUtils.isEmpty(info.private_msg)) {
 					InputStream input1 = null;
 					try {
@@ -87,9 +87,9 @@ public class InformationCheck implements ICommunicate<InformationCheck.Informati
 	}
 
 	public static class InformationCheckResult {
-		public final InformationChecker.InfoSource source;
+		public final Informations.InfoSource source;
 
-		public InformationCheckResult(final InformationChecker.InfoSource source) {
+		public InformationCheckResult(final Informations.InfoSource source) {
 			this.source = source;
 		}
 	}
