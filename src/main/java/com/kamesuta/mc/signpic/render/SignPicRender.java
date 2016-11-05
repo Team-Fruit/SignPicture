@@ -31,23 +31,22 @@ public class SignPicRender extends WGui {
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
 		float opacity = Config.instance.renderPreviewFixedOpacity;
-		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW) || CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
 			opacity = Config.instance.renderPreviewFloatedOpacity;
 		}
-		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
-			if (Sign.preview.isRenderable() && Sign.preview.isVisible()) {
+		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
+			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
-				Client.renderer.renderSignPictureBase(tile, tile.xCoord - TileEntityRendererDispatcher.staticPlayerX, tile.yCoord - TileEntityRendererDispatcher.staticPlayerY, tile.zCoord - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity);
+				Client.renderer.renderSignPictureBase(tile, tile.xCoord-TileEntityRendererDispatcher.staticPlayerX, tile.yCoord-TileEntityRendererDispatcher.staticPlayerY, tile.zCoord-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity);
 			}
-		}
 	}
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
-		if(event.type == ElementType.EXPERIENCE)
-			if (CurrentMode.instance.isMode()) {
-				if ((int)(System.currentTimeMillis()/500)%2==0) {
+		if (event.type==ElementType.EXPERIENCE)
+			if (CurrentMode.instance.isMode())
+				if ((int) (System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
 
 					RenderHelper.startTexture();
@@ -71,14 +70,13 @@ public class SignPicRender extends WGui {
 
 					glPopMatrix();
 				}
-			}
 	}
 
 	@CoreEvent
 	public void onText(final RenderGameOverlayEvent.Text event) {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
-			if (tilesign != null) {
+			if (tilesign!=null) {
 				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
@@ -93,9 +91,9 @@ public class SignPicRender extends WGui {
 					event.left.add(I18n.format("signpic.over.id", uri));
 					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
 					event.left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
-					if (advmsg != null)
+					if (advmsg!=null)
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
-					if (tilesign.signText != null)
+					if (tilesign.signText!=null)
 						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
 					event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
 				}

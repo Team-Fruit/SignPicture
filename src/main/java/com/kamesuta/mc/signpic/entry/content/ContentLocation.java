@@ -9,7 +9,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import com.kamesuta.mc.signpic.Client;
 
 public class ContentLocation {
-	private final ContentId id;
+	public final ContentId id;
 
 	public ContentLocation(final ContentId id) {
 		this.id = id;
@@ -23,11 +23,11 @@ public class ContentLocation {
 		return new File(Client.location.metaDir, DigestUtils.md5Hex(this.id.getURI()));
 	}
 
-	public File cacheLocation(final String cache) {
-		return new File(Client.location.metaDir, cache);
+	public File tempLocation() {
+		return new File(Client.location.tempDir, DigestUtils.md5Hex(this.id.getURI()));
 	}
 
-	public File createCacheLocation() {
+	public File cacheLocation() {
 		return new File(Client.location.cacheDir, DigestUtils.md5Hex(this.id.getURI()));
 	}
 }
