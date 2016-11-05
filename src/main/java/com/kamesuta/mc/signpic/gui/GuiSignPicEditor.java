@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.input.Keyboard;
 
+import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -12,6 +13,7 @@ import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -207,6 +209,15 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							public boolean isHighlight() {
 								return McUiUpload.instance.isVisible();
+							}
+						});
+						add(new MSelect(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), 15) {
+							{
+								setSelector(new ListSelector() {
+									{
+										setList(Lists.newArrayList("uhgnva", "azulghn", "zaghnvu", "iuhvgn"));
+									}
+								});
 							}
 						});
 
