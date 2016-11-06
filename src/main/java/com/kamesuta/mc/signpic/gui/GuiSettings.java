@@ -54,6 +54,12 @@ public class GuiSettings extends WPanel {
 					}
 
 					@Override
+					public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						final Area a = getGuiPosition(pgp);
+						return super.mouseClicked(ev, pgp, p, button)||a.pointInside(p);
+					}
+
+					@Override
 					protected void initWidget() {
 						add(new WPanel(new R(Coord.top(2), Coord.bottom(0))) {
 
