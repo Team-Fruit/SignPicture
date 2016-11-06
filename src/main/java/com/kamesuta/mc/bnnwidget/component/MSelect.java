@@ -52,6 +52,11 @@ public class MSelect extends WPanel {
 		add(this.pos);
 	}
 
+	@Override
+	protected void initWidget() {
+		setText(getSelector().get());
+	}
+
 	protected WCommon getField() {
 		return this.field = new MChatTextField(new R(Coord.left(this.buttonwidth), Coord.right(this.buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
@@ -88,23 +93,27 @@ public class MSelect extends WPanel {
 	}
 
 	public static class ListSelector implements Selector {
-		protected List<String> list = Lists.newArrayList();
+		protected List<?> list = Lists.newArrayList();
 
 		public void setList(final List<String> list) {
 			this.list = list;
 		}
 
-		protected List<String> getList() {
+		protected List<?> getList() {
 			return this.list;
 		}
 
-		protected int length() {
+		public int length() {
 			return getList().size();
 		}
 
 		@Override
 		public String get() {
-			return getList().get(getCurrentPos());
+			final int length = length();
+			final int current = getCurrentPos();
+			if (current<0||current>=length)
+				return "";
+			return getList().get(current).toString();
 		}
 
 		@Override
@@ -123,8 +132,10 @@ public class MSelect extends WPanel {
 			this.current = current;
 		}
 
-		protected int getCurrentPos() {
+		public int getCurrentPos() {
 			final int length = length();
+			if (length<=0)
+				return 0;
 			return this.current = (this.current%length+length)%length;
 		}
 	}

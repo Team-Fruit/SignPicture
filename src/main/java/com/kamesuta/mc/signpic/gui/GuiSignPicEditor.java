@@ -14,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
+import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -212,6 +213,15 @@ public class GuiSignPicEditor extends WFrame {
 							}
 						});
 						add(new MSelect(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), 15) {
+							{
+								setSelector(new ListSelector() {
+									{
+										setList(Lists.newArrayList("uhgnva", "azulghn", "zaghnvu", "iuhvgn"));
+									}
+								});
+							}
+						});
+						add(new MSelectLabel(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), 15) {
 							{
 								setSelector(new ListSelector() {
 									{
