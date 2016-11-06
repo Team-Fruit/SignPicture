@@ -63,9 +63,9 @@ public class R {
 	protected void set(final Coord n) {
 		if (n==null)
 			throw new IllegalStateException(String.format("null coord [%s]", this));
-		if (n.side==null)
+		if (n.getSide()==null)
 			throw new IllegalStateException(String.format("invaild coord [%s]", this));
-		switch (n.side) {
+		switch (n.getSide()) {
 			case Left:
 			case Right:
 				if (this.x1==default_x1) {
