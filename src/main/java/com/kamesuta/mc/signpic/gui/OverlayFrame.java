@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.util.Timer;
 
+import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
@@ -97,70 +98,77 @@ public class OverlayFrame extends WFrame {
 			invokeLater(new Runnable() {
 				@Override
 				public void run() {
+					final MCoord o = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
-						protected Timer timer;
-
-						{
-							this.timer = new Timer();
-							this.timer.set(-showtime);
-						}
-
-						protected MCoord opacity;
-
-						@Override
-						protected void initOpacity() {
-							super.setOpacity(this.opacity = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start());
-						}
+						protected Timer timer = new Timer();
 
 						@Override
 						protected void initWidget() {
-							final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
+							this.timer.set(-showtime);
+							add(new WBase(new R(MCoord.ptop(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start(), MCoord.pbottom(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start())) {
 								@Override
-								public float getScaleWidth(final Area a) {
-									final float f1 = a.w()/font().getStringWidth(string);
-									final float f2 = a.h()/font().FONT_HEIGHT;
-									return Math.min(f1, f2);
+								protected void initOpacity() {
+									super.setOpacity(o);
 								}
 
 								@Override
-								public float getScaleHeight(final Area a) {
-									final float f1 = a.w()/font().getStringWidth(string);
-									final float f2 = a.h()/font().FONT_HEIGHT;
-									return Math.min(f1, f2);
+								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+									final Area a = getGuiPosition(pgp);
+									RenderHelper.startShape();
+									glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
+									drawRect(a);
+									super.draw(ev, pgp, p, frame, popacity);
 								}
-							};
-							add(label);
-						}
+							});
+							add(new WPanel(new R()) {
 
-						private boolean removed;
-
-						@Override
-						public void update(final WEvent ev, final Area pgp, final Point p) {
-							if (this.timer.getTime()>0f)
-								if (!this.removed) {
-									GuiOverlay.this.remove(this);
-									this.removed = true;
+								@Override
+								protected void initOpacity() {
+									super.setOpacity(o);
 								}
-						}
 
-						@Override
-						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-							final Area a = getGuiPosition(pgp);
-							RenderHelper.startShape();
-							glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
-							drawRect(a);
-							super.draw(ev, pgp, p, frame, popacity);
-						}
+								@Override
+								protected void initWidget() {
+									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
+										@Override
+										public float getScaleWidth(final Area a) {
+											final float f1 = a.w()/font().getStringWidth(string);
+											final float f2 = a.h()/font().FONT_HEIGHT;
+											return Math.min(f1, f2);
+										}
 
-						@Override
-						public boolean onCloseRequest() {
-							this.opacity.stop().add(Easings.easeOutQuart.move(.25f, 0f)).start();
-							return false;
-						}
+										@Override
+										public float getScaleHeight(final Area a) {
+											final float f1 = a.w()/font().getStringWidth(string);
+											final float f2 = a.h()/font().FONT_HEIGHT;
+											return Math.min(f1, f2);
+										}
+									};
+									add(label);
+								}
 
-						@Override
-						public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-							return this.opacity.isFinished();
+								private boolean removed;
+
+								@Override
+								public void update(final WEvent ev, final Area pgp, final Point p) {
+									if (timer.getTime()>0f)
+										if (!this.removed) {
+											GuiOverlay.this.remove(this);
+											this.removed = true;
+										}
+								}
+
+								@Override
+								public boolean onCloseRequest() {
+									o.stop().add(Easings.easeOutQuart.move(.25f, 0f)).start();
+									return false;
+								}
+
+								@Override
+								public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+									return o.isFinished();
+								}
+							});
 						}
 					});
 				}

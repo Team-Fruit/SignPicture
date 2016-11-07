@@ -47,6 +47,7 @@ public class GuiSettings extends WPanel {
 		add(new WPanel(new R()) {
 			protected boolean show = true;
 			protected MCoord bottom = MCoord.pbottom(0f);
+			protected boolean closing;
 
 			@Override
 			protected void initWidget() {
@@ -55,18 +56,31 @@ public class GuiSettings extends WPanel {
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
 						final boolean b = a.pointInside(p);
-						if (b) {
-							if (!show) {
-								bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
-								mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
+						if (!closing)
+							if (b) {
+								if (!show) {
+									bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+									mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
+								}
+								show = true;
+							} else {
+								if (show)
+									bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
+								show = false;
 							}
-							show = true;
-						} else {
-							if (show)
-								bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
-							show = false;
-						}
 						super.update(ev, pgp, p);
+					}
+
+					@Override
+					public boolean onCloseRequest() {
+						closing = true;
+						bottom.stop().add(Easings.easeInBack.move(.25f, 0f)).start();
+						return false;
+					}
+
+					@Override
+					public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+						return bottom.isFinished();
 					}
 
 					@Override
