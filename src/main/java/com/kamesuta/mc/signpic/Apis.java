@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
@@ -24,7 +26,7 @@ public class Apis {
 
 	private static final Random rnd = new Random();
 
-	public MapSetting<ImageUploaderFactory> imageUploader = new MapSetting<Apis.ImageUploaderFactory>() {
+	public final MapSetting<ImageUploaderFactory> imageUploader = new MapSetting<Apis.ImageUploaderFactory>() {
 		@Override
 		public String getConfig() {
 			return Config.instance.apiType;
@@ -32,7 +34,8 @@ public class Apis {
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Upload", "Type", setting).set(setting);
+			Config.instance.get("Api.Upload", "Type", "").set(setting);
+			Config.instance.get("Api.Upload", "Key", "").set("");
 			Config.instance.save();
 		};
 	};
@@ -40,8 +43,6 @@ public class Apis {
 	public void registerImageUploader(final String name, final ImageUploaderFactory uploader) {
 		this.imageUploader.registerSetting(name, uploader);
 	}
-
-	public Setting imageUploaderKey = new KeySetting();
 
 	public static class KeySetting extends Setting {
 		public KeySetting() {
@@ -60,7 +61,7 @@ public class Apis {
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Upload", "Key", setting).set(setting);
+			Config.instance.get("Api.Upload", "Key", "").set(setting);
 			Config.instance.save();
 		};
 	}
@@ -90,8 +91,11 @@ public class Apis {
 			return null;
 		}
 
-		public String getSetting() {
-			return getConfig();
+		public String getConfigOrRandom() {
+			String cfg = getConfig();
+			if (StringUtils.isEmpty(cfg))
+				cfg = getRandom();
+			return cfg;
 		}
 
 		public abstract String getConfig();

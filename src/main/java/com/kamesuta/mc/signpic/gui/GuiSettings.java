@@ -49,13 +49,13 @@ public class GuiSettings extends WPanel {
 						final boolean b = a.pointInside(p);
 						if (b) {
 							if (!show) {
-								bottom.stop().add(Easings.easeOutQuad.move(.5f, 1f)).start();
+								bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
 								mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
 							}
 							show = true;
 						} else {
 							if (show)
-								bottom.stop().add(Easings.easeOutBounce.move(.6f, 0f)).start();
+								bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
 							show = false;
 						}
 						super.update(ev, pgp, p);
@@ -98,12 +98,11 @@ public class GuiSettings extends WPanel {
 									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
 										@Override
 										protected void initWidget() {
-											final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getSetting());
+											final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getConfig());
 											Set<String> keys = null;
 											if (factory!=null)
 												keys = factory.keys();
-											Apis.instance.imageUploaderKey = new Apis.KeySetting(keys);
-											box.add(new Key(new R(), Apis.instance.imageUploaderKey));
+											box.add(new Key(new R(), new Apis.KeySetting(keys)));
 										}
 									};
 
@@ -136,13 +135,12 @@ public class GuiSettings extends WPanel {
 													@Override
 													protected void onChanged(final String oldText, final String newText) {
 														if (!StringUtils.equals(oldText, newText)) {
+															Apis.instance.imageUploader.setConfig(newText);
 															final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(newText);
 															Set<String> keys = null;
 															if (factory!=null)
 																keys = factory.keys();
-															Apis.instance.imageUploaderKey = new Apis.KeySetting(keys);
-															box.add(new Key(new R(), Apis.instance.imageUploaderKey));
-															Apis.instance.imageUploader.solve(newText);
+															box.add(new Key(new R(), new Apis.KeySetting(keys)));
 														}
 													}
 												});
@@ -187,7 +185,7 @@ public class GuiSettings extends WPanel {
 												@Override
 												protected void onChanged(final String oldText, final String newText) {
 													if (!StringUtils.equals(oldText, newText))
-														Apis.instance.imageUploader.solve(newText);
+														Key.this.setting.setConfig(newText);
 												}
 											});
 										}
