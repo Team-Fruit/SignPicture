@@ -63,7 +63,7 @@ public class MSelect extends WPanel {
 			protected void onTextChanged(final String oldText) {
 				onChanged(oldText, getText());
 			}
-		}.setAllowedCharacters("+-.eE0123456789").setWatermark("?");
+		};
 	}
 
 	protected void onChanged(final String oldText, final String newText) {
@@ -130,6 +130,12 @@ public class MSelect extends WPanel {
 
 		public void setCurrentPos(final int current) {
 			this.current = current;
+		}
+
+		public void setCurrentPos(final Object o) {
+			final int i = this.list.indexOf(o);
+			if (i>=0)
+				setCurrentPos(i);
 		}
 
 		public int getCurrentPos() {

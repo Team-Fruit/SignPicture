@@ -354,7 +354,7 @@ public class GuiSignPicEditor extends WFrame {
 				};
 				add(GuiSignPicEditor.this.field);
 
-				add(new GuiSettings(new R(Coord.bottom(0), Coord.height(200))));
+				add(new GuiSettings(new R(Coord.bottom(0), Coord.height(92))));
 
 				OverlayFrame.instance.delegate();
 				add(OverlayFrame.instance.pane);
