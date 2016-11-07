@@ -1,6 +1,6 @@
 package com.kamesuta.mc.signpic;
 
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
+import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
@@ -26,7 +26,7 @@ public class Client {
 	public static String name;
 
 	public static void openEditor() {
-		mc.displayGuiScreen(new GuiSignPicEditor(mc.currentScreen));
+		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
 	}
 
 	public static void startSection(final String sec) {

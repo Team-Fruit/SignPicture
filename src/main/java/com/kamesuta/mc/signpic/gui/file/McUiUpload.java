@@ -11,7 +11,7 @@ import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
+import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicator;
@@ -62,8 +62,8 @@ public class McUiUpload extends UiUpload {
 					public void onDone(final ICommunicateResponse res) {
 						if (upload.getLink()!=null) {
 							final String url = upload.getLink();
-							if (Client.mc.currentScreen instanceof GuiSignPicEditor) {
-								final GuiSignPicEditor editor = (GuiSignPicEditor) Client.mc.currentScreen;
+							if (Client.mc.currentScreen instanceof GuiMain) {
+								final GuiMain editor = (GuiMain) Client.mc.currentScreen;
 								editor.getTextField().setFocused(true);
 								editor.getTextField().setText(url);
 								editor.getTextField().setFocused(false);

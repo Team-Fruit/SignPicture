@@ -45,7 +45,7 @@ signpic.gui.notice.downloadfailed=ダウンロード失敗: §7%s
 
 # Upload UI
 signpic.ui.description=ファイルアップローダー!
-signpic.ui.drop=アップロードしたい画像を\nここにドラッグ＆ドロップ
+signpic.ui.drop=ここに画像をドラッグ＆ドロップ
 signpic.ui.select=またはファイルを選択
 
 # Image State

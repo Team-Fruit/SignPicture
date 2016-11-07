@@ -30,15 +30,15 @@ import com.kamesuta.mc.signpic.util.Sign;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-public class GuiSignPicEditor extends WFrame {
+public class GuiMain extends WFrame {
 	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getEntryId());
 	private MChatTextField field;
 
-	public GuiSignPicEditor(final GuiScreen parent) {
+	public GuiMain(final GuiScreen parent) {
 		super(parent);
 	}
 
-	public GuiSignPicEditor() {
+	public GuiMain() {
 	}
 
 	@Override
@@ -90,27 +90,27 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2)), GuiSignPicEditor.this.signbuilder.getMeta().size) {
+				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2)), GuiMain.this.signbuilder.getMeta().size) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 				});
 
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiSignPicEditor.this.signbuilder.getMeta().offset) {
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiMain.this.signbuilder.getMeta().offset) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 				});
 
-				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
+				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), GuiMain.this.signbuilder.getMeta().rotation) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 				});
 
@@ -296,13 +296,13 @@ public class GuiSignPicEditor extends WFrame {
 				});
 
 				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				GuiSignPicEditor.this.field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
+				GuiMain.this.field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
 						super.onAdded();
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
-						final String id = GuiSignPicEditor.this.signbuilder.getURI();
+						final String id = GuiMain.this.signbuilder.getURI();
 						if (id!=null)
 							setText(id);
 					}
@@ -311,12 +311,12 @@ public class GuiSignPicEditor extends WFrame {
 					public void onFocusChanged() {
 						final EntryId entryId = new EntryId(getText());
 						if (entryId.hasMeta())
-							GuiSignPicEditor.this.signbuilder.setMeta(entryId.getMeta());
+							GuiMain.this.signbuilder.setMeta(entryId.getMeta());
 						if (entryId.hasContentId())
-							GuiSignPicEditor.this.signbuilder.setURI(entryId.getContentId().getURI());
+							GuiMain.this.signbuilder.setURI(entryId.getContentId().getURI());
 						else
-							GuiSignPicEditor.this.signbuilder.setURI("");
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+							GuiMain.this.signbuilder.setURI("");
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 
 					@Override
@@ -331,7 +331,7 @@ public class GuiSignPicEditor extends WFrame {
 						return d.isFinished();
 					}
 				};
-				add(GuiSignPicEditor.this.field);
+				add(GuiMain.this.field);
 
 				add(new GuiSettings(new R(Coord.bottom(0), Coord.height(122))));
 
