@@ -8,9 +8,11 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
@@ -25,12 +27,16 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Apis.Setting;
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiSettings extends WPanel {
+	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
+
 	public GuiSettings(final R area) {
 		super(area);
 	}
@@ -86,12 +92,23 @@ public class GuiSettings extends WPanel {
 
 							@Override
 							protected void initWidget() {
-								add(new WPanel(new R(Coord.left(5), Coord.width(200), Coord.top(5), Coord.height(82))) {
+								add(new WBase(new R(Coord.top(5), Coord.left(3), Coord.width(90), Coord.height(26))) {
+									@Override
+									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+										final Area a = getGuiPosition(pgp);
+										texture().bindTexture(settings);
+										glColor4f(1, 1, 1, 1);
+										RenderHelper.startTexture();
+										drawTexturedModalRect(a);
+									}
+								});
+								add(new WPanel(new R(Coord.left(5), Coord.width(200), Coord.top(33), Coord.height(82))) {
 									@Override
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 										final Area a = getGuiPosition(pgp);
 										RenderHelper.startShape();
 										glColor4f(0f, 0f, 0f, .2f);
+										glLineWidth(.5f);
 										draw(a, GL_LINE_LOOP);
 										super.draw(ev, pgp, p, frame, opacity);
 									}
@@ -117,7 +134,8 @@ public class GuiSettings extends WPanel {
 												final Area a = getGuiPosition(pgp);
 												RenderHelper.startShape();
 												glColor4f(0f, 0f, 0f, .2f);
-												drawRect(a);
+												glLineWidth(.5f);
+												draw(a, GL_LINE_LOOP);
 												super.draw(ev, pgp, p, frame, opacity);
 											}
 
@@ -127,8 +145,6 @@ public class GuiSettings extends WPanel {
 												add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 													@Override
 													protected void initWidget() {
-														// TODO 自動生成されたメソッド・スタブ
-														super.initWidget();
 														setSelector(new ListSelector() {
 															{
 																final List<String> settings = Lists.newArrayList("");
@@ -171,7 +187,8 @@ public class GuiSettings extends WPanel {
 											final Area a = getGuiPosition(pgp);
 											RenderHelper.startShape();
 											glColor4f(0f, 0f, 0f, .2f);
-											drawRect(a);
+											glLineWidth(.5f);
+											draw(a, GL_LINE_LOOP);
 											super.draw(ev, pgp, p, frame, opacity);
 										}
 
@@ -201,6 +218,13 @@ public class GuiSettings extends WPanel {
 												}
 											});
 										}
+									}
+								});
+								add(new MButton(new R(Coord.bottom(5), Coord.right(5), Coord.width(60), Coord.height(15)), "Config") {
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));
+										return true;
 									}
 								});
 							}

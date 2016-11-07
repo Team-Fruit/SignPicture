@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiScreen;
 public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected GuiScreen parent;
 	protected WPanel contentPane = new WPanel(new R());
-	protected final WEvent event = new WEvent();
+	protected final WEvent event = new WEvent(this);
 	public float width;
 	public float height;
 
