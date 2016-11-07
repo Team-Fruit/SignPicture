@@ -190,6 +190,7 @@ public class GuiSettings extends WPanel {
 														}
 													});
 													this.field.setWatermark("Default");
+													this.field.setMaxStringLength(256);
 													setText(Key.this.setting.getConfig());
 												}
 

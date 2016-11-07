@@ -61,7 +61,6 @@ public class McUiUpload extends UiUpload {
 					@Override
 					public void onDone(final ICommunicateResponse res) {
 						if (upload.getLink()!=null) {
-							OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploaded", f.getName()), 2);
 							final String url = upload.getLink();
 							if (Client.mc.currentScreen instanceof GuiSignPicEditor) {
 								final GuiSignPicEditor editor = (GuiSignPicEditor) Client.mc.currentScreen;
@@ -73,8 +72,11 @@ public class McUiUpload extends UiUpload {
 								final EntryIdBuilder signbuilder = new EntryIdBuilder(entryId);
 								signbuilder.setURI(url);
 								CurrentMode.instance.setEntryId(signbuilder.build());
+								OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploaded", f.getName()), 2);
 							}
 						}
+						if (!res.isSuccess())
+							OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploadfailed", res.getError()), 2);
 					}
 				});
 				Communicator.instance.communicate(upload);
@@ -82,6 +84,7 @@ public class McUiUpload extends UiUpload {
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
 		} catch (final IOException e) {
+			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploadfailed", e), 2);
 		}
 	}
 

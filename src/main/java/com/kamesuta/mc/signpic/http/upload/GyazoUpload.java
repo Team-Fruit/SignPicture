@@ -84,7 +84,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 				}
 			};
 
-			builder.addTextBody("access_token", this.key);
+			builder.addTextBody("client_id", this.key);
 			builder.addBinaryBody("imagedata", countupstream, ContentType.DEFAULT_BINARY, this.name);
 			httppost.setEntity(builder.build());
 
@@ -99,6 +99,9 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 					onDone(new CommunicateResponse(true, null));
 					return;
 				}
+			} else {
+				onDone(new CommunicateResponse(false, new IOException("Bad Response")));
+				return;
 			}
 		} catch (final Exception e) {
 			onDone(new CommunicateResponse(false, e));

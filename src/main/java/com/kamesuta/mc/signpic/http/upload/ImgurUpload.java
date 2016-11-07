@@ -96,9 +96,12 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				if (this.upstream!=null) {
 					resstream = resEntity.getContent();
 					this.result = gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
-					onDone(new CommunicateResponse(true, null));
+					onDone(new CommunicateResponse(this.result.success, null));
 					return;
 				}
+			} else {
+				onDone(new CommunicateResponse(false, new IOException("Bad Response")));
+				return;
 			}
 		} catch (final Exception e) {
 			onDone(new CommunicateResponse(false, e));
@@ -117,39 +120,44 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 	}
 
 	public static class ImgurResult {
-		public String id;
-		public String title;
-		public String description;
-		public int datetime;
-		public String type;
-		public boolean animated;
-		public int width;
-		public int height;
-		public int size;
-		public int views;
-		public int bandwidth;
-		public String vote;
-		public boolean favorite;
-		public String nsfw;
-		public String section;
-		public String account_url;
-		public int account_id;
-		public boolean is_ad;
-		public boolean in_gallery;
-		public String deletehash;
-		public String name;
-		public String link;
-		public String gifv;
-		public String mp4;
-		public int mp4_size;
-		public boolean looping;
+		public Data data;
+		public boolean success;
+		public int status;
 
+		public static class Data {
+			public String id;
+			public String title;
+			public String description;
+			public int datetime;
+			public String type;
+			public boolean animated;
+			public int width;
+			public int height;
+			public int size;
+			public int views;
+			public int bandwidth;
+			public String vote;
+			public boolean favorite;
+			public String nsfw;
+			public String section;
+			public String account_url;
+			public int account_id;
+			public boolean is_ad;
+			public boolean in_gallery;
+			public String deletehash;
+			public String name;
+			public String link;
+			public String gifv;
+			public String mp4;
+			public int mp4_size;
+			public boolean looping;
+		}
 	}
 
 	@Override
 	public String getLink() {
-		if (this.result!=null)
-			return this.result.link;
+		if (this.result!=null&&this.result.data!=null)
+			return this.result.data.link;
 		return null;
 	}
 }
