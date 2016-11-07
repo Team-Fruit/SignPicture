@@ -96,12 +96,14 @@ public class Apis {
 		public E getSetting() {
 			final Set<Map.Entry<String, E>> entry = getSettings().entrySet();
 			final int size = entry.size();
-			final int item = rnd.nextInt(size);
-			int i = 0;
-			for (final Map.Entry<String, E> obj : entry) {
-				if (i==item)
-					return obj.getValue();
-				i = i+1;
+			if (size>0) {
+				final int item = rnd.nextInt(size);
+				int i = 0;
+				for (final Map.Entry<String, E> obj : entry) {
+					if (i==item)
+						return obj.getValue();
+					i = i+1;
+				}
 			}
 			return null;
 		}

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget;
 
+import java.util.Iterator;
+
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
@@ -19,12 +21,18 @@ public class WBox extends WPanel {
 	}
 
 	protected void removeAll() {
-		for (final WCommon c : getContainer())
-			remove(c);
+		for (final Iterator<WCommon> itr = getContainer().iterator(); itr.hasNext();) {
+			final WCommon widget = itr.next();
+			if (widget.onCloseRequest())
+				itr.remove();
+			else
+				this.removelist.offer(widget);
+		}
 	}
 
 	@Override
 	public void update(final WEvent ev, final Area pgp, final Point p) {
+		super.update(ev, pgp, p);
 		if (getContainer().size()<=0)
 			if (this.addtask!=null) {
 				super.add(this.addtask);

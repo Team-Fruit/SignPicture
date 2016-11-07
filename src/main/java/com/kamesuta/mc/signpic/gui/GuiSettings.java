@@ -93,7 +93,7 @@ public class GuiSettings extends WPanel {
 										super.draw(ev, pgp, p, frame, opacity);
 									}
 
-									protected WBox key = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
+									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
 										@Override
 										protected void initWidget() {
 											final ImageUploaderFactory factory = Apis.instance.imageUploader.getConfigSetting();
@@ -101,7 +101,7 @@ public class GuiSettings extends WPanel {
 												Apis.instance.imageUploaderKey.setSettings(factory.keys());
 											else
 												Apis.instance.imageUploaderKey.clear();
-											add(new Key(new R(), Apis.instance.imageUploaderKey));
+											box.add(new Key(new R(), Apis.instance.imageUploaderKey));
 										}
 									};
 
@@ -139,14 +139,14 @@ public class GuiSettings extends WPanel {
 																Apis.instance.imageUploaderKey.setSettings(factory.keys());
 															else
 																Apis.instance.imageUploaderKey.clear();
-															add(new Key(new R(), Apis.instance.imageUploaderKey));
+															box.add(new Key(new R(), Apis.instance.imageUploaderKey));
 															Apis.instance.imageUploader.setSetting(newText);
 														}
 													}
 												});
 											}
 										});
-										add(this.key);
+										add(this.box);
 									}
 
 									class Key extends WPanel {

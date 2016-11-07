@@ -19,7 +19,7 @@ public class Communicator {
 		return this.tasks;
 	}
 
-	public <RES> void communicate(final ICommunicate communicate) {
+	public void communicate(final ICommunicate communicate) {
 		if (communicate instanceof Progressable)
 			synchronized (this.tasks) {
 				this.tasks.offer((Progressable) communicate);
