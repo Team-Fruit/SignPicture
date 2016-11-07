@@ -18,7 +18,7 @@ public class MCoord extends Coord {
 	}
 
 	public MCoord(final float coord) {
-		this(coord, CoordSide.Top, CoordType.Absolute);
+		this(coord, CoordSide.Top, CoordType.Percent);
 	}
 
 	public MCoord add(final IMotion animation) {
@@ -27,7 +27,7 @@ public class MCoord extends Coord {
 	}
 
 	protected void setCurrent(final IMotion current) {
-		if (this.current != null)
+		if (this.current!=null)
 			this.current.onFinished();
 		this.current = current;
 	}
@@ -48,14 +48,14 @@ public class MCoord extends Coord {
 
 	public MCoord pause() {
 		this.paused = true;
-		if (this.current != null)
+		if (this.current!=null)
 			this.current.pause();
 		return this;
 	}
 
 	public MCoord start() {
 		this.paused = false;
-		if (this.current != null)
+		if (this.current!=null)
 			this.current.resume();
 		return this;
 	}
@@ -67,7 +67,7 @@ public class MCoord extends Coord {
 	}
 
 	public MCoord stopNext() {
-		if (this.current != null)
+		if (this.current!=null)
 			this.coord = this.current.getEnd(this.coord);
 		setCurrent(this.queue.poll());
 		start();
@@ -75,7 +75,7 @@ public class MCoord extends Coord {
 	}
 
 	public IMotion getAnimation() {
-		if ((this.current == null || this.current.isFinished()) && !this.paused)
+		if ((this.current==null||this.current.isFinished())&&!this.paused)
 			stopNext();
 		return this.current;
 	}
@@ -87,7 +87,7 @@ public class MCoord extends Coord {
 	@Override
 	public float get() {
 		final IMotion a = getAnimation();
-		if (a != null)
+		if (a!=null)
 			return (float) a.get(this.coord);
 		else
 			return this.coord;
@@ -95,7 +95,7 @@ public class MCoord extends Coord {
 
 	public float getLast() {
 		final IMotion a = getAnimationLast();
-		if (a != null)
+		if (a!=null)
 			return a.getEnd(this.coord);
 		else
 			return this.coord;
@@ -103,7 +103,7 @@ public class MCoord extends Coord {
 
 	public MCoord addAfter(final MCoord q) {
 		final IMotion a = getAnimationLast();
-		if (a != null)
+		if (a!=null)
 			a.after(new Runnable() {
 				@Override
 				public void run() {
@@ -115,14 +115,14 @@ public class MCoord extends Coord {
 
 	public MCoord addAfter(final Runnable r) {
 		final IMotion a = getAnimationLast();
-		if (a != null)
+		if (a!=null)
 			a.after(r);
 		return this;
 	}
 
 	public boolean isFinished() {
 		final IMotion a = getAnimationLast();
-		if ((this.current!=null && !this.current.isFinished()) || (a!=null && !a.isFinished()))
+		if (this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished())
 			return false;
 		else
 			return true;

@@ -3,7 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
+import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -34,7 +34,7 @@ public class ResourceImage extends Image {
 
 	@Override
 	public void onInit() {
-		this.content.state.setType(ContentStateType.AVAILABLE);
+		this.content.state.setType(StateType.AVAILABLE);
 	}
 
 	@Override
