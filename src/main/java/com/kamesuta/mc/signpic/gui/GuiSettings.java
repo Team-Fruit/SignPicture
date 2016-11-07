@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -124,18 +125,26 @@ public class GuiSettings extends WPanel {
 											protected void initWidget() {
 												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), "Type"));
 												add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
-													{
+													@Override
+													protected void initWidget() {
+														// TODO 自動生成されたメソッド・スタブ
+														super.initWidget();
 														setSelector(new ListSelector() {
 															{
-																setList(Lists.newArrayList(Apis.instance.imageUploader.getSettings()));
+																final List<String> settings = Lists.newArrayList("");
+																settings.addAll(Apis.instance.imageUploader.getSettings());
+																setList(settings);
 															}
 														});
+														this.field.setWatermark("Default");
+														setText(Apis.instance.imageUploader.getConfig());
 													}
 
 													@Override
 													protected void onChanged(final String oldText, final String newText) {
 														if (!StringUtils.equals(oldText, newText)) {
-															Apis.instance.imageUploader.setConfig(newText);
+															if (!StringUtils.equals(newText, Apis.instance.imageUploader.getConfig()))
+																Apis.instance.imageUploader.setConfig(newText);
 															final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(newText);
 															Set<String> keys = null;
 															if (factory!=null)
@@ -170,21 +179,23 @@ public class GuiSettings extends WPanel {
 										protected void initWidget() {
 											add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), "Key"));
 											add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
-												{
+												@Override
+												protected void initWidget() {
 													setSelector(new ListSelector() {
 														{
+															final List<String> settings = Lists.newArrayList("");
 															if (Key.this.setting!=null)
-																setList(Lists.newArrayList(Key.this.setting.getSettings()));
-															else
-																setList(Lists.<String> newArrayList());
+																settings.addAll(Key.this.setting.getSettings());
+															setList(settings);
 														}
 													});
 													this.field.setWatermark("Default");
+													setText(Key.this.setting.getConfig());
 												}
 
 												@Override
 												protected void onChanged(final String oldText, final String newText) {
-													if (!StringUtils.equals(oldText, newText))
+													if (!StringUtils.equals(oldText, newText)&&!StringUtils.equals(newText, Key.this.setting.getConfig()))
 														Key.this.setting.setConfig(newText);
 												}
 											});

@@ -17,10 +17,30 @@ public class MLabel extends WBase {
 	protected int textcolor = 14737632;
 	protected String text;
 	protected boolean shadow;
+	protected String watermark;
+	protected int watermarkcolor = 0x777777;
 
 	public MLabel(final R position, final String text) {
 		super(position);
 		this.text = text;
+	}
+
+	public MLabel setWatermark(final String watermark) {
+		this.watermark = watermark;
+		return this;
+	}
+
+	public String getWatermark() {
+		return this.watermark;
+	}
+
+	public MLabel setWatermarkColor(final int watermark) {
+		this.watermarkcolor = watermark;
+		return this;
+	}
+
+	public int getWatermarkColor() {
+		return this.watermarkcolor;
 	}
 
 	public void setShadow(final boolean b) {
@@ -86,8 +106,13 @@ public class MLabel extends WBase {
 		glScaled(getScaleWidth(a), getScaleHeight(a), 1);
 		RenderHelper.startTexture();
 		final Color c = new Color(getColor());
-		final Color color2 = new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-		drawStringC(getText(), 0, 0, 0, 0, color2.getRGB(), isShadow());
+		final Color c_ = new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
+		drawStringC(getText(), 0, 0, 0, 0, c_.getRGB(), isShadow());
+		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {
+			final Color w = new Color(getWatermarkColor());
+			final Color w_ = new Color(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
+			drawStringC(getWatermark(), 0, 0, 0, 0, w_.getRGB());
+		}
 		glPopMatrix();
 	}
 }

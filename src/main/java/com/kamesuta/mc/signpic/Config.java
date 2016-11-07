@@ -116,16 +116,14 @@ public final class Config extends Configuration {
 	public void save() {
 		if (hasChanged())
 			super.save();
+		changeableSync();
 	}
 
 	@CoreEvent
 	public void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		if (StringUtils.equals(eventArgs.modID, Reference.MODID)) {
-			changeableSync();
-
+		if (StringUtils.equals(eventArgs.modID, Reference.MODID))
 			if (this.updatable)
 				save();
-		}
 	}
 
 	public String getFilePath() {
