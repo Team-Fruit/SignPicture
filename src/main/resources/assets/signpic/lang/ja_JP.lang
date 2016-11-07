@@ -15,6 +15,7 @@ signpic.gui.editor.continue=連続
 signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
+signpic.gui.editor.file=アップロード
 signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
@@ -24,6 +25,12 @@ signpic.gui.editor.size.height=高さ
 signpic.gui.editor.offset.category=オフセット
 ### Rotation
 signpic.gui.editor.rotation.category=回転
+## Settings
+signpic.gui.settings.api.upimage=画像アップロード設定
+signpic.gui.settings.api.upimage.type=APIの種類
+signpic.gui.settings.api.upimage.key=APIキー
+signpic.gui.settings.default=自動
+signpic.gui.settings.config=コンフィグ
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
 signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
@@ -31,8 +38,10 @@ signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
 # Notice
 signpic.gui.notice.uploading=アップロード開始 %s
 signpic.gui.notice.uploaded=アップロード完了 %s
+signpic.gui.notice.uploadfailed=アップロード失敗: §7%s
 signpic.gui.notice.downloading=ダウンロード開始 %s
 signpic.gui.notice.downloaded=ダウンロード完了 %s
+signpic.gui.notice.downloadfailed=ダウンロード失敗: §7%s
 
 # Upload UI
 signpic.ui.description=ファイルアップローダー!

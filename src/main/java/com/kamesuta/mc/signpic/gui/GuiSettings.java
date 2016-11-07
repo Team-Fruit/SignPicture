@@ -32,6 +32,7 @@ import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiSettings extends WPanel {
@@ -127,7 +128,7 @@ public class GuiSettings extends WPanel {
 									@Override
 									protected void initWidget() {
 										float top = 1;
-										add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), "Api Settings"));
+										add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage")));
 										add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 											@Override
 											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
@@ -141,7 +142,7 @@ public class GuiSettings extends WPanel {
 
 											@Override
 											protected void initWidget() {
-												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), "Type"));
+												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage.type")));
 												add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 													@Override
 													protected void initWidget() {
@@ -152,7 +153,7 @@ public class GuiSettings extends WPanel {
 																setList(settings);
 															}
 														});
-														this.field.setWatermark("Default");
+														this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
 														setText(Apis.instance.imageUploader.getConfig());
 													}
 
@@ -194,7 +195,7 @@ public class GuiSettings extends WPanel {
 
 										@Override
 										protected void initWidget() {
-											add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), "Key"));
+											add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage.key")));
 											add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 												@Override
 												protected void initWidget() {
@@ -206,7 +207,7 @@ public class GuiSettings extends WPanel {
 															setList(settings);
 														}
 													});
-													this.field.setWatermark("Default");
+													this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
 													this.field.setMaxStringLength(256);
 													setText(Key.this.setting.getConfig());
 												}
@@ -220,7 +221,7 @@ public class GuiSettings extends WPanel {
 										}
 									}
 								});
-								add(new MButton(new R(Coord.bottom(5), Coord.right(5), Coord.width(60), Coord.height(15)), "Config") {
+								add(new MButton(new R(Coord.bottom(5), Coord.right(5), Coord.width(60), Coord.height(15)), I18n.format("signpic.gui.settings.config")) {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));

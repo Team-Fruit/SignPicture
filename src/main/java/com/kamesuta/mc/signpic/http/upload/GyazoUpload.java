@@ -46,7 +46,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 	public GyazoUpload(final File file, final State state, final String key) throws FileNotFoundException {
 		this.name = file.getName();
 		this.upstream = new FileInputStream(file);
-		state.setName(this.name);
+		state.setName("§3Gyazo: §r"+this.name);
 		state.getProgress().setOverall(file.length());
 		this.state = state;
 		this.key = key;

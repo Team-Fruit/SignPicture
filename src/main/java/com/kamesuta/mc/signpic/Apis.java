@@ -144,7 +144,7 @@ public class Apis {
 
 			@Override
 			public IUploader create(final File f, final State s, final String key) throws IOException {
-				return new GyazoUpload(f, s.setName("§eGyazo: "+f.getName()), key);
+				return new GyazoUpload(f, s, key);
 			}
 		});
 		registerImageUploader("Imgur", new ImageUploaderFactory() {
@@ -164,7 +164,7 @@ public class Apis {
 
 			@Override
 			public IUploader create(final File f, final State s, final String key) throws IOException {
-				return new ImgurUpload(f, s.setName("§eImgur: "+f.getName()), key);
+				return new ImgurUpload(f, s, key);
 			}
 		});
 	}
