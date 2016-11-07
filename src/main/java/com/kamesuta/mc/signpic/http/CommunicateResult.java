@@ -1,6 +1,6 @@
 package com.kamesuta.mc.signpic.http;
 
-public interface ICommunicateResponse {
+public interface CommunicateResult {
 	boolean isSuccess();
 
 	Throwable getError();

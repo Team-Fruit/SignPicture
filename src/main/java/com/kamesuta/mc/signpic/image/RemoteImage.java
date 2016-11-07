@@ -11,14 +11,13 @@ import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
-import com.kamesuta.mc.signpic.http.download.ContentDownload.ContentDLResult;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
 
 public class RemoteImage extends Image {
 	protected ImageTextures texture;
 	protected File local;
-	private ICommunicate<ContentDLResult> downloader;
+	private ICommunicate downloader;
 
 	public RemoteImage(final Content content) {
 		super(content);
@@ -34,9 +33,9 @@ public class RemoteImage extends Image {
 			this.content.state.setProgress(new Progress());
 			try {
 				this.downloader = new ContentDownload(this.content.location, this.content.state);
-				Communicator.instance.<ContentDLResult> communicate(this.downloader, new ICommunicateCallback<ContentDLResult>() {
+				this.downloader.setCallback(new ICommunicateCallback() {
 					@Override
-					public void onDone(final ICommunicateResponse<ContentDLResult> res) {
+					public void onDone(final ICommunicateResponse res) {
 						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
 						if (res.isSuccess())
 							ContentManager.instance.enqueueAsync(RemoteImage.this);
@@ -45,6 +44,7 @@ public class RemoteImage extends Image {
 						RemoteImage.this.downloader = null;
 					}
 				});
+				Communicator.instance.communicate(this.downloader);
 			} catch (final URISyntaxException e) {
 				this.content.state.setErrorMessage(e);
 			}

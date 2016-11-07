@@ -19,14 +19,14 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-public class ImgurUpload implements ICommunicate<ImgurUpload.ImgurResult>, Progressable {
+public class ImgurUpload extends Communicate implements Progressable, IUploader {
 	public static final Gson gson = new Gson();
 
 	private final String name;
@@ -34,6 +34,7 @@ public class ImgurUpload implements ICommunicate<ImgurUpload.ImgurResult>, Progr
 	private final State state;
 	private final String key;
 	protected boolean canceled;
+	protected ImgurResult result;
 
 	protected ImgurUpload(final String name, final InputStream stream, final State state, final String key) {
 		this.name = name;
@@ -57,7 +58,7 @@ public class ImgurUpload implements ICommunicate<ImgurUpload.ImgurResult>, Progr
 	}
 
 	@Override
-	public CommunicateResponse<ImgurResult> communicate() {
+	public void communicate() {
 		final String url = "https://api.imgur.com/3/image";
 
 		InputStream resstream = null;
@@ -94,16 +95,20 @@ public class ImgurUpload implements ICommunicate<ImgurUpload.ImgurResult>, Progr
 				final HttpEntity resEntity = response.getEntity();
 				if (this.upstream!=null) {
 					resstream = resEntity.getContent();
-					return new CommunicateResponse<ImgurResult>(gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class));
+					this.result = gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
+					onDone(new CommunicateResponse(true, null));
+					return;
 				}
 			}
 		} catch (final Exception e) {
-			return new CommunicateResponse<ImgurResult>(e);
+			onDone(new CommunicateResponse(false, e));
+			return;
 		} finally {
 			IOUtils.closeQuietly(countupstream);
 			IOUtils.closeQuietly(resstream);
 		}
-		return new CommunicateResponse<ImgurResult>();
+		onDone(new CommunicateResponse(false, null));
+		return;
 	}
 
 	@Override
@@ -111,7 +116,7 @@ public class ImgurUpload implements ICommunicate<ImgurUpload.ImgurResult>, Progr
 		this.canceled = true;
 	}
 
-	public static class ImgurResult implements UploadResult {
+	public static class ImgurResult {
 		public String id;
 		public String title;
 		public String description;
@@ -139,9 +144,12 @@ public class ImgurUpload implements ICommunicate<ImgurUpload.ImgurResult>, Progr
 		public int mp4_size;
 		public boolean looping;
 
-		@Override
-		public String getLink() {
-			return this.link;
-		}
+	}
+
+	@Override
+	public String getLink() {
+		if (this.result!=null)
+			return this.result.link;
+		return null;
 	}
 }

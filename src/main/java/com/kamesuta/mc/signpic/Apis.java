@@ -13,10 +13,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
+import com.kamesuta.mc.signpic.http.upload.IUploader;
 import com.kamesuta.mc.signpic.http.upload.ImgurUpload;
-import com.kamesuta.mc.signpic.http.upload.UploadResult;
 import com.kamesuta.mc.signpic.information.Info;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.State;
@@ -165,7 +164,7 @@ public class Apis {
 	}
 
 	public static interface ImageUploaderFactory {
-		ICommunicate<? extends UploadResult> create(File f, State s, String key) throws IOException;
+		IUploader create(File f, State s, String key) throws IOException;
 
 		Set<String> keys();
 	}
@@ -187,7 +186,7 @@ public class Apis {
 			}
 
 			@Override
-			public ICommunicate<? extends UploadResult> create(final File f, State s, final String key) throws IOException {
+			public IUploader create(final File f, final State s, final String key) throws IOException {
 				return new GyazoUpload(f, s.setName("§eGyazo: "+f.getName()), key);
 			}
 		});
@@ -207,7 +206,7 @@ public class Apis {
 			}
 
 			@Override
-			public ICommunicate<? extends UploadResult> create(final File f, State s, final String key) throws IOException {
+			public IUploader create(final File f, final State s, final String key) throws IOException {
 				return new ImgurUpload(f, s.setName("§eImgur: "+f.getName()), key);
 			}
 		});

@@ -1,30 +1,15 @@
 package com.kamesuta.mc.signpic.http;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
+public abstract class Communicate implements ICommunicate {
+	protected ICommunicateCallback callback;
 
-import com.kamesuta.mc.signpic.util.Downloader;
-
-public abstract class Communicate<T> implements ICommunicate<T> {
-	protected abstract HttpUriRequest request() throws Exception;
-
-	protected abstract ICommunicateResponse<T> response(HttpResponse response) throws Throwable;
-
-	protected void before() {
-	}
-
-	protected void after() {
+	protected void onDone(final ICommunicateResponse response) {
+		if (this.callback!=null)
+			this.callback.onDone(response);
 	}
 
 	@Override
-	public ICommunicateResponse<T> communicate() {
-		before();
-		try {
-			return response(Downloader.downloader.client.execute(request()));
-		} catch (final Throwable e) {
-			return new CommunicateResponse<T>().setError(e);
-		} finally {
-			after();
-		}
+	public void setCallback(final ICommunicateCallback callback) {
+		this.callback = callback;
 	}
 }

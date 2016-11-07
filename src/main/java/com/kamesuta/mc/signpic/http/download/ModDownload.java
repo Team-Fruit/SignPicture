@@ -21,10 +21,9 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
+import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.ICommunicate;
-import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
@@ -37,12 +36,13 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progressable {
+public class ModDownload extends Communicate implements Progressable {
 	protected boolean canceled;
 	protected State status = new State("§6SignPicture Mod Update");
+	public ModDLResult result;
 
 	@Override
-	public ICommunicateResponse<ModDLResult> communicate() {
+	public void communicate() {
 		final Informations.InfoState state = Informations.instance.getState();
 		final Informations.InfoSource source = Informations.instance.getSource();
 		final Informations.InfoVersion online = source.onlineVersion();
@@ -104,11 +104,15 @@ public class ModDownload implements ICommunicate<ModDownload.ModDLResult>, Progr
 			state.downloading = false;
 			state.downloadedFile = f1;
 
-			return new CommunicateResponse<ModDLResult>(new ModDLResult(chat));
+			this.result = new ModDLResult(chat);
+			onDone(new CommunicateResponse(true, null));
+			return;
 		} catch (final Throwable e) {
 			Reference.logger.warn("Updater Downloading Error", e);
 			final IChatComponent chat = new ChatBuilder().setChat(new ChatComponentTranslation("signpic.versioning.error").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))).build();
-			return new CommunicateResponse<ModDLResult>().setError(e).setResult(new ModDLResult(chat));
+			this.result = new ModDLResult(chat);
+			onDone(new CommunicateResponse(false, e));
+			return;
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);

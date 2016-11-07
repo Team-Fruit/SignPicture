@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.gui.file;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -16,10 +15,9 @@ import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicator;
-import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
-import com.kamesuta.mc.signpic.http.upload.UploadResult;
+import com.kamesuta.mc.signpic.http.upload.IUploader;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.state.State;
 
@@ -56,15 +54,15 @@ public class McUiUpload extends UiUpload {
 			final String key = Apis.instance.imageUploaderKey.getConfigSetting();
 			if (factory!=null&&key!=null) {
 				final State state = new State("Upload");
-				final ICommunicate<? extends UploadResult> upload = factory.create(f, state, key);
+				final IUploader upload = factory.create(f, state, key);
 				state.getMeta().put(GuiTask.HighlightPanel, true);
 				state.getMeta().put(GuiTask.ShowPanel, 3);
-				Communicator.instance.communicate(upload, new ICommunicateCallback<UploadResult>() {
+				upload.setCallback(new ICommunicateCallback() {
 					@Override
-					public void onDone(final ICommunicateResponse<? extends UploadResult> res) {
-						if (res.getResult()!=null) {
+					public void onDone(final ICommunicateResponse res) {
+						if (upload.getLink()!=null) {
 							OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploaded", f.getName()), 2);
-							final String url = "";
+							final String url = upload.getLink();
 							if (Client.mc.currentScreen instanceof GuiSignPicEditor) {
 								final GuiSignPicEditor editor = (GuiSignPicEditor) Client.mc.currentScreen;
 								editor.getTextField().setFocused(true);
@@ -79,10 +77,11 @@ public class McUiUpload extends UiUpload {
 						}
 					}
 				});
+				Communicator.instance.communicate(upload);
 			}
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
-		} catch (final FileNotFoundException e) {
+		} catch (final IOException e) {
 		}
 	}
 

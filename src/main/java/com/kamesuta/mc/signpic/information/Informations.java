@@ -12,7 +12,6 @@ import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
-import com.kamesuta.mc.signpic.information.InformationCheck.InformationCheckResult;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -92,15 +91,17 @@ public final class Informations {
 	}
 
 	public void init() {
-		Communicator.instance.communicate(new InformationCheck(), new ICommunicateCallback<InformationCheck.InformationCheckResult>() {
+		final InformationCheck checker = new InformationCheck();
+		checker.setCallback(new ICommunicateCallback() {
 			@Override
-			public void onDone(final ICommunicateResponse<InformationCheckResult> res) {
-				if (res.getResult()!=null)
-					setSource(res.getResult().source);
+			public void onDone(final ICommunicateResponse res) {
+				if (checker.result!=null)
+					setSource(checker.result);
 				if (res.getError()!=null)
 					Reference.logger.warn("Could not check version information", res.getError());
 			}
 		});
+		Communicator.instance.communicate(checker);
 	}
 
 	@CoreEvent

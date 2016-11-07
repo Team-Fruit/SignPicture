@@ -19,14 +19,14 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progressable {
+public class GyazoUpload extends Communicate implements Progressable, IUploader {
 	public static final Gson gson = new Gson();
 
 	private final String name;
@@ -34,6 +34,7 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 	private final State state;
 	private final String key;
 	protected boolean canceled;
+	protected GyazoResult result;
 
 	protected GyazoUpload(final String name, final InputStream stream, final State state, final String key) {
 		this.name = name;
@@ -57,7 +58,7 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 	}
 
 	@Override
-	public CommunicateResponse<GyazoResult> communicate() {
+	public void communicate() {
 		final String url = "https://upload.gyazo.com/api/upload";
 
 		InputStream resstream = null;
@@ -94,16 +95,20 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 				final HttpEntity resEntity = response.getEntity();
 				if (this.upstream!=null) {
 					resstream = resEntity.getContent();
-					return new CommunicateResponse<GyazoResult>(gson.<GyazoResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), GyazoResult.class));
+					this.result = gson.<GyazoResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), GyazoResult.class);
+					onDone(new CommunicateResponse(true, null));
+					return;
 				}
 			}
 		} catch (final Exception e) {
-			return new CommunicateResponse<GyazoResult>(e);
+			onDone(new CommunicateResponse(false, e));
+			return;
 		} finally {
 			IOUtils.closeQuietly(countupstream);
 			IOUtils.closeQuietly(resstream);
 		}
-		return new CommunicateResponse<GyazoResult>();
+		onDone(new CommunicateResponse(false, null));
+		return;
 	}
 
 	@Override
@@ -111,17 +116,19 @@ public class GyazoUpload implements ICommunicate<GyazoUpload.GyazoResult>, Progr
 		this.canceled = true;
 	}
 
-	public static class GyazoResult implements UploadResult {
+	public static class GyazoResult {
 		public String created_at;
 		public String image_id;
 		public String permalink_url;
 		public String thumb_url;
 		public String type;
 		public String url;
+	}
 
-		@Override
-		public String getLink() {
-			return this.url;
-		}
+	@Override
+	public String getLink() {
+		if (this.result!=null)
+			return this.result.url;
+		return null;
 	}
 }
