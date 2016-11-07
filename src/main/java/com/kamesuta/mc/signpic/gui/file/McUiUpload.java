@@ -50,8 +50,8 @@ public class McUiUpload extends UiUpload {
 	@Override
 	protected void apply(final File f) {
 		try {
-			final ImageUploaderFactory factory = Apis.instance.imageUploader.getConfigSetting();
-			final String key = Apis.instance.imageUploaderKey.getConfigSetting();
+			final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getConfig());
+			final String key = Apis.instance.imageUploaderKey.getConfig();
 			if (factory!=null&&key!=null) {
 				final State state = new State("Upload");
 				final IUploader upload = factory.create(f, state, key);

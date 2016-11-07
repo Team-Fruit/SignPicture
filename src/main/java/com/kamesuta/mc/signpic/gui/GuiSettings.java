@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.Set;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -21,7 +23,7 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
-import com.kamesuta.mc.signpic.Apis.SetSetting;
+import com.kamesuta.mc.signpic.Apis.Setting;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -96,11 +98,11 @@ public class GuiSettings extends WPanel {
 									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
 										@Override
 										protected void initWidget() {
-											final ImageUploaderFactory factory = Apis.instance.imageUploader.getConfigSetting();
+											final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getSetting());
+											Set<String> keys = null;
 											if (factory!=null)
-												Apis.instance.imageUploaderKey.setSettings(factory.keys());
-											else
-												Apis.instance.imageUploaderKey.clear();
+												keys = factory.keys();
+											Apis.instance.imageUploaderKey = new Apis.KeySetting(keys);
 											box.add(new Key(new R(), Apis.instance.imageUploaderKey));
 										}
 									};
@@ -126,7 +128,7 @@ public class GuiSettings extends WPanel {
 													{
 														setSelector(new ListSelector() {
 															{
-																setList(Lists.newArrayList(Apis.instance.imageUploader.getSettingKeys()));
+																setList(Lists.newArrayList(Apis.instance.imageUploader.getSettings()));
 															}
 														});
 													}
@@ -134,13 +136,13 @@ public class GuiSettings extends WPanel {
 													@Override
 													protected void onChanged(final String oldText, final String newText) {
 														if (!StringUtils.equals(oldText, newText)) {
-															final ImageUploaderFactory factory = Apis.instance.imageUploader.getSetting(newText);
+															final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(newText);
+															Set<String> keys = null;
 															if (factory!=null)
-																Apis.instance.imageUploaderKey.setSettings(factory.keys());
-															else
-																Apis.instance.imageUploaderKey.clear();
+																keys = factory.keys();
+															Apis.instance.imageUploaderKey = new Apis.KeySetting(keys);
 															box.add(new Key(new R(), Apis.instance.imageUploaderKey));
-															Apis.instance.imageUploader.setSetting(newText);
+															Apis.instance.imageUploader.solve(newText);
 														}
 													}
 												});
@@ -150,9 +152,9 @@ public class GuiSettings extends WPanel {
 									}
 
 									class Key extends WPanel {
-										protected SetSetting setting;
+										protected Setting setting;
 
-										public Key(final R position, final SetSetting setting) {
+										public Key(final R position, final Setting setting) {
 											super(position);
 											this.setting = setting;
 										}
@@ -174,7 +176,7 @@ public class GuiSettings extends WPanel {
 													setSelector(new ListSelector() {
 														{
 															if (Key.this.setting!=null)
-																setList(Lists.newArrayList(Key.this.setting.getSettingKeys()));
+																setList(Lists.newArrayList(Key.this.setting.getSettings()));
 															else
 																setList(Lists.<String> newArrayList());
 														}
@@ -185,7 +187,7 @@ public class GuiSettings extends WPanel {
 												@Override
 												protected void onChanged(final String oldText, final String newText) {
 													if (!StringUtils.equals(oldText, newText))
-														Apis.instance.imageUploader.setSetting(newText);
+														Apis.instance.imageUploader.solve(newText);
 												}
 											});
 										}
