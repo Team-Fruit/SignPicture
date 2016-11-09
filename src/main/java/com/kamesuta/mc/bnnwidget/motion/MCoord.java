@@ -99,7 +99,7 @@ public class MCoord extends Coord {
 	public float get() {
 		final IMotion a = getAnimation();
 		if (a!=null)
-			return (float) a.get(this.coord);
+			return a.get(this.coord);
 		else
 			return this.coord;
 	}
@@ -110,25 +110,6 @@ public class MCoord extends Coord {
 			return a.getEnd(this.coord);
 		else
 			return this.coord;
-	}
-
-	public MCoord addAfter(final MCoord q) {
-		final IMotion a = getAnimationLast();
-		if (a!=null)
-			a.setAfter(new Runnable() {
-				@Override
-				public void run() {
-					q.start();
-				}
-			});
-		return this;
-	}
-
-	public MCoord addAfter(final Runnable r) {
-		final IMotion a = getAnimationLast();
-		if (a!=null)
-			a.setAfter(r);
-		return this;
 	}
 
 	public boolean isFinished() {

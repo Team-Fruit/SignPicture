@@ -39,8 +39,8 @@ public abstract class Motion implements IMotion {
 	}
 
 	@Override
-	public IMotion setProgress(final float percent) {
-		this.timer.set(this.duration*percent);
+	public IMotion setTime(final float time) {
+		this.timer.set(time);
 		return this;
 	}
 
@@ -53,11 +53,6 @@ public abstract class Motion implements IMotion {
 	public IMotion setAfter(final Runnable r) {
 		this.after = r;
 		return this;
-	}
-
-	@Override
-	public Timer getTimer() {
-		return this.timer;
 	}
 
 	@Override
