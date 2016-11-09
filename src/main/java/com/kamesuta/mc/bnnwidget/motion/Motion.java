@@ -2,19 +2,16 @@ package com.kamesuta.mc.bnnwidget.motion;
 
 import org.lwjgl.util.Timer;
 
-public class Motion implements IMotion {
+public abstract class Motion implements IMotion {
+
 	protected final Timer timer;
-	protected final Easing easing;
 	protected final float duration;
-	protected final float end;
 	protected Runnable after;
 
-	public Motion(final Easing easing, final float duration, final float end) {
+	public Motion(final float duration) {
 		this.timer = new Timer();
 		this.timer.pause();
-		this.easing = easing;
 		this.duration = duration;
-		this.end = end;
 	}
 
 	@Override
@@ -42,13 +39,20 @@ public class Motion implements IMotion {
 	}
 
 	@Override
-	public boolean isFinished() {
-		return this.timer.getTime() >= this.duration;
+	public IMotion setProgress(final float percent) {
+		this.timer.set(this.duration*percent);
+		return this;
 	}
 
 	@Override
-	public void after(final Runnable r) {
+	public boolean isFinished() {
+		return this.timer.getTime()>=this.duration;
+	}
+
+	@Override
+	public IMotion setAfter(final Runnable r) {
 		this.after = r;
+		return this;
 	}
 
 	@Override
@@ -56,18 +60,9 @@ public class Motion implements IMotion {
 		return this.timer;
 	}
 
-	public Easing getEasing() {
-		return this.easing;
-	}
-
 	@Override
 	public float getDuration() {
 		return this.duration;
-	}
-
-	@Override
-	public float getEnd(final float start) {
-		return this.end;
 	}
 
 	@Override
@@ -77,17 +72,91 @@ public class Motion implements IMotion {
 
 	@Override
 	public void onFinished() {
-		if (this.after != null)
+		if (this.after!=null)
 			this.after.run();
 	}
 
-	@Override
-	public double get(final double start) {
-		return this.easing.easing(this.timer.getTime(), start, this.end - start, this.duration);
+	public static IMotion easing(final float duration, final Easing easing, final float end) {
+		return new EasingMotion(duration, easing, end);
 	}
 
-	@Override
-	public String toString() {
-		return String.format("Motion[%1$s->%3$s(%2$ss)]", this.easing, this.duration, this.end);
+	public static IMotion blank(final float duration) {
+		return new BlankMotion(duration);
 	}
+
+	public static IMotion move(final float end) {
+		return new BlankMotion(end);
+	}
+
+	static class EasingMotion extends Motion {
+		protected final Easing easing;
+		protected final float end;
+
+		public EasingMotion(final float duration, final Easing easing, final float end) {
+			super(duration);
+			this.easing = easing;
+			this.end = end;
+		}
+
+		@Override
+		public float getEnd(final float start) {
+			return this.end;
+		}
+
+		@Override
+		public float get(final float start) {
+			return (float) this.easing.easing(this.timer.getTime(), start, this.end-start, this.duration);
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Motion[%2$s->%3$s(%1$ss)]", this.duration, this.easing, this.end);
+		}
+	}
+
+	static class BlankMotion extends Motion {
+		public BlankMotion(final float duration) {
+			super(duration);
+		}
+
+		@Override
+		public float getEnd(final float start) {
+			return start;
+		}
+
+		@Override
+		public float get(final float start) {
+			return start;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Blank[(%ss)]", this.duration);
+		}
+	}
+
+	static class MoveMotion extends Motion {
+		protected final float end;
+
+		public MoveMotion(final float end) {
+			super(0);
+			this.end = end;
+		}
+
+		@Override
+		public float getEnd(final float start) {
+			return this.end;
+		}
+
+		@Override
+		public float get(final float start) {
+			return this.end;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Move[->%2$s(%1$ss)]", this.duration, this.end);
+		}
+	}
+
 }

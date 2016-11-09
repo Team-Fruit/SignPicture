@@ -10,9 +10,9 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Coords;
@@ -125,7 +125,7 @@ public class GuiTask extends WPanel {
 
 							@Override
 							protected void onMoved(final Progressable t, final TaskElement w, final int from, final int to) {
-								w.top.stop().add(new BlankMotion(.75f)).add(Easings.easeInCirc.move(.25f, to*15)).start();
+								w.top.stop().add(Motion.blank(.75f)).add(Easings.easeInCirc.move(.25f, to*15)).start();
 							};
 						});
 					}

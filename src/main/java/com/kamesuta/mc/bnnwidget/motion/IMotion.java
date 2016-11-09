@@ -12,9 +12,11 @@ public interface IMotion {
 
 	IMotion resume();
 
+	IMotion setProgress(float percent);
+
 	boolean isFinished();
 
-	void after(Runnable r);
+	IMotion setAfter(Runnable r);
 
 	Timer getTimer();
 
@@ -26,6 +28,6 @@ public interface IMotion {
 
 	void onFinished();
 
-	double get(double start);
+	float get(float start);
 
 }

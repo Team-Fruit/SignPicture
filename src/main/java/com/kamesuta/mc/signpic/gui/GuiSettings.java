@@ -29,6 +29,7 @@ import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Apis.Setting;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -37,6 +38,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiSettings extends WPanel {
 	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
+	public static final ResourceLocation update = new ResourceLocation("signpic", "textures/gui/update.png");
 
 	public GuiSettings(final R area) {
 		super(area);
@@ -44,7 +46,9 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		add(new WPanel(new R()) {
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired();
+		final int updatepanelHeight = isUpdateRequired ? 50 : 0;
+		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
 			protected boolean show = true;
 			protected MCoord bottom = MCoord.pbottom(0f);
 			protected boolean closing;
@@ -235,11 +239,55 @@ public class GuiSettings extends WPanel {
 										}
 									}
 								});
-								add(new MButton(new R(Coord.bottom(5), Coord.right(5), Coord.width(60), Coord.height(15)), I18n.format("signpic.gui.settings.config")) {
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(60), Coord.height(15)), I18n.format("signpic.gui.settings.config")) {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));
 										return true;
+									}
+								});
+								add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
+									@Override
+									protected void initWidget() {
+										add(new WBase(new R(Coord.top(5), Coord.left(5), Coord.width(50), Coord.height(50))) {
+											protected boolean in;
+
+											protected MCoord rot = new MCoord(0).setLoop(true).add(Easings.easeInOutSine.move(3f, 1f)).start();
+											protected float orot = 0f;
+
+											@Override
+											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+												final Area a = getGuiPosition(pgp);
+												texture().bindTexture(update);
+												glColor4f(1, 1, 1, 1);
+												RenderHelper.startTexture();
+												glPushMatrix();
+												glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
+												glRotatef((this.orot+this.rot.get())*360, 0, 0, 1);
+												glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
+												drawTexturedModalRect(a);
+												glPopMatrix();
+											}
+
+											@Override
+											public void update(final WEvent ev, final Area pgp, final Point p) {
+												final Area a = getGuiPosition(pgp);
+												if (a.pointInside(p)) {
+													if (!this.in) {
+														this.orot += this.rot.get();
+														this.rot.stopFirst().add(Easings.easeLinear.move(3f, 1f));
+													}
+													this.in = true;
+												} else {
+													if (this.in) {
+														this.orot += this.rot.get();
+														this.rot.stopFirst().stopFirst().add(Easings.easeInOutSine.move(3f, 1f));
+													}
+													this.in = false;
+												}
+
+											}
+										});
 									}
 								});
 							}

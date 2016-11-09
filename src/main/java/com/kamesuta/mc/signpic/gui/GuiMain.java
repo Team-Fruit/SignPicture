@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.concurrent.TimeUnit;
+
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -23,6 +25,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -333,12 +336,13 @@ public class GuiMain extends WFrame {
 				};
 				add(GuiMain.this.field);
 
-				add(new GuiSettings(new R(Coord.bottom(0), Coord.height(122))));
+				add(new GuiSettings(new R()));
 
 				OverlayFrame.instance.delegate();
 				add(OverlayFrame.instance.pane);
 			}
 		});
+		Informations.instance.checkInterval(TimeUnit.DAYS.toMillis(1l));
 	}
 
 	public MChatTextField getTextField() {

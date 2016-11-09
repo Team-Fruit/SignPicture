@@ -21,6 +21,8 @@ import net.minecraft.entity.player.EntityPlayer;
 public final class Informations {
 	public static final Informations instance = new Informations();
 
+	public static final Version VersionClient = new Version(Reference.VERSION);
+
 	private Informations() {
 	}
 
@@ -91,6 +93,22 @@ public final class Informations {
 	}
 
 	public void init() {
+		check();
+	}
+
+	private long lastCheck = -1l;
+
+	public boolean shouldCheck(final long l) {
+		return System.currentTimeMillis()-this.lastCheck>l;
+	}
+
+	public void checkInterval(final long l) {
+		if (shouldCheck(l))
+			check();
+	}
+
+	public void check() {
+		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
 		checker.setCallback(new ICommunicateCallback() {
 			@Override
@@ -102,6 +120,12 @@ public final class Informations {
 			}
 		});
 		Communicator.instance.communicate(checker);
+	}
+
+	public boolean isUpdateRequired() {
+		if (getSource()!=null)
+			return getSource().onlineVersion().compare(VersionClient);
+		return false;
 	}
 
 	@CoreEvent
@@ -120,10 +144,9 @@ public final class Informations {
 						Config.instance.informationNotice&&
 						!StringUtils.equals(Reference.VERSION, "${version}")
 			) {
-				final Version client = new Version(Reference.VERSION);
 				final InfoVersion online = source.onlineVersion();
 
-				if (online.compare(client))
+				if (online.compare(VersionClient))
 					if (online.version!=null) {
 						final Info.Version version = online.version;
 						if (version.message_local!=null&&version.message_local.containsKey(lang))

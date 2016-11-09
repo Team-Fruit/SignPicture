@@ -6,9 +6,9 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
-import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -61,7 +61,7 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected MCoord addDelay(final MCoord c) {
-				return c.add(new BlankMotion(1*.025f));
+				return c.add(Motion.blank(1*.025f));
 			}
 		});
 		final MCoord y = MCoord.pleft(-1f);
@@ -85,7 +85,7 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected MCoord addDelay(final MCoord c) {
-				return c.add(new BlankMotion(2*.025f));
+				return c.add(Motion.blank(2*.025f));
 			}
 		});
 		final MCoord z = MCoord.pleft(-1f);
@@ -109,7 +109,7 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected MCoord addDelay(final MCoord c) {
-				return c.add(new BlankMotion(3*.025f));
+				return c.add(Motion.blank(3*.025f));
 			}
 		});
 	}
