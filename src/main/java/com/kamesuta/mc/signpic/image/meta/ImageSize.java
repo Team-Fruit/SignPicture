@@ -79,11 +79,14 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 			return setSize(ImageSizes.HEIGHT, availableaspect, unknownSize, 1);
 	}
 
-	public ImageSize setSize(final ImageSizes s, final float rawWidth, final float rawHeight, final float maxWidth, final float maxHeight) {
-		if ((rawWidth == unknownSize && maxWidth == unknownSize) || (rawHeight == unknownSize && maxHeight == unknownSize))
+	public ImageSize setSize(final ImageSizes s, float rawWidth, float rawHeight, float maxWidth, float maxHeight) {
+		if ((Float.isNaN(rawWidth) && Float.isNaN(maxWidth)) || (Float.isNaN(rawHeight) && Float.isNaN(maxHeight)))
 			throw new IllegalArgumentException("No Size Defined");
-		s.size(this, rawWidth != unknownSize ? rawWidth : maxWidth, rawHeight != unknownSize ? rawHeight : maxHeight,
-				maxWidth != unknownSize ? maxWidth : rawWidth, maxHeight != unknownSize ? maxHeight : rawHeight);
+		if (Float.isNaN(rawWidth)) rawWidth = maxWidth;
+		if (Float.isNaN(rawHeight)) rawHeight = maxHeight;
+		if (Float.isNaN(maxWidth)) maxWidth = rawWidth;
+		if (Float.isNaN(maxHeight)) maxHeight = rawHeight;
+		s.size(this, rawWidth, rawHeight, maxWidth, maxHeight);
 		return this;
 	}
 

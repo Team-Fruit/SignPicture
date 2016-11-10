@@ -37,19 +37,18 @@ public class SignPicRender extends WGui {
 			Sign.preview.capturePlace();
 			opacity = Config.instance.renderPreviewFloatedOpacity;
 		}
-		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
+		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
 			if (Sign.preview.isRenderable() && Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
 				final BlockPos pos = tile.getPos();
 				Client.renderer.renderSignPictureBase(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1, opacity);
 			}
 		}
-	}
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
 		if(event.type == ElementType.EXPERIENCE)
-			if (CurrentMode.instance.isMode()) {
+			if (CurrentMode.instance.isMode())
 				if ((int)(System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
 
@@ -75,7 +74,6 @@ public class SignPicRender extends WGui {
 					GlStateManager.popMatrix();
 				}
 			}
-	}
 
 	@CoreEvent
 	public void onText(final RenderGameOverlayEvent.Text event) {

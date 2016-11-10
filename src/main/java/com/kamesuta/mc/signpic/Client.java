@@ -24,13 +24,7 @@ public class Client {
 
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
-	public static ContentLocation location;
-
-	public static File mcDir;
-	public static File signpicDir;
-	public static File signpicCacheDir;
-	public static File modDir;
-	public static File modFile;
+	public static Locations location;
 
 	public static String mcversion;
 	public static String forgeversion;
@@ -39,7 +33,7 @@ public class Client {
 	public static String name;
 
 	public static void openEditor() {
-		mc.displayGuiScreen(new GuiSignPicEditor());
+		mc.displayGuiScreen(new GuiSignPicEditor(mc.currentScreen));
 	}
 
 	public static void startSection(final String sec) {

@@ -1,0 +1,10 @@
+{
+	"gui.show":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "gui/show"
+			}
+		]
+	}
+}

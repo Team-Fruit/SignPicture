@@ -6,9 +6,9 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
@@ -30,7 +30,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 	public void renderImage(final Content content, final ImageSize size, final int destroy, final float opacity) {
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(size.width, size.height, 1f);
-		if (content.state.getType() == ContentStateType.AVAILABLE) {
+		if (content.state.getType() == StateType.AVAILABLE) {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, opacity * 1.0F);
 			content.image.draw();
 		} else {
@@ -68,8 +68,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		}
 		GlStateManager.translate(size.width/2, size.height/2, 0);
 		GlStateManager.scale(.5f, .5f, 1f);
-		if (content.state.getType() != ContentStateType.AVAILABLE) {
-			if (content.state.getType() == ContentStateType.ERROR) {
+		if (content.state.getType() != StateType.AVAILABLE) {
+			if (content.state.getType() == StateType.ERROR) {
 				RenderHelper.startShape();
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(-.5f, -.5f, 0f);
@@ -78,7 +78,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 				RenderHelper.drawRectTexture(GL_QUADS);
 				GlStateManager.popMatrix();
 			}
-			StateRender.drawLoading(content.state.progress, content.state.getType().circle, content.state.getType().speed);
+			StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
 			StateRender.drawMessage(content, getFontRenderer());
 		}
 	}
@@ -98,7 +98,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer
 		GlStateManager.translate(-size.width/2, size.height + ((size.height>=0)?0:-size.height)-.5f, 0f);
 		GlStateManager.scale(1f, -1f, 1f);
 
-		renderImage(content, size, destroy, opacity);
+		content.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
 		GlStateManager.popMatrix();
 	}

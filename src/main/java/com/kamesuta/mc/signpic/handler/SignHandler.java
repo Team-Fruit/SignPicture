@@ -23,13 +23,12 @@ public class SignHandler {
 	public static void init() {
 		try {
 			final Field[] fields = GuiEditSign.class.getDeclaredFields();
-			for (final Field field : fields) {
+			for (final Field field : fields)
 				if (TileEntitySign.class.equals(field.getType())) {
 					Reference.logger.info("Hook the TileEntitySign field included by GuiEditSign");
 					field.setAccessible(true);
 					f = field;
 				}
-			}
 		} catch (final SecurityException e) {
 			Reference.logger.error("Could not hook TileEntitySign field included by GuiEditSign", e);
 		}
@@ -38,8 +37,8 @@ public class SignHandler {
 	@CoreEvent
 	public void onSign(final GuiOpenEvent event) {
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
-			if (event.gui instanceof GuiEditSign) {
-				if (f != null) {
+			if (event.gui instanceof GuiEditSign)
+				if (f!=null)
 					try {
 						final GuiEditSign ges = (GuiEditSign) event.gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
@@ -62,15 +61,13 @@ public class SignHandler {
 						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
 						ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 					}
-				} else {
+				else
 					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 				}
-			}
-	}
 
 	@CoreEvent
 	public void onClick(final MouseEvent event) {
-		if (event.buttonstate && Client.mc.gameSettings.keyBindUseItem.getKeyCode() == event.button - 100) {
+		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100)
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 				Sign.preview.capturePlace();
 				event.setCanceled(true);
@@ -91,4 +88,3 @@ public class SignHandler {
 			}
 		}
 	}
-}

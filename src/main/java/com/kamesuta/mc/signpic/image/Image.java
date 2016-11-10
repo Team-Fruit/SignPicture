@@ -7,9 +7,9 @@ import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentStateType;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.RenderHelper;
+import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -27,14 +27,14 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 	public abstract String getLocal();
 
 	public ImageSize getSize() {
-		if (this.content.state.getType() == ContentStateType.AVAILABLE)
+		if (this.content.state.getType() == StateType.AVAILABLE)
 			return getTexture().getSize();
 		else
 			return DefaultSize;
 	}
 
 	public void draw() {
-		if (this.content.state.getType() == ContentStateType.AVAILABLE) {
+		if (this.content.state.getType() == StateType.AVAILABLE) {
 			final WorldRenderer t = RenderHelper.w;
 			RenderHelper.startTexture();
 			getTexture().bind();
