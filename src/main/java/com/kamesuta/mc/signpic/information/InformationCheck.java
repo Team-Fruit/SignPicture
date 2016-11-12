@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -16,33 +17,36 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.http.Communicate;
+import com.kamesuta.mc.signpic.http.CommunicateResponse;
+import com.kamesuta.mc.signpic.state.Progressable;
+import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-public class ThreadInformationChecker extends Thread {
+public class InformationCheck extends Communicate implements Progressable {
+	private static final Gson gson = new Gson();
 
-	public ThreadInformationChecker() {
-		setName("Sign Picture Information Checker Thread");
-		setDaemon(true);
-		start();
-	}
+	protected State status = new State("§6SignPicture Update Check");
+	public Informations.InfoSource result;
 
 	@Override
-	public void run() {
-		final InformationChecker.InfoState state = InformationChecker.state;
+	public void communicate() {
+		this.status.getProgress().setOverall(4).setDone(0);
 		InputStream input = null;
-		final Gson gson = new Gson();
 		try {
+			this.status.getProgress().setDone(1);
 			final HttpUriRequest req = new HttpGet(new URI("https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/info/info.json"));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
-			input = entity.getContent();
-			state.info = gson.fromJson(new JsonReader(new InputStreamReader(input, CharEncoding.UTF_8)), Info.class);
-			if (state.info!=null) {
-				if (!StringUtils.isEmpty(state.info.private_msg)) {
+			this.status.getProgress().setDone(2);
+			final Info info = gson.fromJson(new JsonReader(new InputStreamReader(input = entity.getContent(), CharEncoding.UTF_8)), Info.class);
+			if (info!=null) {
+				final Informations.InfoSource source = new Informations.InfoSource(info);
+				if (!StringUtils.isEmpty(info.private_msg)) {
 					InputStream input1 = null;
 					try {
-						if (!StringUtils.isEmpty(Client.name) && !StringUtils.isEmpty(Client.id)) {
-							final String msgurl = state.info.private_msg
+						if (!StringUtils.isEmpty(Client.name)&&!StringUtils.isEmpty(Client.id)) {
+							final String msgurl = info.private_msg
 									.replace("%name%", Client.name)
 									.replace("%id%", Client.id)
 									.replace("%mcversion%", Client.mcversion)
@@ -54,19 +58,35 @@ public class ThreadInformationChecker extends Thread {
 							final HttpResponse response1 = Downloader.downloader.client.execute(req1);
 							final HttpEntity entity1 = response1.getEntity();
 							input1 = entity1.getContent();
-							state.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, CharEncoding.UTF_8)), Info.PrivateMsg.class);
+							this.status.getProgress().setDone(3);
+							source.privateMsg = gson.fromJson(new JsonReader(new InputStreamReader(input1, Charsets.UTF_8)), Info.PrivateMsg.class);
 						}
-					} catch(final Exception e1) {
+					} catch (final Exception e1) {
 					} finally {
 						IOUtils.closeQuietly(input1);
 					}
 				}
+				this.status.getProgress().setDone(4);
+				this.result = source;
+				onDone(new CommunicateResponse(true, null));
+				return;
 			}
-		} catch(final Exception e) {
-			Reference.logger.warn("Could not check version information", e);
+		} catch (final Exception e) {
+			onDone(new CommunicateResponse(false, e));
+			return;
 		} finally {
 			IOUtils.closeQuietly(input);
 		}
-		state.doneChecking = true;
+		onDone(new CommunicateResponse(false, null));
+		return;
+	}
+
+	@Override
+	public State getState() {
+		return this.status;
+	}
+
+	@Override
+	public void cancel() {
 	}
 }

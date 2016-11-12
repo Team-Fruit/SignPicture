@@ -15,6 +15,7 @@ signpic.gui.editor.continue=連続
 signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
+signpic.gui.editor.file=アップロード
 signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
@@ -24,9 +25,28 @@ signpic.gui.editor.size.height=高さ
 signpic.gui.editor.offset.category=オフセット
 ### Rotation
 signpic.gui.editor.rotation.category=回転
+## Settings
+signpic.gui.settings.api.upimage=画像アップロード設定
+signpic.gui.settings.api.upimage.type=APIの種類
+signpic.gui.settings.api.upimage.key=APIキー
+signpic.gui.settings.default=自動
+signpic.gui.settings.config=コンフィグ
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
 signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
+
+# Notice
+signpic.gui.notice.uploading=アップロード開始 %s
+signpic.gui.notice.uploaded=アップロード完了 %s
+signpic.gui.notice.uploadfailed=アップロード失敗: §7%s
+signpic.gui.notice.downloading=ダウンロード開始 %s
+signpic.gui.notice.downloaded=ダウンロード完了 %s
+signpic.gui.notice.downloadfailed=ダウンロード失敗: §7%s
+
+# Upload UI
+signpic.ui.description=ファイルアップローダー!
+signpic.ui.drop=ここに画像をドラッグ＆ドロップ
+signpic.ui.select=またはファイルを選択
 
 # Image State
 signpic.state.init=待機中...
@@ -41,16 +61,15 @@ signpic.state.error=エラー
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=不正なURL
+signpic.advmsg.dlstopped=ダウンロード中止
 signpic.advmsg.capacityover=容量オーバー
 signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s
 
 # Version Checking
-signpic.versioning.outdated=[§6SignPicture§r] 現在のSignPictureのバージョンは %s です。新しいバージョン %s がご利用可能です！
-signpic.versioning.updateMessage=["[",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
 signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
-signpic.versioning.downloading=ダウンロード中... %s%% (%s / %s バイト)
 signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.doneDownloadingWithFile=ダウンロード完了 %s 適用するためには %s を消し、Minecraftを再起動してください
 signpic.versioning.downloadedAlready=すでに最新版をダウンロードしました 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください

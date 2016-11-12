@@ -12,7 +12,7 @@ import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
-import com.kamesuta.mc.bnnwidget.position.RArea;
+import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -33,11 +33,11 @@ public class GuiPAAS extends WFrame {
 	}
 
 	@Override
-	protected void init() {
+	protected void initWidget() {
 		this.preview = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 		CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 
-		add(new WPanel(RArea.diff(0, 0, 0, 0)) {
+		add(new WPanel(R.diff(0, 0, 0, 0)) {
 			private final int max = StringUtils.length(GuiPAAS.this.task.id.id());
 			private int cursor;
 			private boolean close = true;
@@ -45,11 +45,11 @@ public class GuiPAAS extends WFrame {
 
 			@Override
 			protected void initWidget() {
-				add(new WBase(RArea.diff(0, 0, 0, 0)) {
+				add(new WBase(R.diff(0, 0, 0, 0)) {
 					MCoord c = new MCoord(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						GlStateManager.color(0f, 0f, 0f, this.c.get());
 						drawRect(getGuiPosition(pgp));
@@ -57,9 +57,9 @@ public class GuiPAAS extends WFrame {
 				});
 
 				final float f1 = 93.75F;
-				add(new WBase(new RArea(Coord.right(15), Coord.top(15), Coord.width(f1), Coord.height(f1))) {
+				add(new WBase(new R(Coord.right(15), Coord.top(15), Coord.width(f1), Coord.height(f1))) {
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						final Area a = getGuiPosition(pgp);
 
 						RenderHelper.startTexture();
@@ -76,27 +76,27 @@ public class GuiPAAS extends WFrame {
 
 				final int f = font().FONT_HEIGHT/2;
 
-				add(new MLabel(new RArea(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), "") {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), "") {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
-				add(new MLabel(new RArea(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), "") {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), "") {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
-						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit / 1000f)));
+						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));
 					}
 				});
 			}
 
 			@Override
 			public void update(final WEvent ev, final Area pgp, final Point p) {
-				if (this.close) {
+				if (this.close)
 					if (!GuiPAAS.this.task.tick()) {
-						this.c = (int) (GuiPAAS.this.task.timer.getTime() * 1000 / GuiPAAS.this.task.limit * this.max);
-						if (this.cursor != this.c) {
+						this.c = (int) (GuiPAAS.this.task.timer.getTime()*1000/GuiPAAS.this.task.limit*this.max);
+						if (this.cursor!=this.c) {
 							final EntryId id = new EntryId(StringUtils.substring(GuiPAAS.this.task.id.id(), 0, this.c));
 							final int last = id.getLastLine();
 							id.toEntity(GuiPAAS.this.task.entity);
@@ -113,7 +113,6 @@ public class GuiPAAS extends WFrame {
 						this.close = false;
 						requestClose();
 					}
-				}
 				super.update(ev, pgp, p);
 			}
 		});

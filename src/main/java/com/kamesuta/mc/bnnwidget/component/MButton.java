@@ -37,9 +37,10 @@ public class MButton extends WBase {
 	}
 
 	@Override
-	public void mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 		final Area abs = getGuiPosition(pgp);
-		if ((isEnabled()) && (abs.pointInside(p))) {
+		if (abs.pointInside(p)) {
+			if (isEnabled()) {
 			if (onClicked(ev, pgp, p, button)) {
 				if (this.actionCommand != null)
 					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
@@ -47,6 +48,9 @@ public class MButton extends WBase {
 				.playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 			}
 		}
+			return true;
+	}
+		return false;
 	}
 
 	protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -54,7 +58,7 @@ public class MButton extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		drawButtonTex(ev, pgp, p, frame);
 		if (this.text != null) {
 			drawText(ev, pgp, p, frame);

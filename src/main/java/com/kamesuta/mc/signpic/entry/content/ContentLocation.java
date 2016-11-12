@@ -6,17 +6,28 @@ import java.net.URISyntaxException;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import com.kamesuta.mc.signpic.Client;
+
 public class ContentLocation {
-	public File localroot;
-	public ContentLocation(final File localroot) {
-		this.localroot = localroot;
+	public final ContentId id;
+
+	public ContentLocation(final ContentId id) {
+		this.id = id;
 	}
 
-	public URI remoteLocation(final ContentId path) throws URISyntaxException {
-		return new URI(path.getURI());
+	public URI remoteLocation() throws URISyntaxException {
+		return new URI(this.id.getURI());
 	}
 
-	public File localLocation(final ContentId path) {
-		return new File(this.localroot, DigestUtils.md5Hex(path.getURI()));
+	public File metaLocation() {
+		return new File(Client.location.metaDir, DigestUtils.md5Hex(this.id.getURI()));
+	}
+
+	public File tempLocation() {
+		return new File(Client.location.tempDir, DigestUtils.md5Hex(this.id.getURI()));
+	}
+
+	public File cacheLocation() {
+		return new File(Client.location.cacheDir, DigestUtils.md5Hex(this.id.getURI()));
 	}
 }

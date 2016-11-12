@@ -20,12 +20,14 @@ public final class Config extends Configuration {
 	public int imageHeightLimit = 512;
 	public boolean imageAnimationGif = true;
 
-	public int entryGCtick = 15;
+	public int entryGCtick = 15*20;
+
+	public int communicateThreads = 3;
 
 	public int contentLoadThreads = 3;
 	public int contentMaxByte = 0;
 	public int contentGCtick = 15 * 20;
-	public int contentAsyncTick = 0;
+	public int contentLoadTick = 0;
 	public int contentSyncTick = 0;
 
 	public boolean informationNotice = true;
@@ -39,9 +41,14 @@ public final class Config extends Configuration {
 	/** Minimum time needed to type a character. */
 	public int multiplayPAASMinCharTime = 50;
 
+	public boolean renderUseMipmap = true;
+	public boolean renderMipmapTypeNearest = false;
 	public float renderSeeOpacity = .5f;
 	public float renderPreviewFixedOpacity = .7f;
-	public float renderPreviewFloatedOpacity = .7f;
+	public float renderPreviewFloatedOpacity = .7f*.7f;
+
+	public String apiType = "";
+	public String apiKey = "";
 
 	public Config( final File configFile ) {
 		super( configFile );
@@ -65,7 +72,9 @@ public final class Config extends Configuration {
 		}
 		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean( this.informationJoinBeta );
 
-		addCustomCategoryComment("MultiplayPreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
+		addCustomCategoryComment("Multiplay.PreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
+
+		addCustomCategoryComment("Api.Upload", "Api Upload Settings");
 
 		changeableSync();
 
@@ -75,20 +84,27 @@ public final class Config extends Configuration {
 	private void changeableSync() {
 		this.entryGCtick = get( "Entry", "GCDelayTick", this.entryGCtick ).getInt( this.entryGCtick );
 
-		this.contentLoadThreads = addComment(get( "Content", "LoadThreads", this.contentLoadThreads ), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt( this.contentLoadThreads );
+		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
+
+		this.contentLoadThreads = addComment(get("Content", "LoadThreads", this.contentLoadThreads), "parallel processing number such as Image Loading").setRequiresMcRestart(true).getInt(this.contentLoadThreads);
 		this.contentMaxByte = addComment(get( "Content", "MaxByte", this.contentMaxByte ), "limit of size before downloading").getInt( this.contentMaxByte );
 		this.contentGCtick = addComment(get( "Content", "GCDelayTick", this.contentGCtick ), "delay ticks of Garbage Collection").getInt( this.contentGCtick );
-		this.contentAsyncTick = addComment(get( "Content", "AsyncLoadDelayTick", this.contentAsyncTick ), "ticks of Async process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt( this.contentAsyncTick );
+		this.contentLoadTick = addComment(get("Content", "LoadStartIntervalTick", this.contentLoadTick), "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt(this.contentLoadTick);
 		this.contentSyncTick = addComment(get( "Content", "SyncLoadIntervalTick", this.contentSyncTick ), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt( this.contentSyncTick );
 
-		this.multiplayPAAS = get( "MultiplayPreventAntiAutoSign", "Enable", this.multiplayPAAS ).getBoolean( this.multiplayPAAS );
-		this.multiplayPAASMinEditTime = get( "MultiplayPreventAntiAutoSign", "minEditTime", this.multiplayPAASMinEditTime ).getInt( this.multiplayPAASMinEditTime );
-		this.multiplayPAASMinLineTime = get( "MultiplayPreventAntiAutoSign", "minLineTime", this.multiplayPAASMinLineTime ).getInt( this.multiplayPAASMinLineTime );
-		this.multiplayPAASMinCharTime = get( "MultiplayPreventAntiAutoSign", "minCharTime", this.multiplayPAASMinCharTime ).getInt( this.multiplayPAASMinCharTime );
+		this.multiplayPAAS = get("Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS).getBoolean(this.multiplayPAAS);
+		this.multiplayPAASMinEditTime = get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime).getInt(this.multiplayPAASMinEditTime);
+		this.multiplayPAASMinLineTime = get("Multiplay.PreventAntiAutoSign.Time", "minLineTime", this.multiplayPAASMinLineTime).getInt(this.multiplayPAASMinLineTime);
+		this.multiplayPAASMinCharTime = get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", this.multiplayPAASMinCharTime).getInt(this.multiplayPAASMinCharTime);
 
-		this.renderSeeOpacity = (float) get( "Render", "ViewSignOpacity", this.renderSeeOpacity ).getDouble( this.renderSeeOpacity );
-		this.renderPreviewFixedOpacity = (float) get( "Render", "PreviewFixedSignOpacity", this.renderPreviewFixedOpacity ).getDouble( this.renderPreviewFixedOpacity );
-		this.renderPreviewFloatedOpacity = (float) get( "Render", "PreviewFloatedSignOpacity", this.renderPreviewFloatedOpacity ).getDouble( this.renderPreviewFloatedOpacity );
+		this.renderUseMipmap = addComment(get("Render", "Mipmap", this.renderUseMipmap), "Require OpenGL 3.0 or later").getBoolean(this.renderUseMipmap);
+		this.renderMipmapTypeNearest = addComment(get("Render", "MipmapTypeNearest", this.renderMipmapTypeNearest), "true = Nearest, false = Linear").getBoolean(this.renderMipmapTypeNearest);
+		this.renderSeeOpacity = (float) get("Render.Opacity", "ViewSign", this.renderSeeOpacity).getDouble(this.renderSeeOpacity);
+		this.renderPreviewFixedOpacity = (float) get("Render.Opacity", "PreviewFixedSign", this.renderPreviewFixedOpacity).getDouble(this.renderPreviewFixedOpacity);
+		this.renderPreviewFloatedOpacity = (float) get("Render.Opacity", "PreviewFloatedSign", this.renderPreviewFloatedOpacity).getDouble(this.renderPreviewFloatedOpacity);
+
+		this.apiType = get("Api.Upload", "Type", this.apiType).getString();
+		this.apiKey = get("Api.Upload", "Key", this.apiKey).getString();
 	}
 
 	private Property addComment(final Property prop, final String comment) {
@@ -97,30 +113,20 @@ public final class Config extends Configuration {
 	}
 
 	@Override
-	public void save()
-	{
+	public void save() {
 		if( hasChanged() )
-		{
 			super.save();
+		changeableSync();
 		}
-	}
 
 	@CoreEvent
-	public void onConfigChanged( final ConfigChangedEvent.OnConfigChangedEvent eventArgs )
-	{
+	public void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
 		if( StringUtils.equals(eventArgs.getModID(), Reference.MODID) )
-		{
-			changeableSync();
-
 			if( this.updatable )
-			{
 				save();
 			}
-		}
-	}
 
-	public String getFilePath()
-	{
+	public String getFilePath() {
 		return this.configFile.getPath();
 	}
 }

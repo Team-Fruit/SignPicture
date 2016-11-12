@@ -1,9 +1,9 @@
-package com.kamesuta.mc.signpic.entry.content;
+package com.kamesuta.mc.signpic.state;
 
 import com.kamesuta.mc.signpic.render.StateRender.LoadingCircle;
 import com.kamesuta.mc.signpic.render.StateRender.LoadingCircleType;
 
-public enum ContentStateType {
+public enum StateType {
 	INIT("signpic.state.init", LoadingCircle.INIT, LoadingCircleType.WAIT),
 	INITALIZED("signpic.state.initalized", LoadingCircle.INIT, LoadingCircleType.WAIT),
 	DOWNLOADING("signpic.state.downloading", LoadingCircle.DOWNLOAD, LoadingCircleType.RUN),
@@ -17,13 +17,13 @@ public enum ContentStateType {
 	public final String msg;
 	public final LoadingCircle circle;
 	public final LoadingCircleType speed;
-	private ContentStateType(final String s, final LoadingCircle circle, final LoadingCircleType speed) {
+	private StateType(final String s, final LoadingCircle circle, final LoadingCircleType speed) {
 		this.msg = s;
 		this.circle = circle;
 		this.speed = speed;
 	}
 
-	private ContentStateType(final String s) {
+	private StateType(final String s) {
 		this(s, LoadingCircle.DEFAULT, LoadingCircleType.DEFAULT);
 	}
 }

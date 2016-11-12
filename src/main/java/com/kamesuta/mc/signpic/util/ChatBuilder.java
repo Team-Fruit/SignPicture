@@ -31,7 +31,8 @@ public class ChatBuilder {
 	private final Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
-	public ChatBuilder() {}
+	public ChatBuilder() {
+	}
 
 	public ITextComponent build() {
 		ITextComponent chat;

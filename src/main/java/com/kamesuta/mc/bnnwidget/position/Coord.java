@@ -2,8 +2,8 @@ package com.kamesuta.mc.bnnwidget.position;
 
 public class Coord {
 	private final float coord;
-	public CoordSide side;
-	public CoordType type;
+	private CoordSide side;
+	private CoordType type;
 
 	public Coord(final float coord, final CoordSide side, final CoordType type) {
 		this.coord = coord;
@@ -11,44 +11,143 @@ public class Coord {
 		this.type = type;
 	}
 
+	public Coord(final float coord) {
+		this(coord, CoordSide.Top, CoordType.Percent);
+	}
+
 	public float get() {
 		return this.coord;
 	}
 
 	public float getAbsCoord(final float abslength) {
-		return this.type.calc(abslength, get());
+		return getType().calc(0, abslength, get());
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Coord [coord=%s, side=%s, type=%s]", get(), this.side, this.type);
+		return String.format("Coord [coord=%s, side=%s, type=%s]", get(), getSide(), getType());
+	}
+
+	public float base(final Area a) {
+		return getSide().base(a, this);
+	}
+
+	public float next(final Area a, final Coord base) {
+		return getSide().next(a, base, this);
+	}
+
+	public CoordSide getSide() {
+		return this.side;
+	}
+
+	protected CoordType getType() {
+		return this.type;
 	}
 
 	public static enum CoordSide {
-		Top,
-		Left,
-		Bottom,
-		Right,
-		Width,
-		Height,
+		Top(true, 1) {
+			@Override
+			public float base(final Area a, final Coord c) {
+				return a.y1()+c.getAbsCoord(a.h());
+			}
+
+			@Override
+			public float next(final Area a, final Coord base, final Coord c) {
+				if (c.getSide().isAbs)
+					return a.y1()+c.getAbsCoord(a.h());
+				else
+					return base.base(a)+base.getSide().calc*c.getAbsCoord(a.h());
+			}
+		},
+		Left(true, 1) {
+			@Override
+			public float base(final Area a, final Coord c) {
+				return a.x1()+c.getAbsCoord(a.w());
+			}
+
+			@Override
+			public float next(final Area a, final Coord base, final Coord c) {
+				if (c.getSide().isAbs)
+					return a.x1()+c.getAbsCoord(a.w());
+				else
+					return base.base(a)+base.getSide().calc*c.getAbsCoord(a.w());
+			}
+		},
+		Bottom(true, -1) {
+			@Override
+			public float base(final Area a, final Coord c) {
+				return a.y2()-c.getAbsCoord(a.h());
+			}
+
+			@Override
+			public float next(final Area a, final Coord base, final Coord c) {
+				if (c.getSide().isAbs)
+					return a.y2()-c.getAbsCoord(a.h());
+				else
+					return base.base(a)+base.getSide().calc*c.getAbsCoord(a.h());
+			}
+		},
+		Right(true, -1) {
+			@Override
+			public float base(final Area a, final Coord c) {
+				return a.x2()-c.getAbsCoord(a.w());
+			}
+
+			@Override
+			public float next(final Area a, final Coord base, final Coord c) {
+				if (c.getSide().isAbs)
+					return a.x2()-c.getAbsCoord(a.w());
+				else
+					return base.base(a)+base.getSide().calc*c.getAbsCoord(a.w());
+			}
+		},
+		Width(false, 1) {
+			@Override
+			public float next(final Area a, final Coord base, final Coord c) {
+				return base.getSide().next(a, base, c);
+			}
+		},
+		Height(false, 1) {
+			@Override
+			public float next(final Area a, final Coord base, final Coord c) {
+				return base.getSide().next(a, base, c);
+			}
+		},
+		;
+
+		public float base(final Area a, final Coord c) {
+			return 0;
+		}
+
+		public float next(final Area a, final Coord base, final Coord c) {
+			return 0;
+		}
+
+		public final boolean isAbs;
+		private final int calc;
+
+		private CoordSide(final boolean isAbs, final int calc) {
+			this.isAbs = isAbs;
+			this.calc = calc;
+		}
 	}
 
 	public static enum CoordType {
 		Absolute {
 			@Override
-			public float calc(final float all, final float c) {
+			public float calc(final float a, final float b, final float c) {
 				return c;
 			}
 		},
 		Percent {
 			@Override
-			public float calc(final float all, final float c) {
-				return all * c;
+			public float calc(final float a, final float b, final float c) {
+				return a*(1f-c)+b*c;
 			}
 		},
 		;
 
-		public abstract float calc(float all, float f);
+		public abstract float calc(float a, float b, float f);
 	}
 
 	public static Coord top(final float n) {

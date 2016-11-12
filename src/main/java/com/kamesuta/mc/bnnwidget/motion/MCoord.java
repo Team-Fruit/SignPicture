@@ -10,6 +10,7 @@ public class MCoord extends Coord {
 	protected final Deque<IMotion> queue;
 	protected IMotion current;
 	protected float coord;
+	protected boolean looplast;
 
 	public MCoord(final float coord, final CoordSide side, final CoordType type) {
 		super(coord, side, type);
@@ -18,7 +19,7 @@ public class MCoord extends Coord {
 	}
 
 	public MCoord(final float coord) {
-		this(coord, CoordSide.Top, CoordType.Absolute);
+		this(coord, CoordSide.Top, CoordType.Percent);
 	}
 
 	public MCoord add(final IMotion animation) {
@@ -26,36 +27,43 @@ public class MCoord extends Coord {
 		return this;
 	}
 
+	public MCoord setLoop(final boolean b) {
+		this.looplast = b;
+		return this;
+	}
+
 	protected void setCurrent(final IMotion current) {
-		if (this.current != null)
+		if (this.current!=null)
 			this.current.onFinished();
 		this.current = current;
 	}
 
-	public MCoord stop() {
-		this.coord = get();
+	public MCoord stopFirst() {
 		this.queue.clear();
 		setCurrent(null);
 		return this;
 	}
 
+	public MCoord stop() {
+		this.coord = get();
+		return stopFirst();
+	}
+
 	public MCoord stopLast() {
 		this.coord = getLast();
-		this.queue.clear();
-		setCurrent(null);
-		return stop();
+		return stopFirst();
 	}
 
 	public MCoord pause() {
 		this.paused = true;
-		if (this.current != null)
+		if (this.current!=null)
 			this.current.pause();
 		return this;
 	}
 
 	public MCoord start() {
 		this.paused = false;
-		if (this.current != null)
+		if (this.current!=null)
 			this.current.resume();
 		return this;
 	}
@@ -67,15 +75,18 @@ public class MCoord extends Coord {
 	}
 
 	public MCoord stopNext() {
-		if (this.current != null)
-			this.coord = this.current.getEnd(this.coord);
-		setCurrent(this.queue.poll());
-		start();
+		if (this.looplast&&this.current!=null&&this.queue.isEmpty())
+			this.current.reset();
+		else {
+			if (this.current!=null)
+				this.coord = this.current.getEnd(this.coord);
+			next();
+		}
 		return this;
 	}
 
 	public IMotion getAnimation() {
-		if ((this.current == null || this.current.isFinished()) && !this.paused)
+		if ((this.current==null||this.current.isFinished())&&!this.paused)
 			stopNext();
 		return this.current;
 	}
@@ -87,42 +98,23 @@ public class MCoord extends Coord {
 	@Override
 	public float get() {
 		final IMotion a = getAnimation();
-		if (a != null)
-			return (float) a.get(this.coord);
+		if (a!=null)
+			return a.get(this.coord);
 		else
 			return this.coord;
 	}
 
 	public float getLast() {
 		final IMotion a = getAnimationLast();
-		if (a != null)
+		if (a!=null)
 			return a.getEnd(this.coord);
 		else
 			return this.coord;
 	}
 
-	public MCoord addAfter(final MCoord q) {
-		final IMotion a = getAnimationLast();
-		if (a != null)
-			a.after(new Runnable() {
-				@Override
-				public void run() {
-					q.start();
-				}
-			});
-		return this;
-	}
-
-	public MCoord addAfter(final Runnable r) {
-		final IMotion a = getAnimationLast();
-		if (a != null)
-			a.after(r);
-		return this;
-	}
-
 	public boolean isFinished() {
 		final IMotion a = getAnimationLast();
-		if ((this.current!=null && !this.current.isFinished()) || (a!=null && !a.isFinished()))
+		if (this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished())
 			return false;
 		else
 			return true;
