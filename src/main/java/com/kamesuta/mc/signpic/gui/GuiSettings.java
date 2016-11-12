@@ -16,6 +16,7 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
+import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -229,7 +230,7 @@ public class GuiSettings extends WPanel {
 												if (a.pointInside(p)) {
 													if (!this.in) {
 														this.orot += this.rot.get();
-														this.rot.stopFirst().add(Easings.easeLinear.move(3f, 1f));
+														this.rot.stopFirst().add(CompoundMotion.of(Easings.easeLinear.move(3f, 1f), Easings.easeLinear.move(3f, -1f)).setLoop(true));
 													}
 													this.in = true;
 												} else {

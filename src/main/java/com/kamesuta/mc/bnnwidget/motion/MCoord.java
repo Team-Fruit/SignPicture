@@ -93,6 +93,12 @@ public class MCoord extends Coord implements ICompoundMotion {
 		return this.compoundMotion.isFinished();
 	}
 
+	@Override
+	public MCoord reset() {
+		this.compoundMotion.isFinished();
+		return this;
+	}
+
 	public static MCoord top(final float n) {
 		return new MCoord(n, CoordSide.Top, CoordType.Absolute);
 	}

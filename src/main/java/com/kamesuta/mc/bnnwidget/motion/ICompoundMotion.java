@@ -30,4 +30,6 @@ public interface ICompoundMotion {
 
 	ICompoundMotion add(final IMotion animation);
 
+	ICompoundMotion reset();
+
 }
