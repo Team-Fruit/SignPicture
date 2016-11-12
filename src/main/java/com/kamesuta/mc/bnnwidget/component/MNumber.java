@@ -8,7 +8,6 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
-import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta.MetaParser;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -20,7 +19,7 @@ public class MNumber extends WPanel {
 
 	public MNumber(final R position, final float buttonwidth) {
 		super(position);
-		this.neg = new MButton(new RArea(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "-") {
+		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "-") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				float f;
@@ -35,14 +34,14 @@ public class MNumber extends WPanel {
 			}
 		};
 		add(this.neg);
-		this.field = new MChatTextField(new RArea(Coord.left(buttonwidth), Coord.right(buttonwidth), Coord.top(0), Coord.bottom(0))) {
+		this.field = new MChatTextField(new R(Coord.left(buttonwidth), Coord.right(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected void onTextChanged(final String oldText) {
 				onNumberChanged(oldText, getText());
 			}
 		}.setAllowedCharacters("+-.eE0123456789").setWatermark("?");
 		add(this.field);
-		this.pos = new MButton(new RArea(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "+") {
+		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "+") {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				float f;

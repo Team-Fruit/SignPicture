@@ -12,11 +12,14 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath project.forgegradle
         classpath 'com.matthewprenger:CurseGradle:1.0-SNAPSHOT'
     }
 }
 
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'com.matthewprenger.cursegradle'
 
@@ -77,6 +80,7 @@ processResources {
 }
 
 dependencies {
+    compile ('org.apache.httpcomponents:httpmime:4.3.3') { transitive=false }
 }
 
 def commonManifest = {
@@ -90,6 +94,18 @@ jar {
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
     manifest commonManifest
 }
+
+shadowJar {
+	relocate 'org.apache.http.entity.mime', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime'
+	relocate 'org.apache.http.entity.mime.content', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime.content'
+    classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
+    manifest commonManifest
+}
+
+reobf {
+	shadowJar { mappingType = "SEARGE" }
+}
+tasks.reobfShadowJar.mustRunAfter shadowJar
 
 sourceJar {
     from sourceSets.api.allSource

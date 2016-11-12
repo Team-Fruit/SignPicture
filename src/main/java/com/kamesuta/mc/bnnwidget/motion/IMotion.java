@@ -1,7 +1,5 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
-import org.lwjgl.util.Timer;
-
 public interface IMotion {
 
 	IMotion reset();
@@ -12,11 +10,11 @@ public interface IMotion {
 
 	IMotion resume();
 
+	IMotion setTime(float time);
+
 	boolean isFinished();
 
-	void after(Runnable r);
-
-	Timer getTimer();
+	IMotion setAfter(Runnable r);
 
 	float getDuration();
 
@@ -26,6 +24,6 @@ public interface IMotion {
 
 	void onFinished();
 
-	double get(double start);
+	float get(float start);
 
 }

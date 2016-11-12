@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.util.Color;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.entry.content.ContentState.Progress;
+import com.kamesuta.mc.signpic.state.Progress;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;

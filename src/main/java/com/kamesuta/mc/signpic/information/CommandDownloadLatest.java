@@ -1,6 +1,13 @@
 package com.kamesuta.mc.signpic.information;
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.http.Communicator;
+import com.kamesuta.mc.signpic.http.ICommunicateCallback;
+import com.kamesuta.mc.signpic.http.ICommunicateResponse;
+import com.kamesuta.mc.signpic.http.download.ModDownload;
+import com.kamesuta.mc.signpic.http.download.ModDownload.ModDLResult;
+import com.kamesuta.mc.signpic.util.ChatBuilder;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -23,8 +30,7 @@ public class CommandDownloadLatest extends CommandBase {
 	}
 
 	@Override
-	public int getRequiredPermissionLevel()
-	{
+	public int getRequiredPermissionLevel() {
 		return 0;
 	}
 
@@ -35,17 +41,28 @@ public class CommandDownloadLatest extends CommandBase {
 
 	@Override
 	public void execute(final MinecraftServer server, final ICommandSender var1, final String[] var2) throws CommandException {
-		if(!ENABLED) {
+		if (!ENABLED)
 			var1.addChatMessage(new TextComponentTranslation("signpic.versioning.disabled").setStyle(new Style().setColor(TextFormatting.RED)));
-		} else {
-			final InformationChecker.InfoState state = InformationChecker.state;
-			if (state.doneChecking && state.onlineVersion!=null && !StringUtils.isEmpty(state.onlineVersion.remote))
-			{
-				if(state.downloadedFile)
+		else {
+			final Informations.InfoState state = Informations.instance.getState();
+			final Informations.InfoSource source = Informations.instance.getSource();
+			final Informations.InfoVersion online = source.onlineVersion();
+			if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
+				if (state.isDownloaded())
 					var1.addChatMessage(new TextComponentTranslation("signpic.versioning.downloadedAlready").setStyle(new Style().setColor(TextFormatting.RED)));
-				else if(state.startedDownload)
+				else if (state.downloading)
 					var1.addChatMessage(new TextComponentTranslation("signpic.versioning.downloadingAlready").setStyle(new Style().setColor(TextFormatting.RED)));
-				else new ThreadDownloadMod();
+				else {
+					final ModDownload downloader = new ModDownload();
+					downloader.setCallback(new ICommunicateCallback() {
+						@Override
+						public void onDone(final ICommunicateResponse res) {
+							final ModDLResult result = downloader.result;
+							if (result!=null)
+								new ChatBuilder().setChat(result.response).chatClient();
+						}
+					});
+					Communicator.instance.communicate(downloader);
 			}
 		}
 	}

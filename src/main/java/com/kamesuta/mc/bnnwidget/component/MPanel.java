@@ -18,9 +18,9 @@ public class MPanel extends WPanel {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		drawButtonTex(ev, pgp, p, frame);
-		super.draw(ev, pgp, p, frame);
+		super.draw(ev, pgp, p, frame, opacity);
 	}
 
 	protected void drawButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {

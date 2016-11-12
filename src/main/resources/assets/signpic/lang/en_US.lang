@@ -28,6 +28,7 @@ signpic.gui.editor.continue=Continue
 signpic.gui.editor.load=Load
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
+signpic.gui.editor.file=Upload
 signpic.gui.editor.textfield=Place URL Here!
 ### Size
 signpic.gui.editor.size.category=Size
@@ -59,9 +60,30 @@ signpic.gui.editor.rotation.remove=-
 signpic.gui.editor.rotation.add=+
 signpic.gui.editor.rotation.neg=-
 signpic.gui.editor.rotation.pos=+
+## Settings
+signpic.gui.settings.api.upimage=Image Upload Settings
+signpic.gui.settings.api.upimage.type=API Type
+signpic.gui.settings.api.upimage.key=API Key
+signpic.gui.settings.default=Default
+signpic.gui.settings.config=Config
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=Please Wait ( %d / %d letters )
 signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
+
+# Notice
+signpic.gui.notice.uploading=Uploading %s
+signpic.gui.notice.uploaded=Finished uploading %s
+signpic.gui.notice.uploadfailed=Upload Failed: §7%s
+signpic.gui.notice.downloading=Downloading %s
+signpic.gui.notice.downloaded=Finished downloading %s
+signpic.gui.notice.downloadfailed=Download Failed: §7%s
+
+# Upload UI
+signpic.ui.title=SignPicture!File
+signpic.ui.description=A File Uploader!
+signpic.ui.drop=Drag and Drop a Image
+signpic.ui.select=or select a image for upload
+signpic.ui.title.file=SignPicture!File
 
 # Image State
 signpic.state.init=Waiting...
@@ -76,16 +98,15 @@ signpic.state.error=ERROR
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=Invalid URL
+signpic.advmsg.dlstopped=Stopped Downloading
 signpic.advmsg.capacityover=CapacityOver
 signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s
 
 # Version Checking
-signpic.versioning.outdated=[§6SignPicture§r] You are running Sign Picture %s, the latest is %s.
-signpic.versioning.updateMessage=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to automatically download the latest version","color":"green"}},"clickEvent":$download$},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's website","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the version's Changelog","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to automatically download the latest version","color":"green"}},"clickEvent":$download$},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's website","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the version's Changelog","color":"green"}},"clickEvent":$changelog$},"]"]
 signpic.versioning.startingDownload=[{"text":"Starting download of %s. Please do not remove your hard disk. Enjoying ","color":"aqua"}]
-signpic.versioning.downloading=Now Downloading... %s%% (%s / %s bytes)
 signpic.versioning.doneDownloading=Finished downloading %s. Delete your old SignPicture .jar and reload your game to update.
 signpic.versioning.doneDownloadingWithFile=Finished downloading %s. Delete %s and reload your game to update.
 signpic.versioning.downloadedAlready=You already downloaded the latest version. Close your game, delete the old version from your mods folder and load it again to update!

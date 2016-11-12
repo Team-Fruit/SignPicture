@@ -11,14 +11,13 @@ import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
-import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
-import com.kamesuta.mc.bnnwidget.position.RArea;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.Rotate;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.RotateType;
@@ -32,7 +31,7 @@ public class GuiRotation extends WPanel {
 	public GuiRotation(final R position, final ImageRotation rotation) {
 		super(position);
 		final MCoord left = MCoord.pleft(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		this.editor = new RotationEditor(new RArea(left, Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
+		this.editor = new RotationEditor(new R(left, Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				left.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -44,13 +43,13 @@ public class GuiRotation extends WPanel {
 				return left.isFinished();
 			}
 		};
-		this.panel = new RotationPanel(new RArea(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation);
+		this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation);
 	}
 
 	@Override
 	protected void initWidget() {
 		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new RArea(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.rotation.category")) {
+		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.rotation.category")) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -76,7 +75,8 @@ public class GuiRotation extends WPanel {
 		this.panel.update();
 	}
 
-	protected void onUpdate() {}
+	protected void onUpdate() {
+	}
 
 	protected class RotationEditor extends WPanel {
 		public RotationEditor(final R position) {
@@ -85,14 +85,14 @@ public class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MButton(new RArea(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.add")) {
+			add(new MButton(new R(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.add")) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.add(new Rotate(RotateType.X, 0));
 					return true;
 				}
 			});
-			add(new MButton(new RArea(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.remove")) {
+			add(new MButton(new R(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.remove")) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.remove();
@@ -123,7 +123,7 @@ public class GuiRotation extends WPanel {
 
 		public void add(final Rotate rotate) {
 			final int n = this.rotation.rotates.size();
-			if (n < 3) {
+			if (n<3) {
 				this.rotation.rotates.add(rotate);
 				addWidget(rotate, n);
 			}
@@ -138,7 +138,7 @@ public class GuiRotation extends WPanel {
 
 		public void up(final Rotate rotate) {
 			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
-			if (i!=-1 && i>0) {
+			if (i!=-1&&i>0) {
 				final Rotate prev = RotationPanel.this.rotation.rotates.get(i-1);
 				this.rotation.rotates.set(i, prev);
 				this.rotation.rotates.set(i-1, rotate);
@@ -148,7 +148,7 @@ public class GuiRotation extends WPanel {
 
 		public void down(final Rotate rotate) {
 			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
-			if (i!=-1 && i<RotationPanel.this.rotation.rotates.size() - 1) {
+			if (i!=-1&&i<RotationPanel.this.rotation.rotates.size()-1) {
 				final Rotate next = RotationPanel.this.rotation.rotates.get(i+1);
 				this.rotation.rotates.set(i, next);
 				this.rotation.rotates.set(i+1, rotate);
@@ -158,9 +158,9 @@ public class GuiRotation extends WPanel {
 
 		private void addWidget(final Rotate rotate, final int n) {
 			final float t = n*15;
-			final MCoord left = MCoord.pleft(-1f).add(new BlankMotion(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
+			final MCoord left = MCoord.pleft(-1f).add(Motion.blank(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
 			final MCoord top = MCoord.top(t);
-			final RotationElement element = new RotationElement(new RArea(left, top, Coord.pwidth(1f), Coord.height(15)), left, top, rotate);
+			final RotationElement element = new RotationElement(new R(left, top, Coord.pwidth(1f), Coord.height(15)), left, top, rotate);
 			this.map.put(rotate, element);
 			add(element);
 		}
@@ -188,8 +188,8 @@ public class GuiRotation extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				add(new Type(new RArea(Coord.left(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), this.rotate));
-				add(new MNumber(new RArea(Coord.left(15*1), Coord.top(0), Coord.right(15*2), Coord.bottom(0)), 15) {
+				add(new Type(new R(Coord.left(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), this.rotate));
+				add(new MNumber(new R(Coord.left(15*1), Coord.top(0), Coord.right(15*2), Coord.bottom(0)), 15) {
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
 						if (NumberUtils.isNumber(newText))
@@ -199,14 +199,14 @@ public class GuiRotation extends WPanel {
 						onUpdate();
 					}
 				}.setNumber(this.rotate.rotate).setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")));
-				add(new MButton(new RArea(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.up")) {
+				add(new MButton(new R(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.up")) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 						up(RotationElement.this.rotate);
 						return true;
 					}
 				});
-				add(new MButton(new RArea(Coord.right(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.down")) {
+				add(new MButton(new R(Coord.right(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.down")) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 						down(RotationElement.this.rotate);
@@ -217,7 +217,7 @@ public class GuiRotation extends WPanel {
 
 			@Override
 			public boolean onCloseRequest() {
-				this.left.stop().add(new BlankMotion(this.top.get()/15*.025f)).add(Easings.easeInBack.move(.25f, -1f)).start();
+				this.left.stop().add(Motion.blank(this.top.get()/15*.025f)).add(Easings.easeInBack.move(.25f, -1f)).start();
 				return false;
 			}
 
@@ -242,7 +242,7 @@ public class GuiRotation extends WPanel {
 
 				protected RotateType nextType(RotateType type) {
 					final RotateType[] rotateTypes = RotateType.values();
-					if (rotateTypes.length > 0) {
+					if (rotateTypes.length>0) {
 						RotateType rotateType = rotateTypes[0];
 						boolean next = false;
 						for (final RotateType r : rotateTypes) {
@@ -250,7 +250,7 @@ public class GuiRotation extends WPanel {
 								rotateType = r;
 								break;
 							}
-							if (r == type)
+							if (r==type)
 								next = true;
 						}
 						type = rotateType;

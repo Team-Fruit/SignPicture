@@ -1,11 +1,8 @@
 package com.kamesuta.mc.signpic;
 
-import java.io.File;
-
 import org.apache.commons.lang3.Validate;
 
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
+import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
@@ -24,13 +21,7 @@ public class Client {
 
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
-	public static ContentLocation location;
-
-	public static File mcDir;
-	public static File signpicDir;
-	public static File signpicCacheDir;
-	public static File modDir;
-	public static File modFile;
+	public static Locations location;
 
 	public static String mcversion;
 	public static String forgeversion;
@@ -39,7 +30,7 @@ public class Client {
 	public static String name;
 
 	public static void openEditor() {
-		mc.displayGuiScreen(new GuiSignPicEditor());
+		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
 	}
 
 	public static void startSection(final String sec) {
