@@ -1,11 +1,8 @@
 package com.kamesuta.mc.signpic;
 
-import java.io.File;
-
 import org.apache.commons.lang3.Validate;
 
-import com.kamesuta.mc.signpic.entry.content.ContentLocation;
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
+import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.handler.CoreHandler;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
@@ -33,7 +30,7 @@ public class Client {
 	public static String name;
 
 	public static void openEditor() {
-		mc.displayGuiScreen(new GuiSignPicEditor(mc.currentScreen));
+		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
 	}
 
 	public static void startSection(final String sec) {
@@ -48,7 +45,7 @@ public class Client {
 		if (MovePos.getBlock() instanceof BlockSign) {
 			final TileEntity tile = MovePos.getTile();
 			if (tile instanceof TileEntitySign)
-				return (TileEntitySign)tile;
+				return (TileEntitySign) tile;
 		}
 		return null;
 	}
@@ -67,7 +64,7 @@ public class Client {
 
 		public static MovePos getBlockPos() {
 			final MovingObjectPosition movingPos = getMovingPos();
-			if (movingPos != null) {
+			if (movingPos!=null) {
 				final BlockPos pos = movingPos.getBlockPos();
 				if (pos!=null)
 					return new MovePos(pos);
@@ -77,21 +74,21 @@ public class Client {
 
 		public static IBlockState getBlockState() {
 			final MovePos movePos = getBlockPos();
-			if (movePos != null)
+			if (movePos!=null)
 				return mc.theWorld.getBlockState(movePos.pos);
 			return null;
 		}
 
 		public static TileEntity getTile() {
 			final MovePos movePos = getBlockPos();
-			if (movePos != null)
+			if (movePos!=null)
 				return mc.theWorld.getTileEntity(movePos.pos);
 			return null;
 		}
 
 		public static Block getBlock() {
 			final IBlockState blockState = getBlockState();
-			if (blockState != null)
+			if (blockState!=null)
 				return blockState.getBlock();
 			return null;
 		}

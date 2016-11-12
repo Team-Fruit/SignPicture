@@ -51,15 +51,18 @@ public class CommandDownloadLatest extends CommandBase {
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadedAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 				else if (state.downloading)
 					var1.addChatMessage(new ChatComponentTranslation("signpic.versioning.downloadingAlready").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-				else
-					Communicator.instance.communicate(new ModDownload(), new ICommunicateCallback<ModDLResult>() {
+				else {
+					final ModDownload downloader = new ModDownload();
+					downloader.setCallback(new ICommunicateCallback() {
 						@Override
-						public void onDone(final ICommunicateResponse<ModDLResult> res) {
-							final ModDLResult result = res.getResult();
+						public void onDone(final ICommunicateResponse res) {
+							final ModDLResult result = downloader.result;
 							if (result!=null)
 								new ChatBuilder().setChat(result.response).chatClient();
 						}
 					});
+					Communicator.instance.communicate(downloader);
+				}
 		}
 	}
 }

@@ -19,16 +19,15 @@ import org.apache.http.client.methods.HttpUriRequest;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
+import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.ICommunicate;
-import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-public class ContentDownload implements ICommunicate<ContentDownload.ContentDLResult>, Progressable {
+public class ContentDownload extends Communicate implements Progressable {
 	protected final String name;
 	protected final URI remote;
 	protected final File temp;
@@ -54,7 +53,7 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 	}
 
 	@Override
-	public ICommunicateResponse<ContentDLResult> communicate() {
+	public void communicate() {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
@@ -85,9 +84,9 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(this.local);
 			FileUtils.moveFile(this.temp, this.local);
-			return new CommunicateResponse<ContentDLResult>(new ContentDLResult());
+			onDone(new CommunicateResponse(true, null));
 		} catch (final Exception e) {
-			return new CommunicateResponse<ContentDLResult>(e);
+			onDone(new CommunicateResponse(false, e));
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
@@ -98,8 +97,5 @@ public class ContentDownload implements ICommunicate<ContentDownload.ContentDLRe
 	@Override
 	public void cancel() {
 		this.canceled = true;
-	}
-
-	public static class ContentDLResult {
 	}
 }

@@ -60,6 +60,12 @@ signpic.gui.editor.rotation.remove=-
 signpic.gui.editor.rotation.add=+
 signpic.gui.editor.rotation.neg=-
 signpic.gui.editor.rotation.pos=+
+## Settings
+signpic.gui.settings.api.upimage=Image Upload Settings
+signpic.gui.settings.api.upimage.type=API Type
+signpic.gui.settings.api.upimage.key=API Key
+signpic.gui.settings.default=Default
+signpic.gui.settings.config=Config
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=Please Wait ( %d / %d letters )
 signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
@@ -67,8 +73,10 @@ signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
 # Notice
 signpic.gui.notice.uploading=Uploading %s
 signpic.gui.notice.uploaded=Finished uploading %s
+signpic.gui.notice.uploadfailed=Upload Failed: §7%s
 signpic.gui.notice.downloading=Downloading %s
 signpic.gui.notice.downloaded=Finished downloading %s
+signpic.gui.notice.downloadfailed=Download Failed: §7%s
 
 # Upload UI
 signpic.ui.title=SignPicture!File

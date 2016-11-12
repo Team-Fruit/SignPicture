@@ -12,7 +12,6 @@ import com.kamesuta.mc.signpic.handler.CoreEvent;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
-import com.kamesuta.mc.signpic.information.InformationCheck.InformationCheckResult;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -21,6 +20,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public final class Informations {
 	public static final Informations instance = new Informations();
+
+	public static final Version VersionClient = new Version(Reference.VERSION);
 
 	private Informations() {
 	}
@@ -92,15 +93,39 @@ public final class Informations {
 	}
 
 	public void init() {
-		Communicator.instance.communicate(new InformationCheck(), new ICommunicateCallback<InformationCheck.InformationCheckResult>() {
+		check();
+	}
+
+	private long lastCheck = -1l;
+
+	public boolean shouldCheck(final long l) {
+		return System.currentTimeMillis()-this.lastCheck>l;
+	}
+
+	public void checkInterval(final long l) {
+		if (shouldCheck(l))
+			check();
+	}
+
+	public void check() {
+		this.lastCheck = System.currentTimeMillis();
+		final InformationCheck checker = new InformationCheck();
+		checker.setCallback(new ICommunicateCallback() {
 			@Override
-			public void onDone(final ICommunicateResponse<InformationCheckResult> res) {
-				if (res.getResult()!=null)
-					setSource(res.getResult().source);
+			public void onDone(final ICommunicateResponse res) {
+				if (checker.result!=null)
+					setSource(checker.result);
 				if (res.getError()!=null)
 					Reference.logger.warn("Could not check version information", res.getError());
 			}
 		});
+		Communicator.instance.communicate(checker);
+	}
+
+	public boolean isUpdateRequired() {
+		if (getSource()!=null)
+			return getSource().onlineVersion().compare(VersionClient);
+		return false;
 	}
 
 	@CoreEvent
@@ -113,14 +138,15 @@ public final class Informations {
 		final EntityPlayer player = Client.mc.thePlayer;
 		if (player!=null&&!state.triedToWarnPlayer&&source!=null) {
 			final String lang = Client.mc.gameSettings.language;
-			if (source.info!=null&&
-					source.info.versions!=null&&
-					Config.instance.informationNotice&&
-					!StringUtils.equals(Reference.VERSION, "${version}")) {
-				final Version client = new Version(Reference.VERSION);
+			if (
+				source.info!=null&&
+						source.info.versions!=null&&
+						Config.instance.informationNotice&&
+						!StringUtils.equals(Reference.VERSION, "${version}")
+			) {
 				final InfoVersion online = source.onlineVersion();
 
-				if (online.compare(client))
+				if (online.compare(VersionClient))
 					if (online.version!=null) {
 						final Info.Version version = online.version;
 						if (version.message_local!=null&&version.message_local.containsKey(lang))

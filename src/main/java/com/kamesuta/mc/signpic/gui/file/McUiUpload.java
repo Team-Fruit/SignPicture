@@ -2,22 +2,22 @@ package com.kamesuta.mc.signpic.gui.file;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.kamesuta.mc.signpic.Apis;
+import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
-import com.kamesuta.mc.signpic.gui.GuiSignPicEditor;
+import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
-import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
-import com.kamesuta.mc.signpic.http.upload.GyazoUpload.GyazoResult;
+import com.kamesuta.mc.signpic.http.upload.IUploader;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.state.State;
 
@@ -50,32 +50,41 @@ public class McUiUpload extends UiUpload {
 	@Override
 	protected void apply(final File f) {
 		try {
-			final GyazoUpload upload = new GyazoUpload(f, new State("§e"+f.getName()));
-			upload.getState().getMeta().put(GuiTask.HighlightPanel, true);
-			upload.getState().getMeta().put(GuiTask.ShowPanel, 3);
-			Communicator.instance.communicate(upload, new ICommunicateCallback<GyazoResult>() {
-				@Override
-				public void onDone(final ICommunicateResponse<GyazoResult> res) {
-					if (res.getResult()!=null) {
-						OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploaded", f.getName()), 2);
-						final String url = res.getResult().url;
-						if (Client.mc.currentScreen instanceof GuiSignPicEditor) {
-							final GuiSignPicEditor editor = (GuiSignPicEditor) Client.mc.currentScreen;
-							editor.getTextField().setFocused(true);
-							editor.getTextField().setText(url);
-							editor.getTextField().setFocused(false);
-						} else {
-							final EntryId entryId = CurrentMode.instance.getEntryId();
-							final EntryIdBuilder signbuilder = new EntryIdBuilder(entryId);
-							signbuilder.setURI(url);
-							CurrentMode.instance.setEntryId(signbuilder.build());
+			final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getConfigOrRandom());
+			final String key = new Apis.KeySetting(factory.keys()).getConfigOrRandom();
+			if (factory!=null&&key!=null) {
+				final State state = new State("Upload");
+				final IUploader upload = factory.create(f, state, key);
+				state.getMeta().put(GuiTask.HighlightPanel, true);
+				state.getMeta().put(GuiTask.ShowPanel, 3);
+				upload.setCallback(new ICommunicateCallback() {
+					@Override
+					public void onDone(final ICommunicateResponse res) {
+						if (upload.getLink()!=null) {
+							final String url = upload.getLink();
+							if (Client.mc.currentScreen instanceof GuiMain) {
+								final GuiMain editor = (GuiMain) Client.mc.currentScreen;
+								editor.getTextField().setFocused(true);
+								editor.getTextField().setText(url);
+								editor.getTextField().setFocused(false);
+							} else {
+								final EntryId entryId = CurrentMode.instance.getEntryId();
+								final EntryIdBuilder signbuilder = new EntryIdBuilder(entryId);
+								signbuilder.setURI(url);
+								CurrentMode.instance.setEntryId(signbuilder.build());
+								OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploaded", f.getName()), 2);
+							}
 						}
+						if (!res.isSuccess())
+							OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploadfailed", res.getError()), 2);
 					}
-				}
-			});
+				});
+				Communicator.instance.communicate(upload);
+			}
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
-		} catch (final FileNotFoundException e) {
+		} catch (final IOException e) {
+			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.uploadfailed", e), 2);
 		}
 	}
 

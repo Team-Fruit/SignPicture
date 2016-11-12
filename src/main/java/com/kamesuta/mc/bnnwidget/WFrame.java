@@ -1,7 +1,5 @@
 package com.kamesuta.mc.bnnwidget;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -14,11 +12,12 @@ import com.kamesuta.mc.bnnwidget.position.R;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected GuiScreen parent;
 	protected WPanel contentPane = new WPanel(new R());
-	protected final WEvent event = new WEvent();
+	protected final WEvent event = new WEvent(this);
 	public float width;
 	public float height;
 
@@ -139,10 +138,10 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 
 	protected void sDrawScreen(final int mousex, final int mousey, final float f) {
 		if (this.parent!=null) {
-			glPushMatrix();
-			glTranslatef(0, 0, -200f);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0, 0, -200f);
 			this.parent.drawScreen(mousex, mousey, f);
-			glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 		super.drawScreen(mousex, mousey, f);
 	}

@@ -47,14 +47,23 @@ public abstract class UiUpload {
 
 	/**
 	 * Create the application.
-	 * @wbp.parser.entryPoint
 	 */
 	public UiUpload() {
-		initialize();
+	}
+
+	private boolean initialized;
+
+	public void init() {
+		synchronized (this) {
+			if (!this.initialized)
+				initialize();
+			this.initialized = true;
+		}
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @wbp.parser.entryPoint
 	 */
 	protected void initialize() {
 		this.frame = new JDialog();
@@ -250,6 +259,7 @@ public abstract class UiUpload {
 	}
 
 	protected void open() {
+		init();
 		this.frame.setVisible(true);
 	}
 
@@ -267,6 +277,8 @@ public abstract class UiUpload {
 	}
 
 	public boolean isVisible() {
+		if (!this.initialized||this.frame==null)
+			return false;
 		return this.frame.isVisible();
 	}
 

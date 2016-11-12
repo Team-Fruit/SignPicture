@@ -17,20 +17,20 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
-import com.kamesuta.mc.signpic.http.ICommunicate;
-import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
-public class InformationCheck implements ICommunicate<InformationCheck.InformationCheckResult>, Progressable {
+public class InformationCheck extends Communicate implements Progressable {
 	private static final Gson gson = new Gson();
 
 	protected State status = new State("§6SignPicture Update Check");
+	public Informations.InfoSource result;
 
 	@Override
-	public ICommunicateResponse<InformationCheckResult> communicate() {
+	public void communicate() {
 		this.status.getProgress().setOverall(4).setDone(0);
 		InputStream input = null;
 		try {
@@ -67,14 +67,18 @@ public class InformationCheck implements ICommunicate<InformationCheck.Informati
 					}
 				}
 				this.status.getProgress().setDone(4);
-				return new CommunicateResponse<InformationCheckResult>(new InformationCheckResult(source));
+				this.result = source;
+				onDone(new CommunicateResponse(true, null));
+				return;
 			}
 		} catch (final Exception e) {
-			return new CommunicateResponse<InformationCheckResult>(e);
+			onDone(new CommunicateResponse(false, e));
+			return;
 		} finally {
 			IOUtils.closeQuietly(input);
 		}
-		return new CommunicateResponse<InformationCheckResult>();
+		onDone(new CommunicateResponse(false, null));
+		return;
 	}
 
 	@Override
@@ -84,13 +88,5 @@ public class InformationCheck implements ICommunicate<InformationCheck.Informati
 
 	@Override
 	public void cancel() {
-	}
-
-	public static class InformationCheckResult {
-		public final Informations.InfoSource source;
-
-		public InformationCheckResult(final Informations.InfoSource source) {
-			this.source = source;
-		}
 	}
 }

@@ -19,7 +19,7 @@ public class Communicator {
 		return this.tasks;
 	}
 
-	public <RES> void communicate(final ICommunicate<RES> communicate, final ICommunicateCallback<RES> callback) {
+	public void communicate(final ICommunicate communicate) {
 		if (communicate instanceof Progressable)
 			synchronized (this.tasks) {
 				this.tasks.offer((Progressable) communicate);
@@ -28,7 +28,7 @@ public class Communicator {
 			@Override
 			public void run() {
 				try {
-					callback.onDone(communicate.communicate());
+					communicate.communicate();
 				} finally {
 					synchronized (Communicator.this.tasks) {
 						Communicator.this.tasks.remove(communicate);

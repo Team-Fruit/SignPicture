@@ -1,7 +1,9 @@
 package com.kamesuta.mc.signpic.http;
 
-public interface ICommunicate<T> {
-	ICommunicateResponse<T> communicate();
+public interface ICommunicate {
+	void communicate();
+
+	void setCallback(ICommunicateCallback callback);
 
 	void cancel();
 }

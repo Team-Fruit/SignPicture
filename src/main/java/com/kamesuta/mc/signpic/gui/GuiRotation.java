@@ -11,9 +11,9 @@ import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
-import com.kamesuta.mc.bnnwidget.motion.BlankMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -158,7 +158,7 @@ public class GuiRotation extends WPanel {
 
 		private void addWidget(final Rotate rotate, final int n) {
 			final float t = n*15;
-			final MCoord left = MCoord.pleft(-1f).add(new BlankMotion(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
+			final MCoord left = MCoord.pleft(-1f).add(Motion.blank(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
 			final MCoord top = MCoord.top(t);
 			final RotationElement element = new RotationElement(new R(left, top, Coord.pwidth(1f), Coord.height(15)), left, top, rotate);
 			this.map.put(rotate, element);
@@ -217,7 +217,7 @@ public class GuiRotation extends WPanel {
 
 			@Override
 			public boolean onCloseRequest() {
-				this.left.stop().add(new BlankMotion(this.top.get()/15*.025f)).add(Easings.easeInBack.move(.25f, -1f)).start();
+				this.left.stop().add(Motion.blank(this.top.get()/15*.025f)).add(Easings.easeInBack.move(.25f, -1f)).start();
 				return false;
 			}
 

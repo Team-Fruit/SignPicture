@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.handler;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
+import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntryManager;
@@ -34,12 +35,14 @@ public class CoreHandler {
 	public final SignPicRender renderHandler = new SignPicRender();
 	public final OverlayFrame overlayHandler = OverlayFrame.instance;
 	public final Informations informationHandler = Informations.instance;
+	public final Apis apiHandler = Apis.instance;
 
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(this);
 		KeyHandler.init();
 		SignHandler.init();
 		this.informationHandler.init();
+		this.apiHandler.init();
 	}
 
 	@SubscribeEvent

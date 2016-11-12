@@ -1,8 +1,9 @@
 package com.kamesuta.mc.signpic.gui;
 
+import java.util.concurrent.TimeUnit;
+
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -11,7 +12,6 @@ import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -23,23 +23,24 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 
-public class GuiSignPicEditor extends WFrame {
+public class GuiMain extends WFrame {
 	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getEntryId());
 	private MChatTextField field;
 
-	public GuiSignPicEditor(final GuiScreen parent) {
+	public GuiMain(final GuiScreen parent) {
 		super(parent);
 	}
 
-	public GuiSignPicEditor() {
+	public GuiMain() {
 	}
 
 	@Override
@@ -55,6 +56,7 @@ public class GuiSignPicEditor extends WFrame {
 			protected void initWidget() {
 				add(new WBase(R.diff(0, 0, 0, 0)) {
 					MCoord m = new MCoord(0);
+
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
@@ -63,6 +65,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 
 					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
@@ -71,9 +74,9 @@ public class GuiSignPicEditor extends WFrame {
 								this.m.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
 							}
 						} else if (this.b) {
-								this.b = false;
-								this.m.stop().add(Easings.easeLinear.move(.2f, .5f)).start();
-							}
+							this.b = false;
+							this.m.stop().add(Easings.easeLinear.move(.2f, .5f)).start();
+						}
 						super.update(ev, pgp, p);
 					}
 
@@ -89,27 +92,27 @@ public class GuiSignPicEditor extends WFrame {
 					}
 				});
 
-				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2)), GuiSignPicEditor.this.signbuilder.getMeta().size) {
+				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2)), GuiMain.this.signbuilder.getMeta().size) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 				});
 
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiSignPicEditor.this.signbuilder.getMeta().offset) {
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiMain.this.signbuilder.getMeta().offset) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 				});
 
-				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), GuiSignPicEditor.this.signbuilder.getMeta().rotation) {
+				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), GuiMain.this.signbuilder.getMeta().rotation) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 				});
 
@@ -128,6 +131,7 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+
 							@Override
 							public void update(final WEvent ev, final Area pgp, final Point p) {
 								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
@@ -136,9 +140,9 @@ public class GuiSignPicEditor extends WFrame {
 										m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
 									}
 								} else if (this.b) {
-										this.b = false;
-										m.stop().add(Easings.easeOutBack.move(.25f, 0f)).start();
-									}
+									this.b = false;
+									m.stop().add(Easings.easeOutBack.move(.25f, 0f)).start();
+								}
 								super.update(ev, pgp, p);
 							}
 						});
@@ -207,15 +211,6 @@ public class GuiSignPicEditor extends WFrame {
 								return McUiUpload.instance.isVisible();
 							}
 						});
-						add(new MSelect(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), 15) {
-							{
-								setSelector(new ListSelector() {
-									{
-										setList(Lists.newArrayList("uhgnva", "azulghn", "zaghnvu", "iuhvgn"));
-									}
-								});
-							}
-						});
 
 						float bottom = 25*4+5;
 
@@ -253,7 +248,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								if (entry.isValid() && entry.id.isPlaceable()) {
+								if (entry.isValid()&&entry.id.isPlaceable()) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 									requestClose();
@@ -270,7 +265,7 @@ public class GuiSignPicEditor extends WFrame {
 							@Override
 							public boolean isEnabled() {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								return entry.isValid() && entry.id.isPlaceable() && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+								return entry.isValid()&&entry.id.isPlaceable()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});
 						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
@@ -303,27 +298,27 @@ public class GuiSignPicEditor extends WFrame {
 				});
 
 				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				GuiSignPicEditor.this.field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
+				GuiMain.this.field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
 						super.onAdded();
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
-						final String id = GuiSignPicEditor.this.signbuilder.getURI();
+						final String id = GuiMain.this.signbuilder.getURI();
 						if (id!=null)
 							setText(id);
-						}
+					}
 
 					@Override
 					public void onFocusChanged() {
 						final EntryId entryId = new EntryId(getText());
 						if (entryId.hasMeta())
-							GuiSignPicEditor.this.signbuilder.setMeta(entryId.getMeta());
+							GuiMain.this.signbuilder.setMeta(entryId.getMeta());
 						if (entryId.hasContentId())
-							GuiSignPicEditor.this.signbuilder.setURI(entryId.getContentId().getURI());
+							GuiMain.this.signbuilder.setURI(entryId.getContentId().getURI());
 						else
-							GuiSignPicEditor.this.signbuilder.setURI("");
-						CurrentMode.instance.setEntryId(GuiSignPicEditor.this.signbuilder.build());
+							GuiMain.this.signbuilder.setURI("");
+						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 					}
 
 					@Override
@@ -338,15 +333,16 @@ public class GuiSignPicEditor extends WFrame {
 						return d.isFinished();
 					}
 				};
-				add(GuiSignPicEditor.this.field);
+				add(GuiMain.this.field);
 
-				// add(new GuiFileDD(new R(Coord.left(100), Coord.right(100), Coord.top(100), Coord.bottom(100)), field));
+				add(new GuiSettings(new R()));
 
 				OverlayFrame.instance.delegate();
 				add(OverlayFrame.instance.pane);
 			}
-				});
-			}
+		});
+		Informations.instance.checkInterval(TimeUnit.DAYS.toMillis(1l));
+	}
 
 	public MChatTextField getTextField() {
 		return this.field;
