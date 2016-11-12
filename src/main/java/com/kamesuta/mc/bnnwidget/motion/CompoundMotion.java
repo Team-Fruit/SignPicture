@@ -12,7 +12,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	protected float coord;
 	protected boolean looplast;
 	protected Runnable after;
-	protected IMotion first;
+	protected boolean usecoord;
 
 	public CompoundMotion() {
 		this.queue = Queues.newArrayDeque();
@@ -21,13 +21,11 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	public CompoundMotion(final float coord) {
 		this();
 		this.coord = coord;
-		this.first = this;
+		this.usecoord = true;
 	}
 
 	@Override
 	public CompoundMotion add(final IMotion animation) {
-		if (this.first!=null)
-			this.first = animation;
 		this.queue.offer(animation);
 		return this;
 	}
@@ -118,14 +116,16 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public float get(float start) {
+	public float get(final float start) {
 		final IMotion a = getAnimation();
-		if (a!=this.first)
-			start = this.coord;
+		if (!this.usecoord) {
+			this.coord = start;
+			this.usecoord = true;
+		}
 		if (a!=null)
-			return a.get(start);
+			return a.get(this.coord);
 		else
-			return start;
+			return this.coord;
 	}
 
 	@Override
