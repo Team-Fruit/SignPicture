@@ -102,7 +102,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 				this.coord = this.current.getEnd(this.coord);
 			next();
 		}
-		if (this.looplast&&this.tasks.isFinished())
+		if (this.looplast&&(this.current==null||this.current.isFinished())&&this.tasks.isFinished())
 			restart();
 		return this;
 	}
@@ -115,8 +115,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	@Override
 	public IMotion getAnimationLast() {
-		this.tasks.last();
-		return this.tasks.get();
+		return this.tasks.getLast();
 	}
 
 	@Override
@@ -140,7 +139,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	@Override
 	public float getLast() {
-		final IMotion a = getAnimationLast();
+		final IMotion a = this.tasks.getLast();
 		if (a!=null)
 			return a.getEnd(this.coord);
 		else
@@ -149,8 +148,8 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	@Override
 	public boolean isFinished() {
-		final IMotion a = getAnimationLast();
-		return !this.looplast||!(this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished());
+		final IMotion a = this.tasks.getLast();
+		return !(this.looplast||this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished());
 	}
 
 	@Override
@@ -159,7 +158,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 			m.pause().restart();
 		this.coord = this.firstcoord;
 		this.tasks.restart();
-		setCurrent(null);
+		next();
 		return this;
 	}
 
@@ -253,41 +252,42 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 		private final List<E> tasks = Lists.newArrayList();
 		private int pos;
 
-		protected void add(final E e) {
+		public void add(final E e) {
 			this.tasks.add(e);
 		}
 
-		protected E get() {
-			if (0<=this.pos&&this.pos<this.tasks.size())
-				return this.tasks.get(this.pos);
+		protected E get(final int pos) {
+			if (0<=pos&&pos<this.tasks.size())
+				return this.tasks.get(pos);
 			return null;
 		}
 
-		protected E poll() {
-			final int size = this.tasks.size();
-			if (0<=this.pos&&this.pos<size)
-				return this.tasks.get(this.pos++);
-			return null;
+		public E get() {
+			return get(this.pos);
 		}
 
-		protected void reset() {
+		public E poll() {
+			return get(this.pos++);
+		}
+
+		public void reset() {
 			this.tasks.clear();
 			restart();
 		}
 
-		protected void restart() {
+		public void restart() {
 			this.pos = 0;
 		}
 
-		protected void finish() {
+		public void finish() {
 			this.pos = this.tasks.size();
 		}
 
-		protected void last() {
-			this.pos = this.tasks.size()-1;
+		public E getLast() {
+			return get(this.tasks.size()-1);
 		}
 
-		protected boolean isFinished() {
+		public boolean isFinished() {
 			return this.pos>=this.tasks.size();
 		}
 
