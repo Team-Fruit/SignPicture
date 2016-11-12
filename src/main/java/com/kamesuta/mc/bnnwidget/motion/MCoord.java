@@ -94,8 +94,14 @@ public class MCoord extends Coord implements ICompoundMotion {
 	}
 
 	@Override
+	public MCoord restart() {
+		this.compoundMotion.restart();
+		return this;
+	}
+
+	@Override
 	public MCoord reset() {
-		this.compoundMotion.isFinished();
+		this.compoundMotion.reset();
 		return this;
 	}
 

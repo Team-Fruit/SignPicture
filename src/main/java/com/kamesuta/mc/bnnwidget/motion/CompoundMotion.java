@@ -1,5 +1,6 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.common.collect.Lists;
@@ -7,26 +8,28 @@ import com.google.common.collect.Lists;
 public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	protected boolean paused = true;
-	protected TaskList tasks;
+	protected TaskList<IMotion> tasks;
 	protected IMotion current;
+	protected float firstcoord;
 	protected float coord;
 	protected boolean looplast;
 	protected Runnable after;
 	protected boolean usecoord;
 
 	public CompoundMotion() {
-		this.tasks = new TaskList();
+		this.tasks = new TaskList<IMotion>();
 	}
 
 	public CompoundMotion(final float coord) {
 		this();
-		this.coord = coord;
+		this.firstcoord = coord;
 		this.usecoord = true;
+		this.coord = coord;
 	}
 
 	@Override
 	public CompoundMotion add(final IMotion animation) {
-		this.tasks.addTask(animation);
+		this.tasks.add(animation);
 		return this;
 	}
 
@@ -44,7 +47,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	@Override
 	public CompoundMotion stopFirst() {
-		this.tasks.finishTask();
+		this.tasks.finish();
 		setCurrent(null);
 		return this;
 	}
@@ -80,7 +83,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	protected IMotion nextCurrent() {
-		final IMotion m = this.tasks.pollTask();
+		final IMotion m = this.tasks.poll();
 		setCurrent(m);
 		return m;
 	}
@@ -94,27 +97,26 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	@Override
 	public CompoundMotion stopNext() {
-		if (this.looplast&&this.current!=null&&this.tasks.isFinishedTask())
-			reset();
-		else {
+		if ((this.current==null||this.current.isFinished())&&!this.paused) {
 			if (this.current!=null)
 				this.coord = this.current.getEnd(this.coord);
 			next();
 		}
+		if (this.looplast&&this.tasks.isFinished())
+			restart();
 		return this;
 	}
 
 	@Override
 	public IMotion getAnimation() {
-		if ((this.current==null||this.current.isFinished())&&!this.paused)
-			stopNext();
+		stopNext();
 		return this.current;
 	}
 
 	@Override
 	public IMotion getAnimationLast() {
-		this.tasks.lastTask();
-		return this.tasks.getTask();
+		this.tasks.last();
+		return this.tasks.get();
 	}
 
 	@Override
@@ -126,8 +128,9 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	public float get(final float start) {
 		final IMotion a = getAnimation();
 		if (!this.usecoord) {
-			this.coord = start;
 			this.usecoord = true;
+			this.firstcoord = start;
+			this.coord = start;
 		}
 		if (a!=null)
 			return a.get(this.coord);
@@ -147,15 +150,23 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	@Override
 	public boolean isFinished() {
 		final IMotion a = getAnimationLast();
-		if (this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished())
-			return false;
-		else
-			return true;
+		return !this.looplast||!(this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished());
+	}
+
+	@Override
+	public CompoundMotion restart() {
+		for (final IMotion m : this.tasks)
+			m.pause().restart();
+		this.coord = this.firstcoord;
+		this.tasks.restart();
+		setCurrent(null);
+		return this;
 	}
 
 	@Override
 	public CompoundMotion reset() {
-		this.tasks.restartTask();
+		this.tasks.reset();
+		this.coord = this.firstcoord;
 		setCurrent(null);
 		return this;
 	}
@@ -202,7 +213,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	@Override
 	public float getDuration() {
 		float d = 0;
-		for (final IMotion m : this.tasks.tasks)
+		for (final IMotion m : this.tasks)
 			d += m.getDuration();
 		return d;
 	}
@@ -237,42 +248,52 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 		return compound;
 	}
 
-	public static class TaskList {
+	public static class TaskList<E> implements Iterable<E> {
 
-		protected final List<IMotion> tasks = Lists.newArrayList();
-		protected int pos;
+		private final List<E> tasks = Lists.newArrayList();
+		private int pos;
 
-		protected void addTask(final IMotion e) {
+		protected void add(final E e) {
 			this.tasks.add(e);
 		}
 
-		protected IMotion getTask() {
+		protected E get() {
 			if (0<=this.pos&&this.pos<this.tasks.size())
 				return this.tasks.get(this.pos);
 			return null;
 		}
 
-		protected IMotion pollTask() {
+		protected E poll() {
 			final int size = this.tasks.size();
 			if (0<=this.pos&&this.pos<size)
 				return this.tasks.get(this.pos++);
 			return null;
 		}
 
-		protected void restartTask() {
+		protected void reset() {
+			this.tasks.clear();
+			restart();
+		}
+
+		protected void restart() {
 			this.pos = 0;
 		}
 
-		protected void finishTask() {
+		protected void finish() {
 			this.pos = this.tasks.size();
 		}
 
-		protected void lastTask() {
+		protected void last() {
 			this.pos = this.tasks.size()-1;
 		}
 
-		protected boolean isFinishedTask() {
+		protected boolean isFinished() {
 			return this.pos>=this.tasks.size();
+		}
+
+		@Override
+		public Iterator<E> iterator() {
+			return this.tasks.iterator();
 		}
 
 	}

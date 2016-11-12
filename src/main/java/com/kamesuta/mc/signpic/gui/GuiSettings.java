@@ -19,6 +19,7 @@ import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Coords;
@@ -205,9 +206,9 @@ public class GuiSettings extends WPanel {
 									@Override
 									protected void initWidget() {
 										add(new WBase(new R(Coord.top(5), Coord.left(5), Coord.width(50), Coord.height(50))) {
-											protected boolean in;
+											protected boolean in = true;
 
-											protected MCoord rot = new MCoord(0).setLoop(true).add(Easings.easeInOutSine.move(3f, 1f)).start();
+											protected MCoord rot = new MCoord(0).start();
 											protected float orot = 0f;
 
 											@Override
@@ -230,13 +231,13 @@ public class GuiSettings extends WPanel {
 												if (a.pointInside(p)) {
 													if (!this.in) {
 														this.orot += this.rot.get();
-														this.rot.stopFirst().add(CompoundMotion.of(Easings.easeLinear.move(3f, 1f), Easings.easeLinear.move(3f, -1f)).setLoop(true));
+														this.rot.stopFirst().reset().add(Easings.easeLinear.move(3f, 1f));
 													}
 													this.in = true;
 												} else {
 													if (this.in) {
 														this.orot += this.rot.get();
-														this.rot.stopFirst().add(Easings.easeInOutSine.move(3f, 1f));
+														this.rot.stopFirst().reset().add(Easings.easeOutSine.move(3f, 1f)).add(CompoundMotion.of(Motion.move(0), Easings.easeInOutSine.move(3f, 1f), Motion.blank(1f)).setLoop(true)).add(Motion.move(0)).add(Easings.easeInOutElastic.move(3f, 1f));
 													}
 													this.in = false;
 												}

@@ -11,18 +11,19 @@ public abstract class Motion implements IMotion {
 	public Motion(final float duration) {
 		this.timer = new Timer();
 		this.timer.pause();
+		restart();
 		this.duration = duration;
 	}
 
 	@Override
-	public IMotion reset() {
-		this.timer.reset();
+	public IMotion restart() {
+		setTime(0);
 		return this;
 	}
 
 	@Override
 	public IMotion finish() {
-		this.timer.set(this.duration);
+		setTime(this.duration);
 		return this;
 	}
 
