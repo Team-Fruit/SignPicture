@@ -1,123 +1,108 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-
 import com.kamesuta.mc.bnnwidget.position.Coord;
 
-public class MCoord extends Coord {
-	protected boolean paused = true;
-	protected final Deque<IMotion> queue;
-	protected IMotion current;
-	protected float coord;
-	protected boolean looplast;
+public class MCoord extends Coord implements ICompoundMotion {
+	protected final CompoundMotion compoundMotion;
 
 	public MCoord(final float coord, final CoordSide side, final CoordType type) {
 		super(coord, side, type);
-		this.queue = new ArrayDeque<IMotion>();
-		this.coord = coord;
+		this.compoundMotion = new CompoundMotion(coord);
 	}
 
 	public MCoord(final float coord) {
 		this(coord, CoordSide.Top, CoordType.Percent);
 	}
 
+	@Override
 	public MCoord add(final IMotion animation) {
-		this.queue.offer(animation);
+		this.compoundMotion.add(animation);
 		return this;
 	}
 
+	@Override
 	public MCoord setLoop(final boolean b) {
-		this.looplast = b;
+		this.compoundMotion.setLoop(b);
 		return this;
 	}
 
-	protected void setCurrent(final IMotion current) {
-		if (this.current!=null)
-			this.current.onFinished();
-		this.current = current;
-	}
-
+	@Override
 	public MCoord stopFirst() {
-		this.queue.clear();
-		setCurrent(null);
+		this.compoundMotion.stopFirst();
 		return this;
 	}
 
+	@Override
 	public MCoord stop() {
-		this.coord = get();
+		this.compoundMotion.stop();
 		return stopFirst();
 	}
 
+	@Override
 	public MCoord stopLast() {
-		this.coord = getLast();
+		this.compoundMotion.stopLast();
 		return stopFirst();
 	}
 
+	@Override
 	public MCoord pause() {
-		this.paused = true;
-		if (this.current!=null)
-			this.current.pause();
+		this.compoundMotion.pause();
 		return this;
 	}
 
+	@Override
 	public MCoord start() {
-		this.paused = false;
-		if (this.current!=null)
-			this.current.resume();
+		this.compoundMotion.start();
 		return this;
 	}
 
+	@Override
 	public MCoord next() {
-		setCurrent(this.queue.poll());
-		start();
+		this.compoundMotion.next();
 		return this;
 	}
 
+	@Override
 	public MCoord stopNext() {
-		if (this.looplast&&this.current!=null&&this.queue.isEmpty())
-			this.current.reset();
-		else {
-			if (this.current!=null)
-				this.coord = this.current.getEnd(this.coord);
-			next();
-		}
+		this.compoundMotion.stopNext();
 		return this;
 	}
 
+	@Override
 	public IMotion getAnimation() {
-		if ((this.current==null||this.current.isFinished())&&!this.paused)
-			stopNext();
-		return this.current;
+		return this.compoundMotion.getAnimation();
 	}
 
+	@Override
 	public IMotion getAnimationLast() {
-		return this.queue.peekLast();
+		return this.compoundMotion.getAnimationLast();
 	}
 
 	@Override
 	public float get() {
-		final IMotion a = getAnimation();
-		if (a!=null)
-			return a.get(this.coord);
-		else
-			return this.coord;
+		return this.compoundMotion.get();
 	}
 
+	@Override
 	public float getLast() {
-		final IMotion a = getAnimationLast();
-		if (a!=null)
-			return a.getEnd(this.coord);
-		else
-			return this.coord;
+		return this.compoundMotion.getLast();
 	}
 
+	@Override
 	public boolean isFinished() {
-		final IMotion a = getAnimationLast();
-		if (this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished())
-			return false;
-		else
-			return true;
+		return this.compoundMotion.isFinished();
+	}
+
+	@Override
+	public MCoord restart() {
+		this.compoundMotion.restart();
+		return this;
+	}
+
+	@Override
+	public MCoord reset() {
+		this.compoundMotion.reset();
+		return this;
 	}
 
 	public static MCoord top(final float n) {

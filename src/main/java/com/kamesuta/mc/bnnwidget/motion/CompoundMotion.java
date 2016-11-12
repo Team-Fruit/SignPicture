@@ -1,27 +1,42 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Iterator;
+import java.util.List;
 
-public class CompoundMotion implements IMotion {
+import com.google.common.collect.Lists;
+
+public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	protected boolean paused = true;
-	protected final Deque<IMotion> queue;
+	protected TaskList<IMotion> tasks;
 	protected IMotion current;
+	protected float firstcoord;
 	protected float coord;
 	protected boolean looplast;
+	protected Runnable after;
+	protected boolean usecoord;
+
+	public CompoundMotion() {
+		this.tasks = new TaskList<IMotion>();
+	}
 
 	public CompoundMotion(final float coord) {
-		this.queue = new ArrayDeque<IMotion>();
+		this();
+		this.firstcoord = coord;
+		this.usecoord = true;
 		this.coord = coord;
 	}
 
-	public void add(final IMotion animation) {
-		this.queue.offer(animation);
+	@Override
+	public CompoundMotion add(final IMotion animation) {
+		this.tasks.add(animation);
+		return this;
 	}
 
-	public void setLoop(final boolean b) {
+	@Override
+	public CompoundMotion setLoop(final boolean b) {
 		this.looplast = b;
+		return this;
 	}
 
 	protected void setCurrent(final IMotion current) {
@@ -30,68 +45,100 @@ public class CompoundMotion implements IMotion {
 		this.current = current;
 	}
 
-	public void stopFirst() {
-		this.queue.clear();
+	@Override
+	public CompoundMotion stopFirst() {
+		this.tasks.finish();
 		setCurrent(null);
-	}
-
-	public void stop() {
-		this.coord = get();
-		stopFirst();
-	}
-
-	public void stopLast() {
-		this.coord = getLast();
-		stopFirst();
+		return this;
 	}
 
 	@Override
-	public IMotion pause() {
+	public CompoundMotion stop() {
+		this.coord = get();
+		stopFirst();
+		return this;
+	}
+
+	@Override
+	public CompoundMotion stopLast() {
+		this.coord = getLast();
+		stopFirst();
+		return this;
+	}
+
+	@Override
+	public CompoundMotion pause() {
 		this.paused = true;
 		if (this.current!=null)
 			this.current.pause();
 		return this;
 	}
 
-	public void start() {
+	@Override
+	public CompoundMotion start() {
 		this.paused = false;
 		if (this.current!=null)
 			this.current.resume();
+		return this;
 	}
 
-	public void next() {
-		setCurrent(this.queue.poll());
+	protected IMotion nextCurrent() {
+		final IMotion m = this.tasks.poll();
+		setCurrent(m);
+		return m;
+	}
+
+	@Override
+	public CompoundMotion next() {
+		nextCurrent();
 		start();
+		return this;
 	}
 
-	public void stopNext() {
-		if (this.looplast&&this.current!=null&&this.queue.isEmpty())
-			this.current.reset();
-		else {
+	@Override
+	public CompoundMotion stopNext() {
+		if ((this.current==null||this.current.isFinished())&&!this.paused) {
 			if (this.current!=null)
 				this.coord = this.current.getEnd(this.coord);
 			next();
 		}
+		if (this.looplast&&this.tasks.isFinished())
+			restart();
+		return this;
 	}
 
+	@Override
 	public IMotion getAnimation() {
-		if ((this.current==null||this.current.isFinished())&&!this.paused)
-			stopNext();
+		stopNext();
 		return this.current;
 	}
 
+	@Override
 	public IMotion getAnimationLast() {
-		return this.queue.peekLast();
+		this.tasks.last();
+		return this.tasks.get();
 	}
 
+	@Override
 	public float get() {
+		return get(this.coord);
+	}
+
+	@Override
+	public float get(final float start) {
 		final IMotion a = getAnimation();
+		if (!this.usecoord) {
+			this.usecoord = true;
+			this.firstcoord = start;
+			this.coord = start;
+		}
 		if (a!=null)
 			return a.get(this.coord);
 		else
 			return this.coord;
 	}
 
+	@Override
 	public float getLast() {
 		final IMotion a = getAnimationLast();
 		if (a!=null)
@@ -103,37 +150,45 @@ public class CompoundMotion implements IMotion {
 	@Override
 	public boolean isFinished() {
 		final IMotion a = getAnimationLast();
-		if (this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished())
-			return false;
-		else
-			return true;
+		return !this.looplast||!(this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished());
 	}
 
 	@Override
-	public IMotion reset() {
-		stopFirst();
+	public CompoundMotion restart() {
+		for (final IMotion m : this.tasks)
+			m.pause().restart();
+		this.coord = this.firstcoord;
+		this.tasks.restart();
+		setCurrent(null);
 		return this;
 	}
 
 	@Override
-	public IMotion finish() {
+	public CompoundMotion reset() {
+		this.tasks.reset();
+		this.coord = this.firstcoord;
+		setCurrent(null);
+		return this;
+	}
+
+	@Override
+	public CompoundMotion finish() {
 		stopLast();
 		return this;
 	}
 
 	@Override
-	public IMotion resume() {
+	public CompoundMotion resume() {
 		start();
 		return this;
 	}
 
 	@Override
-	public IMotion setTime(final float time) {
+	public CompoundMotion setTime(final float time) {
 		float t = 0;
 		while (true) {
-			final IMotion m = this.queue.poll();
+			final IMotion m = nextCurrent();
 			if (m!=null) {
-				setCurrent(m);
 				final float d = m.getDuration();
 				final float newtime = t+d;
 				if (newtime>time) {
@@ -150,39 +205,96 @@ public class CompoundMotion implements IMotion {
 	}
 
 	@Override
-	public IMotion setAfter(final Runnable r) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+	public CompoundMotion setAfter(final Runnable r) {
+		this.after = r;
+		return this;
 	}
 
 	@Override
 	public float getDuration() {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		float d = 0;
+		for (final IMotion m : this.tasks)
+			d += m.getDuration();
+		return d;
 	}
 
 	@Override
 	public float getEnd(final float start) {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return getLast();
 	}
 
 	@Override
 	public Runnable getAfter() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return this.after;
 	}
 
 	@Override
 	public void onFinished() {
-		// TODO 自動生成されたメソッド・スタブ
-
+		if (this.after!=null)
+			this.after.run();
 	}
 
-	@Override
-	public float get(final float start) {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+	public static CompoundMotion of(final IMotion... motions) {
+		final CompoundMotion compound = new CompoundMotion();
+		for (final IMotion motion : motions)
+			compound.add(motion);
+		return compound;
 	}
 
+	public static CompoundMotion of(final float coord, final IMotion... motions) {
+		final CompoundMotion compound = new CompoundMotion(coord);
+		for (final IMotion motion : motions)
+			compound.add(motion);
+		return compound;
+	}
+
+	public static class TaskList<E> implements Iterable<E> {
+
+		private final List<E> tasks = Lists.newArrayList();
+		private int pos;
+
+		protected void add(final E e) {
+			this.tasks.add(e);
+		}
+
+		protected E get() {
+			if (0<=this.pos&&this.pos<this.tasks.size())
+				return this.tasks.get(this.pos);
+			return null;
+		}
+
+		protected E poll() {
+			final int size = this.tasks.size();
+			if (0<=this.pos&&this.pos<size)
+				return this.tasks.get(this.pos++);
+			return null;
+		}
+
+		protected void reset() {
+			this.tasks.clear();
+			restart();
+		}
+
+		protected void restart() {
+			this.pos = 0;
+		}
+
+		protected void finish() {
+			this.pos = this.tasks.size();
+		}
+
+		protected void last() {
+			this.pos = this.tasks.size()-1;
+		}
+
+		protected boolean isFinished() {
+			return this.pos>=this.tasks.size();
+		}
+
+		@Override
+		public Iterator<E> iterator() {
+			return this.tasks.iterator();
+		}
+
+	}
 }

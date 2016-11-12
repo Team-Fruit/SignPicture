@@ -50,6 +50,10 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
+		final ScaledResolution scaledresolution = new ScaledResolution(Client.mc);
+		setWidth(scaledresolution.getScaledWidth());
+		setHeight(scaledresolution.getScaledHeight());
+
 		if (event.type==ElementType.CHAT)
 			if (Client.mc.currentScreen==null)
 				if (!isDelegated())

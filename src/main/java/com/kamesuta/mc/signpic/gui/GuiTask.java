@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.awt.Color;
 
 import org.lwjgl.util.Timer;
@@ -13,6 +15,8 @@ import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
+import com.kamesuta.mc.bnnwidget.position.Coords;
+import com.kamesuta.mc.bnnwidget.position.PCoord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
@@ -43,84 +47,89 @@ public class GuiTask extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		add(new WPanel(new R(this.oright = MCoord.right(0f)).child(this.right = MCoord.pright(-1f))) {
-			protected Timer showtime = new Timer();
-
-			public void show(final float j) {
-				this.showtime.set(-j);
-			}
-
-			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-				final Area a = getGuiPosition(pgp);
-				RenderHelper.startShape();
-				GlStateManager.color(0f, 0f, 0f, .6f);
-				drawRect(a);
-				super.draw(ev, pgp, p, frame, opacity);
-			}
-
-			@Override
-			public void update(final WEvent ev, final Area pgp, final Point p) {
-				final Area a = getGuiPosition(pgp);
-				if (a.pointInside(p))
-					this.showtime.set(-1f);
-				final boolean b = this.showtime.getTime()<0f;
-				if (b) {
-					if (!GuiTask.this.show) {
-						GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 0f)).start();
-						mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("signpic", "gui.show"), 1.0F));
-					}
-					GuiTask.this.show = true;
-				} else {
-					if (GuiTask.this.show)
-						GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, -1f)).start();
-					GuiTask.this.show = false;
-				}
-				if (Client.mc.currentScreen!=null&&!Communicator.instance.getTasks().isEmpty()&&!b) {
-					if (!GuiTask.this.oshow)
-						GuiTask.this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
-					GuiTask.this.oshow = true;
-				} else {
-					if (GuiTask.this.oshow)
-						GuiTask.this.oright.stop().add(Easings.easeOutQuart.move(.5f, 0f)).start();
-					GuiTask.this.oshow = false;
-				}
-				super.update(ev, pgp, p);
-			}
-
-			@Override
-			public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				final Area a = getGuiPosition(pgp);
-				return a.pointInside(p);
-			}
-
+		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
-				add(new WBase(new R(Coord.top(1), Coord.left(1), Coord.width(80), Coord.height(16))) {
+				add(new WPanel(new R(PCoord.of(Coords.combine(Coord.pright(-1), GuiTask.this.oright), Coord.pright(0f), GuiTask.this.right))) {
+					protected Timer showtime = new Timer();
+
+					public void show(final float j) {
+						this.showtime.set(-j);
+					}
+
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						final Area a = getGuiPosition(pgp);
-						texture().bindTexture(panel);
-						GlStateManager.color(1, 1, 1, 1);
-						RenderHelper.startTexture();
-						drawTexturedModalRect(a);
-					}
-				});
-
-				add(new WList<Progressable, TaskElement>(new R(Coord.top(16)), Communicator.instance.getTasks()) {
-					@Override
-					protected TaskElement createWidget(final Progressable t, final int i) {
-						final Object j = t.getState().getMeta().get(ShowPanel);
-						if (j instanceof Number)
-							show(((Number) j).floatValue());
-						final MCoord top = MCoord.top(i*15);
-						return new TaskElement(new R(top, Coord.height(15)), top, t);
+						RenderHelper.startShape();
+						glColor4f(0f, 0f, 0f, .6f);
+						drawRect(a);
+						super.draw(ev, pgp, p, frame, opacity);
 					}
 
 					@Override
-					protected void onMoved(final Progressable t, final TaskElement w, final int from, final int to) {
-						w.top.stop().add(Motion.blank(.75f)).add(Easings.easeInCirc.move(.25f, to*15)).start();
-					};
+					public void update(final WEvent ev, final Area pgp, final Point p) {
+						final Area a = getGuiPosition(pgp);
+						if (a.pointInside(p))
+							this.showtime.set(-1f);
+						final boolean b = this.showtime.getTime()<0f;
+						if (b) {
+							if (!GuiTask.this.show) {
+								GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 1f)).start();
+								mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("signpic", "gui.show"), 1.0F));
+							}
+							GuiTask.this.show = true;
+						} else {
+							if (GuiTask.this.show)
+								GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 0f)).start();
+							GuiTask.this.show = false;
+						}
+						if (Client.mc.currentScreen!=null&&!Communicator.instance.getTasks().isEmpty()) {
+							if (!GuiTask.this.oshow)
+								GuiTask.this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
+							GuiTask.this.oshow = true;
+						} else {
+							if (GuiTask.this.oshow)
+								GuiTask.this.oright.stop().add(Easings.easeOutQuart.move(.5f, 0f)).start();
+							GuiTask.this.oshow = false;
+						}
+						super.update(ev, pgp, p);
+					}
+
+					@Override
+					public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						final Area a = getGuiPosition(pgp);
+						return super.mouseClicked(ev, pgp, p, button)||a.pointInside(p);
+					}
+
+					@Override
+					protected void initWidget() {
+						add(new WBase(new R(Coord.top(1), Coord.left(1), Coord.width(80), Coord.height(16))) {
+							@Override
+							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+								final Area a = getGuiPosition(pgp);
+								texture().bindTexture(panel);
+								glColor4f(1, 1, 1, 1);
+								RenderHelper.startTexture();
+								drawTexturedModalRect(a);
+							}
+						});
+
+						add(new WList<Progressable, TaskElement>(new R(Coord.top(16)), Communicator.instance.getTasks()) {
+							@Override
+							protected TaskElement createWidget(final Progressable t, final int i) {
+								final Object j = t.getState().getMeta().get(ShowPanel);
+								if (j instanceof Number)
+									show(((Number) j).floatValue());
+								final MCoord top = MCoord.top(i*15);
+								return new TaskElement(new R(top, Coord.height(15)), top, t);
+							}
+
+							@Override
+							protected void onMoved(final Progressable t, final TaskElement w, final int from, final int to) {
+								w.top.stop().add(Motion.blank(.75f)).add(Easings.easeInCirc.move(.25f, to*15)).start();
+							};
+						});
+					}
 				});
 			}
 		});

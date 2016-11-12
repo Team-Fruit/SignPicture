@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import java.text.DecimalFormat;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -29,7 +31,7 @@ public class MNumber extends WPanel {
 					f = .01f;
 				else
 					f = 1f;
-				MNumber.this.field.setText(MetaParser.format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-f));
+				MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-f));
 				return true;
 			}
 		};
@@ -51,7 +53,7 @@ public class MNumber extends WPanel {
 					f = .01f;
 				else
 					f = 1f;
-				MNumber.this.field.setText(MetaParser.format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+f));
+				MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+f));
 				return true;
 			}
 		};
@@ -74,5 +76,26 @@ public class MNumber extends WPanel {
 	}
 
 	protected void onNumberChanged(final String oldText, final String newText) {
+	}
+
+	private static final DecimalFormat signformat = new DecimalFormat(".##");
+
+	public static String format(final float f) {
+		if (f==0)
+			return "0";
+
+		final String str = signformat.format(f);
+
+		final String cut = ".0";
+
+		int end = str.length();
+		int last = cut.length();
+
+		while (end!=0&&last!=0)
+			if (cut.charAt(last-1)==str.charAt(end-1))
+				end--;
+			else
+				last--;
+		return str.substring(0, end);
 	}
 }
