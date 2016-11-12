@@ -1,27 +1,41 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 
-public class CompoundMotion implements IMotion {
+import com.google.common.collect.Queues;
+
+public class CompoundMotion implements IMotion, ICompoundMotion {
 
 	protected boolean paused = true;
 	protected final Deque<IMotion> queue;
 	protected IMotion current;
 	protected float coord;
 	protected boolean looplast;
+	protected Runnable after;
+	protected IMotion first;
+
+	public CompoundMotion() {
+		this.queue = Queues.newArrayDeque();
+	}
 
 	public CompoundMotion(final float coord) {
-		this.queue = new ArrayDeque<IMotion>();
+		this();
 		this.coord = coord;
+		this.first = this;
 	}
 
-	public void add(final IMotion animation) {
+	@Override
+	public CompoundMotion add(final IMotion animation) {
+		if (this.first!=null)
+			this.first = animation;
 		this.queue.offer(animation);
+		return this;
 	}
 
-	public void setLoop(final boolean b) {
+	@Override
+	public CompoundMotion setLoop(final boolean b) {
 		this.looplast = b;
+		return this;
 	}
 
 	protected void setCurrent(final IMotion current) {
@@ -30,41 +44,52 @@ public class CompoundMotion implements IMotion {
 		this.current = current;
 	}
 
-	public void stopFirst() {
+	@Override
+	public CompoundMotion stopFirst() {
 		this.queue.clear();
 		setCurrent(null);
-	}
-
-	public void stop() {
-		this.coord = get();
-		stopFirst();
-	}
-
-	public void stopLast() {
-		this.coord = getLast();
-		stopFirst();
+		return this;
 	}
 
 	@Override
-	public IMotion pause() {
+	public CompoundMotion stop() {
+		this.coord = get();
+		stopFirst();
+		return this;
+	}
+
+	@Override
+	public CompoundMotion stopLast() {
+		this.coord = getLast();
+		stopFirst();
+		return this;
+	}
+
+	@Override
+	public CompoundMotion pause() {
 		this.paused = true;
 		if (this.current!=null)
 			this.current.pause();
 		return this;
 	}
 
-	public void start() {
+	@Override
+	public CompoundMotion start() {
 		this.paused = false;
 		if (this.current!=null)
 			this.current.resume();
+		return this;
 	}
 
-	public void next() {
+	@Override
+	public CompoundMotion next() {
 		setCurrent(this.queue.poll());
 		start();
+		return this;
 	}
 
-	public void stopNext() {
+	@Override
+	public CompoundMotion stopNext() {
 		if (this.looplast&&this.current!=null&&this.queue.isEmpty())
 			this.current.reset();
 		else {
@@ -72,26 +97,38 @@ public class CompoundMotion implements IMotion {
 				this.coord = this.current.getEnd(this.coord);
 			next();
 		}
+		return this;
 	}
 
+	@Override
 	public IMotion getAnimation() {
 		if ((this.current==null||this.current.isFinished())&&!this.paused)
 			stopNext();
 		return this.current;
 	}
 
+	@Override
 	public IMotion getAnimationLast() {
 		return this.queue.peekLast();
 	}
 
+	@Override
 	public float get() {
-		final IMotion a = getAnimation();
-		if (a!=null)
-			return a.get(this.coord);
-		else
-			return this.coord;
+		return get(this.coord);
 	}
 
+	@Override
+	public float get(float start) {
+		final IMotion a = getAnimation();
+		if (a!=this.first)
+			start = this.coord;
+		if (a!=null)
+			return a.get(start);
+		else
+			return start;
+	}
+
+	@Override
 	public float getLast() {
 		final IMotion a = getAnimationLast();
 		if (a!=null)
@@ -151,38 +188,38 @@ public class CompoundMotion implements IMotion {
 
 	@Override
 	public IMotion setAfter(final Runnable r) {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		this.after = r;
+		return this;
 	}
 
 	@Override
 	public float getDuration() {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		float d = 0;
+		for (final IMotion m : this.queue)
+			d += m.getDuration();
+		return d;
 	}
 
 	@Override
 	public float getEnd(final float start) {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return getLast();
 	}
 
 	@Override
 	public Runnable getAfter() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
+		return this.after;
 	}
 
 	@Override
 	public void onFinished() {
-		// TODO 自動生成されたメソッド・スタブ
-
+		if (this.after!=null)
+			this.after.run();
 	}
 
-	@Override
-	public float get(final float start) {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+	public static ICompoundMotion of(final IMotion... motions) {
+		final ICompoundMotion compound = new CompoundMotion();
+		for (final IMotion motion : motions)
+			compound.add(motion);
+		return compound;
 	}
-
 }

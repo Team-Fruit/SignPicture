@@ -5,7 +5,7 @@ import java.util.Deque;
 
 import com.kamesuta.mc.bnnwidget.position.Coord;
 
-public class MCoord extends Coord {
+public class MCoord extends Coord implements ICompoundMotion {
 	protected boolean paused = true;
 	protected final Deque<IMotion> queue;
 	protected IMotion current;
@@ -22,11 +22,13 @@ public class MCoord extends Coord {
 		this(coord, CoordSide.Top, CoordType.Percent);
 	}
 
+	@Override
 	public MCoord add(final IMotion animation) {
 		this.queue.offer(animation);
 		return this;
 	}
 
+	@Override
 	public MCoord setLoop(final boolean b) {
 		this.looplast = b;
 		return this;
@@ -38,22 +40,26 @@ public class MCoord extends Coord {
 		this.current = current;
 	}
 
+	@Override
 	public MCoord stopFirst() {
 		this.queue.clear();
 		setCurrent(null);
 		return this;
 	}
 
+	@Override
 	public MCoord stop() {
 		this.coord = get();
 		return stopFirst();
 	}
 
+	@Override
 	public MCoord stopLast() {
 		this.coord = getLast();
 		return stopFirst();
 	}
 
+	@Override
 	public MCoord pause() {
 		this.paused = true;
 		if (this.current!=null)
@@ -61,6 +67,7 @@ public class MCoord extends Coord {
 		return this;
 	}
 
+	@Override
 	public MCoord start() {
 		this.paused = false;
 		if (this.current!=null)
@@ -68,12 +75,14 @@ public class MCoord extends Coord {
 		return this;
 	}
 
+	@Override
 	public MCoord next() {
 		setCurrent(this.queue.poll());
 		start();
 		return this;
 	}
 
+	@Override
 	public MCoord stopNext() {
 		if (this.looplast&&this.current!=null&&this.queue.isEmpty())
 			this.current.reset();
@@ -85,12 +94,14 @@ public class MCoord extends Coord {
 		return this;
 	}
 
+	@Override
 	public IMotion getAnimation() {
 		if ((this.current==null||this.current.isFinished())&&!this.paused)
 			stopNext();
 		return this.current;
 	}
 
+	@Override
 	public IMotion getAnimationLast() {
 		return this.queue.peekLast();
 	}
@@ -104,6 +115,7 @@ public class MCoord extends Coord {
 			return this.coord;
 	}
 
+	@Override
 	public float getLast() {
 		final IMotion a = getAnimationLast();
 		if (a!=null)
@@ -112,6 +124,7 @@ public class MCoord extends Coord {
 			return this.coord;
 	}
 
+	@Override
 	public boolean isFinished() {
 		final IMotion a = getAnimationLast();
 		if (this.current!=null&&!this.current.isFinished()||a!=null&&!a.isFinished())
