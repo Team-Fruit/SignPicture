@@ -192,52 +192,6 @@ public class GuiSettings extends WPanel {
 										});
 										add(this.box);
 									}
-
-									class Key extends WPanel {
-										protected Setting setting;
-
-										public Key(final R position, final Setting setting) {
-											super(position);
-											this.setting = setting;
-										}
-
-										@Override
-										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-											final Area a = getGuiPosition(pgp);
-											RenderHelper.startShape();
-											glColor4f(0f, 0f, 0f, .2f);
-											glLineWidth(.5f);
-											draw(a, GL_LINE_LOOP);
-											super.draw(ev, pgp, p, frame, opacity);
-										}
-
-										@Override
-										protected void initWidget() {
-											add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage.key")));
-											add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
-												@Override
-												protected void initWidget() {
-													setSelector(new ListSelector() {
-														{
-															final List<String> settings = Lists.newArrayList("");
-															if (Key.this.setting!=null)
-																settings.addAll(Key.this.setting.getSettings());
-															setList(settings);
-														}
-													});
-													this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
-													this.field.setMaxStringLength(256);
-													setText(Key.this.setting.getConfig());
-												}
-
-												@Override
-												protected void onChanged(final String oldText, final String newText) {
-													if (!StringUtils.equals(oldText, newText)&&!StringUtils.equals(newText, Key.this.setting.getConfig()))
-														Key.this.setting.setConfig(newText);
-												}
-											});
-										}
-									}
 								});
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(60), Coord.height(15)), I18n.format("signpic.gui.settings.config")) {
 									@Override
@@ -296,5 +250,51 @@ public class GuiSettings extends WPanel {
 				});
 			}
 		});
+	}
+
+	class Key extends WPanel {
+		protected Setting setting;
+
+		public Key(final R position, final Setting setting) {
+			super(position);
+			this.setting = setting;
+		}
+
+		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+			final Area a = getGuiPosition(pgp);
+			RenderHelper.startShape();
+			glColor4f(0f, 0f, 0f, .2f);
+			glLineWidth(.5f);
+			draw(a, GL_LINE_LOOP);
+			super.draw(ev, pgp, p, frame, opacity);
+		}
+
+		@Override
+		protected void initWidget() {
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage.key")));
+			add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
+				@Override
+				protected void initWidget() {
+					setSelector(new ListSelector() {
+						{
+							final List<String> settings = Lists.newArrayList("");
+							if (Key.this.setting!=null)
+								settings.addAll(Key.this.setting.getSettings());
+							setList(settings);
+						}
+					});
+					this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
+					this.field.setMaxStringLength(256);
+					setText(Key.this.setting.getConfig());
+				}
+
+				@Override
+				protected void onChanged(final String oldText, final String newText) {
+					if (!StringUtils.equals(oldText, newText)&&!StringUtils.equals(newText, Key.this.setting.getConfig()))
+						Key.this.setting.setConfig(newText);
+				}
+			});
+		}
 	}
 }
