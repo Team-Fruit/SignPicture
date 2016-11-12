@@ -36,24 +36,19 @@ public class GuiTask extends WPanel {
 		super(position);
 	}
 
+	protected boolean oshow;
+	protected MCoord oright;
+
+	protected boolean show = true;
+	protected MCoord right;
+
 	@Override
 	protected void initWidget() {
-		add(new WPanel(new R()) {
+		add(new WPanel(new R(this.oright = MCoord.right(0f)).child(this.right = MCoord.pright(-1f))) {
 			protected Timer showtime = new Timer();
-
-			protected boolean oshow;
-			protected MCoord oright;
-
-			protected boolean show = true;
-			protected MCoord right;
 
 			public void show(final float j) {
 				this.showtime.set(-j);
-			}
-
-			@Override
-			protected void initPosition(final R position) {
-				super.initPosition(position.child(this.oright = MCoord.right(0f)).child(this.right = MCoord.pright(-1f)));
 			}
 
 			@Override
@@ -72,24 +67,24 @@ public class GuiTask extends WPanel {
 					this.showtime.set(-1f);
 				final boolean b = this.showtime.getTime()<0f;
 				if (b) {
-					if (!this.show) {
-						this.right.stop().add(Easings.easeOutQuart.move(.7f, 0f)).start();
+					if (!GuiTask.this.show) {
+						GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 0f)).start();
 						mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("signpic", "gui.show"), 1.0F));
 					}
-					this.show = true;
+					GuiTask.this.show = true;
 				} else {
-					if (this.show)
-						this.right.stop().add(Easings.easeOutQuart.move(.7f, -1f)).start();
-					this.show = false;
+					if (GuiTask.this.show)
+						GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, -1f)).start();
+					GuiTask.this.show = false;
 				}
 				if (Client.mc.currentScreen!=null&&!Communicator.instance.getTasks().isEmpty()&&!b) {
-					if (!this.oshow)
-						this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
-					this.oshow = true;
+					if (!GuiTask.this.oshow)
+						GuiTask.this.oright.stop().add(Easings.easeOutQuart.move(.5f, 2f)).start();
+					GuiTask.this.oshow = true;
 				} else {
-					if (this.oshow)
-						this.oright.stop().add(Easings.easeOutQuart.move(.5f, 0f)).start();
-					this.oshow = false;
+					if (GuiTask.this.oshow)
+						GuiTask.this.oright.stop().add(Easings.easeOutQuart.move(.5f, 0f)).start();
+					GuiTask.this.oshow = false;
 				}
 				super.update(ev, pgp, p);
 			}
@@ -129,134 +124,134 @@ public class GuiTask extends WPanel {
 					};
 				});
 			}
+		});
+	}
 
-			class TaskElement extends WPanel {
-				public final MCoord top;
+	class TaskElement extends WPanel {
+		public final MCoord top;
 
-				protected MCoord right;
+		protected MCoord right;
 
-				protected MCoord opacity;
+		protected MCoord opacity;
 
-				@Override
-				protected void initPosition(final R position) {
-					super.initPosition(position.child(this.right = MCoord.pright(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start()));
-				}
+		@Override
+		protected void initPosition(final R position) {
+			super.initPosition(position.child(this.right = MCoord.pright(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start()));
+		}
 
-				@Override
-				protected void initOpacity() {
-					super.setOpacity(this.opacity = new MCoord(1f));
-				}
+		@Override
+		protected void initOpacity() {
+			super.setOpacity(this.opacity = new MCoord(1f));
+		}
 
-				State state;
-				Progress progress;
+		State state;
+		Progress progress;
 
-				public TaskElement(final R position, final MCoord top, final Progressable progressable) {
-					super(position);
-					this.top = top;
-					this.state = progressable.getState();
-					this.progress = progressable.getState().getProgress();
-				}
+		public TaskElement(final R position, final MCoord top, final Progressable progressable) {
+			super(position);
+			this.top = top;
+			this.state = progressable.getState();
+			this.progress = progressable.getState().getProgress();
+		}
 
-				@Override
-				public boolean onCloseRequest() {
-					if (!show&&this.state.getMeta().get(HighlightPanel)!=null)
-						this.right.stop().add(Easings.easeOutQuart.move(2f, 1f)).start();
-					this.opacity.stop().add(Easings.easeLinear.move(1f, 0f)).start();
-					return false;
-				}
+		@Override
+		public boolean onCloseRequest() {
+			if (!GuiTask.this.show&&this.state.getMeta().get(HighlightPanel)!=null)
+				this.right.stop().add(Easings.easeOutQuart.move(2f, 1f)).start();
+			this.opacity.stop().add(Easings.easeLinear.move(1f, 0f)).start();
+			return false;
+		}
 
-				@Override
-				public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-					return this.opacity.isFinished();
-				}
+		@Override
+		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+			return this.opacity.isFinished();
+		}
 
+		@Override
+		protected void initWidget() {
+			add(new WPanel(R.diff(1, 1, 0, 0)) {
 				@Override
 				protected void initWidget() {
-					add(new WPanel(R.diff(1, 1, 0, 0)) {
+					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
+						@Override
+						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+							final Area a = getGuiPosition(pgp);
+							glPushMatrix();
+							glTranslatef(a.x1(), a.y1(), 0f);
+							glScalef(.5f, .5f, .5f);
+							final String cont = "...";
+							final int contwidth = font().getStringWidth(cont);
+							final String name = TaskElement.this.state.getName();
+							final int namewidth = font().getStringWidth(name);
+							String res;
+							final float prefwidth = a.w()*2;
+							if (namewidth<prefwidth)
+								res = name;
+							else
+								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
+							RenderHelper.startTexture();
+							drawString(res, 0f, 0f, new Color(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f)).getRGB());
+							glPopMatrix();
+						}
+					});
+
+					add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
+						protected MCoord progresscoord = MCoord.pleft(0f);
+
 						@Override
 						protected void initWidget() {
-							add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
+							add(new WBase(new R(Coord.pleft(0f), this.progresscoord)) {
 								@Override
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
-									glPushMatrix();
-									glTranslatef(a.x1(), a.y1(), 0f);
-									glScalef(.5f, .5f, .5f);
-									final String cont = "...";
-									final int contwidth = font().getStringWidth(cont);
-									final String name = TaskElement.this.state.getName();
-									final int namewidth = font().getStringWidth(name);
-									String res;
-									final float prefwidth = a.w()*2;
-									if (namewidth<prefwidth)
-										res = name;
-									else
-										res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
-									RenderHelper.startTexture();
-									drawString(res, 0f, 0f, new Color(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f)).getRGB());
-									glPopMatrix();
-								}
-							});
-
-							add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
-								protected MCoord progresscoord = MCoord.pleft(0f);
-
-								@Override
-								protected void initWidget() {
-									add(new WBase(new R(Coord.pleft(0f), this.progresscoord)) {
-										@Override
-										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-											final Area a = getGuiPosition(pgp);
-											glColor4f(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
-											RenderHelper.startShape();
-											drawRect(a);
-
-											glPushMatrix();
-											final String prog = String.format("%.1f%%", TaskElement.this.progress.getProgress()*100);
-											final int progwidth = font().getStringWidth(prog);
-											final float maxx = pgp.x2()*2-progwidth;
-											glColor4f(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
-											glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
-											glScalef(.5f, .5f, .5f);
-											RenderHelper.startTexture();
-											drawString(prog, 0f, 0f, new Color(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f)).getRGB());
-											glPopMatrix();
-
-											super.draw(ev, pgp, p, frame, popacity);
-										}
-									});
-								}
-
-								@Override
-								public void update(final WEvent ev, final Area pgp, final Point p) {
-									this.progresscoord.stop().add(Easings.easeOutQuart.move(.1f, TaskElement.this.progress.getProgress())).start();
-								}
-
-								@Override
-								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-									final Area a = getGuiPosition(pgp);
+									glColor4f(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
 									RenderHelper.startShape();
-									glColor4f(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
 									drawRect(a);
-									super.draw(ev, pgp, p, frame, opacity);
+
+									glPushMatrix();
+									final String prog = String.format("%.1f%%", TaskElement.this.progress.getProgress()*100);
+									final int progwidth = font().getStringWidth(prog);
+									final float maxx = pgp.x2()*2-progwidth;
+									glColor4f(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
+									glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
+									glScalef(.5f, .5f, .5f);
+									RenderHelper.startTexture();
+									drawString(prog, 0f, 0f, new Color(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f)).getRGB());
+									glPopMatrix();
+
+									super.draw(ev, pgp, p, frame, popacity);
 								}
 							});
+						}
+
+						@Override
+						public void update(final WEvent ev, final Area pgp, final Point p) {
+							this.progresscoord.stop().add(Easings.easeOutQuart.move(.1f, TaskElement.this.progress.getProgress())).start();
 						}
 
 						@Override
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-							final Area area = getGuiPosition(pgp);
+							final Area a = getGuiPosition(pgp);
 							RenderHelper.startShape();
-							if (area.pointInside(p))
-								glColor4f(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
-							else
-								glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
-							drawRect(area);
+							glColor4f(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
+							drawRect(a);
 							super.draw(ev, pgp, p, frame, opacity);
 						}
 					});
 				}
-			}
-		});
+
+				@Override
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+					final Area area = getGuiPosition(pgp);
+					RenderHelper.startShape();
+					if (area.pointInside(p))
+						glColor4f(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
+					else
+						glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
+					drawRect(area);
+					super.draw(ev, pgp, p, frame, opacity);
+				}
+			});
+		}
 	}
 }

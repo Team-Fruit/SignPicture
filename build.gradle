@@ -37,11 +37,6 @@ idea {
     }
 }
 
-configurations {
-    shade
-    compile.extendsFrom shade
-}
-
 minecraft {
     version = "${project.version_minecraft}-${project.version_forge}"
 
@@ -85,7 +80,7 @@ processResources {
 }
 
 dependencies {
-    shade('org.apache.httpcomponents:httpmime:4.3.3'){transitive=false}
+    compile ('org.apache.httpcomponents:httpmime:4.3.3') { transitive=false }
 }
 
 def commonManifest = {
@@ -96,11 +91,6 @@ def commonManifest = {
 
 jar {
     from sourceSets.api.output
-    configurations.shade.each { dep ->
-        from(project.zipTree(dep)){
-            exclude 'META-INF', 'META-INF/**'
-        }
-    }
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
     manifest commonManifest
 }
