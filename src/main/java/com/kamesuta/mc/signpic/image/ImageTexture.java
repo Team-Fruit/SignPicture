@@ -41,20 +41,19 @@ public class ImageTexture implements IImageTexture {
 
 	private static ContextCapabilities capabilities;
 
+	public static boolean openGl30() {
+		return capabilities!=null&&capabilities.OpenGL30;
+	}
+
 	public ImageTexture load() {
-		if (this.id == -1 && this.temp != null) {
+		if (this.id==-1&&this.temp!=null) {
 			this.id = TextureUtil.glGenTextures();
 			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
 			TextureUtil.uploadTextureImage(this.id, this.temp);
 			if (capabilities==null)
 				capabilities = GLContext.getCapabilities();
-			if (capabilities.OpenGL30 && Config.instance.renderUseMipmap) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			if (openGl30()&&Config.instance.renderUseMipmap)
 				GL30.glGenerateMipmap(GL_TEXTURE_2D);
-			}
 			this.temp = null;
 		}
 		return this;
@@ -66,9 +65,9 @@ public class ImageTexture implements IImageTexture {
 	}
 
 	public boolean setImage(final BufferedImage image) {
-		if (this.id == -1) {
+		if (this.id==-1) {
 			this.temp = image;
-			if (image != null)
+			if (image!=null)
 				this.size = new ImageSize().setSize(image.getWidth(), image.getHeight());
 			return true;
 		}
@@ -89,14 +88,14 @@ public class ImageTexture implements IImageTexture {
 
 	@Override
 	public void bind() {
-		if (this.id != -1)
+		if (this.id!=-1)
 			glBindTexture(GL_TEXTURE_2D, this.id);
 	}
 
 	public void delete() {
-		if (this.id != -1)
+		if (this.id!=-1)
 			TextureUtil.deleteTexture(this.id);
-		if (this.temp != null)
+		if (this.temp!=null)
 			this.temp = null;
 	}
 }

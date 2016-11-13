@@ -4,30 +4,38 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 public class ImageTextureMap extends ImageMeta.MetaParser {
-	public static final float defaultStart = 0f;
-	public static final float defaultEnd = 1f;
+	public static final float defaultUV = 0f;
+	public static final float defaultWH = 1f;
+	public static final boolean defaultRepeat = true;
+	public static final boolean defaultMipMap = true;
 
-	public float l = defaultStart;
-	public float t = defaultStart;
-	public float b = defaultEnd;
-	public float r = defaultEnd;
+	public float u = defaultUV;
+	public float v = defaultUV;
+	public float w = defaultWH;
+	public float h = defaultWH;
+	public boolean r = defaultRepeat;
+	public boolean m = defaultMipMap;
 
 	@Override
 	public ImageTextureMap reset() {
-		this.l = defaultStart;
-		this.t = defaultStart;
-		this.b = defaultEnd;
-		this.r = defaultEnd;
+		this.u = defaultUV;
+		this.v = defaultUV;
+		this.w = defaultWH;
+		this.h = defaultWH;
+		this.r = defaultRepeat;
+		this.m = defaultMipMap;
 		return this;
 	}
 
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		/* @formatter:off */
-		if (StringUtils.equals(key, "l")) this.l = NumberUtils.toFloat(value, defaultStart);
-		else if (StringUtils.equals(key, "t")) this.t = NumberUtils.toFloat(value, defaultStart);
-		else if (StringUtils.equals(key, "b")) this.b = NumberUtils.toFloat(value, defaultEnd);
-		else if (StringUtils.equals(key, "r")) this.r = NumberUtils.toFloat(value, defaultEnd);
+		if (StringUtils.equals(key, "u")) this.u = NumberUtils.toFloat(value, defaultUV);
+		else if (StringUtils.equals(key, "v")) this.v = NumberUtils.toFloat(value, defaultUV);
+		else if (StringUtils.equals(key, "w")) this.w = NumberUtils.toFloat(value, defaultWH);
+		else if (StringUtils.equals(key, "h")) this.h = NumberUtils.toFloat(value, defaultWH);
+		else if (StringUtils.equals(key, "r")) this.r = !defaultRepeat;
+		else if (StringUtils.equals(key, "m")) this.m = !defaultMipMap;
 		else return false;
 		return true;
 		/* @formatter:on */
@@ -36,14 +44,18 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 	@Override
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
-		if (this.l!=defaultStart)
-			stb.append("l").append(format(this.l));
-		if (this.t!=defaultStart)
-			stb.append("t").append(format(this.t));
-		if (this.b!=defaultEnd)
-			stb.append("b").append(format(this.b));
-		if (this.r!=defaultEnd)
-			stb.append("r").append(format(this.r));
+		if (this.u!=defaultUV)
+			stb.append("u").append(format(this.u));
+		if (this.v!=defaultUV)
+			stb.append("v").append(format(this.v));
+		if (this.w!=defaultWH)
+			stb.append("w").append(format(this.w));
+		if (this.h!=defaultWH)
+			stb.append("h").append(format(this.h));
+		if (this.r!=defaultRepeat)
+			stb.append("r");
+		if (this.m!=defaultMipMap)
+			stb.append("m");
 		return stb.toString();
 	}
 

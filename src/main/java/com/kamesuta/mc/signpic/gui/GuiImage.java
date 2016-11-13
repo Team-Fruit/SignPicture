@@ -54,7 +54,7 @@ public class GuiImage extends WFrame {
 						if (content.state.getType()==StateType.AVAILABLE) {
 							glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
 							final ImageTextureMap map = GuiImage.this.entry.meta.map;
-							content.image.draw(map.l, map.t, 1f-map.b-map.l, 1f-map.r-map.t);
+							content.image.draw(map.u, map.v, 1f/map.w, 1f/map.h, map.r, map.m);
 						} else {
 							RenderHelper.startShape();
 							glLineWidth(1f);

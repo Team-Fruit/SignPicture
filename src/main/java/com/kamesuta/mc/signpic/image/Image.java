@@ -1,5 +1,8 @@
 package com.kamesuta.mc.signpic.image;
 
+import static org.lwjgl.opengl.GL11.*;
+
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
@@ -30,11 +33,25 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			return DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h) {
+	public void draw(final float u, final float v, final float w, final float h, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
 			getTexture().bind();
+			if (r) {
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			} else {
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+			}
+			if (m&&ImageTexture.openGl30()&&Config.instance.renderUseMipmap) {
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
+			} else {
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			}
 			t.startDrawingQuads();
 			t.addVertexWithUV(0, 0, 0, u, v);
 			t.addVertexWithUV(0, 1, 0, u, v+1f/h);
@@ -46,6 +63,6 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 
 	@Deprecated
 	public void draw() {
-		draw(0, 0, 1, 1);
+		draw(0, 0, 1, 1, true, true);
 	}
 }
