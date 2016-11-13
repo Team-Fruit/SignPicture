@@ -40,6 +40,22 @@ public class Area {
 		return this.y2;
 	}
 
+	public float minX() {
+		return Math.min(x1(), x2());
+	}
+
+	public float maxX() {
+		return Math.max(x1(), x2());
+	}
+
+	public float minY() {
+		return Math.min(y1(), y2());
+	}
+
+	public float maxY() {
+		return Math.max(y1(), y2());
+	}
+
 	public Area child(final R p) {
 		return p.getAbsolute(this);
 	}
@@ -54,6 +70,10 @@ public class Area {
 
 	public final boolean pointInside(final Point p) {
 		return p.x >= this.x1 && p.x < this.x2 && p.y >= this.y1 && p.y < this.y2;
+	}
+
+	public final boolean areaOverlap(final Area a) {
+		return !(a.maxX()<minX()||a.minX()>maxX()||a.minY()>maxY()||a.maxY()<minY());
 	}
 
 	@Override
