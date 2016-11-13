@@ -63,6 +63,7 @@ signpic.state.loaded=読み込み完了!
 signpic.state.available=正常 (%d%%)
 signpic.state.failed=読み込み失敗... (%d%%)
 signpic.state.error=エラー
+signpic.state.format.unsupported=未対応 新しいバージョンをお試しください！
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=不正なURL
@@ -71,6 +72,8 @@ signpic.advmsg.capacityover=容量オーバー
 signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s
+signpic.advmsg.format.unsupported=未対応のSignPicture
+signpic.advmsg.format.needupdate=新しいバージョンをお試しください！
 
 # Version Checking
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] 新しいバージョンがご利用可能です: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]

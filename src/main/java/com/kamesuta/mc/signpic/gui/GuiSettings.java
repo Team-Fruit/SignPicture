@@ -249,7 +249,7 @@ public class GuiSettings extends WPanel {
 														if (this.in) {
 															state.stop().add(Easings.easeOutCubic.move(1f, 0f)).start();
 															this.orot += this.rot.get();
-															this.rot.stopFirst().reset().add(Easings.easeOutSine.move(1.5f, .5f)).add(Motion.of(Motion.move(0), Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).add(Motion.move(0)).add(Easings.easeInOutElastic.move(3f, 1f));
+															this.rot.stopFirst().reset().add(Easings.easeOutSine.move(1.5f, .5f)).add(Motion.of(Motion.move(0), Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true));
 														}
 														this.in = false;
 													}

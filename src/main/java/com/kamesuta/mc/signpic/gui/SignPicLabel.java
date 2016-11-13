@@ -33,11 +33,11 @@ public class SignPicLabel extends WBase {
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		final EntryId entryId = getEntryId();
-		if (entryId != null) {
+		if (entryId!=null) {
 			final Entry entry = entryId.entry();
 			if (entry.isValid()) {
 				final Content content = entry.content();
-				if (content == null || StringUtils.isEmpty(content.id.id())) {
+				if (content==null||StringUtils.isEmpty(content.id.id())) {
 					RenderHelper.startTexture();
 					glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
@@ -53,7 +53,7 @@ public class SignPicLabel extends WBase {
 					translate(a);
 					glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
 					glScalef(100, 100, 1f);
-					content.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+					entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
 					glPopMatrix();
 					glEnable(GL_CULL_FACE);

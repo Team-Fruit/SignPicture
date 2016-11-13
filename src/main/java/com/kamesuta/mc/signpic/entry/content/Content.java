@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.entry.content;
 
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
-import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.RemoteImage;
 import com.kamesuta.mc.signpic.image.ResourceImage;
@@ -14,7 +13,6 @@ public class Content implements IInitable, ICollectable {
 	public final State state;
 	public final ContentLocation location;
 	public Image image;
-	public final GuiImage gui;
 
 	public Content(final ContentId id) {
 		this.id = id;
@@ -24,7 +22,6 @@ public class Content implements IInitable, ICollectable {
 			this.image = new ResourceImage(this);
 		else
 			this.image = new RemoteImage(this);
-		this.gui = new GuiImage(this);
 	}
 
 	@Override

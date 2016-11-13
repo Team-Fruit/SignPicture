@@ -100,6 +100,7 @@ signpic.state.loaded=Finished Loading!
 signpic.state.available=Available! (%d%%)
 signpic.state.failed=Loading Failed... (%d%%)
 signpic.state.error=ERROR
+signpic.state.format.unsupported=Unsupported. Try a new Version!
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=Invalid URL
@@ -108,6 +109,8 @@ signpic.advmsg.capacityover=CapacityOver
 signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s
+signpic.advmsg.format.unsupported=Unsupported SignPicture
+signpic.advmsg.format.needupdate=Try a new Version!
 
 # Version Checking
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to automatically download the latest version","color":"green"}},"clickEvent":$download$},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's website","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the version's Changelog","color":"green"}},"clickEvent":$changelog$},"]"]

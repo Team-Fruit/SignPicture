@@ -12,6 +12,7 @@ public class ImageMeta {
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
+	private boolean hasInvalidMeta = false;
 
 	public ImageMeta() {
 		this.size = new ImageSize();
@@ -19,31 +20,37 @@ public class ImageMeta {
 		this.rotation = new ImageRotation();
 	}
 
-	protected ImageMeta parseMeta(final String src, final String key, final String value) {
-		this.size.parse(src, key, value);
-		this.offset.parse(src, key, value);
-		this.rotation.parse(src, key, value);
-		return this;
+	protected boolean parseMeta(final String src, final String key, final String value) {
+		return this.size.parse(src, key, value)||
+				this.offset.parse(src, key, value)||
+				this.rotation.parse(src, key, value);
 	}
 
 	public ImageMeta parse(final String src) {
 		this.size.reset();
 		this.offset.reset();
 		this.rotation.reset();
+		boolean b = true;
 		final Matcher m = p.matcher(src);
-		while(m.find()){
-			if (2 <= m.groupCount()) {
+		while (m.find()) {
+			final int gcount = m.groupCount();
+			if (1<=gcount) {
 				final String key = m.group(1);
-				final String value = m.group(2);
-				if (!StringUtils.isEmpty(key) || !StringUtils.isEmpty(value))
-					parseMeta(src, key, value);
+				final String value = 2<=gcount ? m.group(2) : "";
+				if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
+					b = parseMeta(src, key, value)&&b;
 			}
 		}
+		this.hasInvalidMeta = !b;
 		return this;
 	}
 
+	public boolean hasInvalidMeta() {
+		return this.hasInvalidMeta;
+	}
+
 	public String compose() {
-		return "[" + this.size + this.offset + this.rotation + "]";
+		return "["+this.size+this.offset+this.rotation+"]";
 	}
 
 	@Override
@@ -55,7 +62,7 @@ public class ImageMeta {
 		private static final DecimalFormat signformat = new DecimalFormat(".##");
 
 		public static String format(final float f) {
-			if (f == 0)
+			if (f==0)
 				return "0";
 
 			final String str = signformat.format(f);
@@ -65,16 +72,15 @@ public class ImageMeta {
 			int end = str.length();
 			int last = cut.length();
 
-			while (end != 0 && last != 0) {
-				if (cut.charAt(last - 1) == str.charAt(end - 1))
+			while (end!=0&&last!=0)
+				if (cut.charAt(last-1)==str.charAt(end-1))
 					end--;
 				else
 					last--;
-			}
 			return str.substring(0, end);
 		}
 
-		public abstract MetaParser parse(String src, String key, String value);
+		public abstract boolean parse(String src, String key, String value);
 
 		public abstract MetaParser reset();
 
