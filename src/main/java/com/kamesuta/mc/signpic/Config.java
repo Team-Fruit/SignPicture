@@ -14,6 +14,8 @@ public final class Config extends Configuration {
 	private final File configFile;
 	public boolean updatable;
 
+	public String signpicDir = "";
+
 	public int imageWidthLimit = 512;
 	public int imageHeightLimit = 512;
 	public boolean imageAnimationGif = true;
@@ -52,6 +54,8 @@ public final class Config extends Configuration {
 	public Config(final File configFile) {
 		super(configFile);
 		this.configFile = configFile;
+
+		this.signpicDir = get("General", "SignpicDir", this.signpicDir).setRequiresMcRestart(true).getString();
 
 		this.imageWidthLimit = get("Image", "WidthLimit", this.imageWidthLimit).setRequiresMcRestart(true).getInt(this.imageWidthLimit);
 		this.imageHeightLimit = get("Image", "HeightLimit", this.imageHeightLimit).setRequiresMcRestart(true).getInt(this.imageHeightLimit);

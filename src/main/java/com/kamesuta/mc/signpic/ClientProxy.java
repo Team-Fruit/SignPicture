@@ -42,13 +42,14 @@ public class ClientProxy extends CommonProxy {
 				Client.id = id;
 				Client.name = Client.mc.getSession().getUsername();
 			}
-		} catch (final IllegalArgumentException e) {}
+		} catch (final IllegalArgumentException e) {
+		}
 
 		// Setup
 		Client.handler = new CoreHandler();
 	}
 
-	public File getDataDirectory() {
+	private File getDataDirectory() {
 		final File file = Client.mc.mcDataDir;
 		try {
 			return file.getCanonicalFile();

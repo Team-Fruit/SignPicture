@@ -17,11 +17,6 @@ public class SignPicture {
 	@Instance(Reference.MODID)
 	public static SignPicture instance;
 
-	public SignPicture() {
-		// TODO 自動生成されたコンストラクター・スタブ
-		Reference.logger.info("hey");
-	}
-
 	@SidedProxy(serverSide = Reference.PROXY_SERVER, clientSide = Reference.PROXY_CLIENT)
 	public static CommonProxy proxy;
 
