@@ -28,9 +28,10 @@ import com.kamesuta.mc.bnnwidget.position.PCoord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Apis;
-import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Apis.Setting;
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -49,7 +50,7 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final boolean isUpdateRequired = Informations.instance.isUpdateRequired();
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui;
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
 			protected boolean show = true;
@@ -211,6 +212,10 @@ public class GuiSettings extends WPanel {
 									final Coord wend = Coord.width(37);
 									final Coord hstart = Coord.height(32);
 									final Coord hend = Coord.height(37);
+									final Coord lstart = Coord.left(30);
+									final Coord lend = Coord.left(10);
+									final Coord rstart = Coord.right(30);
+									final Coord rend = Coord.right(10);
 
 									add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
 										@Override
@@ -224,10 +229,10 @@ public class GuiSettings extends WPanel {
 
 										@Override
 										protected void initWidget() {
-											add(new WPanel(new R(PCoord.of(hstart, hend, state), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
+											add(new WPanel(new R(PCoord.of(lstart, lend, state), PCoord.of(rstart, rend, state), PCoord.of(hstart, hend, state), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 												protected boolean in;
 
-												protected MCoord rot = new MCoord(0).setLoop(true).start();
+												protected MCoord rot = new MCoord(0).add(Easings.easeLinear.move(8.04f/4f, 1f)).setLoop(true).start();
 												protected float orot = 0f;
 
 												@Override
@@ -252,6 +257,14 @@ public class GuiSettings extends WPanel {
 												}
 
 												@Override
+												public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+													final Area a = getGuiPosition(pgp);
+													if (a.pointInside(p))
+														Informations.instance.runUpdate();
+													return true;
+												}
+
+												@Override
 												protected void initWidget() {
 													add(new WBase(new R(PCoord.of(wstart, wend, state), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
@@ -271,7 +284,9 @@ public class GuiSettings extends WPanel {
 														}
 													});
 													final MCoord o = new MCoord(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();
-													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), "Update Available") {
+													final String message = I18n.format("signpic.gui.update.message");
+													final String update = Informations.instance.getUpdateMessage();
+													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), message) {
 														@Override
 														protected void initOpacity() {
 															super.setOpacity(o);
@@ -291,7 +306,7 @@ public class GuiSettings extends WPanel {
 															glPopMatrix();
 														}
 													}.setShadow(true));
-													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), "Restart Minecraft!") {
+													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), !StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message) {
 														@Override
 														protected void initOpacity() {
 															super.setOpacity(PCoord.of(Coord.ptop(1f), Coord.ptop(0f), o));

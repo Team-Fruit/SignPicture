@@ -30,6 +30,7 @@ public final class Config extends Configuration {
 
 	public boolean informationNotice = true;
 	public boolean informationJoinBeta = false;
+	public boolean informationUpdateGui = true;
 
 	public boolean multiplayPAAS = true;
 	/** Fastest time "possible" estimate for an empty sign. */
@@ -89,6 +90,8 @@ public final class Config extends Configuration {
 		this.contentGCtick = addComment(get("Content", "GCDelayTick", this.contentGCtick), "delay ticks of Garbage Collection").getInt(this.contentGCtick);
 		this.contentLoadTick = addComment(get("Content", "LoadStartIntervalTick", this.contentLoadTick), "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt(this.contentLoadTick);
 		this.contentSyncTick = addComment(get("Content", "SyncLoadIntervalTick", this.contentSyncTick), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt(this.contentSyncTick);
+
+		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
 
 		this.multiplayPAAS = get("Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS).getBoolean(this.multiplayPAAS);
 		this.multiplayPAASMinEditTime = get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime).getInt(this.multiplayPAASMinEditTime);
