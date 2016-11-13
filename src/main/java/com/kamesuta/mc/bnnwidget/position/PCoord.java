@@ -14,12 +14,12 @@ public class PCoord extends Coord {
 
 	@Override
 	protected CoordType getType() {
-		return this.c.getType();
+		return this.a.getType();
 	}
 
 	@Override
 	public CoordSide getSide() {
-		return this.c.getSide();
+		return this.a.getSide();
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class PCoord extends Coord {
 	public float getAbsCoord(final float abslength) {
 		final float a = this.a.getAbsCoord(abslength);
 		final float b = this.b.getAbsCoord(abslength);
-		return getType().calc(a, b, this.c.get());
+		return this.c.getType().calc(a, b, this.c.get());
 	}
 
 	public static PCoord of(Coord start, Coord end, final Coord percent) {

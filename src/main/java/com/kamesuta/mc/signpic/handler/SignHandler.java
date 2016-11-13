@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;

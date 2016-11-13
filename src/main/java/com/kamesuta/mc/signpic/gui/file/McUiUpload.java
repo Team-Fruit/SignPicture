@@ -7,8 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.kamesuta.mc.signpic.Apis;
-import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.GuiMain;

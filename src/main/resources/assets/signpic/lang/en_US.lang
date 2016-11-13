@@ -66,6 +66,9 @@ signpic.gui.settings.api.upimage.type=API Type
 signpic.gui.settings.api.upimage.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
+## Update
+signpic.gui.update.message=A new version of SignPicture! is available!  Please click here to update.
+signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=Please Wait ( %d / %d letters )
 signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
@@ -77,6 +80,8 @@ signpic.gui.notice.uploadfailed=Upload Failed: §7%s
 signpic.gui.notice.downloading=Downloading %s
 signpic.gui.notice.downloaded=Finished downloading %s
 signpic.gui.notice.downloadfailed=Download Failed: §7%s
+signpic.gui.notice.versioning.downloadedAlready=Close your game, delete the old version and load it again to update!
+signpic.gui.notice.versioning.downloadingAlready=The update is already downloading!
 
 # Upload UI
 signpic.ui.title=SignPicture!File
@@ -106,6 +111,7 @@ signpic.advmsg.unknown=Unknown Error: §7%s
 
 # Version Checking
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to automatically download the latest version","color":"green"}},"clickEvent":$download$},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's website","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the version's Changelog","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] %s
 signpic.versioning.startingDownload=[{"text":"Starting download of %s. Please do not remove your hard disk. Enjoying ","color":"aqua"}]
 signpic.versioning.doneDownloading=Finished downloading %s. Delete your old SignPicture .jar and reload your game to update.
 signpic.versioning.doneDownloadingWithFile=Finished downloading %s. Delete %s and reload your game to update.

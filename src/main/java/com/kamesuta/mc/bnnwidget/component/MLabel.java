@@ -43,28 +43,31 @@ public class MLabel extends WBase {
 		return this.watermarkcolor;
 	}
 
-	public void setShadow(final boolean b) {
+	public MLabel setShadow(final boolean b) {
 		this.shadow = b;
+		return this;
 	}
 
 	public boolean isShadow() {
 		return this.shadow;
 	}
 
-	public void setColor(final int color) {
+	public MLabel setColor(final int color) {
 		this.textcolor = color;
+		return this;
 	}
 
 	public int getColor() {
 		return this.textcolor;
 	}
 
-	public void setText(final String s) {
+	public MLabel setText(final String s) {
 		if (StringUtils.equals(s, getText()))
-			return;
+			return this;
 		final String oldText = getText();
 		this.text = s;
 		onTextChanged(oldText);
+		return this;
 	}
 
 	public String getText() {
@@ -82,8 +85,9 @@ public class MLabel extends WBase {
 
 	protected float wscale = 1f;
 
-	public void setScaleWidth(final float f) {
+	public MLabel setScaleWidth(final float f) {
 		this.wscale = f;
+		return this;
 	}
 
 	public float getScaleWidth(final Area a) {
@@ -92,8 +96,9 @@ public class MLabel extends WBase {
 
 	protected float hscale = 1f;
 
-	public void setScaleHeight(final float f) {
+	public MLabel setScaleHeight(final float f) {
 		this.hscale = f;
+		return this;
 	}
 
 	public float getScaleHeight(final Area a) {

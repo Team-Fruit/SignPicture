@@ -19,7 +19,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
@@ -60,8 +59,6 @@ public class ModDownload extends Communicate implements Progressable {
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
 			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.downloading", local), 2f);
-			this.status.getMeta().put(GuiTask.HighlightPanel, true);
-			this.status.getMeta().put(GuiTask.ShowPanel, 3f);
 
 			state.downloading = true;
 

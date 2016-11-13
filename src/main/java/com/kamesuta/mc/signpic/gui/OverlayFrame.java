@@ -16,7 +16,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.handler.CoreEvent;
+import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;

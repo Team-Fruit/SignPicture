@@ -68,8 +68,8 @@ public abstract class Motion implements IMotion {
 
 	@Override
 	public void onFinished() {
-		if (this.after!=null)
-			this.after.run();
+		if (getAfter()!=null)
+			getAfter().run();
 	}
 
 	public static IMotion easing(final float duration, final Easing easing, final float end) {
@@ -81,7 +81,15 @@ public abstract class Motion implements IMotion {
 	}
 
 	public static IMotion move(final float end) {
-		return new BlankMotion(end);
+		return new MoveMotion(end);
+	}
+
+	public static CompoundMotion of(final IMotion... motions) {
+		return CompoundMotion.of(motions);
+	}
+
+	public static CompoundMotion of(final float coord, final IMotion... motions) {
+		return CompoundMotion.of(coord, motions);
 	}
 
 	static class EasingMotion extends Motion {
@@ -135,7 +143,7 @@ public abstract class Motion implements IMotion {
 		protected final float end;
 
 		public MoveMotion(final float end) {
-			super(0);
+			super(0.5f);
 			this.end = end;
 		}
 

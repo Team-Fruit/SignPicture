@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.Set;
 
@@ -14,9 +15,9 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
-import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
@@ -30,6 +31,7 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Apis.Setting;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -48,8 +50,8 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final boolean isUpdateRequired = Informations.instance.isUpdateRequired();
-		final int updatepanelHeight = isUpdateRequired ? 50 : 0;
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui;
+		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
 			protected boolean show = true;
 			protected MCoord bottom = MCoord.pbottom(0f);
@@ -202,50 +204,133 @@ public class GuiSettings extends WPanel {
 										return true;
 									}
 								});
-								add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
-									@Override
-									protected void initWidget() {
-										add(new WBase(new R(Coord.top(5), Coord.left(5), Coord.width(50), Coord.height(50))) {
-											protected boolean in = true;
 
-											protected MCoord rot = new MCoord(0).start();
-											protected float orot = 0f;
+								if (isUpdateRequired) {
 
-											@Override
-											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-												final Area a = getGuiPosition(pgp);
-												texture().bindTexture(update);
-												glColor4f(1, 1, 1, 1);
-												RenderHelper.startTexture();
-												glPushMatrix();
-												glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
-												glRotatef((this.orot+this.rot.get())*360, 0, 0, 1);
-												glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
-												drawTexturedModalRect(a);
-												glPopMatrix();
-											}
+									final MCoord state = new MCoord(0f);
+									final Coord wstart = Coord.width(32);
+									final Coord wend = Coord.width(37);
+									final Coord hstart = Coord.height(32);
+									final Coord hend = Coord.height(37);
+									final Coord lstart = Coord.left(30);
+									final Coord lend = Coord.left(10);
+									final Coord rstart = Coord.right(30);
+									final Coord rend = Coord.right(10);
 
-											@Override
-											public void update(final WEvent ev, final Area pgp, final Point p) {
-												final Area a = getGuiPosition(pgp);
-												if (a.pointInside(p)) {
-													if (!this.in) {
-														this.orot += this.rot.get();
-														this.rot.stopFirst().reset().add(Easings.easeLinear.move(3f, 1f));
+									add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
+										@Override
+										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+											final Area a = getGuiPosition(pgp);
+											glColor4f(0f, 0f, 0f, .4f);
+											RenderHelper.startShape();
+											drawRect(a);
+											super.draw(ev, pgp, p, frame, popacity);
+										}
+
+										@Override
+										protected void initWidget() {
+											add(new WPanel(new R(PCoord.of(lstart, lend, state), PCoord.of(rstart, rend, state), PCoord.of(hstart, hend, state), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
+												protected boolean in;
+
+												protected MCoord rot = new MCoord(0).add(Easings.easeLinear.move(8.04f/4f, 1f)).setLoop(true).start();
+												protected float orot = 0f;
+
+												@Override
+												public void update(final WEvent ev, final Area pgp, final Point p) {
+													final Area a = getGuiPosition(pgp);
+													if (a.pointInside(p)) {
+														if (!this.in) {
+															state.stop().add(Easings.easeOutCubic.move(1f, 1f)).start();
+															this.orot += this.rot.get();
+															this.rot.stopFirst().reset().add(Easings.easeLinear.move(8.04f/4f, 1f));
+														}
+														this.in = true;
+													} else {
+														if (this.in) {
+															state.stop().add(Easings.easeOutCubic.move(1f, 0f)).start();
+															this.orot += this.rot.get();
+															this.rot.stopFirst().reset().add(Easings.easeOutSine.move(1.5f, .5f)).add(Motion.of(Motion.move(0), Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).add(Motion.move(0)).add(Easings.easeInOutElastic.move(3f, 1f));
+														}
+														this.in = false;
 													}
-													this.in = true;
-												} else {
-													if (this.in) {
-														this.orot += this.rot.get();
-														this.rot.stopFirst().reset().add(Easings.easeOutSine.move(3f, 1f)).add(CompoundMotion.of(Motion.move(0), Easings.easeInOutSine.move(3f, 1f), Motion.blank(1f)).setLoop(true)).add(Motion.move(0)).add(Easings.easeInOutElastic.move(3f, 1f));
-													}
-													this.in = false;
+													super.update(ev, pgp, p);
 												}
 
-											}
-										});
-									}
-								});
+												@Override
+												public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+													final Area a = getGuiPosition(pgp);
+													if (a.pointInside(p))
+														Informations.instance.runUpdate();
+													return true;
+												}
+
+												@Override
+												protected void initWidget() {
+													add(new WBase(new R(PCoord.of(wstart, wend, state), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
+														@Override
+														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+															final Area a = getGuiPosition(pgp);
+															texture().bindTexture(update);
+															// glColor4f(1, 1, 1, 1);
+															final float f = state.get();
+															glColor4f(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f, 1f);
+															RenderHelper.startTexture();
+															glPushMatrix();
+															glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
+															glRotatef((orot+rot.get())*360, 0, 0, 1);
+															glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
+															drawTexturedModalRect(a);
+															glPopMatrix();
+														}
+													});
+													final MCoord o = new MCoord(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();
+													final String message = I18n.format("signpic.gui.update.message");
+													final String update = Informations.instance.getUpdateMessage();
+													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), message) {
+														@Override
+														protected void initOpacity() {
+															super.setOpacity(o);
+														}
+
+														@Override
+														public int getColor() {
+															final float f = state.get();
+															return new Color(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f).getRGB();
+														}
+
+														@Override
+														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+															glPushMatrix();
+															glTranslatef(0, 0, 10f);
+															super.draw(ev, pgp, p, frame, popacity);
+															glPopMatrix();
+														}
+													}.setShadow(true));
+													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), !StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message) {
+														@Override
+														protected void initOpacity() {
+															super.setOpacity(PCoord.of(Coord.ptop(1f), Coord.ptop(0f), o));
+														}
+
+														@Override
+														public int getColor() {
+															final float f = state.get();
+															return new Color(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f).getRGB();
+														}
+
+														@Override
+														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+															glPushMatrix();
+															glTranslatef(0, 0, 10f);
+															super.draw(ev, pgp, p, frame, popacity);
+															glPopMatrix();
+														}
+													}.setShadow(true));
+												}
+											});
+										}
+									});
+								}
 							}
 						});
 					}
