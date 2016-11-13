@@ -18,7 +18,7 @@ public class SignPicture {
 	public static SignPicture instance;
 
 	@SidedProxy(serverSide = Reference.PROXY_SERVER, clientSide = Reference.PROXY_CLIENT)
-	public static IInit proxy;
+	public static CommonProxy proxy;
 
 	@NetworkCheckHandler
 	public boolean checkModList(final Map<String, String> versions, final Side side) {
