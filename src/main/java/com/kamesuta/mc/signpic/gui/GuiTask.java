@@ -113,7 +113,7 @@ public class GuiTask extends WPanel {
 							}
 						});
 
-						add(new WList<Progressable, TaskElement>(new R(Coord.top(16)), Communicator.instance.getTasks()) {
+						add(new WList<Progressable, TaskElement>(new R(Coord.top(16), Coord.bottom(0)), Communicator.instance.getTasks()) {
 							@Override
 							protected TaskElement createWidget(final Progressable t, final int i) {
 								final Object j = t.getState().getMeta().get(ShowPanel);
@@ -172,6 +172,13 @@ public class GuiTask extends WPanel {
 		@Override
 		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
 			return this.opacity.isFinished();
+		}
+
+		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			final Area a = getGuiPosition(pgp);
+			if (pgp.areaInside(a))
+				super.draw(ev, pgp, p, frame, popacity);
 		}
 
 		@Override
@@ -249,13 +256,13 @@ public class GuiTask extends WPanel {
 
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-					final Area area = getGuiPosition(pgp);
+					final Area a = getGuiPosition(pgp);
 					RenderHelper.startShape();
-					if (area.pointInside(p))
+					if (a.pointInside(p))
 						glColor4f(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
 					else
 						glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
-					drawRect(area);
+					drawRect(a);
 					super.draw(ev, pgp, p, frame, opacity);
 				}
 			});
