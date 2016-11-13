@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.kamesuta.mc.signpic.handler.CoreEvent;
-
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;

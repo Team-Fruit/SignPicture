@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.handler;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.CoreEvent;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.gameevent.InputEvent;

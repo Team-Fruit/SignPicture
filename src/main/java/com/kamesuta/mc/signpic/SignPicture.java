@@ -2,8 +2,6 @@ package com.kamesuta.mc.signpic;
 
 import java.util.Map;
 
-import com.kamesuta.mc.signpic.proxy.CommonProxy;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -20,7 +18,7 @@ public class SignPicture {
 	public static SignPicture instance;
 
 	@SidedProxy(serverSide = Reference.PROXY_SERVER, clientSide = Reference.PROXY_CLIENT)
-	public static CommonProxy proxy;
+	public static IInit proxy;
 
 	@NetworkCheckHandler
 	public boolean checkModList(final Map<String, String> versions, final Side side) {
@@ -29,7 +27,6 @@ public class SignPicture {
 
 	@EventHandler
 	public void preInit(final FMLPreInitializationEvent event) {
-		Config.instance = new Config(event.getSuggestedConfigurationFile());
 		proxy.preInit(event);
 	}
 
@@ -41,6 +38,5 @@ public class SignPicture {
 	@EventHandler
 	public void postInit(final FMLPostInitializationEvent event) {
 		proxy.postInit(event);
-		Config.instance.save();
 	}
 }

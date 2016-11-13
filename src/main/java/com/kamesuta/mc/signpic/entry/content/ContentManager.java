@@ -10,10 +10,10 @@ import java.util.concurrent.Executors;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
-import com.kamesuta.mc.signpic.handler.CoreEvent;
 
 public class ContentManager implements ITickEntry {
 	public static ContentManager instance = new ContentManager();

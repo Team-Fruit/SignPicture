@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.handler;
+package com.kamesuta.mc.signpic;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;

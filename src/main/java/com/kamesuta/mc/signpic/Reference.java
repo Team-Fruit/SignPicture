@@ -9,8 +9,8 @@ public class Reference {
 	public static final String VERSION = "${version}";
 	public static final String FORGE = "${forgeversion}";
 	public static final String MINECRAFT = "${mcversion}";
-	public static final String PROXY_SERVER = "com.kamesuta.mc.signpic.proxy.CommonProxy";
-	public static final String PROXY_CLIENT = "com.kamesuta.mc.signpic.proxy.ClientProxy";
+	public static final String PROXY_SERVER = "com.kamesuta.mc.signpic.CommonProxy";
+	public static final String PROXY_CLIENT = "com.kamesuta.mc.signpic.ClientProxy";
 	public static final String GUI_FACTORY = "com.kamesuta.mc.signpic.gui.config.ConfigGuiFactory";
 
 	public static Logger logger = LogManager.getLogger(Reference.MODID);

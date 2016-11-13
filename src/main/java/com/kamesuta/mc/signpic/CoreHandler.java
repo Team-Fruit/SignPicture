@@ -1,15 +1,14 @@
-package com.kamesuta.mc.signpic.handler;
+package com.kamesuta.mc.signpic;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
-import com.kamesuta.mc.signpic.Apis;
-import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
+import com.kamesuta.mc.signpic.handler.KeyHandler;
+import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
@@ -119,6 +118,8 @@ public class CoreHandler {
 	}
 
 	void debug() {
-		Client.openEditor();
+		// Client.openEditor();
+		Reference.logger.info("try to delete: "+Client.location.modFile.getName());
+		Client.deleteMod();
 	}
 }
