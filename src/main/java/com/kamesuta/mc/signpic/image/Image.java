@@ -24,23 +24,28 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 	public abstract String getLocal();
 
 	public ImageSize getSize() {
-		if (this.content.state.getType() == StateType.AVAILABLE)
+		if (this.content.state.getType()==StateType.AVAILABLE)
 			return getTexture().getSize();
 		else
 			return DefaultSize;
 	}
 
-	public void draw() {
-		if (this.content.state.getType() == StateType.AVAILABLE) {
+	public void draw(final float u, final float v, final float w, final float h) {
+		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
 			getTexture().bind();
 			t.startDrawingQuads();
-			t.addVertexWithUV(0, 0, 0, 0, 0);
-			t.addVertexWithUV(0, 1, 0, 0, 1);
-			t.addVertexWithUV(1, 1, 0, 1, 1);
-			t.addVertexWithUV(1, 0, 0, 1, 0);
+			t.addVertexWithUV(0, 0, 0, u, v);
+			t.addVertexWithUV(0, 1, 0, u, v+1f/h);
+			t.addVertexWithUV(1, 1, 0, u+1f/w, v+1f/h);
+			t.addVertexWithUV(1, 0, 0, u+1f/w, v);
 			t.draw();
 		}
+	}
+
+	@Deprecated
+	public void draw() {
+		draw(0, 0, 1, 1);
 	}
 }

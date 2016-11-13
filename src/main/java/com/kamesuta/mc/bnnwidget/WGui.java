@@ -180,6 +180,15 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
+	public static void draw(final float x1, final float y1, final float x2, final float y2, final int mode) {
+		t.startDrawing(mode);
+		t.addVertex(x1, y1, 0);
+		t.addVertex(x1, y2, 0);
+		t.addVertex(x2, y2, 0);
+		t.addVertex(x2, y1, 0);
+		t.draw();
+	}
+
 	public static R horizontalLine = new R(Coord.left(0), Coord.top(0), Coord.right(0), Coord.top(1));
 
 	public static void drawHorizontalLine(final Area a) {

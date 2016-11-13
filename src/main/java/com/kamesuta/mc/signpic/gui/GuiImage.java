@@ -17,11 +17,11 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
 
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -53,19 +53,13 @@ public class GuiImage extends WFrame {
 						glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
 							glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
-							content.image.draw();
+							final ImageTextureMap map = GuiImage.this.entry.meta.map;
+							content.image.draw(map.l, map.t, 1f-map.b-map.l, 1f-map.r-map.t);
 						} else {
-							final Tessellator t = Tessellator.instance;
 							RenderHelper.startShape();
 							glLineWidth(1f);
 							glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
-
-							t.startDrawing(GL_LINE_LOOP);
-							t.addVertex(0, 0, 0);
-							t.addVertex(0, 1, 0);
-							t.addVertex(1, 1, 0);
-							t.addVertex(1, 0, 0);
-							t.draw();
+							draw(0, 0, 1, 1, GL_LINE_LOOP);
 						}
 						glPopMatrix();
 

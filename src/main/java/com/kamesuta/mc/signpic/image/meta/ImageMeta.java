@@ -12,18 +12,22 @@ public class ImageMeta {
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
+	public final ImageTextureMap map;
 	private boolean hasInvalidMeta = false;
 
 	public ImageMeta() {
 		this.size = new ImageSize();
 		this.offset = new ImageOffset();
 		this.rotation = new ImageRotation();
+		this.map = new ImageTextureMap();
 	}
 
 	protected boolean parseMeta(final String src, final String key, final String value) {
-		return this.size.parse(src, key, value)||
-				this.offset.parse(src, key, value)||
-				this.rotation.parse(src, key, value);
+		final boolean a = this.size.parse(src, key, value);
+		final boolean b = this.offset.parse(src, key, value);
+		final boolean c = this.rotation.parse(src, key, value);
+		final boolean d = this.map.parse(src, key, value);
+		return a||b||c||d;
 	}
 
 	public ImageMeta parse(final String src) {
@@ -50,7 +54,7 @@ public class ImageMeta {
 	}
 
 	public String compose() {
-		return "["+this.size+this.offset+this.rotation+"]";
+		return "["+this.size+this.offset+this.rotation+this.map+"]";
 	}
 
 	@Override
