@@ -143,9 +143,9 @@ public class GuiImage extends WFrame {
 			glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 			glRotatef(this.rot.get()*360, 0, 0, 1);
 			glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, -.001f);
-			drawTexturedModalRect(a);
+			drawTexture(a);
 			glTranslatef(0f, 0f, -.002f);
-			drawTexturedModalRect(a);
+			drawTexture(a);
 			glPopMatrix();
 		}
 	};

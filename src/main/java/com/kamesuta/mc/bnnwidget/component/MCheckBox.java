@@ -50,9 +50,9 @@ public class MCheckBox extends MLabel {
 		final Area in = out.child(1, 1, -1, -1);
 		RenderHelper.startShape();
 		glColor4f(0.627451f, 0.627451f, 0.627451f, 1f);
-		drawRect(out);
+		draw(out, GL_QUADS);
 		glColor4f(0f, 0f, 0f, 1f);
-		drawRect(in);
+		draw(in, GL_QUADS);
 		RenderHelper.startTexture();
 		if (this.checked) {
 			final String strcheck = "\u2713";

@@ -41,7 +41,7 @@ public class SignPicLabel extends WBase {
 					RenderHelper.startTexture();
 					glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
-					drawTexturedModalRect(a);
+					drawTexture(a);
 				} else {
 					glDisable(GL_CULL_FACE);
 					glPushMatrix();
@@ -50,7 +50,7 @@ public class SignPicLabel extends WBase {
 					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
 					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
 
-					translate(a);
+					glTranslatef(a.x1(), a.y1(), 0f);
 					glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
 					glScalef(100, 100, 1f);
 					entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);

@@ -62,7 +62,7 @@ public class GuiMain extends WFrame {
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, this.m.get());
-						drawRect(getGuiPosition(pgp));
+						draw(getGuiPosition(pgp), GL_QUADS);
 					}
 
 					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);

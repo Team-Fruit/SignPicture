@@ -107,9 +107,9 @@ public class GuiSettings extends WPanel {
 								final Area a = getGuiPosition(pgp);
 								RenderHelper.startShape();
 								glColor4f(0f, 0f, 0f, .6f);
-								drawRect(a);
+								draw(a, GL_QUADS);
 								glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
-								drawRect(this.line.getAbsolute(a));
+								draw(this.line.getAbsolute(a), GL_QUADS);
 								super.draw(ev, pgp, p, frame, opacity);
 							}
 
@@ -122,7 +122,7 @@ public class GuiSettings extends WPanel {
 										texture().bindTexture(settings);
 										glColor4f(1, 1, 1, 1);
 										RenderHelper.startTexture();
-										drawTexturedModalRect(a);
+										drawTexture(a);
 									}
 								});
 								add(new WPanel(new R(Coord.left(5), Coord.width(200), Coord.top(33), Coord.height(82))) {
@@ -223,7 +223,7 @@ public class GuiSettings extends WPanel {
 											final Area a = getGuiPosition(pgp);
 											glColor4f(0f, 0f, 0f, .4f);
 											RenderHelper.startShape();
-											drawRect(a);
+											draw(a, GL_QUADS);
 											super.draw(ev, pgp, p, frame, popacity);
 										}
 
@@ -279,7 +279,7 @@ public class GuiSettings extends WPanel {
 															glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 															glRotatef((orot+rot.get())*360, 0, 0, 1);
 															glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
-															drawTexturedModalRect(a);
+															drawTexture(a);
 															glPopMatrix();
 														}
 													});

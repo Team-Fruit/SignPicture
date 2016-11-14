@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
-import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
@@ -119,38 +118,16 @@ public class MLabel extends WBase {
 		glPushMatrix();
 		glTranslated(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
 		glScaled(getScaleWidth(a), getScaleHeight(a), 1);
+		glTranslated(-(a.x1()+a.w()/2), -(a.y1()+a.h()/2), 0);
 		RenderHelper.startTexture();
 		final Color c = new Color(getColor());
-		final Color c_ = new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-		this.align.drawString(getText(), 0, 0, 0, 0, c_.getRGB(), isShadow());
+		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
+		drawString(getText(), a, getAlign(), isShadow());
 		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {
 			final Color w = new Color(getWatermarkColor());
-			final Color w_ = new Color(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-			this.align.drawString(getWatermark(), 0, 0, 0, 0, w_.getRGB(), isShadow());
+			fontColor(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
+			drawString(getWatermark(), a, getAlign(), isShadow());
 		}
 		glPopMatrix();
-	}
-
-	public static enum Align {
-		LEFT {
-			@Override
-			public void drawString(final String text, final float x, final float y, final float w, final float h, final int colour, final boolean shadow) {
-				WGui.drawString(text, x, y, colour, shadow);
-			}
-		},
-		CENTER {
-			@Override
-			public void drawString(final String text, final float x, final float y, final float w, final float h, final int colour, final boolean shadow) {
-				WGui.drawStringC(text, x, y, w, h, colour, shadow);
-			}
-		},
-		RIGHT {
-			@Override
-			public void drawString(final String text, final float x, final float y, final float w, final float h, final int colour, final boolean shadow) {
-				WGui.drawStringR(text, x+w, y, colour, shadow);
-			}
-		},
-		;
-		public abstract void drawString(String text, float x, float y, float w, float h, int colour, boolean shadow);
 	}
 }
