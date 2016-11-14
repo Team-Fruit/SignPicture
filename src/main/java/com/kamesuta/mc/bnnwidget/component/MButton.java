@@ -70,10 +70,10 @@ public class MButton extends WBase {
 		texture().bindTexture(button);
 		final int state = getButtonTex(ev, pgp, p, frame);
 
-		//		drawTexturedModalRect(a.x1(), a.y1(), 0, state*80, a.w()/2, a.h()/2);
-		//		drawTexturedModalRect(a.x1()+a.w()/2, a.y1(), 256-a.w()/2, state*80, a.w()/2, a.h()/2);
-		//		drawTexturedModalRect(a.x1(), a.y1()+a.h()/2, 0, state*80+80-a.h()/2, a.w()/2, a.h()/2);
-		//		drawTexturedModalRect(a.x1()+a.w()/2, a.y1()+a.h()/2, 256-a.w()/2, state*80+80-a.h()/2, a.w()/2, a.h()/2);
+		drawTextureModalSize(a.x1(), a.y1(), a.w()/2, a.h()/2, 0, state*80, a.w()/2, a.h()/2);
+		drawTextureModalSize(a.x1()+a.w()/2, a.y1(), a.w()/2, a.h()/2, 256-a.w()/2, state*80, a.w()/2, a.h()/2);
+		drawTextureModalSize(a.x1(), a.y1()+a.h()/2, a.w()/2, a.h()/2, 0, state*80+80-a.h()/2, a.w()/2, a.h()/2);
+		drawTextureModalSize(a.x1()+a.w()/2, a.y1()+a.h()/2, a.w()/2, a.h()/2, 256-a.w()/2, state*80+80-a.h()/2, a.w()/2, a.h()/2);
 	}
 
 	public int getButtonTex(final WEvent ev, final Area pgp, final Point p, final float frame) {
@@ -82,10 +82,10 @@ public class MButton extends WBase {
 	}
 
 	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame) {
-		final Area abs = getGuiPosition(pgp);
+		final Area a = getGuiPosition(pgp);
 		RenderHelper.startTexture();
 		fontColor(getTextColour(ev, pgp, p, frame));
-		drawString(this.text, abs, Align.CENTER, true);
+		drawString(this.text, a, Align.CENTER, VerticalAlign.MIDDLE, true);
 	}
 
 	public int getTextColour(final WEvent ev, final Area pgp, final Point p, final float frame) {

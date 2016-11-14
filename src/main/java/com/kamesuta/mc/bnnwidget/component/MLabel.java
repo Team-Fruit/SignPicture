@@ -20,6 +20,7 @@ public class MLabel extends WBase {
 	protected String watermark;
 	protected int watermarkcolor = 0x777777;
 	protected Align align = Align.CENTER;
+	protected VerticalAlign valign = VerticalAlign.MIDDLE;
 
 	public MLabel(final R position) {
 		super(position);
@@ -32,6 +33,15 @@ public class MLabel extends WBase {
 
 	public Align getAlign() {
 		return this.align;
+	}
+
+	public MLabel setVerticalAlign(final VerticalAlign valign) {
+		this.valign = valign;
+		return this;
+	}
+
+	public VerticalAlign getVerticalAlign() {
+		return this.valign;
 	}
 
 	public MLabel setWatermark(final String watermark) {
@@ -122,11 +132,11 @@ public class MLabel extends WBase {
 		RenderHelper.startTexture();
 		final Color c = new Color(getColor());
 		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-		drawString(getText(), a, getAlign(), isShadow());
+		drawString(getText(), a, getAlign(), getVerticalAlign(), isShadow());
 		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {
 			final Color w = new Color(getWatermarkColor());
 			fontColor(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-			drawString(getWatermark(), a, getAlign(), isShadow());
+			drawString(getWatermark(), a, getAlign(), getVerticalAlign(), isShadow());
 		}
 		glPopMatrix();
 	}

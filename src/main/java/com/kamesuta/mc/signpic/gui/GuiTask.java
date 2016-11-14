@@ -59,7 +59,7 @@ public class GuiTask extends WPanel {
 						final Area a = getGuiPosition(pgp);
 						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, .6f);
-						draw(a, GL_QUADS);
+						draw(a);
 						super.draw(ev, pgp, p, frame, opacity);
 					}
 
@@ -191,6 +191,7 @@ public class GuiTask extends WPanel {
 							glPushMatrix();
 							glTranslatef(a.x1(), a.y1(), 0f);
 							glScalef(.5f, .5f, .5f);
+							glTranslatef(-a.x1(), -a.y1(), 0f);
 							final String cont = "...";
 							final int contwidth = font().getStringWidth(cont);
 							final String name = TaskElement.this.state.getName();
@@ -203,7 +204,7 @@ public class GuiTask extends WPanel {
 								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
 							RenderHelper.startTexture();
 							fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
-							drawString(res, a, Align.LEFT, true);
+							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
 							glPopMatrix();
 						}
 					});
@@ -219,7 +220,7 @@ public class GuiTask extends WPanel {
 									final Area a = getGuiPosition(pgp);
 									glColor4f(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
 									RenderHelper.startShape();
-									draw(a, GL_QUADS);
+									draw(a);
 
 									glPushMatrix();
 									final String prog = String.format("%.1f%%", TaskElement.this.progress.getProgress()*100);
@@ -230,7 +231,7 @@ public class GuiTask extends WPanel {
 									glScalef(.5f, .5f, .5f);
 									RenderHelper.startTexture();
 									fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
-									drawString(prog, a, Align.LEFT, true);
+									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
 									glPopMatrix();
 
 									super.draw(ev, pgp, p, frame, popacity);
@@ -248,7 +249,7 @@ public class GuiTask extends WPanel {
 							final Area a = getGuiPosition(pgp);
 							RenderHelper.startShape();
 							glColor4f(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
-							draw(a, GL_QUADS);
+							draw(a);
 							super.draw(ev, pgp, p, frame, opacity);
 						}
 					});
@@ -262,7 +263,7 @@ public class GuiTask extends WPanel {
 						glColor4f(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
 					else
 						glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
-					draw(a, GL_QUADS);
+					draw(a);
 					super.draw(ev, pgp, p, frame, opacity);
 				}
 			});
