@@ -33,7 +33,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			return DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final boolean r, final boolean m) {
+	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
@@ -54,15 +54,15 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			}
 			t.startDrawingQuads();
 			t.addVertexWithUV(0, 0, 0, u, v);
-			t.addVertexWithUV(0, 1, 0, u, v+1f/h);
-			t.addVertexWithUV(1, 1, 0, u+1f/w, v+1f/h);
-			t.addVertexWithUV(1, 0, 0, u+1f/w, v);
+			t.addVertexWithUV(0, 1, 0, u, v+h/s);
+			t.addVertexWithUV(1, 1, 0, u+w/c, v+h/s);
+			t.addVertexWithUV(1, 0, 0, u+w/c, v);
 			t.draw();
 		}
 	}
 
 	@Deprecated
 	public void draw() {
-		draw(0, 0, 1, 1, true, true);
+		draw(0, 0, 1, 1, 1, 1, true, true);
 	}
 }
