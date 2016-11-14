@@ -4,8 +4,8 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 public class MScaledLabel extends MLabel {
-	public MScaledLabel(final R position, final String text) {
-		super(position, text);
+	public MScaledLabel(final R position) {
+		super(position);
 	}
 
 	@Override

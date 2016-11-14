@@ -150,7 +150,7 @@ public class GuiSettings extends WPanel {
 									@Override
 									protected void initWidget() {
 										float top = 1;
-										add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage")));
+										add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage")));
 										add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 											@Override
 											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
@@ -164,7 +164,7 @@ public class GuiSettings extends WPanel {
 
 											@Override
 											protected void initWidget() {
-												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage.type")));
+												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage.type")));
 												add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 													@Override
 													protected void initWidget() {
@@ -286,7 +286,7 @@ public class GuiSettings extends WPanel {
 													final MCoord o = new MCoord(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();
 													final String message = I18n.format("signpic.gui.update.message");
 													final String update = Informations.instance.getUpdateMessage();
-													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), message) {
+													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 														@Override
 														protected void initOpacity() {
 															super.setOpacity(o);
@@ -305,8 +305,8 @@ public class GuiSettings extends WPanel {
 															super.draw(ev, pgp, p, frame, popacity);
 															glPopMatrix();
 														}
-													}.setShadow(true));
-													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f)), !StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message) {
+													}.setShadow(true).setText(message));
+													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 														@Override
 														protected void initOpacity() {
 															super.setOpacity(PCoord.of(Coord.ptop(1f), Coord.ptop(0f), o));
@@ -325,7 +325,7 @@ public class GuiSettings extends WPanel {
 															super.draw(ev, pgp, p, frame, popacity);
 															glPopMatrix();
 														}
-													}.setShadow(true));
+													}.setShadow(true).setText(!StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message));
 												}
 											});
 										}
@@ -359,7 +359,7 @@ public class GuiSettings extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), I18n.format("signpic.gui.settings.api.upimage.key")));
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage.key")));
 			add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {

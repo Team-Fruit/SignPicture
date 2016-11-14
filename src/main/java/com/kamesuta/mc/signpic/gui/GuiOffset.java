@@ -28,7 +28,7 @@ public class GuiOffset extends WPanel {
 	@Override
 	protected void initWidget() {
 		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.offset.category")) {
+		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -39,7 +39,7 @@ public class GuiOffset extends WPanel {
 			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 				return label.isFinished();
 			}
-		});
+		}.setText(I18n.format("signpic.gui.editor.offset.category")));
 		final MCoord x = MCoord.pleft(-1f);
 		add(new OffsetElement(new R(x, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), x, 0, I18n.format("signpic.gui.editor.offset.x"), I18n.format("signpic.gui.editor.offset.x.neg"), I18n.format("signpic.gui.editor.offset.x.pos")) {
 			@Override
@@ -133,7 +133,7 @@ public class GuiOffset extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)), this.label));
+			add(new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f))).setText(this.label));
 			final MNumber n = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
 				@Override
 				protected void onNumberChanged(final String oldText, final String newText) {

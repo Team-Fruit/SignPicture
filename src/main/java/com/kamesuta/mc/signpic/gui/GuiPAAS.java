@@ -77,14 +77,14 @@ public class GuiPAAS extends WFrame {
 
 				final int f = font().FONT_HEIGHT/2;
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), "") {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), "") {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));

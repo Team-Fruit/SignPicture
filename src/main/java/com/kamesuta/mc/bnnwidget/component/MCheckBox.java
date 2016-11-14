@@ -11,8 +11,8 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 public class MCheckBox extends MLabel {
 	protected boolean checked = true;
 
-	public MCheckBox(final R position, final String text) {
-		super(position, text);
+	public MCheckBox(final R position) {
+		super(position);
 	}
 
 	public void check(final boolean check) {

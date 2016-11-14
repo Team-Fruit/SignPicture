@@ -49,7 +49,7 @@ public class GuiRotation extends WPanel {
 	@Override
 	protected void initWidget() {
 		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.rotation.category")) {
+		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -60,7 +60,7 @@ public class GuiRotation extends WPanel {
 			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 				return label.isFinished();
 			}
-		});
+		}.setText(I18n.format("signpic.gui.editor.rotation.category")));
 		add(this.editor);
 		add(this.panel);
 	}

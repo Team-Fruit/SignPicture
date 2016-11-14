@@ -133,7 +133,7 @@ public class OverlayFrame extends WFrame {
 
 								@Override
 								protected void initWidget() {
-									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
+									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f))) {
 										@Override
 										public float getScaleWidth(final Area a) {
 											final float f1 = a.w()/font().getStringWidth(string);
@@ -147,7 +147,7 @@ public class OverlayFrame extends WFrame {
 											final float f2 = a.h()/font().FONT_HEIGHT;
 											return Math.min(f1, f2);
 										}
-									};
+									}.setText(string);
 									add(label);
 								}
 
