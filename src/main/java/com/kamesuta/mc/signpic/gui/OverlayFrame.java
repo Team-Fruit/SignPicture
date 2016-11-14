@@ -120,7 +120,7 @@ public class OverlayFrame extends WFrame {
 									final Area a = getGuiPosition(pgp);
 									RenderHelper.startShape();
 									glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
-									draw(a, GL_QUADS);
+									draw(a);
 									super.draw(ev, pgp, p, frame, popacity);
 								}
 							});

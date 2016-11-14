@@ -40,6 +40,7 @@ public class FunnyButton extends MButton {
 			this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
 			this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
 		}
+		super.update(ev, pgp, p);
 	}
 
 	@Override

@@ -33,6 +33,7 @@ public final class Config extends Configuration {
 	public boolean informationNotice = true;
 	public boolean informationJoinBeta = false;
 	public boolean informationUpdateGui = true;
+	public boolean informationTryNew = false;
 
 	public boolean multiplayPAAS = true;
 	/** Fastest time "possible" estimate for an empty sign. */
@@ -96,6 +97,7 @@ public final class Config extends Configuration {
 		this.contentSyncTick = addComment(get("Content", "SyncLoadIntervalTick", this.contentSyncTick), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt(this.contentSyncTick);
 
 		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
+		this.informationTryNew = get("Version", "TryNew", this.informationTryNew).getBoolean(this.informationTryNew);
 
 		this.multiplayPAAS = get("Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS).getBoolean(this.multiplayPAAS);
 		this.multiplayPAASMinEditTime = get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime).getInt(this.multiplayPAASMinEditTime);
