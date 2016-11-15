@@ -21,13 +21,17 @@ public class ResourceImageTexture implements IImageTexture {
 	public void bind() {
 		if (!StringUtils.isEmpty(this.location.getResourcePath()))
 			Client.mc.renderEngine.bindTexture(this.location);
-		else {
+		else
 			Client.mc.renderEngine.bindTexture(Null);
-		}
 	}
 
 	@Override
 	public ImageSize getSize() {
 		return DefaultSize;
+	}
+
+	@Override
+	public boolean hasMipmap() {
+		return false;
 	}
 }

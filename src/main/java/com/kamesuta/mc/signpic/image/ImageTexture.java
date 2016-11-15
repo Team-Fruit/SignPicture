@@ -45,6 +45,8 @@ public class ImageTexture implements IImageTexture {
 		return capabilities!=null&&capabilities.OpenGL30;
 	}
 
+	private boolean hasMipmap;
+
 	public ImageTexture load() {
 		if (this.id==-1&&this.temp!=null) {
 			this.id = TextureUtil.glGenTextures();
@@ -52,11 +54,18 @@ public class ImageTexture implements IImageTexture {
 			TextureUtil.uploadTextureImage(this.id, this.temp);
 			if (capabilities==null)
 				capabilities = GLContext.getCapabilities();
-			if (openGl30()&&Config.instance.renderUseMipmap)
+			if (openGl30()&&Config.instance.renderUseMipmap) {
 				GL30.glGenerateMipmap(GL_TEXTURE_2D);
+				this.hasMipmap = true;
+			}
 			this.temp = null;
 		}
 		return this;
+	}
+
+	@Override
+	public boolean hasMipmap() {
+		return this.hasMipmap;
 	}
 
 	@Override

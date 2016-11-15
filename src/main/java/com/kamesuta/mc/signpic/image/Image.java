@@ -37,24 +37,28 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
-			getTexture().bind();
+			final IImageTexture image = getTexture();
+			image.bind();
+
 			final int wraps = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S);
 			final int wrapt = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T);
 			final int mag = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER);
 			final int min = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER);
-			if (r) {
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			} else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-			}
-			if (m&&ImageTexture.openGl30()&&Config.instance.renderUseMipmap) {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
-			} else {
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			if (image.hasMipmap()) {
+				if (r) {
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+					glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+				} else {
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+				}
+				if (m&&ImageTexture.openGl30()&&Config.instance.renderUseMipmap) {
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
+				} else {
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+				}
 			}
 			t.startDrawingQuads();
 			t.addVertexWithUV(0, 0, 0, u, v);
@@ -62,10 +66,12 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			t.addVertexWithUV(1, 1, 0, u+w/c, v+h/s);
 			t.addVertexWithUV(1, 0, 0, u+w/c, v);
 			t.draw();
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+			if (image.hasMipmap()) {
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
+				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
+			}
 		}
 	}
 

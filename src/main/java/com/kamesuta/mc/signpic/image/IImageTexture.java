@@ -8,4 +8,6 @@ public interface IImageTexture {
 
 	ImageSize getSize();
 
+	boolean hasMipmap();
+
 }
