@@ -71,7 +71,6 @@ public class GuiImage extends WFrame {
 						glScalef(.5f, .5f, 1f);
 						if (content.state.getType()!=StateType.AVAILABLE) {
 							if (content.state.getType()==StateType.ERROR) {
-								RenderHelper.startShape();
 								glPushMatrix();
 								glTranslatef(-.5f, -.5f, 0f);
 								RenderHelper.startTexture();
@@ -83,7 +82,6 @@ public class GuiImage extends WFrame {
 							StateRender.drawMessage(content, font());
 						}
 						glPopMatrix();
-						super.draw(ev, pgp, p, frame, opacity);
 					}
 				});
 				add(new WPanel(new R()) {

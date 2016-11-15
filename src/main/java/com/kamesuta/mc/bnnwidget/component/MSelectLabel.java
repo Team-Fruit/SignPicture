@@ -26,7 +26,7 @@ public class MSelectLabel extends MSelect {
 				final Area a = getGuiPosition(pgp);
 				RenderHelper.startShape();
 				glColor4f(0f, 0f, 0f, .4f);
-				draw(a, GL_QUADS);
+				draw(a);
 				super.draw(ev, pgp, p, frame, popacity);
 			}
 

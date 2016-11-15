@@ -37,6 +37,8 @@ signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
 signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
+## Notice
+signpic.gui.editor.notice.toolong=コードが長すぎて看板に収まりません！
 
 # Notice
 signpic.gui.notice.uploading=アップロード開始 %s

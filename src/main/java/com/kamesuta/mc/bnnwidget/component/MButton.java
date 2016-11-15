@@ -66,12 +66,10 @@ public class MButton extends WBase {
 
 		if (Config.instance.informationTryNew) {
 			RenderHelper.startShape();
-			glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
 			if (isEnabled()) {
 				glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
 			}
-			RenderHelper.startShape();
 			glColor4f(1f, 1f, 1f, opacity*this.o.get()*.3f);
 			draw(a);
 			glLineWidth(1f);

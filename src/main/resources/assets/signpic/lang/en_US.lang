@@ -72,6 +72,8 @@ signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=Please Wait ( %d / %d letters )
 signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
+## Notice
+signpic.gui.editor.notice.toolong=Too long code for Sign!
 
 # Notice
 signpic.gui.notice.uploading=Uploading %s

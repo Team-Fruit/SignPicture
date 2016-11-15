@@ -107,9 +107,9 @@ public class GuiSettings extends WPanel {
 								final Area a = getGuiPosition(pgp);
 								RenderHelper.startShape();
 								glColor4f(0f, 0f, 0f, .6f);
-								draw(a, GL_QUADS);
+								draw(a);
 								glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
-								draw(this.line.getAbsolute(a), GL_QUADS);
+								draw(this.line.getAbsolute(a));
 								super.draw(ev, pgp, p, frame, opacity);
 							}
 
@@ -223,7 +223,7 @@ public class GuiSettings extends WPanel {
 											final Area a = getGuiPosition(pgp);
 											glColor4f(0f, 0f, 0f, .4f);
 											RenderHelper.startShape();
-											draw(a, GL_QUADS);
+											draw(a);
 											super.draw(ev, pgp, p, frame, popacity);
 										}
 

@@ -9,12 +9,12 @@ public class RenderHelper {
 
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
 		final long time = System.currentTimeMillis();
-		final float time1 = time % Math.abs(msPerRoundOuter) / (float)msPerRoundOuter;
+		final float time1 = time%Math.abs(msPerRoundOuter)/(float) msPerRoundOuter;
 		t.startDrawing(GL_LINE_LOOP);
 		addCircleVertex(time1, time1+0.2f, 1.07f);
 		addCircleVertex(time1+0.2f, time1, 1.09f);
 		t.draw();
-		final float time2 = time % Math.abs(msPerRoundInner) / (float)msPerRoundInner;
+		final float time2 = time%Math.abs(msPerRoundInner)/(float) msPerRoundInner;
 		t.startDrawing(GL_LINE_LOOP);
 		addCircleVertex(time2, time2+0.1f, 1.03f);
 		addCircleVertex(time2+0.1f, time2, 1.05f);
@@ -49,7 +49,7 @@ public class RenderHelper {
 		final double ey = Math.sin(eangle);
 
 		t.addVertex(sx*r, sy*r, 0);
-		for(int i=(int)((end<start)?Math.floor(start*acc):Math.ceil(start*acc)); (end<start)?i>end*acc:i<end*acc; i+=(end<start)?-1:1) {
+		for (int i = (int) (end<start ? Math.floor(start*acc) : Math.ceil(start*acc)); end<start ? i>end*acc : i<end*acc; i += end<start ? -1 : 1) {
 			final double angle = Math.PI*(2d*i/acc-.5);
 			final double ix = Math.cos(angle);
 			final double iy = Math.sin(angle);

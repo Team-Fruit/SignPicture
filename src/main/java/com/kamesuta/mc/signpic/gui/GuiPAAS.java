@@ -53,7 +53,7 @@ public class GuiPAAS extends WFrame {
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, this.c.get());
-						draw(getGuiPosition(pgp), GL_QUADS);
+						draw(getGuiPosition(pgp));
 					}
 				});
 

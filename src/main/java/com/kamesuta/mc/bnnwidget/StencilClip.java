@@ -71,7 +71,7 @@ public class StencilClip {
 
 	public void clipArea(final Area a) {
 		startCropping();
-		WGui.draw(a, GL_QUADS);
+		WGui.draw(a);
 		endCropping();
 	}
 

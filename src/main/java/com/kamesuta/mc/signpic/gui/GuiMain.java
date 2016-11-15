@@ -62,7 +62,7 @@ public class GuiMain extends WFrame {
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, this.m.get());
-						draw(getGuiPosition(pgp), GL_QUADS);
+						draw(getGuiPosition(pgp));
 					}
 
 					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
@@ -256,6 +256,17 @@ public class GuiMain extends WFrame {
 									return true;
 								}
 								return false;
+							}
+
+							@Override
+							public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								final Area a = getGuiPosition(pgp);
+								if (a.pointInside(p)) {
+									final Entry entry = CurrentMode.instance.getEntryId().entry();
+									if (entry.isValid()&&!entry.id.isPlaceable())
+										OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.editor.notice.toolong"), 1f);
+								}
+								return super.mouseClicked(ev, pgp, p, button);
 							}
 
 							@Override
