@@ -22,7 +22,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 		this.content = content;
 	}
 
-	public abstract IImageTexture getTexture() throws IllegalStateException;
+	public abstract ImageTexture getTexture() throws IllegalStateException;
 
 	public abstract String getLocal();
 
@@ -37,7 +37,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
-			final IImageTexture image = getTexture();
+			final ImageTexture image = getTexture();
 			image.bind();
 
 			final int wraps = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S);
@@ -52,7 +52,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 				}
-				if (m&&ImageTexture.openGl30()&&Config.instance.renderUseMipmap) {
+				if (m&&DynamicImageTexture.openGl30()&&Config.instance.renderUseMipmap) {
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
 				} else {
@@ -73,10 +73,5 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
 			}
 		}
-	}
-
-	@Deprecated
-	public void draw() {
-		draw(0, 0, 1, 1, 1, 1, true, true);
 	}
 }

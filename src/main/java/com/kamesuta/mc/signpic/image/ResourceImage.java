@@ -28,7 +28,7 @@ public class ResourceImage extends Image {
 	}
 
 	@Override
-	public IImageTexture getTexture() {
+	public ImageTexture getTexture() {
 		return this.texture;
 	}
 

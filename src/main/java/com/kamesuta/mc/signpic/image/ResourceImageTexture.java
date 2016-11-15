@@ -8,7 +8,7 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
-public class ResourceImageTexture implements IImageTexture {
+public class ResourceImageTexture implements ImageTexture {
 	protected static final ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected ResourceLocation location;
