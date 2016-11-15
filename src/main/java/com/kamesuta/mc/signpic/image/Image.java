@@ -38,6 +38,10 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			final Tessellator t = Tessellator.instance;
 			RenderHelper.startTexture();
 			getTexture().bind();
+			final int wraps = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S);
+			final int wrapt = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T);
+			final int mag = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER);
+			final int min = glGetTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER);
 			if (r) {
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 				glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -58,6 +62,10 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			t.addVertexWithUV(1, 1, 0, u+1f/w, v+1f/h);
 			t.addVertexWithUV(1, 0, 0, u+1f/w, v);
 			t.draw();
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
 		}
 	}
 
