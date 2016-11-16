@@ -7,7 +7,7 @@ import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -27,8 +27,8 @@ public class GuiOffset extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
+		final MC label = MC.p(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
+		add(new MLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -40,8 +40,8 @@ public class GuiOffset extends WPanel {
 				return label.isFinished();
 			}
 		}.setText(I18n.format("signpic.gui.editor.offset.category")));
-		final MCoord x = MCoord.pleft(-1f);
-		add(new OffsetElement(new R(x, Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), x, 0, I18n.format("signpic.gui.editor.offset.x"), I18n.format("signpic.gui.editor.offset.x.neg"), I18n.format("signpic.gui.editor.offset.x.pos")) {
+		final MC x = MC.p(-1f);
+		add(new OffsetElement(new R(Coord.left(x), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), x, 0, I18n.format("signpic.gui.editor.offset.x"), I18n.format("signpic.gui.editor.offset.x.neg"), I18n.format("signpic.gui.editor.offset.x.pos")) {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -60,12 +60,12 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			protected MCoord addDelay(final MCoord c) {
+			protected MC addDelay(final MC c) {
 				return c.add(Motion.blank(1*.025f));
 			}
 		});
-		final MCoord y = MCoord.pleft(-1f);
-		add(new OffsetElement(new R(y, Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), y, 1, I18n.format("signpic.gui.editor.offset.y"), I18n.format("signpic.gui.editor.offset.y.neg"), I18n.format("signpic.gui.editor.offset.y.pos")) {
+		final MC y = MC.p(-1f);
+		add(new OffsetElement(new R(Coord.left(y), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), y, 1, I18n.format("signpic.gui.editor.offset.y"), I18n.format("signpic.gui.editor.offset.y.neg"), I18n.format("signpic.gui.editor.offset.y.pos")) {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -84,12 +84,12 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			protected MCoord addDelay(final MCoord c) {
+			protected MC addDelay(final MC c) {
 				return c.add(Motion.blank(2*.025f));
 			}
 		});
-		final MCoord z = MCoord.pleft(-1f);
-		add(new OffsetElement(new R(z, Coord.pwidth(1f), Coord.top(15*3), Coord.height(15)), z, 2, I18n.format("signpic.gui.editor.offset.z"), I18n.format("signpic.gui.editor.offset.z.neg"), I18n.format("signpic.gui.editor.offset.z.pos")) {
+		final MC z = MC.p(-1f);
+		add(new OffsetElement(new R(Coord.left(z), Coord.pwidth(1f), Coord.top(15*3), Coord.height(15)), z, 2, I18n.format("signpic.gui.editor.offset.z"), I18n.format("signpic.gui.editor.offset.z.neg"), I18n.format("signpic.gui.editor.offset.z.pos")) {
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -108,7 +108,7 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			protected MCoord addDelay(final MCoord c) {
+			protected MC addDelay(final MC c) {
 				return c.add(Motion.blank(3*.025f));
 			}
 		});
@@ -121,9 +121,9 @@ public class GuiOffset extends WPanel {
 		protected String label;
 		protected String neg;
 		protected String pos;
-		protected MCoord left;
+		protected MC left;
 
-		public OffsetElement(final R position, final MCoord left, final int i, final String label, final String neg, final String pos) {
+		public OffsetElement(final R position, final MC left, final int i, final String label, final String neg, final String pos) {
 			super(position);
 			this.label = label;
 			this.neg = neg;
@@ -153,7 +153,7 @@ public class GuiOffset extends WPanel {
 
 		protected abstract void set(float f);
 
-		protected MCoord addDelay(final MCoord c) {
+		protected MC addDelay(final MC c) {
 			return c;
 		}
 

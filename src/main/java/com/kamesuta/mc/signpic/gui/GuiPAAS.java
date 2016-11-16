@@ -10,7 +10,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -47,7 +47,7 @@ public class GuiPAAS extends WFrame {
 			@Override
 			protected void initWidget() {
 				add(new WBase(R.diff(0, 0, 0, 0)) {
-					MCoord c = new MCoord(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
+					MC c = MC.p(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {

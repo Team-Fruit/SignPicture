@@ -8,7 +8,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -85,7 +85,7 @@ public class GuiImage extends WFrame {
 					}
 				});
 				add(new WPanel(new R()) {
-					protected MCoord rot = new MCoord(1f).add(Easings.easeLinear.move(8.04f*4, 0f)).setLoop(true).start();
+					protected MC rot = MC.p(1f).add(Easings.easeLinear.move(8.04f*4, 0f)).setLoop(true).start();
 
 					@Override
 					protected void initWidget() {
@@ -125,7 +125,7 @@ public class GuiImage extends WFrame {
 	}
 
 	protected class UpdateLogo extends WBase {
-		protected MCoord rot = new MCoord(0).add(Motion.of(0, Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).setLoop(true).start();
+		protected MC rot = MC.p(0).add(Motion.of(0, Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).setLoop(true).start();
 
 		public UpdateLogo(final R position) {
 			super(position);

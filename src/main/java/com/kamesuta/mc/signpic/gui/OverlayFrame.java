@@ -10,7 +10,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -102,14 +102,14 @@ public class OverlayFrame extends WFrame {
 			invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					final MCoord o = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
+					final MC o = MC.p(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
 						protected Timer timer = new Timer();
 
 						@Override
 						protected void initWidget() {
 							this.timer.set(-showtime);
-							add(new WBase(new R(MCoord.ptop(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start(), MCoord.pbottom(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start())) {
+							add(new WBase(new R(Coord.top(MC.p(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()), Coord.bottom(MC.p(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()))) {
 								@Override
 								protected void initOpacity() {
 									super.setOpacity(o);

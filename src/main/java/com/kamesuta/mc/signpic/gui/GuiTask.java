@@ -9,12 +9,13 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
+import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.bnnwidget.position.C;
 import com.kamesuta.mc.bnnwidget.position.Coord;
-import com.kamesuta.mc.bnnwidget.position.Coords;
-import com.kamesuta.mc.bnnwidget.position.PCoord;
+import com.kamesuta.mc.bnnwidget.position.Cs;
+import com.kamesuta.mc.bnnwidget.position.P;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
@@ -37,17 +38,17 @@ public class GuiTask extends WPanel {
 	}
 
 	protected boolean oshow;
-	protected MCoord oright = MCoord.right(0f);
+	protected MC oright = MC.a(0f);
 
 	protected boolean show;
-	protected MCoord right = MCoord.pright(0f);
+	protected MC right = MC.p(0f);
 
 	@Override
 	protected void initWidget() {
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(PCoord.of(Coords.combine(Coord.pright(-1), GuiTask.this.oright), Coord.pright(0f), GuiTask.this.right))) {
+				add(new WPanel(new R(Coord.right(P.of(Cs.combine(C.p(-1), GuiTask.this.oright), C.p(0f), GuiTask.this.right)))) {
 					protected Timer showtime = new Timer();
 
 					public void show(final float j) {
@@ -117,8 +118,8 @@ public class GuiTask extends WPanel {
 								final Object j = t.getState().getMeta().get(ShowPanel);
 								if (j instanceof Number)
 									show(((Number) j).floatValue());
-								final MCoord top = MCoord.top(i*15);
-								return new TaskElement(new R(top, Coord.height(15)), top, t);
+								final MC top = MC.a(i*15);
+								return new TaskElement(new R(Coord.top(top), Coord.height(15)), top, t);
 							}
 
 							@Override
@@ -133,26 +134,26 @@ public class GuiTask extends WPanel {
 	}
 
 	class TaskElement extends WPanel {
-		public final MCoord top;
+		public final MC top;
 
-		protected MCoord right;
+		protected MC right;
 
-		protected MCoord opacity;
+		protected MC opacity;
 
 		@Override
 		protected void initPosition(final R position) {
-			super.initPosition(position.child(this.right = MCoord.pright(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start()));
+			super.initPosition(position.child(Coord.right(this.right = MC.p(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start())));
 		}
 
 		@Override
 		protected void initOpacity() {
-			super.setOpacity(this.opacity = new MCoord(1f));
+			super.setOpacity(this.opacity = MC.p(1f));
 		}
 
 		State state;
 		Progress progress;
 
-		public TaskElement(final R position, final MCoord top, final Progressable progressable) {
+		public TaskElement(final R position, final MC top, final Progressable progressable) {
 			super(position);
 			this.top = top;
 			this.state = progressable.getState();
@@ -210,11 +211,11 @@ public class GuiTask extends WPanel {
 					});
 
 					add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
-						protected MCoord progresscoord = MCoord.pleft(0f);
+						protected MC progresscoord = MC.p(0f);
 
 						@Override
 						protected void initWidget() {
-							add(new WBase(new R(Coord.pleft(0f), this.progresscoord)) {
+							add(new WBase(new R(Coord.pleft(0f), Coord.left(this.progresscoord))) {
 								@Override
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);

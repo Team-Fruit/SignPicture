@@ -1,31 +1,32 @@
 package com.kamesuta.mc.bnnwidget.position;
 
-public class Coord {
-	private final float coord;
-	private CoordSide side;
-	private CoordType type;
+import com.kamesuta.mc.bnnwidget.position.C.CoordType;
 
-	public Coord(final float coord, final CoordSide side, final CoordType type) {
+public class Coord {
+	private C coord;
+	private CoordSide side;
+
+	public Coord(final C coord, final CoordSide side) {
 		this.coord = coord;
 		this.side = side;
-		this.type = type;
 	}
 
-	public Coord(final float coord) {
-		this(coord, CoordSide.Top, CoordType.Percent);
+	@Deprecated
+	public Coord(final C coord) {
+		this(coord, CoordSide.Top);
 	}
 
 	public float get() {
-		return this.coord;
+		return this.coord.get();
 	}
 
 	public float getAbsCoord(final float abslength) {
-		return getType().calc(0, abslength, get());
+		return this.coord.getAbsCoord(0, abslength);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("Coord [coord=%s, side=%s, type=%s]", get(), getSide(), getType());
+		return String.format("Coord [coord=%s, side=%s]", get(), getSide());
 	}
 
 	public float base(final Area a) {
@@ -38,10 +39,6 @@ public class Coord {
 
 	public CoordSide getSide() {
 		return this.side;
-	}
-
-	protected CoordType getType() {
-		return this.type;
 	}
 
 	public static enum CoordSide {
@@ -132,69 +129,75 @@ public class Coord {
 		}
 	}
 
-	public static enum CoordType {
-		Absolute {
-			@Override
-			public float calc(final float a, final float b, final float c) {
-				return c;
-			}
-		},
-		Percent {
-			@Override
-			public float calc(final float a, final float b, final float c) {
-				return a*(1f-c)+b*c;
-			}
-		},
-		;
-
-		public abstract float calc(float a, float b, float f);
+	public static Coord top(final C n) {
+		return new Coord(n, CoordSide.Top);
 	}
 
 	public static Coord top(final float n) {
-		return new Coord(n, CoordSide.Top, CoordType.Absolute);
+		return Coord.top(new C(n, CoordType.Absolute));
 	}
 
 	public static Coord ptop(final float n) {
-		return new Coord(n, CoordSide.Top, CoordType.Percent);
+		return Coord.top(new C(n, CoordType.Percent));
+	}
+
+	public static Coord left(final C n) {
+		return new Coord(n, CoordSide.Left);
 	}
 
 	public static Coord left(final float n) {
-		return new Coord(n, CoordSide.Left, CoordType.Absolute);
+		return left(new C(n, CoordType.Absolute));
 	}
 
 	public static Coord pleft(final float n) {
-		return new Coord(n, CoordSide.Left, CoordType.Percent);
+		return left(new C(n, CoordType.Percent));
+	}
+
+	public static Coord bottom(final C n) {
+		return new Coord(n, CoordSide.Bottom);
 	}
 
 	public static Coord bottom(final float n) {
-		return new Coord(n, CoordSide.Bottom, CoordType.Absolute);
+		return bottom(new C(n, CoordType.Absolute));
 	}
 
 	public static Coord pbottom(final float n) {
-		return new Coord(n, CoordSide.Bottom, CoordType.Percent);
+		return bottom(new C(n, CoordType.Percent));
+	}
+
+	public static Coord right(final C n) {
+		return new Coord(n, CoordSide.Right);
 	}
 
 	public static Coord right(final float n) {
-		return new Coord(n, CoordSide.Right, CoordType.Absolute);
+		return right(new C(n, CoordType.Absolute));
 	}
 
 	public static Coord pright(final float n) {
-		return new Coord(n, CoordSide.Right, CoordType.Percent);
+		return right(new C(n, CoordType.Percent));
+	}
+
+	public static Coord width(final C n) {
+		return new Coord(n, CoordSide.Width);
 	}
 
 	public static Coord width(final float n) {
-		return new Coord(n, CoordSide.Width, CoordType.Absolute);
+		return width(new C(n, CoordType.Absolute));
 	}
 
 	public static Coord pwidth(final float n) {
-		return new Coord(n, CoordSide.Width, CoordType.Percent);
+		return width(new C(n, CoordType.Percent));
+	}
+
+	public static Coord height(final C n) {
+		return new Coord(n, CoordSide.Height);
 	}
 
 	public static Coord height(final float n) {
-		return new Coord(n, CoordSide.Height, CoordType.Absolute);
+		return height(new C(n, CoordType.Absolute));
 	}
 
 	public static Coord pheight(final float n) {
-		return new Coord(n, CoordSide.Height, CoordType.Percent);
+		return height(new C(n, CoordType.Percent));
 	}
 }
