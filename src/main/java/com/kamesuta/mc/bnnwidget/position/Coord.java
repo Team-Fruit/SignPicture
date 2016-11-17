@@ -1,19 +1,15 @@
 package com.kamesuta.mc.bnnwidget.position;
 
-import com.kamesuta.mc.bnnwidget.position.C.CoordType;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
 
 public class Coord {
-	private C coord;
+	private VCommon coord;
 	private CoordSide side;
 
-	public Coord(final C coord, final CoordSide side) {
+	public Coord(final VCommon coord, final CoordSide side) {
 		this.coord = coord;
 		this.side = side;
-	}
-
-	@Deprecated
-	public Coord(final C coord) {
-		this(coord, CoordSide.Top);
 	}
 
 	public float get() {
@@ -129,75 +125,75 @@ public class Coord {
 		}
 	}
 
-	public static Coord top(final C n) {
+	public static Coord top(final VCommon n) {
 		return new Coord(n, CoordSide.Top);
 	}
 
 	public static Coord top(final float n) {
-		return Coord.top(new C(n, CoordType.Absolute));
+		return top(V.a(n));
 	}
 
 	public static Coord ptop(final float n) {
-		return Coord.top(new C(n, CoordType.Percent));
+		return top(V.p(n));
 	}
 
-	public static Coord left(final C n) {
+	public static Coord left(final VCommon n) {
 		return new Coord(n, CoordSide.Left);
 	}
 
 	public static Coord left(final float n) {
-		return left(new C(n, CoordType.Absolute));
+		return left(V.a(n));
 	}
 
 	public static Coord pleft(final float n) {
-		return left(new C(n, CoordType.Percent));
+		return left(V.p(n));
 	}
 
-	public static Coord bottom(final C n) {
+	public static Coord bottom(final VCommon n) {
 		return new Coord(n, CoordSide.Bottom);
 	}
 
 	public static Coord bottom(final float n) {
-		return bottom(new C(n, CoordType.Absolute));
+		return bottom(V.a(n));
 	}
 
 	public static Coord pbottom(final float n) {
-		return bottom(new C(n, CoordType.Percent));
+		return bottom(V.p(n));
 	}
 
-	public static Coord right(final C n) {
+	public static Coord right(final VCommon n) {
 		return new Coord(n, CoordSide.Right);
 	}
 
 	public static Coord right(final float n) {
-		return right(new C(n, CoordType.Absolute));
+		return right(V.a(n));
 	}
 
 	public static Coord pright(final float n) {
-		return right(new C(n, CoordType.Percent));
+		return right(V.p(n));
 	}
 
-	public static Coord width(final C n) {
+	public static Coord width(final VCommon n) {
 		return new Coord(n, CoordSide.Width);
 	}
 
 	public static Coord width(final float n) {
-		return width(new C(n, CoordType.Absolute));
+		return width(V.a(n));
 	}
 
 	public static Coord pwidth(final float n) {
-		return width(new C(n, CoordType.Percent));
+		return width(V.p(n));
 	}
 
-	public static Coord height(final C n) {
+	public static Coord height(final VCommon n) {
 		return new Coord(n, CoordSide.Height);
 	}
 
 	public static Coord height(final float n) {
-		return height(new C(n, CoordType.Absolute));
+		return height(V.a(n));
 	}
 
 	public static Coord pheight(final float n) {
-		return height(new C(n, CoordType.Percent));
+		return height(V.p(n));
 	}
 }

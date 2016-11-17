@@ -4,10 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 
 public class FunnyButton extends MButton {
 	public FunnyButton(final R position, final String text) {
@@ -16,8 +17,8 @@ public class FunnyButton extends MButton {
 
 	private boolean isHighlight = true;
 	private boolean highlighted;
-	MC m = MC.p(0);
-	MC s = MC.p(1);
+	VMotion m = V.pm(0);
+	VMotion s = V.pm(1);
 
 	public boolean isHighlight() {
 		return this.isHighlight;

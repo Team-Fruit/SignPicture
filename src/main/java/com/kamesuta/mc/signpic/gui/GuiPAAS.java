@@ -10,11 +10,12 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -47,7 +48,7 @@ public class GuiPAAS extends WFrame {
 			@Override
 			protected void initWidget() {
 				add(new WBase(R.diff(0, 0, 0, 0)) {
-					MC c = MC.p(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
+					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {

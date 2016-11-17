@@ -9,15 +9,13 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
-import com.kamesuta.mc.bnnwidget.position.C;
 import com.kamesuta.mc.bnnwidget.position.Coord;
-import com.kamesuta.mc.bnnwidget.position.Cs;
-import com.kamesuta.mc.bnnwidget.position.P;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -38,17 +36,17 @@ public class GuiTask extends WPanel {
 	}
 
 	protected boolean oshow;
-	protected MC oright = MC.a(0f);
+	protected VMotion oright = V.am(0f);
 
 	protected boolean show;
-	protected MC right = MC.p(0f);
+	protected VMotion right = V.pm(0f);
 
 	@Override
 	protected void initWidget() {
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.right(P.of(Cs.combine(C.p(-1), GuiTask.this.oright), C.p(0f), GuiTask.this.right)))) {
+				add(new WPanel(new R(Coord.right(V.of(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
 					protected Timer showtime = new Timer();
 
 					public void show(final float j) {
@@ -118,7 +116,7 @@ public class GuiTask extends WPanel {
 								final Object j = t.getState().getMeta().get(ShowPanel);
 								if (j instanceof Number)
 									show(((Number) j).floatValue());
-								final MC top = MC.a(i*15);
+								final VMotion top = V.am(i*15);
 								return new TaskElement(new R(Coord.top(top), Coord.height(15)), top, t);
 							}
 
@@ -134,26 +132,26 @@ public class GuiTask extends WPanel {
 	}
 
 	class TaskElement extends WPanel {
-		public final MC top;
+		public final VMotion top;
 
-		protected MC right;
+		protected VMotion right;
 
-		protected MC opacity;
+		protected VMotion opacity;
 
 		@Override
 		protected void initPosition(final R position) {
-			super.initPosition(position.child(Coord.right(this.right = MC.p(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start())));
+			super.initPosition(position.child(Coord.right(this.right = V.pm(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start())));
 		}
 
 		@Override
 		protected void initOpacity() {
-			super.setOpacity(this.opacity = MC.p(1f));
+			super.setOpacity(this.opacity = V.pm(1f));
 		}
 
 		State state;
 		Progress progress;
 
-		public TaskElement(final R position, final MC top, final Progressable progressable) {
+		public TaskElement(final R position, final VMotion top, final Progressable progressable) {
 			super(position);
 			this.top = top;
 			this.state = progressable.getState();
@@ -211,7 +209,7 @@ public class GuiTask extends WPanel {
 					});
 
 					add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
-						protected MC progresscoord = MC.p(0f);
+						protected VMotion progresscoord = V.pm(0f);
 
 						@Override
 						protected void initWidget() {

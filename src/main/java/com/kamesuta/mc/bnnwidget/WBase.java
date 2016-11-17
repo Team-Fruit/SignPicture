@@ -1,14 +1,15 @@
 package com.kamesuta.mc.bnnwidget;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
-import com.kamesuta.mc.bnnwidget.position.C;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
 
 public abstract class WBase extends WComponent {
 
 	protected R position;
-	protected C opacity;
+	protected VCommon opacity;
 
 	public WBase(final R position) {
 		initPosition(position);
@@ -19,7 +20,7 @@ public abstract class WBase extends WComponent {
 		this.position = position;
 	}
 
-	public void setOpacity(final C c) {
+	public void setOpacity(final VCommon c) {
 		this.opacity = c;
 	}
 
@@ -28,14 +29,14 @@ public abstract class WBase extends WComponent {
 	}
 
 	protected void initOpacity() {
-		setOpacity(C.p(1f));
+		setOpacity(V.p(1f));
 	}
 
 	public R getGuiPosition() {
 		return this.position;
 	}
 
-	public C getGuiOpacity() {
+	public VCommon getGuiOpacity() {
 		return this.opacity;
 	}
 

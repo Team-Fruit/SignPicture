@@ -5,10 +5,11 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
@@ -93,7 +94,7 @@ public class MButton extends WBase {
 			drawText(ev, pgp, p, frame);
 	}
 
-	protected MC o = MC.p(0).start();
+	protected VMotion o = V.pm(0).start();
 	protected boolean ob = false;;
 
 	@Override

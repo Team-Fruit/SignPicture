@@ -15,11 +15,12 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -56,7 +57,7 @@ public class GuiMain extends WFrame {
 			@Override
 			protected void initWidget() {
 				add(new WBase(R.diff(0, 0, 0, 0)) {
-					MC m = MC.p(0);
+					VMotion m = V.pm(0);
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
@@ -117,7 +118,7 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MC m = MC.p(-1f);
+				final VMotion m = V.pm(-1f);
 				add(new WPanel(new R(Coord.top(m), Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
 					@Override
 					protected void initWidget() {
@@ -161,7 +162,7 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MC p = MC.a(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
+				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
 				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(70), Coord.bottom(0))) {
 					@Override
 					protected void initWidget() {
@@ -309,7 +310,7 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MC d = MC.a(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
+				final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
 				GuiMain.this.field = new MChatTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {

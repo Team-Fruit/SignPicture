@@ -19,15 +19,14 @@ import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MC;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
-import com.kamesuta.mc.bnnwidget.position.C;
 import com.kamesuta.mc.bnnwidget.position.Coord;
-import com.kamesuta.mc.bnnwidget.position.Cs;
-import com.kamesuta.mc.bnnwidget.position.P;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Apis.Setting;
@@ -55,12 +54,12 @@ public class GuiSettings extends WPanel {
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
 			protected boolean show = true;
-			protected MC bottom = MC.p(0f);
+			protected VMotion bottom = V.pm(0f);
 			protected boolean closing;
 
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.bottom(P.of(Cs.combine(C.p(-1), C.a(2)), C.p(0f), this.bottom)))) {
+				add(new WPanel(new R(Coord.bottom(V.of(V.combine(V.p(-1), V.a(2)), V.p(0f), this.bottom)))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
@@ -208,20 +207,11 @@ public class GuiSettings extends WPanel {
 
 								if (isUpdateRequired) {
 
-									final MC state = MC.p(0f);
-									final C vstart = C.a(32);
-									final C vend = C.a(37);
-									final C hstart = C.a(30);
-									final C hend = C.a(10);
-
-									//									final Coord wstart = Coord.width(32);
-									//									final Coord wend = Coord.width(37);
-									//									final Coord hstart = Coord.height(32);
-									//									final Coord hend = Coord.height(37);
-									//									final Coord lstart = Coord.left(30);
-									//									final Coord lend = Coord.left(10);
-									//									final Coord rstart = Coord.right(30);
-									//									final Coord rend = Coord.right(10);
+									final VMotion state = V.pm(0f);
+									final VCommon vstart = V.a(32);
+									final VCommon vend = V.a(37);
+									final VCommon hstart = V.a(30);
+									final VCommon hend = V.a(10);
 
 									add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
 										@Override
@@ -235,10 +225,10 @@ public class GuiSettings extends WPanel {
 
 										@Override
 										protected void initWidget() {
-											add(new WPanel(new R(Coord.left(P.of(hstart, hend, state)), Coord.right(P.of(hstart, hend, state)), Coord.height(P.of(vstart, vend, state)), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
+											add(new WPanel(new R(Coord.left(V.of(hstart, hend, state)), Coord.right(V.of(hstart, hend, state)), Coord.height(V.of(vstart, vend, state)), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 												protected boolean in;
 
-												protected MC rot = MC.p(0).add(Easings.easeLinear.move(8.04f/4f, 1f)).setLoop(true).start();
+												protected VMotion rot = V.pm(0).add(Easings.easeLinear.move(8.04f/4f, 1f)).setLoop(true).start();
 												protected float orot = 0f;
 
 												@Override
@@ -272,7 +262,7 @@ public class GuiSettings extends WPanel {
 
 												@Override
 												protected void initWidget() {
-													add(new WBase(new R(Coord.width(P.of(hstart, hend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
+													add(new WBase(new R(Coord.width(V.of(hstart, hend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 															final Area a = getGuiPosition(pgp);
@@ -289,7 +279,7 @@ public class GuiSettings extends WPanel {
 															glPopMatrix();
 														}
 													});
-													final MC o = MC.p(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();
+													final VMotion o = V.pm(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();
 													final String message = I18n.format("signpic.gui.update.message");
 													final String update = Informations.instance.getUpdateMessage();
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
@@ -315,7 +305,7 @@ public class GuiSettings extends WPanel {
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 														@Override
 														protected void initOpacity() {
-															super.setOpacity(P.of(C.p(1f), C.p(0f), o));
+															super.setOpacity(V.of(V.p(1f), V.p(0f), o));
 														}
 
 														@Override

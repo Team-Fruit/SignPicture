@@ -1,65 +1,67 @@
-package com.kamesuta.mc.bnnwidget.motion;
+package com.kamesuta.mc.bnnwidget.var;
 
-import com.kamesuta.mc.bnnwidget.position.C;
+import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
+import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
+import com.kamesuta.mc.bnnwidget.motion.IMotion;
 
-public class MC extends C implements ICompoundMotion {
+public class VMotion extends VBase implements ICompoundMotion {
 	protected final CompoundMotion compoundMotion;
 
-	public MC(final float coord, final CoordType type) {
+	public VMotion(final float coord, final VType type) {
 		super(coord, type);
 		this.compoundMotion = new CompoundMotion(coord);
 	}
 
 	@Override
-	public MC add(final IMotion animation) {
+	public VMotion add(final IMotion animation) {
 		this.compoundMotion.add(animation);
 		return this;
 	}
 
 	@Override
-	public MC setLoop(final boolean b) {
+	public VMotion setLoop(final boolean b) {
 		this.compoundMotion.setLoop(b);
 		return this;
 	}
 
 	@Override
-	public MC stopFirst() {
+	public VMotion stopFirst() {
 		this.compoundMotion.stopFirst();
 		return this;
 	}
 
 	@Override
-	public MC stop() {
+	public VMotion stop() {
 		this.compoundMotion.stop();
 		return stopFirst();
 	}
 
 	@Override
-	public MC stopLast() {
+	public VMotion stopLast() {
 		this.compoundMotion.stopLast();
 		return stopFirst();
 	}
 
 	@Override
-	public MC pause() {
+	public VMotion pause() {
 		this.compoundMotion.pause();
 		return this;
 	}
 
 	@Override
-	public MC start() {
+	public VMotion start() {
 		this.compoundMotion.start();
 		return this;
 	}
 
 	@Override
-	public MC next() {
+	public VMotion next() {
 		this.compoundMotion.next();
 		return this;
 	}
 
 	@Override
-	public MC stopNext() {
+	public VMotion stopNext() {
 		this.compoundMotion.stopNext();
 		return this;
 	}
@@ -90,22 +92,14 @@ public class MC extends C implements ICompoundMotion {
 	}
 
 	@Override
-	public MC restart() {
+	public VMotion restart() {
 		this.compoundMotion.restart();
 		return this;
 	}
 
 	@Override
-	public MC reset() {
+	public VMotion reset() {
 		this.compoundMotion.reset();
 		return this;
-	}
-
-	public static MC a(final float n) {
-		return new MC(n, CoordType.Absolute);
-	}
-
-	public static MC p(final float n) {
-		return new MC(n, CoordType.Percent);
 	}
 }
