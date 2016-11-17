@@ -20,7 +20,7 @@
 			"screenshots": [],
 			"updateUrl": "https://github.com/Team-Fruit/SignPicture/releases",
 			"url": "https://github.com/Team-Fruit/SignPicture/releases",
-			"useDependencyInformation": true
+			"useDependencyInformation": false
 		}
 	]
 }
