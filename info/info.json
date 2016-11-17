@@ -36,6 +36,15 @@
 			"message_local": {
 				"ja_JP": "描画バグ修正!"
 			}
+		},
+		"1.11-beta": {
+			"version": "2.3.1.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.3.1/SignPicture-1.11-2.3.1.beta-universal.jar",
+			"local": "SignPicture-1.11-2.3.1.beta-universal.jar",
+			"message": "Supported Minecraft 1.11!",
+			"message_local": {
+				"ja_JP": "Minecraft 1.11 に対応しました!"
+			}
 		}
 	},
 	"apis": {

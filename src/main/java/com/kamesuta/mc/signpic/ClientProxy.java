@@ -1,12 +1,9 @@
-package com.kamesuta.mc.signpic.proxy;
+package com.kamesuta.mc.signpic;
 
 import java.io.File;
 import java.io.IOException;
 
-import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Locations;
-import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.handler.CoreHandler;
+import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
@@ -26,7 +23,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		// Setup stencil clip
-		//StencilClip.init();
+		StencilClip.init();
 
 		// Setup image
 		Client.renderer = new CustomTileEntitySignRenderer();
@@ -45,13 +42,14 @@ public class ClientProxy extends CommonProxy {
 				Client.id = id;
 				Client.name = Client.mc.getSession().getUsername();
 			}
-		} catch (final IllegalArgumentException e) {}
+		} catch (final IllegalArgumentException e) {
+		}
 
 		// Setup
 		Client.handler = new CoreHandler();
 	}
 
-	public File getDataDirectory() {
+	private File getDataDirectory() {
 		final File file = Client.mc.mcDataDir;
 		try {
 			return file.getCanonicalFile();

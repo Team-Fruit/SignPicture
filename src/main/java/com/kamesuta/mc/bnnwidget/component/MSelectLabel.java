@@ -20,13 +20,13 @@ public class MSelectLabel extends MSelect {
 
 	@Override
 	protected WCommon getField() {
-		return this.field = new MLabel(new R(Coord.left(this.buttonwidth), Coord.right(this.buttonwidth), Coord.top(0), Coord.bottom(0)), "") {
+		return this.field = new MLabel(new R(Coord.left(this.buttonwidth), Coord.right(this.buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 				final Area a = getGuiPosition(pgp);
 				RenderHelper.startShape();
 				GlStateManager.color(0f, 0f, 0f, .4f);
-				drawRect(a);
+				draw(a);
 				super.draw(ev, pgp, p, frame, popacity);
 			}
 

@@ -8,13 +8,15 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.handler.CoreEvent;
+import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.gui.ScaledResolution;
@@ -84,7 +86,18 @@ public class OverlayFrame extends WFrame {
 
 		@Override
 		protected void initWidget() {
+			add(new WPanel(new R()) {
+				@Override
+				protected void initWidget() {
 			add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+		}
+
+		@Override
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					if (Config.instance.renderOverlayPanel||instance.isDelegated())
+						super.draw(ev, pgp, p, frame, popacity);
+				}
+			});
 		}
 
 		@Override
@@ -101,14 +114,14 @@ public class OverlayFrame extends WFrame {
 			invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					final MCoord o = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
+					final VMotion o = V.pm(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
 						protected Timer timer = new Timer();
 
 						@Override
 						protected void initWidget() {
 							this.timer.set(-showtime);
-							add(new WBase(new R(MCoord.ptop(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start(), MCoord.pbottom(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start())) {
+							add(new WBase(new R(Coord.top(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()), Coord.bottom(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()))) {
 								@Override
 								protected void initOpacity() {
 									super.setOpacity(o);
@@ -119,7 +132,7 @@ public class OverlayFrame extends WFrame {
 									final Area a = getGuiPosition(pgp);
 									RenderHelper.startShape();
 									GlStateManager.color(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
-									drawRect(a);
+									draw(a);
 									super.draw(ev, pgp, p, frame, popacity);
 								}
 							});
@@ -132,7 +145,7 @@ public class OverlayFrame extends WFrame {
 
 								@Override
 								protected void initWidget() {
-									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
+									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f))) {
 										@Override
 										public float getScaleWidth(final Area a) {
 											final float f1 = a.w()/font().getStringWidth(string);
@@ -146,7 +159,7 @@ public class OverlayFrame extends WFrame {
 											final float f2 = a.h()/font().FONT_HEIGHT;
 											return Math.min(f1, f2);
 										}
-									};
+									}.setText(string);
 									add(label);
 								}
 

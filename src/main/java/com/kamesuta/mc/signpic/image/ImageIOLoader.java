@@ -46,7 +46,7 @@ public class ImageIOLoader {
 		this.input = inputFactory;
 	}
 
-	public ImageTextures load() throws IOException {
+	public RemoteImageTexture load() throws IOException {
 		final ImageInputStream imagestream = ImageIO.createImageInputStream(this.input.createInput());
 		final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
 		if (!iter.hasNext())
@@ -55,7 +55,7 @@ public class ImageIOLoader {
 
 		this.content.state.setType(StateType.LOADING);
 		this.content.state.setProgress(new Progress());
-		ImageTextures textures;
+		RemoteImageTexture textures;
 		if (Config.instance.imageAnimationGif&&reader.getFormatName()=="gif")
 			textures = loadGif();
 		else
@@ -65,26 +65,26 @@ public class ImageIOLoader {
 		return textures;
 	}
 
-	private ImageTextures loadGif() throws IOException {
+	private RemoteImageTexture loadGif() throws IOException {
 		final GifImage gifImage = GifDecoder.read(this.input.createInput());
 		final int width = gifImage.getWidth();
 		final int height = gifImage.getHeight();
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
 
-		final ArrayList<ImageTexture> textures = new ArrayList<ImageTexture>();
+		final ArrayList<DynamicImageTexture> textures = new ArrayList<DynamicImageTexture>();
 		final int frameCount = gifImage.getFrameCount();
 		this.content.state.getProgress().overall = frameCount;
 		for (int i = 0; i<frameCount; i++) {
 			final BufferedImage image = gifImage.getFrame(i);
 			final int delay = gifImage.getDelay(i);
-			final ImageTexture texture = new ImageTexture(createResizedImage(image, newsize), (float) delay/100);
+			final DynamicImageTexture texture = new DynamicImageTexture(createResizedImage(image, newsize), (float) delay/100);
 			textures.add(texture);
 			this.content.state.getProgress().done = i;
 		}
-		return new ImageTextures(textures);
+		return new RemoteImageTexture(textures);
 	}
 
-	private ImageTextures loadImage(final ImageReader reader, final ImageInputStream imagestream) throws IOException {
+	private RemoteImageTexture loadImage(final ImageReader reader, final ImageInputStream imagestream) throws IOException {
 		final ImageReadParam param = reader.getDefaultReadParam();
 		reader.setInput(imagestream, true, true);
 		BufferedImage canvas;
@@ -95,7 +95,7 @@ public class ImageIOLoader {
 			imagestream.close();
 		}
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
-		return new ImageTextures(Lists.newArrayList(new ImageTexture(createResizedImage(canvas, newsize))));
+		return new RemoteImageTexture(Lists.newArrayList(new DynamicImageTexture(createResizedImage(canvas, newsize))));
 	}
 
 	private BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {

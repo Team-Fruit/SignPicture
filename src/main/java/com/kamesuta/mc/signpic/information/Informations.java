@@ -1,22 +1,31 @@
 package com.kamesuta.mc.signpic.information;
 
+import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.handler.CoreEvent;
+import com.kamesuta.mc.signpic.gui.GuiTask;
+import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
+import com.kamesuta.mc.signpic.http.download.ModDownload;
+import com.kamesuta.mc.signpic.http.download.ModDownload.ModDLResult;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 
 public final class Informations {
 	public static final Informations instance = new Informations();
@@ -124,8 +133,53 @@ public final class Informations {
 
 	public boolean isUpdateRequired() {
 		if (getSource()!=null)
-			return getSource().onlineVersion().compare(VersionClient);
+			return !StringUtils.equals(Reference.VERSION, "${version}")&&getSource().onlineVersion().compare(VersionClient);
 		return false;
+	}
+
+	public String getUpdateMessage() {
+		final InfoVersion online = this.source.onlineVersion();
+		if (online.version!=null) {
+			final String lang = Client.mc.gameSettings.language;
+			final Info.Version version = online.version;
+			if (version.message_local!=null&&version.message_local.containsKey(lang))
+				return version.message_local.get(lang);
+			else if (!StringUtils.isEmpty(version.message))
+				return version.message;
+		}
+		return null;
+	}
+
+	public void runUpdate() {
+		final Informations.InfoState state = getState();
+		final Informations.InfoSource source = getSource();
+		final Informations.InfoVersion online = source.onlineVersion();
+		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
+			if (state.isDownloaded()) {
+				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
+				OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
+				try {
+					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
+				} catch (final IOException e) {
+					Reference.logger.error(e.getMessage(), e);
+				}
+			} else if (state.downloading) {
+				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
+				OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
+			} else {
+				final ModDownload downloader = new ModDownload();
+				downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
+				downloader.getState().getMeta().put(GuiTask.ShowPanel, 3f);
+				downloader.setCallback(new ICommunicateCallback() {
+					@Override
+					public void onDone(final ICommunicateResponse res) {
+						final ModDLResult result = downloader.result;
+						if (result!=null)
+							new ChatBuilder().setChat(result.response).chatClient();
+					}
+				});
+				Communicator.instance.communicate(downloader);
+			}
 	}
 
 	@CoreEvent
@@ -150,9 +204,9 @@ public final class Informations {
 					if (online.version!=null) {
 						final Info.Version version = online.version;
 						if (version.message_local!=null&&version.message_local.containsKey(lang))
-							ChatBuilder.create(version.message_local.get(lang)).chatClient();
+							ChatBuilder.create("signpic.versioning.changelog").useTranslation().setParams(version.message_local.get(lang)).chatClient();
 						else if (!StringUtils.isEmpty(version.message))
-							ChatBuilder.create(version.message).chatClient();
+							ChatBuilder.create("signpic.versioning.changelog").useTranslation().setParams(version.message).chatClient();
 
 						final String website;
 						if (version.website!=null)

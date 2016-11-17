@@ -12,12 +12,13 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.Rotate;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.RotateType;
@@ -30,8 +31,8 @@ public class GuiRotation extends WPanel {
 
 	public GuiRotation(final R position, final ImageRotation rotation) {
 		super(position);
-		final MCoord left = MCoord.pleft(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		this.editor = new RotationEditor(new R(left, Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
+		final VMotion left = V.pm(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
+		this.editor = new RotationEditor(new R(Coord.left(left), Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				left.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -48,8 +49,8 @@ public class GuiRotation extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final MCoord label = MCoord.pleft(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new R(label, Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), I18n.format("signpic.gui.editor.rotation.category")) {
+		final VMotion label = V.pm(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
+		add(new MLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -60,7 +61,7 @@ public class GuiRotation extends WPanel {
 			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
 				return label.isFinished();
 			}
-		});
+		}.setText(I18n.format("signpic.gui.editor.rotation.category")));
 		add(this.editor);
 		add(this.panel);
 	}
@@ -158,9 +159,9 @@ public class GuiRotation extends WPanel {
 
 		private void addWidget(final Rotate rotate, final int n) {
 			final float t = n*15;
-			final MCoord left = MCoord.pleft(-1f).add(Motion.blank(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
-			final MCoord top = MCoord.top(t);
-			final RotationElement element = new RotationElement(new R(left, top, Coord.pwidth(1f), Coord.height(15)), left, top, rotate);
+			final VMotion left = V.pm(-1f).add(Motion.blank(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
+			final VMotion top = V.am(t);
+			final RotationElement element = new RotationElement(new R(Coord.left(left), Coord.top(top), Coord.pwidth(1f), Coord.height(15)), left, top, rotate);
 			this.map.put(rotate, element);
 			add(element);
 		}
@@ -176,10 +177,10 @@ public class GuiRotation extends WPanel {
 
 		protected class RotationElement extends WPanel {
 			protected Rotate rotate;
-			protected MCoord left;
-			protected MCoord top;
+			protected VMotion left;
+			protected VMotion top;
 
-			public RotationElement(final R position, final MCoord left, final MCoord top, final Rotate rotate) {
+			public RotationElement(final R position, final VMotion left, final VMotion top, final Rotate rotate) {
 				super(position);
 				this.left = left;
 				this.top = top;

@@ -32,15 +32,15 @@ public class SignPicLabel extends WBase {
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		final EntryId entryId = getEntryId();
-		if (entryId != null) {
+		if (entryId!=null) {
 			final Entry entry = entryId.entry();
 			if (entry.isValid()) {
 				final Content content = entry.content();
-				if (content == null || StringUtils.isEmpty(content.id.id())) {
+				if (content==null||StringUtils.isEmpty(content.id.id())) {
 					RenderHelper.startTexture();
 					GlStateManager.color(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
-					drawTexturedModalRect(a);
+					drawTexture(a);
 				} else {
 					GlStateManager.disableCull();
 					GlStateManager.pushMatrix();
@@ -49,10 +49,10 @@ public class SignPicLabel extends WBase {
 					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
 					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
 
-					translate(a);
+					GlStateManager.translate(a.x1(), a.y1(), 0f);
 					GlStateManager.translate((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
 					GlStateManager.scale(100, 100, 1f);
-					content.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+					entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
 					GlStateManager.popMatrix();
 					GlStateManager.enableCull();

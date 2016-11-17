@@ -2,8 +2,6 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.awt.Color;
-
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -11,14 +9,13 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
-import com.kamesuta.mc.bnnwidget.position.Coords;
-import com.kamesuta.mc.bnnwidget.position.PCoord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -40,17 +37,17 @@ public class GuiTask extends WPanel {
 	}
 
 	protected boolean oshow;
-	protected MCoord oright;
+	protected VMotion oright = V.am(0f);
 
-	protected boolean show = true;
-	protected MCoord right;
+	protected boolean show;
+	protected VMotion right = V.pm(0f);
 
 	@Override
 	protected void initWidget() {
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(PCoord.of(Coords.combine(Coord.pright(-1), GuiTask.this.oright), Coord.pright(0f), GuiTask.this.right))) {
+				add(new WPanel(new R(Coord.right(V.of(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
 					protected Timer showtime = new Timer();
 
 					public void show(final float j) {
@@ -62,7 +59,7 @@ public class GuiTask extends WPanel {
 						final Area a = getGuiPosition(pgp);
 						RenderHelper.startShape();
 						glColor4f(0f, 0f, 0f, .6f);
-						drawRect(a);
+						draw(a);
 						super.draw(ev, pgp, p, frame, opacity);
 					}
 
@@ -110,18 +107,18 @@ public class GuiTask extends WPanel {
 								texture().bindTexture(panel);
 								glColor4f(1, 1, 1, 1);
 								RenderHelper.startTexture();
-								drawTexturedModalRect(a);
+								drawTexture(a);
 							}
 						});
 
-						add(new WList<Progressable, TaskElement>(new R(Coord.top(16)), Communicator.instance.getTasks()) {
+						add(new WList<Progressable, TaskElement>(new R(Coord.top(16), Coord.bottom(0)), Communicator.instance.getTasks()) {
 							@Override
 							protected TaskElement createWidget(final Progressable t, final int i) {
 								final Object j = t.getState().getMeta().get(ShowPanel);
 								if (j instanceof Number)
 									show(((Number) j).floatValue());
-								final MCoord top = MCoord.top(i*15);
-								return new TaskElement(new R(top, Coord.height(15)), top, t);
+								final VMotion top = V.am(i*15);
+								return new TaskElement(new R(Coord.top(top), Coord.height(15)), top, t);
 							}
 
 							@Override
@@ -136,26 +133,26 @@ public class GuiTask extends WPanel {
 	}
 
 	class TaskElement extends WPanel {
-		public final MCoord top;
+		public final VMotion top;
 
-		protected MCoord right;
+		protected VMotion right;
 
-		protected MCoord opacity;
+		protected VMotion opacity;
 
 		@Override
 		protected void initPosition(final R position) {
-			super.initPosition(position.child(this.right = MCoord.pright(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start()));
+			super.initPosition(position.child(Coord.right(this.right = V.pm(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start())));
 		}
 
 		@Override
 		protected void initOpacity() {
-			super.setOpacity(this.opacity = new MCoord(1f));
+			super.setOpacity(this.opacity = V.pm(1f));
 		}
 
 		State state;
 		Progress progress;
 
-		public TaskElement(final R position, final MCoord top, final Progressable progressable) {
+		public TaskElement(final R position, final VMotion top, final Progressable progressable) {
 			super(position);
 			this.top = top;
 			this.state = progressable.getState();
@@ -176,6 +173,13 @@ public class GuiTask extends WPanel {
 		}
 
 		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			final Area a = getGuiPosition(pgp);
+			if (pgp.areaInside(a))
+				super.draw(ev, pgp, p, frame, popacity);
+		}
+
+		@Override
 		protected void initWidget() {
 			add(new WPanel(R.diff(1, 1, 0, 0)) {
 				@Override
@@ -187,6 +191,7 @@ public class GuiTask extends WPanel {
 							GlStateManager.pushMatrix();
 							GlStateManager.translate(a.x1(), a.y1(), 0f);
 							GlStateManager.scale(.5f, .5f, .5f);
+							glTranslatef(-a.x1(), -a.y1(), 0f);
 							final String cont = "...";
 							final int contwidth = font().getStringWidth(cont);
 							final String name = TaskElement.this.state.getName();
@@ -198,23 +203,24 @@ public class GuiTask extends WPanel {
 							else
 								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
 							RenderHelper.startTexture();
-							drawString(res, 0f, 0f, new Color(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f)).getRGB());
+							fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
+							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
 							GlStateManager.popMatrix();
 						}
 					});
 
 					add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
-						protected MCoord progresscoord = MCoord.pleft(0f);
+						protected VMotion progresscoord = V.pm(0f);
 
 						@Override
 						protected void initWidget() {
-							add(new WBase(new R(Coord.pleft(0f), this.progresscoord)) {
+							add(new WBase(new R(Coord.pleft(0f), Coord.left(this.progresscoord))) {
 								@Override
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
 									GlStateManager.color(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
 									RenderHelper.startShape();
-									drawRect(a);
+									draw(a);
 
 									GlStateManager.pushMatrix();
 									final String prog = String.format("%.1f%%", TaskElement.this.progress.getProgress()*100);
@@ -224,7 +230,8 @@ public class GuiTask extends WPanel {
 									GlStateManager.translate(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
 									GlStateManager.scale(.5f, .5f, .5f);
 									RenderHelper.startTexture();
-									drawString(prog, 0f, 0f, new Color(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f)).getRGB());
+									fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
+									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
 									GlStateManager.popMatrix();
 
 									super.draw(ev, pgp, p, frame, popacity);
@@ -242,7 +249,7 @@ public class GuiTask extends WPanel {
 							final Area a = getGuiPosition(pgp);
 							RenderHelper.startShape();
 							GlStateManager.color(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
-							drawRect(a);
+							draw(a);
 							super.draw(ev, pgp, p, frame, opacity);
 						}
 					});
@@ -250,13 +257,13 @@ public class GuiTask extends WPanel {
 
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-					final Area area = getGuiPosition(pgp);
+					final Area a = getGuiPosition(pgp);
 					RenderHelper.startShape();
-					if (area.pointInside(p))
+					if (a.pointInside(p))
 						GlStateManager.color(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
 					else
 						GlStateManager.color(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
-					drawRect(area);
+					draw(a);
 					super.draw(ev, pgp, p, frame, opacity);
 				}
 			});

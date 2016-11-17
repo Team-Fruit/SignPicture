@@ -11,8 +11,8 @@ import net.minecraft.client.renderer.GlStateManager;
 public class MCheckBox extends MLabel {
 	protected boolean checked = true;
 
-	public MCheckBox(final R position, final String text) {
-		super(position, text);
+	public MCheckBox(final R position) {
+		super(position);
 	}
 
 	public void check(final boolean check) {
@@ -50,9 +50,9 @@ public class MCheckBox extends MLabel {
 		final Area in = out.child(1, 1, -1, -1);
 		RenderHelper.startShape();
 		GlStateManager.color(0.627451f, 0.627451f, 0.627451f, 1f);
-		drawRect(out);
+		draw(out);
 		GlStateManager.color(0f, 0f, 0f, 1f);
-		drawRect(in);
+		draw(in);
 		RenderHelper.startTexture();
 		if (this.checked) {
 			final String strcheck = "\u2713";

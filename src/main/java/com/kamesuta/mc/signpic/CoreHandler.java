@@ -1,15 +1,14 @@
-package com.kamesuta.mc.signpic.handler;
+package com.kamesuta.mc.signpic;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
-import com.kamesuta.mc.signpic.Apis;
-import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
+import com.kamesuta.mc.signpic.handler.KeyHandler;
+import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
@@ -20,6 +19,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -38,6 +38,7 @@ public class CoreHandler {
 	public final Apis apiHandler = Apis.instance;
 
 	public void init() {
+		FMLCommonHandler.instance().bus().register(this);
 		MinecraftForge.EVENT_BUS.register(this);
 		KeyHandler.init();
 		SignHandler.init();
@@ -117,6 +118,8 @@ public class CoreHandler {
 	}
 
 	void debug() {
-		Client.openEditor();
+		// Client.openEditor();
+		Reference.logger.info("try to delete: "+Client.location.modFile.getName());
+		Client.deleteMod();
 	}
 }

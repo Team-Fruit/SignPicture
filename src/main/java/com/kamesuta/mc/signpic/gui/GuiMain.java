@@ -13,11 +13,12 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -47,6 +48,7 @@ public class GuiMain extends WFrame {
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
+		OverlayFrame.instance.delegate();
 	}
 
 	@Override
@@ -55,13 +57,13 @@ public class GuiMain extends WFrame {
 			@Override
 			protected void initWidget() {
 				add(new WBase(R.diff(0, 0, 0, 0)) {
-					MCoord m = new MCoord(0);
+					VMotion m = V.pm(0);
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						GlStateManager.color(0f, 0f, 0f, this.m.get());
-						drawRect(getGuiPosition(pgp));
+						draw(getGuiPosition(pgp));
 					}
 
 					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
@@ -116,8 +118,8 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MCoord m = MCoord.ptop(-1f);
-				add(new WPanel(new R(m, Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
+				final VMotion m = V.pm(-1f);
+				add(new WPanel(new R(Coord.top(m), Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
 					@Override
 					protected void initWidget() {
 						add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
@@ -160,8 +162,8 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MCoord p = MCoord.right(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
-				add(new WPanel(new R(Coord.top(0), p, Coord.width(70), Coord.bottom(0))) {
+				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
+				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(70), Coord.bottom(0))) {
 					@Override
 					protected void initWidget() {
 						float top = -20f;
@@ -258,6 +260,17 @@ public class GuiMain extends WFrame {
 							}
 
 							@Override
+							public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								final Area a = getGuiPosition(pgp);
+								if (a.pointInside(p)) {
+									final Entry entry = CurrentMode.instance.getEntryId().entry();
+									if (entry.isValid()&&!entry.id.isPlaceable())
+										OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.editor.notice.toolong"), 1f);
+								}
+								return super.mouseClicked(ev, pgp, p, button);
+							}
+
+							@Override
 							public boolean isHighlight() {
 								return CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
@@ -297,8 +310,8 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MCoord d = MCoord.bottom(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				GuiMain.this.field = new MChatTextField(new R(Coord.left(5), d, Coord.right(70), Coord.height(15))) {
+				final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
+				GuiMain.this.field = new MChatTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(70), Coord.height(15))) {
 					@Override
 					public void onAdded() {
 						super.onAdded();
@@ -337,7 +350,6 @@ public class GuiMain extends WFrame {
 
 				add(new GuiSettings(new R()));
 
-				OverlayFrame.instance.delegate();
 				add(OverlayFrame.instance.pane);
 			}
 		});

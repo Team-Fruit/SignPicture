@@ -18,36 +18,24 @@ public class SignEntity {
 	private boolean renderable = false;
 	private boolean visible = false;
 
-	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side)
-	{
-		if (side == EnumFacing.DOWN)
-		{
+	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side) {
+		if (side==EnumFacing.DOWN) {
 			return null;
-		}
-		else if (!worldIn.getBlockState(pos).getBlock().getMaterial().isSolid())
-		{
+		} else if (!worldIn.getBlockState(pos).getBlock().getMaterial().isSolid()) {
 			return null;
-		}
-		else
-		{
+		} else {
 			pos = pos.offset(side);
 
-			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, pos))
-			{
+			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, pos)) {
 				return null;
-			}
-			else
-			{
+			} else {
 				this.tileSign.setPos(pos);
 
-				if (side == EnumFacing.UP)
-				{
+				if (side==EnumFacing.UP) {
 					this.tileSign.setBlockType(Blocks.standing_sign);
-					final int i = MathHelper.floor_double((playerIn.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
+					final int i = MathHelper.floor_double((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
 					this.tileSign.setBlockMetadata(i);
-				}
-				else
-				{
+				} else {
 					this.tileSign.setBlockType(Blocks.wall_sign);
 					this.tileSign.setBlockMetadata(side.getIndex());
 				}
@@ -59,13 +47,12 @@ public class SignEntity {
 		}
 	}
 
-
 	public TileEntitySign capturePlace() {
 		final Minecraft mc = Client.mc;
-		if (mc.thePlayer != null) {
+		if (mc.thePlayer!=null) {
 			final MovingObjectPosition m = MovePos.getMovingPos();
 			final MovePos p = MovePos.getBlockPos();
-			if (m!=null && p!=null) {
+			if (m!=null&&p!=null) {
 				setVisible(true);
 				return onItemUse(mc.thePlayer, mc.theWorld, p.pos, m.sideHit);
 			}
@@ -78,7 +65,8 @@ public class SignEntity {
 	}
 
 	public TileEntitySign getRenderTileEntity() throws IllegalStateException {
-		if (!isRenderable()) throw new IllegalStateException("Not Renderable");
+		if (!isRenderable())
+			throw new IllegalStateException("Not Renderable");
 		return this.tileSign;
 	}
 

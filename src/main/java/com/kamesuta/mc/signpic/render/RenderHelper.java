@@ -53,7 +53,7 @@ public class RenderHelper {
 		final double ey = Math.sin(eangle);
 
 		w.pos(sx*r, sy*r, 0).endVertex();
-		for(int i=(int)((end<start)?Math.floor(start*acc):Math.ceil(start*acc)); (end<start)?i>end*acc:i<end*acc; i+=(end<start)?-1:1) {
+		for (int i = (int) (end<start ? Math.floor(start*acc) : Math.ceil(start*acc)); end<start ? i>end*acc : i<end*acc; i += end<start ? -1 : 1) {
 			final double angle = Math.PI*(2d*i/acc-.5);
 			final double ix = Math.cos(angle);
 			final double iy = Math.sin(angle);

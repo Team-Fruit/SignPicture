@@ -1,7 +1,9 @@
 package com.kamesuta.mc.signpic.handler;
+
 import java.lang.reflect.Field;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -50,7 +52,7 @@ public class SignHandler {
 							if (se.isRenderable()) {
 								final BlockPos preview = se.getTileEntity().getPos();
 								final BlockPos tileSignPos = tileSign.getPos();
-								if (preview.getX()==tileSignPos.getX() && preview.getY()==tileSignPos.getY() && preview.getZ()==tileSignPos.getZ()) {
+								if (preview.getX()==tileSignPos.getX()&&preview.getY()==tileSignPos.getY()&&preview.getZ()==tileSignPos.getZ()) {
 									Sign.preview.setVisible(false);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 									CurrentMode.instance.setState(CurrentMode.State.SEE, false);
@@ -63,7 +65,7 @@ public class SignHandler {
 					}
 				else
 					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
-				}
+	}
 
 	@CoreEvent
 	public void onClick(final MouseEvent event) {
@@ -75,7 +77,7 @@ public class SignHandler {
 				Client.openEditor();
 			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
-				if (tilesign != null) {
+				if (tilesign!=null) {
 					final Entry entry = EntryId.fromTile(tilesign).entry();
 					if (entry.isValid()) {
 						CurrentMode.instance.setEntryId(entry.id);
@@ -86,5 +88,5 @@ public class SignHandler {
 					}
 				}
 			}
-		}
 	}
+}

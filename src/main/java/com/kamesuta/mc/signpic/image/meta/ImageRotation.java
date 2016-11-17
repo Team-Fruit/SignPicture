@@ -21,11 +21,16 @@ public class ImageRotation extends ImageMeta.MetaParser {
 	}
 
 	@Override
-	public ImageRotation parse(final String src, final String key, final String value) {
-		if (StringUtils.equals(key, RotateType.X.name())) this.rotates.add(new Rotate(RotateType.X, NumberUtils.toFloat(value, defaultOffset)));
-		else if (StringUtils.equals(key, RotateType.Y.name())) this.rotates.add(new Rotate(RotateType.Y, NumberUtils.toFloat(value, defaultOffset)));
-		else if (StringUtils.equals(key, RotateType.Z.name())) this.rotates.add(new Rotate(RotateType.Z, NumberUtils.toFloat(value, defaultOffset)));
-		return this;
+	public boolean parse(final String src, final String key, final String value) {
+		if (StringUtils.equals(key, RotateType.X.name()))
+			this.rotates.add(new Rotate(RotateType.X, NumberUtils.toFloat(value, defaultOffset)));
+		else if (StringUtils.equals(key, RotateType.Y.name()))
+			this.rotates.add(new Rotate(RotateType.Y, NumberUtils.toFloat(value, defaultOffset)));
+		else if (StringUtils.equals(key, RotateType.Z.name()))
+			this.rotates.add(new Rotate(RotateType.Z, NumberUtils.toFloat(value, defaultOffset)));
+		else
+			return false;
+		return true;
 	}
 
 	@Override
@@ -60,13 +65,13 @@ public class ImageRotation extends ImageMeta.MetaParser {
 		}
 
 		public String compose() {
-			final float rotate = ((this.rotate%8)+8)%8;
-			if (rotate == 0)
+			final float rotate = (this.rotate%8+8)%8;
+			if (rotate==0)
 				return "";
-			else if (rotate == defaultOffset)
+			else if (rotate==defaultOffset)
 				return this.type.name();
 			else
-				return this.type.name() + format(rotate);
+				return this.type.name()+format(rotate);
 		}
 	}
 

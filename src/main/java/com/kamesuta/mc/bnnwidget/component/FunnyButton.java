@@ -2,10 +2,11 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -16,8 +17,8 @@ public class FunnyButton extends MButton {
 
 	private boolean isHighlight = true;
 	private boolean highlighted;
-	MCoord m = new MCoord(0);
-	MCoord s = new MCoord(1);
+	VMotion m = V.pm(0);
+	VMotion s = V.pm(1);
 
 	public boolean isHighlight() {
 		return this.isHighlight;
@@ -40,6 +41,7 @@ public class FunnyButton extends MButton {
 				this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
 				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
 			}
+		super.update(ev, pgp, p);
 		}
 
 	@Override

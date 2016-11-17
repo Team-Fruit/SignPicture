@@ -8,11 +8,12 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -46,13 +47,13 @@ public class GuiPAAS extends WFrame {
 			@Override
 			protected void initWidget() {
 				add(new WBase(R.diff(0, 0, 0, 0)) {
-					MCoord c = new MCoord(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
+					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
 						GlStateManager.color(0f, 0f, 0f, this.c.get());
-						drawRect(getGuiPosition(pgp));
+						draw(getGuiPosition(pgp));
 					}
 				});
 
@@ -76,14 +77,14 @@ public class GuiPAAS extends WFrame {
 
 				final int f = font().FONT_HEIGHT/2;
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), "") {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), "") {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));

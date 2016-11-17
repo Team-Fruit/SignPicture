@@ -15,14 +15,33 @@ import net.minecraft.client.renderer.GlStateManager;
 
 public class MLabel extends WBase {
 	protected int textcolor = 14737632;
-	protected String text;
+	protected String text = "";
 	protected boolean shadow;
 	protected String watermark;
 	protected int watermarkcolor = 0x777777;
+	protected Align align = Align.CENTER;
+	protected VerticalAlign valign = VerticalAlign.MIDDLE;
 
-	public MLabel(final R position, final String text) {
+	public MLabel(final R position) {
 		super(position);
-		this.text = text;
+	}
+
+	public MLabel setAlign(final Align align) {
+		this.align = align;
+		return this;
+	}
+
+	public Align getAlign() {
+		return this.align;
+	}
+
+	public MLabel setVerticalAlign(final VerticalAlign valign) {
+		this.valign = valign;
+		return this;
+	}
+
+	public VerticalAlign getVerticalAlign() {
+		return this.valign;
 	}
 
 	public MLabel setWatermark(final String watermark) {
@@ -43,28 +62,31 @@ public class MLabel extends WBase {
 		return this.watermarkcolor;
 	}
 
-	public void setShadow(final boolean b) {
+	public MLabel setShadow(final boolean b) {
 		this.shadow = b;
+		return this;
 	}
 
 	public boolean isShadow() {
 		return this.shadow;
 	}
 
-	public void setColor(final int color) {
+	public MLabel setColor(final int color) {
 		this.textcolor = color;
+		return this;
 	}
 
 	public int getColor() {
 		return this.textcolor;
 	}
 
-	public void setText(final String s) {
+	public MLabel setText(final String s) {
 		if (StringUtils.equals(s, getText()))
-			return;
+			return this;
 		final String oldText = getText();
 		this.text = s;
 		onTextChanged(oldText);
+		return this;
 	}
 
 	public String getText() {
@@ -82,8 +104,9 @@ public class MLabel extends WBase {
 
 	protected float wscale = 1f;
 
-	public void setScaleWidth(final float f) {
+	public MLabel setScaleWidth(final float f) {
 		this.wscale = f;
+		return this;
 	}
 
 	public float getScaleWidth(final Area a) {
@@ -92,8 +115,9 @@ public class MLabel extends WBase {
 
 	protected float hscale = 1f;
 
-	public void setScaleHeight(final float f) {
+	public MLabel setScaleHeight(final float f) {
 		this.hscale = f;
+		return this;
 	}
 
 	public float getScaleHeight(final Area a) {
@@ -104,14 +128,15 @@ public class MLabel extends WBase {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
 		GlStateManager.scale(getScaleWidth(a), getScaleHeight(a), 1);
+		GlStateManager.translate(-(a.x1()+a.w()/2), -(a.y1()+a.h()/2), 0);
 		RenderHelper.startTexture();
 		final Color c = new Color(getColor());
-		final Color c_ = new Color(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-		drawStringC(getText(), 0, 0, 0, 0, c_.getRGB(), isShadow());
+		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
+		drawString(getText(), a, getAlign(), getVerticalAlign(), isShadow());
 		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {
 			final Color w = new Color(getWatermarkColor());
-			final Color w_ = new Color(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-			drawStringC(getWatermark(), 0, 0, 0, 0, w_.getRGB());
+			fontColor(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
+			drawString(getWatermark(), a, getAlign(), getVerticalAlign(), isShadow());
 		}
 		GlStateManager.popMatrix();
 	}
