@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -79,7 +80,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, opacity*.5f);
+				GlStateManager.color(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
 				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 

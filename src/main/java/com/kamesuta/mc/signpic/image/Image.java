@@ -61,10 +61,10 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
 			t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			t.pos(0, 0, 0).tex(u, v).endVertex();
 			t.pos(0, 1, 0).tex(u, v+h/s).endVertex();
 			t.pos(1, 1, 0).tex(u+w/c, v+h/s).endVertex();
 			t.pos(1, 0, 0).tex(u+w/c, v).endVertex();
+			t.pos(0, 0, 0).tex(u, v).endVertex();
 			RenderHelper.t.draw();
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);

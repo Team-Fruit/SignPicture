@@ -16,6 +16,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
@@ -23,9 +24,6 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
 
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -60,18 +58,9 @@ public class GuiImage extends WFrame {
 							final ImageTextureMap map = GuiImage.this.entry.meta.map;
 							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
 						} else {
-							final Tessellator t = Tessellator.getInstance();
-							final WorldRenderer w = t.getWorldRenderer();
 							RenderHelper.startShape();
 							glLineWidth(1f);
-							glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
-
-							w.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION_TEX);
-							w.pos(0, 0, 0).tex(0, 0).endVertex();
-							w.pos(0, 1, 0).tex(0, 1).endVertex();
-							w.pos(1, 1, 0).tex(1, 1).endVertex();
-							w.pos(1, 0, 0).tex(1, 0).endVertex();
-							t.draw();
+							glColor4f(1.0F, 0.0F, 0.0F, opacity*Config.instance.renderSeeOpacity);
 							draw(0, 0, 1, 1, GL_LINE_LOOP);
 						}
 						glPopMatrix();
