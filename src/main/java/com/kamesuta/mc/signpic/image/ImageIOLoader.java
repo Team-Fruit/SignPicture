@@ -32,8 +32,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader {
 	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
-			((Config.instance.imageWidthLimit > 0) ? Config.instance.imageWidthLimit : ImageSize.unknownSize),
-			((Config.instance.imageHeightLimit > 0) ? Config.instance.imageHeightLimit : ImageSize.unknownSize));
+			Config.instance.imageWidthLimit>0 ? Config.instance.imageWidthLimit : ImageSize.unknownSize,
+			Config.instance.imageHeightLimit>0 ? Config.instance.imageHeightLimit : ImageSize.unknownSize);
 
 	protected Content content;
 	protected InputStream input;
