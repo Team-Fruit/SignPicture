@@ -17,6 +17,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
@@ -86,7 +87,18 @@ public class OverlayFrame extends WFrame {
 
 		@Override
 		protected void initWidget() {
-			add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+			add(new WPanel(new R()) {
+				@Override
+				protected void initWidget() {
+					add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+				}
+
+				@Override
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					if (Config.instance.renderOverlayPanel||instance.isDelegated())
+						super.draw(ev, pgp, p, frame, popacity);
+				}
+			});
 		}
 
 		@Override

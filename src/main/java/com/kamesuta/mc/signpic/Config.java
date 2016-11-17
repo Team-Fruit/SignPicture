@@ -43,6 +43,7 @@ public final class Config extends Configuration {
 	/** Minimum time needed to type a character. */
 	public int multiplayPAASMinCharTime = 50;
 
+	public boolean renderOverlayPanel = true;
 	public boolean renderUseMipmap = true;
 	public boolean renderMipmapTypeNearest = false;
 	public float renderSeeOpacity = .5f;
@@ -104,6 +105,7 @@ public final class Config extends Configuration {
 		this.multiplayPAASMinLineTime = get("Multiplay.PreventAntiAutoSign.Time", "minLineTime", this.multiplayPAASMinLineTime).getInt(this.multiplayPAASMinLineTime);
 		this.multiplayPAASMinCharTime = get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", this.multiplayPAASMinCharTime).getInt(this.multiplayPAASMinCharTime);
 
+		this.renderOverlayPanel = addComment(get("Render", "Overlay", this.renderOverlayPanel), "Overlay signpic!online").getBoolean(this.renderOverlayPanel);
 		this.renderUseMipmap = addComment(get("Render", "Mipmap", this.renderUseMipmap), "Require OpenGL 3.0 or later").getBoolean(this.renderUseMipmap);
 		this.renderMipmapTypeNearest = addComment(get("Render", "MipmapTypeNearest", this.renderMipmapTypeNearest), "true = Nearest, false = Linear").getBoolean(this.renderMipmapTypeNearest);
 		this.renderSeeOpacity = (float) get("Render.Opacity", "ViewSign", this.renderSeeOpacity).getDouble(this.renderSeeOpacity);

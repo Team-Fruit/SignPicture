@@ -49,6 +49,7 @@ public class GuiMain extends WFrame {
 	public void initGui() {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
+		OverlayFrame.instance.delegate();
 	}
 
 	@Override
@@ -350,7 +351,6 @@ public class GuiMain extends WFrame {
 
 				add(new GuiSettings(new R()));
 
-				OverlayFrame.instance.delegate();
 				add(OverlayFrame.instance.pane);
 			}
 		});
