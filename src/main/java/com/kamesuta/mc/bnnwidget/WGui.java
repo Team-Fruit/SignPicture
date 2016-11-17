@@ -83,10 +83,10 @@ public class WGui extends Gui {
 
 	public static void draw(final float x1, final float y1, final float x2, final float y2, final int mode) {
 		w.begin(mode, DefaultVertexFormats.POSITION);
-		w.pos(x1, y1, 0).endVertex();
 		w.pos(x1, y2, 0).endVertex();
 		w.pos(x2, y2, 0).endVertex();
 		w.pos(x2, y1, 0).endVertex();
+		w.pos(x1, y1, 0).endVertex();
 		t.draw();
 	}
 

@@ -77,10 +77,10 @@ public class RenderHelper {
 	}
 
 	public static void addRectVertex(final float x1, final float y1, final float x2, final float y2) {
-		w.pos(x1, y1, 0).tex(0, 0).endVertex();
-		w.pos(x1, y2, 0).tex(0, 1).endVertex();
-		w.pos(x2, y2, 0).tex(1, 1).endVertex();
-		w.pos(x2, y1, 0).tex(1, 0).endVertex();
+		w.pos(x1, y2, 0).tex(0, 0).endVertex();
+		w.pos(x2, y2, 0).tex(0, 1).endVertex();
+		w.pos(x2, y1, 0).tex(1, 1).endVertex();
+		w.pos(x1, y1, 0).tex(1, 0).endVertex();
 	}
 
 	public static void drawRectTexture(final int mode) {
