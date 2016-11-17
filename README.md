@@ -32,13 +32,13 @@ The sign tells us how beautiful it is!
 ## License
 
 * Sign Picture
-  - (c) 2016 TeamFruit et al
+  - (c) 2016 TeamFruit
   - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/LICENSE.md)
 * Banana Widget
-  - (c) 2016 TeamFruit et al
+  - (c) 2016 TeamFruit
   - [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
 * Textures and Models
-  - (c) 2016 TeamFruit et al
+  - (c) 2016 TeamFruit
   - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%203.0-yellow.svg?style=flat)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 * Text and Translations
   - [![License](https://img.shields.io/badge/License-No%20Restriction-green.svg?style=flat)](https://creativecommons.org/publicdomain/zero/1.0/)
