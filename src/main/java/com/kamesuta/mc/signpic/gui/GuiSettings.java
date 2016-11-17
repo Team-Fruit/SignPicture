@@ -59,7 +59,7 @@ public class GuiSettings extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.bottom(V.of(V.combine(V.p(-1), V.a(2)), V.p(0f), this.bottom)))) {
+				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(2)), V.p(0f), this.bottom)))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
@@ -225,7 +225,7 @@ public class GuiSettings extends WPanel {
 
 										@Override
 										protected void initWidget() {
-											add(new WPanel(new R(Coord.left(V.of(hstart, hend, state)), Coord.right(V.of(hstart, hend, state)), Coord.height(V.of(vstart, vend, state)), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
+											add(new WPanel(new R(Coord.left(V.per(hstart, hend, state)), Coord.right(V.per(hstart, hend, state)), Coord.height(V.per(vstart, vend, state)), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 												protected boolean in;
 
 												protected VMotion rot = V.pm(0).add(Easings.easeLinear.move(8.04f/4f, 1f)).setLoop(true).start();
@@ -262,7 +262,7 @@ public class GuiSettings extends WPanel {
 
 												@Override
 												protected void initWidget() {
-													add(new WBase(new R(Coord.width(V.of(hstart, hend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
+													add(new WBase(new R(Coord.width(V.per(hstart, hend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 															final Area a = getGuiPosition(pgp);
@@ -305,7 +305,7 @@ public class GuiSettings extends WPanel {
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 														@Override
 														protected void initOpacity() {
-															super.setOpacity(V.of(V.p(1f), V.p(0f), o));
+															super.setOpacity(V.per(V.p(1f), V.p(0f), o));
 														}
 
 														@Override

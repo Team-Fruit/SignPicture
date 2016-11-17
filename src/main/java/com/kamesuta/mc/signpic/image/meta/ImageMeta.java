@@ -54,7 +54,7 @@ public class ImageMeta {
 	}
 
 	public String compose() {
-		return "["+this.size+this.offset+this.rotation+this.map+"]";
+		return "{"+this.size+this.offset+this.rotation+this.map+"}";
 	}
 
 	@Override
