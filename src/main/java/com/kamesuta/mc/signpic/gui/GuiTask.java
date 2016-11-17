@@ -47,7 +47,7 @@ public class GuiTask extends WPanel {
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.right(V.of(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
+				add(new WPanel(new R(Coord.right(V.per(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
 					protected Timer showtime = new Timer();
 
 					public void show(final float j) {

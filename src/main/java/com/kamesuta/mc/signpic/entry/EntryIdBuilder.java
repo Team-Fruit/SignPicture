@@ -8,7 +8,7 @@ public class EntryIdBuilder {
 	private String uri;
 
 	public EntryIdBuilder(final EntryId source) {
-		if (source != null) {
+		if (source!=null) {
 			this.meta = source.getMeta();
 			if (source.hasContentId())
 				this.uri = source.getContentId().getURI();
@@ -41,6 +41,6 @@ public class EntryIdBuilder {
 	}
 
 	public EntryId build() {
-		return new EntryId(new ContentId(getURI()).getID() + getMeta());
+		return new EntryId("#"+new ContentId(getURI()).getID()+getMeta());
 	}
 }

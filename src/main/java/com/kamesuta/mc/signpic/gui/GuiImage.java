@@ -14,12 +14,14 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
@@ -87,34 +89,21 @@ public class GuiImage extends WFrame {
 					}
 				});
 				add(new WPanel(new R()) {
-					protected VMotion rot = V.pm(1f).add(Easings.easeLinear.move(8.04f*4, 0f)).setLoop(true).start();
-
 					@Override
 					protected void initWidget() {
-						add(new UpdateLogo(new R(Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
+						final VCommon var = V.range(V.a(.5f), V.a(.8f), V.p(.5f));
+						add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
 						add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
-						add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.bottom(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.needupdate")).setColor(0xff9900).setShadow(true));
+						if (Informations.instance.isUpdateRequired())
+							add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.bottom(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.needupdate")).setColor(0xff9900).setShadow(true));
 					}
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 						if (GuiImage.this.entry.isNotSupported()) {
-							final Area a = getGuiPosition(pgp);
 							RenderHelper.startShape();
 							glLineWidth(1f);
 							glColor4f(1f, 1f, 1f, 1f);
-							glPushMatrix();
-							glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
-							glRotatef(this.rot.get()*360, 0, 0, 1);
-							glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
-							draw(a, GL_LINE_LOOP);
-							glPopMatrix();
-							glPushMatrix();
-							glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
-							glRotatef(this.rot.get()*-180, 0, 0, 1);
-							glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
-							draw(a, GL_LINE_LOOP);
-							glPopMatrix();
 							glPushMatrix();
 							glTranslatef(0f, 0f, .002f);
 							super.draw(ev, pgp, p, frame, popacity);

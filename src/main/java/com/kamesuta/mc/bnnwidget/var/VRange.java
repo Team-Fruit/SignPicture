@@ -1,25 +1,32 @@
 package com.kamesuta.mc.bnnwidget.var;
 
 public class VRange implements VCommon {
-	private VCommon a;
-	private VCommon b;
-	private VCommon c;
+	private VCommon min;
+	private VCommon max;
+	private VCommon var;
 
-	public VRange(final VCommon a, final VCommon b, final VCommon c) {
-		this.a = a;
-		this.b = b;
-		this.c = c;
+	public VRange(final VCommon min, final VCommon max, final VCommon var) {
+		this.min = min;
+		this.max = max;
+		this.var = var;
 	}
 
 	@Override
 	public float get() {
-		return this.c.get();
+		return this.var.get();
 	}
 
 	@Override
 	public float getAbsCoord(final float a, final float b) {
-		final float ca = this.a.getAbsCoord(a, b);
-		final float cb = this.b.getAbsCoord(a, b);
-		return this.c.getAbsCoord(ca, cb);
+		float v = this.var.getAbsCoord(a, b);
+		if (this.min!=null) {
+			final float min = this.min.getAbsCoord(a, b);
+			v = Math.max(min, v);
+		}
+		if (this.max!=null) {
+			final float max = this.max.getAbsCoord(a, b);
+			v = Math.min(max, v);
+		}
+		return v;
 	}
 }
