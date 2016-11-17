@@ -26,6 +26,10 @@ ext.modversion = "${project.version_major}.${project.version_minor}.${project.ve
 group = project.group
 version = "${project.version_minecraft}-${modversion}"
 compileJava.options.encoding = 'UTF-8'
+sourceCompatibility = targetCompatibility = "1.6"
+compileJava {
+    sourceCompatibility = targetCompatibility = "1.6"
+}
 
 idea {
     module {

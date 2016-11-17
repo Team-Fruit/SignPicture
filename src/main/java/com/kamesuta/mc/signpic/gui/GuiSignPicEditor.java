@@ -46,6 +46,7 @@ public class GuiSignPicEditor extends WFrame {
 			protected void initWidget() {
 				add(new WBase(RArea.diff(0, 0, 0, 0)) {
 					MCoord m = new MCoord(0);
+
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame) {
 						RenderHelper.startShape();
@@ -54,6 +55,7 @@ public class GuiSignPicEditor extends WFrame {
 					}
 
 					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
@@ -121,6 +123,7 @@ public class GuiSignPicEditor extends WFrame {
 							}
 
 							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+
 							@Override
 							public void update(final WEvent ev, final Area pgp, final Point p) {
 								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
@@ -157,7 +160,7 @@ public class GuiSignPicEditor extends WFrame {
 					protected void initWidget() {
 						float top = -20f;
 
-						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top+=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.SEE, !CurrentMode.instance.isState(CurrentMode.State.SEE));
@@ -170,7 +173,7 @@ public class GuiSignPicEditor extends WFrame {
 								return true;
 							}
 						});
-						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top+=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final boolean state = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
@@ -195,7 +198,7 @@ public class GuiSignPicEditor extends WFrame {
 
 						float bottom = 25*4+5;
 
-						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
@@ -208,7 +211,7 @@ public class GuiSignPicEditor extends WFrame {
 								return true;
 							}
 						});
-						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.load")) {
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.load")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
@@ -222,11 +225,11 @@ public class GuiSignPicEditor extends WFrame {
 								return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
 							}
 						});
-						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
+						add(new FunnyButton(new RArea(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								if (entry.isValid() && entry.id.isPlaceable()) {
+								if (entry.isValid()&&entry.id.isPlaceable()) {
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 									requestClose();
@@ -239,10 +242,10 @@ public class GuiSignPicEditor extends WFrame {
 							public boolean isEnabled() {
 								state(CurrentMode.instance.isMode(CurrentMode.Mode.PLACE));
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								return entry.isValid() && entry.id.isPlaceable() && !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+								return entry.isValid()&&entry.id.isPlaceable()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});
-						add(new MButton(new RArea(Coord.right(5), Coord.bottom(bottom-=25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
+						add(new MButton(new RArea(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								if (CurrentMode.instance.isMode()) {
@@ -279,7 +282,7 @@ public class GuiSignPicEditor extends WFrame {
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
 						final String id = GuiSignPicEditor.this.signbuilder.getURI();
-						if (id != null) {
+						if (id!=null) {
 							setText(id);
 						}
 					}
