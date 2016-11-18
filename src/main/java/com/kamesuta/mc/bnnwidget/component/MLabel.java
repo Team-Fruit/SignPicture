@@ -131,6 +131,7 @@ public class MLabel extends WBase {
 		glTranslated(-(a.x1()+a.w()/2), -(a.y1()+a.h()/2), 0);
 		RenderHelper.startTexture();
 		final Color c = new Color(getColor());
+		glColor4f(1f, 1f, 1f, opacity);
 		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
 		drawString(getText(), a, getAlign(), getVerticalAlign(), isShadow());
 		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {

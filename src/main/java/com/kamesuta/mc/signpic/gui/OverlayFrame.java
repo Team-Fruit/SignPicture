@@ -9,6 +9,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -47,20 +48,25 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (!isDelegated())
-			drawScreen(event.mouseX, event.mouseY, event.renderPartialTicks);
+		if (Config.instance.renderGuiOverlay)
+			if (!isDelegated()) {
+				setWidth(event.gui.width);
+				setHeight(event.gui.height);
+				glPushMatrix();
+				glTranslatef(0f, 0f, 1000f);
+				drawScreen(event.mouseX, event.mouseY, event.renderPartialTicks);
+				glPopMatrix();
+			}
 	}
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
-		final ScaledResolution scaledresolution = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
-		setWidth(scaledresolution.getScaledWidth());
-		setHeight(scaledresolution.getScaledHeight());
-
-		if (event.type==ElementType.CHAT)
-			if (Client.mc.currentScreen==null)
-				if (!isDelegated())
-					drawScreen(event.mouseX, event.mouseY, event.partialTicks);
+		if (event.type==ElementType.CHAT&&Client.mc.currentScreen==null)
+			if (!isDelegated()) {
+				setWidth(event.resolution.getScaledWidth());
+				setHeight(event.resolution.getScaledHeight());
+				drawScreen(event.mouseX, event.mouseY, event.partialTicks);
+			}
 	}
 
 	@CoreEvent
@@ -119,6 +125,17 @@ public class OverlayFrame extends WFrame {
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
 						protected Timer timer = new Timer();
 
+						private boolean removed;
+
+						@Override
+						public void update(final WEvent ev, final Area pgp, final Point p) {
+							if (this.timer.getTime()>0f)
+								if (!this.removed) {
+									GuiOverlay.this.remove(this);
+									this.removed = true;
+								}
+						}
+
 						@Override
 						protected void initWidget() {
 							this.timer.set(-showtime);
@@ -146,33 +163,8 @@ public class OverlayFrame extends WFrame {
 
 								@Override
 								protected void initWidget() {
-									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f))) {
-										@Override
-										public float getScaleWidth(final Area a) {
-											final float f1 = a.w()/font().getStringWidth(string);
-											final float f2 = a.h()/font().FONT_HEIGHT;
-											return Math.min(f1, f2);
-										}
-
-										@Override
-										public float getScaleHeight(final Area a) {
-											final float f1 = a.w()/font().getStringWidth(string);
-											final float f2 = a.h()/font().FONT_HEIGHT;
-											return Math.min(f1, f2);
-										}
-									}.setText(string);
+									final MLabel label = new MScaledLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f))).setText(string);
 									add(label);
-								}
-
-								private boolean removed;
-
-								@Override
-								public void update(final WEvent ev, final Area pgp, final Point p) {
-									if (timer.getTime()>0f)
-										if (!this.removed) {
-											GuiOverlay.this.remove(this);
-											this.removed = true;
-										}
 								}
 
 								@Override
