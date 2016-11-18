@@ -18,7 +18,7 @@ public class SignEntity {
 	private boolean renderable = false;
 	private boolean visible = false;
 
-	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side) {
+	private PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side) {
 		if (side==EnumFacing.DOWN) {
 			return null;
 		} else if (!worldIn.getBlockState(pos).getBlock().getMaterial().isSolid()) {

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -20,7 +22,6 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
@@ -52,7 +53,7 @@ public class GuiPAAS extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
-						GlStateManager.color(0f, 0f, 0f, this.c.get());
+						glColor4f(0f, 0f, 0f, this.c.get());
 						draw(getGuiPosition(pgp));
 					}
 				});
@@ -64,14 +65,14 @@ public class GuiPAAS extends WFrame {
 						final Area a = getGuiPosition(pgp);
 
 						RenderHelper.startTexture();
-						GlStateManager.color(1f, 1f, 1f, 1f);
-						GlStateManager.pushMatrix();
-						GlStateManager.translate(a.x1()+a.w()/2, a.y1(), 50f);
-						GlStateManager.scale(-f1, -f1, -f1);
-						GlStateManager.rotate(180f, 0f, 1f, 0f);
+						glColor4f(1f, 1f, 1f, 1f);
+						glPushMatrix();
+						glTranslatef(a.x1()+a.w()/2, a.y1(), 50f);
+						glScalef(-f1, -f1, -f1);
+						glRotatef(180f, 0f, 1f, 0f);
 						Client.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, -1f);
 						Client.renderer.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
-						GlStateManager.popMatrix();
+						glPopMatrix();
 					}
 				});
 

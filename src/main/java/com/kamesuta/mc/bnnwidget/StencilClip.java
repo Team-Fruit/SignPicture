@@ -14,7 +14,6 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-@Deprecated
 public class StencilClip {
 	public static final StencilClip instance = new StencilClip();
 	private int layer = 0;

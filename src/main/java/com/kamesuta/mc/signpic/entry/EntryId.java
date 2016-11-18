@@ -136,7 +136,7 @@ public class EntryId {
 
 	public void toChats(final IChatComponent[] sign) {
 		final int length = StringUtils.length(this.id);
-		for (int i=0; i<4; i++)
+		for (int i = 0; i<4; i++)
 			sign[i] = new ChatComponentText(StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length)));
 	}
 

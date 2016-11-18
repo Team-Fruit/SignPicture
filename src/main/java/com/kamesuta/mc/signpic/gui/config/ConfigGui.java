@@ -1,4 +1,5 @@
 package com.kamesuta.mc.signpic.gui.config;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,39 +12,33 @@ import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
-public class ConfigGui extends GuiConfig
-{
+public class ConfigGui extends GuiConfig {
 
-	public ConfigGui( final GuiScreen parent )
-	{
-		super( parent, getConfigElements(), Reference.MODID, false, false, GuiConfig.getAbridgedConfigPath( Config.instance.getFilePath() ) );
+	public ConfigGui(final GuiScreen parent) {
+		super(parent, getConfigElements(), Reference.MODID, false, false, GuiConfig.getAbridgedConfigPath(Config.instance.getFilePath()));
 	}
 
-	private static List<IConfigElement> getConfigElements()
-	{
+	@SuppressWarnings("rawtypes")
+	private static List<IConfigElement> getConfigElements() {
 		final List<IConfigElement> list = new ArrayList<IConfigElement>();
 
-		for( final String cat : Config.instance.getCategoryNames() )
-		{
-			if( cat.equals( "versionchecker" ) )
-			{
+		for (final String cat : Config.instance.getCategoryNames()) {
+			if (cat.equals("versionchecker")) {
 				continue;
 			}
 
-			if( cat.equals( "settings" ) )
-			{
+			if (cat.equals("settings")) {
 				continue;
 			}
 
-			final ConfigCategory cc = Config.instance.getCategory( cat );
+			final ConfigCategory cc = Config.instance.getCategory(cat);
 
-			if( cc.isChild() )
-			{
+			if (cc.isChild()) {
 				continue;
 			}
 
-			final ConfigElement ce = new ConfigElement( cc );
-			list.add( ce );
+			final ConfigElement ce = new ConfigElement(cc);
+			list.add(ce);
 		}
 
 		return list;

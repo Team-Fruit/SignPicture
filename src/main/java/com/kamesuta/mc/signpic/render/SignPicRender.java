@@ -14,7 +14,6 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
@@ -33,53 +32,52 @@ public class SignPicRender extends WGui {
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
 		float opacity = Config.instance.renderPreviewFixedOpacity;
-		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW) || CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
 			opacity = Config.instance.renderPreviewFloatedOpacity;
 		}
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
-			if (Sign.preview.isRenderable() && Sign.preview.isVisible()) {
+			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
 				final BlockPos pos = tile.getPos();
-				Client.renderer.renderSignPictureBase(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1, opacity);
-			}
-		}
+				Client.renderer.renderSignPictureBase(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1, opacity);			}
+	}
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
-		if(event.type == ElementType.EXPERIENCE)
+		if (event.type==ElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode())
-				if ((int)(System.currentTimeMillis()/500)%2==0) {
+				if ((int) (System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
 
 					RenderHelper.startTexture();
-					GlStateManager.pushMatrix();
-					GlStateManager.translate(5f, 5f, 0f);
-					GlStateManager.scale(2f, 2f, 1f);
+					glPushMatrix();
+					glTranslatef(5f, 5f, 0f);
+					glScalef(2f, 2f, 1f);
 
-					GlStateManager.pushMatrix();
-					GlStateManager.scale(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+					glPushMatrix();
+					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 					texture().bindTexture(resSign);
 					RenderHelper.startTexture();
 					RenderHelper.drawRectTexture(GL_QUADS);
 
-					GlStateManager.popMatrix();
+					glPopMatrix();
 
-					GlStateManager.translate(fontrenderer.FONT_HEIGHT, 0f, 0f);
+					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
 					final String str = I18n.format(CurrentMode.instance.getMode().message);
 					fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
-					GlStateManager.popMatrix();
+					glPopMatrix();
 				}
-			}
+	}
 
 	@CoreEvent
 	public void onText(final RenderGameOverlayEvent.Text event) {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
-			if (tilesign != null) {
+			if (tilesign!=null) {
 				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
@@ -98,8 +96,8 @@ public class SignPicRender extends WGui {
 						event.left.add(I18n.format("signpic.over.advmsg", I18n.format("signpic.state.format.unsupported")));
 					else if (advmsg!=null)
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
-					if (tilesign.signText != null)
-						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0].getUnformattedText(), tilesign.signText[1].getUnformattedText(), tilesign.signText[2].getUnformattedText(), tilesign.signText[3].getUnformattedText()));
+					if (tilesign.signText!=null)
+						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
 					event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
 				}
 			}

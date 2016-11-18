@@ -92,7 +92,7 @@ public abstract class UiUpload {
 		close.setImage(getImage("textures/ui/close.png"));
 
 		final UiImage icon = new UiImage();
-		icon.setImage(getImage("/textures/logo.png"));
+		icon.setImage(getImage("textures/logo.png"));
 
 		final JLabel lbltitle = new JLabel(getString("signpic.ui.title"));
 		lbltitle.setForeground(new Color(154, 202, 71));

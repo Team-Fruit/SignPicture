@@ -11,41 +11,38 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
-	protected final WorldRenderer t = RenderHelper.w;
+	protected final Tessellator t = Tessellator.getInstance();
 
 	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
 	public CustomTileEntitySignRenderer() {
 	}
 
-	public void renderSignPicture(final Entry entry, final int destroy, final float opacity) {
+	public void renderSignPicture(final Entry entry, final float opacity) {
 		// Load Image
 		final Content content = entry.content();
 
 		// Size
 		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 
-		GlStateManager.pushMatrix();
+		glPushMatrix();
 
-		GlStateManager.translate(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
+		glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 		entry.meta.rotation.rotate();
 
-		GlStateManager.translate(-size.width/2, size.height+((size.height>=0) ? 0 : -size.height)-.5f, 0f);
-		GlStateManager.scale(1f, -1f, 1f);
 		glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
 		glScalef(1f, -1f, 1f);
 
 		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
-		GlStateManager.popMatrix();
+		glPopMatrix();
 	}
 
 	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z, final float rotateratio) {
@@ -55,9 +52,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		float f3;
 
 		if (block==Blocks.standing_sign) {
-			GlStateManager.translate((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
+			glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
 			final float f2 = tile.getBlockMetadata()*360/16.0F;
-			GlStateManager.rotate(-f2*rotateratio, 0.0F, 1.0F, 0.0F);
+			glRotatef(-f2*rotateratio, 0.0F, 1.0F, 0.0F);
 		} else {
 			final int j = tile.getBlockMetadata();
 			f3 = 0.0F;
@@ -69,9 +66,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			if (j==5)
 				f3 = -90.0F;
 
-			GlStateManager.translate((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
-			GlStateManager.rotate(-f3*rotateratio, 0.0F, 1.0F, 0.0F);
-			GlStateManager.translate(0.0F, 0.0F, -0.4375F);
+			glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
+			glRotatef(-f3*rotateratio, 0.0F, 1.0F, 0.0F);
+			glTranslatef(0.0F, 0.0F, -0.4375F);
 		}
 	}
 
@@ -80,27 +77,27 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
+				glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
 				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 
-			GlStateManager.pushMatrix();
+			glPushMatrix();
 			translateBase(tile, x, y, z, 1f);
 
 			// Draw Canvas
-			GlStateManager.disableCull();
-			GlStateManager.disableLighting();
+			glDisable(GL_CULL_FACE);
+			glDisable(GL_LIGHTING);
 
-			renderSignPicture(entry, destroy, opacity);
+			renderSignPicture(entry, opacity);
 
-			GlStateManager.enableLighting();
-			GlStateManager.enableCull();
+			glEnable(GL_LIGHTING);
+			glEnable(GL_CULL_FACE);
 
-			GlStateManager.popMatrix();
+			glPopMatrix();
 		} else {
 			if (opacity<1f) {
 				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, opacity);
+				glColor4f(1f, 1f, 1f, opacity);
 			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}

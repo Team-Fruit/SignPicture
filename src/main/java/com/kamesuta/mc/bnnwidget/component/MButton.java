@@ -14,7 +14,6 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class MButton extends WBase {
@@ -69,20 +68,20 @@ public class MButton extends WBase {
 		if (Config.instance.informationTryNew) {
 			RenderHelper.startShape();
 			if (isEnabled()) {
-				GlStateManager.color(.2f, .2f, .2f, opacity*.2f);
+				glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
 			}
-			GlStateManager.color(1f, 1f, 1f, opacity*this.o.get()*.3f);
+			glColor4f(1f, 1f, 1f, opacity*this.o.get()*.3f);
 			draw(a);
 			glLineWidth(1f);
 			if (isEnabled())
-				GlStateManager.color(0f, 0f, 0f, opacity);
+				glColor4f(0f, 0f, 0f, opacity);
 			else
-				GlStateManager.color(.5f, .5f, .5f, opacity);
+				glColor4f(.5f, .5f, .5f, opacity);
 			draw(a, GL_LINE_LOOP);
 		} else {
 			RenderHelper.startTexture();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			texture().bindTexture(button);
 			final int state = !isEnabled() ? 0 : a.pointInside(p) ? 2 : 1;
 

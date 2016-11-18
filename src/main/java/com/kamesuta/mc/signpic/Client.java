@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic;
 
-import org.apache.commons.lang3.Validate;
-
 import java.awt.GraphicsEnvironment;
 import java.io.Closeable;
 import java.io.File;
@@ -12,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
+
+import org.apache.commons.lang3.Validate;
 
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;

@@ -24,7 +24,6 @@ import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTask extends WPanel {
@@ -188,9 +187,9 @@ public class GuiTask extends WPanel {
 						@Override
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 							final Area a = getGuiPosition(pgp);
-							GlStateManager.pushMatrix();
-							GlStateManager.translate(a.x1(), a.y1(), 0f);
-							GlStateManager.scale(.5f, .5f, .5f);
+							glPushMatrix();
+							glTranslatef(a.x1(), a.y1(), 0f);
+							glScalef(.5f, .5f, .5f);
 							glTranslatef(-a.x1(), -a.y1(), 0f);
 							final String cont = "...";
 							final int contwidth = font().getStringWidth(cont);
@@ -205,7 +204,7 @@ public class GuiTask extends WPanel {
 							RenderHelper.startTexture();
 							fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
 							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
-							GlStateManager.popMatrix();
+							glPopMatrix();
 						}
 					});
 
@@ -218,21 +217,21 @@ public class GuiTask extends WPanel {
 								@Override
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
-									GlStateManager.color(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
+									glColor4f(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
 									RenderHelper.startShape();
 									draw(a);
 
-									GlStateManager.pushMatrix();
+									glPushMatrix();
 									final String prog = String.format("%.1f%%", TaskElement.this.progress.getProgress()*100);
 									final int progwidth = font().getStringWidth(prog);
 									final float maxx = pgp.x2()*2-progwidth;
-									GlStateManager.color(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
-									GlStateManager.translate(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
-									GlStateManager.scale(.5f, .5f, .5f);
+									glColor4f(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
+									glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
+									glScalef(.5f, .5f, .5f);
 									RenderHelper.startTexture();
 									fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
 									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
-									GlStateManager.popMatrix();
+									glPopMatrix();
 
 									super.draw(ev, pgp, p, frame, popacity);
 								}
@@ -248,7 +247,7 @@ public class GuiTask extends WPanel {
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 							final Area a = getGuiPosition(pgp);
 							RenderHelper.startShape();
-							GlStateManager.color(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
+							glColor4f(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
 							draw(a);
 							super.draw(ev, pgp, p, frame, opacity);
 						}
@@ -260,9 +259,9 @@ public class GuiTask extends WPanel {
 					final Area a = getGuiPosition(pgp);
 					RenderHelper.startShape();
 					if (a.pointInside(p))
-						GlStateManager.color(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
+						glColor4f(.75f, .75f, .75f, getGuiOpacity(opacity)*.125f);
 					else
-						GlStateManager.color(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
+						glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
 					draw(a);
 					super.draw(ev, pgp, p, frame, opacity);
 				}
