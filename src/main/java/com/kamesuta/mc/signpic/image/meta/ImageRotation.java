@@ -1,13 +1,13 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ImageRotation extends ImageMeta.MetaParser {
 	public static final float defaultOffset = 4f;
@@ -79,19 +79,19 @@ public class ImageRotation extends ImageMeta.MetaParser {
 		X {
 			@Override
 			public void rotate(final float f) {
-				glRotatef(f*360f/8f, 1f, 0f, 0f);
+				GlStateManager.rotate(f*360f/8f, 1f, 0f, 0f);
 			}
 		},
 		Y {
 			@Override
 			public void rotate(final float f) {
-				glRotatef(f*360f/8f, 0f, 1f, 0f);
+				GlStateManager.rotate(f*360f/8f, 0f, 1f, 0f);
 			}
 		},
 		Z {
 			@Override
 			public void rotate(final float f) {
-				glRotatef(f*360f/8f, 0f, 0f, 1f);
+				GlStateManager.rotate(f*360f/8f, 0f, 0f, 1f);
 			}
 		},
 		;

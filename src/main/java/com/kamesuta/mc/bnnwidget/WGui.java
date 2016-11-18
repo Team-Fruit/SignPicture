@@ -11,6 +11,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -133,11 +134,11 @@ public class WGui extends Gui {
 	}
 
 	public static void drawString(final String text, final float x, final float y, final float w, final float h, final Align align, final VerticalAlign valign, final boolean shadow) {
-		glPushMatrix();
+		GlStateManager.pushMatrix();
 		align.translate(text, x, w);
 		valign.translate(text, y, h);
 		font().drawString(text, 0, 0, fontcolor, shadow);
-		glPopMatrix();
+		GlStateManager.popMatrix();
 		resetFontColor();
 	}
 
@@ -149,19 +150,19 @@ public class WGui extends Gui {
 		LEFT {
 			@Override
 			protected void translate(final String text, final float x, final float w) {
-				glTranslatef(x, 0, 0);
+				GlStateManager.translate(x, 0, 0);
 			}
 		},
 		CENTER {
 			@Override
 			protected void translate(final String text, final float x, final float w) {
-				glTranslatef(x+(w-getStringWidth(text))/2, 0, 0);
+				GlStateManager.translate(x+(w-getStringWidth(text))/2, 0, 0);
 			}
 		},
 		RIGHT {
 			@Override
 			protected void translate(final String text, final float x, final float w) {
-				glTranslatef(x-getStringWidth(text), 0, 0);
+				GlStateManager.translate(x-getStringWidth(text), 0, 0);
 			}
 		},
 		;
@@ -172,19 +173,19 @@ public class WGui extends Gui {
 		TOP {
 			@Override
 			protected void translate(final String text, final float y, final float h) {
-				glTranslatef(0, y, 0);
+				GlStateManager.translate(0, y, 0);
 			}
 		},
 		MIDDLE {
 			@Override
 			protected void translate(final String text, final float y, final float h) {
-				glTranslatef(0, y+(h-font().FONT_HEIGHT)/2, 0);
+				GlStateManager.translate(0, y+(h-font().FONT_HEIGHT)/2, 0);
 			}
 		},
 		BOTTOM {
 			@Override
 			protected void translate(final String text, final float y, final float h) {
-				glTranslatef(0, y+h-font().FONT_HEIGHT, 0);
+				GlStateManager.translate(0, y+h-font().FONT_HEIGHT, 0);
 			}
 		},
 		;

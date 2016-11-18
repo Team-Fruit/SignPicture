@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GLContext;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 
 public class DynamicImageTexture implements ImageTexture {
@@ -98,7 +99,7 @@ public class DynamicImageTexture implements ImageTexture {
 	@Override
 	public void bind() {
 		if (this.id!=-1)
-			glBindTexture(GL_TEXTURE_2D, this.id);
+			GlStateManager.bindTexture(this.id);
 	}
 
 	public void delete() {

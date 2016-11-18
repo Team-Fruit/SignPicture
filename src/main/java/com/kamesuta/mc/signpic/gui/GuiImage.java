@@ -26,6 +26,7 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -50,42 +51,43 @@ public class GuiImage extends WFrame {
 						final Area a = getGuiPosition(pgp);
 						final Content content = GuiImage.this.entry.content();
 
-						glPushMatrix();
+						GlStateManager.pushMatrix();
 						if (GuiImage.this.entry.isNotSupported())
 							opacity *= .5f;
-						glPushMatrix();
-						glScalef(a.w(), a.h(), 1f);
+						GlStateManager.pushMatrix();
+						GlStateManager.scale(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
+							GlStateManager.color(1.0F, 1.0F, 1.0F, opacity*1.0F);
 							final ImageTextureMap map = GuiImage.this.entry.meta.map;
 							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
 						} else {
 							RenderHelper.startShape();
 							glLineWidth(1f);
-							glColor4f(1.0F, 0.0F, 0.0F, opacity*Config.instance.renderSeeOpacity);
+							GlStateManager.color(1.0F, 0.0F, 0.0F, opacity*Config.instance.renderSeeOpacity);
 							draw(0, 0, 1, 1, GL_LINE_LOOP);
 						}
-						glPopMatrix();
+						GlStateManager.popMatrix();
 
 						if (a.w()<1.5f||a.h()<1.5) {
-							glScalef(.5f, .5f, .5f);
-							glTranslatef(a.w()/2, a.h()/4, 0);
+							GlStateManager.scale(.5f, .5f, .5f);
+							GlStateManager.translate(a.w()/2, a.h()/4, 0);
 						}
-						glTranslatef(a.w()/2, a.h()/2, 0);
-						glScalef(.5f, .5f, 1f);
+						GlStateManager.translate(a.w()/2, a.h()/2, 0);
+						GlStateManager.scale(.5f, .5f, 1f);
 						if (content.state.getType()!=StateType.AVAILABLE) {
 							if (content.state.getType()==StateType.ERROR) {
-								glPushMatrix();
-								glTranslatef(-.5f, -.5f, 0f);
+								GlStateManager.pushMatrix();
+								;
+								GlStateManager.scale(-.5f, -.5f, 0f);
 								RenderHelper.startTexture();
 								texture().bindTexture(resError);
 								RenderHelper.drawRectTexture(GL_QUADS);
-								glPopMatrix();
+								GlStateManager.popMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
 							StateRender.drawMessage(content, font());
 						}
-						glPopMatrix();
+						GlStateManager.popMatrix();
 					}
 				});
 				add(new WPanel(new R()) {
@@ -103,11 +105,11 @@ public class GuiImage extends WFrame {
 						if (GuiImage.this.entry.isNotSupported()) {
 							RenderHelper.startShape();
 							glLineWidth(1f);
-							glColor4f(1f, 1f, 1f, 1f);
-							glPushMatrix();
-							glTranslatef(0f, 0f, .002f);
+							GlStateManager.color(1f, 1f, 1f, 1f);
+							GlStateManager.pushMatrix();
+							GlStateManager.translate(0f, 0f, .002f);
 							super.draw(ev, pgp, p, frame, popacity);
-							glPopMatrix();
+							GlStateManager.popMatrix();
 						}
 					}
 				});

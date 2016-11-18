@@ -14,6 +14,7 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
@@ -40,7 +41,8 @@ public class SignPicRender extends WGui {
 			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
 				final BlockPos pos = tile.getPos();
-				Client.renderer.renderSignPictureBase(tile, pos.getX() - TileEntityRendererDispatcher.staticPlayerX, pos.getY() - TileEntityRendererDispatcher.staticPlayerY, pos.getZ() - TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1, opacity);			}
+				Client.renderer.renderSignPictureBase(tile, pos.getX()-TileEntityRendererDispatcher.staticPlayerX, pos.getY()-TileEntityRendererDispatcher.staticPlayerY, pos.getZ()-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, -1, opacity);
+			}
 	}
 
 	@CoreEvent
@@ -51,25 +53,25 @@ public class SignPicRender extends WGui {
 					final FontRenderer fontrenderer = font();
 
 					RenderHelper.startTexture();
-					glPushMatrix();
-					glTranslatef(5f, 5f, 0f);
-					glScalef(2f, 2f, 1f);
+					GlStateManager.pushMatrix();
+					GlStateManager.translate(5f, 5f, 0f);
+					GlStateManager.scale(2f, 2f, 1f);
 
-					glPushMatrix();
-					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
-					glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					GlStateManager.pushMatrix();
+					GlStateManager.scale(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 					texture().bindTexture(resSign);
 					RenderHelper.startTexture();
 					RenderHelper.drawRectTexture(GL_QUADS);
 
-					glPopMatrix();
+					GlStateManager.popMatrix();
 
-					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
+					GlStateManager.translate(fontrenderer.FONT_HEIGHT, 0f, 0f);
 					final String str = I18n.format(CurrentMode.instance.getMode().message);
 					fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
-					glPopMatrix();
+					GlStateManager.popMatrix();
 				}
 	}
 
