@@ -183,6 +183,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	protected Point mouselast;
+	protected int lastbutton = -1;
 
 	@Override
 	public void updateScreen() {
@@ -191,12 +192,11 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		final Area gp = getAbsolute();
 		getContentPane().update(this.event, gp, p);
 		final int m = Mouse.getEventButton();
-		if (this.mousebutton!=m) {
-			if (!Mouse.isButtonDown(this.mousebutton))
-				getContentPane().mouseReleased(this.event, gp, p, this.mousebutton);
-			if (m>=-1)
-				this.mousebutton = m;
-		}
+		if (this.lastbutton==-1&&m!=this.lastbutton||!Mouse.isButtonDown(this.mousebutton))
+			getContentPane().mouseReleased(this.event, gp, p, this.mousebutton);
+		this.lastbutton = m;
+		if (this.mousebutton!=m&&m!=-1)
+			this.mousebutton = m;
 		if (!p.equals(this.mouselast)) {
 			this.mouselast = p;
 			getContentPane().mouseMoved(this.event, gp, p, this.mousebutton);
