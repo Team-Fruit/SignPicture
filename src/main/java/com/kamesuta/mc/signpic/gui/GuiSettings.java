@@ -263,7 +263,7 @@ public class GuiSettings extends WPanel {
 
 												@Override
 												protected void initWidget() {
-													add(new WBase(new R(Coord.width(V.per(hstart, hend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
+													add(new WBase(new R(Coord.width(V.per(vstart, vend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 															final Area a = getGuiPosition(pgp);
