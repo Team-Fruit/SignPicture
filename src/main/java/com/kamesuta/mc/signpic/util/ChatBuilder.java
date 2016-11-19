@@ -32,12 +32,13 @@ public class ChatBuilder {
 	private final Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
-	public ChatBuilder() {}
+	public ChatBuilder() {
+	}
 
 	public IChatComponent build() {
 		IChatComponent chat;
 		if (this.chat==null) {
-			if (this.useTranslation && !this.useJson)
+			if (this.useTranslation&&!this.useJson)
 				chat = new ChatComponentTranslation(this.text, this.params);
 			else {
 				String s;
@@ -46,7 +47,7 @@ public class ChatBuilder {
 				else
 					s = this.text;
 
-				for (final Map.Entry<String, String> entry: this.replace.entrySet())
+				for (final Map.Entry<String, String> entry : this.replace.entrySet())
 					s = StringUtils.replace(s, entry.getKey(), entry.getValue());
 
 				if (this.params.length>0)
@@ -56,21 +57,20 @@ public class ChatBuilder {
 					try {
 						chat = IChatComponent.Serializer.func_150699_a(s);
 					} catch (final Exception e) {
-						chat = new ChatComponentText("Invaild Json: " + this.text);
+						chat = new ChatComponentText("Invaild Json: "+this.text);
 					}
 				else
 					chat = new ChatComponentText(this.text);
 			}
-		} else {
+		} else
 			chat = this.chat;
-		}
-		if (chat!=null && this.style!=null)
+		if (chat!=null&&this.style!=null)
 			chat.setChatStyle(this.style);
 		return chat;
 	}
 
 	public boolean isEmpty() {
-		return StringUtils.isEmpty(this.text) && (this.chat==null || StringUtils.isEmpty(this.chat.getUnformattedText()));
+		return StringUtils.isEmpty(this.text)&&(this.chat==null||StringUtils.isEmpty(this.chat.getUnformattedText()));
 	}
 
 	public ChatBuilder setId(final int id) {
@@ -129,6 +129,11 @@ public class ChatBuilder {
 			chatClient(this);
 	}
 
+	public void sendPlayer(final ICommandSender target) {
+		if (!isEmpty())
+			sendPlayer(target, this);
+	}
+
 	@SideOnly(Side.CLIENT)
 	public static void chatClient(final ChatBuilder chat) {
 		final Minecraft mc = Client.mc;
@@ -141,13 +146,12 @@ public class ChatBuilder {
 		}
 	}
 
-	@SideOnly(Side.SERVER)
-	public static void sendPlayerChat(final ICommandSender target, final ChatBuilder chat) {
+	public static void sendPlayer(final ICommandSender target, final ChatBuilder chat) {
 		target.addChatMessage(chat.build());
 	}
 
 	@SideOnly(Side.SERVER)
-	public static void sendServerChat(final ChatBuilder chat) {
+	public static void sendServer(final ChatBuilder chat) {
 		final ServerConfigurationManager sender = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager();
 		sender.sendChatMsg(chat.build());
 	}

@@ -82,7 +82,11 @@ signpic.advmsg.format.unsupported=未対応のSignPicture
 signpic.advmsg.format.needupdate=新しいバージョンをお試しください！
 
 # Version Checking
+signpic.versioning.check.start=更新データの確認開始
+signpic.versioning.check.cooldown=Checking Failed: §7もう少し時間をおいてお試しください
+signpic.versioning.noupdate=更新はありませんでした
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] 新しいバージョンがご利用可能です: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] [§a更新§r] %s
 signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
 signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.doneDownloadingWithFile=ダウンロード完了 %s 適用するためには %s を消し、Minecraftを再起動してください

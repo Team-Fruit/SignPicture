@@ -4,7 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import com.kamesuta.mc.bnnwidget.StencilClip;
-import com.kamesuta.mc.signpic.information.CommandDownloadLatest;
+import com.kamesuta.mc.signpic.command.CommandVersion;
+import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
@@ -47,6 +48,9 @@ public class ClientProxy extends CommonProxy {
 
 		// Setup
 		Client.handler = new CoreHandler();
+		Client.rootCommand = new RootCommand();
+
+		Client.rootCommand.addChildCommand(new CommandVersion());
 	}
 
 	private File getDataDirectory() {
@@ -68,7 +72,7 @@ public class ClientProxy extends CommonProxy {
 
 		// Event Register
 		Client.handler.init();
-		ClientCommandHandler.instance.registerCommand(new CommandDownloadLatest());
+		ClientCommandHandler.instance.registerCommand(Client.rootCommand);
 	}
 
 	@Override

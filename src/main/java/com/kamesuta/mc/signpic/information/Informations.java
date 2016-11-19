@@ -110,9 +110,8 @@ public final class Informations {
 		return System.currentTimeMillis()-this.lastCheck>l;
 	}
 
-	public void checkInterval(final long l, final Runnable after) {
-		if (shouldCheck(l))
-			check(after);
+	public long getLastCheck() {
+		return this.lastCheck;
 	}
 
 	public void check(final Runnable after) {
@@ -228,7 +227,7 @@ public final class Informations {
 						ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson()
 								.replace("$old$", Reference.VERSION)
 								.replace("$new$", version.version)
-								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic-download-latest\"}")
+								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic version update\"}")
 								.replace("$website$", "{\"action\":\"open_url\",\"value\":\""+website+"\"}")
 								.replace("$changelog$", "{\"action\":\"open_url\",\"value\":\""+changelog+"\"}")
 								.chatClient();

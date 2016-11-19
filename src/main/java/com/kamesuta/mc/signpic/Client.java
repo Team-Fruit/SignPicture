@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -37,6 +38,8 @@ public class Client {
 	public static String id;
 	public static String name;
 
+	public static RootCommand rootCommand;
+
 	public static void openEditor() {
 		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
 	}
@@ -61,6 +64,10 @@ public class Client {
 	@SuppressWarnings("deprecation")
 	public static void notice(final String notice, final float duration) {
 		OverlayFrame.instance.pane.addNotice1(notice, duration);
+	}
+
+	public static void notice(final String notice) {
+		Client.notice(notice, 2f);
 	}
 
 	public static class MovePos {
