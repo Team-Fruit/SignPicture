@@ -140,7 +140,7 @@ public class GuiSettings extends WPanel {
 									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
 										@Override
 										protected void initWidget() {
-											final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getConfig());
+											final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(Apis.instance.imageUploaders.getConfig());
 											Set<String> keys = null;
 											if (factory!=null)
 												keys = factory.keys();
@@ -172,20 +172,20 @@ public class GuiSettings extends WPanel {
 														setSelector(new ListSelector() {
 															{
 																final List<String> settings = Lists.newArrayList("");
-																settings.addAll(Apis.instance.imageUploader.getSettings());
+																settings.addAll(Apis.instance.imageUploaders.getSettings());
 																setList(settings);
 															}
 														});
 														this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
-														setText(Apis.instance.imageUploader.getConfig());
+														setText(Apis.instance.imageUploaders.getConfig());
 													}
 
 													@Override
 													protected void onChanged(final String oldText, final String newText) {
 														if (!StringUtils.equals(oldText, newText)) {
-															if (!StringUtils.equals(newText, Apis.instance.imageUploader.getConfig()))
-																Apis.instance.imageUploader.setConfig(newText);
-															final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(newText);
+															if (!StringUtils.equals(newText, Apis.instance.imageUploaders.getConfig()))
+																Apis.instance.imageUploaders.setConfig(newText);
+															final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(newText);
 															Set<String> keys = null;
 															if (factory!=null)
 																keys = factory.keys();

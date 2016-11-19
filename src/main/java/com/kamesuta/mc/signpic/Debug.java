@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -21,7 +23,6 @@ public class Debug {
 		//				.child(new RelativePosition(10, 10, -11, -11, true))
 		//				.child(new RelativeSizedPosition(0, 0, 21, 21, false));
 		//		Reference.logger.info(gp.getAbsolute());
-
 
 		//		final int p_73734_4_ = -16777216;
 		//		final float f3 = (p_73734_4_ >> 24 & 255) / 255.0F;
@@ -54,17 +55,40 @@ public class Debug {
 		//
 		//		PostData();
 
-		final int color = 0xffffff;
-		final float a = (color >> 24 & 255) / 255.0F;
-		final float r = (color >> 16 & 255) / 255.0F;
-		final float g = (color >> 8 & 255) / 255.0F;
-		final float b = (color & 255) / 255.0F;
-		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
+		//		final int color = 0xffffff;
+		//		final float a = (color >> 24 & 255) / 255.0F;
+		//		final float r = (color >> 16 & 255) / 255.0F;
+		//		final float g = (color >> 8 & 255) / 255.0F;
+		//		final float b = (color & 255) / 255.0F;
+		//		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
+
+		final String src = "gyazo.com/114514e";
+		Reference.logger.info(replace(src));
+	}
+
+	final static Pattern p = Pattern.compile("[^\\w]");
+
+	static String replace(String src) {
+		if (StringUtils.containsIgnoreCase(src, "gyazo.com")) {
+			if (!StringUtils.containsIgnoreCase(src, "i.gyazo.com"))
+				src = StringUtils.replace(src, "gyazo.com", "i.gyazo.com");
+			final String path = StringUtils.substringAfter(src, "gyazo.com/");
+			final String pre = StringUtils.substringBefore(src, "gyazo.com/");
+			final Matcher m = p.matcher(path);
+			if (m.find()) {
+				final String querystring = StringUtils.substring(path, 0, m.start());
+				final int i = StringUtils.indexOf(path, ".");
+				if (i<0||i>StringUtils.length(querystring))
+					src = pre+"gyazo.com/"+querystring+".png";
+			} else
+				src += ".png";
+		}
+		return src;
 	}
 
 	static void toStrings(final String[] sign, final String id) {
 		final int length = StringUtils.length(id);
-		for (int i=0; i<4; i++)
+		for (int i = 0; i<4; i++)
 			sign[i] = StringUtils.substring(id, 15*i, Math.min(15*(i+1), length));
 	}
 
@@ -74,7 +98,7 @@ public class Debug {
 	}
 
 	static boolean isPlaceable(final String entryId) {
-		return StringUtils.length(entryId) <= 15*4;
+		return StringUtils.length(entryId)<=15*4;
 	}
 
 	// TODO: Fix and test this method.
@@ -89,7 +113,7 @@ public class Debug {
 		final File f = new File("./src/main/resources/assets/signpic/textures/logo.png");
 		builder.addBinaryBody("imagedata", f, ContentType.DEFAULT_BINARY, f.getName());
 		builder.addTextBody("access_token", "4d080e95be741beba0b74653a872668326a79526784d2daed9190dc584bffad7");
-		httppost.setEntity(builder .build());
+		httppost.setEntity(builder.build());
 
 		// execute request
 		final HttpResponse response = httpclient.execute(httppost);

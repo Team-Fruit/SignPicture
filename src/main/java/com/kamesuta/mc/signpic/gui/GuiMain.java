@@ -19,6 +19,7 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
+import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -317,9 +318,10 @@ public class GuiMain extends WFrame {
 						super.onAdded();
 						setMaxStringLength(Integer.MAX_VALUE);
 						setWatermark(I18n.format("signpic.gui.editor.textfield"));
-						final String id = GuiMain.this.signbuilder.getURI();
-						if (id!=null)
-							setText(id);
+
+						final EntryId id = CurrentMode.instance.getEntryId();
+						if (id.hasContentId())
+							setText(id.getContentId().getID());
 					}
 
 					@Override
@@ -327,11 +329,27 @@ public class GuiMain extends WFrame {
 						final EntryId entryId = new EntryId(getText());
 						if (entryId.hasMeta())
 							GuiMain.this.signbuilder.setMeta(entryId.getMeta());
-						if (entryId.hasContentId())
-							GuiMain.this.signbuilder.setURI(entryId.getContentId().getURI());
-						else
+						if (entryId.hasContentId()) {
+							String url = entryId.getContentId().getURI();
+							setText(url = Apis.instance.replaceURL(url));
+							GuiMain.this.signbuilder.setURI(url);
+						} else
 							GuiMain.this.signbuilder.setURI("");
 						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
+					}
+
+					@Override
+					public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+						final int cursor1 = getCursorPosition();
+						final boolean focused1 = isFocused();
+						final boolean b = super.mouseClicked(ev, pgp, p, button);
+						final int cursor2 = getCursorPosition();
+						final boolean focused2 = isFocused();
+						final Area a = getGuiPosition(pgp);
+						if (a.pointInside(p))
+							if (focused1&&focused2&&cursor1==cursor2)
+								setText(GuiScreen.getClipboardString());
+						return b;
 					}
 
 					@Override
