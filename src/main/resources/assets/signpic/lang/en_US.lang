@@ -29,6 +29,7 @@ signpic.gui.editor.load=Load
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.file=Upload
+signpic.gui.editor.paste=Paste
 signpic.gui.editor.textfield=Place URL Here!
 ### Size
 signpic.gui.editor.size.category=Size
@@ -76,6 +77,9 @@ signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
 signpic.gui.editor.notice.toolong=Too long code for Sign!
 
 # Notice
+signpic.gui.notice.paste.unsupported=Not Supported
+signpic.gui.notice.paste.typeunsupported=Unsupported Type
+signpic.gui.notice.paste.error=Paste Error: %s
 signpic.gui.notice.uploading=Uploading %s
 signpic.gui.notice.uploaded=Finished uploading %s
 signpic.gui.notice.uploadfailed=Upload Failed: §7%s

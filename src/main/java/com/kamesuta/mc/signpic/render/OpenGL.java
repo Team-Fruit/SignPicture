@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.render;
 
+import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -136,6 +137,19 @@ public class OpenGL {
 	public static void glColor4f(final float red, final float green, final float blue, final float alpha) {
 		//GlStateManager.color(red, green, blue, alpha);
 		GL11.glColor4f(red, green, blue, alpha);
+	}
+
+	public static void glColor4ub(final byte red, final byte green, final byte blue, final byte alpha) {
+		//GlStateManager.color(red, green, blue, alpha);
+		GL11.glColor4ub(red, green, blue, alpha);
+	}
+
+	public static void glColor(final Color color) {
+		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+	}
+
+	public static void glColor(final org.lwjgl.util.Color color) {
+		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
 	}
 
 	public static void glColorMask(final boolean red, final boolean green, final boolean blue, final boolean alpha) {

@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +15,9 @@ import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
 import com.kamesuta.mc.signpic.http.upload.IUploader;
 import com.kamesuta.mc.signpic.http.upload.ImgurUpload;
+import com.kamesuta.mc.signpic.http.upload.UploadContent;
 import com.kamesuta.mc.signpic.information.Info;
 import com.kamesuta.mc.signpic.information.Informations;
-import com.kamesuta.mc.signpic.state.State;
 
 public class Apis {
 	public static final Apis instance = new Apis();
@@ -140,7 +139,7 @@ public class Apis {
 	}
 
 	public static interface ImageUploaderFactory {
-		IUploader create(File f, State s, String key) throws IOException;
+		IUploader create(UploadContent upload, String key) throws IOException;
 
 		Set<String> keys();
 	}
@@ -162,8 +161,8 @@ public class Apis {
 			}
 
 			@Override
-			public IUploader create(final File f, final State s, final String key) throws IOException {
-				return new GyazoUpload(f, s, key);
+			public IUploader create(final UploadContent upload, final String key) throws IOException {
+				return new GyazoUpload(upload, key);
 			}
 		});
 		registerImageUploader("Imgur", new ImageUploaderFactory() {
@@ -182,8 +181,8 @@ public class Apis {
 			}
 
 			@Override
-			public IUploader create(final File f, final State s, final String key) throws IOException {
-				return new ImgurUpload(f, s, key);
+			public IUploader create(final UploadContent upload, final String key) throws IOException {
+				return new ImgurUpload(upload, key);
 			}
 		});
 		final Pattern p = Pattern.compile("[^\\w]");

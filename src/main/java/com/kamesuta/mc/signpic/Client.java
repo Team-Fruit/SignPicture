@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 
 import com.kamesuta.mc.signpic.gui.GuiMain;
+import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -55,6 +56,11 @@ public class Client {
 				return (TileEntitySign) tile;
 		}
 		return null;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void notice(final String notice, final float duration) {
+		OverlayFrame.instance.pane.addNotice1(notice, duration);
 	}
 
 	public static class MovePos {

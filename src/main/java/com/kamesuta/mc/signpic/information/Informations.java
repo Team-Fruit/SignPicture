@@ -12,7 +12,6 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.gui.GuiTask;
-import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
@@ -157,7 +156,7 @@ public final class Informations {
 		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
 			if (state.isDownloaded()) {
 				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
+				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
 				try {
 					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 				} catch (final IOException e) {
@@ -165,7 +164,7 @@ public final class Informations {
 				}
 			} else if (state.downloading) {
 				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
+				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
 			} else {
 				final ModDownload downloader = new ModDownload();
 				downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);

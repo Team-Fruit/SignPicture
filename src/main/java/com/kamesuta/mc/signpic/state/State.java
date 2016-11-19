@@ -12,14 +12,13 @@ import com.kamesuta.mc.signpic.image.InvaildImageException;
 import net.minecraft.client.resources.I18n;
 
 public class State {
-	private String name;
+	private String name = "";
 	private Progress progress = new Progress();
 	private StateType type = StateType.INIT;
 	private String message = "";
 	private Map<String, Object> map = Maps.newHashMap();
 
-	public State(final String name) {
-		this.name = name;
+	public State() {
 	}
 
 	public State setName(final String name) {

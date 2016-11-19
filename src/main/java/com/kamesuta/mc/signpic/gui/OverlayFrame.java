@@ -116,6 +116,7 @@ public class OverlayFrame extends WFrame {
 			return true;
 		}
 
+		@Deprecated
 		public void addNotice1(final String string, final float showtime) {
 			invokeLater(new Runnable() {
 				@Override

@@ -22,19 +22,15 @@ public class StateRender {
 		}
 
 		public void loadingColor() {
-			color(this.loading);
+			OpenGL.glColor(this.loading);
 		}
 
 		public void progressColor() {
-			color(this.progress);
+			OpenGL.glColor(this.progress);
 		}
 
 		public void designColor() {
-			color(this.design);
-		}
-
-		private static void color(final Color color) {
-			OpenGL.glColor4f(color.getBlue()/256f, color.getGreen()/256f, color.getBlue()/256f, color.getAlpha()/256f);
+			OpenGL.glColor(this.design);
 		}
 	}
 

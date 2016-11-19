@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Transferable;
 import java.util.concurrent.TimeUnit;
 
 import org.lwjgl.input.Keyboard;
@@ -20,10 +22,12 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.file.FileUtilitiy;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -35,8 +39,20 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class GuiMain extends WFrame {
-	private final EntryIdBuilder signbuilder = new EntryIdBuilder(CurrentMode.instance.getEntryId());
-	private MChatTextField field;
+	private final EntryIdBuilder signbuilder = new EntryIdBuilder().load(CurrentMode.instance.getEntryId());
+
+	public void setURL(final String url) {
+		this.signbuilder.setURI(url);
+		final MainTextField field = getTextField();
+		field.setText(url);
+		field.apply();
+	}
+
+	public void export() {
+		CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
+	}
+
+	private MainTextField field;
 
 	public GuiMain(final GuiScreen parent) {
 		super(parent);
@@ -99,7 +115,8 @@ public class GuiMain extends WFrame {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
+						export();
+						;
 					}
 				});
 
@@ -107,7 +124,8 @@ public class GuiMain extends WFrame {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
+						export();
+						;
 					}
 				});
 
@@ -115,7 +133,8 @@ public class GuiMain extends WFrame {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
-						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
+						export();
+						;
 					}
 				});
 
@@ -214,6 +233,18 @@ public class GuiMain extends WFrame {
 								return McUiUpload.instance.isVisible();
 							}
 						});
+						add(new MButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.paste")) {
+							@Override
+							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								try {
+									final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+									FileUtilitiy.transfer(transferable);
+								} catch (final Exception e) {
+									Client.notice(I18n.format("signpic.gui.notice.paste.unsupported", e), 2);
+								}
+								return true;
+							}
+						});
 
 						float bottom = 25*4+5;
 
@@ -266,7 +297,7 @@ public class GuiMain extends WFrame {
 								if (a.pointInside(p)) {
 									final Entry entry = CurrentMode.instance.getEntryId().entry();
 									if (entry.isValid()&&!entry.id.isPlaceable())
-										OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.editor.notice.toolong"), 1f);
+										Client.notice(I18n.format("signpic.gui.editor.notice.toolong"), 1f);
 								}
 								return super.mouseClicked(ev, pgp, p, button);
 							}
@@ -312,46 +343,7 @@ public class GuiMain extends WFrame {
 				});
 
 				final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				GuiMain.this.field = new MChatTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(70), Coord.height(15))) {
-					@Override
-					public void onAdded() {
-						super.onAdded();
-						setMaxStringLength(Integer.MAX_VALUE);
-						setWatermark(I18n.format("signpic.gui.editor.textfield"));
-
-						final EntryId id = CurrentMode.instance.getEntryId();
-						if (id.hasContentId())
-							setText(id.getContentId().getID());
-					}
-
-					@Override
-					public void onFocusChanged() {
-						final EntryId entryId = new EntryId(getText());
-						if (entryId.hasMeta())
-							GuiMain.this.signbuilder.setMeta(entryId.getMeta());
-						if (entryId.hasContentId()) {
-							String url = entryId.getContentId().getURI();
-							setText(url = Apis.instance.replaceURL(url));
-							GuiMain.this.signbuilder.setURI(url);
-						} else
-							GuiMain.this.signbuilder.setURI("");
-						CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
-					}
-
-					@Override
-					public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-						final int cursor1 = getCursorPosition();
-						final boolean focused1 = isFocused();
-						final boolean b = super.mouseClicked(ev, pgp, p, button);
-						final int cursor2 = getCursorPosition();
-						final boolean focused2 = isFocused();
-						final Area a = getGuiPosition(pgp);
-						if (a.pointInside(p))
-							if (focused1&&focused2&&cursor1==cursor2)
-								setText(GuiScreen.getClipboardString());
-						return b;
-					}
-
+				GuiMain.this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(70), Coord.height(15))) {
 					@Override
 					public boolean onCloseRequest() {
 						super.onCloseRequest();
@@ -374,7 +366,7 @@ public class GuiMain extends WFrame {
 		Informations.instance.checkInterval(TimeUnit.DAYS.toMillis(1l));
 	}
 
-	public MChatTextField getTextField() {
+	public MainTextField getTextField() {
 		return this.field;
 	}
 
@@ -388,5 +380,68 @@ public class GuiMain extends WFrame {
 	@Override
 	public boolean doesGuiPauseGame() {
 		return super.sDoesGuiPauseGame();
+	}
+
+	public static boolean setContentId(final String id) {
+		if (Client.mc.currentScreen instanceof GuiMain) {
+			final GuiMain editor = (GuiMain) Client.mc.currentScreen;
+			editor.setURL(id);
+			return true;
+		} else {
+			final EntryId entryId = CurrentMode.instance.getEntryId();
+			final EntryIdBuilder signbuilder = new EntryIdBuilder().load(entryId);
+			signbuilder.setURI(id);
+			CurrentMode.instance.setEntryId(signbuilder.build());
+			return false;
+		}
+	}
+
+	public class MainTextField extends MChatTextField {
+		public MainTextField(final R position) {
+			super(position);
+		}
+
+		@Override
+		public void onAdded() {
+			super.onAdded();
+			setMaxStringLength(Integer.MAX_VALUE);
+			setWatermark(I18n.format("signpic.gui.editor.textfield"));
+
+			final EntryId id = CurrentMode.instance.getEntryId();
+			if (id.hasContentId())
+				setText(id.getContentId().getID());
+		}
+
+		@Override
+		public void onFocusChanged() {
+			apply();
+		}
+
+		public void apply() {
+			final EntryId entryId = new EntryId(getText());
+			if (entryId.hasMeta())
+				GuiMain.this.signbuilder.setMeta(entryId.getMeta());
+			if (entryId.hasContentId()) {
+				String url = entryId.getContentId().getURI();
+				setText(url = Apis.instance.replaceURL(url));
+				GuiMain.this.signbuilder.setURI(url);
+			} else
+				GuiMain.this.signbuilder.setURI("");
+			export();
+		}
+
+		@Override
+		public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+			final int cursor1 = getCursorPosition();
+			final boolean focused1 = isFocused();
+			final boolean b = super.mouseClicked(ev, pgp, p, button);
+			final int cursor2 = getCursorPosition();
+			final boolean focused2 = isFocused();
+			final Area a = getGuiPosition(pgp);
+			if (a.pointInside(p))
+				if (focused1&&focused2&&cursor1==cursor2)
+					setText(GuiScreen.getClipboardString());
+			return b;
+		}
 	}
 }

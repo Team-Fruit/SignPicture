@@ -121,6 +121,6 @@ public class CoreHandler {
 		// Client.openEditor();
 		// Reference.logger.info("try to delete: "+Client.location.modFile.getName());
 		// Client.deleteMod();
-		OverlayFrame.instance.pane.addNotice1("Debug Message!", 3f);
+		Client.notice("Debug Message!", 3f);
 	}
 }

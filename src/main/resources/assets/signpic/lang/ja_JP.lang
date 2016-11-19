@@ -16,6 +16,7 @@ signpic.gui.editor.load=ロード
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.file=アップロード
+signpic.gui.editor.paste=貼り付け
 signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
@@ -41,6 +42,9 @@ signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
 signpic.gui.editor.notice.toolong=コードが長すぎて看板に収まりません！
 
 # Notice
+signpic.gui.notice.paste.unsupported=非対応
+signpic.gui.notice.paste.typeunsupported=非対応な種類
+signpic.gui.notice.paste.error=貼り付けエラー: %s
 signpic.gui.notice.uploading=アップロード開始 %s
 signpic.gui.notice.uploaded=アップロード完了 %s
 signpic.gui.notice.uploadfailed=アップロード失敗: §7%s
