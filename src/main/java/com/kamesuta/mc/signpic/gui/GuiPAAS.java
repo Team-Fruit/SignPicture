@@ -38,7 +38,7 @@ public class GuiPAAS extends WFrame {
 		this.preview = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 		CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 
-		add(new WPanel(R.diff(0, 0, 0, 0)) {
+		add(new WPanel(new R()) {
 			private final int max = StringUtils.length(GuiPAAS.this.task.id.id());
 			private int cursor;
 			private boolean close = true;
@@ -46,7 +46,7 @@ public class GuiPAAS extends WFrame {
 
 			@Override
 			protected void initWidget() {
-				add(new WBase(R.diff(0, 0, 0, 0)) {
+				add(new WBase(new R()) {
 					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override

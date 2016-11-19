@@ -72,10 +72,10 @@ public class GuiMain extends WFrame {
 
 	@Override
 	protected void initWidget() {
-		add(new WPanel(R.diff(0, 0, 0, 0)) {
+		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
-				add(new WBase(R.diff(0, 0, 0, 0)) {
+				add(new WBase(new R()) {
 					VMotion m = V.pm(0);
 
 					@Override

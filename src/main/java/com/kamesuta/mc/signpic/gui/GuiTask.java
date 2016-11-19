@@ -179,7 +179,7 @@ public class GuiTask extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new WPanel(R.diff(1, 1, 0, 0)) {
+			add(new WPanel(new R(Coord.top(1f), Coord.left(1f), Coord.bottom(0f), Coord.right(0f))) {
 				@Override
 				protected void initWidget() {
 					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
