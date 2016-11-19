@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -20,6 +18,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -52,10 +51,10 @@ public class OverlayFrame extends WFrame {
 			if (!isDelegated()) {
 				setWidth(event.gui.width);
 				setHeight(event.gui.height);
-				glPushMatrix();
-				glTranslatef(0f, 0f, 1000f);
+				OpenGL.glPushMatrix();
+				OpenGL.glTranslatef(0f, 0f, 1000f);
 				drawScreen(event.mouseX, event.mouseY, event.renderPartialTicks);
-				glPopMatrix();
+				OpenGL.glPopMatrix();
 			}
 	}
 
@@ -149,7 +148,7 @@ public class OverlayFrame extends WFrame {
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
 									RenderHelper.startShape();
-									glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
+									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
 									draw(a);
 								}
 							});

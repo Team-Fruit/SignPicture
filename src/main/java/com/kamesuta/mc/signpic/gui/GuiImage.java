@@ -21,6 +21,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
@@ -49,42 +50,42 @@ public class GuiImage extends WFrame {
 						final Area a = getGuiPosition(pgp);
 						final Content content = GuiImage.this.entry.content();
 
-						glPushMatrix();
+						OpenGL.glPushMatrix();
 						if (GuiImage.this.entry.isNotSupported())
 							opacity *= .5f;
-						glPushMatrix();
-						glScalef(a.w(), a.h(), 1f);
+						OpenGL.glPushMatrix();
+						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
 							final ImageTextureMap map = GuiImage.this.entry.meta.map;
 							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
 						} else {
 							RenderHelper.startShape();
-							glLineWidth(1f);
-							glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
+							OpenGL.glLineWidth(1f);
+							OpenGL.glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
 							draw(0, 0, 1, 1, GL_LINE_LOOP);
 						}
-						glPopMatrix();
+						OpenGL.glPopMatrix();
 
 						if (a.w()<1.5f||a.h()<1.5) {
-							glScalef(.5f, .5f, .5f);
-							glTranslatef(a.w()/2, a.h()/4, 0);
+							OpenGL.glScalef(.5f, .5f, .5f);
+							OpenGL.glTranslatef(a.w()/2, a.h()/4, 0);
 						}
-						glTranslatef(a.w()/2, a.h()/2, 0);
-						glScalef(.5f, .5f, 1f);
+						OpenGL.glTranslatef(a.w()/2, a.h()/2, 0);
+						OpenGL.glScalef(.5f, .5f, 1f);
 						if (content.state.getType()!=StateType.AVAILABLE) {
 							if (content.state.getType()==StateType.ERROR) {
-								glPushMatrix();
-								glTranslatef(-.5f, -.5f, 0f);
+								OpenGL.glPushMatrix();
+								OpenGL.glTranslatef(-.5f, -.5f, 0f);
 								RenderHelper.startTexture();
 								texture().bindTexture(resError);
 								RenderHelper.drawRectTexture(GL_QUADS);
-								glPopMatrix();
+								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
 							StateRender.drawMessage(content, font());
 						}
-						glPopMatrix();
+						OpenGL.glPopMatrix();
 					}
 				});
 				add(new WPanel(new R()) {
@@ -101,12 +102,12 @@ public class GuiImage extends WFrame {
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 						if (GuiImage.this.entry.isNotSupported()) {
 							RenderHelper.startShape();
-							glLineWidth(1f);
-							glColor4f(1f, 1f, 1f, 1f);
-							glPushMatrix();
-							glTranslatef(0f, 0f, .002f);
+							OpenGL.glLineWidth(1f);
+							OpenGL.glColor4f(1f, 1f, 1f, 1f);
+							OpenGL.glPushMatrix();
+							OpenGL.glTranslatef(0f, 0f, .002f);
 							super.draw(ev, pgp, p, frame, popacity);
-							glPopMatrix();
+							OpenGL.glPopMatrix();
 						}
 					}
 				});
@@ -125,16 +126,16 @@ public class GuiImage extends WFrame {
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			texture().bindTexture(GuiSettings.update);
-			glColor4f(144f/256f, 191f/256f, 48f/256f, 1f);
+			OpenGL.glColor4f(144f/256f, 191f/256f, 48f/256f, 1f);
 			RenderHelper.startTexture();
-			glPushMatrix();
-			glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
-			glRotatef(this.rot.get()*360, 0, 0, 1);
-			glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, -.001f);
+			OpenGL.glPushMatrix();
+			OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
+			OpenGL.glRotatef(this.rot.get()*360, 0, 0, 1);
+			OpenGL.glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, -.001f);
 			drawTexture(a);
-			glTranslatef(0f, 0f, -.002f);
+			OpenGL.glTranslatef(0f, 0f, -.002f);
 			drawTexture(a);
-			glPopMatrix();
+			OpenGL.glPopMatrix();
 		}
 	};
 

@@ -11,6 +11,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -68,20 +69,20 @@ public class MButton extends WBase {
 		if (Config.instance.informationTryNew) {
 			RenderHelper.startShape();
 			if (isEnabled()) {
-				glColor4f(.2f, .2f, .2f, opacity*.2f);
+				OpenGL.glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
 			}
-			glColor4f(1f, 1f, 1f, opacity*this.o.get()*.3f);
+			OpenGL.glColor4f(1f, 1f, 1f, opacity*this.o.get()*.3f);
 			draw(a);
-			glLineWidth(1f);
+			OpenGL.glLineWidth(1f);
 			if (isEnabled())
-				glColor4f(0f, 0f, 0f, opacity);
+				OpenGL.glColor4f(0f, 0f, 0f, opacity);
 			else
-				glColor4f(.5f, .5f, .5f, opacity);
+				OpenGL.glColor4f(.5f, .5f, .5f, opacity);
 			draw(a, GL_LINE_LOOP);
 		} else {
 			RenderHelper.startTexture();
-			glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+			OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			texture().bindTexture(button);
 			final int state = !isEnabled() ? 0 : a.pointInside(p) ? 2 : 1;
 

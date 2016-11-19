@@ -50,25 +50,25 @@ public class SignPicRender extends WGui {
 					final FontRenderer fontrenderer = font();
 
 					RenderHelper.startTexture();
-					glPushMatrix();
-					glTranslatef(5f, 5f, 0f);
-					glScalef(2f, 2f, 1f);
+					OpenGL.glPushMatrix();
+					OpenGL.glTranslatef(5f, 5f, 0f);
+					OpenGL.glScalef(2f, 2f, 1f);
 
-					glPushMatrix();
-					glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
-					glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					OpenGL.glPushMatrix();
+					OpenGL.glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 					texture().bindTexture(resSign);
 					RenderHelper.startTexture();
 					RenderHelper.drawRectTexture(GL_QUADS);
 
-					glPopMatrix();
+					OpenGL.glPopMatrix();
 
-					glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
+					OpenGL.glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
 					final String str = I18n.format(CurrentMode.instance.getMode().message);
 					fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 
-					glPopMatrix();
+					OpenGL.glPopMatrix();
 				}
 	}
 

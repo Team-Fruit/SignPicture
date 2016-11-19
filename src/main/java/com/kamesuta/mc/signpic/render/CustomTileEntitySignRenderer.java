@@ -33,17 +33,17 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		// Size
 		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 
-		glPushMatrix();
+		OpenGL.glPushMatrix();
 
-		glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
+		OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 		entry.meta.rotation.rotate();
 
-		glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
-		glScalef(1f, -1f, 1f);
+		OpenGL.glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
+		OpenGL.glScalef(1f, -1f, 1f);
 
 		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
-		glPopMatrix();
+		OpenGL.glPopMatrix();
 	}
 
 	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z, final float rotateratio) {
@@ -53,9 +53,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		float f3;
 
 		if (block==Blocks.standing_sign) {
-			glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
+			OpenGL.glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
 			final float f2 = tile.getBlockMetadata()*360/16.0F;
-			glRotatef(-f2*rotateratio, 0.0F, 1.0F, 0.0F);
+			OpenGL.glRotatef(-f2*rotateratio, 0.0F, 1.0F, 0.0F);
 		} else {
 			final int j = tile.getBlockMetadata();
 			f3 = 0.0F;
@@ -67,9 +67,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			if (j==5)
 				f3 = -90.0F;
 
-			glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
-			glRotatef(-f3*rotateratio, 0.0F, 1.0F, 0.0F);
-			glTranslatef(0.0F, 0.0F, -0.4375F);
+			OpenGL.glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
+			OpenGL.glRotatef(-f3*rotateratio, 0.0F, 1.0F, 0.0F);
+			OpenGL.glTranslatef(0.0F, 0.0F, -0.4375F);
 		}
 	}
 
@@ -78,27 +78,27 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
+				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
 
-			glPushMatrix();
+			OpenGL.glPushMatrix();
 			translateBase(tile, x, y, z, 1f);
 
 			// Draw Canvas
-			glDisable(GL_CULL_FACE);
-			glDisable(GL_LIGHTING);
+			OpenGL.glDisable(GL_CULL_FACE);
+			OpenGL.glDisable(GL_LIGHTING);
 
 			renderSignPicture(entry, opacity);
 
-			glEnable(GL_LIGHTING);
-			glEnable(GL_CULL_FACE);
+			OpenGL.glEnable(GL_LIGHTING);
+			OpenGL.glEnable(GL_CULL_FACE);
 
-			glPopMatrix();
+			OpenGL.glPopMatrix();
 		} else {
 			if (opacity<1f) {
 				RenderHelper.startTexture();
-				glColor4f(1f, 1f, 1f, opacity);
+				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}

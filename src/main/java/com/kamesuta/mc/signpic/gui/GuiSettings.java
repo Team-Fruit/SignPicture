@@ -34,6 +34,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -106,9 +107,9 @@ public class GuiSettings extends WPanel {
 							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 								final Area a = getGuiPosition(pgp);
 								RenderHelper.startShape();
-								glColor4f(0f, 0f, 0f, .6f);
+								OpenGL.glColor4f(0f, 0f, 0f, .6f);
 								draw(a);
-								glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
+								OpenGL.glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
 								draw(this.line.getAbsolute(a));
 								super.draw(ev, pgp, p, frame, opacity);
 							}
@@ -120,7 +121,7 @@ public class GuiSettings extends WPanel {
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 										final Area a = getGuiPosition(pgp);
 										texture().bindTexture(settings);
-										glColor4f(1, 1, 1, 1);
+										OpenGL.glColor4f(1, 1, 1, 1);
 										RenderHelper.startTexture();
 										drawTexture(a);
 									}
@@ -130,8 +131,8 @@ public class GuiSettings extends WPanel {
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 										final Area a = getGuiPosition(pgp);
 										RenderHelper.startShape();
-										glColor4f(0f, 0f, 0f, .2f);
-										glLineWidth(.5f);
+										OpenGL.glColor4f(0f, 0f, 0f, .2f);
+										OpenGL.glLineWidth(.5f);
 										draw(a, GL_LINE_LOOP);
 										super.draw(ev, pgp, p, frame, opacity);
 									}
@@ -156,8 +157,8 @@ public class GuiSettings extends WPanel {
 											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 												final Area a = getGuiPosition(pgp);
 												RenderHelper.startShape();
-												glColor4f(0f, 0f, 0f, .2f);
-												glLineWidth(.5f);
+												OpenGL.glColor4f(0f, 0f, 0f, .2f);
+												OpenGL.glLineWidth(.5f);
 												draw(a, GL_LINE_LOOP);
 												super.draw(ev, pgp, p, frame, opacity);
 											}
@@ -217,7 +218,7 @@ public class GuiSettings extends WPanel {
 										@Override
 										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 											final Area a = getGuiPosition(pgp);
-											glColor4f(0f, 0f, 0f, .4f);
+											OpenGL.glColor4f(0f, 0f, 0f, .4f);
 											RenderHelper.startShape();
 											draw(a);
 											super.draw(ev, pgp, p, frame, popacity);
@@ -269,14 +270,14 @@ public class GuiSettings extends WPanel {
 															texture().bindTexture(update);
 															// glColor4f(1, 1, 1, 1);
 															final float f = state.get();
-															glColor4f(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f, 1f);
+															OpenGL.glColor4f(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f, 1f);
 															RenderHelper.startTexture();
-															glPushMatrix();
-															glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
-															glRotatef((orot+rot.get())*360, 0, 0, 1);
-															glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
+															OpenGL.glPushMatrix();
+															OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
+															OpenGL.glRotatef((orot+rot.get())*360, 0, 0, 1);
+															OpenGL.glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
 															drawTexture(a);
-															glPopMatrix();
+															OpenGL.glPopMatrix();
 														}
 													});
 													final VMotion o = V.pm(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();
@@ -296,10 +297,10 @@ public class GuiSettings extends WPanel {
 
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-															glPushMatrix();
-															glTranslatef(0, 0, 10f);
+															OpenGL.glPushMatrix();
+															OpenGL.glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
-															glPopMatrix();
+															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(message));
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
@@ -316,10 +317,10 @@ public class GuiSettings extends WPanel {
 
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-															glPushMatrix();
-															glTranslatef(0, 0, 10f);
+															OpenGL.glPushMatrix();
+															OpenGL.glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
-															glPopMatrix();
+															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(!StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message));
 												}
@@ -347,8 +348,8 @@ public class GuiSettings extends WPanel {
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			RenderHelper.startShape();
-			glColor4f(0f, 0f, 0f, .2f);
-			glLineWidth(.5f);
+			OpenGL.glColor4f(0f, 0f, 0f, .2f);
+			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
 			super.draw(ev, pgp, p, frame, opacity);
 		}

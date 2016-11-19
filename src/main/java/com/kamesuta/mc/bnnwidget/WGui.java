@@ -7,6 +7,7 @@ import java.awt.Color;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.signpic.render.OpenGL;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.Minecraft;
@@ -130,11 +131,11 @@ public class WGui extends Gui {
 	}
 
 	public static void drawString(final String text, final float x, final float y, final float w, final float h, final Align align, final VerticalAlign valign, final boolean shadow) {
-		glPushMatrix();
+		OpenGL.glPushMatrix();
 		align.translate(text, x, w);
 		valign.translate(text, y, h);
 		font().drawString(text, 0, 0, fontcolor, shadow);
-		glPopMatrix();
+		OpenGL.glPopMatrix();
 		resetFontColor();
 	}
 
@@ -146,19 +147,19 @@ public class WGui extends Gui {
 		LEFT {
 			@Override
 			protected void translate(final String text, final float x, final float w) {
-				glTranslatef(x, 0, 0);
+				OpenGL.glTranslatef(x, 0, 0);
 			}
 		},
 		CENTER {
 			@Override
 			protected void translate(final String text, final float x, final float w) {
-				glTranslatef(x+(w-getStringWidth(text))/2, 0, 0);
+				OpenGL.glTranslatef(x+(w-getStringWidth(text))/2, 0, 0);
 			}
 		},
 		RIGHT {
 			@Override
 			protected void translate(final String text, final float x, final float w) {
-				glTranslatef(x-getStringWidth(text), 0, 0);
+				OpenGL.glTranslatef(x-getStringWidth(text), 0, 0);
 			}
 		},
 		;
@@ -169,19 +170,19 @@ public class WGui extends Gui {
 		TOP {
 			@Override
 			protected void translate(final String text, final float y, final float h) {
-				glTranslatef(0, y, 0);
+				OpenGL.glTranslatef(0, y, 0);
 			}
 		},
 		MIDDLE {
 			@Override
 			protected void translate(final String text, final float y, final float h) {
-				glTranslatef(0, y+(h-font().FONT_HEIGHT)/2, 0);
+				OpenGL.glTranslatef(0, y+(h-font().FONT_HEIGHT)/2, 0);
 			}
 		},
 		BOTTOM {
 			@Override
 			protected void translate(final String text, final float y, final float h) {
-				glTranslatef(0, y+h-font().FONT_HEIGHT, 0);
+				OpenGL.glTranslatef(0, y+h-font().FONT_HEIGHT, 0);
 			}
 		},
 		;

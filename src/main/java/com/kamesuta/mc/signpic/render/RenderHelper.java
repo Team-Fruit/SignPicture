@@ -97,16 +97,16 @@ public class RenderHelper {
 	}
 
 	public static void startTexture() {
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_BLEND);
-		glEnable(GL_TEXTURE_2D);
+		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		OpenGL.glDisable(GL_LIGHTING);
+		OpenGL.glEnable(GL_BLEND);
+		OpenGL.glEnable(GL_TEXTURE_2D);
 	}
 
 	public static void startShape() {
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_BLEND);
-		glDisable(GL_TEXTURE_2D);
+		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		OpenGL.glDisable(GL_LIGHTING);
+		OpenGL.glEnable(GL_BLEND);
+		OpenGL.glDisable(GL_TEXTURE_2D);
 	}
 }

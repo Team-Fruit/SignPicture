@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.concurrent.TimeUnit;
 
 import org.lwjgl.input.Keyboard;
@@ -28,6 +26,7 @@ import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -63,7 +62,7 @@ public class GuiMain extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
-						glColor4f(0f, 0f, 0f, this.m.get());
+						OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
 						draw(getGuiPosition(pgp));
 					}
 

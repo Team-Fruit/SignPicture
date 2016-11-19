@@ -4,12 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.image.BufferedImage;
 
-import org.lwjgl.opengl.ContextCapabilities;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GLContext;
-
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
 
@@ -39,12 +36,6 @@ public class DynamicImageTexture implements ImageTexture {
 		this(null, DefaultDelay);
 	}
 
-	private static ContextCapabilities capabilities;
-
-	public static boolean openGl30() {
-		return capabilities!=null&&capabilities.OpenGL30;
-	}
-
 	private boolean hasMipmap;
 
 	public DynamicImageTexture load() {
@@ -52,10 +43,8 @@ public class DynamicImageTexture implements ImageTexture {
 			this.id = TextureUtil.glGenTextures();
 			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
 			TextureUtil.uploadTextureImage(this.id, this.temp);
-			if (capabilities==null)
-				capabilities = GLContext.getCapabilities();
-			if (openGl30()&&Config.instance.renderUseMipmap) {
-				GL30.glGenerateMipmap(GL_TEXTURE_2D);
+			if (OpenGL.openGl30()&&Config.instance.renderUseMipmap) {
+				OpenGL.glGenerateMipmap(GL_TEXTURE_2D);
 				this.hasMipmap = true;
 			}
 			this.temp = null;
@@ -98,7 +87,7 @@ public class DynamicImageTexture implements ImageTexture {
 	@Override
 	public void bind() {
 		if (this.id!=-1)
-			glBindTexture(GL_TEXTURE_2D, this.id);
+			OpenGL.glBindTexture(GL_TEXTURE_2D, this.id);
 	}
 
 	public void delete() {

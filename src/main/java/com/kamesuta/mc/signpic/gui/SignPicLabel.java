@@ -15,6 +15,7 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.util.ResourceLocation;
@@ -39,24 +40,24 @@ public class SignPicLabel extends WBase {
 				final Content content = entry.content();
 				if (content==null||StringUtils.isEmpty(content.id.id())) {
 					RenderHelper.startTexture();
-					glColor4f(1f, 1f, 1f, .2f);
+					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
 					drawTexture(a);
 				} else {
-					glDisable(GL_CULL_FACE);
-					glPushMatrix();
+					OpenGL.glDisable(GL_CULL_FACE);
+					OpenGL.glPushMatrix();
 
 					final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
 					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
 
-					glTranslatef(a.x1(), a.y1(), 0f);
-					glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
-					glScalef(100, 100, 1f);
+					OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
+					OpenGL.glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
+					OpenGL.glScalef(100, 100, 1f);
 					entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
 
-					glPopMatrix();
-					glEnable(GL_CULL_FACE);
+					OpenGL.glPopMatrix();
+					OpenGL.glEnable(GL_CULL_FACE);
 				}
 			}
 		}

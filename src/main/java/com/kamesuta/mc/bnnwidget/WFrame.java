@@ -1,7 +1,5 @@
 package com.kamesuta.mc.bnnwidget;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
@@ -10,6 +8,7 @@ import org.lwjgl.input.Mouse;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -138,10 +137,10 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 
 	protected void sDrawScreen(final int mousex, final int mousey, final float f) {
 		if (this.parent!=null) {
-			glPushMatrix();
-			glTranslatef(0, 0, -200f);
+			OpenGL.glPushMatrix();
+			OpenGL.glTranslatef(0, 0, -200f);
 			this.parent.drawScreen(mousex, mousey, f);
-			glPopMatrix();
+			OpenGL.glPopMatrix();
 		}
 		super.drawScreen(mousex, mousey, f);
 	}
