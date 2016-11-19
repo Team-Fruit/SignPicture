@@ -151,7 +151,6 @@ public class OverlayFrame extends WFrame {
 									RenderHelper.startShape();
 									glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
 									draw(a);
-									super.draw(ev, pgp, p, frame, popacity);
 								}
 							});
 							add(new WPanel(new R()) {

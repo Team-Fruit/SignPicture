@@ -202,7 +202,9 @@ public class GuiTask extends WPanel {
 							else
 								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
 							RenderHelper.startTexture();
-							fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
+							final float opacity = getGuiOpacity(popacity);
+							glColor4f(4f, 4f, 4f, opacity);
+							fontColor(1f, 1f, 1f, Math.max(.05f, opacity*1f));
 							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
 							glPopMatrix();
 						}
@@ -229,7 +231,9 @@ public class GuiTask extends WPanel {
 									glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
 									glScalef(.5f, .5f, .5f);
 									RenderHelper.startTexture();
-									fontColor(1f, 1f, 1f, Math.max(.05f, getGuiOpacity(popacity)*1f));
+									final float opacity = getGuiOpacity(popacity);
+									glColor4f(4f, 4f, 4f, opacity);
+									fontColor(1f, 1f, 1f, Math.max(.05f, opacity*1f));
 									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
 									glPopMatrix();
 

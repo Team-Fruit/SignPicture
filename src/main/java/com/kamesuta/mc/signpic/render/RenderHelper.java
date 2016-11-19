@@ -98,12 +98,14 @@ public class RenderHelper {
 
 	public static void startTexture() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_LIGHTING);
 		glEnable(GL_BLEND);
 		glEnable(GL_TEXTURE_2D);
 	}
 
 	public static void startShape() {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_LIGHTING);
 		glEnable(GL_BLEND);
 		glDisable(GL_TEXTURE_2D);
 	}
