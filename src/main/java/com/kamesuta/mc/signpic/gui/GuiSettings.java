@@ -53,6 +53,7 @@ public class GuiSettings extends WPanel {
 	protected void initWidget() {
 		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui;
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
+		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
 			protected boolean show = true;
 			protected VMotion bottom = V.pm(0f);
@@ -60,7 +61,7 @@ public class GuiSettings extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(2)), V.p(0f), this.bottom)))) {
+				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(hitarea)), V.p(0f), this.bottom)))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
@@ -100,7 +101,7 @@ public class GuiSettings extends WPanel {
 
 					@Override
 					protected void initWidget() {
-						add(new WPanel(new R(Coord.top(2), Coord.bottom(0))) {
+						add(new WPanel(new R(Coord.top(hitarea), Coord.bottom(0))) {
 							protected R line = new R(Coord.top(0), Coord.top(2));
 
 							@Override
