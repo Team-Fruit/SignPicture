@@ -14,7 +14,9 @@ import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -442,6 +444,16 @@ public class GuiMain extends WFrame {
 				if (focused1&&focused2&&cursor1==cursor2)
 					setText(GuiScreen.getClipboardString());
 			return b;
+		}
+	}
+
+	private CompoundMotion closeCooldown = new CompoundMotion().start();
+
+	@Override
+	public void requestClose() {
+		if (this.closeCooldown.isFinished()) {
+			this.closeCooldown.add(Motion.blank(3f));
+			super.requestClose();
 		}
 	}
 }
