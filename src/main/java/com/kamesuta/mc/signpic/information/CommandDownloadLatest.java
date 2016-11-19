@@ -1,15 +1,11 @@
 package com.kamesuta.mc.signpic.information;
 
-import com.kamesuta.mc.signpic.util.ChatBuilder;
+import java.util.concurrent.TimeUnit;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 
 public class CommandDownloadLatest extends CommandBase {
-	private static final boolean ENABLED = true;
-
 	@Override
 	public String getCommandName() {
 		return "signpic-download-latest";
@@ -32,8 +28,15 @@ public class CommandDownloadLatest extends CommandBase {
 
 	@Override
 	public void processCommand(final ICommandSender var1, final String[] var2) {
-		if (!ENABLED)
-			ChatBuilder.sendPlayerChat(var1, ChatBuilder.create("signpic.versioning.disabled").setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+		// ChatBuilder.sendPlayerChat(var1, ChatBuilder.create("signpic.versioning.disabled").setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+		final long cooldown = TimeUnit.HOURS.toMillis(2l);
+		if (Informations.instance.shouldCheck(cooldown))
+			Informations.instance.check(new Runnable() {
+				@Override
+				public void run() {
+					Informations.instance.runUpdate();
+				}
+			});
 		else
 			Informations.instance.runUpdate();
 	}

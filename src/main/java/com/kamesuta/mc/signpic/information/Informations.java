@@ -101,7 +101,7 @@ public final class Informations {
 	}
 
 	public void init() {
-		check();
+		check(null);
 	}
 
 	private long lastCheck = -1l;
@@ -110,12 +110,12 @@ public final class Informations {
 		return System.currentTimeMillis()-this.lastCheck>l;
 	}
 
-	public void checkInterval(final long l) {
+	public void checkInterval(final long l, final Runnable after) {
 		if (shouldCheck(l))
-			check();
+			check(after);
 	}
 
-	public void check() {
+	public void check(final Runnable after) {
 		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
 		checker.setCallback(new ICommunicateCallback() {
@@ -125,6 +125,8 @@ public final class Informations {
 					setSource(checker.result);
 				if (res.getError()!=null)
 					Reference.logger.warn("Could not check version information", res.getError());
+				if (after!=null)
+					after.run();
 			}
 		});
 		Communicator.instance.communicate(checker);

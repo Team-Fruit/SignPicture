@@ -365,7 +365,7 @@ public class GuiMain extends WFrame {
 				add(OverlayFrame.instance.pane);
 			}
 		});
-		Informations.instance.checkInterval(TimeUnit.DAYS.toMillis(1l));
+		Informations.instance.checkInterval(TimeUnit.DAYS.toMillis(1l), null);
 	}
 
 	public MainTextField getTextField() {
