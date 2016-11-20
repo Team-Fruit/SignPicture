@@ -129,6 +129,6 @@ public abstract class SubCommand implements IModCommand {
 
 	@Override
 	public int compareTo(final Object command) {
-		return this.compareTo(command);
+		return this.compareTo((ICommand) command);
 	}
 }
