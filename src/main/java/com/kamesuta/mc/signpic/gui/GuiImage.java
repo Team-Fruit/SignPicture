@@ -46,9 +46,11 @@ public class GuiImage extends WFrame {
 			protected void initWidget() {
 				add(new WBase(new R()) {
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, float opacity) {
+					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
 						final Content content = GuiImage.this.entry.content();
+
+						float opacity = getGuiOpacity(popacity);
 
 						OpenGL.glPushMatrix();
 						if (GuiImage.this.entry.isNotSupported())
@@ -56,8 +58,8 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*1.0F);
 							final ImageTextureMap map = GuiImage.this.entry.meta.map;
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(map.o*0.1f));
 							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
 						} else {
 							RenderHelper.startShape();
