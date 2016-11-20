@@ -79,11 +79,10 @@ public class SignHandler {
 				if (tilesign!=null) {
 					final Entry entry = EntryId.fromTile(tilesign).entry();
 					if (entry.isValid()) {
+						final Entry old = CurrentMode.instance.getEntryId().entry();
 						final EntryIdBuilder idb = new EntryIdBuilder();
-						if (CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT))
-							idb.setURI(entry.contentId.getID());
-						if (CurrentMode.instance.isState(CurrentMode.State.LOAD_META))
-							idb.setMeta(entry.meta);
+						idb.setURI(CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT) ? entry.contentId.getID() : old.contentId.getID());
+						idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.meta : old.meta);
 						CurrentMode.instance.setEntryId(idb.build());
 						event.setCanceled(true);
 						Client.openEditor();

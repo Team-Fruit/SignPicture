@@ -147,7 +147,7 @@ public class GuiMain extends WFrame {
 				add(new WPanel(new R(Coord.top(m), Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
 					@Override
 					protected void initWidget() {
-						add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(70), Coord.bottom(25))) {
+						add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(80), Coord.bottom(25))) {
 							{
 								add(new SignPicLabel(new R(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
 									@Override
@@ -188,12 +188,12 @@ public class GuiMain extends WFrame {
 				});
 
 				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
-				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(70), Coord.bottom(0))) {
+				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(80), Coord.bottom(0))) {
 					@Override
 					protected void initWidget() {
-						float top = -20f;
+						float top = -15f;
 
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.SEE, !CurrentMode.instance.isState(CurrentMode.State.SEE));
@@ -205,7 +205,7 @@ public class GuiMain extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.SEE);
 							}
 						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final boolean state = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
@@ -226,7 +226,7 @@ public class GuiMain extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 							}
 						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.file")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.file")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								McUiUpload.instance.setVisible(!McUiUpload.instance.isVisible());
@@ -238,7 +238,7 @@ public class GuiMain extends WFrame {
 								return McUiUpload.instance.isVisible();
 							}
 						});
-						add(new MButton(new R(Coord.right(5), Coord.top(top += 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.paste")) {
+						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.paste")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								try {
@@ -251,9 +251,9 @@ public class GuiMain extends WFrame {
 							}
 						});
 
-						float bottom = 25*4+5;
+						float bottom = 20*4+5;
 
-						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
@@ -265,7 +265,7 @@ public class GuiMain extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 							}
 						});
-						add(new MSelectButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), 15) {
+						add(new MSelectButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), 15) {
 							@Override
 							protected void initWidget() {
 								setSelector(new ButtonSelector() {
@@ -306,7 +306,7 @@ public class GuiMain extends WFrame {
 								super.initWidget();
 							}
 						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
@@ -341,7 +341,7 @@ public class GuiMain extends WFrame {
 								return entry.isValid()&&entry.id.isPlaceable()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						});
-						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
+						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								if (CurrentMode.instance.isMode()) {
@@ -371,7 +371,7 @@ public class GuiMain extends WFrame {
 				});
 
 				final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				GuiMain.this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(70), Coord.height(15))) {
+				GuiMain.this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(80), Coord.height(15))) {
 					@Override
 					public boolean onCloseRequest() {
 						super.onCloseRequest();
