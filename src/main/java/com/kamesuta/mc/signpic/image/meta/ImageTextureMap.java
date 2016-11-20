@@ -70,7 +70,7 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 		if (this.s!=defaultCS)
 			stb.append("s").append(format(this.s));
 		if (this.s!=defaultOpacity)
-			stb.append("o").append(format(this.s));
+			stb.append("o").append(format(this.o));
 		if (this.r!=defaultRepeat)
 			stb.append("r");
 		if (this.m!=defaultMipMap)
