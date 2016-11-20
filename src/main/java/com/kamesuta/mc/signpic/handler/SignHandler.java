@@ -7,6 +7,7 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
@@ -78,7 +79,12 @@ public class SignHandler {
 				if (tilesign!=null) {
 					final Entry entry = EntryId.fromTile(tilesign).entry();
 					if (entry.isValid()) {
-						CurrentMode.instance.setEntryId(entry.id);
+						final EntryIdBuilder idb = new EntryIdBuilder();
+						if (CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT))
+							idb.setURI(entry.contentId.getID());
+						if (CurrentMode.instance.isState(CurrentMode.State.LOAD_META))
+							idb.setMeta(entry.meta);
+						CurrentMode.instance.setEntryId(idb.build());
 						event.setCanceled(true);
 						Client.openEditor();
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))

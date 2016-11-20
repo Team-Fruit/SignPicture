@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.lwjgl.input.Keyboard;
 
+import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -14,6 +15,7 @@ import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.component.MSelectButton;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
@@ -25,6 +27,7 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -262,22 +265,45 @@ public class GuiMain extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 							}
 						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.load")) {
+						add(new MSelectButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), 15) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-								requestClose();
-								return true;
-							}
-
-							@Override
-							public boolean isHighlight() {
-								return CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
-							}
-
-							@Override
-							public boolean isEnabled() {
-								return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
+							protected void initWidget() {
+								setSelector(new ButtonSelector() {
+									{
+										setList(Lists.<MButton> newArrayList(
+												new LoadButton(new R(), I18n.format("signpic.gui.editor.load")) {
+													@Override
+													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
+														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, true);
+														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
+														requestClose();
+														return true;
+													}
+												},
+												new LoadButton(new R(), I18n.format("signpic.gui.editor.load.content")) {
+													@Override
+													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
+														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, false);
+														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
+														requestClose();
+														return true;
+													}
+												},
+												new LoadButton(new R(), I18n.format("signpic.gui.editor.load.meta")) {
+													@Override
+													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, false);
+														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, true);
+														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
+														requestClose();
+														return true;
+													}
+												}));
+									}
+								});
+								super.initWidget();
 							}
 						});
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 25), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
@@ -365,7 +391,7 @@ public class GuiMain extends WFrame {
 				add(OverlayFrame.instance.pane);
 			}
 		});
-		if (Informations.instance.shouldCheck(TimeUnit.DAYS.toMillis(1l)))
+		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
 			Informations.instance.check(null);
 	}
 
@@ -396,6 +422,25 @@ public class GuiMain extends WFrame {
 			signbuilder.setURI(id);
 			CurrentMode.instance.setEntryId(signbuilder.build());
 			return false;
+		}
+	}
+
+	public abstract class LoadButton extends FunnyButton {
+		public LoadButton(final R position, final String text) {
+			super(position, text);
+		}
+
+		@Override
+		protected abstract boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button);
+
+		@Override
+		public boolean isHighlight() {
+			return CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
+		}
+
+		@Override
+		public boolean isEnabled() {
+			return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
 		}
 	}
 
