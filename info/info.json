@@ -61,7 +61,7 @@
 			}
 		}
 	},
-	"website": "https://github.com/Kamesuta/SignPicture/",
-	"changelog": "https://github.com/Kamesuta/SignPicture/releases",
+	"website": "https://minecraft.curseforge.com/projects/sign-picture",
+	"changelog": "https://github.com/Team-Fruit/SignPicture/releases",
 	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }
