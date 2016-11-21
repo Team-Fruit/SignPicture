@@ -4,6 +4,7 @@
 			"version": "2.4.4",
 			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.4/SignPicture-1.7.10-2.4.4-universal.jar",
 			"local": "SignPicture-1.7.10-2.4.4-universal.jar",
+			"changelog": "https://github.com/Team-Fruit/SignPicture/releases/tag/1.7.10-2.4.4",
 			"message": "Support Uploading and Pasting!",
 			"message_local": {
 				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
