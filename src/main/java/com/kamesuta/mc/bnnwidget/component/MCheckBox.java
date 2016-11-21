@@ -31,6 +31,7 @@ public class MCheckBox extends MLabel {
 		final Area a = getGuiPosition(pgp);
 		if (a.pointInside(p)) {
 			check(!this.checked);
+			MButton.playPressButtonSound();
 			return true;
 		}
 		return false;

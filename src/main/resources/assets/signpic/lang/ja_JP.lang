@@ -34,6 +34,7 @@ signpic.gui.settings.api.upimage.type=APIの種類
 signpic.gui.settings.api.upimage.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
+signpic.gui.settings.paas=チート回避
 ## Update
 signpic.gui.update.message=SignPictureの新しいバージョンがリリースされています！こちらをクリックしてアップデートして下さい。
 signpic.gui.update.message.changelog=%s

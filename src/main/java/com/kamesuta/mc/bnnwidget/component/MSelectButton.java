@@ -33,24 +33,24 @@ public class MSelectButton extends WPanel {
 	public MSelectButton(final R position, final float buttonwidth) {
 		super(position);
 		this.buttonwidth = buttonwidth;
-		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "<") {
+		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				getSelector().prev();
 				MSelectButton.this.selectButton(getSelector().get());
 				return true;
 			}
-		};
+		}.setText("<");
 		add(this.neg);
 		add(getField());
-		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), ">") {
+		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				getSelector().next();
 				MSelectButton.this.selectButton(getSelector().get());
 				return true;
 			}
-		};
+		}.setText(">");
 		add(this.pos);
 	}
 
@@ -113,7 +113,7 @@ public class MSelectButton extends WPanel {
 			final int length = length();
 			final int current = getCurrentPos();
 			if (current<0||current>=length)
-				return new MButton(new R(), "");
+				return new MButton(new R());
 			return getList().get(current);
 		}
 	}

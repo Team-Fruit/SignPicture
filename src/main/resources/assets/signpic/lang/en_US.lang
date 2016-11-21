@@ -69,6 +69,7 @@ signpic.gui.settings.api.upimage.type=API Type
 signpic.gui.settings.api.upimage.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
+signpic.gui.settings.paas=Prevent Cheat
 ## Update
 signpic.gui.update.message=A new version of SignPicture! is available!  Please click here to update.
 signpic.gui.update.message.changelog=%s

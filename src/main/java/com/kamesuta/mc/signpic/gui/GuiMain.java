@@ -58,6 +58,7 @@ public class GuiMain extends WFrame {
 	}
 
 	private MainTextField field;
+	private GuiSettings settings;
 
 	public GuiMain(final GuiScreen parent) {
 		super(parent);
@@ -172,6 +173,17 @@ public class GuiMain extends WFrame {
 								}
 								super.update(ev, pgp, p);
 							}
+
+							@Override
+							public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								final Area a = getGuiPosition(pgp);
+								if (a.pointInside(p))
+									if (Informations.instance.isUpdateRequired()) {
+										GuiMain.this.settings.show();
+										return true;
+									}
+								return false;
+							}
 						});
 					}
 
@@ -193,7 +205,7 @@ public class GuiMain extends WFrame {
 					protected void initWidget() {
 						float top = -15f;
 
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.see")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.SEE, !CurrentMode.instance.isState(CurrentMode.State.SEE));
@@ -204,8 +216,8 @@ public class GuiMain extends WFrame {
 							public boolean isHighlight() {
 								return CurrentMode.instance.isState(CurrentMode.State.SEE);
 							}
-						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.preview")) {
+						}.setText(I18n.format("signpic.gui.editor.see")));
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final boolean state = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
@@ -225,8 +237,8 @@ public class GuiMain extends WFrame {
 							public boolean isHighlight() {
 								return CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 							}
-						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.file")) {
+						}.setText(I18n.format("signpic.gui.editor.preview")));
+						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								McUiUpload.instance.setVisible(!McUiUpload.instance.isVisible());
@@ -237,8 +249,8 @@ public class GuiMain extends WFrame {
 							public boolean isHighlight() {
 								return McUiUpload.instance.isVisible();
 							}
-						});
-						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.paste")) {
+						}.setText(I18n.format("signpic.gui.editor.file")));
+						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								try {
@@ -249,11 +261,11 @@ public class GuiMain extends WFrame {
 								}
 								return true;
 							}
-						});
+						}.setText(I18n.format("signpic.gui.editor.paste")));
 
 						float bottom = 20*4+5;
 
-						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.continue")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
@@ -264,14 +276,14 @@ public class GuiMain extends WFrame {
 							public boolean isHighlight() {
 								return CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 							}
-						});
+						}.setText(I18n.format("signpic.gui.editor.continue")));
 						add(new MSelectButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), 15) {
 							@Override
 							protected void initWidget() {
 								setSelector(new ButtonSelector() {
 									{
 										setList(Lists.<MButton> newArrayList(
-												new LoadButton(new R(), I18n.format("signpic.gui.editor.load")) {
+												new LoadButton(new R()) {
 													@Override
 													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
@@ -280,8 +292,8 @@ public class GuiMain extends WFrame {
 														requestClose();
 														return true;
 													}
-												},
-												new LoadButton(new R(), I18n.format("signpic.gui.editor.load.content")) {
+												}.setText(I18n.format("signpic.gui.editor.load")),
+												new LoadButton(new R()) {
 													@Override
 													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
@@ -290,8 +302,8 @@ public class GuiMain extends WFrame {
 														requestClose();
 														return true;
 													}
-												},
-												new LoadButton(new R(), I18n.format("signpic.gui.editor.load.meta")) {
+												}.setText(I18n.format("signpic.gui.editor.load.content")),
+												new LoadButton(new R()) {
 													@Override
 													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, false);
@@ -300,13 +312,13 @@ public class GuiMain extends WFrame {
 														requestClose();
 														return true;
 													}
-												}));
+												}.setText(I18n.format("signpic.gui.editor.load.meta"))));
 									}
 								});
 								super.initWidget();
 							}
 						});
-						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.place")) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
@@ -340,8 +352,8 @@ public class GuiMain extends WFrame {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								return entry.isValid()&&entry.id.isPlaceable()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
-						});
-						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), I18n.format("signpic.gui.editor.cancel")) {
+						}.setText(I18n.format("signpic.gui.editor.place")));
+						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								if (CurrentMode.instance.isMode()) {
@@ -355,7 +367,7 @@ public class GuiMain extends WFrame {
 							public boolean isEnabled() {
 								return CurrentMode.instance.isMode();
 							}
-						});
+						}.setText(I18n.format("signpic.gui.editor.cancel")));
 					}
 
 					@Override
@@ -386,7 +398,9 @@ public class GuiMain extends WFrame {
 				};
 				add(GuiMain.this.field);
 
-				add(new GuiSettings(new R()));
+				GuiMain.this.settings = new GuiSettings(new R());
+
+				add(GuiMain.this.settings);
 
 				add(OverlayFrame.instance.pane);
 			}
@@ -426,8 +440,8 @@ public class GuiMain extends WFrame {
 	}
 
 	public abstract class LoadButton extends FunnyButton {
-		public LoadButton(final R position, final String text) {
-			super(position, text);
+		public LoadButton(final R position) {
+			super(position);
 		}
 
 		@Override

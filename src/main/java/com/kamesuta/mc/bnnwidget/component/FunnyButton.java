@@ -10,8 +10,8 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class FunnyButton extends MButton {
-	public FunnyButton(final R position, final String text) {
-		super(position, text);
+	public FunnyButton(final R position) {
+		super(position);
 	}
 
 	private boolean isHighlight = true;

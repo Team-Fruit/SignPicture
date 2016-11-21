@@ -14,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
+import com.kamesuta.mc.bnnwidget.component.MCheckBox;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
@@ -40,10 +41,23 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.config.Property;
 
 public class GuiSettings extends WPanel {
 	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
 	public static final ResourceLocation update = new ResourceLocation("signpic", "textures/gui/update.png");
+
+	protected boolean show = true;
+	protected VMotion bottom = V.pm(0f);
+	protected boolean closing;
+
+	public void show() {
+		this.bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+	}
+
+	public void hide() {
+		this.bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
+	}
 
 	public GuiSettings(final R area) {
 		super(area);
@@ -55,42 +69,39 @@ public class GuiSettings extends WPanel {
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
-			protected boolean show = true;
-			protected VMotion bottom = V.pm(0f);
-			protected boolean closing;
 
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(hitarea)), V.p(0f), this.bottom)))) {
+				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(hitarea)), V.p(0f), GuiSettings.this.bottom)))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
 						final boolean b = a.pointInside(p);
-						if (!closing)
+						if (!GuiSettings.this.closing)
 							if (b) {
-								if (!show) {
-									bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+								if (!GuiSettings.this.show) {
+									show();
 									mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
 								}
-								show = true;
+								GuiSettings.this.show = true;
 							} else {
-								if (show)
-									bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
-								show = false;
+								if (GuiSettings.this.show)
+									hide();
+								GuiSettings.this.show = false;
 							}
 						super.update(ev, pgp, p);
 					}
 
 					@Override
 					public boolean onCloseRequest() {
-						closing = true;
-						bottom.stop().add(Easings.easeInBack.move(.25f, 0f)).start();
+						GuiSettings.this.closing = true;
+						GuiSettings.this.bottom.stop().add(Easings.easeInBack.move(.25f, 0f)).start();
 						return false;
 					}
 
 					@Override
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-						return bottom.isFinished();
+						return GuiSettings.this.bottom.isFinished();
 					}
 
 					@Override
@@ -199,13 +210,34 @@ public class GuiSettings extends WPanel {
 										add(this.box);
 									}
 								});
-								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(60), Coord.height(15)), I18n.format("signpic.gui.settings.config")) {
+								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected void initWidget() {
+										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
+											{
+												check(getConfig().getBoolean(true));
+											}
+
+											private Property getConfig() {
+												return Config.instance.get("Multiplay.PreventAntiAutoSign", "Enable", true);
+											}
+
+											@Override
+											protected void onCheckChanged(final boolean oldCheck) {
+												getConfig().set(isCheck());
+												Config.instance.save();
+											}
+										});
+										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
+									}
+								});
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));
 										return true;
 									}
-								});
+								}.setText(I18n.format("signpic.gui.settings.config"));
 
 								if (isUpdateRequired) {
 
