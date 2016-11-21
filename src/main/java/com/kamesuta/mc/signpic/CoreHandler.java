@@ -119,7 +119,8 @@ public class CoreHandler {
 
 	void debug() {
 		// Client.openEditor();
-		Reference.logger.info("try to delete: "+Client.location.modFile.getName());
-		Client.deleteMod();
+		// Reference.logger.info("try to delete: "+Client.location.modFile.getName());
+		// Client.deleteMod();
+		Client.notice("Debug Message!", 3f);
 	}
 }

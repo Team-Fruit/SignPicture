@@ -31,6 +31,7 @@ public class R {
 		setParent(parent);
 	}
 
+	@Deprecated
 	public static R diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
 		return new R(Coord.left(diff_x1), Coord.top(diff_y1), Coord.right(-diff_x2), Coord.bottom(-diff_y2));
 	}

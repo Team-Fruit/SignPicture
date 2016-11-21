@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.gui.file;
 
+import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -41,5 +42,10 @@ public class ExpUiUpload extends UiUpload {
 	@Override
 	protected void apply(final File f) {
 		Reference.logger.info(f.getAbsolutePath());
+	}
+
+	@Override
+	protected void transfer(final Transferable transferable) {
+		Reference.logger.info(transferable);
 	}
 };

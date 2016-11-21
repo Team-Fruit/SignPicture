@@ -17,10 +17,10 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
@@ -38,7 +38,7 @@ public class GuiPAAS extends WFrame {
 		this.preview = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 		CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 
-		add(new WPanel(R.diff(0, 0, 0, 0)) {
+		add(new WPanel(new R()) {
 			private final int max = StringUtils.length(GuiPAAS.this.task.id.id());
 			private int cursor;
 			private boolean close = true;
@@ -46,13 +46,13 @@ public class GuiPAAS extends WFrame {
 
 			@Override
 			protected void initWidget() {
-				add(new WBase(R.diff(0, 0, 0, 0)) {
+				add(new WBase(new R()) {
 					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						RenderHelper.startShape();
-						GlStateManager.color(0f, 0f, 0f, this.c.get());
+						OpenGL.glColor4f(0f, 0f, 0f, this.c.get());
 						draw(getGuiPosition(pgp));
 					}
 				});
@@ -64,14 +64,14 @@ public class GuiPAAS extends WFrame {
 						final Area a = getGuiPosition(pgp);
 
 						RenderHelper.startTexture();
-						GlStateManager.color(1f, 1f, 1f, 1f);
-						GlStateManager.pushMatrix();
-						GlStateManager.translate(a.x1()+a.w()/2, a.y1(), 50f);
-						GlStateManager.scale(-f1, -f1, -f1);
-						GlStateManager.rotate(180f, 0f, 1f, 0f);
+						OpenGL.glColor4f(1f, 1f, 1f, 1f);
+						OpenGL.glPushMatrix();
+						OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1(), 50f);
+						OpenGL.glScalef(-f1, -f1, -f1);
+						OpenGL.glRotatef(180f, 0f, 1f, 0f);
 						Client.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, -1f);
 						Client.renderer.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
-						GlStateManager.popMatrix();
+						OpenGL.glPopMatrix();
 					}
 				});
 

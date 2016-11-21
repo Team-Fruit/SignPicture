@@ -14,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
+import com.kamesuta.mc.bnnwidget.component.MCheckBox;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
@@ -34,16 +35,30 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.config.Property;
 
 public class GuiSettings extends WPanel {
 	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
 	public static final ResourceLocation update = new ResourceLocation("signpic", "textures/gui/update.png");
+
+	protected boolean show = true;
+	protected VMotion bottom = V.pm(0f);
+	protected boolean closing;
+
+	public void show() {
+		this.bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+	}
+
+	public void hide() {
+		this.bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
+	}
 
 	public GuiSettings(final R area) {
 		super(area);
@@ -53,43 +68,41 @@ public class GuiSettings extends WPanel {
 	protected void initWidget() {
 		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui;
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
+		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
-			protected boolean show = true;
-			protected VMotion bottom = V.pm(0f);
-			protected boolean closing;
 
 			@Override
 			protected void initWidget() {
-				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(2)), V.p(0f), this.bottom)))) {
+				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(hitarea)), V.p(0f), GuiSettings.this.bottom)))) {
 					@Override
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
 						final boolean b = a.pointInside(p);
-						if (!closing)
+						if (!GuiSettings.this.closing)
 							if (b) {
-								if (!show) {
-									bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+								if (!GuiSettings.this.show) {
+									show();
 									mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("signpic", "gui.show"), 1.0F));
 								}
-								show = true;
+								GuiSettings.this.show = true;
 							} else {
-								if (show)
-									bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
-								show = false;
+								if (GuiSettings.this.show)
+									hide();
+								GuiSettings.this.show = false;
 							}
 						super.update(ev, pgp, p);
 					}
 
 					@Override
 					public boolean onCloseRequest() {
-						closing = true;
-						bottom.stop().add(Easings.easeInBack.move(.25f, 0f)).start();
+						GuiSettings.this.closing = true;
+						GuiSettings.this.bottom.stop().add(Easings.easeInBack.move(.25f, 0f)).start();
 						return false;
 					}
 
 					@Override
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-						return bottom.isFinished();
+						return GuiSettings.this.bottom.isFinished();
 					}
 
 					@Override
@@ -100,16 +113,16 @@ public class GuiSettings extends WPanel {
 
 					@Override
 					protected void initWidget() {
-						add(new WPanel(new R(Coord.top(2), Coord.bottom(0))) {
+						add(new WPanel(new R(Coord.top(hitarea), Coord.bottom(0))) {
 							protected R line = new R(Coord.top(0), Coord.top(2));
 
 							@Override
 							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 								final Area a = getGuiPosition(pgp);
 								RenderHelper.startShape();
-								GlStateManager.color(0f, 0f, 0f, .6f);
+								OpenGL.glColor4f(0f, 0f, 0f, .6f);
 								draw(a);
-								GlStateManager.color(0f/256f, 78f/256f, 155f/256f, 1f);
+								OpenGL.glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
 								draw(this.line.getAbsolute(a));
 								super.draw(ev, pgp, p, frame, opacity);
 							}
@@ -121,7 +134,7 @@ public class GuiSettings extends WPanel {
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 										final Area a = getGuiPosition(pgp);
 										texture().bindTexture(settings);
-										GlStateManager.color(1, 1, 1, 1);
+										OpenGL.glColor4f(1, 1, 1, 1);
 										RenderHelper.startTexture();
 										drawTexture(a);
 									}
@@ -131,8 +144,8 @@ public class GuiSettings extends WPanel {
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 										final Area a = getGuiPosition(pgp);
 										RenderHelper.startShape();
-										GlStateManager.color(0f, 0f, 0f, .2f);
-										glLineWidth(.5f);
+										OpenGL.glColor4f(0f, 0f, 0f, .2f);
+										OpenGL.glLineWidth(.5f);
 										draw(a, GL_LINE_LOOP);
 										super.draw(ev, pgp, p, frame, opacity);
 									}
@@ -140,7 +153,7 @@ public class GuiSettings extends WPanel {
 									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
 										@Override
 										protected void initWidget() {
-											final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(Apis.instance.imageUploader.getConfig());
+											final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(Apis.instance.imageUploaders.getConfig());
 											Set<String> keys = null;
 											if (factory!=null)
 												keys = factory.keys();
@@ -157,8 +170,8 @@ public class GuiSettings extends WPanel {
 											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 												final Area a = getGuiPosition(pgp);
 												RenderHelper.startShape();
-												GlStateManager.color(0f, 0f, 0f, .2f);
-												glLineWidth(.5f);
+												OpenGL.glColor4f(0f, 0f, 0f, .2f);
+												OpenGL.glLineWidth(.5f);
 												draw(a, GL_LINE_LOOP);
 												super.draw(ev, pgp, p, frame, opacity);
 											}
@@ -172,20 +185,20 @@ public class GuiSettings extends WPanel {
 														setSelector(new ListSelector() {
 															{
 																final List<String> settings = Lists.newArrayList("");
-																settings.addAll(Apis.instance.imageUploader.getSettings());
+																settings.addAll(Apis.instance.imageUploaders.getSettings());
 																setList(settings);
 															}
 														});
 														this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
-														setText(Apis.instance.imageUploader.getConfig());
+														setText(Apis.instance.imageUploaders.getConfig());
 													}
 
 													@Override
 													protected void onChanged(final String oldText, final String newText) {
 														if (!StringUtils.equals(oldText, newText)) {
-															if (!StringUtils.equals(newText, Apis.instance.imageUploader.getConfig()))
-																Apis.instance.imageUploader.setConfig(newText);
-															final ImageUploaderFactory factory = Apis.instance.imageUploader.solve(newText);
+															if (!StringUtils.equals(newText, Apis.instance.imageUploaders.getConfig()))
+																Apis.instance.imageUploaders.setConfig(newText);
+															final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(newText);
 															Set<String> keys = null;
 															if (factory!=null)
 																keys = factory.keys();
@@ -198,13 +211,34 @@ public class GuiSettings extends WPanel {
 										add(this.box);
 									}
 								});
-								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(60), Coord.height(15)), I18n.format("signpic.gui.settings.config")) {
+								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected void initWidget() {
+										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
+											{
+												check(getConfig().getBoolean(true));
+											}
+
+											private Property getConfig() {
+												return Config.instance.get("Multiplay.PreventAntiAutoSign", "Enable", true);
+											}
+
+											@Override
+											protected void onCheckChanged(final boolean oldCheck) {
+												getConfig().set(isCheck());
+												Config.instance.save();
+											}
+										});
+										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
+									}
+								});
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));
 										return true;
 									}
-								});
+								}.setText(I18n.format("signpic.gui.settings.config")));
 
 								if (isUpdateRequired) {
 
@@ -218,7 +252,7 @@ public class GuiSettings extends WPanel {
 										@Override
 										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 											final Area a = getGuiPosition(pgp);
-											GlStateManager.color(0f, 0f, 0f, .4f);
+											OpenGL.glColor4f(0f, 0f, 0f, .4f);
 											RenderHelper.startShape();
 											draw(a);
 											super.draw(ev, pgp, p, frame, popacity);
@@ -256,28 +290,30 @@ public class GuiSettings extends WPanel {
 												@Override
 												public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 													final Area a = getGuiPosition(pgp);
-													if (a.pointInside(p))
+													if (a.pointInside(p)) {
 														Informations.instance.runUpdate();
 													return true;
+												}
+													return false;
 												}
 
 												@Override
 												protected void initWidget() {
-													add(new WBase(new R(Coord.width(V.per(hstart, hend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
+													add(new WBase(new R(Coord.width(V.per(vstart, vend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 															final Area a = getGuiPosition(pgp);
 															texture().bindTexture(update);
 															// glColor4f(1, 1, 1, 1);
 															final float f = state.get();
-															GlStateManager.color(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f, 1f);
+															OpenGL.glColor4f(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f, 1f);
 															RenderHelper.startTexture();
-															GlStateManager.pushMatrix();
-															GlStateManager.translate(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
-															GlStateManager.rotate((orot+rot.get())*360, 0, 0, 1);
-															GlStateManager.translate(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
+															OpenGL.glPushMatrix();
+															OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
+															OpenGL.glRotatef((orot+rot.get())*360, 0, 0, 1);
+															OpenGL.glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
 															drawTexture(a);
-															GlStateManager.popMatrix();
+															OpenGL.glPopMatrix();
 														}
 													});
 													final VMotion o = V.pm(0).add(Easings.easeLinear.move(.8f, 1f)).add(Motion.blank(2f)).add(Easings.easeLinear.move(.8f, 0f)).add(Motion.blank(2f)).setLoop(true).start();

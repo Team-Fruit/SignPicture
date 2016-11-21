@@ -15,6 +15,7 @@ public class Info {
 		public String remote;
 		public String local;
 		public String message;
+		public String image;
 		public Map<String, String> message_local;
 		public String website;
 		public String changelog;

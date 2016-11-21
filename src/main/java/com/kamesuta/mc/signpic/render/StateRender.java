@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.render;
 
-import static org.lwjgl.opengl.GL11.*;
-
 import org.lwjgl.util.Color;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -25,29 +23,25 @@ public class StateRender {
 		}
 
 		public void loadingColor() {
-			color(this.loading);
+			OpenGL.glColor(this.loading);
 		}
 
 		public void progressColor() {
-			color(this.progress);
+			OpenGL.glColor(this.progress);
 		}
 
 		public void designColor() {
-			color(this.design);
+			OpenGL.glColor(this.design);
 		}
-
-		private static void color(final Color color) {
-			glColor4ub(color.getRedByte(), color.getGreenByte(), color.getBlueByte(), color.getAlphaByte());
 		}
-	}
 
 	public static void drawLoading(final Progress progress, final LoadingCircle type, final LoadingCircleType speed) {
 		if (type!=LoadingCircle.DEFAULT) {
-			glLineWidth(3f);
+			OpenGL.glLineWidth(3f);
 			RenderHelper.startShape();
 
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(.5f, .5f, 1f);
+			OpenGL.glPushMatrix();
+			OpenGL.glScalef(.5f, .5f, 1f);
 
 			// Loading Circle
 			type.loadingColor();
@@ -62,7 +56,7 @@ public class StateRender {
 			final float p = progress.getProgress();
 			RenderHelper.drawProgressCircle(p);
 
-			GlStateManager.popMatrix();
+			OpenGL.glPopMatrix();
 		}
 	}
 
@@ -70,24 +64,24 @@ public class StateRender {
 		RenderHelper.startTexture();
 		final float f1 = 0.6666667F;
 		float f3 = 0.06666668F*f1;
-		GlStateManager.translate(0f, 1f, 0f);
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(f3, f3, 1f);
+		OpenGL.glTranslatef(0f, 1f, 0f);
+		OpenGL.glPushMatrix();
+		OpenGL.glScalef(f3, f3, 1f);
 		final String msg1 = content.state.getStateMessage();
 		fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1)/2, -fontrenderer.FONT_HEIGHT, 0xffffff);
-		GlStateManager.popMatrix();
+		OpenGL.glPopMatrix();
 		f3 = 0.036666668F*f1;
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(f3, f3, 1f);
+		OpenGL.glPushMatrix();
+		OpenGL.glScalef(f3, f3, 1f);
 		final String msg2 = content.id.id();
 		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2)/2, 0, 0xffffff);
-		GlStateManager.popMatrix();
+		OpenGL.glPopMatrix();
 		final String msg3 = content.state.getMessage();
 		if (msg3!=null) {
-			GlStateManager.pushMatrix();
-			GlStateManager.scale(f3, f3, 1f);
+			OpenGL.glPushMatrix();
+			OpenGL.glScalef(f3, f3, 1f);
 			fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3)/2, fontrenderer.FONT_HEIGHT, 0xffffff);
-			GlStateManager.popMatrix();
+			OpenGL.glPopMatrix();
 		}
 	}
 

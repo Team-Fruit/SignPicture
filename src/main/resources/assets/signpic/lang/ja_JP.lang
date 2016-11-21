@@ -13,9 +13,12 @@ signpic.gui.editor.see=実体表示
 signpic.gui.editor.preview=プレビュー
 signpic.gui.editor.continue=連続
 signpic.gui.editor.load=ロード
+signpic.gui.editor.load.content=URL
+signpic.gui.editor.load.meta=メタ情報
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.file=アップロード
+signpic.gui.editor.paste=貼り付け
 signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
@@ -31,6 +34,7 @@ signpic.gui.settings.api.upimage.type=APIの種類
 signpic.gui.settings.api.upimage.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
+signpic.gui.settings.paas=チート回避
 ## Update
 signpic.gui.update.message=SignPictureの新しいバージョンがリリースされています！こちらをクリックしてアップデートして下さい。
 signpic.gui.update.message.changelog=%s
@@ -41,6 +45,9 @@ signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
 signpic.gui.editor.notice.toolong=コードが長すぎて看板に収まりません！
 
 # Notice
+signpic.gui.notice.paste.unsupported=非対応
+signpic.gui.notice.paste.typeunsupported=非対応な種類
+signpic.gui.notice.paste.error=貼り付けエラー: %s
 signpic.gui.notice.uploading=アップロード開始 %s
 signpic.gui.notice.uploaded=アップロード完了 %s
 signpic.gui.notice.uploadfailed=アップロード失敗: §7%s
@@ -78,7 +85,11 @@ signpic.advmsg.format.unsupported=未対応のSignPicture
 signpic.advmsg.format.needupdate=新しいバージョンをお試しください！
 
 # Version Checking
+signpic.versioning.check.start=更新データの確認開始
+signpic.versioning.check.cooldown=Checking Failed: §7もう少し時間をおいてお試しください
+signpic.versioning.noupdate=更新はありませんでした
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] 新しいバージョンがご利用可能です: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] [§a更新§r] %s
 signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
 signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
 signpic.versioning.doneDownloadingWithFile=ダウンロード完了 %s 適用するためには %s を消し、Minecraftを再起動してください

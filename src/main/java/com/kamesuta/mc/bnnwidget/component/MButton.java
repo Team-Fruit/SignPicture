@@ -11,34 +11,35 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class MButton extends WBase {
 	public static final ResourceLocation button = new ResourceLocation("signpic", "textures/gui/buttons.png");
 
-	public String text;
+	public String text = "";
 	public String actionCommand;
 	private boolean isEnabled = true;
 
-	public MButton(final R position, final String text) {
+	public MButton(final R position) {
 		super(position);
-		this.text = text;
 	}
 
-	public void setText(final String s) {
+	public MButton setText(final String s) {
 		this.text = s;
+		return this;
 	}
 
 	public boolean isEnabled() {
 		return this.isEnabled;
 	}
 
-	public void setEnabled(final boolean b) {
+	public MButton setEnabled(final boolean b) {
 		this.isEnabled = b;
+		return this;
 	}
 
 	@Override
@@ -49,12 +50,15 @@ public class MButton extends WBase {
 				if (onClicked(ev, pgp, p, button)) {
 					if (this.actionCommand!=null)
 						ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
-					mc.getSoundHandler()
-							.playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+					playPressButtonSound();
 				}
 			return true;
 		}
 		return false;
+	}
+
+	public static void playPressButtonSound() {
+		mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
 	}
 
 	protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -69,20 +73,20 @@ public class MButton extends WBase {
 		if (Config.instance.informationTryNew) {
 			RenderHelper.startShape();
 			if (isEnabled()) {
-				GlStateManager.color(.2f, .2f, .2f, opacity*.2f);
+				OpenGL.glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
 			}
-			GlStateManager.color(1f, 1f, 1f, opacity*this.o.get()*.3f);
+			OpenGL.glColor4f(1f, 1f, 1f, opacity*this.o.get()*.3f);
 			draw(a);
-			glLineWidth(1f);
+			OpenGL.glLineWidth(1f);
 			if (isEnabled())
-				GlStateManager.color(0f, 0f, 0f, opacity);
+				OpenGL.glColor4f(0f, 0f, 0f, opacity);
 			else
-				GlStateManager.color(.5f, .5f, .5f, opacity);
+				OpenGL.glColor4f(.5f, .5f, .5f, opacity);
 			draw(a, GL_LINE_LOOP);
 		} else {
 			RenderHelper.startTexture();
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			texture().bindTexture(button);
 			final int state = !isEnabled() ? 0 : a.pointInside(p) ? 2 : 1;
 

@@ -24,11 +24,11 @@ public class CurrentMode {
 	}
 
 	public boolean isMode() {
-		return getMode() != Mode.NONE;
+		return getMode()!=Mode.NONE;
 	}
 
 	public boolean isMode(final Mode mode) {
-		return getMode() == mode;
+		return getMode()==mode;
 	}
 
 	public Mode getMode() {
@@ -60,22 +60,18 @@ public class CurrentMode {
 	}
 
 	public static enum Mode {
-		PLACE("signpic.over.mode.place"),
-		LOAD("signpic.over.mode.load"),
-		SETPREVIEW("signpic.over.mode.setpreview"),
-		NONE("signpic.over.mode.none"),
+		PLACE("signpic.over.mode.place"), LOAD("signpic.over.mode.load"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
 		;
 
 		public final String message;
+
 		private Mode(final String message) {
 			this.message = message;
 		}
 	}
 
 	public static enum State {
-		CONTINUE,
-		SEE,
-		PREVIEW,
+		CONTINUE, SEE, PREVIEW, LOAD_CONTENT, LOAD_META,
 		;
 	}
 }

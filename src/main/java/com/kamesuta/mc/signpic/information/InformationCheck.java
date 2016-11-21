@@ -26,7 +26,7 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class InformationCheck extends Communicate implements Progressable {
 	private static final Gson gson = new Gson();
 
-	protected State status = new State("§6SignPicture Update Check");
+	protected State status = new State().setName("§6SignPicture Update Check");
 	public Informations.InfoSource result;
 
 	@Override

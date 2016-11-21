@@ -86,20 +86,20 @@ public class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MButton(new R(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.add")) {
+			add(new MButton(new R(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f))) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.add(new Rotate(RotateType.X, 0));
 					return true;
 				}
-			});
-			add(new MButton(new R(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f)), I18n.format("signpic.gui.editor.rotation.remove")) {
+			}.setText(I18n.format("signpic.gui.editor.rotation.add")));
+			add(new MButton(new R(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f))) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 					GuiRotation.this.remove();
 					return true;
 				}
-			});
+			}.setText(I18n.format("signpic.gui.editor.rotation.remove")));
 		}
 	}
 
@@ -200,20 +200,20 @@ public class GuiRotation extends WPanel {
 						onUpdate();
 					}
 				}.setNumber(this.rotate.rotate).setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")));
-				add(new MButton(new R(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.up")) {
+				add(new MButton(new R(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0))) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 						up(RotationElement.this.rotate);
 						return true;
 					}
-				});
-				add(new MButton(new R(Coord.right(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), I18n.format("signpic.gui.editor.rotation.down")) {
+				}.setText(I18n.format("signpic.gui.editor.rotation.up")));
+				add(new MButton(new R(Coord.right(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0))) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 						down(RotationElement.this.rotate);
 						return true;
 					}
-				});
+				}.setText(I18n.format("signpic.gui.editor.rotation.down")));
 			}
 
 			@Override
@@ -231,7 +231,8 @@ public class GuiRotation extends WPanel {
 				protected Rotate rotate;
 
 				public Type(final R position, final Rotate rotate) {
-					super(position, rotate.type.name());
+					super(position);
+					setText(rotate.type.name());
 					this.rotate = rotate;
 				}
 

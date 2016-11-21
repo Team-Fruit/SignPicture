@@ -9,6 +9,7 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 	public static final float defaultWH = 1f;
 	// Crossing Slitting
 	public static final float defaultCS = 1f;
+	public static final float defaultOpacity = 10f;
 	public static final boolean defaultRepeat = true;
 	public static final boolean defaultMipMap = true;
 
@@ -18,6 +19,7 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 	public float h = defaultWH;
 	public float c = defaultCS;
 	public float s = defaultCS;
+	public float o = defaultOpacity;
 	public boolean r = defaultRepeat;
 	public boolean m = defaultMipMap;
 
@@ -29,6 +31,7 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 		this.h = defaultWH;
 		this.c = defaultCS;
 		this.s = defaultCS;
+		this.o = defaultOpacity;
 		this.r = defaultRepeat;
 		this.m = defaultMipMap;
 		return this;
@@ -43,6 +46,7 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 		else if (StringUtils.equals(key, "h")) this.h = NumberUtils.toFloat(value, defaultWH);
 		else if (StringUtils.equals(key, "c")) this.c = NumberUtils.toFloat(value, defaultCS);
 		else if (StringUtils.equals(key, "s")) this.s = NumberUtils.toFloat(value, defaultCS);
+		else if (StringUtils.equals(key, "o")) this.o = NumberUtils.toFloat(value, defaultOpacity);
 		else if (StringUtils.equals(key, "r")) this.r = !defaultRepeat;
 		else if (StringUtils.equals(key, "m")) this.m = !defaultMipMap;
 		else return false;
@@ -65,6 +69,8 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 			stb.append("c").append(format(this.c));
 		if (this.s!=defaultCS)
 			stb.append("s").append(format(this.s));
+		if (this.s!=defaultOpacity)
+			stb.append("o").append(format(this.o));
 		if (this.r!=defaultRepeat)
 			stb.append("r");
 		if (this.m!=defaultMipMap)

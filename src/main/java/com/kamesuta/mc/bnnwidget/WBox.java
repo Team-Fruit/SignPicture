@@ -15,12 +15,20 @@ public class WBox extends WPanel {
 
 	@Override
 	public boolean add(final WCommon widget) {
-		this.addtask = widget;
-		removeAll();
+		set(widget);
 		return true;
 	}
 
-	protected void removeAll() {
+	public void set(final WCommon widget) {
+		this.addtask = widget;
+		removeAll();
+	}
+
+	public void reset() {
+		set(null);
+	}
+
+	private void removeAll() {
 		for (final Iterator<WCommon> itr = getContainer().iterator(); itr.hasNext();) {
 			final WCommon widget = itr.next();
 			if (widget.onCloseRequest())

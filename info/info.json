@@ -1,17 +1,13 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.3.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.3.0/SignPicture-1.7.10-2.3.0-universal.jar",
-			"local": "SignPicture-1.7.10-2.3.0-universal.jar"
-		},
-		"1.7.10-beta": {
-			"version": "2.4.1.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.1/SignPicture-1.7.10-2.4.1.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.4.1.beta-universal.jar",
-			"message": "Bug Fix",
+			"version": "2.4.4",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.4/SignPicture-1.7.10-2.4.4-universal.jar",
+			"local": "SignPicture-1.7.10-2.4.4-universal.jar",
+			"changelog": "https://github.com/Team-Fruit/SignPicture/releases/tag/1.7.10-2.4.4",
+			"message": "Support Uploading and Pasting!",
 			"message_local": {
-				"ja_JP": "バグ修正"
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
 		"1.8.9": {
@@ -65,7 +61,7 @@
 			}
 		}
 	},
-	"website": "https://github.com/Kamesuta/SignPicture/",
-	"changelog": "https://github.com/Kamesuta/SignPicture/releases",
+	"website": "https://minecraft.curseforge.com/projects/sign-picture",
+	"changelog": "https://github.com/Team-Fruit/SignPicture/releases",
 	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }

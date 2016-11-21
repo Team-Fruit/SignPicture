@@ -12,7 +12,6 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.gui.GuiTask;
-import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
@@ -102,7 +101,7 @@ public final class Informations {
 	}
 
 	public void init() {
-		check();
+		check(null);
 	}
 
 	private long lastCheck = -1l;
@@ -111,12 +110,11 @@ public final class Informations {
 		return System.currentTimeMillis()-this.lastCheck>l;
 	}
 
-	public void checkInterval(final long l) {
-		if (shouldCheck(l))
-			check();
+	public long getLastCheck() {
+		return this.lastCheck;
 	}
 
-	public void check() {
+	public void check(final Runnable after) {
 		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
 		checker.setCallback(new ICommunicateCallback() {
@@ -126,6 +124,8 @@ public final class Informations {
 					setSource(checker.result);
 				if (res.getError()!=null)
 					Reference.logger.warn("Could not check version information", res.getError());
+				if (after!=null)
+					after.run();
 			}
 		});
 		Communicator.instance.communicate(checker);
@@ -150,6 +150,16 @@ public final class Informations {
 		return null;
 	}
 
+	public String getUpdateImage() {
+		final InfoVersion online = this.source.onlineVersion();
+		if (online.version!=null) {
+			final Info.Version version = online.version;
+			if (!StringUtils.isEmpty(version.image))
+				return version.image;
+		}
+		return null;
+	}
+
 	public void runUpdate() {
 		final Informations.InfoState state = getState();
 		final Informations.InfoSource source = getSource();
@@ -157,7 +167,7 @@ public final class Informations {
 		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
 			if (state.isDownloaded()) {
 				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
+				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
 				try {
 					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 				} catch (final IOException e) {
@@ -165,7 +175,7 @@ public final class Informations {
 				}
 			} else if (state.downloading) {
 				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
+				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
 			} else {
 				final ModDownload downloader = new ModDownload();
 				downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
@@ -225,7 +235,7 @@ public final class Informations {
 						ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson()
 								.replace("$old$", Reference.VERSION)
 								.replace("$new$", version.version)
-								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic-download-latest\"}")
+								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic version update\"}")
 								.replace("$website$", "{\"action\":\"open_url\",\"value\":\""+website+"\"}")
 								.replace("$changelog$", "{\"action\":\"open_url\",\"value\":\""+changelog+"\"}")
 								.chatClient();

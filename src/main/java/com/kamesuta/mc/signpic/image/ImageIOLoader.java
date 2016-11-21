@@ -125,7 +125,7 @@ public class ImageIOLoader {
 		}
 
 		public static class FileInputFactory extends AbstractInputFactory {
-			private File file;
+			private final File file;
 
 			public FileInputFactory(final File file) {
 				this.file = file;
@@ -146,8 +146,8 @@ public class ImageIOLoader {
 		}
 
 		public static class ResourceInputFactory extends AbstractInputFactory {
-			private IResourceManager manager;
-			private ResourceLocation location;
+			private final IResourceManager manager;
+			private final ResourceLocation location;
 
 			public ResourceInputFactory(final IResourceManager manager, final ResourceLocation location) {
 				this.manager = manager;

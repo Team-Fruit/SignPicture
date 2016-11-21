@@ -6,6 +6,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -25,7 +26,7 @@ public class MSelectLabel extends MSelect {
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 				final Area a = getGuiPosition(pgp);
 				RenderHelper.startShape();
-				GlStateManager.color(0f, 0f, 0f, .4f);
+				OpenGL.glColor4f(0f, 0f, 0f, .4f);
 				draw(a);
 				super.draw(ev, pgp, p, frame, popacity);
 			}

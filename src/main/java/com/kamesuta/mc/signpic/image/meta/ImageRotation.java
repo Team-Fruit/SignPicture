@@ -9,6 +9,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import net.minecraft.client.renderer.GlStateManager;
 
+import com.kamesuta.mc.signpic.render.OpenGL;
+
 public class ImageRotation extends ImageMeta.MetaParser {
 	public static final float defaultOffset = 4f;
 
@@ -79,19 +81,19 @@ public class ImageRotation extends ImageMeta.MetaParser {
 		X {
 			@Override
 			public void rotate(final float f) {
-				GlStateManager.rotate(f*360f/8f, 1f, 0f, 0f);
+				OpenGL.glRotatef(f*360f/8f, 1f, 0f, 0f);
 			}
 		},
 		Y {
 			@Override
 			public void rotate(final float f) {
-				GlStateManager.rotate(f*360f/8f, 0f, 1f, 0f);
+				OpenGL.glRotatef(f*360f/8f, 0f, 1f, 0f);
 			}
 		},
 		Z {
 			@Override
 			public void rotate(final float f) {
-				GlStateManager.rotate(f*360f/8f, 0f, 0f, 1f);
+				OpenGL.glRotatef(f*360f/8f, 0f, 0f, 1f);
 			}
 		},
 		;

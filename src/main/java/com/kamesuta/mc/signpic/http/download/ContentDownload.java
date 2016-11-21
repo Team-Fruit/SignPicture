@@ -64,7 +64,7 @@ public class ContentDownload extends Communicate implements Progressable {
 			final long max = Config.instance.contentMaxByte;
 			final long size = entity.getContentLength();
 			if (max>0&&(size<0||size>max))
-				throw new ContentCapacityOverException();
+				throw new ContentCapacityOverException("size: "+size);
 
 			final Progress progress = this.state.getProgress();
 			progress.setOverall(entity.getContentLength());
@@ -76,7 +76,12 @@ public class ContentDownload extends Communicate implements Progressable {
 						req.abort();
 						throw new CommunicateCanceledException();
 					}
-					progress.setDone(getByteCount());
+					final long bcount = getByteCount();
+					if (max>0&&bcount>max) {
+						req.abort();
+						throw new ContentCapacityOverException();
+					}
+					progress.setDone(bcount);
 				}
 			};
 			FileUtils.deleteQuietly(this.temp);

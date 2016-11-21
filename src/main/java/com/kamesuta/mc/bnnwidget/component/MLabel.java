@@ -9,6 +9,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -125,12 +126,13 @@ public class MLabel extends WBase {
 	}
 
 	protected void drawText(final Area a, final float opacity) {
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
-		GlStateManager.scale(getScaleWidth(a), getScaleHeight(a), 1);
-		GlStateManager.translate(-(a.x1()+a.w()/2), -(a.y1()+a.h()/2), 0);
+		OpenGL.glPushMatrix();
+		OpenGL.glTranslated(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
+		OpenGL.glScaled(getScaleWidth(a), getScaleHeight(a), 1);
+		OpenGL.glTranslated(-(a.x1()+a.w()/2), -(a.y1()+a.h()/2), 0);
 		RenderHelper.startTexture();
 		final Color c = new Color(getColor());
+		OpenGL.glColor4f(1f, 1f, 1f, opacity);
 		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
 		drawString(getText(), a, getAlign(), getVerticalAlign(), isShadow());
 		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {
@@ -138,6 +140,6 @@ public class MLabel extends WBase {
 			fontColor(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
 			drawString(getWatermark(), a, getAlign(), getVerticalAlign(), isShadow());
 		}
-		GlStateManager.popMatrix();
+		OpenGL.glPopMatrix();
 	}
 }

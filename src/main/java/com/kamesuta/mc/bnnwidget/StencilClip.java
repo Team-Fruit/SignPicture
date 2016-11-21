@@ -8,6 +8,7 @@ import org.lwjgl.opengl.EXTFramebufferObject;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -23,20 +24,20 @@ public class StencilClip {
 
 	public void startCropping() {
 		if (this.layer<=0) {
-			glEnable(GL_STENCIL_TEST);
-			glClear(GL_STENCIL_BUFFER_BIT);
+			OpenGL.glEnable(GL_STENCIL_TEST);
+			OpenGL.glClear(GL_STENCIL_BUFFER_BIT);
 		}
 		// layer
 		this.layer++;
 
 		// stencil mode on
-		glStencilOp(GL_INCR, GL_KEEP, GL_KEEP);
-		glColorMask(false, false, false, false);
-		glDepthMask(false);
+		OpenGL.glStencilOp(GL_INCR, GL_KEEP, GL_KEEP);
+		OpenGL.glColorMask(false, false, false, false);
+		OpenGL.glDepthMask(false);
 
 		// draw where pattern has been drawn
-		glStencilFunc(GL_EQUAL, this.layer, 0xff);
-		glStencilMask(0xff);
+		OpenGL.glStencilFunc(GL_EQUAL, this.layer, 0xff);
+		OpenGL.glStencilMask(0xff);
 	}
 
 	public void endCropping() {
@@ -44,13 +45,13 @@ public class StencilClip {
 			throw new IllegalStateException("Not Clipping");
 		else {
 			// stencil mode off
-			glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-			glColorMask(true, true, true, true);
-			glDepthMask(true);
+			OpenGL.glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+			OpenGL.glColorMask(true, true, true, true);
+			OpenGL.glDepthMask(true);
 
 			// draw where pattern has been drawn
-			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
-			glStencilMask(0xff);
+			OpenGL.glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+			OpenGL.glStencilMask(0xff);
 		}
 	}
 
@@ -60,12 +61,12 @@ public class StencilClip {
 			this.layer--;
 
 			// draw where pattern has been drawn
-			glStencilFunc(GL_LEQUAL, this.layer, 0xff);
-			glStencilMask(0xff);
+			OpenGL.glStencilFunc(GL_LEQUAL, this.layer, 0xff);
+			OpenGL.glStencilMask(0xff);
 		}
 		if (this.layer<=0) {
-			glClear(GL_STENCIL_BUFFER_BIT);
-			glDisable(GL_STENCIL_TEST);
+			OpenGL.glClear(GL_STENCIL_BUFFER_BIT);
+			OpenGL.glDisable(GL_STENCIL_TEST);
 		}
 	}
 
