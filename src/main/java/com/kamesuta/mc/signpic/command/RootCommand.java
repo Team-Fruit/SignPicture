@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import com.google.common.collect.Lists;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
@@ -54,7 +55,7 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] args) {
+	public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
 		if (!CommandHelpers.processCommands(sender, this, args))
 			CommandHelpers.throwWrongUsage(sender, this);
 	}

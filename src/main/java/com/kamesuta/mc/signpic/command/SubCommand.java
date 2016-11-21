@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import com.google.common.collect.Lists;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
@@ -77,7 +78,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public final void processCommand(final ICommandSender sender, final String[] args) {
+	public final void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
 		if (!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}
