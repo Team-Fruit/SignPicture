@@ -237,7 +237,7 @@ public class GuiSettings extends WPanel {
 										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));
 										return true;
 									}
-								}.setText(I18n.format("signpic.gui.settings.config"));
+								}.setText(I18n.format("signpic.gui.settings.config")));
 
 								if (isUpdateRequired) {
 
