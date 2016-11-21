@@ -257,9 +257,11 @@ public class GuiSettings extends WPanel {
 												@Override
 												public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 													final Area a = getGuiPosition(pgp);
-													if (a.pointInside(p))
+													if (a.pointInside(p)) {
 														Informations.instance.runUpdate();
-													return true;
+														return true;
+													}
+													return false;
 												}
 
 												@Override
