@@ -42,36 +42,27 @@ public class SignPicLabel extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 		final Area a = getGuiPosition(pgp);
+		final float opacity = getGuiOpacity(popacity);
 		final EntryId entryId = getEntryId();
 		if (entryId!=null) {
-			Entry entry = entryId.entry();
-			if (entry.isValid()) {
+			final Entry entry = entryId.entry();
+			if (entry!=null&&entry.isValid()) {
 				final Content content = entry.content();
-				final boolean contentvalid = content!=null&&!StringUtils.isEmpty(content.id.id());
 				Entry upentry = null;
-				if (this.update!=null)
+				Content upcontent = null;
+				if (this.update!=null) {
 					upentry = this.update.entry();
-				if (contentvalid||this.update!=null||upentry!=null&&upentry.isValid()) {
-					if (!contentvalid)
-						entry = upentry;
+					if (upentry!=null&&upentry.isValid())
+						upcontent = upentry.content();
+				}
 
-					OpenGL.glDisable(GL_CULL_FACE);
-					OpenGL.glPushMatrix();
-
-					final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
-					final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
-					final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
-
-					OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
-					OpenGL.glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
-					OpenGL.glScalef(100, 100, 1f);
-					entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
-
-					OpenGL.glPopMatrix();
-					OpenGL.glEnable(GL_CULL_FACE);
-				} else {
+				if (content!=null&&!StringUtils.isEmpty(content.id.id()))
+					drawEntry(a, opacity, upentry, content);
+				else if (upentry!=null&&upcontent!=null)
+					drawEntry(a, opacity, upentry, upcontent);
+				else {
 					RenderHelper.startTexture();
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
@@ -80,6 +71,23 @@ public class SignPicLabel extends WBase {
 				}
 			}
 		}
+	}
+
+	private void drawEntry(final Area a, final float opacity, final Entry entry, final Content content) {
+		OpenGL.glDisable(GL_CULL_FACE);
+		OpenGL.glPushMatrix();
+
+		final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
+		final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
+		final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
+
+		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
+		OpenGL.glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
+		OpenGL.glScalef(100, 100, 1f);
+		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+
+		OpenGL.glPopMatrix();
+		OpenGL.glEnable(GL_CULL_FACE);
 	}
 
 	public EntryId getEntryId() {
