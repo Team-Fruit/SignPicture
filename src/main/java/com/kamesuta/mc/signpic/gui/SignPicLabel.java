@@ -11,10 +11,12 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
@@ -24,10 +26,19 @@ public class SignPicLabel extends WBase {
 	public static final ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
 	protected EntryId entryId;
 	protected ContentManager manager;
+	protected EntryId update;
 
 	public SignPicLabel(final R position, final ContentManager manager) {
 		super(position);
 		this.manager = manager;
+		if (Informations.instance.isUpdateRequired()) {
+			final String image = Informations.instance.getUpdateImage();
+			if (image!=null) {
+				final EntryIdBuilder eidb = new EntryIdBuilder();
+				eidb.setURI(image);
+				this.update = eidb.build();
+			}
+		}
 	}
 
 	@Override
@@ -35,15 +46,17 @@ public class SignPicLabel extends WBase {
 		final Area a = getGuiPosition(pgp);
 		final EntryId entryId = getEntryId();
 		if (entryId!=null) {
-			final Entry entry = entryId.entry();
+			Entry entry = entryId.entry();
 			if (entry.isValid()) {
 				final Content content = entry.content();
-				if (content==null||StringUtils.isEmpty(content.id.id())) {
-					RenderHelper.startTexture();
-					OpenGL.glColor4f(1f, 1f, 1f, .2f);
-					texture().bindTexture(defaultTexture);
-					drawTexture(a);
-				} else {
+				final boolean contentvalid = content!=null&&!StringUtils.isEmpty(content.id.id());
+				Entry upentry = null;
+				if (this.update!=null)
+					upentry = this.update.entry();
+				if (contentvalid||this.update!=null||upentry!=null&&upentry.isValid()) {
+					if (!contentvalid)
+						entry = upentry;
+
 					OpenGL.glDisable(GL_CULL_FACE);
 					OpenGL.glPushMatrix();
 
@@ -58,6 +71,12 @@ public class SignPicLabel extends WBase {
 
 					OpenGL.glPopMatrix();
 					OpenGL.glEnable(GL_CULL_FACE);
+				} else {
+					RenderHelper.startTexture();
+					OpenGL.glColor4f(1f, 1f, 1f, .2f);
+					texture().bindTexture(defaultTexture);
+					final ImageSize size1 = new ImageSize().setSize(ImageSizes.INNER, new ImageSize().setSize(1, 1), new ImageSize().setArea(a));
+					drawTexture(new Area(a.x1()+a.w()/2-size1.width/2, a.y1()+a.h()/2-size1.height/2, a.x1()+a.w()/2+size1.width/2, a.y1()+a.h()/2+size1.height/2));
 				}
 			}
 		}

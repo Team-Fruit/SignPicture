@@ -150,6 +150,16 @@ public final class Informations {
 		return null;
 	}
 
+	public String getUpdateImage() {
+		final InfoVersion online = this.source.onlineVersion();
+		if (online.version!=null) {
+			final Info.Version version = online.version;
+			if (!StringUtils.isEmpty(version.image))
+				return version.image;
+		}
+		return null;
+	}
+
 	public void runUpdate() {
 		final Informations.InfoState state = getState();
 		final Informations.InfoSource source = getSource();
