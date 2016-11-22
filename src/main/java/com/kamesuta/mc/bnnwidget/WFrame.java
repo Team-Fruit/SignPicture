@@ -13,7 +13,6 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected GuiScreen parent;
@@ -194,10 +193,10 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		getContentPane().update(this.event, gp, p);
 		final int m = Mouse.getEventButton();
 		if (this.lastbutton==-1&&m!=this.lastbutton||!Mouse.isButtonDown(this.mousebutton))
-				getContentPane().mouseReleased(this.event, gp, p, this.mousebutton);
+			getContentPane().mouseReleased(this.event, gp, p, this.mousebutton);
 		this.lastbutton = m;
 		if (this.mousebutton!=m&&m!=-1)
-				this.mousebutton = m;
+			this.mousebutton = m;
 		if (!p.equals(this.mouselast)) {
 			this.mouselast = p;
 			getContentPane().mouseMoved(this.event, gp, p, this.mousebutton);

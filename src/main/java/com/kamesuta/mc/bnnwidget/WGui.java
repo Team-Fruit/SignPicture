@@ -12,7 +12,6 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -24,7 +23,7 @@ public class WGui extends Gui {
 	public static final Minecraft mc;
 	public static final Tessellator t = Tessellator.getInstance();
 	public static final WorldRenderer w = t.getWorldRenderer();
-	public static final StencilClip clip = StencilClip.instance;
+	// public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
 	}
