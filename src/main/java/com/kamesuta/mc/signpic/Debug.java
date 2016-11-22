@@ -1,8 +1,5 @@
 package com.kamesuta.mc.signpic;
 
-
-import java.io.File;
-import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

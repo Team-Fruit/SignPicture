@@ -15,6 +15,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
+@Deprecated
 public class StencilClip {
 	public static final StencilClip instance = new StencilClip();
 	private int layer = 0;
@@ -79,8 +80,10 @@ public class StencilClip {
 	public static void init() {
 		if (!Boolean.parseBoolean(System.getProperty("forge.forceDisplayStencil", "false")))
 			try {
-				if (!(ReflectionHelper.findField(OpenGlHelper.class, "field_153212_w").getInt(null)==2&&
-						EXTFramebufferObject.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT)!=EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT)) {
+				if (
+					!(ReflectionHelper.findField(OpenGlHelper.class, "field_153212_w").getInt(null)==2&&
+							EXTFramebufferObject.glCheckFramebufferStatusEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT)!=EXTFramebufferObject.GL_FRAMEBUFFER_COMPLETE_EXT)
+				) {
 					ReflectionHelper.findField(ForgeHooksClient.class, "stencilBits").setInt(null, 8);
 					ReflectionHelper.<BitSet, MinecraftForgeClient> getPrivateValue(MinecraftForgeClient.class, null, "stencilBits").set(0, 8);
 				}

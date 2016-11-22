@@ -7,8 +7,6 @@ import java.util.ListIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import net.minecraft.client.renderer.GlStateManager;
-
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class ImageRotation extends ImageMeta.MetaParser {

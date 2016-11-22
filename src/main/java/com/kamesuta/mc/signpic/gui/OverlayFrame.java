@@ -22,7 +22,6 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -54,7 +53,7 @@ public class OverlayFrame extends WFrame {
 				setHeight(event.gui.height);
 				OpenGL.glPushMatrix();
 				OpenGL.glTranslatef(0f, 0f, 1000f);
-			drawScreen(event.mouseX, event.mouseY, event.renderPartialTicks);
+				drawScreen(event.mouseX, event.mouseY, event.renderPartialTicks);
 				OpenGL.glPopMatrix();
 			}
 	}
@@ -65,8 +64,8 @@ public class OverlayFrame extends WFrame {
 			if (!isDelegated()) {
 				setWidth(event.resolution.getScaledWidth());
 				setHeight(event.resolution.getScaledHeight());
-					drawScreen(0, 0, event.partialTicks);
-	}
+				drawScreen(0, 0, event.partialTicks);
+			}
 	}
 
 	@CoreEvent

@@ -39,7 +39,6 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Property;
@@ -292,8 +291,8 @@ public class GuiSettings extends WPanel {
 													final Area a = getGuiPosition(pgp);
 													if (a.pointInside(p)) {
 														Informations.instance.runUpdate();
-													return true;
-												}
+														return true;
+													}
 													return false;
 												}
 
@@ -333,10 +332,10 @@ public class GuiSettings extends WPanel {
 
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-															GlStateManager.pushMatrix();
-															GlStateManager.translate(0, 0, 10f);
+															OpenGL.glPushMatrix();
+															OpenGL.glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
-															GlStateManager.popMatrix();
+															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(message));
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
@@ -353,10 +352,10 @@ public class GuiSettings extends WPanel {
 
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-															GlStateManager.pushMatrix();
+															OpenGL.glPushMatrix();
 															glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
-															GlStateManager.popMatrix();
+															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(!StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message));
 												}
@@ -384,7 +383,7 @@ public class GuiSettings extends WPanel {
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			RenderHelper.startShape();
-			GlStateManager.color(0f, 0f, 0f, .2f);
+			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
 			super.draw(ev, pgp, p, frame, opacity);

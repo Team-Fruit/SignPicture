@@ -94,188 +94,193 @@ public class OpenGL {
 
 	public static void glAlphaFunc(final int func, final float ref) {
 		GlStateManager.alphaFunc(func, ref);
-		//		GL11.glAlphaFunc(func, ref);
+		// GL11.glAlphaFunc(func, ref);
 	}
 
 	public static void glBlendFunc(final int sfactor, final int dfactor) {
 		GlStateManager.blendFunc(sfactor, dfactor);
-		//		GL11.glBlendFunc(sfactor, dfactor);
+		// GL11.glBlendFunc(sfactor, dfactor);
 	}
 
 	public static void glBlendFuncSeparate(final int srcFactor, final int dstFactor, final int srcFactorAlpha, final int dstFactorAlpha) {
 		GlStateManager.tryBlendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
-		//		OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+		// OpenGlHelper.glBlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
 	}
 
 	public static void glCallList(final int list) {
 		GlStateManager.callList(list);
-		//		GL11.glCallList(list);
+		// GL11.glCallList(list);
 	}
 
 	public static void glClear(final int mask) {
 		GlStateManager.clear(mask);
-		//		GL11.glClear(mask);
+		// GL11.glClear(mask);
 	}
 
 	public static void glClearColor(
 			final float red, final float green, final float blue,
-			final float alpha) {
+			final float alpha
+	) {
 		GlStateManager.clearColor(red, green, blue, alpha);
-		//		GL11.glClearColor(red, green, blue, alpha);
+		// GL11.glClearColor(red, green, blue, alpha);
 	}
 
 	public static void glClearDepth(final double depth) {
 		GlStateManager.clearDepth(depth);
-		//		GL11.glClearDepth(depth);
+		// GL11.glClearDepth(depth);
 	}
 
 	public static void glColor3f(final float red, final float green, final float blue) {
 		GlStateManager.color(red, green, blue, 1.0F);
-		//		GL11.glColor3f(red, green, blue);
+		// GL11.glColor3f(red, green, blue);
 	}
 
 	public static void glColor4f(final float red, final float green, final float blue, final float alpha) {
 		GlStateManager.color(red, green, blue, alpha);
-		//		GL11.glColor4f(red, green, blue, alpha);
+		// GL11.glColor4f(red, green, blue, alpha);
+	}
+
+	public static void glColor4i(final int red, final int green, final int blue, final int alpha) {
+		glColor4f(red/255f, green/255f, blue/255f, alpha/255f);
 	}
 
 	public static void glColor4ub(final byte red, final byte green, final byte blue, final byte alpha) {
-		GlStateManager.color(red, green, blue, alpha);
-		//		GL11.glColor4ub(red, green, blue, alpha);
+		glColor4i(red&0xff, green&0xff, blue&0xff, alpha&0xff);
+		// GL11.glColor4ub(red, green, blue, alpha);
 	}
 
 	public static void glColor(final Color color) {
-		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+		glColor4i(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static void glColor(final org.lwjgl.util.Color color) {
-		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+		glColor4i(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static void glColorMask(final boolean red, final boolean green, final boolean blue, final boolean alpha) {
 		GlStateManager.colorMask(red, green, blue, alpha);
-		//		GL11.glColorMask(red, green, blue, alpha);
+		// GL11.glColorMask(red, green, blue, alpha);
 	}
 
 	public static void glColorMaterial(final int face, final int mode) {
 		GlStateManager.colorMaterial(face, mode);
-		//		GL11.glColorMaterial(face, mode);
+		// GL11.glColorMaterial(face, mode);
 	}
 
 	public static void glCullFace(final int mode) {
 		GlStateManager.cullFace(mode);
-		//		if (mode==GlStateManager.CullFace.BACK.mode)
-		//			GlStateManager.cullFace(GlStateManager.CullFace.BACK);
-		//		else if (mode==GlStateManager.CullFace.FRONT.mode)
-		//			GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
-		//		else if (mode==GlStateManager.CullFace.FRONT_AND_BACK.mode)
-		//			GlStateManager.cullFace(GlStateManager.CullFace.FRONT_AND_BACK);
-		//		GL11.glCullFace(mode);
+		// if (mode==GlStateManager.CullFace.BACK.mode)
+		// 	GlStateManager.cullFace(GlStateManager.CullFace.BACK);
+		// else if (mode==GlStateManager.CullFace.FRONT.mode)
+		// 	GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
+		// else if (mode==GlStateManager.CullFace.FRONT_AND_BACK.mode)
+		// 	GlStateManager.cullFace(GlStateManager.CullFace.FRONT_AND_BACK);
+		// GL11.glCullFace(mode);
 	}
 
 	public static void glDepthFunc(final int func) {
 		GlStateManager.depthFunc(func);
-		//		GL11.glDepthFunc(func);
+		// GL11.glDepthFunc(func);
 	}
 
 	public static void glDepthMask(final boolean flag) {
 		GlStateManager.depthMask(flag);
-		//		GL11.glDepthMask(flag);
+		// GL11.glDepthMask(flag);
 	}
 
 	public static void glGetFloat(final int pname, final FloatBuffer params) {
 		GlStateManager.getFloat(pname, params);
-		//		GL11.glGetFloat(pname, params);
+		// GL11.glGetFloat(pname, params);
 	}
 
 	public static void glLoadIdentity() {
 		GlStateManager.loadIdentity();
-		//		GL11.glLoadIdentity();
+		// GL11.glLoadIdentity();
 	}
 
 	public static void glLogicOp(final int opcode) {
 		GlStateManager.colorLogicOp(opcode);
-		//		GL11.glLogicOp(opcode);
+		// GL11.glLogicOp(opcode);
 	}
 
 	public static void glMatrixMode(final int mode) {
 		GlStateManager.matrixMode(mode);
-		//		GL11.glMatrixMode(mode);
+		// GL11.glMatrixMode(mode);
 	}
 
 	public static void glMultMatrix(final FloatBuffer m) {
 		GlStateManager.multMatrix(m);
-		//		GL11.glMultMatrix(m);
+		// GL11.glMultMatrix(m);
 	}
 
 	public static void glOrtho(final double left, final double right, final double bottom, final double top, final double zNear, final double zFar) {
 		GlStateManager.ortho(left, right, bottom, top, zNear, zFar);
-		//		GL11.glOrtho(left, right, bottom, top, zNear, zFar);
+		// GL11.glOrtho(left, right, bottom, top, zNear, zFar);
 	}
 
 	public static void glPolygonOffset(final float factor, final float units) {
 		GlStateManager.doPolygonOffset(factor, units);
-		//		GL11.glPolygonOffset(factor, units);
+		// GL11.glPolygonOffset(factor, units);
 	}
 
 	public static void glPopAttrib() {
 		GlStateManager.popAttrib();
-		//		GL11.glPopAttrib();
+		// GL11.glPopAttrib();
 	}
 
 	public static void glPopMatrix() {
 		GlStateManager.popMatrix();
-		//		GL11.glPopMatrix();
+		// GL11.glPopMatrix();
 	}
 
 	public static void glPushAttrib() {
 		GlStateManager.pushAttrib();
-		//		GL11.glPushAttrib(8256);
+		// GL11.glPushAttrib(8256);
 	}
 
 	public static void glPushMatrix() {
 		GlStateManager.pushMatrix();
-		//		GL11.glPushMatrix();
+		// GL11.glPushMatrix();
 	}
 
 	public static void glRotatef(final float angle, final float x, final float y, final float z) {
 		GlStateManager.rotate(angle, x, y, z);
-		//		GL11.glRotatef(angle, x, y, z);
+		// GL11.glRotatef(angle, x, y, z);
 	}
 
 	public static void glScaled(final double x, final double y, final double z) {
 		GlStateManager.scale(x, y, z);
-		//		GL11.glScaled(x, y, z);
+		// GL11.glScaled(x, y, z);
 	}
 
 	public static void glScalef(final float x, final float y, final float z) {
 		GlStateManager.scale(x, y, z);
-		//		GL11.glScalef(x, y, z);
+		// GL11.glScalef(x, y, z);
 	}
 
 	public static void glSetActiveTextureUnit(final int texture) {
 		GlStateManager.setActiveTexture(texture);
-		//		OpenGlHelper.setActiveTexture(texture);
+		// OpenGlHelper.setActiveTexture(texture);
 	}
 
 	public static void glShadeModel(final int mode) {
 		GlStateManager.shadeModel(mode);
-		//		GL11.glShadeModel(mode);
+		// GL11.glShadeModel(mode);
 	}
 
 	public static void glTranslated(final double x, final double y, final double z) {
 		GlStateManager.translate(x, y, z);
-		//		GL11.glTranslated(x, y, z);
+		// GL11.glTranslated(x, y, z);
 	}
 
 	public static void glTranslatef(final float x, final float y, final float z) {
 		GlStateManager.translate(x, y, z);
-		//		GL11.glTranslatef(x, y, z);
+		// GL11.glTranslatef(x, y, z);
 	}
 
 	public static void glViewport(final int x, final int y, final int width, final int height) {
 		GlStateManager.viewport(x, y, width, height);
-		//		GL11.glViewport(x, y, width, height);
+		// GL11.glViewport(x, y, width, height);
 	}
 
 	public static void glBegin(final int mode) {

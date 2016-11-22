@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.io.IOException;
 
-import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -24,7 +23,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		// Setup stencil clip
-		StencilClip.init();
+		// StencilClip.init();
 
 		// Setup image
 		Client.renderer = new CustomTileEntitySignRenderer();

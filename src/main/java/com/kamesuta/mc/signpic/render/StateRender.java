@@ -6,7 +6,6 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.state.Progress;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class StateRender {
 	public static enum LoadingCircle {
@@ -33,7 +32,7 @@ public class StateRender {
 		public void designColor() {
 			OpenGL.glColor(this.design);
 		}
-		}
+	}
 
 	public static void drawLoading(final Progress progress, final LoadingCircle type, final LoadingCircleType speed) {
 		if (type!=LoadingCircle.DEFAULT) {

@@ -12,8 +12,6 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
-import net.minecraft.client.renderer.GlStateManager;
-
 public class MLabel extends WBase {
 	protected int textcolor = 14737632;
 	protected String text = "";

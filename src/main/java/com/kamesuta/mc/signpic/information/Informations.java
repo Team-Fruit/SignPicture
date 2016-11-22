@@ -202,10 +202,12 @@ public final class Informations {
 		final EntityPlayer player = Client.mc.thePlayer;
 		if (player!=null&&!state.triedToWarnPlayer&&source!=null) {
 			final String lang = Client.mc.gameSettings.language;
-			if (source.info!=null&&
-					source.info.versions!=null&&
-					Config.instance.informationNotice&&
-					!StringUtils.equals(Reference.VERSION, "${version}")) {
+			if (
+				source.info!=null&&
+						source.info.versions!=null&&
+						Config.instance.informationNotice&&
+						!StringUtils.equals(Reference.VERSION, "${version}")
+			) {
 				final InfoVersion online = source.onlineVersion();
 
 				if (online.compare(VersionClient))
@@ -304,7 +306,7 @@ public final class Informations {
 				return true;
 			if (obj==null)
 				return false;
-			if (getClass()!=obj.getClass())
+			if (!(obj instanceof Version))
 				return false;
 			final Version other = (Version) obj;
 			if (this.beta!=other.beta)
