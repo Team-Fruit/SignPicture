@@ -5,39 +5,39 @@ import java.util.List;
 
 import org.lwjgl.util.Timer;
 
-public class ImageTextures {
+public class RemoteImageTexture {
 
 	protected final Timer timer = new Timer();
-	protected final List<ImageTexture> textures;
+	protected final List<DynamicImageTexture> textures;
 	protected int currenttexture = 0;
 
-	public ImageTextures(final List<ImageTexture> images) {
+	public RemoteImageTexture(final List<DynamicImageTexture> images) {
 		this.textures = images;
 	}
 
-	public IImageTexture get() {
+	public ImageTexture get() {
 		if (this.textures.size()==1) {
 			return this.textures.get(0).load();
 		} else if (this.textures.size()>1) {
-			final ImageTexture texture = this.textures.get(this.currenttexture).load();
+			final DynamicImageTexture texture = this.textures.get(this.currenttexture).load();
 			if(this.timer.getTime() > texture.delay){
 				this.timer.reset();
 				this.currenttexture = (this.currenttexture<this.textures.size()-1)?this.currenttexture+1:0;
 			}
 			return this.textures.get(this.currenttexture);
 		} else {
-			return ImageTexture.NULL;
+			return DynamicImageTexture.NULL;
 		}
 	}
 
-	public List<ImageTexture> getAll() {
+	public List<DynamicImageTexture> getAll() {
 		return this.textures;
 	}
 
 	public void delete() {
-		final Iterator<ImageTexture> itr = this.textures.iterator();
+		final Iterator<DynamicImageTexture> itr = this.textures.iterator();
 		while(itr.hasNext()){
-			final ImageTexture t = itr.next();
+			final DynamicImageTexture t = itr.next();
 			t.delete();
 			itr.remove();
 		}

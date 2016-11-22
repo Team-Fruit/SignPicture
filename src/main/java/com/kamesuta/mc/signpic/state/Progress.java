@@ -5,11 +5,11 @@ public class Progress {
 	public long done;
 
 	float per() {
-		return (float) this.done / (float) this.overall;
+		return (float) this.done/(float) this.overall;
 	}
 
 	public float getProgress() {
-		if (this.overall > 0)
+		if (this.overall>0)
 			return Math.max(0, Math.min(1, per()));
 		return 0;
 	}

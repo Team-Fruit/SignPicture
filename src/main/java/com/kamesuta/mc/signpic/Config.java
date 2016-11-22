@@ -4,8 +4,6 @@ import java.io.File;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.kamesuta.mc.signpic.handler.CoreEvent;
-
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -16,6 +14,8 @@ public final class Config extends Configuration {
 	private final File configFile;
 	public boolean updatable;
 
+	public String signpicDir = "";
+
 	public int imageWidthLimit = 512;
 	public int imageHeightLimit = 512;
 	public boolean imageAnimationGif = true;
@@ -25,13 +25,15 @@ public final class Config extends Configuration {
 	public int communicateThreads = 3;
 
 	public int contentLoadThreads = 3;
-	public int contentMaxByte = 0;
+	public int contentMaxByte = 32*1024*1024;
 	public int contentGCtick = 15 * 20;
 	public int contentLoadTick = 0;
 	public int contentSyncTick = 0;
 
 	public boolean informationNotice = true;
 	public boolean informationJoinBeta = false;
+	public boolean informationUpdateGui = true;
+	public boolean informationTryNew = false;
 
 	public boolean multiplayPAAS = true;
 	/** Fastest time "possible" estimate for an empty sign. */
@@ -41,6 +43,8 @@ public final class Config extends Configuration {
 	/** Minimum time needed to type a character. */
 	public int multiplayPAASMinCharTime = 50;
 
+	public boolean renderOverlayPanel = true;
+	public boolean renderGuiOverlay = true;
 	public boolean renderUseMipmap = true;
 	public boolean renderMipmapTypeNearest = false;
 	public float renderSeeOpacity = .5f;
@@ -53,6 +57,8 @@ public final class Config extends Configuration {
 	public Config( final File configFile ) {
 		super( configFile );
 		this.configFile = configFile;
+
+		this.signpicDir = get("General", "SignpicDir", this.signpicDir).setRequiresMcRestart(true).getString();
 
 		this.imageWidthLimit = get( "Image", "WidthLimit", this.imageWidthLimit ).setRequiresMcRestart(true).getInt( this.imageWidthLimit );
 		this.imageHeightLimit = get( "Image", "HeightLimit", this.imageHeightLimit ).setRequiresMcRestart(true).getInt( this.imageHeightLimit );
@@ -87,16 +93,21 @@ public final class Config extends Configuration {
 		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
 
 		this.contentLoadThreads = addComment(get("Content", "LoadThreads", this.contentLoadThreads), "parallel processing number such as Image Loading").setRequiresMcRestart(true).getInt(this.contentLoadThreads);
-		this.contentMaxByte = addComment(get( "Content", "MaxByte", this.contentMaxByte ), "limit of size before downloading").getInt( this.contentMaxByte );
+		this.contentMaxByte = addComment(get("Content", "MaxByte", this.contentMaxByte), "limit of size before downloading. 0 is infinity.").getInt(this.contentMaxByte);
 		this.contentGCtick = addComment(get( "Content", "GCDelayTick", this.contentGCtick ), "delay ticks of Garbage Collection").getInt( this.contentGCtick );
 		this.contentLoadTick = addComment(get("Content", "LoadStartIntervalTick", this.contentLoadTick), "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt(this.contentLoadTick);
 		this.contentSyncTick = addComment(get( "Content", "SyncLoadIntervalTick", this.contentSyncTick ), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt( this.contentSyncTick );
+
+		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
+		this.informationTryNew = get("Version", "TryNew", this.informationTryNew).getBoolean(this.informationTryNew);
 
 		this.multiplayPAAS = get("Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS).getBoolean(this.multiplayPAAS);
 		this.multiplayPAASMinEditTime = get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime).getInt(this.multiplayPAASMinEditTime);
 		this.multiplayPAASMinLineTime = get("Multiplay.PreventAntiAutoSign.Time", "minLineTime", this.multiplayPAASMinLineTime).getInt(this.multiplayPAASMinLineTime);
 		this.multiplayPAASMinCharTime = get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", this.multiplayPAASMinCharTime).getInt(this.multiplayPAASMinCharTime);
 
+		this.renderOverlayPanel = addComment(get("Render", "OverlayPanel", this.renderOverlayPanel), "Overlay signpic!online").getBoolean(this.renderOverlayPanel);
+		this.renderGuiOverlay = addComment(get("Render", "GuiOverlay", this.renderGuiOverlay), "Overlay on GUI").getBoolean(this.renderGuiOverlay);
 		this.renderUseMipmap = addComment(get("Render", "Mipmap", this.renderUseMipmap), "Require OpenGL 3.0 or later").getBoolean(this.renderUseMipmap);
 		this.renderMipmapTypeNearest = addComment(get("Render", "MipmapTypeNearest", this.renderMipmapTypeNearest), "true = Nearest, false = Linear").getBoolean(this.renderMipmapTypeNearest);
 		this.renderSeeOpacity = (float) get("Render.Opacity", "ViewSign", this.renderSeeOpacity).getDouble(this.renderSeeOpacity);

@@ -1,8 +1,5 @@
 package com.kamesuta.mc.signpic.http.upload;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,32 +26,19 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class ImgurUpload extends Communicate implements Progressable, IUploader {
 	public static final Gson gson = new Gson();
 
-	private final String name;
-	private final InputStream upstream;
-	private final State state;
-	private final String key;
+	protected UploadContent upload;
+	protected String key;
 	protected boolean canceled;
 	protected ImgurResult result;
 
-	protected ImgurUpload(final String name, final InputStream stream, final State state, final String key) {
-		this.name = name;
-		this.upstream = stream;
-		this.state = state;
-		this.key = key;
-	}
-
-	public ImgurUpload(final File file, final State state, final String key) throws FileNotFoundException {
-		this.name = file.getName();
-		this.upstream = new FileInputStream(file);
-		state.setName("§3Imgur: §r"+this.name);
-		state.getProgress().setOverall(file.length());
-		this.state = state;
+	public ImgurUpload(final UploadContent upload, final String key) {
+		this.upload = upload;
 		this.key = key;
 	}
 
 	@Override
 	public State getState() {
-		return this.state;
+		return this.upload.getState("§3Imgur: §r%s");
 	}
 
 	@Override
@@ -69,7 +53,8 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 			httppost.addHeader("Authorization", "Client-ID "+this.key);
 			final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-			countupstream = new CountingInputStream(this.upstream) {
+			final State state = getState();
+			countupstream = new CountingInputStream(this.upload.getStream()) {
 				@Override
 				protected void beforeRead(final int n) throws IOException {
 					if (ImgurUpload.this.canceled) {
@@ -81,11 +66,11 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				@Override
 				protected void afterRead(final int n) {
 					super.afterRead(n);
-					ImgurUpload.this.state.getProgress().done = getByteCount();
+					state.getProgress().done = getByteCount();
 				}
 			};
 
-			builder.addBinaryBody("image", countupstream, ContentType.DEFAULT_BINARY, this.name);
+			builder.addBinaryBody("image", countupstream, ContentType.DEFAULT_BINARY, this.upload.getName());
 			httppost.setEntity(builder.build());
 
 			// execute request
@@ -93,7 +78,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 
 			if (response.getStatusLine().getStatusCode()==HttpStatus.SC_OK) {
 				final HttpEntity resEntity = response.getEntity();
-				if (this.upstream!=null) {
+				if (resEntity!=null) {
 					resstream = resEntity.getContent();
 					this.result = gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
 					onDone(new CommunicateResponse(this.result.success, null));

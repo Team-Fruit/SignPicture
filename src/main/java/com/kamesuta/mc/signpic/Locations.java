@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class Locations {
@@ -14,7 +16,7 @@ public class Locations {
 	public File modFile;
 
 	public Locations(final FMLPreInitializationEvent event, final File mcdir) {
-		this.signpicDir = new File(mcdir, "signpic");
+		this.signpicDir = getSignPicDir(mcdir);
 		securementDirectory(this.signpicDir);
 		this.tempDir = new File(this.signpicDir, "temp");
 		securementDirectory(this.tempDir);
@@ -25,6 +27,16 @@ public class Locations {
 
 		this.modDir = new File(mcdir, "mods");
 		this.modFile = event.getSourceFile();
+	}
+
+	private File getSignPicDir(final File defaultdir) {
+		final File dir = new File(Config.instance.signpicDir);
+		if (!StringUtils.isEmpty(Config.instance.signpicDir)) {
+			if (dir.exists()&&dir.isDirectory()&&!dir.equals(defaultdir))
+				return dir;
+			Reference.logger.debug("invalid signpic dir location! use default dir.");
+		}
+		return new File(defaultdir, "signpic");
 	}
 
 	private boolean securementDirectory(final File cachedir) {

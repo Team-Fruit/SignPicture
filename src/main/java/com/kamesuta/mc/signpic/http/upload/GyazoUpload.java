@@ -1,8 +1,5 @@
 package com.kamesuta.mc.signpic.http.upload;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,32 +26,19 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class GyazoUpload extends Communicate implements Progressable, IUploader {
 	public static final Gson gson = new Gson();
 
-	private final String name;
-	private final InputStream upstream;
-	private final State state;
-	private final String key;
+	protected UploadContent upload;
+	protected String key;
 	protected boolean canceled;
 	protected GyazoResult result;
 
-	protected GyazoUpload(final String name, final InputStream stream, final State state, final String key) {
-		this.name = name;
-		this.upstream = stream;
-		this.state = state;
-		this.key = key;
-	}
-
-	public GyazoUpload(final File file, final State state, final String key) throws FileNotFoundException {
-		this.name = file.getName();
-		this.upstream = new FileInputStream(file);
-		state.setName("§3Gyazo: §r"+this.name);
-		state.getProgress().setOverall(file.length());
-		this.state = state;
+	public GyazoUpload(final UploadContent upload, final String key) {
+		this.upload = upload;
 		this.key = key;
 	}
 
 	@Override
 	public State getState() {
-		return this.state;
+		return this.upload.getState("§3Gyazo: §r%s");
 	}
 
 	@Override
@@ -68,7 +52,8 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 			final HttpPost httppost = new HttpPost(url);
 			final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-			countupstream = new CountingInputStream(this.upstream) {
+			final State state = getState();
+			countupstream = new CountingInputStream(this.upload.getStream()) {
 				@Override
 				protected void beforeRead(final int n) throws IOException {
 					if (GyazoUpload.this.canceled) {
@@ -80,12 +65,12 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 				@Override
 				protected void afterRead(final int n) {
 					super.afterRead(n);
-					GyazoUpload.this.state.getProgress().done = getByteCount();
+					state.getProgress().done = getByteCount();
 				}
 			};
 
 			builder.addTextBody("client_id", this.key);
-			builder.addBinaryBody("imagedata", countupstream, ContentType.DEFAULT_BINARY, this.name);
+			builder.addBinaryBody("imagedata", countupstream, ContentType.DEFAULT_BINARY, this.upload.getName());
 			httppost.setEntity(builder.build());
 
 			// execute request
@@ -93,7 +78,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 
 			if (response.getStatusLine().getStatusCode()==HttpStatus.SC_OK) {
 				final HttpEntity resEntity = response.getEntity();
-				if (this.upstream!=null) {
+				if (resEntity!=null) {
 					resstream = resEntity.getContent();
 					this.result = gson.<GyazoResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), GyazoResult.class);
 					onDone(new CommunicateResponse(true, null));

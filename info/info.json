@@ -1,17 +1,13 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.3.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.3.0/SignPicture-1.7.10-2.3.0-universal.jar",
-			"local": "SignPicture-1.7.10-2.3.0-universal.jar"
-		},
-		"1.7.10-beta": {
-			"version": "2.4.0.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.0/SignPicture-1.7.10-2.4.0.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.4.0.beta-universal.jar",
-			"message": "Support Gyazo and Imgur Uploading!",
+			"version": "2.4.4",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.4/SignPicture-1.7.10-2.4.4-universal.jar",
+			"local": "SignPicture-1.7.10-2.4.4-universal.jar",
+			"changelog": "https://github.com/Team-Fruit/SignPicture/releases/tag/1.7.10-2.4.4",
+			"message": "Support Uploading and Pasting!",
 			"message_local": {
-				"ja_JP": "GyazoやImgurに自動で画像をアップロードできるようになりました！"
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
 		"1.8.9": {
@@ -36,6 +32,15 @@
 			"message_local": {
 				"ja_JP": "描画バグ修正!"
 			}
+		},
+		"1.11-beta": {
+			"version": "2.3.1.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.3.1/SignPicture-1.11-2.3.1.beta-universal.jar",
+			"local": "SignPicture-1.11-2.3.1.beta-universal.jar",
+			"message": "Supported Minecraft 1.11!",
+			"message_local": {
+				"ja_JP": "Minecraft 1.11 に対応しました!"
+			}
 		}
 	},
 	"apis": {
@@ -56,7 +61,7 @@
 			}
 		}
 	},
-	"website": "https://github.com/Kamesuta/SignPicture/",
-	"changelog": "https://github.com/Kamesuta/SignPicture/releases",
+	"website": "https://minecraft.curseforge.com/projects/sign-picture",
+	"changelog": "https://github.com/Team-Fruit/SignPicture/releases",
 	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }
