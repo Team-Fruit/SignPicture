@@ -139,17 +139,21 @@ public class OpenGL {
 		GL11.glColor4f(red, green, blue, alpha);
 	}
 
+	public static void glColor4i(final int red, final int green, final int blue, final int alpha) {
+		glColor4f(red/255f, green/255f, blue/255f, alpha/255f);
+	}
+
 	public static void glColor4ub(final byte red, final byte green, final byte blue, final byte alpha) {
 		//GlStateManager.color(red, green, blue, alpha);
 		GL11.glColor4ub(red, green, blue, alpha);
 	}
 
 	public static void glColor(final Color color) {
-		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+		glColor4i(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static void glColor(final org.lwjgl.util.Color color) {
-		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+		glColor4i(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static void glColorMask(final boolean red, final boolean green, final boolean blue, final boolean alpha) {
