@@ -136,6 +136,10 @@ public class EntryId {
 		return StringUtils.length(this.id)<=15*4;
 	}
 
+	public boolean isNameable() {
+		return StringUtils.length(this.id)<=40;
+	}
+
 	public void toStrings(final String[] sign) {
 		final int length = StringUtils.length(this.id);
 		for (int i = 0; i<4; i++)

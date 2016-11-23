@@ -86,6 +86,7 @@ public class CoreHandler {
 	@SubscribeEvent()
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
 		this.overlayHandler.onDraw(event);
+		this.signHandler.onDraw(event);
 	}
 
 	@SubscribeEvent
@@ -104,6 +105,7 @@ public class CoreHandler {
 			Client.startSection("signpic_load");
 			debugKey();
 			this.signEntryManager.onTick();
+			this.signHandler.onTick();
 			this.contentManager.onTick();
 			this.overlayHandler.onTick(event);
 			this.informationHandler.onTick(event);

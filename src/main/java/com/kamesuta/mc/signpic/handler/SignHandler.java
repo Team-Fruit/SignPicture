@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
@@ -10,70 +13,148 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
-import com.kamesuta.mc.signpic.util.ChatBuilder;
+import com.kamesuta.mc.signpic.render.OpenGL;
+import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.gui.GuiRepair;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static Field f;
+	private static Field guiEditSignTileEntity;
+	private static Field guiRepairTextField;
+	private static Field guiRepairContainer;
 
 	public static void init() {
 		try {
 			final Field[] fields = GuiEditSign.class.getDeclaredFields();
 			for (final Field field : fields)
 				if (TileEntitySign.class.equals(field.getType())) {
-					Reference.logger.info("Hook the TileEntitySign field included by GuiEditSign");
 					field.setAccessible(true);
-					f = field;
+					guiEditSignTileEntity = field;
 				}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook TileEntitySign field included by GuiEditSign", e);
+			Reference.logger.error("Could not hook TileEntitySign field included in GuiEditSign", e);
+		}
+		try {
+			final Field[] fields = GuiRepair.class.getDeclaredFields();
+			for (final Field field : fields) {
+				final Class<?> type = field.getType();
+				if (GuiTextField.class.equals(type)) {
+					field.setAccessible(true);
+					guiRepairTextField = field;
+				} else if (ContainerRepair.class.equals(type)) {
+					field.setAccessible(true);
+					guiRepairContainer = field;
+				}
+			}
+		} catch (final SecurityException e) {
+			Reference.logger.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
+		}
+	}
+
+	private GuiRepair repairGuiTask;
+	private String repairGuiTextFieldCache;
+
+	@CoreEvent
+	public void onSign(final GuiOpenEvent event) {
+		this.repairGuiTask = null;
+		this.repairGuiTextFieldCache = null;
+		final EntryId handSign = CurrentMode.instance.getHandSign();
+		final boolean handSignValid = handSign.entry().isValid();
+		if (handSignValid||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+			final EntryId entryId = CurrentMode.instance.getEntryId();
+			if (event.gui instanceof GuiEditSign)
+				check: {
+					if (guiEditSignTileEntity!=null)
+						try {
+							final TileEntitySign tileSign = (TileEntitySign) guiEditSignTileEntity.get(event.gui);
+							Sign.placeSign(handSignValid ? handSign : entryId, tileSign);
+							event.setCanceled(true);
+							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+								CurrentMode.instance.setMode();
+								final SignEntity se = Sign.preview;
+								if (se.isRenderable()) {
+									final TileEntitySign preview = se.getTileEntity();
+									if (preview.xCoord==tileSign.xCoord&&preview.yCoord==tileSign.yCoord&&preview.zCoord==tileSign.zCoord) {
+										Sign.preview.setVisible(false);
+										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+										CurrentMode.instance.setState(CurrentMode.State.SEE, false);
+									}
+								}
+							}
+							break check;
+						} catch (final Exception e) {
+							Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+						}
+					Client.notice(I18n.format("signpic.chat.error.place"));
+				}
+			else if (event.gui instanceof GuiRepair)
+				if (entryId.isNameable())
+					this.repairGuiTask = (GuiRepair) event.gui;
+				else {
+					Client.notice(I18n.format("signpic.gui.notice.toolongname"));
+					event.setCanceled(true);
+				}
 		}
 	}
 
 	@CoreEvent
-	public void onSign(final GuiOpenEvent event) {
-		final EntryId handSign = CurrentMode.instance.getHandSign();
-		final boolean handSignValid = handSign.entry().isValid();
-		if (handSignValid||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
-			if (event.gui instanceof GuiEditSign)
-				if (f!=null)
+	public void onTick() {
+		if (this.repairGuiTask!=null&&CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+			check: {
+				final EntryId entryId = CurrentMode.instance.getEntryId();
+				if (!entryId.isNameable())
+					break check;
+				if (guiRepairTextField!=null&&guiRepairContainer!=null)
 					try {
-						final GuiEditSign ges = (GuiEditSign) event.gui;
-						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-						Sign.placeSign(handSignValid ? handSign : CurrentMode.instance.getEntryId(), tileSign);
-						event.setCanceled(true);
-						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-							CurrentMode.instance.setMode();
-							final SignEntity se = Sign.preview;
-							if (se.isRenderable()) {
-								final TileEntitySign preview = se.getTileEntity();
-								if (preview.xCoord==tileSign.xCoord&&preview.yCoord==tileSign.yCoord&&preview.zCoord==tileSign.zCoord) {
-									Sign.preview.setVisible(false);
-									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
-									CurrentMode.instance.setState(CurrentMode.State.SEE, false);
-								}
+						final GuiTextField textField = (GuiTextField) guiRepairTextField.get(this.repairGuiTask);
+						final ContainerRepair containerRepair = (ContainerRepair) guiRepairContainer.get(this.repairGuiTask);
+						if (textField!=null&&containerRepair!=null) {
+							final String text = textField.getText();
+							if (!StringUtils.isEmpty(text)&&!StringUtils.equals(this.repairGuiTextFieldCache, text)) {
+								final String name = entryId.id();
+								Sign.setRepairName(name, textField, containerRepair);
+								this.repairGuiTextFieldCache = name;
 							}
 						}
+						break check;
 					} catch (final Exception e) {
 						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
-						ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
 					}
-				else
-					ChatBuilder.create("signpic.chat.error.place").setId().useTranslation().chatClient();
+				Client.notice(I18n.format("signpic.chat.error.place"));
+			}
+	}
+
+	@CoreEvent
+	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
+		if (event.gui instanceof GuiRepair)
+			if (this.repairGuiTask!=null&&CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+				final int xSize = 176;
+				final int ySize = 166;
+				final int guiLeft = (event.gui.width-xSize)/2;
+				final int guiTop = (event.gui.height-ySize)/2;
+				OpenGL.glColor4f(1f, 1f, 1f, 1f);
+				WGui.texture().bindTexture(SignPicLabel.defaultTexture);
+				RenderHelper.startTexture();
+				WGui.drawTextureSize(guiLeft-40, guiTop+3, 42, 42);
+			}
 	}
 
 	@CoreEvent
@@ -84,7 +165,7 @@ public class SignHandler {
 				final EntryId id = EntryId.fromItemStack(handItem);
 				CurrentMode.instance.setHandSign(id);
 			} else
-				CurrentMode.instance.setEntryId(EntryId.blank);
+				CurrentMode.instance.setHandSign(EntryId.blank);
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 				Sign.preview.capturePlace();
 				event.setCanceled(true);

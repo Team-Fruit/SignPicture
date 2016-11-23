@@ -322,24 +322,15 @@ public class GuiMain extends WFrame {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								if (entry.isValid()&&entry.id.isPlaceable()) {
-									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
-									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
-									requestClose();
-									return true;
-								}
+								if (entry.isValid())
+									if (entry.id.isPlaceable()) {
+										CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
+										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
+										requestClose();
+										return true;
+									} else
+										Client.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
 								return false;
-							}
-
-							@Override
-							public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								final Area a = getGuiPosition(pgp);
-								if (a.pointInside(p)) {
-									final Entry entry = CurrentMode.instance.getEntryId().entry();
-									if (entry.isValid()&&!entry.id.isPlaceable())
-										Client.notice(I18n.format("signpic.gui.editor.notice.toolong"), 1f);
-								}
-								return super.mouseClicked(ev, pgp, p, button);
 							}
 
 							@Override
@@ -350,7 +341,7 @@ public class GuiMain extends WFrame {
 							@Override
 							public boolean isEnabled() {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								return entry.isValid()&&entry.id.isPlaceable()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+								return entry.isValid()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						}.setText(I18n.format("signpic.gui.editor.place")));
 						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {

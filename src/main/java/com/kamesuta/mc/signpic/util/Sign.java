@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.util;
 
+import org.apache.commons.io.Charsets;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
@@ -9,8 +10,11 @@ import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.GuiPAAS;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class Sign {
@@ -27,16 +31,26 @@ public class Sign {
 		entryId.toEntity(sourceentity);
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
-		if (nethandlerplayclient != null)
+		if (nethandlerplayclient!=null)
 			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.xCoord, sourceentity.yCoord, sourceentity.zCoord, sourceentity.signText));
 		sourceentity.setEditable(true);
 	}
 
 	public static void placeSign(final EntryId entryId, final TileEntitySign sourceentity) {
-		if (Config.instance.multiplayPAAS && !Client.mc.isSingleplayer())
+		if (Config.instance.multiplayPAAS&&!Client.mc.isSingleplayer())
 			Client.mc.displayGuiScreen(new GuiPAAS(new SendPacketTask(entryId, sourceentity)));
 		else
 			sendSign(entryId, sourceentity);
+	}
+
+	public static void sendRepairName(final String name) {
+		Client.mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", name.getBytes(Charsets.UTF_8)));
+	}
+
+	public static void setRepairName(final String name, final GuiTextField textField, final ContainerRepair containerRepair) {
+		textField.setText(name);
+		containerRepair.updateItemName(name);
+		sendRepairName(name);
 	}
 
 	public static class SendPacketTask {
@@ -60,7 +74,7 @@ public class Sign {
 		}
 
 		public boolean tick() {
-			if (this.timer.getTime() * 1000 > this.limit) {
+			if (this.timer.getTime()*1000>this.limit) {
 				sendPacket();
 				return true;
 			}
@@ -70,22 +84,19 @@ public class Sign {
 		private static long getExpectedEditTime(final String[] lines, final boolean skipEmpty) {
 			long expected = Config.instance.multiplayPAASMinEditTime;
 			int n = 0;
-			for (String line : lines){
-				if (line != null){
+			for (String line : lines)
+				if (line!=null) {
 					line = line.trim().toLowerCase();
-					if (!line.isEmpty()){
+					if (!line.isEmpty()) {
 						final int chars = line.length();
 						n += 1;
-						expected += Config.instance.multiplayPAASMinCharTime * chars;
+						expected += Config.instance.multiplayPAASMinCharTime*chars;
 					}
 				}
-			}
-			if (skipEmpty && n == 0) {
+			if (skipEmpty&&n==0)
 				return 0;
-			}
-			if (n > 1){
-				expected += Config.instance.multiplayPAASMinLineTime * n;
-			}
+			if (n>1)
+				expected += Config.instance.multiplayPAASMinLineTime*n;
 			return expected;
 		}
 	}

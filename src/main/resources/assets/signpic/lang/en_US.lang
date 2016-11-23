@@ -87,8 +87,6 @@ signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=Please Wait ( %d / %d letters )
 signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
-## Notice
-signpic.gui.editor.notice.toolong=Too long code for Sign!
 
 # Notice
 signpic.gui.notice.paste.unsupported=Not Supported
@@ -102,6 +100,8 @@ signpic.gui.notice.downloaded=Finished downloading %s
 signpic.gui.notice.downloadfailed=Download Failed: §7%s
 signpic.gui.notice.versioning.downloadedAlready=Close your game, delete the old version and load it again to update!
 signpic.gui.notice.versioning.downloadingAlready=The update is already downloading!
+signpic.gui.notice.toolongname=URL+metadata length must be less than 40 characters to name!
+signpic.gui.notice.toolongplace=URL+metadata length must be less than 60 characters to place!
 
 # Upload UI
 signpic.ui.title=SignPicture!File
