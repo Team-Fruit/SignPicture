@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WGui;
+import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
@@ -151,9 +153,12 @@ public class SignHandler {
 				final int guiLeft = (event.gui.width-xSize)/2;
 				final int guiTop = (event.gui.height-ySize)/2;
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				WGui.texture().bindTexture(SignPicLabel.defaultTexture);
 				RenderHelper.startTexture();
-				WGui.drawTextureSize(guiLeft-40, guiTop+3, 42, 42);
+				WGui.texture().bindTexture(MPanel.background);
+				final Area a = new Area(guiLeft-42, guiTop, guiLeft, guiTop+49);
+				MPanel.drawBack(a);
+				WGui.texture().bindTexture(SignPicLabel.defaultTexture);
+				WGui.drawTextureSize(guiLeft-42, guiTop+3, 42, 42);
 			}
 	}
 
