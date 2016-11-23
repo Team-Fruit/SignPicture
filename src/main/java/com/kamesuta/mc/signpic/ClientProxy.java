@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
+import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
@@ -13,8 +14,10 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -69,6 +72,7 @@ public class ClientProxy extends CommonProxy {
 
 		// Replace Sign Renderer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.renderer);
+		MinecraftForgeClient.registerItemRenderer(Items.sign, new CustomItemSignRenderer());
 
 		// Event Register
 		Client.handler.init();
