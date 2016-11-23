@@ -68,7 +68,7 @@ public class ModDownload extends Communicate implements Progressable {
 			this.status.getProgress().overall = entity.getContentLength();
 			input = entity.getContent();
 
-			final File f = new File(Client.location.modDir, local+".dl");
+			final File f = Client.location.createCache("modupdate");
 			f.createNewFile();
 			final File f1 = new File(Client.location.modDir, local);
 
