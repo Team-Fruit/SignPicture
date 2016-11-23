@@ -12,8 +12,9 @@
 		},
 		"1.7.10-beta": {
 			"version": "2.5.0.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.5.0/SignPicture-1.7.10-2.4.5.0.beta-universal.jar",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.5.0/SignPicture-1.7.10-2.5.0.beta-universal.jar",
 			"local": "SignPicture-1.7.10-2.5.0.beta-universal.jar",
+			"image": "https://i.gyazo.com/234a908ea304a7e446d139a3bceac4e1.png",
 			"message": "Item SignPicture!",
 			"message_local": {
 				"ja_JP": "アイテムのSignPicture実装!"
