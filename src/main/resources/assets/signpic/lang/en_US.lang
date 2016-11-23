@@ -16,6 +16,11 @@ signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] Sorry, you will not be able to use this feature because of an error.
 
+# Item
+signpic.item.sign.desc=§dPress §a%s§d to edit SignPicture
+signpic.item.sign.desc.keyconflict=§cOpen §a%2$s§c in §a%1$s§c and solve key conflict!
+signpic.item.sign.desc.keyconflict.key=§c - conflict §a%2$s§c in §a%1$s
+
 # Key
 signpic.key.category=Sign Picture
 signpic.key.gui=Open GUI

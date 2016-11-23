@@ -25,6 +25,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class CoreHandler {
 	public final Config configHandler = Config.instance;
@@ -64,6 +65,11 @@ public class CoreHandler {
 	@SubscribeEvent
 	public void onClick(final MouseEvent event) {
 		this.signHandler.onClick(event);
+	}
+
+	@SubscribeEvent
+	public void onTooltip(final ItemTooltipEvent event) {
+		this.signHandler.onTooltip(event);
 	}
 
 	@SubscribeEvent

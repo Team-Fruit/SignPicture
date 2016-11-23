@@ -1,8 +1,10 @@
 package com.kamesuta.mc.signpic.handler;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -15,9 +17,14 @@ import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.MouseEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
 	private static Field f;
@@ -91,5 +98,22 @@ public class SignHandler {
 					}
 				}
 			}
+	}
+
+	@CoreEvent
+	public void onTooltip(final ItemTooltipEvent event) {
+		if (event.itemStack.getItem()==Items.sign&&(Config.instance.signTooltip||!Config.instance.guiExperienced)) {
+			final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
+			final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
+			String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());
+			if (!conflict.isEmpty())
+				keyDisplay = EnumChatFormatting.RED+keyDisplay;
+			event.toolTip.add(I18n.format("signpic.item.sign.desc", keyDisplay));
+			if (!conflict.isEmpty()) {
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict", I18n.format("menu.options"), I18n.format("options.controls")));
+				for (final KeyBinding key : conflict)
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict.key", I18n.format(key.getKeyCategory()), I18n.format(key.getKeyDescription())));
+			}
+		}
 	}
 }
