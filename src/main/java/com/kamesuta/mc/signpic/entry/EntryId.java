@@ -5,13 +5,16 @@ import org.apache.commons.lang3.StringUtils;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IChatComponent;
 
 public class EntryId {
+	public static final EntryId blank = new EntryId("");
+
 	private final String id;
 
-	public EntryId(final String id) {
+	protected EntryId(final String id) {
 		this.id = id;
 	}
 
@@ -50,11 +53,13 @@ public class EntryId {
 	}
 
 	public static EntryId from(final String string) {
+		if (StringUtils.isEmpty(string))
+			return blank;
 		return new EntryId(string);
 	}
 
 	public static EntryId fromStrings(final String[] strings) {
-		return new EntryId(StringUtils.join(strings));
+		return from(StringUtils.join(strings));
 	}
 
 	public static EntryId fromTile(final TileEntitySign tile) {
@@ -66,7 +71,11 @@ public class EntryId {
 		for (final IChatComponent chat : chats)
 			if (chat!=null)
 				stb.append(chat.getUnformattedText());
-		return new EntryId(stb.toString());
+		return from(stb.toString());
+	}
+
+	public static EntryId fromItemStack(final ItemStack itemStack) {
+		return from(itemStack.getDisplayName());
 	}
 
 	public boolean hasContentId() {

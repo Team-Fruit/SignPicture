@@ -484,7 +484,7 @@ public class GuiMain extends WFrame {
 		}
 
 		public void apply() {
-			final EntryId entryId = new EntryId(getText());
+			final EntryId entryId = EntryId.from(getText());
 			if (entryId.hasMeta())
 				GuiMain.this.signbuilder.setMeta(entryId.getMeta());
 			if (entryId.hasContentId()) {

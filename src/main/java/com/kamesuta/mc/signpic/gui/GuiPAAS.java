@@ -98,7 +98,7 @@ public class GuiPAAS extends WFrame {
 					if (!GuiPAAS.this.task.tick()) {
 						this.c = (int) (GuiPAAS.this.task.timer.getTime()*1000/GuiPAAS.this.task.limit*this.max);
 						if (this.cursor!=this.c) {
-							final EntryId id = new EntryId(StringUtils.substring(GuiPAAS.this.task.id.id(), 0, this.c));
+							final EntryId id = EntryId.from(StringUtils.substring(GuiPAAS.this.task.id.id(), 0, this.c));
 							final int last = id.getLastLine();
 							id.toEntity(GuiPAAS.this.task.entity);
 							GuiPAAS.this.task.entity.lineBeingEdited = last;

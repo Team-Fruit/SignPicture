@@ -16,7 +16,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 	public boolean handleRenderType(final ItemStack item, final ItemRenderType type) {
 		if (item.getItem()!=Items.sign)
 			return false;
-		return new EntryId(item.getDisplayName()).entry().isValid();
+		return EntryId.fromItemStack(item).entry().isValid();
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		OpenGL.glPushMatrix();
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
-		final Entry entry = new EntryId(item.getDisplayName()).entry();
+		final Entry entry = EntryId.fromItemStack(item).entry();
 		if (type==ItemRenderType.INVENTORY)
 			OpenGL.glScalef(16f, 16f, 1f);
 		else {

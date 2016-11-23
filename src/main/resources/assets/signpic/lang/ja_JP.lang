@@ -11,6 +11,11 @@ signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエ�
 signpic.item.sign.desc=§a%s§d を押してSignPictureを編集
 signpic.item.sign.desc.keyconflict=§a%s§c の §a%s§c を開き、キー競合を解決してください！
 signpic.item.sign.desc.keyconflict.key=§c - 競合 §a%s§c の §a%s
+signpic.item.sign.desc.named.prop.size=§7 - サイズ: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - オフセット: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - 回転: %s
+signpic.item.sign.desc.named.meta=§7メタ情報: %s§7
+signpic.item.sign.desc.named.raw=§7名前: [%s§7]
 
 # GUI
 ## Sign Editor

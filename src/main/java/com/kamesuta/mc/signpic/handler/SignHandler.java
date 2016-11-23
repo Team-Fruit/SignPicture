@@ -20,6 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -45,13 +46,15 @@ public class SignHandler {
 
 	@CoreEvent
 	public void onSign(final GuiOpenEvent event) {
-		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+		final EntryId handSign = CurrentMode.instance.getHandSign();
+		final boolean handSignValid = handSign.entry().isValid();
+		if (handSignValid||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
 			if (event.gui instanceof GuiEditSign)
 				if (f!=null)
 					try {
 						final GuiEditSign ges = (GuiEditSign) event.gui;
 						final TileEntitySign tileSign = (TileEntitySign) f.get(ges);
-						Sign.placeSign(CurrentMode.instance.getEntryId(), tileSign);
+						Sign.placeSign(handSignValid ? handSign : CurrentMode.instance.getEntryId(), tileSign);
 						event.setCanceled(true);
 						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 							CurrentMode.instance.setMode();
@@ -75,7 +78,13 @@ public class SignHandler {
 
 	@CoreEvent
 	public void onClick(final MouseEvent event) {
-		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100)
+		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100) {
+			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
+			if (handItem!=null&&handItem.getItem()==Items.sign) {
+				final EntryId id = EntryId.fromItemStack(handItem);
+				CurrentMode.instance.setHandSign(id);
+			} else
+				CurrentMode.instance.setEntryId(EntryId.blank);
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
 				Sign.preview.capturePlace();
 				event.setCanceled(true);
@@ -98,21 +107,34 @@ public class SignHandler {
 					}
 				}
 			}
+		}
 	}
 
 	@CoreEvent
 	public void onTooltip(final ItemTooltipEvent event) {
-		if (event.itemStack.getItem()==Items.sign&&(Config.instance.signTooltip||!Config.instance.guiExperienced)) {
-			final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
-			final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
-			String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());
-			if (!conflict.isEmpty())
-				keyDisplay = EnumChatFormatting.RED+keyDisplay;
-			event.toolTip.add(I18n.format("signpic.item.sign.desc", keyDisplay));
-			if (!conflict.isEmpty()) {
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict", I18n.format("menu.options"), I18n.format("options.controls")));
-				for (final KeyBinding key : conflict)
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict.key", I18n.format(key.getKeyCategory()), I18n.format(key.getKeyDescription())));
+		if (event.itemStack.getItem()==Items.sign) {
+			final EntryId id = EntryId.fromItemStack(event.itemStack);
+			final Entry entry = id.entry();
+			if (entry.isValid()) {
+				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
+				event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", entry.meta.size.width, entry.meta.size.height));
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z));
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", entry.meta.rotation.compose()));
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", entry.meta.compose()));
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+			} else if (Config.instance.signTooltip||!Config.instance.guiExperienced) {
+				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
+				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
+				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());
+				if (!conflict.isEmpty())
+					keyDisplay = EnumChatFormatting.RED+keyDisplay;
+				event.toolTip.add(I18n.format("signpic.item.sign.desc", keyDisplay));
+				if (!conflict.isEmpty()) {
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict", I18n.format("menu.options"), I18n.format("options.controls")));
+					for (final KeyBinding key : conflict)
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict.key", I18n.format(key.getKeyCategory()), I18n.format(key.getKeyDescription())));
+				}
 			}
 		}
 	}
