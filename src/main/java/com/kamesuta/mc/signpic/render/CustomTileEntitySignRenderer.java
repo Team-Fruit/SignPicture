@@ -51,11 +51,11 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			RenderHelper.startTexture();
 			bindTexture(DESTROY_STAGES[destroy]);
 			OpenGL.glTranslatef(0f, 0f, .01f);
-			RenderHelper.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.w.func_181668_a(GL_QUADS, DefaultVertexFormats.field_181707_g);
 			RenderHelper.addRectVertex(0, 0, 1, 1);
 			RenderHelper.t.draw();
 			OpenGL.glTranslatef(0f, 0f, -.02f);
-			RenderHelper.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.w.func_181668_a(GL_QUADS, DefaultVertexFormats.field_181707_g);
 			RenderHelper.addRectVertex(0, 0, 1, 1);
 			RenderHelper.t.draw();
 			OpenGL.glPopMatrix();

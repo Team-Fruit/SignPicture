@@ -29,11 +29,11 @@ public class WGui extends Gui {
 	}
 
 	public static void drawTextureAbs(final float vx1, final float vy1, final float vx2, final float vy2, final float tx1, final float ty1, final float tx2, final float ty2) {
-		w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		w.pos(vx1, vy2, 0).tex(tx1, ty2).endVertex();
-		w.pos(vx2, vy2, 0).tex(tx2, ty2).endVertex();
-		w.pos(vx2, vy1, 0).tex(tx2, ty1).endVertex();
-		w.pos(vx1, vy1, 0).tex(tx1, ty1).endVertex();
+		w.func_181668_a(GL_QUADS, DefaultVertexFormats.field_181707_g);
+		w.func_181662_b(vx1, vy2, 0).func_181673_a(tx1, ty2).func_181675_d();
+		w.func_181662_b(vx2, vy2, 0).func_181673_a(tx2, ty2).func_181675_d();
+		w.func_181662_b(vx2, vy1, 0).func_181673_a(tx2, ty1).func_181675_d();
+		w.func_181662_b(vx1, vy1, 0).func_181673_a(tx1, ty1).func_181675_d();
 		t.draw();
 	}
 
@@ -83,11 +83,11 @@ public class WGui extends Gui {
 	}
 
 	public static void draw(final float x1, final float y1, final float x2, final float y2, final int mode) {
-		w.begin(mode, DefaultVertexFormats.POSITION);
-		w.pos(x1, y2, 0).endVertex();
-		w.pos(x2, y2, 0).endVertex();
-		w.pos(x2, y1, 0).endVertex();
-		w.pos(x1, y1, 0).endVertex();
+		w.func_181668_a(mode, DefaultVertexFormats.field_181705_e);
+		w.func_181662_b(x1, y2, 0).func_181675_d();
+		w.func_181662_b(x2, y2, 0).func_181675_d();
+		w.func_181662_b(x2, y1, 0).func_181675_d();
+		w.func_181662_b(x1, y1, 0).func_181675_d();
 		t.draw();
 	}
 
