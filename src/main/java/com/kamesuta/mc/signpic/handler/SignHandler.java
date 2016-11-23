@@ -166,9 +166,10 @@ public class SignHandler {
 	public void onClick(final MouseEvent event) {
 		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100) {
 			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
+			EntryId handEntry = null;
 			if (handItem!=null&&handItem.getItem()==Items.sign) {
-				final EntryId id = EntryId.fromItemStack(handItem);
-				CurrentMode.instance.setHandSign(id);
+				handEntry = EntryId.fromItemStack(handItem);
+				CurrentMode.instance.setHandSign(handEntry);
 			} else
 				CurrentMode.instance.setHandSign(EntryId.blank);
 			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
@@ -178,19 +179,21 @@ public class SignHandler {
 				Client.openEditor();
 			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
-				if (tilesign!=null) {
-					final Entry entry = EntryId.fromTile(tilesign).entry();
-					if (entry.isValid()) {
-						final Entry old = CurrentMode.instance.getEntryId().entry();
-						final EntryIdBuilder idb = new EntryIdBuilder();
-						idb.setURI(CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT) ? entry.contentId.getID() : old.contentId.getID());
-						idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.meta : old.meta);
-						CurrentMode.instance.setEntryId(idb.build());
-						event.setCanceled(true);
-						Client.openEditor();
-						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
-							CurrentMode.instance.setMode();
-					}
+				Entry entry = null;
+				if (tilesign!=null)
+					entry = EntryId.fromTile(tilesign).entry();
+				else if (handEntry!=null)
+					entry = handEntry.entry();
+				if (entry!=null&&entry.isValid()) {
+					final Entry old = CurrentMode.instance.getEntryId().entry();
+					final EntryIdBuilder idb = new EntryIdBuilder();
+					idb.setURI(CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT) ? entry.contentId.getID() : old.contentId.getID());
+					idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.meta : old.meta);
+					CurrentMode.instance.setEntryId(idb.build());
+					event.setCanceled(true);
+					Client.openEditor();
+					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
+						CurrentMode.instance.setMode();
 				}
 			}
 		}
