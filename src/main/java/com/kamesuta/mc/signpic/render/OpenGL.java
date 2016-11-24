@@ -139,17 +139,21 @@ public class OpenGL {
 		//		GL11.glColor4f(red, green, blue, alpha);
 	}
 
+	public static void glColor4i(final int red, final int green, final int blue, final int alpha) {
+		glColor4f(red/255f, green/255f, blue/255f, alpha/255f);
+	}
+
 	public static void glColor4ub(final byte red, final byte green, final byte blue, final byte alpha) {
-		GlStateManager.color(red, green, blue, alpha);
+		glColor4i(red&0xff, green&0xff, blue&0xff, alpha&0xff);
 		//		GL11.glColor4ub(red, green, blue, alpha);
 	}
 
 	public static void glColor(final Color color) {
-		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+		glColor4i(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static void glColor(final org.lwjgl.util.Color color) {
-		OpenGL.glColor4ub((byte) color.getBlue(), (byte) color.getGreen(), (byte) color.getBlue(), (byte) color.getAlpha());
+		glColor4i(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 	}
 
 	public static void glColorMask(final boolean red, final boolean green, final boolean blue, final boolean alpha) {
@@ -287,7 +291,8 @@ public class OpenGL {
 	}
 
 	public static int glGenTextures() {
-		return GL11.glGenTextures();
+		return GlStateManager.generateTexture();
+		// return GL11.glGenTextures();
 	}
 
 	public static int glGetTexLevelParameteri(final int target, final int level, final int pname) {
@@ -355,7 +360,13 @@ public class OpenGL {
 	}
 
 	public static void glBindTexture(final int target, final int texture) {
-		GL11.glBindTexture(target, texture);
+		if (target==GL11.GL_TEXTURE_2D)
+			GlStateManager.bindTexture(texture);
+		else
+			GL11.glBindTexture(target, texture);
 	}
 
+	public static void glDeleteTextures(final int texture) {
+		GlStateManager.deleteTexture(texture);
+	}
 }

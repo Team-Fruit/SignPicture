@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.render;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -8,9 +10,9 @@ import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
@@ -30,17 +32,35 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		// Size
 		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
 
-		GlStateManager.pushMatrix();
+		OpenGL.glPushMatrix();
 
-		GlStateManager.translate(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
+		OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 		entry.meta.rotation.rotate();
 
-		GlStateManager.translate(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
-		GlStateManager.scale(1f, -1f, 1f);
+		OpenGL.glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
+		OpenGL.glScalef(1f, -1f, 1f);
 
+		OpenGL.glPushMatrix();
 		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+		OpenGL.glPopMatrix();
 
-		GlStateManager.popMatrix();
+		if (destroy>=0) {
+			OpenGL.glPushMatrix();
+			OpenGL.glScalef(size.width, size.height, 1f);
+			RenderHelper.startTexture();
+			bindTexture(DESTROY_STAGES[destroy]);
+			OpenGL.glTranslatef(0f, 0f, .01f);
+			RenderHelper.v.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.addRectVertex(0, 0, 1, 1);
+			RenderHelper.t.draw();
+			OpenGL.glTranslatef(0f, 0f, -.02f);
+			RenderHelper.v.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			RenderHelper.addRectVertex(0, 0, 1, 1);
+			RenderHelper.t.draw();
+			OpenGL.glPopMatrix();
+		}
+
+		OpenGL.glPopMatrix();
 	}
 
 	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z, final float rotateratio) {
@@ -75,27 +95,27 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, opacity*.5f);
+				OpenGL.glColor4f(1f, 1f, 1f, opacity*.5f);
 				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 
-			GlStateManager.pushMatrix();
+			OpenGL.glPushMatrix();
 			translateBase(tile, x, y, z, 1f);
 
 			// Draw Canvas
-			GlStateManager.disableCull();
-			GlStateManager.disableLighting();
+			OpenGL.glDisable(GL_CULL_FACE);
+			OpenGL.glDisable(GL_LIGHTING);
 
 			renderSignPicture(entry, destroy, opacity);
 
-			GlStateManager.enableLighting();
-			GlStateManager.enableCull();
+			OpenGL.glEnable(GL_LIGHTING);
+			OpenGL.glEnable(GL_CULL_FACE);
 
-			GlStateManager.popMatrix();
+			OpenGL.glPopMatrix();
 		} else {
 			if (opacity<1f) {
 				RenderHelper.startTexture();
-				GlStateManager.color(1f, 1f, 1f, opacity);
+				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}

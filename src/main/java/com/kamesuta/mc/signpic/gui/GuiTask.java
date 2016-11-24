@@ -23,7 +23,6 @@ import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 

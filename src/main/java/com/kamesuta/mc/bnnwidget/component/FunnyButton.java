@@ -9,8 +9,6 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
-import net.minecraft.client.renderer.GlStateManager;
-
 public class FunnyButton extends MButton {
 	public FunnyButton(final R position) {
 		super(position);
@@ -39,11 +37,11 @@ public class FunnyButton extends MButton {
 			}
 		} else if (this.highlighted) {
 			this.highlighted = false;
-				this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
-				this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
-			}
-		super.update(ev, pgp, p);
+			this.m.stop().add(Easings.easeOutElastic.move(.5f, 0f)).start();
+			this.s.stop().add(Easings.easeOutElastic.move(.5f, 1f)).start();
 		}
+		super.update(ev, pgp, p);
+	}
 
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {

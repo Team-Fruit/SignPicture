@@ -8,7 +8,6 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 
 public class DynamicImageTexture implements ImageTexture {
@@ -41,7 +40,7 @@ public class DynamicImageTexture implements ImageTexture {
 
 	public DynamicImageTexture load() {
 		if (this.id==-1&&this.temp!=null) {
-			this.id = TextureUtil.glGenTextures();
+			this.id = OpenGL.glGenTextures();
 			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
 			TextureUtil.uploadTextureImage(this.id, this.temp);
 			if (OpenGL.openGl30()&&Config.instance.renderUseMipmap) {
@@ -93,7 +92,7 @@ public class DynamicImageTexture implements ImageTexture {
 
 	public void delete() {
 		if (this.id!=-1)
-			TextureUtil.deleteTexture(this.id);
+			OpenGL.glDeleteTextures(this.id);
 		if (this.temp!=null)
 			this.temp = null;
 	}

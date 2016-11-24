@@ -18,24 +18,20 @@ public class ConfigGui extends GuiConfig {
 		super(parent, getConfigElements(), Reference.MODID, false, false, GuiConfig.getAbridgedConfigPath(Config.instance.getFilePath()));
 	}
 
-	@SuppressWarnings("rawtypes")
 	private static List<IConfigElement> getConfigElements() {
 		final List<IConfigElement> list = new ArrayList<IConfigElement>();
 
 		for (final String cat : Config.instance.getCategoryNames()) {
-			if (cat.equals("versionchecker")) {
+			if (cat.equals("versionchecker"))
 				continue;
-			}
 
-			if (cat.equals("settings")) {
+			if (cat.equals("settings"))
 				continue;
-			}
 
 			final ConfigCategory cc = Config.instance.getCategory(cat);
 
-			if (cc.isChild()) {
+			if (cc.isChild())
 				continue;
-			}
 
 			final ConfigElement ce = new ConfigElement(cc);
 			list.add(ce);

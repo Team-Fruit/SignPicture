@@ -23,7 +23,7 @@ public class WGui extends Gui {
 	public static final Minecraft mc;
 	public static final Tessellator t = Tessellator.getInstance();
 	public static final VertexBuffer vb = t.getBuffer();
-	public static final StencilClip clip = StencilClip.instance;
+	// public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
 	}

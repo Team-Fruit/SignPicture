@@ -11,7 +11,6 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class MPanel extends WPanel {
