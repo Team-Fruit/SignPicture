@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+@Deprecated
 public class StencilClip {
 	public static final StencilClip instance = new StencilClip();
 	private int layer = 0;

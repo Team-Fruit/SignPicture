@@ -27,7 +27,7 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		// Setup stencil clip
-		StencilClip.init();
+		// StencilClip.init();
 
 		// Setup image
 		Client.renderer = new CustomTileEntitySignRenderer();
