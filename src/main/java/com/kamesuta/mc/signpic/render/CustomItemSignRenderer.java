@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Items;
@@ -30,9 +31,16 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
-		if (type==ItemRenderType.INVENTORY)
-			OpenGL.glScalef(16f, 16f, 1f);
-		else {
+		// Size
+		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, entry.content().image.getSize());
+		if (type==ItemRenderType.INVENTORY) {
+			final float slot = 16f;
+			final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size, slot, slot);
+			OpenGL.glTranslatef((slot-size2.width)/2f, (slot-size2.height)/2f, 0f);
+			OpenGL.glScalef(slot, slot, 1f);
+			entry.gui.drawScreen(0, 0, 0f, 1f, size2.width/slot, size2.height/slot);
+		} else {
+			OpenGL.glScalef(2f, 2f, 1f);
 			if (type==ItemRenderType.ENTITY) {
 				if (RenderItem.renderInFrame) {
 					OpenGL.glRotatef(90f, 0f, 1f, 0f);
@@ -46,16 +54,14 @@ public class CustomItemSignRenderer implements IItemRenderer {
 				OpenGL.glTranslatef(1f, 1f, 0f);
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
-			// Size
-			final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, entry.content().image.getSize());
 			if (type==ItemRenderType.ENTITY)
 				OpenGL.glTranslatef(-(size.width-1f)/2f, 0f, 0f);
 			OpenGL.glTranslatef(0f, 1f-size.height, 0f);
 			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 			entry.meta.rotation.rotate();
-			OpenGL.glScalef(size.width, size.height, 1f);
+			// OpenGL.glScalef(size.width, size.height, 1f);
+			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
 		}
-		entry.gui.drawScreen(0, 0, 0f, 1f, 1f, 1f);
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
 	}
