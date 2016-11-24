@@ -360,7 +360,9 @@ public class OpenGL {
 	}
 
 	public static void glBindTexture(final int target, final int texture) {
-		GL11.glBindTexture(target, texture);
+		if (target==GL11.GL_TEXTURE_2D)
+			GlStateManager.bindTexture(texture);
+		else
+			GL11.glBindTexture(target, texture);
 	}
-
 }
