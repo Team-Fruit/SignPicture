@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
 
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.Vec3;
 
 public class OpenGL {
@@ -290,6 +291,7 @@ public class OpenGL {
 	}
 
 	public static int glGenTextures() {
+		// return GlStateManager.generateTexture();
 		return GL11.glGenTextures();
 	}
 
@@ -358,7 +360,14 @@ public class OpenGL {
 	}
 
 	public static void glBindTexture(final int target, final int texture) {
+		// if (target==GL11.GL_TEXTURE_2D)
+		// 	GlStateManager.bindTexture(texture);
+		// else
 		GL11.glBindTexture(target, texture);
 	}
 
+	public static void glDeleteTextures(final int texture) {
+		// GlStateManager.deleteTexture(texture);
+		TextureUtil.deleteTexture(texture);
+	}
 }
