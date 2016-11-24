@@ -292,7 +292,8 @@ public class OpenGL {
 	}
 
 	public static int glGenTextures() {
-		return GL11.glGenTextures();
+		return GlStateManager.generateTexture();
+		// return GL11.glGenTextures();
 	}
 
 	public static int glGetTexLevelParameteri(final int target, final int level, final int pname) {
@@ -364,5 +365,9 @@ public class OpenGL {
 			GlStateManager.bindTexture(texture);
 		else
 			GL11.glBindTexture(target, texture);
+	}
+
+	public static void glDeleteTextures(final int texture) {
+		GlStateManager.deleteTexture(texture);
 	}
 }
