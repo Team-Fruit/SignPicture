@@ -21,9 +21,9 @@
 			}
 		},
 		"1.8.9": {
-			"version": "2.4.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.4.5/SignPicture-1.8.9-2.4.5-universal.jar",
-			"local": "SignPicture-1.8.9-2.4.5-universal.jar",
+			"version": "2.4.6",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.4.6/SignPicture-1.8.9-2.4.6-universal.jar",
+			"local": "SignPicture-1.8.9-2.4.6-universal.jar",
 			"message": "Support Uploading and Pasting!",
 			"message_local": {
 				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
