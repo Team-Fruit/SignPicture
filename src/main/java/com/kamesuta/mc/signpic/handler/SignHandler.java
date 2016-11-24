@@ -73,6 +73,7 @@ public class SignHandler {
 
 	private GuiRepair repairGuiTask;
 	private String repairGuiTextFieldCache;
+	private boolean isPlaceMode;
 
 	@CoreEvent
 	public void onSign(final GuiOpenEvent event) {
@@ -80,7 +81,8 @@ public class SignHandler {
 		this.repairGuiTextFieldCache = null;
 		final EntryId handSign = CurrentMode.instance.getHandSign();
 		final boolean handSignValid = handSign.entry().isValid();
-		if (handSignValid||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+		this.isPlaceMode = CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+		if (handSignValid||this.isPlaceMode) {
 			final EntryId entryId = CurrentMode.instance.getEntryId();
 			if (event.gui instanceof GuiEditSign)
 				check: {
@@ -95,7 +97,7 @@ public class SignHandler {
 								if (se.isRenderable()) {
 									final TileEntitySign preview = se.getTileEntity();
 									if (preview.xCoord==tileSign.xCoord&&preview.yCoord==tileSign.yCoord&&preview.zCoord==tileSign.zCoord) {
-										Sign.preview.setVisible(false);
+										se.setVisible(false);
 										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 										CurrentMode.instance.setState(CurrentMode.State.SEE, false);
 									}
@@ -108,9 +110,15 @@ public class SignHandler {
 					Client.notice(I18n.format("signpic.chat.error.place"));
 				}
 			else if (event.gui instanceof GuiRepair)
-				if (entryId.isNameable())
+				if (entryId.isNameable()) {
 					this.repairGuiTask = (GuiRepair) event.gui;
-				else {
+					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+						CurrentMode.instance.setMode();
+						Sign.preview.setVisible(false);
+						CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+						CurrentMode.instance.setState(CurrentMode.State.SEE, false);
+					}
+				} else {
 					Client.notice(I18n.format("signpic.gui.notice.toolongname"));
 					event.setCanceled(true);
 				}
@@ -119,7 +127,7 @@ public class SignHandler {
 
 	@CoreEvent
 	public void onTick() {
-		if (this.repairGuiTask!=null&&CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+		if (this.repairGuiTask!=null&&this.isPlaceMode)
 			check: {
 				final EntryId entryId = CurrentMode.instance.getEntryId();
 				if (!entryId.isNameable())
@@ -147,7 +155,7 @@ public class SignHandler {
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
 		if (event.gui instanceof GuiRepair)
-			if (this.repairGuiTask!=null&&CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
+			if (this.repairGuiTask!=null&&this.isPlaceMode) {
 				final int xSize = 176;
 				final int ySize = 166;
 				final int guiLeft = (event.gui.width-xSize)/2;
