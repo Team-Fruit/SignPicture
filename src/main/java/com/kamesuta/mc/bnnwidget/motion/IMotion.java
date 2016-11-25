@@ -2,7 +2,7 @@ package com.kamesuta.mc.bnnwidget.motion;
 
 public interface IMotion {
 
-	IMotion reset();
+	IMotion restart();
 
 	IMotion finish();
 

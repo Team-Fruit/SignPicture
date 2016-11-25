@@ -10,7 +10,7 @@ import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
@@ -20,7 +20,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -92,7 +91,7 @@ public abstract class UiUpload {
 		close.setImage(getImage("textures/ui/close.png"));
 
 		final UiImage icon = new UiImage();
-		icon.setImage(getImage("/textures/logo.png"));
+		icon.setImage(getImage("textures/logo.png"));
 
 		final JLabel lbltitle = new JLabel(getString("signpic.ui.title"));
 		lbltitle.setForeground(new Color(154, 202, 71));
@@ -145,12 +144,8 @@ public abstract class UiUpload {
 			public synchronized void drop(final DropTargetDropEvent evt) {
 				try {
 					evt.acceptDrop(DnDConstants.ACTION_COPY);
-					final List<?> droppedFiles = (List<?>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-					for (final Object obj : droppedFiles)
-						if (obj instanceof File) {
-							final File file = (File) obj;
-							apply(file);
-						}
+					final Transferable transferable = evt.getTransferable();
+					transfer(transferable);
 				} catch (final Exception ex) {
 					ex.printStackTrace();
 				}
@@ -281,6 +276,8 @@ public abstract class UiUpload {
 			return false;
 		return this.frame.isVisible();
 	}
+
+	protected abstract void transfer(final Transferable transferable);
 
 	protected abstract void apply(final File f);
 

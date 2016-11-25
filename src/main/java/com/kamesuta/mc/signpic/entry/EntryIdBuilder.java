@@ -7,15 +7,16 @@ public class EntryIdBuilder {
 	private ImageMeta meta;
 	private String uri;
 
-	public EntryIdBuilder(final EntryId source) {
-		if (source != null) {
+	public EntryIdBuilder() {
+	}
+
+	public EntryIdBuilder load(final EntryId source) {
+		if (source!=null) {
 			this.meta = source.getMeta();
 			if (source.hasContentId())
 				this.uri = source.getContentId().getURI();
 		}
-	}
-
-	public EntryIdBuilder() {
+		return this;
 	}
 
 	public void setMeta(final ImageMeta meta) {
@@ -41,6 +42,6 @@ public class EntryIdBuilder {
 	}
 
 	public EntryId build() {
-		return new EntryId(new ContentId(getURI()).getID() + getMeta());
+		return new EntryId("#"+new ContentId(getURI()).getID()+getMeta());
 	}
 }

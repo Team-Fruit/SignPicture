@@ -3,7 +3,8 @@
 		"category":"player",
 		"sounds":[
 			{
-				"name": "gui/show"
+				"name": "signpic:gui/show",
+				"stream": false
 			}
 		]
 	}

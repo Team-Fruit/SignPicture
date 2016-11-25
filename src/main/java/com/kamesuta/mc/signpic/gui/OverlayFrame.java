@@ -7,18 +7,21 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.MCoord;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.handler.CoreEvent;
+import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -44,16 +47,25 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (!isDelegated())
-			drawScreen(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
+		if (Config.instance.renderGuiOverlay)
+			if (!isDelegated()) {
+				setWidth(event.getGui().width);
+				setHeight(event.getGui().height);
+				OpenGL.glPushMatrix();
+				OpenGL.glTranslatef(0f, 0f, 1000f);
+				drawScreen(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
+				OpenGL.glPopMatrix();
+			}
 	}
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
-		if (event.getType()==ElementType.CHAT)
-			if (Client.mc.currentScreen==null)
-				if (!isDelegated())
-					drawScreen(0, 0, event.getPartialTicks());
+		if (event.getType()==ElementType.CHAT&&Client.mc.currentScreen==null)
+			if (!isDelegated()) {
+				setWidth(event.getResolution().getScaledWidth());
+				setHeight(event.getResolution().getScaledHeight());
+				drawScreen(0, 0, event.getPartialTicks());
+			}
 	}
 
 	@CoreEvent
@@ -80,7 +92,18 @@ public class OverlayFrame extends WFrame {
 
 		@Override
 		protected void initWidget() {
-			add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+			add(new WPanel(new R()) {
+				@Override
+				protected void initWidget() {
+					add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+				}
+
+				@Override
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					if (Config.instance.renderOverlayPanel||instance.isDelegated())
+						super.draw(ev, pgp, p, frame, popacity);
+				}
+			});
 		}
 
 		@Override
@@ -93,18 +116,30 @@ public class OverlayFrame extends WFrame {
 			return true;
 		}
 
+		@Deprecated
 		public void addNotice1(final String string, final float showtime) {
 			invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					final MCoord o = new MCoord(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
+					final VMotion o = V.pm(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
 						protected Timer timer = new Timer();
+
+						private boolean removed;
+
+						@Override
+						public void update(final WEvent ev, final Area pgp, final Point p) {
+							if (this.timer.getTime()>0f)
+								if (!this.removed) {
+									GuiOverlay.this.remove(this);
+									this.removed = true;
+								}
+						}
 
 						@Override
 						protected void initWidget() {
 							this.timer.set(-showtime);
-							add(new WBase(new R(MCoord.ptop(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start(), MCoord.pbottom(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start())) {
+							add(new WBase(new R(Coord.top(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()), Coord.bottom(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()))) {
 								@Override
 								protected void initOpacity() {
 									super.setOpacity(o);
@@ -114,9 +149,8 @@ public class OverlayFrame extends WFrame {
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
 									RenderHelper.startShape();
-									GlStateManager.color(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
-									drawRect(a);
-									super.draw(ev, pgp, p, frame, popacity);
+									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
+									draw(a);
 								}
 							});
 							add(new WPanel(new R()) {
@@ -128,33 +162,8 @@ public class OverlayFrame extends WFrame {
 
 								@Override
 								protected void initWidget() {
-									final MLabel label = new MLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), string) {
-										@Override
-										public float getScaleWidth(final Area a) {
-											final float f1 = a.w()/font().getStringWidth(string);
-											final float f2 = a.h()/font().FONT_HEIGHT;
-											return Math.min(f1, f2);
-										}
-
-										@Override
-										public float getScaleHeight(final Area a) {
-											final float f1 = a.w()/font().getStringWidth(string);
-											final float f2 = a.h()/font().FONT_HEIGHT;
-											return Math.min(f1, f2);
-										}
-									};
+									final MLabel label = new MScaledLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f))).setText(string);
 									add(label);
-								}
-
-								private boolean removed;
-
-								@Override
-								public void update(final WEvent ev, final Area pgp, final Point p) {
-									if (timer.getTime()>0f)
-										if (!this.removed) {
-											GuiOverlay.this.remove(this);
-											this.removed = true;
-										}
 								}
 
 								@Override

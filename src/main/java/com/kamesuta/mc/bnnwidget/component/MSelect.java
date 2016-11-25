@@ -18,37 +18,37 @@ public class MSelect extends WPanel {
 
 	protected float buttonwidth;
 
-	public Selector selector = new ListSelector();
+	public Selector<String> selector = new ListSelector();
 
-	public void setSelector(final Selector selector) {
+	public void setSelector(final Selector<String> selector) {
 		this.selector = selector;
 	}
 
-	protected Selector getSelector() {
+	protected Selector<String> getSelector() {
 		return this.selector;
 	}
 
 	public MSelect(final R position, final float buttonwidth) {
 		super(position);
 		this.buttonwidth = buttonwidth;
-		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "<") {
+		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				getSelector().prev();
 				MSelect.this.setText(getSelector().get());
 				return true;
 			}
-		};
+		}.setText("<");
 		add(this.neg);
 		add(getField());
-		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), ">") {
+		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				getSelector().next();
 				MSelect.this.setText(getSelector().get());
 				return true;
 			}
-		};
+		}.setText(">");
 		add(this.pos);
 	}
 
@@ -84,38 +84,15 @@ public class MSelect extends WPanel {
 		return this;
 	}
 
-	public static interface Selector {
-		String get();
+	public static interface Selector<E> {
+		E get();
 
 		void next();
 
 		void prev();
 	}
 
-	public static class ListSelector implements Selector {
-		protected List<?> list = Lists.newArrayList();
-
-		public void setList(final List<String> list) {
-			this.list = list;
-		}
-
-		protected List<?> getList() {
-			return this.list;
-		}
-
-		public int length() {
-			return getList().size();
-		}
-
-		@Override
-		public String get() {
-			final int length = length();
-			final int current = getCurrentPos();
-			if (current<0||current>=length)
-				return "";
-			return getList().get(current).toString();
-		}
-
+	public static abstract class PosSelector<E> implements Selector<E> {
 		@Override
 		public void next() {
 			this.current++;
@@ -132,17 +109,52 @@ public class MSelect extends WPanel {
 			this.current = current;
 		}
 
-		public void setCurrentPos(final Object o) {
-			final int i = this.list.indexOf(o);
+		public void setCurrentPos(final E o) {
+			final int i = this.indexOf(o);
 			if (i>=0)
 				setCurrentPos(i);
 		}
+
+		protected abstract int indexOf(E o);
+
+		protected abstract int length();
 
 		public int getCurrentPos() {
 			final int length = length();
 			if (length<=0)
 				return 0;
 			return this.current = (this.current%length+length)%length;
+		}
+	}
+
+	public static class ListSelector extends PosSelector<String> {
+		protected List<?> list = Lists.newArrayList();
+
+		public void setList(final List<String> list) {
+			this.list = list;
+		}
+
+		protected List<?> getList() {
+			return this.list;
+		}
+
+		@Override
+		public int length() {
+			return getList().size();
+		}
+
+		@Override
+		protected int indexOf(final String o) {
+			return this.list.indexOf(o);
+		}
+
+		@Override
+		public String get() {
+			final int length = length();
+			final int current = getCurrentPos();
+			if (current<0||current>=length)
+				return "";
+			return getList().get(current).toString();
 		}
 	}
 }

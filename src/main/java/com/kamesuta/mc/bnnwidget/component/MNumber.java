@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import java.text.DecimalFormat;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -19,7 +21,7 @@ public class MNumber extends WPanel {
 
 	public MNumber(final R position, final float buttonwidth) {
 		super(position);
-		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "-") {
+		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				float f;
@@ -29,10 +31,10 @@ public class MNumber extends WPanel {
 					f = .01f;
 				else
 					f = 1f;
-				MNumber.this.field.setText(MetaParser.format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-f));
+				MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-f));
 				return true;
 			}
-		};
+		}.setText("-");
 		add(this.neg);
 		this.field = new MChatTextField(new R(Coord.left(buttonwidth), Coord.right(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
@@ -41,7 +43,7 @@ public class MNumber extends WPanel {
 			}
 		}.setAllowedCharacters("+-.eE0123456789").setWatermark("?");
 		add(this.field);
-		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0)), "+") {
+		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 				float f;
@@ -51,10 +53,10 @@ public class MNumber extends WPanel {
 					f = .01f;
 				else
 					f = 1f;
-				MNumber.this.field.setText(MetaParser.format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+f));
+				MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+f));
 				return true;
 			}
-		};
+		}.setText("+");
 		add(this.pos);
 	}
 
@@ -74,5 +76,26 @@ public class MNumber extends WPanel {
 	}
 
 	protected void onNumberChanged(final String oldText, final String newText) {
+	}
+
+	private static final DecimalFormat signformat = new DecimalFormat(".##");
+
+	public static String format(final float f) {
+		if (f==0)
+			return "0";
+
+		final String str = signformat.format(f);
+
+		final String cut = ".0";
+
+		int end = str.length();
+		int last = cut.length();
+
+		while (end!=0&&last!=0)
+			if (cut.charAt(last-1)==str.charAt(end-1))
+				end--;
+			else
+				last--;
+		return str.substring(0, end);
 	}
 }

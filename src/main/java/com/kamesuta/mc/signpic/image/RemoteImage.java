@@ -15,7 +15,7 @@ import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
 
 public class RemoteImage extends Image {
-	protected ImageTextures texture;
+	protected RemoteImageTexture texture;
 	protected File local;
 	private ICommunicate downloader;
 
@@ -66,9 +66,9 @@ public class RemoteImage extends Image {
 
 	@Override
 	public boolean onDivisionProcess() {
-		final List<ImageTexture> texs = this.texture.getAll();
+		final List<DynamicImageTexture> texs = this.texture.getAll();
 		if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
-			final ImageTexture tex = texs.get(this.processing);
+			final DynamicImageTexture tex = texs.get(this.processing);
 			tex.load();
 			this.processing++;
 			this.content.state.getProgress().done = this.processing;
@@ -89,11 +89,11 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
-	public IImageTexture getTexture() throws IllegalStateException {
+	public ImageTexture getTexture() throws IllegalStateException {
 		return getTextures().get();
 	}
 
-	public ImageTextures getTextures() {
+	public RemoteImageTexture getTextures() {
 		if (this.content.state.getType()==StateType.AVAILABLE)
 			return this.texture;
 		else

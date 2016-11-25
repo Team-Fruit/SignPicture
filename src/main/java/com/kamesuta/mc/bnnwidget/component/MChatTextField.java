@@ -7,9 +7,9 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ChatAllowedCharacters;
 
 public class MChatTextField extends WBase {
@@ -62,12 +62,12 @@ public class MChatTextField extends WBase {
 		this.t.yPosition = 1;
 		this.t.width = (int) a.w()-2;
 		this.t.height = (int) a.h()-2;
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(a.x1(), a.y1(), 0f);
+		OpenGL.glPushMatrix();
+		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
 
 		this.t.drawTextBox();
 
-		GlStateManager.popMatrix();
+		OpenGL.glPopMatrix();
 		this.t.xPosition = x;
 		this.t.yPosition = y;
 		this.t.width = w;

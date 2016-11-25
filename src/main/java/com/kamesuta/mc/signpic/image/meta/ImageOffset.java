@@ -28,14 +28,17 @@ public class ImageOffset extends ImageMeta.MetaParser {
 	 * @param src
 	 */
 	@Override
-	public ImageOffset parse(final String src, final String key, final String value) {
+	public boolean parse(final String src, final String key, final String value) {
+		/* @formatter:off */
 		if (StringUtils.equals(key, "L")) if (StringUtils.isEmpty(value)) this.x -= defaultOffset; else this.x -= NumberUtils.toFloat(value, 0f);
 		else if (StringUtils.equals(key, "R")) if (StringUtils.isEmpty(value)) this.x += defaultOffset; else this.x += NumberUtils.toFloat(value, 0f);
 		else if (StringUtils.equals(key, "D")) if (StringUtils.isEmpty(value)) this.y -= defaultOffset; else this.y -= NumberUtils.toFloat(value, 0f);
 		else if (StringUtils.equals(key, "U")) if (StringUtils.isEmpty(value)) this.y += defaultOffset; else this.y += NumberUtils.toFloat(value, 0f);
 		else if (StringUtils.equals(key, "B")) if (StringUtils.isEmpty(value)) this.z -= defaultOffset; else this.z -= NumberUtils.toFloat(value, 0f);
 		else if (StringUtils.equals(key, "F")) if (StringUtils.isEmpty(value)) this.z += defaultOffset; else this.z += NumberUtils.toFloat(value, 0f);
-		return this;
+		else return false;
+		return true;
+		/* @formatter:on */
 	}
 
 	/**
@@ -48,6 +51,7 @@ public class ImageOffset extends ImageMeta.MetaParser {
 	 */
 	@Override
 	public String compose() {
+		/* @formatter:off */
 		final StringBuilder stb = new StringBuilder();
 		if (this.x!=0)
 			if (this.x<0)
@@ -71,6 +75,7 @@ public class ImageOffset extends ImageMeta.MetaParser {
 				if (this.z==defaultOffset) stb.append("F");
 				else stb.append("F").append(format(this.z));
 		return stb.toString();
+		/* @formatter:on */
 	}
 
 	@Override

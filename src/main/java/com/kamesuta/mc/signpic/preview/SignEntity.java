@@ -18,36 +18,24 @@ public class SignEntity {
 	private boolean renderable = false;
 	private boolean visible = false;
 
-	protected PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side)
-	{
-		if (side == EnumFacing.DOWN)
-		{
+	private PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side) {
+		if (side==EnumFacing.DOWN) {
 			return null;
-		}
-		else if (!worldIn.getBlockState(pos).getMaterial().isSolid())
-		{
+		} else if (!worldIn.getBlockState(pos).getMaterial().isSolid()) {
 			return null;
-		}
-		else
-		{
+		} else {
 			pos = pos.offset(side);
 
-			if (!Blocks.STANDING_SIGN.canPlaceBlockAt(worldIn, pos))
-			{
+			if (!Blocks.STANDING_SIGN.canPlaceBlockAt(worldIn, pos)) {
 				return null;
-			}
-			else
-			{
+			} else {
 				this.tileSign.setPos(pos);
 
-				if (side == EnumFacing.UP)
-				{
+				if (side==EnumFacing.UP) {
 					this.tileSign.setBlockType(Blocks.STANDING_SIGN);
 					final int i = MathHelper.floor_double((playerIn.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
 					this.tileSign.setBlockMetadata(i);
-				}
-				else
-				{
+				} else {
 					this.tileSign.setBlockType(Blocks.WALL_SIGN);
 					this.tileSign.setBlockMetadata(side.getIndex());
 				}
@@ -78,7 +66,8 @@ public class SignEntity {
 	}
 
 	public TileEntitySign getRenderTileEntity() throws IllegalStateException {
-		if (!isRenderable()) throw new IllegalStateException("Not Renderable");
+		if (!isRenderable())
+			throw new IllegalStateException("Not Renderable");
 		return this.tileSign;
 	}
 

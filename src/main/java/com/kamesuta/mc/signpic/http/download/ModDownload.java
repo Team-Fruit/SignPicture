@@ -19,8 +19,6 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.gui.GuiTask;
-import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
@@ -38,7 +36,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ModDownload extends Communicate implements Progressable {
 	protected boolean canceled;
-	protected State status = new State("§6SignPicture Mod Update");
+	protected State status = new State().setName("§6SignPicture Mod Update");
 	public ModDLResult result;
 
 	@Override
@@ -59,9 +57,7 @@ public class ModDownload extends Communicate implements Progressable {
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
-			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.downloading", local), 2f);
-			this.status.getMeta().put(GuiTask.HighlightPanel, true);
-			this.status.getMeta().put(GuiTask.ShowPanel, 3f);
+			Client.notice(I18n.format("signpic.gui.notice.downloading", local), 2f);
 
 			state.downloading = true;
 
@@ -98,7 +94,7 @@ public class ModDownload extends Communicate implements Progressable {
 				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
-			OverlayFrame.instance.pane.addNotice1(I18n.format("signpic.gui.notice.downloaded", local), 2f);
+			Client.notice(I18n.format("signpic.gui.notice.downloaded", local), 2f);
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloading = false;
