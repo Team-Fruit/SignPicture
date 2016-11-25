@@ -1,0 +1,11 @@
+{
+	"gui.show":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "signpic:gui/show",
+				"stream": false
+			}
+		]
+	}
+}

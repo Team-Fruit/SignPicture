@@ -2,12 +2,12 @@ package com.kamesuta.mc.bnnwidget;
 
 import java.util.List;
 
-public interface WContainer {
+public interface WContainer<W extends WCommon> {
 
-	boolean remove(final WCommon widget);
+	boolean remove(final W widget);
 
-	boolean add(final WCommon widget);
+	boolean add(final W widget);
 
-	List<WCommon> getContainer();
+	List<W> getContainer();
 
 }
