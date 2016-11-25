@@ -47,7 +47,7 @@
 				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
-		"1.11-beta": {
+		"1.11": {
 			"version": "2.4.6",
 			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.4.6/SignPicture-1.11-2.4.6-universal.jar",
 			"local": "SignPicture-1.11-2.4.6-universal.jar",
