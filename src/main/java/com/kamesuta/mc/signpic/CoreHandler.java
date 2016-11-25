@@ -10,10 +10,13 @@ import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.render.ModelCanvas;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -103,6 +106,13 @@ public class CoreHandler {
 			EntrySlot.Tick();
 			Client.endSection();
 		}
+	}
+
+	@SubscribeEvent
+	public void onModelBakeEvent(final ModelBakeEvent event) {
+		final IBakedModel object = event.modelRegistry.getObject(ModelCanvas.modelResourceLocation);
+		final ModelCanvas atlas6 = new ModelCanvas(object);
+		event.modelRegistry.putObject(ModelCanvas.modelResourceLocation, atlas6);
 	}
 
 	boolean debugKey;
