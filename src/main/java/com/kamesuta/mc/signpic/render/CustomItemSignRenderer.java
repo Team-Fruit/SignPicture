@@ -86,7 +86,7 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 				OpenGL.glTranslatef(-size.width/2f, .25f, 0f);
 			else if (type==TransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
-				OpenGL.glTranslatef(-size.width/2f, 1f, f);
+				OpenGL.glTranslatef(-size.width/2f, .5f, f);
 			} else if (type==TransformType.FIRST_PERSON_LEFT_HAND) {
 				OpenGL.glScalef(-1f, 1f, 1f);
 				OpenGL.glTranslatef(.25f, .25f, 0f);
