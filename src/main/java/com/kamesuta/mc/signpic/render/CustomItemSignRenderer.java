@@ -40,26 +40,26 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			OpenGL.glScalef(slot, slot, 1f);
 			entry.gui.drawScreen(0, 0, 0f, 1f, size2.width/slot, size2.height/slot);
 		} else {
-			OpenGL.glScalef(2f, 2f, 1f);
 			if (type==ItemRenderType.ENTITY) {
 				if (RenderItem.renderInFrame) {
 					OpenGL.glRotatef(90f, 0f, 1f, 0f);
-					OpenGL.glTranslatef(.5f, -.54f, 0f);
+					OpenGL.glScalef(-1f, -1f, 1f);
+					OpenGL.glTranslatef(.5f, -.62f, 0f);
 				} else {
 					OpenGL.glRotatef(180f, 1f, 0f, 0f);
+					OpenGL.glScalef(2f, 2f, 1f);
 					OpenGL.glTranslatef(.5f, -1f, 0f);
 				}
 				OpenGL.glScalef(-1f, 1f, 1f);
+				OpenGL.glTranslatef(-(size.width-1f)/2f, .125f, 0f);
 			} else {
-				OpenGL.glTranslatef(1f, 1f, 0f);
+				OpenGL.glScalef(2f, 2f, 1f);
+				OpenGL.glTranslatef(.5f, 1f, 0f);
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
-			if (type==ItemRenderType.ENTITY)
-				OpenGL.glTranslatef(-(size.width-1f)/2f, 0f, 0f);
 			OpenGL.glTranslatef(0f, 1f-size.height, 0f);
 			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 			entry.meta.rotation.rotate();
-			// OpenGL.glScalef(size.width, size.height, 1f);
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
 		}
 		OpenGL.glPopAttrib();
