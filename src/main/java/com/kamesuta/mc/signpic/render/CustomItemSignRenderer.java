@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.vecmath.Matrix4f;
@@ -37,7 +38,6 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
 	private final IBakedModel baseModel;
 	private ItemStack itemStack;
-	private boolean isOverride;
 
 	public CustomItemSignRenderer(final IBakedModel model) {
 		this.baseModel = model;
@@ -46,14 +46,16 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	@Override
 	public IBakedModel handleItemState(final ItemStack stack) {
 		this.itemStack = stack;
-		this.isOverride = stack.getItem()==Items.sign&&EntryId.fromItemStack(stack).entry().isValid();
-		return this;
+		if (stack.getItem()==Items.sign&&EntryId.fromItemStack(stack).entry().isValid())
+			return this;
+		else
+			return this.baseModel;
 	}
 
 	@Override
 	public Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(final TransformType cameraTransformType) {
 		final TRSRTransformation transform = new TRSRTransformation(new Vector3f(0.0F, 0.0F, 0.0F), new Quat4f(0.0F, 0.0F, 0.0F, 1.0F), new Vector3f(1.0F, 1.0F, 1.0F), new Quat4f(0.0F, 0.0F, 0.0F, 1.0F));
-		if (this.itemStack!=null&&this.isOverride) {
+		if (this.itemStack!=null) {
 			OpenGL.glPushMatrix();
 			OpenGL.glDisable(GL11.GL_CULL_FACE);
 			renderItem(cameraTransformType, this.itemStack);
@@ -74,28 +76,39 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		// Size
 		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, entry.content().image.getSize());
 		if (type==TransformType.GUI) {
+			OpenGL.glScalef(1f, -1f, 1f);
 			final float slot = 1f;
 			final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size, slot, slot);
+			OpenGL.glScalef(.5f, .5f, 1f);
+			OpenGL.glTranslatef(-.5f, -.5f, 0f);
 			OpenGL.glTranslatef((slot-size2.width)/2f, (slot-size2.height)/2f, 0f);
 			OpenGL.glScalef(slot, slot, 1f);
 			entry.gui.drawScreen(0, 0, 0f, 1f, size2.width/slot, size2.height/slot);
 		} else {
-			OpenGL.glScalef(2f, 2f, 1f);
-			if (type==TransformType.GROUND||type==TransformType.FIXED) {
-				if (type==TransformType.FIXED) {
-					OpenGL.glRotatef(90f, 0f, 1f, 0f);
-					OpenGL.glTranslatef(.5f, -.54f, 0f);
-				} else {
-					OpenGL.glRotatef(180f, 1f, 0f, 0f);
-					OpenGL.glTranslatef(.5f, -1f, 0f);
-				}
+			if (type==TransformType.GROUND) {
+				OpenGL.glScalef(1f, -1f, 1f);
+				OpenGL.glTranslatef(-.5f, -1f, 0f);
+				;//OpenGL.glRotatef(90f, 0f, 1f, 0f);
+				;//OpenGL.glTranslatef(.5f, -.54f, 0f);
+				;//OpenGL.glScalef(-1f, 1f, 1f);
+				;//OpenGL.glTranslatef(-(size.width-1f)/2f, 0f, 0f);
+			} else if (type==TransformType.FIXED) {
+				;//OpenGL.glRotatef(180f, 1f, 0f, 0f);
+				OpenGL.glTranslatef(.5f, -1f, 0f);
 				OpenGL.glScalef(-1f, 1f, 1f);
 				OpenGL.glTranslatef(-(size.width-1f)/2f, 0f, 0f);
+			} else if (type==TransformType.FIRST_PERSON) {
+				OpenGL.glScalef(1f, -1f, 1f);
+				OpenGL.glRotatef(90f, 0f, 1f, 0f);
+				OpenGL.glRotatef(45f, 0f, 0f, 1f);
+				OpenGL.glTranslatef(-.5f, -1f, 0f);
+				;
+				;
 			} else {
-				OpenGL.glTranslatef(1f, 1f, 0f);
-				OpenGL.glScalef(-1f, -1f, 1f);
+				OpenGL.glTranslatef(-1f, -1f, 0f);
+				;//OpenGL.glScalef(-1f, 1f, 1f);
 			}
-			OpenGL.glTranslatef(0f, 1f-size.height, 0f);
+			;//OpenGL.glTranslatef(0f, 1f-size.height, 0f);
 			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 			entry.meta.rotation.rotate();
 			// OpenGL.glScalef(size.width, size.height, 1f);
@@ -117,7 +130,6 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 
 	@Override
 	public TextureAtlasSprite getParticleTexture() {
-		// Client.mc.getTextureMapBlocks().getMissingSprite();
 		return this.baseModel.getParticleTexture();
 	}
 
@@ -128,7 +140,7 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 
 	@Override
 	public List<BakedQuad> getGeneralQuads() {
-		return this.baseModel.getGeneralQuads();
+		return Collections.<BakedQuad> emptyList();
 	}
 
 	@Override
