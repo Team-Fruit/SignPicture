@@ -2,7 +2,7 @@
 	"versions": {
 		"1.7.10": {
 			"version": "2.5.1",
-			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349401/download",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.5.1/SignPicture-1.7.10-2.5.1-universal.jar",
 			"local": "SignPicture-1.7.10-2.5.1-universal.jar",
 			"message": "Fix iChunUtil conflict bug",
 			"message_local": {
@@ -11,7 +11,7 @@
 		},
 		"1.8.9": {
 			"version": "2.5.1",
-			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349402/download",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.5.1/SignPicture-1.8.9-2.5.1-universal.jar",
 			"local": "SignPicture-1.8.9-2.5.1-universal.jar",
 			"message": "Fix iChunUtil conflict bug",
 			"message_local": {
@@ -20,7 +20,7 @@
 		},
 		"1.9.4": {
 			"version": "2.5.1",
-			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349403/download",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.5.1/SignPicture-1.9.4-2.5.1-universal.jar",
 			"local": "SignPicture-1.9.4-2.5.1-universal.jar",
 			"message": "Fix iChunUtil conflict bug",
 			"message_local": {
@@ -29,7 +29,7 @@
 		},
 		"1.10.2": {
 			"version": "2.5.1",
-			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349404/download",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.5.1/SignPicture-1.10.2-2.5.1-universal.jar",
 			"local": "SignPicture-1.10.2-2.5.1-universal.jar",
 			"message": "Fix iChunUtil conflict bug",
 			"message_local": {
@@ -38,7 +38,7 @@
 		},
 		"1.11": {
 			"version": "2.5.1",
-			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349405/download",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.5.1/SignPicture-1.11-2.5.1-universal.jar",
 			"local": "SignPicture-1.11-2.5.1-universal.jar",
 			"message": "Fix iChunUtil conflict bug",
 			"message_local": {
