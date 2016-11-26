@@ -169,12 +169,6 @@ public class OpenGL {
 
 	public static void glCullFace(final int mode) {
 		GlStateManager.cullFace(mode);
-		// if (mode==GlStateManager.CullFace.BACK.mode)
-		// 	GlStateManager.cullFace(GlStateManager.CullFace.BACK);
-		// else if (mode==GlStateManager.CullFace.FRONT.mode)
-		// 	GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
-		// else if (mode==GlStateManager.CullFace.FRONT_AND_BACK.mode)
-		// 	GlStateManager.cullFace(GlStateManager.CullFace.FRONT_AND_BACK);
 		// GL11.glCullFace(mode);
 	}
 
@@ -369,5 +363,6 @@ public class OpenGL {
 
 	public static void glDeleteTextures(final int texture) {
 		GlStateManager.deleteTexture(texture);
+		// TextureUtil.deleteTexture(texture);
 	}
 }

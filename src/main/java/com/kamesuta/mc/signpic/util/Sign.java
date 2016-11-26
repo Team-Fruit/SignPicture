@@ -9,8 +9,13 @@ import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.GuiPAAS;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 
+import io.netty.buffer.Unpooled;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.inventory.ContainerRepair;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class Sign {
@@ -37,6 +42,16 @@ public class Sign {
 			Client.mc.displayGuiScreen(new GuiPAAS(new SendPacketTask(entryId, sourceentity)));
 		else
 			sendSign(entryId, sourceentity);
+	}
+
+	public static void sendRepairName(final String name) {
+		Client.mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", new PacketBuffer(Unpooled.buffer()).writeString(name)));
+	}
+
+	public static void setRepairName(final String name, final GuiTextField textField, final ContainerRepair containerRepair) {
+		textField.setText(name);
+		containerRepair.updateItemName(name);
+		sendRepairName(name);
 	}
 
 	public static class SendPacketTask {
@@ -70,7 +85,7 @@ public class Sign {
 		private static long getExpectedEditTime(final String[] lines, final boolean skipEmpty) {
 			long expected = Config.instance.multiplayPAASMinEditTime;
 			int n = 0;
-			for (String line : lines) {
+			for (String line : lines)
 				if (line!=null) {
 					line = line.trim().toLowerCase();
 					if (!line.isEmpty()) {
@@ -79,13 +94,10 @@ public class Sign {
 						expected += Config.instance.multiplayPAASMinCharTime*chars;
 					}
 				}
-			}
-			if (skipEmpty&&n==0) {
+			if (skipEmpty&&n==0)
 				return 0;
-			}
-			if (n>1) {
+			if (n>1)
 				expected += Config.instance.multiplayPAASMinLineTime*n;
-			}
 			return expected;
 		}
 	}

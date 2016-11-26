@@ -44,6 +44,7 @@ public class ModDownload extends Communicate implements Progressable {
 		final Informations.InfoState state = Informations.instance.getState();
 		final Informations.InfoSource source = Informations.instance.getSource();
 		final Informations.InfoVersion online = source.onlineVersion();
+		File tmp = null;
 		InputStream input = null;
 		OutputStream output = null;
 		try {
@@ -68,11 +69,10 @@ public class ModDownload extends Communicate implements Progressable {
 			this.status.getProgress().overall = entity.getContentLength();
 			input = entity.getContent();
 
-			final File f = new File(Client.location.modDir, local+".dl");
-			f.createNewFile();
+			tmp = Client.location.createCache("modupdate");
 			final File f1 = new File(Client.location.modDir, local);
 
-			output = new CountingOutputStream(new FileOutputStream(f)) {
+			output = new CountingOutputStream(new FileOutputStream(tmp)) {
 				@Override
 				protected void afterWrite(final int n) throws IOException {
 					if (ModDownload.this.canceled) {
@@ -87,7 +87,7 @@ public class ModDownload extends Communicate implements Progressable {
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(f1);
 			if (!f1.exists())
-				FileUtils.moveFile(f, f1);
+				FileUtils.moveFile(tmp, f1);
 
 			IChatComponent chat;
 			if (Client.location.modFile.isFile())
@@ -112,6 +112,7 @@ public class ModDownload extends Communicate implements Progressable {
 		} finally {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
+			FileUtils.deleteQuietly(tmp);
 		}
 	}
 

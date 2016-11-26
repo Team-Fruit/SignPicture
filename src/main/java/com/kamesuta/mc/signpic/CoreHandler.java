@@ -10,14 +10,18 @@ import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -66,6 +70,11 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent
+	public void onTooltip(final ItemTooltipEvent event) {
+		this.signHandler.onTooltip(event);
+	}
+
+	@SubscribeEvent
 	public void onRender(final RenderWorldLastEvent event) {
 		this.renderHandler.onRender(event);
 	}
@@ -79,6 +88,7 @@ public class CoreHandler {
 	@SubscribeEvent()
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
 		this.overlayHandler.onDraw(event);
+		this.signHandler.onDraw(event);
 	}
 
 	@SubscribeEvent
@@ -97,12 +107,20 @@ public class CoreHandler {
 			Client.startSection("signpic_load");
 			debugKey();
 			this.signEntryManager.onTick();
+			this.signHandler.onTick();
 			this.contentManager.onTick();
 			this.overlayHandler.onTick(event);
 			this.informationHandler.onTick(event);
 			EntrySlot.Tick();
 			Client.endSection();
 		}
+	}
+
+	@SubscribeEvent
+	public void onModelBakeEvent(final ModelBakeEvent event) {
+		final IBakedModel object = event.modelRegistry.getObject(CustomItemSignRenderer.modelResourceLocation);
+		final CustomItemSignRenderer atlas6 = new CustomItemSignRenderer(object);
+		event.modelRegistry.putObject(CustomItemSignRenderer.modelResourceLocation, atlas6);
 	}
 
 	boolean debugKey;
