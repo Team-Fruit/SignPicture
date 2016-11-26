@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.io.IOException;
 
-import com.kamesuta.mc.bnnwidget.StencilClip;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;

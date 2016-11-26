@@ -20,7 +20,7 @@ import net.minecraft.util.EnumChatFormatting;
 public class WGui extends Gui {
 	public static final Minecraft mc;
 	public static final Tessellator t = Tessellator.instance;
-	public static final StencilClip clip = StencilClip.instance;
+	// public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
 	}
