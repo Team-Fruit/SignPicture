@@ -23,6 +23,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
 		return null;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
 		return null;
