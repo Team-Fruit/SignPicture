@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.render;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Matrix4f;
@@ -10,13 +9,10 @@ import javax.vecmath.Vector3f;
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
-import com.google.common.collect.Lists;
-
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -31,9 +27,11 @@ import net.minecraftforge.client.model.TRSRTransformation;
 @SuppressWarnings("deprecation")
 public class ModelCanvas implements ISmartItemModel, IPerspectiveAwareModel {
 	public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
-	ArrayList<String> modelParts = Lists.newArrayList();
 	private final IBakedModel baseModel;
-	ItemStack itemStack;
+	private ItemStack itemStack;
+	private boolean isOverride;
+
+	private CustomItemSignRenderer renderer = new CustomItemSignRenderer();
 
 	public ModelCanvas(final IBakedModel model) {
 		this.baseModel = model;
@@ -42,26 +40,23 @@ public class ModelCanvas implements ISmartItemModel, IPerspectiveAwareModel {
 	@Override
 	public IBakedModel handleItemState(final ItemStack stack) {
 		this.itemStack = stack;
+		this.isOverride = this.renderer.handleRenderType(stack);
 		return this;
 	}
 
 	@Override
 	public Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(final TransformType cameraTransformType) {
 		final TRSRTransformation transform = new TRSRTransformation(new Vector3f(0.0F, 0.0F, 0.0F), new Quat4f(0.0F, 0.0F, 0.0F, 1.0F), new Vector3f(1.0F, 1.0F, 1.0F), new Quat4f(0.0F, 0.0F, 0.0F, 1.0F));
-		OpenGL.glPushMatrix();
-		OpenGL.glDisable(GL11.GL_CULL_FACE);
-		OpenGL.glDisable(GL11.GL_TEXTURE_2D);
-		OpenGL.glColor4f(1f, 0f, 0f, 1f);
-		RenderHelper.w.begin(7, DefaultVertexFormats.POSITION);
-		RenderHelper.w.pos(0, 0, 0).endVertex();
-		RenderHelper.w.pos(0, 1, 0).endVertex();
-		RenderHelper.w.pos(1, 1, 0).endVertex();
-		RenderHelper.w.pos(1, 0, 0).endVertex();
-		RenderHelper.t.draw();
-		OpenGL.glEnable(GL11.GL_TEXTURE_2D);
-		OpenGL.glEnable(GL11.GL_CULL_FACE);
-		OpenGL.glPopMatrix();
-
+		if (this.itemStack!=null&&this.isOverride) {
+			OpenGL.glPushMatrix();
+			OpenGL.glDisable(GL11.GL_CULL_FACE);
+			this.renderer.renderItem(cameraTransformType, this.itemStack);
+			OpenGL.glEnable(GL11.GL_LIGHTING);
+			OpenGL.glEnable(GL11.GL_BLEND);
+			OpenGL.glEnable(GL11.GL_TEXTURE_2D);
+			OpenGL.glEnable(GL11.GL_CULL_FACE);
+			OpenGL.glPopMatrix();
+		}
 		return Pair.of(this, transform.getMatrix());
 	}
 
@@ -97,7 +92,7 @@ public class ModelCanvas implements ISmartItemModel, IPerspectiveAwareModel {
 
 	@Override
 	public boolean isAmbientOcclusion() {
-		return true;
+		return this.baseModel.isAmbientOcclusion();
 	}
 
 	@Override

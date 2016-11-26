@@ -21,6 +21,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -69,6 +70,11 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent
+	public void onTooltip(final ItemTooltipEvent event) {
+		this.signHandler.onTooltip(event);
+	}
+
+	@SubscribeEvent
 	public void onRender(final RenderWorldLastEvent event) {
 		this.renderHandler.onRender(event);
 	}
@@ -82,6 +88,7 @@ public class CoreHandler {
 	@SubscribeEvent()
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
 		this.overlayHandler.onDraw(event);
+		this.signHandler.onDraw(event);
 	}
 
 	@SubscribeEvent
@@ -100,6 +107,7 @@ public class CoreHandler {
 			Client.startSection("signpic_load");
 			debugKey();
 			this.signEntryManager.onTick();
+			this.signHandler.onTick();
 			this.contentManager.onTick();
 			this.overlayHandler.onTick(event);
 			this.informationHandler.onTick(event);

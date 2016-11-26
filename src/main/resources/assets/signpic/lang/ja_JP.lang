@@ -7,6 +7,16 @@ signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 
+# Item
+signpic.item.sign.desc=§a%s§d を押してSignPictureを編集
+signpic.item.sign.desc.keyconflict=§a%s§c の §a%s§c を開き、キー競合を解決してください！
+signpic.item.sign.desc.keyconflict.key=§c - 競合 §a%s§c の §a%s
+signpic.item.sign.desc.named.prop.size=§7 - サイズ: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - オフセット: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - 回転: %s
+signpic.item.sign.desc.named.meta=§7メタ情報: %s§7
+signpic.item.sign.desc.named.raw=§7名前: [%s§7]
+
 # GUI
 ## Sign Editor
 signpic.gui.editor.see=実体表示
@@ -41,8 +51,6 @@ signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
 signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
-## Notice
-signpic.gui.editor.notice.toolong=コードが長すぎて看板に収まりません！
 
 # Notice
 signpic.gui.notice.paste.unsupported=非対応
@@ -56,6 +64,8 @@ signpic.gui.notice.downloaded=ダウンロード完了 %s
 signpic.gui.notice.downloadfailed=ダウンロード失敗: §7%s
 signpic.gui.notice.versioning.downloadedAlready=古いバージョンのファイルを消して再起動してください
 signpic.gui.notice.versioning.downloadingAlready=最新版は既にダウンロード中です！
+signpic.gui.notice.toolongname=名前を付けるためにはURL+メタデータの長さが40文字以下である必要があります
+signpic.gui.notice.toolongplace=設置するためにはURL+メタデータの長さが60文字以下である必要があります
 
 # Upload UI
 signpic.ui.description=ファイルアップローダー!

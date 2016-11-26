@@ -23,10 +23,6 @@ public class ContentLocation {
 		return new File(Client.location.metaDir, DigestUtils.md5Hex(this.id.getURI()));
 	}
 
-	public File tempLocation() {
-		return new File(Client.location.tempDir, DigestUtils.md5Hex(this.id.getURI()));
-	}
-
 	public File cacheLocation() {
 		return new File(Client.location.cacheDir, DigestUtils.md5Hex(this.id.getURI()));
 	}
