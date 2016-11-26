@@ -15,6 +15,7 @@ public final class Config extends Configuration {
 	public boolean updatable;
 
 	public String signpicDir = "";
+	public boolean signTooltip = false;
 
 	public int imageWidthLimit = 512;
 	public int imageHeightLimit = 512;
@@ -26,7 +27,7 @@ public final class Config extends Configuration {
 
 	public int contentLoadThreads = 3;
 	public int contentMaxByte = 32*1024*1024;
-	public int contentGCtick = 15 * 20;
+	public int contentGCtick = 15*20;
 	public int contentLoadTick = 0;
 	public int contentSyncTick = 0;
 
@@ -54,29 +55,31 @@ public final class Config extends Configuration {
 	public String apiType = "";
 	public String apiKey = "";
 
-	public Config( final File configFile ) {
-		super( configFile );
+	public boolean guiExperienced = false;
+
+	public Config(final File configFile) {
+		super(configFile);
 		this.configFile = configFile;
 
 		this.signpicDir = get("General", "SignpicDir", this.signpicDir).setRequiresMcRestart(true).getString();
 
-		this.imageWidthLimit = get( "Image", "WidthLimit", this.imageWidthLimit ).setRequiresMcRestart(true).getInt( this.imageWidthLimit );
-		this.imageHeightLimit = get( "Image", "HeightLimit", this.imageHeightLimit ).setRequiresMcRestart(true).getInt( this.imageHeightLimit );
-		this.imageAnimationGif = get( "Image", "AnimateGif", this.imageAnimationGif ).setRequiresMcRestart(true).getBoolean( this.imageAnimationGif );
+		this.imageWidthLimit = get("Image", "WidthLimit", this.imageWidthLimit).setRequiresMcRestart(true).getInt(this.imageWidthLimit);
+		this.imageHeightLimit = get("Image", "HeightLimit", this.imageHeightLimit).setRequiresMcRestart(true).getInt(this.imageHeightLimit);
+		this.imageAnimationGif = get("Image", "AnimateGif", this.imageAnimationGif).setRequiresMcRestart(true).getBoolean(this.imageAnimationGif);
 
 		addCustomCategoryComment("Entry", "Entry(sign text parse cache) Management");
 
 		addCustomCategoryComment("Content", "Content Data Management");
 
-		this.informationNotice = get( "Version", "Notice", this.informationNotice ).setRequiresMcRestart(true).getBoolean( this.informationNotice );
+		this.informationNotice = get("Version", "Notice", this.informationNotice).setRequiresMcRestart(true).getBoolean(this.informationNotice);
 
-		final Property joinBeta = get( "Version", "JoinBeta", this.informationJoinBeta );
+		final Property joinBeta = get("Version", "JoinBeta", this.informationJoinBeta);
 		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
-		if (v.length>=4 &&StringUtils.equals(v[3], "beta")) {
+		if (v.length>=4&&StringUtils.equals(v[3], "beta")) {
 			this.informationJoinBeta = true;
 			joinBeta.set(true);
 		}
-		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean( this.informationJoinBeta );
+		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean(this.informationJoinBeta);
 
 		addCustomCategoryComment("Multiplay.PreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
 
@@ -88,15 +91,17 @@ public final class Config extends Configuration {
 	}
 
 	private void changeableSync() {
-		this.entryGCtick = get( "Entry", "GCDelayTick", this.entryGCtick ).getInt( this.entryGCtick );
+		this.signTooltip = addComment(get("General", "SignToolTip", this.signTooltip), "add tooltip line to sign").getBoolean(this.signTooltip);
+
+		this.entryGCtick = get("Entry", "GCDelayTick", this.entryGCtick).getInt(this.entryGCtick);
 
 		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
 
 		this.contentLoadThreads = addComment(get("Content", "LoadThreads", this.contentLoadThreads), "parallel processing number such as Image Loading").setRequiresMcRestart(true).getInt(this.contentLoadThreads);
 		this.contentMaxByte = addComment(get("Content", "MaxByte", this.contentMaxByte), "limit of size before downloading. 0 is infinity.").getInt(this.contentMaxByte);
-		this.contentGCtick = addComment(get( "Content", "GCDelayTick", this.contentGCtick ), "delay ticks of Garbage Collection").getInt( this.contentGCtick );
+		this.contentGCtick = addComment(get("Content", "GCDelayTick", this.contentGCtick), "delay ticks of Garbage Collection").getInt(this.contentGCtick);
 		this.contentLoadTick = addComment(get("Content", "LoadStartIntervalTick", this.contentLoadTick), "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt(this.contentLoadTick);
-		this.contentSyncTick = addComment(get( "Content", "SyncLoadIntervalTick", this.contentSyncTick ), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt( this.contentSyncTick );
+		this.contentSyncTick = addComment(get("Content", "SyncLoadIntervalTick", this.contentSyncTick), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt(this.contentSyncTick);
 
 		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
 		this.informationTryNew = get("Version", "TryNew", this.informationTryNew).getBoolean(this.informationTryNew);
@@ -116,6 +121,8 @@ public final class Config extends Configuration {
 
 		this.apiType = get("Api.Upload", "Type", this.apiType).getString();
 		this.apiKey = get("Api.Upload", "Key", this.apiKey).getString();
+
+		this.guiExperienced = addComment(get("Internal", "GuiExperienced", this.guiExperienced), "Have you ever opened SignPicture GUI yet?").getBoolean(this.guiExperienced);
 	}
 
 	private Property addComment(final Property prop, final String comment) {
@@ -125,17 +132,17 @@ public final class Config extends Configuration {
 
 	@Override
 	public void save() {
-		if( hasChanged() )
+		if (hasChanged())
 			super.save();
 		changeableSync();
-		}
+	}
 
 	@CoreEvent
 	public void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		if( StringUtils.equals(eventArgs.getModID(), Reference.MODID) )
-			if( this.updatable )
+		if (StringUtils.equals(eventArgs.getModID(), Reference.MODID))
+			if (this.updatable)
 				save();
-			}
+	}
 
 	public String getFilePath() {
 		return this.configFile.getPath();
