@@ -2,7 +2,7 @@
 	"versions": {
 		"1.7.10": {
 			"version": "2.5.1",
-			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349401",
+			"remote": "https://minecraft.curseforge.com/projects/sign-picture/files/2349401/download",
 			"local": "SignPicture-1.7.10-2.5.1-universal.jar",
 			"message": "Fix iChunUtil conflict bug",
 			"message_local": {
