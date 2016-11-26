@@ -89,7 +89,7 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		} else {
 			OpenGL.glScalef(1f, -1f, 1f);
 			if (type==TransformType.GROUND)
-				OpenGL.glTranslatef(-size.width/2f, 0f, 0f);
+				OpenGL.glTranslatef(-size.width/2f, .25f, 0f);
 			else if (type==TransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.width/2f, .5f, f);
@@ -98,7 +98,8 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 			else if (type==TransformType.THIRD_PERSON) {
 				OpenGL.glTranslatef(.25f, .25f, 0f);
 				OpenGL.glTranslatef(-size.width, 0f, 0f);
-			}
+			} else if (type==TransformType.HEAD)
+				;// Minecraft 1.8.x doesn't support Item Head.
 			OpenGL.glTranslatef(0f, -size.height, 0f);
 			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
 			entry.meta.rotation.rotate();
