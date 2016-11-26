@@ -18,6 +18,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected GuiScreen parent;
 	protected WPanel contentPane = new WPanel(new R());
 	protected final WEvent event = new WEvent(this);
+	protected boolean initialized;
 	public float width;
 	public float height;
 
@@ -93,6 +94,11 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		if (this.parent!=null)
 			this.parent.initGui();
 		super.initGui();
+		if (!this.initialized) {
+			init();
+			initWidget();
+			this.initialized = true;
+		}
 	}
 
 	protected void init() {
@@ -106,12 +112,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 
 	@Override
 	public void setWorldAndResolution(final Minecraft mc, final int i, final int j) {
-		final boolean init = this.mc==null;
 		sSetWorldAndResolution(mc, i, j);
-		if (init) {
-			init();
-			initWidget();
-		}
 	}
 
 	protected void sSetWorldAndResolution(final Minecraft mc, final int i, final int j) {

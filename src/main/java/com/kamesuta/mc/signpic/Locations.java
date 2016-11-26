@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,6 +28,10 @@ public class Locations {
 
 		this.modDir = new File(mcdir, "mods");
 		this.modFile = event.getSourceFile();
+	}
+
+	public File createCache(final String pre) throws IOException {
+		return File.createTempFile(pre+"_", "", this.tempDir);
 	}
 
 	private File getSignPicDir(final File defaultdir) {

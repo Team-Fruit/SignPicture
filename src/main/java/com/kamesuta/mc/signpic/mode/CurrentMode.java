@@ -11,7 +11,8 @@ public class CurrentMode {
 	private CurrentMode() {
 	}
 
-	private EntryId entryId = new EntryId("");
+	private EntryId handSign = EntryId.blank;
+	private EntryId entryId = EntryId.blank;
 	private Mode mode = Mode.NONE;
 	private final EnumSet<State> states = EnumSet.noneOf(State.class);
 
@@ -57,6 +58,14 @@ public class CurrentMode {
 
 	public EntryId getEntryId() {
 		return this.entryId;
+	}
+
+	public void setHandSign(final EntryId sign) {
+		this.handSign = sign;
+	}
+
+	public EntryId getHandSign() {
+		return this.handSign;
 	}
 
 	public static enum Mode {
