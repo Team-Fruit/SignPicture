@@ -1,10 +1,13 @@
 package com.kamesuta.mc.signpic.http.upload;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
 import org.apache.http.HttpEntity;
@@ -16,6 +19,9 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
@@ -45,16 +51,20 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 	public void communicate() {
 		final String url = "https://api.imgur.com/3/image";
 
+		File tmp = null;
 		InputStream resstream = null;
 		InputStream countupstream = null;
 		try {
+			tmp = Client.location.createCache("imgur");
+			FileUtils.copyInputStreamToFile(this.upload.getStream(), tmp);
+
 			// create the post request.
 			final HttpPost httppost = new HttpPost(url);
 			httppost.addHeader("Authorization", "Client-ID "+this.key);
 			final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
 			final State state = getState();
-			countupstream = new CountingInputStream(this.upload.getStream()) {
+			countupstream = new CountingInputStream(new FileInputStream(tmp)) {
 				@Override
 				protected void beforeRead(final int n) throws IOException {
 					if (ImgurUpload.this.canceled) {
@@ -81,6 +91,9 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				if (resEntity!=null) {
 					resstream = resEntity.getContent();
 					this.result = gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
+					final String link = getLink();
+					if (link!=null)
+						FileUtils.moveFile(tmp, new ContentLocation(new ContentId(link)).cacheLocation());
 					onDone(new CommunicateResponse(this.result.success, null));
 					return;
 				}
@@ -94,6 +107,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 		} finally {
 			IOUtils.closeQuietly(countupstream);
 			IOUtils.closeQuietly(resstream);
+			FileUtils.deleteQuietly(tmp);
 		}
 		onDone(new CommunicateResponse(false, null));
 		return;

@@ -5,11 +5,14 @@ import java.io.IOException;
 
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
+import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
+import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -50,6 +53,8 @@ public class ClientProxy extends CommonProxy {
 		Client.rootCommand = new RootCommand();
 
 		Client.rootCommand.addChildCommand(new CommandVersion());
+
+		ModelLoader.setCustomModelResourceLocation(Items.SIGN, 0, CustomItemSignRenderer.modelResourceLocation);
 	}
 
 	private File getDataDirectory() {
