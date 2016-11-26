@@ -6,7 +6,7 @@ import java.io.IOException;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
-import com.kamesuta.mc.signpic.render.ModelCanvas;
+import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
 import net.minecraft.init.Items;
@@ -54,7 +54,7 @@ public class ClientProxy extends CommonProxy {
 
 		Client.rootCommand.addChildCommand(new CommandVersion());
 
-		ModelLoader.setCustomModelResourceLocation(Items.sign, 0, ModelCanvas.modelResourceLocation);
+		ModelLoader.setCustomModelResourceLocation(Items.sign, 0, CustomItemSignRenderer.modelResourceLocation);
 	}
 
 	private File getDataDirectory() {

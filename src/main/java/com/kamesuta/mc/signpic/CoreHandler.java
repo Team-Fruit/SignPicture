@@ -10,7 +10,7 @@ import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.information.Informations;
-import com.kamesuta.mc.signpic.render.ModelCanvas;
+import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 
 import net.minecraft.client.resources.model.IBakedModel;
@@ -118,9 +118,9 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onModelBakeEvent(final ModelBakeEvent event) {
-		final IBakedModel object = event.modelRegistry.getObject(ModelCanvas.modelResourceLocation);
-		final ModelCanvas atlas6 = new ModelCanvas(object);
-		event.modelRegistry.putObject(ModelCanvas.modelResourceLocation, atlas6);
+		final IBakedModel object = event.modelRegistry.getObject(CustomItemSignRenderer.modelResourceLocation);
+		final CustomItemSignRenderer atlas6 = new CustomItemSignRenderer(object);
+		event.modelRegistry.putObject(CustomItemSignRenderer.modelResourceLocation, atlas6);
 	}
 
 	boolean debugKey;
