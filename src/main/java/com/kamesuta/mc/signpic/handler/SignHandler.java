@@ -210,14 +210,22 @@ public class SignHandler {
 	@CoreEvent
 	public void onTooltip(final ItemTooltipEvent event) {
 		if (event.itemStack.getItem()==Items.sign) {
+			final String dspname = event.itemStack.getDisplayName();
+			final String name = StringUtils.substringAfterLast(dspname, "}");
+			final boolean useName = !StringUtils.isEmpty(name);
 			final EntryId id = EntryId.fromItemStack(event.itemStack);
 			final Entry entry = id.entry();
 			if (entry.isValid()) {
 				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
-				event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
+				if (useName)
+					event.toolTip.set(0, name);
+				else
+					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", entry.meta.size.width, entry.meta.size.height));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", entry.meta.rotation.compose()));
+				if (useName)
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", entry.meta.compose()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 			} else if (Config.instance.signTooltip||!Config.instance.guiExperienced) {

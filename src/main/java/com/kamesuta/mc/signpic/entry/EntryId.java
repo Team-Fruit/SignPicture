@@ -75,7 +75,9 @@ public class EntryId {
 	}
 
 	public static EntryId fromItemStack(final ItemStack itemStack) {
-		return from(itemStack.getDisplayName());
+		final String name = itemStack.getDisplayName();
+		final int index = StringUtils.lastIndexOf(name, "}");
+		return from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0));
 	}
 
 	public boolean hasContentId() {
