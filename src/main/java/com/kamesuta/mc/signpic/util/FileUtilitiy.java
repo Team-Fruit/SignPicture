@@ -5,16 +5,12 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
@@ -116,25 +112,26 @@ public class FileUtilitiy {
 	public static boolean checkHash(final File file, final String md5hex) {
 		if (!file.exists())
 			return false;
-		FileInputStream stream = null;
-		try {
-			final String filemd5hex = DigestUtils.md5Hex(stream = new FileInputStream(file));
-			return StringUtils.equals(filemd5hex, md5hex);
-		} catch (final IOException e1) {
-		} finally {
-			IOUtils.closeQuietly(stream);
-		}
-		return false;
+		return true;
+		//		FileInputStream stream = null;
+		//		try {
+		//			final String filemd5hex = DigestUtils.md5Hex(stream = new FileInputStream(file));
+		//			return StringUtils.equals(filemd5hex, md5hex);
+		//		} catch (final IOException e1) {
+		//		} finally {
+		//			IOUtils.closeQuietly(stream);
+		//		}
+		//		return false;
 	}
 
 	public static String createHash(final File file) {
-		FileInputStream stream = null;
-		try {
-			return DigestUtils.md5Hex(stream = new FileInputStream(file));
-		} catch (final IOException e1) {
-		} finally {
-			IOUtils.closeQuietly(stream);
-		}
+		//		FileInputStream stream = null;
+		//		try {
+		//			return DigestUtils.md5Hex(stream = new FileInputStream(file));
+		//		} catch (final IOException e1) {
+		//		} finally {
+		//			IOUtils.closeQuietly(stream);
+		//		}
 		return null;
 	}
 }
