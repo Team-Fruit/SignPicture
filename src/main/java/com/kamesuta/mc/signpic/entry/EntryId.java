@@ -63,10 +63,14 @@ public class EntryId {
 	}
 
 	public static EntryId fromTile(final TileEntitySign tile) {
+		if (tile==null)
+			return blank;
 		return fromStrings(tile.signText);
 	}
 
 	public static EntryId fromChats(final IChatComponent[] chats) {
+		if (chats==null)
+			return blank;
 		final StringBuilder stb = new StringBuilder();
 		for (final IChatComponent chat : chats)
 			if (chat!=null)
@@ -75,6 +79,8 @@ public class EntryId {
 	}
 
 	public static EntryId fromItemStack(final ItemStack itemStack) {
+		if (itemStack==null)
+			return blank;
 		final String name = itemStack.getDisplayName();
 		final int index = StringUtils.lastIndexOf(name, "}");
 		return from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0));
