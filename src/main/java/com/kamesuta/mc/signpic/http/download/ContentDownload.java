@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -15,9 +13,11 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.Communicate;
@@ -27,39 +27,33 @@ import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
+import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
 public class ContentDownload extends Communicate implements Progressable {
-	protected final String name;
-	protected final URI remote;
-	protected final File local;
-	protected final State state;
+	protected final Content content;
 	protected boolean canceled;
 
-	public ContentDownload(final String name, final URI remote, final File local, final State state) {
-		this.name = name;
-		this.remote = remote;
-		this.local = local;
-		this.state = state;
-	}
-
-	public ContentDownload(final ContentLocation location, final State state) throws URISyntaxException {
-		this(location.id.id(), location.remoteLocation(), location.cacheLocation(), state);
+	public ContentDownload(final Content content) {
+		this.content = content;
 	}
 
 	@Override
 	public State getState() {
-		return this.state;
+		return this.content.state;
 	}
 
 	@Override
 	public void communicate() {
+		this.content.meta.getData().countdltry++;
 		File tmp = null;
 		InputStream input = null;
 		OutputStream output = null;
 		try {
-			final HttpUriRequest req = new HttpGet(this.remote);
+			final HttpUriRequest req = new HttpGet(ContentLocation.remoteLocation(this.content.meta.getData().url));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
+
 			final HttpEntity entity = response.getEntity();
+			this.content.meta.getData().mime = ContentType.getOrDefault(entity).getMimeType();
 
 			tmp = Client.location.createCache("content");
 
@@ -70,7 +64,7 @@ public class ContentDownload extends Communicate implements Progressable {
 				throw new ContentCapacityOverException("size: "+size);
 			}
 
-			final Progress progress = this.state.getProgress();
+			final Progress progress = this.content.state.getProgress();
 			progress.setOverall(entity.getContentLength());
 			input = entity.getContent();
 			output = new CountingOutputStream(new FileOutputStream(tmp)) {
@@ -91,8 +85,13 @@ public class ContentDownload extends Communicate implements Progressable {
 			FileUtils.deleteQuietly(tmp);
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
-			FileUtils.deleteQuietly(this.local);
-			FileUtils.moveFile(tmp, this.local);
+			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
+			FileUtils.deleteQuietly(local);
+			FileUtils.moveFile(tmp, local);
+			this.content.meta.getData().fresh = true;
+			this.content.meta.getData().lastupdate = System.currentTimeMillis();
+			this.content.meta.getData().cachemd5 = FileUtilitiy.createHash(local);
+			this.content.meta.getData().size = local.length();
 			onDone(new CommunicateResponse(true, null));
 		} catch (final Exception e) {
 			onDone(new CommunicateResponse(false, e));
@@ -100,6 +99,7 @@ public class ContentDownload extends Communicate implements Progressable {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(tmp);
+			this.content.meta.save();
 		}
 	}
 

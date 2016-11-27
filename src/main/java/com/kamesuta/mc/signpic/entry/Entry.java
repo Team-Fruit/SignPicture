@@ -35,7 +35,7 @@ public class Entry {
 
 	public ImageMeta getMeta() {
 		if (this.contentId!=null) {
-			final String newmeta = content().meta;
+			final String newmeta = content().imagemeta;
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
 				this.meta = this.id.getMeta().parse(newmeta);
 				this.cmetacache = newmeta;

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
+import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
 import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.image.InvaildImageException;
 
@@ -57,6 +58,8 @@ public class State {
 				setMessage(I18n.format("signpic.advmsg.invalidurl"));
 			} catch (final CommunicateCanceledException e) {
 				setMessage(I18n.format("signpic.advmsg.dlstopped"));
+			} catch (final RetryCountOverException e) {
+				setMessage(I18n.format("signpic.advmsg.retryover"));
 			} catch (final ContentCapacityOverException e) {
 				setMessage(I18n.format("signpic.advmsg.capacityover"));
 			} catch (final InvaildImageException e) {

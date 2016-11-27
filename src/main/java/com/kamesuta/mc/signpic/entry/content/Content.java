@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.entry.content;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.image.Image;
@@ -10,14 +12,21 @@ import com.kamesuta.mc.signpic.state.StateType;
 
 public class Content implements IInitable, ICollectable {
 	public final ContentId id;
+	public final ContentMeta meta;
 	public final State state;
-	public final ContentLocation location;
 	public Image image;
-	public String meta;
+	public String imagemeta;
 
 	public Content(final ContentId id) {
 		this.id = id;
-		this.location = new ContentLocation(id);
+		final String url = id.getURI();
+		final String hash = ContentLocation.hash(url);
+		this.meta = new ContentMeta(ContentLocation.metaLocation(hash));
+		this.meta.getData().url = url;
+		this.meta.getData().meta = hash;
+		if (StringUtils.isEmpty(this.meta.getData().cache))
+			this.meta.getData().cache = hash;
+		this.meta.save();
 		this.state = new State().setName(id.id());
 		if (id.isResource())
 			this.image = new ResourceImage(this);

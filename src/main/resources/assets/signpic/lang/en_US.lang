@@ -136,6 +136,7 @@ signpic.state.format.unsupported=Unsupported. Try a new Version!
 signpic.advmsg.invalidurl=Invalid URL
 signpic.advmsg.dlstopped=Stopped Downloading
 signpic.advmsg.capacityover=CapacityOver
+signpic.advmsg.retryover=Retry Count Over
 signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s

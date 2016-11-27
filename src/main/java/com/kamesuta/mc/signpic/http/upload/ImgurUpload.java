@@ -20,6 +20,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.Communicate;
@@ -92,8 +93,10 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 					resstream = resEntity.getContent();
 					this.result = gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
 					final String link = getLink();
-					if (link!=null)
-						FileUtils.moveFile(tmp, new ContentLocation(new ContentId(link)).cacheLocation());
+					if (link!=null) {
+						final Content content = new ContentId(link).content();
+						FileUtils.moveFile(tmp, ContentLocation.cacheLocation(content.meta.getData().cache));
+					}
 					onDone(new CommunicateResponse(this.result.success, null));
 					return;
 				}

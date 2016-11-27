@@ -1,11 +1,12 @@
 package com.kamesuta.mc.signpic.image;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
@@ -13,6 +14,7 @@ import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
+import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
 public class RemoteImage extends Image {
 	protected RemoteImageTexture texture;
@@ -27,12 +29,14 @@ public class RemoteImage extends Image {
 
 	@Override
 	public void onInit() {
-		final File local = this.content.location.cacheLocation();
-		if (!local.exists()) {
-			this.content.state.setType(StateType.DOWNLOADING);
-			this.content.state.setProgress(new Progress());
-			try {
-				this.downloader = new ContentDownload(this.content.location, this.content.state);
+		try {
+			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
+			if (!FileUtilitiy.checkHash(local, this.content.meta.getData().cachemd5)||!this.content.meta.getData().contentavailable||!this.content.meta.getData().fresh) {
+				if (this.content.meta.getData().countdltry>2)
+					throw new RetryCountOverException("too many retry");
+				this.content.state.setType(StateType.DOWNLOADING);
+				this.content.state.setProgress(new Progress());
+				this.downloader = new ContentDownload(this.content);
 				this.downloader.setCallback(new ICommunicateCallback() {
 					@Override
 					public void onDone(final ICommunicateResponse res) {
@@ -45,11 +49,11 @@ public class RemoteImage extends Image {
 					}
 				});
 				Communicator.instance.communicate(this.downloader);
-			} catch (final URISyntaxException e) {
-				this.content.state.setErrorMessage(e);
-			}
-		} else
-			ContentManager.instance.enqueueAsync(this);
+			} else
+				ContentManager.instance.enqueueAsync(this);
+		} catch (final RetryCountOverException e) {
+			this.content.state.setErrorMessage(e);
+		}
 	}
 
 	@Override
@@ -76,6 +80,9 @@ public class RemoteImage extends Image {
 		} else {
 			this.content.state.setType(StateType.AVAILABLE);
 			this.content.state.getProgress().done = this.content.state.getProgress().overall;
+			this.content.meta.getData().fresh = true;
+			this.content.meta.getData().contentavailable = true;
+			this.content.meta.save();
 			return true;
 		}
 	}

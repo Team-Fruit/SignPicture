@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
@@ -141,7 +142,7 @@ public class ImageIOLoader {
 
 		public static class ContentInputFactory extends FileInputFactory {
 			public ContentInputFactory(final Content content) {
-				super(content.location.cacheLocation());
+				super(ContentLocation.cacheLocation(content.meta.getData().cache));
 			}
 		}
 
