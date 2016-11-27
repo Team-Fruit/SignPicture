@@ -87,7 +87,8 @@ public class ContentDownload extends Communicate implements Progressable {
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
 			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
-			FileUtils.deleteQuietly(local);
+			if (!FileUtils.deleteQuietly(local))
+				Reference.logger.info("could not delete");
 			FileUtils.moveFile(tmp, local);
 			this.content.meta.getData().update = System.currentTimeMillis();
 			this.content.meta.getData().cachemd5 = FileUtilitiy.createHash(local);

@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Apis;
@@ -115,18 +116,24 @@ public class FileUtilitiy {
 	public static boolean checkHash(final File file, final String md5hex) {
 		if (!file.exists())
 			return false;
+		FileInputStream stream = null;
 		try {
-			final String filemd5hex = DigestUtils.md5Hex(new FileInputStream(file));
+			final String filemd5hex = DigestUtils.md5Hex(stream = new FileInputStream(file));
 			return StringUtils.equals(filemd5hex, md5hex);
 		} catch (final IOException e1) {
+		} finally {
+			IOUtils.closeQuietly(stream);
 		}
 		return false;
 	}
 
 	public static String createHash(final File file) {
+		FileInputStream stream = null;
 		try {
-			return DigestUtils.md5Hex(new FileInputStream(file));
+			return DigestUtils.md5Hex(stream = new FileInputStream(file));
 		} catch (final IOException e1) {
+		} finally {
+			IOUtils.closeQuietly(stream);
 		}
 		return null;
 	}
