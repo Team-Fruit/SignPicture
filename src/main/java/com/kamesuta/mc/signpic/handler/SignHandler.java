@@ -15,6 +15,7 @@ import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -203,6 +204,15 @@ public class SignHandler {
 					Client.openEditor();
 					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 						CurrentMode.instance.setMode();
+				}
+			} else {
+				final TileEntitySign tilesign = Client.getTileSignLooking();
+				if (tilesign!=null) {
+					final Entry entry = EntryId.fromTile(tilesign).entry();
+					if (entry.isValid()) {
+						Client.mc.displayGuiScreen(new GuiSignOption(entry));
+						event.setCanceled(true);
+					}
 				}
 			}
 		}

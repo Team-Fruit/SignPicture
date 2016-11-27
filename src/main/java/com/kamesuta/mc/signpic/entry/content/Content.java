@@ -16,6 +16,7 @@ public class Content implements IInitable, ICollectable {
 	public final State state;
 	public Image image;
 	public String imagemeta;
+	private boolean dirty;
 
 	public Content(final ContentId id) {
 		this.id = id;
@@ -43,5 +44,20 @@ public class Content implements IInitable, ICollectable {
 	@Override
 	public void onCollect() {
 		this.image.onCollect();
+	}
+
+	public boolean shouldCollect() {
+		return this.dirty;
+	}
+
+	public void markDirty() {
+		this.dirty = true;
+	}
+
+	public void markDirtyWithCache() {
+		this.meta.getData().dirty = true;
+		this.meta.getData().dltry = 0;
+		this.meta.save();
+		markDirty();
 	}
 }

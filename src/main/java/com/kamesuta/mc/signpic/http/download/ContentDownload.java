@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.commons.io.FileExistsException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
@@ -17,6 +18,7 @@ import org.apache.http.entity.ContentType;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
@@ -44,7 +46,6 @@ public class ContentDownload extends Communicate implements Progressable {
 
 	@Override
 	public void communicate() {
-		this.content.meta.getData().countdltry++;
 		File tmp = null;
 		InputStream input = null;
 		OutputStream output = null;
@@ -88,12 +89,16 @@ public class ContentDownload extends Communicate implements Progressable {
 			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
 			FileUtils.deleteQuietly(local);
 			FileUtils.moveFile(tmp, local);
-			this.content.meta.getData().fresh = true;
-			this.content.meta.getData().lastupdate = System.currentTimeMillis();
+			this.content.meta.getData().update = System.currentTimeMillis();
 			this.content.meta.getData().cachemd5 = FileUtilitiy.createHash(local);
 			this.content.meta.getData().size = local.length();
 			onDone(new CommunicateResponse(true, null));
+		} catch (final FileExistsException e) {
+			this.content.meta.getData().dltry++;
+			Reference.logger.error(e.getMessage(), e);
+			onDone(new CommunicateResponse(false, e));
 		} catch (final Exception e) {
+			this.content.meta.getData().dltry++;
 			onDone(new CommunicateResponse(false, e));
 		} finally {
 			IOUtils.closeQuietly(input);

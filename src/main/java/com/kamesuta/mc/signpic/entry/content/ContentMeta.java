@@ -17,7 +17,7 @@ import com.kamesuta.mc.signpic.Reference;
 
 public class ContentMeta {
 	private static final Gson gson = new Gson();
-	public static final int FormatVersion = 1;
+	public static final int FormatVersion = 0;
 
 	public final File location;
 	private transient ContentData data;
@@ -67,16 +67,49 @@ public class ContentMeta {
 	}
 
 	public static class ContentData {
+		/**
+		 * format version
+		 */
 		public int format = FormatVersion;
+		/**
+		 * content URL
+		 */
 		public String url;
-		public String cache;
+		/**
+		 * meta ID
+		 */
 		public String meta;
+		/**
+		 * cache ID
+		 */
+		public String cache;
+		/**
+		 * content MIME type
+		 */
 		public String mime;
+		/**
+		 * cache file md5 hash
+		 */
 		public String cachemd5;
+		/**
+		 * content length
+		 */
 		public long size;
-		public boolean fresh;
-		public int countdltry;
-		public boolean contentavailable;
-		public long lastupdate;
+		/**
+		 * dirty mark
+		 */
+		public boolean dirty;
+		/**
+		 * download try count
+		 */
+		public int dltry;
+		/**
+		 * has content ever been available
+		 */
+		public boolean available;
+		/**
+		 * last cache updated
+		 */
+		public long update;
 	}
 }
