@@ -13,7 +13,7 @@ public class ImageMeta {
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
 	public final ImageTextureMap map;
-	private boolean hasInvalidMeta = false;
+	private boolean hasInvalidMeta;
 
 	public ImageMeta() {
 		this.size = new ImageSize();
@@ -30,10 +30,16 @@ public class ImageMeta {
 		return a||b||c||d;
 	}
 
-	public ImageMeta parse(final String src) {
+	public ImageMeta reset() {
 		this.size.reset();
 		this.offset.reset();
 		this.rotation.reset();
+		this.map.reset();
+		this.hasInvalidMeta = false;
+		return this;
+	}
+
+	public ImageMeta parse(final String src) {
 		boolean b = true;
 		final Matcher m = p.matcher(src);
 		while (m.find()) {
@@ -45,7 +51,13 @@ public class ImageMeta {
 					b = parseMeta(src, key, value)&&b;
 			}
 		}
-		this.hasInvalidMeta = !b;
+		this.hasInvalidMeta = this.hasInvalidMeta||!b;
+		return this;
+	}
+
+	public ImageMeta init(final String src) {
+		reset();
+		parse(src);
 		return this;
 	}
 

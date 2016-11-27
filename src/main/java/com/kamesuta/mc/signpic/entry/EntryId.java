@@ -127,9 +127,9 @@ public class EntryId {
 	public ImageMeta getMeta() {
 		if (hasMeta())
 			if (StringUtils.endsWith(this.id, "}"))
-				return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1));
+				return new ImageMeta().init(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1));
 			else
-				return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
+				return new ImageMeta().init(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
 		else
 			return null;
 	}

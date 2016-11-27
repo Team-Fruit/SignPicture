@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 
@@ -31,8 +32,9 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
+		final ImageMeta meta = entry.getMeta();
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, entry.content().image.getSize());
+		final ImageSize size = new ImageSize().setAspectSize(meta.size, entry.content().image.getSize());
 		if (type==ItemRenderType.INVENTORY) {
 			final float slot = 16f;
 			final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size, slot, slot);
@@ -58,8 +60,8 @@ public class CustomItemSignRenderer implements IItemRenderer {
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
 			OpenGL.glTranslatef(0f, 1f-size.height, 0f);
-			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
-			entry.meta.rotation.rotate();
+			OpenGL.glTranslatef(meta.offset.x, meta.offset.y, meta.offset.z);
+			meta.rotation.rotate();
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
 		}
 		OpenGL.glPopAttrib();
