@@ -96,7 +96,7 @@ public class ContentMeta {
 		 */
 		public long size;
 		/**
-		 * dirty mark
+		 * cache dirty mark
 		 */
 		public boolean dirty;
 		/**
