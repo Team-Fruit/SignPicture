@@ -34,7 +34,9 @@ signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
 signpic.gui.editor.size.width=幅
+signpic.gui.editor.size.width.unknown=縦横比を使用
 signpic.gui.editor.size.height=高さ
+signpic.gui.editor.size.height.unknown=縦横比を使用
 ### Offset
 signpic.gui.editor.offset.category=オフセット
 ### Rotation

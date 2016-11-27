@@ -42,7 +42,14 @@ public class GuiOffset extends WPanel {
 			}
 		}.setText(I18n.format("signpic.gui.editor.offset.category")));
 		final VMotion x = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(x), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), x, 0, I18n.format("signpic.gui.editor.offset.x"), I18n.format("signpic.gui.editor.offset.x.neg"), I18n.format("signpic.gui.editor.offset.x.pos")) {
+		add(new OffsetElement(new R(Coord.left(x), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), x, 0) {
+			{
+				this.label.setText(I18n.format("signpic.gui.editor.offset.x"));
+				this.number.setNegLabel(I18n.format("signpic.gui.editor.offset.x.neg"));
+				this.number.setPosLabel(I18n.format("signpic.gui.editor.offset.x.pos"));
+				this.number.setUnknownLabel(I18n.format("signpic.gui.editor.offset.x.unknown"));
+			}
+
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -66,7 +73,14 @@ public class GuiOffset extends WPanel {
 			}
 		});
 		final VMotion y = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(y), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), y, 1, I18n.format("signpic.gui.editor.offset.y"), I18n.format("signpic.gui.editor.offset.y.neg"), I18n.format("signpic.gui.editor.offset.y.pos")) {
+		add(new OffsetElement(new R(Coord.left(y), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), y, 1) {
+			{
+				this.label.setText(I18n.format("signpic.gui.editor.offset.y"));
+				this.number.setNegLabel(I18n.format("signpic.gui.editor.offset.y.neg"));
+				this.number.setPosLabel(I18n.format("signpic.gui.editor.offset.y.pos"));
+				this.number.setUnknownLabel(I18n.format("signpic.gui.editor.offset.y.unknown"));
+			}
+
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -90,7 +104,14 @@ public class GuiOffset extends WPanel {
 			}
 		});
 		final VMotion z = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(z), Coord.pwidth(1f), Coord.top(15*3), Coord.height(15)), z, 2, I18n.format("signpic.gui.editor.offset.z"), I18n.format("signpic.gui.editor.offset.z.neg"), I18n.format("signpic.gui.editor.offset.z.pos")) {
+		add(new OffsetElement(new R(Coord.left(z), Coord.pwidth(1f), Coord.top(15*3), Coord.height(15)), z, 2) {
+			{
+				this.label.setText(I18n.format("signpic.gui.editor.offset.z"));
+				this.number.setNegLabel(I18n.format("signpic.gui.editor.offset.z.neg"));
+				this.number.setPosLabel(I18n.format("signpic.gui.editor.offset.z.pos"));
+				this.number.setUnknownLabel(I18n.format("signpic.gui.editor.offset.z.unknown"));
+			}
+
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -119,23 +140,14 @@ public class GuiOffset extends WPanel {
 	}
 
 	protected abstract class OffsetElement extends WPanel {
-		protected String label;
-		protected String neg;
-		protected String pos;
+		public MLabel label;
+		public MNumber number;
 		protected VMotion left;
 
-		public OffsetElement(final R position, final VMotion left, final int i, final String label, final String neg, final String pos) {
+		public OffsetElement(final R position, final VMotion left, final int i) {
 			super(position);
-			this.label = label;
-			this.neg = neg;
-			this.pos = pos;
-			this.left = left;
-		}
-
-		@Override
-		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f))).setText(this.label));
-			final MNumber n = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
+			this.label = new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)));
+			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
 				@Override
 				protected void onNumberChanged(final String oldText, final String newText) {
 					if (NumberUtils.isNumber(newText))
@@ -144,10 +156,33 @@ public class GuiOffset extends WPanel {
 						set(0);
 					onUpdate();
 				}
-			}.setNumber(get());
-			n.neg.setText(this.neg);
-			n.pos.setText(this.pos);
-			add(n);
+
+				@Override
+				protected boolean negClicked() {
+					final boolean b = super.negClicked();
+					if (NumberUtils.toFloat(this.field.getText())==0f)
+						this.field.setText("");
+					return b;
+				}
+
+				@Override
+				protected boolean posClicked() {
+					final boolean b = super.posClicked();
+					if (NumberUtils.toFloat(this.field.getText())==0f)
+						this.field.setText("");
+					return b;
+				}
+			};
+			this.left = left;
+		}
+
+		@Override
+		protected void initWidget() {
+			add(this.label);
+			final float f = get();
+			if (f!=0f)
+				this.number.setNumber(f);
+			add(this.number);
 		}
 
 		protected abstract float get();

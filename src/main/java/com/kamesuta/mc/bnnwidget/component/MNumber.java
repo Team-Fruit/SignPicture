@@ -2,6 +2,7 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import java.text.DecimalFormat;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -13,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta.MetaParser;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class MNumber extends WPanel {
 	public MButton neg;
@@ -24,40 +26,48 @@ public class MNumber extends WPanel {
 		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				float f;
-				if (GuiScreen.isShiftKeyDown())
-					f = .1f;
-				else if (GuiScreen.isCtrlKeyDown())
-					f = .01f;
-				else
-					f = 1f;
-				MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)-f));
-				return true;
+				return negClicked();
 			}
-		}.setText("-");
+		}.setText(I18n.format("signpic.gui.editor.number.neg"));
 		add(this.neg);
 		this.field = new MChatTextField(new R(Coord.left(buttonwidth), Coord.right(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected void onTextChanged(final String oldText) {
 				onNumberChanged(oldText, getText());
 			}
-		}.setAllowedCharacters("+-.eE0123456789").setWatermark("?");
+		}.setAllowedCharacters("+-.eE0123456789").setWatermark(I18n.format("signpic.gui.editor.number.unknown"));
 		add(this.field);
 		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				float f;
-				if (GuiScreen.isShiftKeyDown())
-					f = .1f;
-				else if (GuiScreen.isCtrlKeyDown())
-					f = .01f;
-				else
-					f = 1f;
-				MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText(), 0)+f));
-				return true;
+				return posClicked();
 			}
-		}.setText("+");
+		}.setText(I18n.format("signpic.gui.editor.number.pos"));
 		add(this.pos);
+	}
+
+	protected boolean negClicked() {
+		float f;
+		if (GuiScreen.isShiftKeyDown())
+			f = .1f;
+		else if (GuiScreen.isCtrlKeyDown())
+			f = .01f;
+		else
+			f = 1f;
+		MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText())-f));
+		return true;
+	}
+
+	protected boolean posClicked() {
+		float f;
+		if (GuiScreen.isShiftKeyDown())
+			f = .1f;
+		else if (GuiScreen.isCtrlKeyDown())
+			f = .01f;
+		else
+			f = 1f;
+		MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText())+f));
+		return true;
 	}
 
 	public MNumber setNumber(final float f) {
@@ -66,12 +76,20 @@ public class MNumber extends WPanel {
 	}
 
 	public MNumber setPosLabel(final String s) {
-		this.pos.setText(s);
+		if (!StringUtils.isEmpty(s)&&!StringUtils.contains(s, "signpic."))
+			this.pos.setText(s);
 		return this;
 	}
 
 	public MNumber setNegLabel(final String s) {
-		this.neg.setText(s);
+		if (!StringUtils.isEmpty(s)&&!StringUtils.contains(s, "signpic."))
+			this.neg.setText(s);
+		return this;
+	}
+
+	public MNumber setUnknownLabel(final String s) {
+		if (!StringUtils.isEmpty(s)&&!StringUtils.contains(s, "signpic."))
+			this.field.setWatermark(s);
 		return this;
 	}
 

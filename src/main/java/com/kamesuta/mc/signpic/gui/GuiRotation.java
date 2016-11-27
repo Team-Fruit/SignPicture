@@ -191,6 +191,11 @@ public class GuiRotation extends WPanel {
 			protected void initWidget() {
 				add(new Type(new R(Coord.left(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), this.rotate));
 				add(new MNumber(new R(Coord.left(15*1), Coord.top(0), Coord.right(15*2), Coord.bottom(0)), 15) {
+					{
+						if (RotationElement.this.rotate.rotate!=0f)
+							setNumber(RotationElement.this.rotate.rotate);
+					}
+
 					@Override
 					protected void onNumberChanged(final String oldText, final String newText) {
 						if (NumberUtils.isNumber(newText))
@@ -199,7 +204,23 @@ public class GuiRotation extends WPanel {
 							RotationElement.this.rotate.rotate = 0;
 						onUpdate();
 					}
-				}.setNumber(this.rotate.rotate).setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")));
+
+					@Override
+					protected boolean negClicked() {
+						final boolean b = super.negClicked();
+						if (NumberUtils.toFloat(this.field.getText())==0f)
+							this.field.setText("");
+						return b;
+					}
+
+					@Override
+					protected boolean posClicked() {
+						final boolean b = super.posClicked();
+						if (NumberUtils.toFloat(this.field.getText())==0f)
+							this.field.setText("");
+						return b;
+					}
+				}.setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")).setUnknownLabel(I18n.format("signpic.gui.editor.rotation.unknown")));
 				add(new MButton(new R(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0))) {
 					@Override
 					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
