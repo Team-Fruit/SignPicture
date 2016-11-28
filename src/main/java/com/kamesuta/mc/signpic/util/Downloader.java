@@ -1,4 +1,5 @@
 package com.kamesuta.mc.signpic.util;
+
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -15,6 +16,7 @@ import javax.net.ssl.SSLSocket;
 import org.apache.http.Header;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.config.RequestConfig.Builder;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -27,6 +29,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeader;
 
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Reference;
 
 public class Downloader {
@@ -45,16 +48,16 @@ public class Downloader {
 					.loadTrustMaterial(
 							null,
 							new TrustStrategy() {
-								@Override public boolean isTrusted(final X509Certificate[] chain, final String authType)
+								@Override
+								public boolean isTrusted(final X509Certificate[] chain, final String authType)
 										throws CertificateException {
 									return true;
 								}
 							})
 					.build();
-			final SSLConnectionSocketFactory sslConnectionSocketFactory =
-					new SSLConnectionSocketFactory(
-							sslContext,
-							SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER) {
+			final SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(
+					sslContext,
+					SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER) {
 				@Override
 				protected void prepareSocket(final SSLSocket socket) throws IOException {
 					final String[] enabledCipherSuites = socket.getEnabledCipherSuites();
@@ -70,8 +73,7 @@ public class Downloader {
 				};
 			};
 
-			registry =
-					RegistryBuilder.<ConnectionSocketFactory>create()
+			registry = RegistryBuilder.<ConnectionSocketFactory> create()
 					.register("http", PlainConnectionSocketFactory.getSocketFactory())
 					.register("https", sslConnectionSocketFactory)
 					.build();
@@ -80,24 +82,25 @@ public class Downloader {
 		} catch (final KeyStoreException e) {
 		}
 
-		if (registry != null)
+		if (registry!=null)
 			this.manager = new PoolingHttpClientConnectionManager(registry);
 		else
 			this.manager = new PoolingHttpClientConnectionManager();
 
-		final RequestConfig requestConfig = RequestConfig.custom()
-				.setConnectTimeout(15 * 1000)
-				.setSocketTimeout(15 * 1000)
-				.build();
+		final Builder requestConfig = RequestConfig.custom();
+		if (Config.instance.contentDLTimedout>0) {
+			requestConfig.setConnectTimeout(Config.instance.contentDLTimedout);
+			requestConfig.setSocketTimeout(Config.instance.contentDLTimedout);
+		}
 
 		final List<Header> headers = new ArrayList<Header>();
-		headers.add(new BasicHeader("Accept-Charset","utf-8"));
-		headers.add(new BasicHeader("Accept-Language","ja, en;q=0.8"));
+		headers.add(new BasicHeader("Accept-Charset", "utf-8"));
+		headers.add(new BasicHeader("Accept-Language", "ja, en;q=0.8"));
 		headers.add(new BasicHeader("User-Agent", Reference.MODID));
 
 		this.client = HttpClientBuilder.create()
 				.setConnectionManager(this.manager)
-				.setDefaultRequestConfig(requestConfig)
+				.setDefaultRequestConfig(requestConfig.build())
 				.setDefaultHeaders(headers)
 				.build();
 	}

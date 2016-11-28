@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import java.io.File;
 import java.util.List;
 
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -31,7 +32,7 @@ public class RemoteImage extends Image {
 		try {
 			final File local = ContentLocation.cacheLocation(this.content.meta.getCacheID());
 			if (!local.exists()||!this.content.meta.getCache().isAvailable()||this.content.meta.getCache().isDirty()) {
-				if (this.content.meta.getTryCount()>2)
+				if (Config.instance.contentMaxRetry>0&&this.content.meta.getTryCount()>Config.instance.contentMaxRetry)
 					throw new RetryCountOverException();
 				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);
 				this.content.meta.resetCache();
