@@ -1,7 +1,9 @@
 package com.kamesuta.mc.signpic.entry.content;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.image.Image;
@@ -55,6 +57,8 @@ public class Content implements IInitable, ICollectable {
 	}
 
 	public void markDirtyWithCache() {
+		//System.gc();
+		Reference.logger.info("delete: "+FileUtils.deleteQuietly(ContentLocation.cacheLocation(this.meta.getData().cache)));
 		this.meta.getData().dirty = true;
 		this.meta.getData().dltry = 0;
 		this.meta.save();

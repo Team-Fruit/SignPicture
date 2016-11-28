@@ -14,7 +14,6 @@ import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
-import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
 public class RemoteImage extends Image {
 	protected RemoteImageTexture texture;
@@ -31,7 +30,7 @@ public class RemoteImage extends Image {
 	public void onInit() {
 		try {
 			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
-			if (!FileUtilitiy.checkHash(local, this.content.meta.getData().cachemd5)||!this.content.meta.getData().available||this.content.meta.getData().dirty) {
+			if (!local.exists()||!this.content.meta.getData().available||this.content.meta.getData().dirty) {
 				this.content.meta.getData().dirty = false;
 				this.content.meta.save();
 				if (this.content.meta.getData().dltry>2)

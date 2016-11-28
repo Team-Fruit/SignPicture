@@ -108,30 +108,4 @@ public class FileUtilitiy {
 	public static String getKey(final ImageUploaderFactory factory) {
 		return new Apis.KeySetting(factory.keys()).getConfigOrRandom();
 	}
-
-	public static boolean checkHash(final File file, final String md5hex) {
-		if (!file.exists())
-			return false;
-		return true;
-		//		FileInputStream stream = null;
-		//		try {
-		//			final String filemd5hex = DigestUtils.md5Hex(stream = new FileInputStream(file));
-		//			return StringUtils.equals(filemd5hex, md5hex);
-		//		} catch (final IOException e1) {
-		//		} finally {
-		//			IOUtils.closeQuietly(stream);
-		//		}
-		//		return false;
-	}
-
-	public static String createHash(final File file) {
-		//		FileInputStream stream = null;
-		//		try {
-		//			return DigestUtils.md5Hex(stream = new FileInputStream(file));
-		//		} catch (final IOException e1) {
-		//		} finally {
-		//			IOUtils.closeQuietly(stream);
-		//		}
-		return null;
-	}
 }

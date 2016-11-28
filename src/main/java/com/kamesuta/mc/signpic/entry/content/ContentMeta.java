@@ -17,7 +17,7 @@ import com.kamesuta.mc.signpic.Reference;
 
 public class ContentMeta {
 	private static final Gson gson = new Gson();
-	public static final int FormatVersion = 0;
+	public static final int FormatVersion = 1;
 
 	public final File location;
 	private transient ContentData data;
@@ -87,10 +87,6 @@ public class ContentMeta {
 		 * content MIME type
 		 */
 		public String mime;
-		/**
-		 * cache file md5 hash
-		 */
-		public String cachemd5;
 		/**
 		 * content length
 		 */
