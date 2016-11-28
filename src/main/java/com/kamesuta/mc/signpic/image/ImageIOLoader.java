@@ -133,7 +133,7 @@ public class ImageIOLoader {
 
 		public static class ContentInputFactory extends FileInputFactory {
 			public ContentInputFactory(final Content content) {
-				super(ContentLocation.cacheLocation(content.meta.getData().cache));
+				super(ContentLocation.cacheLocation(content.meta.getCacheID()));
 			}
 		}
 

@@ -96,7 +96,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 					final String link = getLink();
 					if (link!=null) {
 						final Content content = new ContentId(link).content();
-						FileUtils.moveFile(tmp, ContentLocation.cacheLocation(content.meta.getData().cache));
+						FileUtils.moveFile(tmp, ContentLocation.cacheLocation(content.meta.getCacheID()));
 					}
 					onDone(new CommunicateResponse(true, null));
 					return;

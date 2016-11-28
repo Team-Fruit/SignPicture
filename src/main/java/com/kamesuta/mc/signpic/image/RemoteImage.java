@@ -29,13 +29,12 @@ public class RemoteImage extends Image {
 	@Override
 	public void onInit() {
 		try {
-			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
-			if (!local.exists()||!this.content.meta.getData().available||this.content.meta.getData().dirty) {
-				this.content.meta.getData().dirty = false;
-				if (this.content.meta.getData().dltry>2)
+			final File local = ContentLocation.cacheLocation(this.content.meta.getCacheID());
+			if (!local.exists()||!this.content.meta.getCache().isAvailable()||this.content.meta.getCache().isDirty()) {
+				if (this.content.meta.getTryCount()>2)
 					throw new RetryCountOverException();
-				this.content.meta.getData().dltry++;
-				this.content.meta.save();
+				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);
+				this.content.meta.resetCache();
 				this.content.state.setType(StateType.DOWNLOADING);
 				this.content.state.setProgress(new Progress());
 				this.downloader = new ContentDownload(this.content);
@@ -82,8 +81,8 @@ public class RemoteImage extends Image {
 		} else {
 			this.content.state.setType(StateType.AVAILABLE);
 			this.content.state.getProgress().done = this.content.state.getProgress().overall;
-			this.content.meta.getData().available = true;
-			this.content.meta.save();
+			this.content.meta.setTryCount(0);
+			this.content.meta.getCache().setAvailable(true);
 			return true;
 		}
 	}

@@ -47,11 +47,11 @@ public class ContentDownload extends Communicate implements Progressable {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
-			final HttpUriRequest req = new HttpGet(ContentLocation.remoteLocation(this.content.meta.getData().url));
+			final HttpUriRequest req = new HttpGet(ContentLocation.remoteLocation(this.content.meta.getURL()));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 
 			final HttpEntity entity = response.getEntity();
-			this.content.meta.getData().mime = ContentType.getOrDefault(entity).getMimeType();
+			this.content.meta.getCache().setMime(ContentType.getOrDefault(entity).getMimeType());
 
 			tmp = Client.location.createCache("content");
 
@@ -83,11 +83,11 @@ public class ContentDownload extends Communicate implements Progressable {
 			FileUtils.deleteQuietly(tmp);
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
-			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
+			final File local = ContentLocation.cacheLocation(this.content.meta.getCacheID());
 			FileUtils.deleteQuietly(local);
 			FileUtils.moveFile(tmp, local);
-			this.content.meta.getData().update = System.currentTimeMillis();
-			this.content.meta.getData().size = local.length();
+			this.content.meta.getCache().setLastUpdated(System.currentTimeMillis());
+			this.content.meta.getCache().setSize(local.length());
 			onDone(new CommunicateResponse(true, null));
 		} catch (final Exception e) {
 			onDone(new CommunicateResponse(false, e));
@@ -95,7 +95,6 @@ public class ContentDownload extends Communicate implements Progressable {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(tmp);
-			this.content.meta.save();
 		}
 	}
 
