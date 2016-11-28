@@ -30,7 +30,7 @@ public class RemoteImage extends Image {
 	private int processing = 0;
 
 	@Override
-	public void loadCancel() {
+	public void cancel() {
 		if (this.downloader!=null)
 			this.downloader.cancel();
 		if (this.ioloader!=null)

@@ -51,6 +51,6 @@ public class ResourceImage extends Image {
 	}
 
 	@Override
-	public void loadCancel() {
+	public void cancel() {
 	}
 }

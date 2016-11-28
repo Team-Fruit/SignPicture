@@ -55,7 +55,7 @@ public class GuiSignOption extends WFrame {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 										if (GuiSignOption.this.entry.isValid()) {
-											GuiSignOption.this.entry.content().loadCancel();
+											GuiSignOption.this.entry.content().cancel();
 											return true;
 										}
 										return false;

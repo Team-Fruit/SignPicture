@@ -18,8 +18,9 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.ILoadCancelable;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
@@ -32,7 +33,7 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
-public class ImageIOLoader {
+public class ImageIOLoader implements ILoadCancelable {
 	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
 			Config.instance.imageWidthLimit>0 ? Config.instance.imageWidthLimit : ImageSize.unknownSize,
 			Config.instance.imageHeightLimit>0 ? Config.instance.imageHeightLimit : ImageSize.unknownSize);
@@ -157,6 +158,7 @@ public class ImageIOLoader {
 		}
 	}
 
+	@Override
 	public void cancel() {
 		this.canceled = true;
 	}

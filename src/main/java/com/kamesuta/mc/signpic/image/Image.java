@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
@@ -15,7 +16,7 @@ import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.renderer.Tessellator;
 
-public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable {
+public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected final Content content;
 
@@ -26,8 +27,6 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 	public abstract ImageTexture getTexture() throws IllegalStateException;
 
 	public abstract String getLocal();
-
-	public abstract void loadCancel();
 
 	public ImageSize getSize() {
 		if (this.content.state.getType()==StateType.AVAILABLE)

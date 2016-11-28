@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.entry.content;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.image.Image;
@@ -10,7 +11,7 @@ import com.kamesuta.mc.signpic.image.ResourceImage;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.state.StateType;
 
-public class Content implements IInitable, ICollectable {
+public class Content implements IInitable, ICollectable, ILoadCancelable {
 	public final ContentId id;
 	public final ContentMeta meta;
 	public final State state;
@@ -49,8 +50,9 @@ public class Content implements IInitable, ICollectable {
 		return this.dirty;
 	}
 
-	public void loadCancel() {
-		this.image.loadCancel();
+	@Override
+	public void cancel() {
+		this.image.cancel();
 	}
 
 	public void markDirty() {
