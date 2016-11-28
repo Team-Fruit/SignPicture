@@ -96,6 +96,8 @@ signpic.gui.settings.sign=Sign Option
 signpic.gui.settings.sign.loadcancel=Cancel Loading
 signpic.gui.settings.sign.reload=Reload
 signpic.gui.settings.sign.redownload=Redownload
+signpic.gui.settings.sign.block=Block
+signpic.gui.settings.sign.unblock=Unblock
 signpic.gui.settings.sign.reloadall=Reload All
 signpic.gui.settings.sign.redownloadall=Redownload All
 ## Update
@@ -143,6 +145,7 @@ signpic.state.format.unsupported=Unsupported. Try a new Version!
 signpic.advmsg.invalidurl=Invalid URL
 signpic.advmsg.loadstopped=Stopped Downloading
 signpic.advmsg.capacityover=CapacityOver
+signpic.advmsg.blocked=Blocked Image
 signpic.advmsg.retryover=MaxRetryCountOver
 signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s

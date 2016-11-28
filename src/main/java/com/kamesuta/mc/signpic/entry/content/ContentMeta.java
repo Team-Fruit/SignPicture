@@ -64,6 +64,16 @@ public class ContentMeta {
 		return this;
 	}
 
+	public boolean isBlocked() {
+		return this.io.get().blocked;
+	}
+
+	public ContentMeta setBlocked(final boolean blocked) {
+		this.io.get().blocked = blocked;
+		ContentMeta.this.io.save();
+		return this;
+	}
+
 	public ContentCacheMeta getCache() {
 		if (this.io.get().cache==null)
 			this.io.get().cache = new Cache();
@@ -163,6 +173,10 @@ public class ContentMeta {
 		 * cache meta data
 		 */
 		public Cache cache;
+		/**
+		 * user block
+		 */
+		public boolean blocked;
 
 		/**
 		 * cache meta data

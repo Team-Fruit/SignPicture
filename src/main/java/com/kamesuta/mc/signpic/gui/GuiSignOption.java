@@ -75,19 +75,20 @@ public class GuiSignOption extends WFrame {
 						super.draw(ev, pgp, p, frame, popacity);
 					}
 				});
-				add(new WPanel(new R(Coord.pleft(.5f), Coord.ptop(.5f), Coord.width(100f), Coord.height(100f))) {
+				add(new WPanel(new R(Coord.pleft(.5f), Coord.ptop(.5f), Coord.width(200f), Coord.height(125f))) {
 					@Override
 					protected void initWidget() {
 						add(new WPanel(new R(Coord.pleft(-.5f), Coord.ptop(-.5f))) {
 							@Override
 							protected void initWidget() {
+								float top = -25f;
 								final float d = 1f;
 								final float n = .1f;
 								final float od = .7f;
 								float i = 0f;
 								final VCommon v1 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o1 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MLabel(new R(Coord.left(v1), Coord.top(0f), Coord.height(20f))) {
+								add(new MLabel(new R(Coord.left(v1), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
 									protected void initOpacity() {
 										setOpacity(o1);
@@ -95,7 +96,7 @@ public class GuiSignOption extends WFrame {
 								}.setText(I18n.format("signpic.gui.settings.sign")));
 								final VCommon v2 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o2 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.right(v2), Coord.top(25f), Coord.height(20f))) {
+								add(new MButton(new R(Coord.right(v2), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
 									protected void initOpacity() {
 										setOpacity(o2);
@@ -112,7 +113,7 @@ public class GuiSignOption extends WFrame {
 								}.setText(I18n.format("signpic.gui.settings.sign.reload")));
 								final VCommon v3 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o3 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.left(v3), Coord.top(50f), Coord.height(20f))) {
+								add(new MButton(new R(Coord.left(v3), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
 									protected void initOpacity() {
 										setOpacity(o3);
@@ -129,7 +130,7 @@ public class GuiSignOption extends WFrame {
 								}.setText(I18n.format("signpic.gui.settings.sign.redownload")));
 								final VCommon v4 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o4 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.right(v4), Coord.top(75f), Coord.height(20f))) {
+								add(new MButton(new R(Coord.right(v4), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
 									protected void initOpacity() {
 										setOpacity(o4);
@@ -144,6 +145,41 @@ public class GuiSignOption extends WFrame {
 										return false;
 									}
 								}.setText(I18n.format("signpic.gui.settings.sign.loadcancel")));
+								final VCommon v5 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+								final VCommon o5 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+								add(new MButton(new R(Coord.right(v5), Coord.top(top += 25f), Coord.height(20f))) {
+									{
+										setBlock();
+									}
+
+									protected void setBlock() {
+										setBlock(!GuiSignOption.this.entry.content().meta.isBlocked());
+									}
+
+									protected void setBlock(final boolean b) {
+										if (b)
+											setText(I18n.format("signpic.gui.settings.sign.block"));
+										else
+											setText(I18n.format("signpic.gui.settings.sign.unblock"));
+									}
+
+									@Override
+									protected void initOpacity() {
+										setOpacity(o5);
+									}
+
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										if (GuiSignOption.this.entry.isValid()) {
+											final boolean blocked = GuiSignOption.this.entry.content().meta.isBlocked();
+											GuiSignOption.this.entry.content().meta.setBlocked(!blocked);
+											setBlock();
+											GuiSignOption.this.entry.content().markDirty();
+											return true;
+										}
+										return false;
+									}
+								});
 							}
 						});
 					}

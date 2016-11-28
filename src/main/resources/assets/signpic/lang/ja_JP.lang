@@ -53,6 +53,8 @@ signpic.gui.settings.sign=看板オプション
 signpic.gui.settings.sign.loadcancel=ロードキャンセル
 signpic.gui.settings.sign.reload=再読み込み
 signpic.gui.settings.sign.redownload=再ダウンロード
+signpic.gui.settings.sign.block=ブロック
+signpic.gui.settings.sign.unblock=ブロック解除
 signpic.gui.settings.sign.reloadall=全再読み込み
 signpic.gui.settings.sign.redownloadall=全再ダウンロード
 ## Update
@@ -98,6 +100,7 @@ signpic.state.format.unsupported=未対応 新しいバージョンをお試し�
 signpic.advmsg.invalidurl=不正なURL
 signpic.advmsg.loadstopped=ロード中止
 signpic.advmsg.capacityover=容量オーバー
+signpic.advmsg.blocked=ブロックした画像
 signpic.advmsg.retryover=最大再試行回数制限オーバー
 signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s

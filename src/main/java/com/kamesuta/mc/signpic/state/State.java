@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.LoadCanceledException;
+import com.kamesuta.mc.signpic.entry.content.ContentBlockedException;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
 import com.kamesuta.mc.signpic.image.InvaildImageException;
@@ -55,15 +56,17 @@ public class State {
 			try {
 				throw throwable;
 			} catch (final URISyntaxException e) {
-				setMessage(I18n.format("signpic.advmsg.invalidurl"));
+				setMessage(I18n.format("signpic.advmsg.invalidurl", e));
 			} catch (final LoadCanceledException e) {
-				setMessage(I18n.format("signpic.advmsg.loadstopped"));
+				setMessage(I18n.format("signpic.advmsg.loadstopped", e));
 			} catch (final RetryCountOverException e) {
-				setMessage(I18n.format("signpic.advmsg.retryover"));
+				setMessage(I18n.format("signpic.advmsg.retryover", e));
 			} catch (final ContentCapacityOverException e) {
-				setMessage(I18n.format("signpic.advmsg.capacityover"));
+				setMessage(I18n.format("signpic.advmsg.capacityover", e));
+			} catch (final ContentBlockedException e) {
+				setMessage(I18n.format("signpic.advmsg.blocked", e));
 			} catch (final InvaildImageException e) {
-				setMessage(I18n.format("signpic.advmsg.invalidimage"));
+				setMessage(I18n.format("signpic.advmsg.invalidimage", e));
 			} catch (final IOException e) {
 				setMessage(I18n.format("signpic.advmsg.ioerror", e));
 			} catch (final Throwable e) {

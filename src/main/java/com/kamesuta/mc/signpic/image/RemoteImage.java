@@ -6,6 +6,7 @@ import java.util.List;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentBlockedException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
@@ -41,6 +42,8 @@ public class RemoteImage extends Image {
 	@Override
 	public void onInit() {
 		try {
+			if (this.content.meta.isBlocked())
+				throw new ContentBlockedException();
 			if (this.content.meta.getCache().isDirty()||!this.content.meta.getCache().isAvailable()||!ContentLocation.cacheLocation(this.content.meta.getCacheID()).exists()) {
 				if (Config.instance.contentMaxRetry>0&&this.content.meta.getTryCount()>Config.instance.contentMaxRetry)
 					throw new RetryCountOverException();
@@ -64,6 +67,8 @@ public class RemoteImage extends Image {
 			} else
 				ContentManager.instance.enqueueAsync(this);
 		} catch (final RetryCountOverException e) {
+			this.content.state.setErrorMessage(e);
+		} catch (final ContentBlockedException e) {
 			this.content.state.setErrorMessage(e);
 		}
 	}
