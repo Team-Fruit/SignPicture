@@ -72,6 +72,7 @@ public class GuiMain extends WFrame {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		OverlayFrame.instance.delegate();
+		setGuiPauseGame(false);
 	}
 
 	@Override
@@ -413,11 +414,6 @@ public class GuiMain extends WFrame {
 		super.onGuiClosed();
 		Keyboard.enableRepeatEvents(false);
 		OverlayFrame.instance.release();
-	}
-
-	@Override
-	public boolean doesGuiPauseGame() {
-		return super.sDoesGuiPauseGame();
 	}
 
 	public static boolean setContentId(final String id) {

@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic.entry.content;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
@@ -17,7 +16,7 @@ import com.kamesuta.mc.signpic.Reference;
 
 public class ContentMeta {
 	private static final Gson gson = new Gson();
-	public static final int FormatVersion = 1;
+	public static final int FormatVersion = 3;
 
 	public final File location;
 	private transient ContentData data;
@@ -42,8 +41,8 @@ public class ContentMeta {
 				if (data!=null&&data.format==FormatVersion)
 					return data;
 			}
-		} catch (final IOException e) {
-			Reference.logger.info("content meta data is broken. aborted.");
+		} catch (final Exception e) {
+			Reference.logger.info("content meta data is broken. aborted. ["+this.location.getName()+"]");
 		} finally {
 			IOUtils.closeQuietly(reader);
 		}
@@ -60,7 +59,7 @@ public class ContentMeta {
 		try {
 			writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(this.location), Charsets.UTF_8));
 			gson.toJson(data, ContentData.class, writer);
-		} catch (final IOException e) {
+		} catch (final Exception e) {
 		} finally {
 			IOUtils.closeQuietly(writer);
 		}

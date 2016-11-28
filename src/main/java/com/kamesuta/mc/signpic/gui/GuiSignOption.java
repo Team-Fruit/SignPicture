@@ -16,6 +16,7 @@ public class GuiSignOption extends WFrame {
 
 	public GuiSignOption(final Entry entry) {
 		this.entry = entry;
+		setGuiPauseGame(false);
 	}
 
 	@Override

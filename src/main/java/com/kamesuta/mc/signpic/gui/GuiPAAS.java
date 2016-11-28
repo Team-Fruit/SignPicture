@@ -31,6 +31,7 @@ public class GuiPAAS extends WFrame {
 
 	public GuiPAAS(final SendPacketTask task) {
 		this.task = task;
+		setGuiPauseGame(false);
 	}
 
 	@Override
@@ -117,11 +118,6 @@ public class GuiPAAS extends WFrame {
 				super.update(ev, pgp, p);
 			}
 		});
-	}
-
-	@Override
-	public boolean doesGuiPauseGame() {
-		return false;
 	}
 
 	@Override

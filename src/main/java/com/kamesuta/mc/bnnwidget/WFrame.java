@@ -18,6 +18,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected WPanel contentPane = new WPanel(new R());
 	protected final WEvent event = new WEvent(this);
 	protected boolean initialized;
+	protected boolean doesPauseGui = true;
 	public float width;
 	public float height;
 
@@ -282,10 +283,15 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 
 	@Override
 	public boolean doesGuiPauseGame() {
-		return this.parent==null||sDoesGuiPauseGame();
+		return this.doesPauseGui||parentDoesGuiPauseGame();
 	}
 
-	protected boolean sDoesGuiPauseGame() {
+	protected boolean parentDoesGuiPauseGame() {
 		return this.parent!=null&&this.parent.doesGuiPauseGame();
+	}
+
+	public WFrame setGuiPauseGame(final boolean doesPause) {
+		this.doesPauseGui = doesPause;
+		return this;
 	}
 }

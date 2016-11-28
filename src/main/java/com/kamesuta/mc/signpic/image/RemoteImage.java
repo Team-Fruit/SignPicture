@@ -32,9 +32,10 @@ public class RemoteImage extends Image {
 			final File local = ContentLocation.cacheLocation(this.content.meta.getData().cache);
 			if (!local.exists()||!this.content.meta.getData().available||this.content.meta.getData().dirty) {
 				this.content.meta.getData().dirty = false;
-				this.content.meta.save();
 				if (this.content.meta.getData().dltry>2)
-					throw new RetryCountOverException("too many retry");
+					throw new RetryCountOverException();
+				this.content.meta.getData().dltry++;
+				this.content.meta.save();
 				this.content.state.setType(StateType.DOWNLOADING);
 				this.content.state.setProgress(new Progress());
 				this.downloader = new ContentDownload(this.content);
