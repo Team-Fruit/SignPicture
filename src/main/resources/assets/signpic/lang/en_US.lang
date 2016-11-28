@@ -91,6 +91,11 @@ signpic.gui.settings.api.upimage.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
 signpic.gui.settings.paas=Prevent Cheat
+### Sign Option
+signpic.gui.settings.sign=Sign Option
+signpic.gui.settings.sign.loadcancel=Cancel Loading
+signpic.gui.settings.sign.reload=Reload
+signpic.gui.settings.sign.redownload=Redownload
 signpic.gui.settings.sign.reloadall=Reload All
 signpic.gui.settings.sign.redownloadall=Redownload All
 ## Update
