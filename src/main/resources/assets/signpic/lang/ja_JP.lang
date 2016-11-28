@@ -48,6 +48,8 @@ signpic.gui.settings.api.upimage.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
 signpic.gui.settings.paas=チート回避
+signpic.gui.settings.sign.reloadall=全再読み込み
+signpic.gui.settings.sign.redownloadall=全再ダウンロード
 ## Update
 signpic.gui.update.message=SignPictureの新しいバージョンがリリースされています！こちらをクリックしてアップデートして下さい。
 signpic.gui.update.message.changelog=%s

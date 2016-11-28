@@ -33,6 +33,7 @@ import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Apis.Setting;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -210,7 +211,7 @@ public class GuiSettings extends WPanel {
 										add(this.box);
 									}
 								});
-								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
+								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected void initWidget() {
 										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
@@ -231,6 +232,21 @@ public class GuiSettings extends WPanel {
 										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
 									}
 								});
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+40), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										ContentManager.instance.reloadAll();
+										return true;
+									}
+								}.setText(I18n.format("signpic.gui.settings.sign.reloadall")));
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										ContentManager.instance.redownloadAll();
+										OverlayFrame.instance.pane.task.show(2f);
+										return true;
+									}
+								}.setText(I18n.format("signpic.gui.settings.sign.redownloadall")));
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {

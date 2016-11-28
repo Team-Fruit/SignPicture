@@ -34,6 +34,12 @@ public class GuiTask extends WPanel {
 		super(position);
 	}
 
+	protected Timer showtime = new Timer();
+
+	public void show(final float j) {
+		this.showtime.set(-j);
+	}
+
 	protected boolean oshow;
 	protected VMotion oright = V.am(0f);
 
@@ -46,11 +52,6 @@ public class GuiTask extends WPanel {
 			@Override
 			protected void initWidget() {
 				add(new WPanel(new R(Coord.right(V.per(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
-					protected Timer showtime = new Timer();
-
-					public void show(final float j) {
-						this.showtime.set(-j);
-					}
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
@@ -65,8 +66,8 @@ public class GuiTask extends WPanel {
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
 						if (a.pointInside(p))
-							this.showtime.set(-1f);
-						final boolean b = this.showtime.getTime()<0f;
+							GuiTask.this.showtime.set(-1f);
+						final boolean b = GuiTask.this.showtime.getTime()<0f;
 						if (b) {
 							if (!GuiTask.this.show) {
 								GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 1f)).start();

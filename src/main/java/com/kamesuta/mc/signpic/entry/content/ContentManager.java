@@ -102,6 +102,20 @@ public class ContentManager implements ITickEntry {
 		}
 	}
 
+	public void reloadAll() {
+		for (final Iterator<Entry<ContentId, ContentSlot>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
+			final Entry<ContentId, ContentSlot> entry = itr.next();
+			entry.getValue().get().markDirty();
+		}
+	}
+
+	public void redownloadAll() {
+		for (final Iterator<Entry<ContentId, ContentSlot>> itr = this.registry.entrySet().iterator(); itr.hasNext();) {
+			final Entry<ContentId, ContentSlot> entry = itr.next();
+			entry.getValue().get().markDirtyWithCache();
+		}
+	}
+
 	public static class ContentSlot extends EntrySlot<Content> implements IInitable, ICollectable {
 		public ContentSlot(final Content entry) {
 			super(entry);
