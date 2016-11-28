@@ -72,6 +72,7 @@ public final class Config extends Configuration {
 		addCustomCategoryComment("Entry", "Entry(sign text parse cache) Management");
 
 		addCustomCategoryComment("Content", "Content Data Management");
+		this.contentDLTimedout = addComment(get("Content", "DownloadTimedout", this.contentDLTimedout), "milliseconds of max waiting response time. 0 is infinity.").setRequiresMcRestart(true).getInt(this.contentDLTimedout);
 
 		this.informationNotice = get("Version", "Notice", this.informationNotice).setRequiresMcRestart(true).getBoolean(this.informationNotice);
 
@@ -104,7 +105,6 @@ public final class Config extends Configuration {
 		this.contentGCtick = addComment(get("Content", "GCDelayTick", this.contentGCtick), "delay ticks of Garbage Collection").getInt(this.contentGCtick);
 		this.contentLoadTick = addComment(get("Content", "LoadStartIntervalTick", this.contentLoadTick), "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt(this.contentLoadTick);
 		this.contentSyncTick = addComment(get("Content", "SyncLoadIntervalTick", this.contentSyncTick), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt(this.contentSyncTick);
-		this.contentDLTimedout = addComment(get("Content", "DownloadTimedout", this.contentDLTimedout), "milliseconds of max waiting response time. 0 is infinity.").getInt(this.contentDLTimedout);
 		this.contentMaxRetry = addComment(get("Content", "MaxRetry", this.contentMaxRetry), "limit of retry count. 0 is infinity.").getInt(this.contentMaxRetry);
 
 		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
