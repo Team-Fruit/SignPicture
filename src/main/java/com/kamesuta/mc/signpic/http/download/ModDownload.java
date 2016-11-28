@@ -18,9 +18,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.http.Communicate;
-import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -77,7 +77,7 @@ public class ModDownload extends Communicate implements Progressable {
 				protected void afterWrite(final int n) throws IOException {
 					if (ModDownload.this.canceled) {
 						req.abort();
-						throw new CommunicateCanceledException();
+						throw new LoadCanceledException();
 					}
 					ModDownload.this.status.getProgress().setDone(getByteCount());
 				}

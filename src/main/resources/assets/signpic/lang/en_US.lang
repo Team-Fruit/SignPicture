@@ -136,7 +136,7 @@ signpic.state.format.unsupported=Unsupported. Try a new Version!
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=Invalid URL
-signpic.advmsg.dlstopped=Stopped Downloading
+signpic.advmsg.loadstopped=Stopped Downloading
 signpic.advmsg.capacityover=CapacityOver
 signpic.advmsg.retryover=MaxRetryCountOver
 signpic.advmsg.invalidimage=Invalid Image

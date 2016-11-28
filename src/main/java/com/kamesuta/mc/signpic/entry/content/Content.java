@@ -49,6 +49,10 @@ public class Content implements IInitable, ICollectable {
 		return this.dirty;
 	}
 
+	public void loadCancel() {
+		this.image.loadCancel();
+	}
+
 	public void markDirty() {
 		this.dirty = true;
 	}

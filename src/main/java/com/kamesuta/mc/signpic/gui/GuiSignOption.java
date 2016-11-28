@@ -51,6 +51,16 @@ public class GuiSignOption extends WFrame {
 										return false;
 									}
 								}.setText("Cache Reload"));
+								add(new MButton(new R(Coord.top(75f), Coord.height(20f))) {
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										if (GuiSignOption.this.entry.isValid()) {
+											GuiSignOption.this.entry.content().loadCancel();
+											return true;
+										}
+										return false;
+									}
+								}.setText("Load Cancel"));
 							}
 						});
 					}

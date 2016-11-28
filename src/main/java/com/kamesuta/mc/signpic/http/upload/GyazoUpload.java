@@ -20,11 +20,11 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.Communicate;
-import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
@@ -70,7 +70,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 				protected void beforeRead(final int n) throws IOException {
 					if (GyazoUpload.this.canceled) {
 						httppost.abort();
-						throw new CommunicateCanceledException();
+						throw new LoadCanceledException();
 					}
 				}
 

@@ -4,12 +4,12 @@ import java.io.File;
 import java.util.List;
 
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
 import com.kamesuta.mc.signpic.http.Communicator;
-import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
@@ -19,13 +19,24 @@ import com.kamesuta.mc.signpic.state.StateType;
 public class RemoteImage extends Image {
 	protected RemoteImageTexture texture;
 	protected File local;
-	private ICommunicate downloader;
+	private ContentDownload downloader;
+	private ImageIOLoader ioloader;
+	private boolean canceled;
 
 	public RemoteImage(final Content content) {
 		super(content);
 	}
 
 	private int processing = 0;
+
+	@Override
+	public void loadCancel() {
+		if (this.downloader!=null)
+			this.downloader.cancel();
+		if (this.ioloader!=null)
+			this.ioloader.cancel();
+		this.canceled = true;
+	}
 
 	@Override
 	public void onInit() {
@@ -60,7 +71,8 @@ public class RemoteImage extends Image {
 	@Override
 	public void onAsyncProcess() {
 		try {
-			this.texture = new ImageIOLoader(this.content, new ImageIOLoader.InputFactory.ContentInputFactory(this.content)).load();
+			this.ioloader = new ImageIOLoader(this.content, new ImageIOLoader.InputFactory.ContentInputFactory(this.content));
+			this.texture = this.ioloader.load();
 			this.content.state.setType(StateType.LOADING);
 			this.content.state.setProgress(new Progress());
 			ContentManager.instance.enqueueDivision(this);
@@ -72,7 +84,10 @@ public class RemoteImage extends Image {
 	@Override
 	public boolean onDivisionProcess() {
 		final List<DynamicImageTexture> texs = this.texture.getAll();
-		if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
+		if (this.canceled) {
+			this.content.state.setErrorMessage(new LoadCanceledException());
+			return true;
+		} else if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
 			final DynamicImageTexture tex = texs.get(this.processing);
 			tex.load();
 			this.processing++;

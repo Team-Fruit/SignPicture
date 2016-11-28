@@ -16,12 +16,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.Communicate;
-import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -29,8 +29,8 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownload extends Communicate implements Progressable {
-	protected final Content content;
-	protected boolean canceled;
+	private final Content content;
+	private boolean canceled;
 
 	public ContentDownload(final Content content) {
 		this.content = content;
@@ -70,7 +70,7 @@ public class ContentDownload extends Communicate implements Progressable {
 				protected void afterWrite(final int n) throws IOException {
 					if (ContentDownload.this.canceled) {
 						req.abort();
-						throw new CommunicateCanceledException();
+						throw new LoadCanceledException();
 					}
 					final long bcount = getByteCount();
 					if (max>0&&bcount>max) {

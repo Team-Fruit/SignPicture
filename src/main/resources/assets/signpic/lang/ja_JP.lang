@@ -91,7 +91,7 @@ signpic.state.format.unsupported=未対応 新しいバージョンをお試し�
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=不正なURL
-signpic.advmsg.dlstopped=ダウンロード中止
+signpic.advmsg.loadstopped=ロード中止
 signpic.advmsg.capacityover=容量オーバー
 signpic.advmsg.retryover=最大再試行回数制限オーバー
 signpic.advmsg.invalidimage=不正な画像

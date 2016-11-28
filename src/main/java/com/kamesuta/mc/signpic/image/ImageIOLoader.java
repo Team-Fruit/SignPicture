@@ -18,6 +18,7 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.commons.io.IOUtils;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
@@ -38,6 +39,7 @@ public class ImageIOLoader {
 
 	protected Content content;
 	protected InputFactory input;
+	private boolean canceled;
 
 	public ImageIOLoader(final Content content, final InputFactory inputFactory) throws IOException {
 		this.content = content;
@@ -79,6 +81,8 @@ public class ImageIOLoader {
 			final int frameCount = gifImage.getFrameCount();
 			this.content.state.getProgress().overall = frameCount;
 			for (int i = 0; i<frameCount; i++) {
+				if (this.canceled)
+					throw new LoadCanceledException();
 				final BufferedImage image = gifImage.getFrame(i);
 				final int delay = gifImage.getDelay(i);
 				final DynamicImageTexture texture = new DynamicImageTexture(createResizedImage(image, newsize), (float) delay/100);
@@ -151,5 +155,9 @@ public class ImageIOLoader {
 				return manager.getResource(location).getInputStream();
 			}
 		}
+	}
+
+	public void cancel() {
+		this.canceled = true;
 	}
 }
