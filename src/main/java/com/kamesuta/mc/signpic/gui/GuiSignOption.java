@@ -33,6 +33,7 @@ public class GuiSignOption extends WFrame {
 	protected void initWidget() {
 		add(new WPanel(new R()) {
 			protected VMotion opa;
+			protected VMotion opac;
 
 			@Override
 			protected void initOpacity() {
@@ -45,25 +46,29 @@ public class GuiSignOption extends WFrame {
 			}
 
 			@Override
+			public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+				return this.opac.isFinished()&&super.mouseClicked(ev, pgp, p, button);
+			}
+
+			@Override
 			protected void initWidget() {
 				add(new WBase(new R()) {
-					protected VMotion opac;
 
 					@Override
 					protected void initOpacity() {
-						setOpacity(this.opac = V.pm(0f).add(Easings.easeLinear.move(.5f, .5f)).start());
+						setOpacity(opac = V.pm(0f).add(Easings.easeLinear.move(.5f, .5f)).start());
 					}
 
 					@Override
 					public boolean onCloseRequest() {
-						this.opac.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
+						opac.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
 						opa.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
 						return false;
 					}
 
 					@Override
 					public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-						return this.opac.isFinished();
+						return opac.isFinished();
 					}
 
 					@Override
