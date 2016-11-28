@@ -69,7 +69,7 @@ public class CurrentMode {
 	}
 
 	public static enum Mode {
-		PLACE("signpic.over.mode.place"), LOAD("signpic.over.mode.load"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
+		PLACE("signpic.over.mode.place"), OPTION("signpic.over.mode.option"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
 		;
 
 		public final String message;
@@ -80,7 +80,7 @@ public class CurrentMode {
 	}
 
 	public static enum State {
-		CONTINUE, SEE, PREVIEW, LOAD_CONTENT, LOAD_META,
+		CONTINUE, SEE, PREVIEW,
 		;
 	}
 }

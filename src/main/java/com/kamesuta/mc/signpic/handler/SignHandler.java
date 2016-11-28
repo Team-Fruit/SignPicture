@@ -14,7 +14,6 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
@@ -187,7 +186,7 @@ public class SignHandler {
 				event.setCanceled(true);
 				CurrentMode.instance.setMode();
 				Client.openEditor();
-			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
+			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.OPTION)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				Entry entry = null;
 				if (tilesign!=null)
@@ -195,24 +194,10 @@ public class SignHandler {
 				else if (handEntry!=null)
 					entry = handEntry.entry();
 				if (entry!=null&&entry.isValid()) {
-					final Entry old = CurrentMode.instance.getEntryId().entry();
-					final EntryIdBuilder idb = new EntryIdBuilder();
-					idb.setURI(CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT) ? entry.contentId.getID() : old.contentId.getID());
-					idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.getMeta() : old.getMeta());
-					CurrentMode.instance.setEntryId(idb.build());
 					event.setCanceled(true);
-					Client.openEditor();
+					Client.mc.displayGuiScreen(new GuiSignOption(entry));
 					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 						CurrentMode.instance.setMode();
-				}
-			} else {
-				final TileEntitySign tilesign = Client.getTileSignLooking();
-				if (tilesign!=null) {
-					final Entry entry = EntryId.fromTile(tilesign).entry();
-					if (entry.isValid()) {
-						Client.mc.displayGuiScreen(new GuiSignOption(entry));
-						event.setCanceled(true);
-					}
 				}
 			}
 		}

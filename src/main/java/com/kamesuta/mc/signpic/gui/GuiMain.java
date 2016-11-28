@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -15,7 +14,6 @@ import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.bnnwidget.component.MSelectButton;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
@@ -278,47 +276,19 @@ public class GuiMain extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 							}
 						}.setText(I18n.format("signpic.gui.editor.continue")));
-						add(new MSelectButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), 15) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected void initWidget() {
-								setSelector(new ButtonSelector() {
-									{
-										setList(Lists.<MButton> newArrayList(
-												new LoadButton(new R()) {
-													@Override
-													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, true);
-														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-														requestClose();
-														return true;
-													}
-												}.setText(I18n.format("signpic.gui.editor.load")),
-												new LoadButton(new R()) {
-													@Override
-													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, false);
-														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-														requestClose();
-														return true;
-													}
-												}.setText(I18n.format("signpic.gui.editor.load.content")),
-												new LoadButton(new R()) {
-													@Override
-													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, false);
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, true);
-														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-														requestClose();
-														return true;
-													}
-												}.setText(I18n.format("signpic.gui.editor.load.meta"))));
-									}
-								});
-								super.initWidget();
+							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								CurrentMode.instance.setMode(CurrentMode.Mode.OPTION);
+								requestClose();
+								return true;
 							}
-						});
+
+							@Override
+							public boolean isHighlight() {
+								return CurrentMode.instance.isMode(CurrentMode.Mode.OPTION);
+							}
+						}.setText(I18n.format("signpic.gui.editor.option")));
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -427,25 +397,6 @@ public class GuiMain extends WFrame {
 			signbuilder.setURI(id);
 			CurrentMode.instance.setEntryId(signbuilder.build());
 			return false;
-		}
-	}
-
-	public abstract class LoadButton extends FunnyButton {
-		public LoadButton(final R position) {
-			super(position);
-		}
-
-		@Override
-		protected abstract boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button);
-
-		@Override
-		public boolean isHighlight() {
-			return CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
-		}
-
-		@Override
-		public boolean isEnabled() {
-			return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
 		}
 	}
 

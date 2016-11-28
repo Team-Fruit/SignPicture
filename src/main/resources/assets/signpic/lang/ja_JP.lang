@@ -1,7 +1,7 @@
 # Overlay
 ## Overlay
 signpic.over.mode.place=看板を置いて画像を適用
-signpic.over.mode.load=画像看板をクリックしてロード
+signpic.over.mode.option=画像看板をクリックして詳細設定を表示
 signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位置を設定
 
 # Chat
@@ -23,9 +23,7 @@ signpic.item.sign.desc.named.raw=§7名前: [%s§7]
 signpic.gui.editor.see=実体表示
 signpic.gui.editor.preview=プレビュー
 signpic.gui.editor.continue=連続
-signpic.gui.editor.load=ロード
-signpic.gui.editor.load.content=URL
-signpic.gui.editor.load.meta=メタ情報
+signpic.gui.editor.option=詳細設定
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.file=アップロード
@@ -50,6 +48,9 @@ signpic.gui.settings.config=コンフィグ
 signpic.gui.settings.paas=チート回避
 ### Sign Option
 signpic.gui.settings.sign=看板オプション
+signpic.gui.settings.sign.load=URLとメタ情報をロード
+signpic.gui.settings.sign.load.content=URLをロード
+signpic.gui.settings.sign.load.meta=メタ情報をロード
 signpic.gui.settings.sign.loadcancel=ロードキャンセル
 signpic.gui.settings.sign.reload=再読み込み
 signpic.gui.settings.sign.redownload=再ダウンロード

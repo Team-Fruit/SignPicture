@@ -1,7 +1,7 @@
 # Overlay
 ## Overlay
 signpic.over.mode.place=Place Sign and Apply Image
-signpic.over.mode.load=Click Sign Picture and Load Image
+signpic.over.mode.option=Click Sign Picture and Open Sign Option GUI.
 signpic.over.mode.setpreview=Click Block and Set Preview Location
 
 ## F3
@@ -37,9 +37,7 @@ signpic.key.gui=Open GUI
 signpic.gui.editor.see=View Sign
 signpic.gui.editor.preview=Preview
 signpic.gui.editor.continue=Continue
-signpic.gui.editor.load=Load
-signpic.gui.editor.load.content=URL
-signpic.gui.editor.load.meta=Meta
+signpic.gui.editor.option=Option
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.file=Upload
@@ -93,6 +91,9 @@ signpic.gui.settings.config=Config
 signpic.gui.settings.paas=Prevent Cheat
 ### Sign Option
 signpic.gui.settings.sign=Sign Option
+signpic.gui.settings.sign.load=Load URL and Meta
+signpic.gui.settings.sign.load.content=Load URL
+signpic.gui.settings.sign.load.meta=Load Meta
 signpic.gui.settings.sign.loadcancel=Cancel Loading
 signpic.gui.settings.sign.reload=Reload
 signpic.gui.settings.sign.redownload=Redownload
