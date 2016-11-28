@@ -30,8 +30,7 @@ public class RemoteImage extends Image {
 	@Override
 	public void onInit() {
 		try {
-			final File local = ContentLocation.cacheLocation(this.content.meta.getCacheID());
-			if (!local.exists()||!this.content.meta.getCache().isAvailable()||this.content.meta.getCache().isDirty()) {
+			if (this.content.meta.getCache().isDirty()||!this.content.meta.getCache().isAvailable()||!ContentLocation.cacheLocation(this.content.meta.getCacheID()).exists()) {
 				if (Config.instance.contentMaxRetry>0&&this.content.meta.getTryCount()>Config.instance.contentMaxRetry)
 					throw new RetryCountOverException();
 				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);

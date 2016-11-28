@@ -124,7 +124,7 @@ public class ContentMeta {
 		}
 
 		public boolean isAvailable() {
-			return this.cache.dirty;
+			return this.cache.available;
 		}
 
 		public ContentCacheMeta setAvailable(final boolean available) {

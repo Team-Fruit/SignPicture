@@ -30,7 +30,7 @@ public final class Config extends Configuration {
 	public int contentGCtick = 15*20;
 	public int contentLoadTick = 0;
 	public int contentSyncTick = 0;
-	public int contentDLTimedout = 15000;
+	public int communicateDLTimedout = 15000;
 	public int contentMaxRetry = 3;
 
 	public boolean informationNotice = true;
@@ -72,7 +72,9 @@ public final class Config extends Configuration {
 		addCustomCategoryComment("Entry", "Entry(sign text parse cache) Management");
 
 		addCustomCategoryComment("Content", "Content Data Management");
-		this.contentDLTimedout = addComment(get("Content", "DownloadTimedout", this.contentDLTimedout), "milliseconds of max waiting response time. 0 is infinity.").setRequiresMcRestart(true).getInt(this.contentDLTimedout);
+
+		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
+		this.communicateDLTimedout = addComment(get("Http", "DownloadTimedout", this.communicateDLTimedout), "milliseconds of max waiting response time. 0 is infinity.").setRequiresMcRestart(true).getInt(this.communicateDLTimedout);
 
 		this.informationNotice = get("Version", "Notice", this.informationNotice).setRequiresMcRestart(true).getBoolean(this.informationNotice);
 
@@ -97,8 +99,6 @@ public final class Config extends Configuration {
 		this.signTooltip = addComment(get("General", "SignToolTip", this.signTooltip), "add tooltip line to sign").getBoolean(this.signTooltip);
 
 		this.entryGCtick = get("Entry", "GCDelayTick", this.entryGCtick).getInt(this.entryGCtick);
-
-		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
 
 		this.contentLoadThreads = addComment(get("Content", "LoadThreads", this.contentLoadThreads), "parallel processing number such as Image Loading").setRequiresMcRestart(true).getInt(this.contentLoadThreads);
 		this.contentMaxByte = addComment(get("Content", "MaxByte", this.contentMaxByte), "limit of size before downloading. 0 is infinity.").getInt(this.contentMaxByte);
