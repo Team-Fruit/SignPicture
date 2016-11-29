@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 
 public class ImageMeta {
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
@@ -41,6 +42,7 @@ public class ImageMeta {
 
 	public ImageMeta parse(final String src) {
 		boolean b = true;
+		Validate.notNull(src);
 		final Matcher m = p.matcher(src);
 		while (m.find()) {
 			final int gcount = m.groupCount();

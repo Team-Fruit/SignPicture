@@ -62,7 +62,7 @@ public class RemoteImage extends Image {
 					public void onDone(final ICommunicateResponse res) {
 						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
 						if (res.isSuccess())
-							ContentManager.instance.enqueueAsync(RemoteImage.this);
+							onDoneInit();
 						else if (res.getError()!=null)
 							RemoteImage.this.content.state.setErrorMessage(res.getError());
 						RemoteImage.this.downloader = null;
@@ -70,12 +70,17 @@ public class RemoteImage extends Image {
 				});
 				Communicator.instance.communicate(this.downloader);
 			} else
-				ContentManager.instance.enqueueAsync(this);
+				onDoneInit();
 		} catch (final RetryCountOverException e) {
 			this.content.state.setErrorMessage(e);
 		} catch (final ContentBlockedException e) {
 			this.content.state.setErrorMessage(e);
 		}
+	}
+
+	private void onDoneInit() {
+		this.content.imagemeta = this.content.meta.getImageMeta();
+		ContentManager.instance.enqueueAsync(this);
 	}
 
 	@Override
@@ -85,10 +90,14 @@ public class RemoteImage extends Image {
 			this.texture = this.ioloader.load();
 			this.content.state.setType(StateType.LOADING);
 			this.content.state.setProgress(new Progress());
-			ContentManager.instance.enqueueDivision(this);
+			onDoneAsyncProcess();
 		} catch (final Throwable e) {
 			this.content.state.setErrorMessage(e);
 		}
+	}
+
+	private void onDoneAsyncProcess() {
+		ContentManager.instance.enqueueDivision(this);
 	}
 
 	@Override
@@ -104,13 +113,17 @@ public class RemoteImage extends Image {
 			this.content.state.getProgress().done = this.processing;
 			return false;
 		} else {
-			this.content.state.setType(StateType.AVAILABLE);
-			this.content.state.getProgress().done = this.content.state.getProgress().overall;
-			this.content.meta.setTryCount(0);
-			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.content.meta.getCacheID()));
-			cachemeta.setAvailable(true);
+			onDoneDivisionProcess();
 			return true;
 		}
+	}
+
+	private void onDoneDivisionProcess() {
+		this.content.state.setType(StateType.AVAILABLE);
+		this.content.state.getProgress().done = this.content.state.getProgress().overall;
+		this.content.meta.setTryCount(0);
+		final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.content.meta.getCacheID()));
+		cachemeta.setAvailable(true);
 	}
 
 	@Override

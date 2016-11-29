@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.collect.Lists;
 
 public class URIStacks {
@@ -26,6 +28,18 @@ public class URIStacks {
 	 */
 	public List<URI> getRedirectTrace() {
 		return this.uristack;
+	}
+
+	public String getMetaString() {
+		final StringBuilder stb = new StringBuilder();
+		for (final URI uri : this.uristack) {
+			final String frag = uri.getFragment();
+			final String[] metas = StringUtils.substringsBetween(frag, "@[", "]");
+			if (metas!=null)
+				for (final String meta : metas)
+					stb.append(meta);
+		}
+		return stb.toString();
 	}
 
 	public static URIStacks from(final URI base, final List<URI> redirects) {

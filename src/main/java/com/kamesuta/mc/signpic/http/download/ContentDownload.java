@@ -60,11 +60,13 @@ public class ContentDownload extends Communicate implements Progressable {
 			final List<URI> redirects = context.getRedirectLocations();
 			final URIStacks uristacks = URIStacks.from(base, redirects);
 			this.content.meta.setURLStack(uristacks);
+			this.content.meta.setImageMeta(uristacks.getMetaString());
 
 			final String end = uristacks.getEndPoint().toString();
 			final String endid = ContentLocation.hash(end);
 			this.content.meta.setCacheID(endid);
 			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(endid));
+			cachemeta.setDirty(false);
 
 			final File cachefile = ContentLocation.cacheLocation(endid);
 			if (cachemeta.isAvailable()&&!cachemeta.isDirty()&&cachefile.exists()) {

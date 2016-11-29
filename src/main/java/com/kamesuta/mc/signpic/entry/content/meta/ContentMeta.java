@@ -34,6 +34,16 @@ public class ContentMeta {
 		return this;
 	}
 
+	public String getImageMeta() {
+		return this.metaio.get().imagemeta;
+	}
+
+	public ContentMeta setImageMeta(final String imagemeta) {
+		this.metaio.get().imagemeta = imagemeta;
+		this.metaio.save();
+		return this;
+	}
+
 	public String getMetaID() {
 		return this.metaio.get().metaid;
 	}
@@ -91,6 +101,10 @@ public class ContentMeta {
 		 * content URL Stacks
 		 */
 		public URIStacks urlstack;
+		/**
+		 * image meta data
+		 */
+		public String imagemeta;
 		/**
 		 * meta ID
 		 */

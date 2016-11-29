@@ -34,13 +34,12 @@ public class Entry {
 	}
 
 	public ImageMeta getMeta() {
-		if (this.contentId!=null) {
-			final String newmeta = content().imagemeta;
+		final String newmeta = content().imagemeta;
+		if (this.contentId!=null&&newmeta!=null)
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
 				this.meta = this.id.getMeta().parse(newmeta);
 				this.cmetacache = newmeta;
 			}
-		}
 		if (this.meta==null)
 			this.meta = this.id.getMeta();
 		return this.meta;
