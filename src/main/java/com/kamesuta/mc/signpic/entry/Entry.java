@@ -37,7 +37,9 @@ public class Entry {
 		final String newmeta = content().imagemeta;
 		if (this.contentId!=null&&newmeta!=null)
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
-				this.meta = this.id.getMeta().parse(newmeta);
+				final String meta1 = this.id.getMetaSource();
+				if (meta1!=null)
+					this.meta = new ImageMeta().init(newmeta).parse(meta1);
 				this.cmetacache = newmeta;
 			}
 		if (this.meta==null)
