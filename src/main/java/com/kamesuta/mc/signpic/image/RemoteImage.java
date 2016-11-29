@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.image;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,6 @@ import com.kamesuta.mc.signpic.state.StateType;
 
 public class RemoteImage extends Image {
 	protected RemoteImageTexture texture;
-	protected File local;
 	private ContentDownload downloader;
 	private ImageIOLoader ioloader;
 	private boolean canceled;
@@ -137,10 +135,7 @@ public class RemoteImage extends Image {
 
 	@Override
 	public String getLocal() {
-		if (this.local!=null)
-			return "File:"+this.local.getName();
-		else
-			return "None";
+		return String.format("RemoteImage:{Meta:%s,Cache:%s}", this.content.meta.getMetaID(), this.content.meta.getCacheID());
 	}
 
 	@Override
