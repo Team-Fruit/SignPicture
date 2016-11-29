@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.image;
 import java.io.File;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -10,6 +12,7 @@ import com.kamesuta.mc.signpic.entry.content.ContentBlockedException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
+import com.kamesuta.mc.signpic.entry.content.meta.ContentCache;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
@@ -44,11 +47,15 @@ public class RemoteImage extends Image {
 		try {
 			if (this.content.meta.isBlocked())
 				throw new ContentBlockedException();
-			if (this.content.meta.getCache().isDirty()||!this.content.meta.getCache().isAvailable()||!ContentLocation.cacheLocation(this.content.meta.getCacheID()).exists()) {
+
+			final String cacheid = this.content.meta.getCacheID();
+			ContentCache cachemeta = null;
+			if (!StringUtils.isEmpty(cacheid))
+				cachemeta = new ContentCache(ContentLocation.cachemetaLocation(cacheid));
+			if (cachemeta==null||cachemeta.isDirty()||!cachemeta.isAvailable()||!ContentLocation.cacheLocation(cacheid).exists()) {
 				if (Config.instance.contentMaxRetry>0&&this.content.meta.getTryCount()>Config.instance.contentMaxRetry)
 					throw new RetryCountOverException();
 				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);
-				this.content.meta.resetCache();
 				this.content.state.setType(StateType.DOWNLOADING);
 				this.content.state.setProgress(new Progress());
 				this.downloader = new ContentDownload(this.content);
@@ -102,7 +109,8 @@ public class RemoteImage extends Image {
 			this.content.state.setType(StateType.AVAILABLE);
 			this.content.state.getProgress().done = this.content.state.getProgress().overall;
 			this.content.meta.setTryCount(0);
-			this.content.meta.getCache().setAvailable(true);
+			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.content.meta.getCacheID()));
+			cachemeta.setAvailable(true);
 			return true;
 		}
 	}

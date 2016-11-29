@@ -21,6 +21,10 @@ public class ContentLocation {
 		return new File(Client.location.metaDir, name+".json");
 	}
 
+	public static File cachemetaLocation(final String name) {
+		return new File(Client.location.cacheDir, name+".json");
+	}
+
 	public static File cacheLocation(final String name) {
 		return new File(Client.location.cacheDir, name);
 	}

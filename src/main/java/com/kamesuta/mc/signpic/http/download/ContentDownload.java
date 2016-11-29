@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URI;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -13,14 +15,17 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.ContentType;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
+import com.kamesuta.mc.signpic.entry.content.meta.ContentCache;
+import com.kamesuta.mc.signpic.entry.content.meta.URIStacks;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progress;
@@ -47,11 +52,29 @@ public class ContentDownload extends Communicate implements Progressable {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
-			final HttpUriRequest req = new HttpGet(ContentLocation.remoteLocation(this.content.meta.getURL()));
-			final HttpResponse response = Downloader.downloader.client.execute(req);
+			final URI base = ContentLocation.remoteLocation(this.content.meta.getURL());
+			final HttpUriRequest req = new HttpGet(base);
+			final HttpClientContext context = HttpClientContext.create();
+			final HttpResponse response = Downloader.downloader.client.execute(req, context);
+
+			final List<URI> redirects = context.getRedirectLocations();
+			final URIStacks uristacks = URIStacks.from(base, redirects);
+			this.content.meta.setURLStack(uristacks);
+
+			final String end = uristacks.getEndPoint().toString();
+			final String endid = ContentLocation.hash(end);
+			this.content.meta.setCacheID(endid);
+			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(endid));
+
+			final File cachefile = ContentLocation.cacheLocation(endid);
+			if (cachemeta.isAvailable()&&!cachemeta.isDirty()&&cachefile.exists()) {
+				req.abort();
+				onDone(new CommunicateResponse(true, null));
+				return;
+			}
 
 			final HttpEntity entity = response.getEntity();
-			this.content.meta.getCache().setMime(ContentType.getOrDefault(entity).getMimeType());
+			cachemeta.setMime(ContentType.getOrDefault(entity).getMimeType());
 
 			tmp = Client.location.createCache("content");
 
@@ -83,11 +106,10 @@ public class ContentDownload extends Communicate implements Progressable {
 			FileUtils.deleteQuietly(tmp);
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
-			final File local = ContentLocation.cacheLocation(this.content.meta.getCacheID());
-			FileUtils.deleteQuietly(local);
-			FileUtils.moveFile(tmp, local);
-			this.content.meta.getCache().setLastUpdated(System.currentTimeMillis());
-			this.content.meta.getCache().setSize(local.length());
+			FileUtils.deleteQuietly(cachefile);
+			FileUtils.moveFile(tmp, cachefile);
+			cachemeta.setLastUpdated(System.currentTimeMillis());
+			cachemeta.setSize(cachefile.length());
 			onDone(new CommunicateResponse(true, null));
 		} catch (final Exception e) {
 			onDone(new CommunicateResponse(false, e));
