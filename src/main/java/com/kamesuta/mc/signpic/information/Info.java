@@ -48,12 +48,21 @@ public class Info {
 
 		public static class Shortener {
 			public Bitly bitly;
+			public Googl googl;
 
 			public static class Bitly {
 				public List<Config> config;
 
 				public static class Config {
-					public String token;
+					public String key;
+				}
+			}
+
+			public static class Googl {
+				public List<Config> config;
+
+				public static class Config {
+					public String key;
 				}
 			}
 		}

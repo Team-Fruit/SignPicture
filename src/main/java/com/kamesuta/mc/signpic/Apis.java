@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.http.shortening.BitlyShortener;
+import com.kamesuta.mc.signpic.http.shortening.GooglShortener;
 import com.kamesuta.mc.signpic.http.shortening.IShortener;
 import com.kamesuta.mc.signpic.http.shortening.ShorteningRequest;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
@@ -221,7 +222,7 @@ public class Apis {
 					configs = Informations.instance.getSource().info.apis.shortener.bitly.config;
 					for (final Info.Api.Shortener.Bitly.Config config : configs)
 						if (config!=null)
-							keys.add(config.token);
+							keys.add(config.key);
 				} catch (final NullPointerException e) {
 				}
 				return keys;
@@ -230,6 +231,26 @@ public class Apis {
 			@Override
 			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
 				return new BitlyShortener(upload, key);
+			}
+		});
+		registerURLShortener("Googl", new URLShortenerFactory() {
+			@Override
+			public Set<String> keys() {
+				final Set<String> keys = Sets.newHashSet();
+				List<Info.Api.Shortener.Googl.Config> configs = null;
+				try {
+					configs = Informations.instance.getSource().info.apis.shortener.googl.config;
+					for (final Info.Api.Shortener.Googl.Config config : configs)
+						if (config!=null)
+							keys.add(config.key);
+				} catch (final NullPointerException e) {
+				}
+				return keys;
+			}
+
+			@Override
+			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
+				return new GooglShortener(upload, key);
 			}
 		});
 		final Pattern p = Pattern.compile("[^\\w]");
