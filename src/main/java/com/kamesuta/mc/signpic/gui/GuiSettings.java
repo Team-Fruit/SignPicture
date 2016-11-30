@@ -29,8 +29,11 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
+import com.kamesuta.mc.signpic.Apis.ApiFactory;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
+import com.kamesuta.mc.signpic.Apis.MapSetting;
 import com.kamesuta.mc.signpic.Apis.Setting;
+import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -139,78 +142,8 @@ public class GuiSettings extends WPanel {
 										drawTexture(a);
 									}
 								});
-								add(new WPanel(new R(Coord.left(5), Coord.width(200), Coord.top(33), Coord.height(82))) {
-									@Override
-									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-										final Area a = getGuiPosition(pgp);
-										RenderHelper.startShape();
-										OpenGL.glColor4f(0f, 0f, 0f, .2f);
-										OpenGL.glLineWidth(.5f);
-										draw(a, GL_LINE_LOOP);
-										super.draw(ev, pgp, p, frame, opacity);
-									}
-
-									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
-										@Override
-										protected void initWidget() {
-											final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(Apis.instance.imageUploaders.getConfig());
-											Set<String> keys = null;
-											if (factory!=null)
-												keys = factory.keys();
-											box.add(new Key(new R(), new Apis.KeySetting(keys)));
-										}
-									};
-
-									@Override
-									protected void initWidget() {
-										float top = 1;
-										add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage")));
-										add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
-											@Override
-											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-												final Area a = getGuiPosition(pgp);
-												RenderHelper.startShape();
-												OpenGL.glColor4f(0f, 0f, 0f, .2f);
-												OpenGL.glLineWidth(.5f);
-												draw(a, GL_LINE_LOOP);
-												super.draw(ev, pgp, p, frame, opacity);
-											}
-
-											@Override
-											protected void initWidget() {
-												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage.type")));
-												add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
-													@Override
-													protected void initWidget() {
-														setSelector(new ListSelector() {
-															{
-																final List<String> settings = Lists.newArrayList("");
-																settings.addAll(Apis.instance.imageUploaders.getSettings());
-																setList(settings);
-															}
-														});
-														this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
-														setText(Apis.instance.imageUploaders.getConfig());
-													}
-
-													@Override
-													protected void onChanged(final String oldText, final String newText) {
-														if (!StringUtils.equals(oldText, newText)) {
-															if (!StringUtils.equals(newText, Apis.instance.imageUploaders.getConfig()))
-																Apis.instance.imageUploaders.setConfig(newText);
-															final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(newText);
-															Set<String> keys = null;
-															if (factory!=null)
-																keys = factory.keys();
-															box.add(new Key(new R(), new Apis.KeySetting(keys)));
-														}
-													}
-												});
-											}
-										});
-										add(this.box);
-									}
-								});
+								add(new GuiApis<ImageUploaderFactory>(new R(Coord.left(5), Coord.width(200), Coord.top(33), Coord.height(82)), Apis.instance.imageUploaders, I18n.format("signpic.gui.settings.api.upimage")));
+								add(new GuiApis<URLShortenerFactory>(new R(Coord.left(5+200), Coord.width(200), Coord.top(33), Coord.height(82)), Apis.instance.urlShorteners, I18n.format("signpic.gui.settings.api.urlshortener")));
 								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected void initWidget() {
@@ -387,7 +320,89 @@ public class GuiSettings extends WPanel {
 		});
 	}
 
-	class Key extends WPanel {
+	static class GuiApis<E extends ApiFactory> extends WPanel {
+		protected MapSetting<E> typesetting;
+		protected String title;
+
+		public GuiApis(final R position, final MapSetting<E> typesetting, final String title) {
+			super(position);
+			this.typesetting = typesetting;
+			this.title = title;
+		}
+
+		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+			final Area a = getGuiPosition(pgp);
+			RenderHelper.startShape();
+			OpenGL.glColor4f(0f, 0f, 0f, .2f);
+			OpenGL.glLineWidth(.5f);
+			draw(a, GL_LINE_LOOP);
+			super.draw(ev, pgp, p, frame, opacity);
+		}
+
+		protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
+			@Override
+			protected void initWidget() {
+				final ApiFactory factory = GuiApis.this.typesetting.solve(GuiApis.this.typesetting.getConfig());
+				Set<String> keys = null;
+				if (factory!=null)
+					keys = factory.keys();
+				GuiApis.this.box.add(new Key(new R(), new Apis.KeySetting(keys)));
+			}
+		};
+
+		@Override
+		protected void initWidget() {
+			float top = 1;
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(this.title));
+			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
+				@Override
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+					final Area a = getGuiPosition(pgp);
+					RenderHelper.startShape();
+					OpenGL.glColor4f(0f, 0f, 0f, .2f);
+					OpenGL.glLineWidth(.5f);
+					draw(a, GL_LINE_LOOP);
+					super.draw(ev, pgp, p, frame, opacity);
+				}
+
+				@Override
+				protected void initWidget() {
+					add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.type")));
+					add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
+						@Override
+						protected void initWidget() {
+							setSelector(new ListSelector() {
+								{
+									final List<String> settings = Lists.newArrayList("");
+									settings.addAll(GuiApis.this.typesetting.getSettings());
+									setList(settings);
+								}
+							});
+							this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
+							setText(GuiApis.this.typesetting.getConfig());
+						}
+
+						@Override
+						protected void onChanged(final String oldText, final String newText) {
+							if (!StringUtils.equals(oldText, newText)) {
+								if (!StringUtils.equals(newText, GuiApis.this.typesetting.getConfig()))
+									GuiApis.this.typesetting.setConfig(newText);
+								final ApiFactory factory = GuiApis.this.typesetting.solve(newText);
+								Set<String> keys = null;
+								if (factory!=null)
+									keys = factory.keys();
+								GuiApis.this.box.add(new Key(new R(), new Apis.KeySetting(keys)));
+							}
+						}
+					});
+				}
+			});
+			add(this.box);
+		}
+	}
+
+	static class Key extends WPanel {
 		protected Setting setting;
 
 		public Key(final R position, final Setting setting) {
@@ -407,7 +422,7 @@ public class GuiSettings extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage.key")));
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.key")));
 			add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {

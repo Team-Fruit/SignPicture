@@ -84,8 +84,8 @@ signpic.gui.editor.rotation.pos=+
 signpic.gui.editor.rotation.unknown=0
 ## Settings
 signpic.gui.settings.api.upimage=Image Upload Settings
-signpic.gui.settings.api.upimage.type=API Type
-signpic.gui.settings.api.upimage.key=API Key
+signpic.gui.settings.api.type=API Type
+signpic.gui.settings.api.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
 signpic.gui.settings.paas=Prevent Cheat

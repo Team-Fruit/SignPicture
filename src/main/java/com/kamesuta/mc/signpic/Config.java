@@ -54,8 +54,10 @@ public final class Config extends Configuration {
 	public float renderPreviewFixedOpacity = .7f;
 	public float renderPreviewFloatedOpacity = .7f*.7f;
 
-	public String apiType = "";
-	public String apiKey = "";
+	public String apiUploaderType = "";
+	public String apiUploaderKey = "";
+	public String apiShortenerType = "";
+	public String apiShortenerKey = "";
 
 	public boolean guiExperienced = false;
 
@@ -123,8 +125,10 @@ public final class Config extends Configuration {
 		this.renderPreviewFixedOpacity = (float) get("Render.Opacity", "PreviewFixedSign", this.renderPreviewFixedOpacity).getDouble(this.renderPreviewFixedOpacity);
 		this.renderPreviewFloatedOpacity = (float) get("Render.Opacity", "PreviewFloatedSign", this.renderPreviewFloatedOpacity).getDouble(this.renderPreviewFloatedOpacity);
 
-		this.apiType = get("Api.Upload", "Type", this.apiType).getString();
-		this.apiKey = get("Api.Upload", "Key", this.apiKey).getString();
+		this.apiUploaderType = get("Api.Upload", "Type", this.apiUploaderType).getString();
+		this.apiUploaderKey = get("Api.Upload", "Key", this.apiUploaderKey).getString();
+		this.apiShortenerType = get("Api.Shortener", "Type", this.apiShortenerType).getString();
+		this.apiShortenerKey = get("Api.Shortener", "Key", this.apiShortenerKey).getString();
 
 		this.guiExperienced = addComment(get("Internal", "GuiExperienced", this.guiExperienced), "Have you ever opened SignPicture GUI yet?").getBoolean(this.guiExperienced);
 	}

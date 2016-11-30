@@ -41,8 +41,8 @@ signpic.gui.editor.offset.category=オフセット
 signpic.gui.editor.rotation.category=回転
 ## Settings
 signpic.gui.settings.api.upimage=画像アップロード設定
-signpic.gui.settings.api.upimage.type=APIの種類
-signpic.gui.settings.api.upimage.key=APIキー
+signpic.gui.settings.api.type=APIの種類
+signpic.gui.settings.api.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
 signpic.gui.settings.paas=チート回避

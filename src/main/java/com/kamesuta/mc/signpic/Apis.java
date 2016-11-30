@@ -50,7 +50,7 @@ public class Apis {
 	public final MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
 		@Override
 		public String getConfig() {
-			return Config.instance.apiType;
+			return Config.instance.apiUploaderType;
 		}
 
 		@Override
@@ -64,7 +64,7 @@ public class Apis {
 	public final MapSetting<URLShortenerFactory> urlShorteners = new MapSetting<URLShortenerFactory>() {
 		@Override
 		public String getConfig() {
-			return Config.instance.apiType;
+			return Config.instance.apiShortenerType;
 		}
 
 		@Override
@@ -95,7 +95,7 @@ public class Apis {
 
 		@Override
 		public String getConfig() {
-			return Config.instance.apiKey;
+			return Config.instance.apiUploaderKey;
 		}
 
 		@Override
@@ -159,16 +159,16 @@ public class Apis {
 		}
 	}
 
-	public static interface ImageUploaderFactory {
-		IUploader create(UploadRequest upload, String key) throws IOException;
-
+	public static interface ApiFactory {
 		Set<String> keys();
 	}
 
-	public static interface URLShortenerFactory {
-		IShortener create(ShorteningRequest upload, String key) throws IOException;
+	public static interface ImageUploaderFactory extends ApiFactory {
+		IUploader create(UploadRequest upload, String key) throws IOException;
+	}
 
-		Set<String> keys();
+	public static interface URLShortenerFactory extends ApiFactory {
+		IShortener create(ShorteningRequest upload, String key) throws IOException;
 	}
 
 	public void init() {
