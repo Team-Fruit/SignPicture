@@ -1,20 +1,18 @@
 package com.kamesuta.mc.signpic.http.shortening;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.apache.commons.io.Charsets;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 
-import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -22,8 +20,6 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class BitlyShortener extends Communicate implements Progressable, IShortener {
-	public static final Gson gson = new Gson();
-
 	protected ShorteningRequest shortreq;
 	protected String key;
 	protected boolean canceled;
@@ -43,7 +39,6 @@ public class BitlyShortener extends Communicate implements Progressable, IShorte
 	public void communicate() {
 		final String url = "https://api-ssl.bitly.com/v3/shorten?access_token=%s&longUrl=%s";
 
-		final File tmp = null;
 		InputStream resstream = null;
 		JsonReader jsonReader1 = null;
 		try {
@@ -57,7 +52,7 @@ public class BitlyShortener extends Communicate implements Progressable, IShorte
 				final HttpEntity resEntity = response.getEntity();
 				if (resEntity!=null) {
 					resstream = resEntity.getContent();
-					this.result = gson.<BitlyResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), BitlyResult.class);
+					this.result = Client.gson.<BitlyResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), BitlyResult.class);
 					onDone(new CommunicateResponse(this.result!=null&&this.result.status_code==HttpStatus.SC_OK, null));
 					return;
 				}
@@ -71,7 +66,6 @@ public class BitlyShortener extends Communicate implements Progressable, IShorte
 		} finally {
 			IOUtils.closeQuietly(resstream);
 			IOUtils.closeQuietly(jsonReader1);
-			FileUtils.deleteQuietly(tmp);
 		}
 		onDone(new CommunicateResponse(false, null));
 		return;

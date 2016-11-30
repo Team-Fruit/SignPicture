@@ -84,6 +84,7 @@ signpic.gui.editor.rotation.pos=+
 signpic.gui.editor.rotation.unknown=0
 ## Settings
 signpic.gui.settings.api.upimage=Image Upload Settings
+signpic.gui.settings.api.urlshortener=URL Shortener Settings
 signpic.gui.settings.api.type=API Type
 signpic.gui.settings.api.key=API Key
 signpic.gui.settings.default=Default
@@ -122,6 +123,7 @@ signpic.gui.notice.versioning.downloadedAlready=Close your game, delete the old 
 signpic.gui.notice.versioning.downloadingAlready=The update is already downloading!
 signpic.gui.notice.toolongname=URL+metadata length must be less than 40 characters to name!
 signpic.gui.notice.toolongplace=URL+metadata length must be less than 60 characters to place!
+signpic.gui.notice.startshortening=Please wait... The URL is being abbreviated.
 
 # Upload UI
 signpic.ui.title=SignPicture!File

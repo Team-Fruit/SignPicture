@@ -17,7 +17,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
-import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.LoadCanceledException;
@@ -31,8 +30,6 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ImgurUpload extends Communicate implements Progressable, IUploader {
-	public static final Gson gson = new Gson();
-
 	protected UploadRequest upreq;
 	protected String key;
 	protected boolean canceled;
@@ -92,7 +89,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				final HttpEntity resEntity = response.getEntity();
 				if (resEntity!=null) {
 					resstream = resEntity.getContent();
-					this.result = gson.<ImgurResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
+					this.result = Client.gson.<ImgurResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
 					final String link = getLink();
 					if (link!=null) {
 						final Content content = new ContentId(link).content();

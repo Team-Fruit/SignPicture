@@ -9,14 +9,12 @@ import java.io.OutputStreamWriter;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
-import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Reference;
 
 public abstract class MetaIO<E extends IData> {
-	private static final Gson gson = new Gson();
-
 	public final File location;
 	public final Class<E> clazz;
 	private transient E data;
@@ -37,7 +35,7 @@ public abstract class MetaIO<E extends IData> {
 		try {
 			if (this.location.exists()) {
 				reader = new JsonReader(new InputStreamReader(new FileInputStream(this.location), Charsets.UTF_8));
-				final E data = gson.fromJson(reader, this.clazz);
+				final E data = Client.gson.fromJson(reader, this.clazz);
 				IOUtils.closeQuietly(reader);
 				if (data!=null&&data.getFormat()==IData.FormatVersion)
 					return data;
@@ -60,7 +58,7 @@ public abstract class MetaIO<E extends IData> {
 		JsonWriter writer = null;
 		try {
 			writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(this.location), Charsets.UTF_8));
-			gson.toJson(data, this.clazz, writer);
+			Client.gson.toJson(data, this.clazz, writer);
 		} catch (final Exception e) {
 		} finally {
 			IOUtils.closeQuietly(writer);

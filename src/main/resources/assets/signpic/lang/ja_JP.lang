@@ -41,6 +41,7 @@ signpic.gui.editor.offset.category=オフセット
 signpic.gui.editor.rotation.category=回転
 ## Settings
 signpic.gui.settings.api.upimage=画像アップロード設定
+signpic.gui.settings.api.urlshortener=URL短縮設定
 signpic.gui.settings.api.type=APIの種類
 signpic.gui.settings.api.key=APIキー
 signpic.gui.settings.default=自動
@@ -79,6 +80,7 @@ signpic.gui.notice.versioning.downloadedAlready=古いバージョンのファ�
 signpic.gui.notice.versioning.downloadingAlready=最新版は既にダウンロード中です！
 signpic.gui.notice.toolongname=名前を付けるためにはURL+メタデータの長さが40文字以下である必要があります
 signpic.gui.notice.toolongplace=設置するためにはURL+メタデータの長さが60文字以下である必要があります
+signpic.gui.notice.startshortening=URLを短縮中です・・・ しばらくお待ちください
 
 # Upload UI
 signpic.ui.description=ファイルアップローダー!

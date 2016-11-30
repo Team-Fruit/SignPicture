@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.google.gson.Gson;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
@@ -26,7 +27,9 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MovingObjectPosition;
 
 public class Client {
-	public final static Minecraft mc = FMLClientHandler.instance().getClient();
+	public static final Minecraft mc = FMLClientHandler.instance().getClient();
+
+	public static final Gson gson = new Gson();
 
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
