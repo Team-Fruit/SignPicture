@@ -16,6 +16,17 @@ signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] Sorry, you will not be able to use this feature because of an error.
 
+# Item
+signpic.item.sign.desc=§dPress §a%s§d to edit SignPicture
+signpic.item.sign.desc.keyconflict=§cOpen §a%2$s§c in §a%1$s§c and solve key conflict!
+signpic.item.sign.desc.keyconflict.key=§c - conflict §a%2$s§c in §a%1$s
+signpic.item.sign.desc.named=Sign Picture§r §7(%s)
+signpic.item.sign.desc.named.prop.size=§7 - size: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - offset: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - rotation: %s
+signpic.item.sign.desc.named.meta=§7meta: %s§7
+signpic.item.sign.desc.named.raw=§7name: [%s§7]
+
 # Key
 signpic.key.category=Sign Picture
 signpic.key.gui=Open GUI
@@ -76,8 +87,6 @@ signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=Please Wait ( %d / %d letters )
 signpic.gui.paas.time=Esc for Cancel ( %.2f / %.2f seconds )
-## Notice
-signpic.gui.editor.notice.toolong=Too long code for Sign!
 
 # Notice
 signpic.gui.notice.paste.unsupported=Not Supported
@@ -91,6 +100,8 @@ signpic.gui.notice.downloaded=Finished downloading %s
 signpic.gui.notice.downloadfailed=Download Failed: §7%s
 signpic.gui.notice.versioning.downloadedAlready=Close your game, delete the old version and load it again to update!
 signpic.gui.notice.versioning.downloadingAlready=The update is already downloading!
+signpic.gui.notice.toolongname=URL+metadata length must be less than 40 characters to name!
+signpic.gui.notice.toolongplace=URL+metadata length must be less than 60 characters to place!
 
 # Upload UI
 signpic.ui.title=SignPicture!File

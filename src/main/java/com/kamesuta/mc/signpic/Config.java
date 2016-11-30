@@ -15,6 +15,7 @@ public final class Config extends Configuration {
 	public boolean updatable;
 
 	public String signpicDir = "";
+	public boolean signTooltip = false;
 
 	public int imageWidthLimit = 512;
 	public int imageHeightLimit = 512;
@@ -54,6 +55,8 @@ public final class Config extends Configuration {
 	public String apiType = "";
 	public String apiKey = "";
 
+	public boolean guiExperienced = false;
+
 	public Config(final File configFile) {
 		super(configFile);
 		this.configFile = configFile;
@@ -88,6 +91,8 @@ public final class Config extends Configuration {
 	}
 
 	private void changeableSync() {
+		this.signTooltip = addComment(get("General", "SignToolTip", this.signTooltip), "add tooltip line to sign").getBoolean(this.signTooltip);
+
 		this.entryGCtick = get("Entry", "GCDelayTick", this.entryGCtick).getInt(this.entryGCtick);
 
 		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
@@ -116,6 +121,8 @@ public final class Config extends Configuration {
 
 		this.apiType = get("Api.Upload", "Type", this.apiType).getString();
 		this.apiKey = get("Api.Upload", "Key", this.apiKey).getString();
+
+		this.guiExperienced = addComment(get("Internal", "GuiExperienced", this.guiExperienced), "Have you ever opened SignPicture GUI yet?").getBoolean(this.guiExperienced);
 	}
 
 	private Property addComment(final Property prop, final String comment) {

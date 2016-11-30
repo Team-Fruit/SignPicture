@@ -72,7 +72,7 @@ public class FileUtilitiy {
 			} else if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
 				final BufferedImage bi = (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
 				try {
-					final File tmp = File.createTempFile("paste_", "", Client.location.tempDir);
+					final File tmp = Client.location.createCache("paste");
 					ImageIO.write(bi, "png", tmp);
 					FileUtilitiy.upload(UploadContent.fromFile(tmp, new State()), new Runnable() {
 						@Override
