@@ -54,6 +54,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 		InputStream countupstream = null;
 		JsonReader jsonReader1 = null;
 		try {
+			setCurrent();
 			tmp = Client.location.createCache("imgur");
 			FileUtils.copyInputStreamToFile(this.upreq.getStream(), tmp);
 
@@ -106,6 +107,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 			onDone(new CommunicateResponse(false, e));
 			return;
 		} finally {
+			unsetCurrent();
 			IOUtils.closeQuietly(countupstream);
 			IOUtils.closeQuietly(resstream);
 			IOUtils.closeQuietly(jsonReader1);
@@ -118,6 +120,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 	@Override
 	public void cancel() {
 		this.canceled = true;
+		super.cancel();
 	}
 
 	public static class ImgurResult {

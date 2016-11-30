@@ -52,6 +52,7 @@ public class ContentDownload extends Communicate implements Progressable {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
+			setCurrent();
 			final URI base = ContentLocation.remoteLocation(this.content.meta.getURL());
 			final HttpUriRequest req = new HttpGet(base);
 			final HttpClientContext context = HttpClientContext.create();
@@ -116,6 +117,7 @@ public class ContentDownload extends Communicate implements Progressable {
 		} catch (final Exception e) {
 			onDone(new CommunicateResponse(false, e));
 		} finally {
+			unsetCurrent();
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(tmp);
@@ -125,5 +127,6 @@ public class ContentDownload extends Communicate implements Progressable {
 	@Override
 	public void cancel() {
 		this.canceled = true;
+		super.cancel();
 	}
 }

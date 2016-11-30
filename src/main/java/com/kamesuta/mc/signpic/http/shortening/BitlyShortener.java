@@ -22,7 +22,6 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class BitlyShortener extends Communicate implements Progressable, IShortener {
 	protected ShorteningRequest shortreq;
 	protected String key;
-	protected boolean canceled;
 	protected BitlyResult result;
 
 	public BitlyShortener(final ShorteningRequest shortreq, final String key) {
@@ -42,6 +41,7 @@ public class BitlyShortener extends Communicate implements Progressable, IShorte
 		InputStream resstream = null;
 		JsonReader jsonReader1 = null;
 		try {
+			setCurrent();
 			// create the get request.
 			final HttpGet httpget = new HttpGet(String.format(url, this.key, this.shortreq.getLongURL()));
 
@@ -64,16 +64,12 @@ public class BitlyShortener extends Communicate implements Progressable, IShorte
 			onDone(new CommunicateResponse(false, e));
 			return;
 		} finally {
+			unsetCurrent();
 			IOUtils.closeQuietly(resstream);
 			IOUtils.closeQuietly(jsonReader1);
 		}
 		onDone(new CommunicateResponse(false, null));
 		return;
-	}
-
-	@Override
-	public void cancel() {
-		this.canceled = true;
 	}
 
 	public static class BitlyResult {

@@ -48,6 +48,7 @@ public class ModDownload extends Communicate implements Progressable {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
+			setCurrent();
 			final String stringurl = online.version.remote;
 			final String stringlocal = online.version.local;
 			final String local;
@@ -109,6 +110,7 @@ public class ModDownload extends Communicate implements Progressable {
 			onDone(new CommunicateResponse(false, e));
 			return;
 		} finally {
+			unsetCurrent();
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(tmp);
@@ -124,6 +126,7 @@ public class ModDownload extends Communicate implements Progressable {
 	@Override
 	public void cancel() {
 		this.canceled = true;
+		super.cancel();
 	}
 
 	public static class ModDLResult {
