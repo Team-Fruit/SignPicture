@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import com.kamesuta.mc.signpic.handler.CoreEvent;
+import com.kamesuta.mc.signpic.CoreEvent;
 
 public class EntryManager implements ITickEntry {
 	public static final EntryManager instance = new EntryManager();

@@ -8,9 +8,10 @@
 			"mcversion": "${mcversion}",
 			"version": "${version}",
 			"authorList": [
-				"Kamesuta"
+				"Kamesuta",
+				"sjcl"
 			],
-			"credits": "2016 Kamesuta",
+			"credits": "2016 TeamFruit",
 			"dependants": [],
 			"dependencies": ["Forge@[${minforgeversion},)"],
 			"parent": "",

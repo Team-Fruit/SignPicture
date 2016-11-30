@@ -3,8 +3,10 @@
 
 # Sign Picture
 ![Minecraft 1.7.10](https://img.shields.io/badge/Minecraft-1.7.10-yellow.svg?style=flat)
-![Minecraft 1.8](https://img.shields.io/badge/Minecraft-1.8-green.svg?style=flat)
-![Minecraft 1.9](https://img.shields.io/badge/Minecraft-1.9-green.svg?style=flat)
+![Minecraft 1.8.9](https://img.shields.io/badge/Minecraft-1.8.9-green.svg?style=flat)
+![Minecraft 1.9.4](https://img.shields.io/badge/Minecraft-1.9.4-green.svg?style=flat)
+![Minecraft 1.10.2](https://img.shields.io/badge/Minecraft-1.10.2-green.svg?style=flat)
+![Minecraft 1.11](https://img.shields.io/badge/Minecraft-1.11-green.svg?style=flat)
 
 ## Table of Contents
 
@@ -30,10 +32,13 @@ The sign tells us how beautiful it is!
 ## License
 
 * Sign Picture
-  - (c) 2016 Kamesuta et al
+  - (c) 2016 TeamFruit
   - [![License](https://img.shields.io/badge/License-LGPLv3-blue.svg?style=flat)](https://raw.githubusercontent.com/Team-Fruit/SignPicture/master/LICENSE.md)
+* Banana Widget
+  - (c) 2016 TeamFruit
+  - [![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://opensource.org/licenses/mit-license.php)
 * Textures and Models
-  - (c) 2016 Kamesuta et al
+  - (c) 2016 TeamFruit
   - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%203.0-yellow.svg?style=flat)](https://creativecommons.org/licenses/by-nc-sa/3.0/)
 * Text and Translations
   - [![License](https://img.shields.io/badge/License-No%20Restriction-green.svg?style=flat)](https://creativecommons.org/publicdomain/zero/1.0/)
@@ -138,5 +143,5 @@ Thanks to
 
 * Notch et al for Minecraft
 * Lex et al for MinecraftForge
-* Kamesuta for SignPicture
+* Kamesuta, sjcl for SignPicture
 * all [contributors](https://github.com/Team-Fruit/SignPicture/graphs/contributors)

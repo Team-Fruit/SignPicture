@@ -1,41 +1,67 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.3.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.3.0/SignPicture-1.7.10-2.3.0-universal.jar",
-			"local": "SignPicture-1.7.10-2.3.0-universal.jar",
-			"message": "Config & Prevent Anti-AutoSign Mode added. SignPicture 2.3.0 Released.",
+			"version": "2.4.4",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.4/SignPicture-1.7.10-2.4.4-universal.jar",
+			"local": "SignPicture-1.7.10-2.4.4-universal.jar",
+			"changelog": "https://github.com/Team-Fruit/SignPicture/releases/tag/1.7.10-2.4.4",
+			"message": "Support Uploading and Pasting!",
 			"message_local": {
-				"ja_JP": "Anti-AutoSign回避モードとコンフィグの追加 SignPicture 2.3.0 リリース!"
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
 		"1.8.9": {
-			"version": "2.2.2",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.2.2/SignPicture-1.8.9-2.2.2-universal.jar",
-			"local": "SignPicture-1.8.9-2.2.2-universal.jar",
-			"message": "Offset And Rotations! More freely images! SignPicture 2.2.2 Released!",
-			"message_local": {
-				"ja_JP": "オフセットと回転機能実装! さらに自由自在に画像を貼ろう! SignPicture 2.2.2 リリース!"
-			}
+			"version": "2.3.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.3.0/SignPicture-1.8.9-2.3.0-universal.jar",
+			"local": "SignPicture-1.8.9-2.3.0-universal.jar"
 		},
 		"1.9.4": {
-			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.1.5/SignPicture-1.9.4-2.1.5-universal.jar",
-			"local": "SignPicture-1.9.4-2.1.5-universal.jar",
-			"message": "GUI Update! SignPicture 2.1.5 Released!",
+			"version": "2.3.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.3.1/SignPicture-1.9.4-2.3.1-universal.jar",
+			"local": "SignPicture-1.9.4-2.3.1-universal.jar",
+			"message": "Fix Rendering Bug!",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
+				"ja_JP": "描画バグ修正!"
 			}
 		},
 		"1.10.2": {
-			"version": "2.1.5",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.1.5/SignPicture-1.10.2-2.1.5-universal.jar",
-			"local": "SignPicture-1.10.2-2.1.5-universal.jar",
-			"message": "GUI Update! SignPicture 2.1.5 Released!",
+			"version": "2.3.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.3.1/SignPicture-1.10.2-2.3.1-universal.jar",
+			"local": "SignPicture-1.10.2-2.3.1-universal.jar",
+			"message": "Fix Rendering Bug!",
 			"message_local": {
-				"ja_JP": "遂にSignPictureにGUIが! SignPicture 2.1.5リリース!!"
+				"ja_JP": "描画バグ修正!"
+			}
+		},
+		"1.11-beta": {
+			"version": "2.3.1.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.3.1/SignPicture-1.11-2.3.1.beta-universal.jar",
+			"local": "SignPicture-1.11-2.3.1.beta-universal.jar",
+			"message": "Supported Minecraft 1.11!",
+			"message_local": {
+				"ja_JP": "Minecraft 1.11 に対応しました!"
 			}
 		}
 	},
+	"apis": {
+		"image": {
+			"gyazo": {
+				"config": [
+					{
+						"clientid": "6dceb988be0fad140e544f9e2ec830bb83014b6cde9766049d03d88bdf3884f1"
+					}
+				]
+			},
+			"imgur": {
+				"config": [
+					{
+						"clientid": "7896a166a54f0bc"
+					}
+				]
+			}
+		}
+	},
+	"website": "https://minecraft.curseforge.com/projects/sign-picture",
+	"changelog": "https://github.com/Team-Fruit/SignPicture/releases",
 	"private_msg": "http://fruit.bebehp.com/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }

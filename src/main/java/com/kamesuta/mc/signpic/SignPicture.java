@@ -2,8 +2,6 @@ package com.kamesuta.mc.signpic;
 
 import java.util.Map;
 
-import com.kamesuta.mc.signpic.proxy.CommonProxy;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -29,7 +27,6 @@ public class SignPicture {
 
 	@EventHandler
 	public void preInit(final FMLPreInitializationEvent event) {
-		Config.instance = new Config(event.getSuggestedConfigurationFile());
 		proxy.preInit(event);
 	}
 
@@ -41,6 +38,5 @@ public class SignPicture {
 	@EventHandler
 	public void postInit(final FMLPostInitializationEvent event) {
 		proxy.postInit(event);
-		Config.instance.save();
 	}
 }

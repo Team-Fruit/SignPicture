@@ -2,7 +2,6 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 
@@ -12,12 +11,12 @@ public class RenderHelper {
 
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
 		final long time = System.currentTimeMillis();
-		final float time1 = time % Math.abs(msPerRoundOuter) / (float)msPerRoundOuter;
+		final float time1 = time%Math.abs(msPerRoundOuter)/(float) msPerRoundOuter;
 		w.startDrawing(GL_LINE_LOOP);
 		addCircleVertex(time1, time1+0.2f, 1.07f);
 		addCircleVertex(time1+0.2f, time1, 1.09f);
 		t.draw();
-		final float time2 = time % Math.abs(msPerRoundInner) / (float)msPerRoundInner;
+		final float time2 = time%Math.abs(msPerRoundInner)/(float) msPerRoundInner;
 		w.startDrawing(GL_LINE_LOOP);
 		addCircleVertex(time2, time2+0.1f, 1.03f);
 		addCircleVertex(time2+0.1f, time2, 1.05f);
@@ -52,7 +51,7 @@ public class RenderHelper {
 		final double ey = Math.sin(eangle);
 
 		w.addVertex(sx*r, sy*r, 0);
-		for(int i=(int)((end<start)?Math.floor(start*acc):Math.ceil(start*acc)); (end<start)?i>end*acc:i<end*acc; i+=(end<start)?-1:1) {
+		for (int i = (int) (end<start ? Math.floor(start*acc) : Math.ceil(start*acc)); end<start ? i>end*acc : i<end*acc; i += end<start ? -1 : 1) {
 			final double angle = Math.PI*(2d*i/acc-.5);
 			final double ix = Math.cos(angle);
 			final double iy = Math.sin(angle);
@@ -76,10 +75,10 @@ public class RenderHelper {
 	}
 
 	public static void addRectVertex(final float x1, final float y1, final float x2, final float y2) {
-		w.addVertexWithUV(x1, y1, 0, 0, 0);
-		w.addVertexWithUV(x1, y2, 0, 0, 1);
-		w.addVertexWithUV(x2, y2, 0, 1, 1);
-		w.addVertexWithUV(x2, y1, 0, 1, 0);
+		w.addVertexWithUV(x1, y2, 0, 0, 0);
+		w.addVertexWithUV(x2, y2, 0, 0, 1);
+		w.addVertexWithUV(x2, y1, 0, 1, 1);
+		w.addVertexWithUV(x1, y1, 0, 1, 0);
 	}
 
 	public static void drawRectTexture(final int mode) {
@@ -100,14 +99,16 @@ public class RenderHelper {
 	}
 
 	public static void startTexture() {
-		GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableBlend();
-		GlStateManager.enableTexture2D();
+		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		OpenGL.glDisable(GL_LIGHTING);
+		OpenGL.glEnable(GL_BLEND);
+		OpenGL.glEnable(GL_TEXTURE_2D);
 	}
 
 	public static void startShape() {
-		GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture2D();
+		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		OpenGL.glDisable(GL_LIGHTING);
+		OpenGL.glEnable(GL_BLEND);
+		OpenGL.glDisable(GL_TEXTURE_2D);
 	}
 }
