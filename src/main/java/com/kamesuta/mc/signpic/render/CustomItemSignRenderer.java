@@ -76,7 +76,7 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, entry.content().image.getSize());
+		final ImageSize size = new ImageSize().setAspectSize(entry.getMeta().size, entry.content().image.getSize());
 		if (type==TransformType.GUI) {
 			OpenGL.glScalef(1f, -1f, 1f);
 			final float slot = 1f;
@@ -101,8 +101,8 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 			} else if (type==TransformType.HEAD)
 				;// Minecraft 1.8.x doesn't support Item Head.
 			OpenGL.glTranslatef(0f, -size.height, 0f);
-			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
-			entry.meta.rotation.rotate();
+			OpenGL.glTranslatef(entry.getMeta().offset.x, entry.getMeta().offset.y, entry.getMeta().offset.z);
+			entry.getMeta().rotation.rotate();
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
 		}
 		OpenGL.glPopAttrib();

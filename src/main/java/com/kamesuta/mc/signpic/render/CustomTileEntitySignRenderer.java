@@ -7,6 +7,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
@@ -30,13 +31,15 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		// Load Image
 		final Content content = entry.content();
 
+		final ImageMeta meta = entry.getMeta();
+
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
+		final ImageSize size = new ImageSize().setAspectSize(meta.size, content.image.getSize());
 
 		OpenGL.glPushMatrix();
 
-		OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
-		entry.meta.rotation.rotate();
+		OpenGL.glTranslatef(meta.offset.x, meta.offset.y, meta.offset.z);
+		meta.rotation.rotate();
 
 		OpenGL.glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
 		OpenGL.glScalef(1f, -1f, 1f);
