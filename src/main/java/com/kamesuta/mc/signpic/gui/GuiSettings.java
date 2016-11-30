@@ -353,7 +353,7 @@ public class GuiSettings extends WPanel {
 														@Override
 														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 															OpenGL.glPushMatrix();
-															glTranslatef(0, 0, 10f);
+															OpenGL.glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
 															OpenGL.glPopMatrix();
 														}
@@ -384,7 +384,7 @@ public class GuiSettings extends WPanel {
 			final Area a = getGuiPosition(pgp);
 			RenderHelper.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
-			glLineWidth(.5f);
+			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
 			super.draw(ev, pgp, p, frame, opacity);
 		}

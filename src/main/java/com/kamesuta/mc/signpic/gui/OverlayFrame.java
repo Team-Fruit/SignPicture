@@ -21,7 +21,6 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -30,14 +29,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 public class OverlayFrame extends WFrame {
 	public static final OverlayFrame instance = new OverlayFrame();
 
+	protected boolean initialized;
 	public GuiOverlay pane = new GuiOverlay(new R());
 	private boolean d;
 
 	private OverlayFrame() {
-		final ScaledResolution scaledresolution = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
-		final int i = scaledresolution.getScaledWidth();
-		final int j = scaledresolution.getScaledHeight();
-		setWorldAndResolution(Client.mc, i, j);
 	}
 
 	@Override
@@ -66,6 +62,15 @@ public class OverlayFrame extends WFrame {
 				setHeight(event.resolution.getScaledHeight());
 				drawScreen(0, 0, event.partialTicks);
 			}
+	}
+
+	@Override
+	public void drawScreen(final int mousex, final int mousey, final float f) {
+		if (!this.initialized) {
+			setWorldAndResolution(Client.mc, (int) width(), (int) height());
+			this.initialized = true;
+		}
+		super.drawScreen(mousex, mousey, f);
 	}
 
 	@CoreEvent

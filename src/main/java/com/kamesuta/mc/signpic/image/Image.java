@@ -38,12 +38,6 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final WorldRenderer t = RenderHelper.w;
 			RenderHelper.startTexture();
-			getTexture().bind();
-			t.startDrawingQuads();
-			t.addVertexWithUV(0, 0, 0, 0, 0);
-			t.addVertexWithUV(0, 1, 0, 0, 1);
-			t.addVertexWithUV(1, 1, 0, 1, 1);
-			t.addVertexWithUV(1, 0, 0, 1, 0);
 			final ImageTexture image = getTexture();
 			image.bind();
 

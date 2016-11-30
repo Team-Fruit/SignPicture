@@ -169,12 +169,6 @@ public class OpenGL {
 
 	public static void glCullFace(final int mode) {
 		GlStateManager.cullFace(mode);
-		// if (mode==GlStateManager.CullFace.BACK.mode)
-		// 	GlStateManager.cullFace(GlStateManager.CullFace.BACK);
-		// else if (mode==GlStateManager.CullFace.FRONT.mode)
-		// 	GlStateManager.cullFace(GlStateManager.CullFace.FRONT);
-		// else if (mode==GlStateManager.CullFace.FRONT_AND_BACK.mode)
-		// 	GlStateManager.cullFace(GlStateManager.CullFace.FRONT_AND_BACK);
 		// GL11.glCullFace(mode);
 	}
 
@@ -292,7 +286,8 @@ public class OpenGL {
 	}
 
 	public static int glGenTextures() {
-		return GL11.glGenTextures();
+		return GlStateManager.generateTexture();
+		// return GL11.glGenTextures();
 	}
 
 	public static int glGetTexLevelParameteri(final int target, final int level, final int pname) {
@@ -360,7 +355,14 @@ public class OpenGL {
 	}
 
 	public static void glBindTexture(final int target, final int texture) {
-		GL11.glBindTexture(target, texture);
+		if (target==GL11.GL_TEXTURE_2D)
+			GlStateManager.bindTexture(texture);
+		else
+			GL11.glBindTexture(target, texture);
 	}
 
+	public static void glDeleteTextures(final int texture) {
+		GlStateManager.deleteTexture(texture);
+		// TextureUtil.deleteTexture(texture);
+	}
 }

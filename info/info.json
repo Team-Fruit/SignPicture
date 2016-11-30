@@ -10,36 +10,50 @@
 				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
+		"1.7.10-beta": {
+			"version": "2.5.0.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.5.0/SignPicture-1.7.10-2.5.0.beta-universal.jar",
+			"local": "SignPicture-1.7.10-2.5.0.beta-universal.jar",
+			"image": "https://i.gyazo.com/234a908ea304a7e446d139a3bceac4e1.png",
+			"message": "Item SignPicture!",
+			"message_local": {
+				"ja_JP": "アイテムのSignPicture実装!"
+			}
+		},
 		"1.8.9": {
-			"version": "2.3.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.3.0/SignPicture-1.8.9-2.3.0-universal.jar",
-			"local": "SignPicture-1.8.9-2.3.0-universal.jar"
+			"version": "2.4.6",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.4.6/SignPicture-1.8.9-2.4.6-universal.jar",
+			"local": "SignPicture-1.8.9-2.4.6-universal.jar",
+			"message": "Support Uploading and Pasting!",
+			"message_local": {
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
+			}
 		},
 		"1.9.4": {
-			"version": "2.3.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.3.1/SignPicture-1.9.4-2.3.1-universal.jar",
-			"local": "SignPicture-1.9.4-2.3.1-universal.jar",
-			"message": "Fix Rendering Bug!",
+			"version": "2.4.6",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.4.6/SignPicture-1.9.4-2.4.6-universal.jar",
+			"local": "SignPicture-1.9.4-2.4.6-universal.jar",
+			"message": "Support Uploading and Pasting!",
 			"message_local": {
-				"ja_JP": "描画バグ修正!"
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
 		"1.10.2": {
-			"version": "2.3.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.3.1/SignPicture-1.10.2-2.3.1-universal.jar",
-			"local": "SignPicture-1.10.2-2.3.1-universal.jar",
-			"message": "Fix Rendering Bug!",
+			"version": "2.4.6",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.4.6/SignPicture-1.10.2-2.4.6-universal.jar",
+			"local": "SignPicture-1.10.2-2.4.6-universal.jar",
+			"message": "Support Uploading and Pasting!",
 			"message_local": {
-				"ja_JP": "描画バグ修正!"
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		},
-		"1.11-beta": {
-			"version": "2.3.1.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.3.1/SignPicture-1.11-2.3.1.beta-universal.jar",
-			"local": "SignPicture-1.11-2.3.1.beta-universal.jar",
-			"message": "Supported Minecraft 1.11!",
+		"1.11": {
+			"version": "2.4.6",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.4.6/SignPicture-1.11-2.4.6-universal.jar",
+			"local": "SignPicture-1.11-2.4.6-universal.jar",
+			"message": "Support Uploading and Pasting!",
 			"message_local": {
-				"ja_JP": "Minecraft 1.11 に対応しました!"
+				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
 			}
 		}
 	},
