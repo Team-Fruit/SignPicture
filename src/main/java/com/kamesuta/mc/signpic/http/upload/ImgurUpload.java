@@ -33,19 +33,19 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class ImgurUpload extends Communicate implements Progressable, IUploader {
 	public static final Gson gson = new Gson();
 
-	protected UploadContent upload;
+	protected UploadRequest upreq;
 	protected String key;
 	protected boolean canceled;
 	protected ImgurResult result;
 
-	public ImgurUpload(final UploadContent upload, final String key) {
-		this.upload = upload;
+	public ImgurUpload(final UploadRequest upload, final String key) {
+		this.upreq = upload;
 		this.key = key;
 	}
 
 	@Override
 	public State getState() {
-		return this.upload.getState("§3Imgur: §r%s");
+		return this.upreq.getState("§3Imgur: §r%s");
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 		JsonReader jsonReader1 = null;
 		try {
 			tmp = Client.location.createCache("imgur");
-			FileUtils.copyInputStreamToFile(this.upload.getStream(), tmp);
+			FileUtils.copyInputStreamToFile(this.upreq.getStream(), tmp);
 
 			// create the post request.
 			final HttpPost httppost = new HttpPost(url);
@@ -82,7 +82,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				}
 			};
 
-			builder.addBinaryBody("image", countupstream, ContentType.DEFAULT_BINARY, this.upload.getName());
+			builder.addBinaryBody("image", countupstream, ContentType.DEFAULT_BINARY, this.upreq.getName());
 			httppost.setEntity(builder.build());
 
 			// execute request
@@ -98,7 +98,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 						final Content content = new ContentId(link).content();
 						FileUtils.moveFile(tmp, ContentLocation.cacheLocation(content.meta.getCacheID()));
 					}
-					onDone(new CommunicateResponse(this.result.success, null));
+					onDone(new CommunicateResponse(this.result!=null&&this.result.success, null));
 					return;
 				}
 			} else {

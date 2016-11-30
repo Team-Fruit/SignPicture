@@ -62,6 +62,15 @@
 					}
 				]
 			}
+		},
+		"shortener": {
+			"bitly": {
+				"config": [
+					{
+						"token": "9a2bae8d0385870dfad9e4ad0b874c468df04149"
+					}
+				]
+			}
 		}
 	},
 	"website": "https://minecraft.curseforge.com/projects/sign-picture",

@@ -23,6 +23,7 @@ public class Info {
 
 	public static class Api {
 		public Image image;
+		public Shortener shortener;
 
 		public static class Image {
 			public Gyazo gyazo;
@@ -41,6 +42,18 @@ public class Info {
 
 				public static class Config {
 					public String clientid;
+				}
+			}
+		}
+
+		public static class Shortener {
+			public Bitly bitly;
+
+			public static class Bitly {
+				public List<Config> config;
+
+				public static class Config {
+					public String token;
 				}
 			}
 		}

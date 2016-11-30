@@ -21,13 +21,13 @@ import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.upload.IUploader;
-import com.kamesuta.mc.signpic.http.upload.UploadContent;
+import com.kamesuta.mc.signpic.http.upload.UploadRequest;
 import com.kamesuta.mc.signpic.state.State;
 
 import net.minecraft.client.resources.I18n;
 
 public class FileUtilitiy {
-	public static boolean upload(final UploadContent content, final Runnable onDone) {
+	public static boolean upload(final UploadRequest content, final Runnable onDone) {
 		try {
 			final ImageUploaderFactory factory = getUploaderFactory();
 			final String key = getKey(factory);
@@ -67,14 +67,14 @@ public class FileUtilitiy {
 				for (final Object obj : droppedFiles)
 					if (obj instanceof File) {
 						final File file = (File) obj;
-						FileUtilitiy.upload(UploadContent.fromFile(file, new State()));
+						FileUtilitiy.upload(UploadRequest.fromFile(file, new State()));
 					}
 			} else if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
 				final BufferedImage bi = (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
 				try {
 					final File tmp = Client.location.createCache("paste");
 					ImageIO.write(bi, "png", tmp);
-					FileUtilitiy.upload(UploadContent.fromFile(tmp, new State()), new Runnable() {
+					FileUtilitiy.upload(UploadRequest.fromFile(tmp, new State()), new Runnable() {
 						@Override
 						public void run() {
 							FileUtils.deleteQuietly(tmp);
@@ -97,7 +97,7 @@ public class FileUtilitiy {
 		return true;
 	}
 
-	public static boolean upload(final UploadContent content) {
+	public static boolean upload(final UploadRequest content) {
 		return upload(content, null);
 	}
 

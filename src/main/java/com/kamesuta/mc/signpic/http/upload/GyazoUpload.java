@@ -33,19 +33,19 @@ import com.kamesuta.mc.signpic.util.Downloader;
 public class GyazoUpload extends Communicate implements Progressable, IUploader {
 	public static final Gson gson = new Gson();
 
-	protected UploadContent upload;
+	protected UploadRequest upreq;
 	protected String key;
 	protected boolean canceled;
 	protected GyazoResult result;
 
-	public GyazoUpload(final UploadContent upload, final String key) {
-		this.upload = upload;
+	public GyazoUpload(final UploadRequest upload, final String key) {
+		this.upreq = upload;
 		this.key = key;
 	}
 
 	@Override
 	public State getState() {
-		return this.upload.getState("§3Gyazo: §r%s");
+		return this.upreq.getState("§3Gyazo: §r%s");
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 		JsonReader jsonReader1 = null;
 		try {
 			tmp = Client.location.createCache("gyazo");
-			FileUtils.copyInputStreamToFile(this.upload.getStream(), tmp);
+			FileUtils.copyInputStreamToFile(this.upreq.getStream(), tmp);
 
 			// create the post request.
 			final HttpPost httppost = new HttpPost(url);
@@ -82,7 +82,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 			};
 
 			builder.addTextBody("client_id", this.key);
-			builder.addBinaryBody("imagedata", countupstream, ContentType.DEFAULT_BINARY, this.upload.getName());
+			builder.addBinaryBody("imagedata", countupstream, ContentType.DEFAULT_BINARY, this.upreq.getName());
 			httppost.setEntity(builder.build());
 
 			// execute request
