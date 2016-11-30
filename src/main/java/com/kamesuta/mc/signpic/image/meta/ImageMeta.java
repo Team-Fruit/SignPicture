@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,7 +12,7 @@ public class ImageMeta {
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
 	public final ImageTextureMap map;
-	private boolean hasInvalidMeta = false;
+	private boolean hasInvalidMeta;
 
 	public ImageMeta() {
 		this.size = new ImageSize();
@@ -30,10 +29,16 @@ public class ImageMeta {
 		return a||b||c||d;
 	}
 
-	public ImageMeta parse(final String src) {
+	public ImageMeta reset() {
 		this.size.reset();
 		this.offset.reset();
 		this.rotation.reset();
+		this.map.reset();
+		this.hasInvalidMeta = false;
+		return this;
+	}
+
+	public ImageMeta parse(final String src) {
 		boolean b = true;
 		final Matcher m = p.matcher(src);
 		while (m.find()) {
@@ -45,7 +50,13 @@ public class ImageMeta {
 					b = parseMeta(src, key, value)&&b;
 			}
 		}
-		this.hasInvalidMeta = !b;
+		this.hasInvalidMeta = this.hasInvalidMeta||!b;
+		return this;
+	}
+
+	public ImageMeta init(final String src) {
+		reset();
+		parse(src);
 		return this;
 	}
 
@@ -63,27 +74,6 @@ public class ImageMeta {
 	}
 
 	public static abstract class MetaParser {
-		private static final DecimalFormat signformat = new DecimalFormat(".##");
-
-		public static String format(final float f) {
-			if (f==0)
-				return "0";
-
-			final String str = signformat.format(f);
-
-			final String cut = ".0";
-
-			int end = str.length();
-			int last = cut.length();
-
-			while (end!=0&&last!=0)
-				if (cut.charAt(last-1)==str.charAt(end-1))
-					end--;
-				else
-					last--;
-			return str.substring(0, end);
-		}
-
 		public abstract boolean parse(String src, String key, String value);
 
 		public abstract MetaParser reset();

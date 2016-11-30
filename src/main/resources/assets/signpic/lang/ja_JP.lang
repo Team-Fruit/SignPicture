@@ -14,6 +14,7 @@ signpic.item.sign.desc.keyconflict.key=§c - 競合 §a%s§c の §a%s
 signpic.item.sign.desc.named.prop.size=§7 - サイズ: %s×%s
 signpic.item.sign.desc.named.prop.offset=§7 - オフセット: ⇨:%s, ⇧:%s, ↗:%s
 signpic.item.sign.desc.named.prop.rotation=§7 - 回転: %s
+signpic.item.sign.desc.named.meta=§7URL: %s§7
 signpic.item.sign.desc.named.meta=§7メタ情報: %s§7
 signpic.item.sign.desc.named.raw=§7名前: [%s§7]
 
@@ -33,7 +34,9 @@ signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
 signpic.gui.editor.size.width=幅
+signpic.gui.editor.size.width.unknown=縦横比を使用
 signpic.gui.editor.size.height=高さ
+signpic.gui.editor.size.height.unknown=縦横比を使用
 ### Offset
 signpic.gui.editor.offset.category=オフセット
 ### Rotation

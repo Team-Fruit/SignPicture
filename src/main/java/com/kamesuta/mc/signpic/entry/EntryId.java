@@ -64,10 +64,14 @@ public class EntryId {
 	}
 
 	public static EntryId fromTile(final TileEntitySign tile) {
+		if (tile==null)
+			return blank;
 		return fromChats(tile.signText);
 	}
 
 	public static EntryId fromChats(final ITextComponent[] chats) {
+		if (chats==null)
+			return blank;
 		final StringBuilder stb = new StringBuilder();
 		for (final ITextComponent chat : chats)
 			if (chat!=null)
@@ -76,7 +80,11 @@ public class EntryId {
 	}
 
 	public static EntryId fromItemStack(final ItemStack itemStack) {
-		return from(itemStack.getDisplayName());
+		if (itemStack==null)
+			return blank;
+		final String name = itemStack.getDisplayName();
+		final int index = StringUtils.lastIndexOf(name, "}");
+		return from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0));
 	}
 
 	public boolean hasContentId() {
@@ -126,9 +134,9 @@ public class EntryId {
 	public ImageMeta getMeta() {
 		if (hasMeta())
 			if (StringUtils.endsWith(this.id, "}"))
-				return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1));
+				return new ImageMeta().init(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1));
 			else
-				return new ImageMeta().parse(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
+				return new ImageMeta().init(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
 		else
 			return null;
 	}

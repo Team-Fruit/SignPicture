@@ -58,7 +58,7 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							final ImageTextureMap map = GuiImage.this.entry.meta.map;
+							final ImageTextureMap map = GuiImage.this.entry.getMeta().map;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(map.o*0.1f));
 							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
 						} else {
@@ -93,7 +93,7 @@ public class GuiImage extends WFrame {
 				add(new WPanel(new R()) {
 					@Override
 					protected void initWidget() {
-						final VCommon var = V.range(V.a(.5f), V.a(.8f), V.p(.5f));
+						final VCommon var = V.a(.8f);
 						add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
 						add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
 						if (Informations.instance.isUpdateRequired())

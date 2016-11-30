@@ -16,6 +16,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -200,7 +201,7 @@ public class SignHandler {
 					final Entry old = CurrentMode.instance.getEntryId().entry();
 					final EntryIdBuilder idb = new EntryIdBuilder();
 					idb.setURI(CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT) ? entry.contentId.getID() : old.contentId.getID());
-					idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.meta : old.meta);
+					idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.getMeta() : old.getMeta());
 					CurrentMode.instance.setEntryId(idb.build());
 					event.setCanceled(true);
 					Client.openEditor();
@@ -214,16 +215,25 @@ public class SignHandler {
 	@CoreEvent
 	public void onTooltip(final ItemTooltipEvent event) {
 		if (event.getItemStack().getItem()==Items.SIGN) {
+			final String dspname = event.getItemStack().getDisplayName();
+			final String name = StringUtils.substringAfterLast(dspname, "}");
+			final boolean useName = !StringUtils.isEmpty(name);
 			final EntryId id = EntryId.fromItemStack(event.getItemStack());
 			final Entry entry = id.entry();
 			final List<String> tip = event.getToolTip();
 			if (entry.isValid()) {
 				final String raw = !tip.isEmpty() ? tip.get(0) : "";
-				tip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
-				tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", entry.meta.size.width, entry.meta.size.height));
-				tip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z));
-				tip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", entry.meta.rotation.compose()));
-				tip.add(I18n.format("signpic.item.sign.desc.named.meta", entry.meta.compose()));
+				if (useName)
+					tip.set(0, name);
+				else
+					tip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
+				final ImageMeta meta = entry.getMeta();
+				tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
+				tip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
+				tip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+				if (useName)
+					tip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+				tip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 				tip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 			} else if (Config.instance.signTooltip||!Config.instance.guiExperienced) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
