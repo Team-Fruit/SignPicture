@@ -67,7 +67,14 @@
 			"bitly": {
 				"config": [
 					{
-						"token": "9a2bae8d0385870dfad9e4ad0b874c468df04149"
+						"key": "9a2bae8d0385870dfad9e4ad0b874c468df04149"
+					}
+				]
+			},
+			"googl": {
+				"config": [
+					{
+						"key": "AIzaSyCbJC4zTqtSRMGrMj1C4_jOesDhrB-TOuM"
 					}
 				]
 			}
