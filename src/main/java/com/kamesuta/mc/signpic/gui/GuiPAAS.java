@@ -21,7 +21,10 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 
@@ -67,11 +70,37 @@ public class GuiPAAS extends WFrame {
 						RenderHelper.startTexture();
 						OpenGL.glColor4f(1f, 1f, 1f, 1f);
 						OpenGL.glPushMatrix();
-						OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1(), 50f);
+						OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1(), 0f);
+						drawSign(GuiPAAS.this.task.entity);
+						OpenGL.glPopMatrix();
+					}
+
+					private void drawSign(final TileEntitySign sign) {
+						OpenGL.glPushMatrix();
+						OpenGL.glTranslatef(0.0F, 0.0F, 50.0F);
+						final float f1 = 93.75F;
 						OpenGL.glScalef(-f1, -f1, -f1);
-						OpenGL.glRotatef(180f, 0f, 1f, 0f);
-						Client.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, -1f);
-						Client.renderer.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, 1f);
+						OpenGL.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+						final Block block = sign.getBlockType();
+
+						if (block==Blocks.standing_sign) {
+							final float f2 = sign.getBlockMetadata()*360/16.0F;
+							OpenGL.glRotatef(f2, 0.0F, 1.0F, 0.0F);
+							OpenGL.glTranslatef(0F, -.33590F, 0.0F);
+						} else {
+							final int k = sign.getBlockMetadata();
+							float f3 = 0.0F;
+							if (k==2)
+								f3 = 180.0F;
+							if (k==4)
+								f3 = 90.0F;
+							if (k==5)
+								f3 = -90.0F;
+							OpenGL.glRotatef(f3, 0.0F, 1.0F, 0.0F);
+							OpenGL.glTranslatef(0.0F, -.02348F, 0.0F);
+						}
+
+						TileEntityRendererDispatcher.instance.renderTileEntityAt(sign, -0.5D, -0.75D, -0.5D, 0.0F);
 						OpenGL.glPopMatrix();
 					}
 				});
