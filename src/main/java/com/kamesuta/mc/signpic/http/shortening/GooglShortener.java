@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
@@ -48,6 +49,7 @@ public class GooglShortener extends Communicate implements Progressable, IShorte
 			final EntityBuilder builder = EntityBuilder.create();
 
 			final String reqjson = Client.gson.toJson(new GooglRequest(this.shortreq.getLongURL()));
+			builder.setContentType(ContentType.APPLICATION_JSON);
 			builder.setText(reqjson);
 			httppost.setEntity(builder.build());
 
