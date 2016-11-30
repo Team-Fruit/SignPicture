@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.text.DecimalFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,27 +74,6 @@ public class ImageMeta {
 	}
 
 	public static abstract class MetaParser {
-		private static final DecimalFormat signformat = new DecimalFormat(".##");
-
-		public static String format(final float f) {
-			if (f==0)
-				return "0";
-
-			final String str = signformat.format(f);
-
-			final String cut = ".0";
-
-			int end = str.length();
-			int last = cut.length();
-
-			while (end!=0&&last!=0)
-				if (cut.charAt(last-1)==str.charAt(end-1))
-					end--;
-				else
-					last--;
-			return str.substring(0, end);
-		}
-
 		public abstract boolean parse(String src, String key, String value);
 
 		public abstract MetaParser reset();

@@ -7,6 +7,7 @@ import java.util.ListIterator;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class ImageRotation extends ImageMeta.MetaParser {
@@ -71,7 +72,7 @@ public class ImageRotation extends ImageMeta.MetaParser {
 			else if (rotate==defaultOffset)
 				return this.type.name();
 			else
-				return this.type.name()+format(rotate);
+				return this.type.name()+ShortestFloatFormatter.format(rotate);
 		}
 	}
 

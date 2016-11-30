@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+
 public class ImageTextureMap extends ImageMeta.MetaParser {
 	public static final float defaultUV = 0f;
 	// Width Height
@@ -58,19 +60,19 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.u!=defaultUV)
-			stb.append("u").append(format(this.u));
+			stb.append("u").append(ShortestFloatFormatter.format(this.u));
 		if (this.v!=defaultUV)
-			stb.append("v").append(format(this.v));
+			stb.append("v").append(ShortestFloatFormatter.format(this.v));
 		if (this.w!=defaultWH)
-			stb.append("w").append(format(this.w));
+			stb.append("w").append(ShortestFloatFormatter.format(this.w));
 		if (this.h!=defaultWH)
-			stb.append("h").append(format(this.h));
+			stb.append("h").append(ShortestFloatFormatter.format(this.h));
 		if (this.c!=defaultCS)
-			stb.append("c").append(format(this.c));
+			stb.append("c").append(ShortestFloatFormatter.format(this.c));
 		if (this.s!=defaultCS)
-			stb.append("s").append(format(this.s));
+			stb.append("s").append(ShortestFloatFormatter.format(this.s));
 		if (this.o!=defaultOpacity)
-			stb.append("o").append(format(this.o));
+			stb.append("o").append(ShortestFloatFormatter.format(this.o));
 		if (this.r!=defaultRepeat)
 			stb.append("r");
 		if (this.m!=defaultMipMap)
