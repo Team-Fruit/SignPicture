@@ -31,10 +31,13 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
+import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
+import com.kamesuta.mc.signpic.http.shortening.ShorteningRequest;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
+import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -299,8 +302,11 @@ public class GuiMain extends WFrame {
 										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 										requestClose();
 										return true;
-									} else
-										Client.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+									} else {
+										final String longurl = entry.contentId.getURI();
+										ShortenerApiUtil.shortening(new ShorteningRequest(longurl, longurl, new State()));
+										Client.notice(I18n.format("signpic.gui.notice.startshortening"), 1f);
+									}
 								return false;
 							}
 

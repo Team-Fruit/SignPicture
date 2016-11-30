@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.http.upload.UploadApiUtil;
 import com.kamesuta.mc.signpic.http.upload.UploadRequest;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.state.State;
@@ -48,7 +49,7 @@ public class McUiUpload extends UiUpload {
 
 	@Override
 	protected void apply(final File f) {
-		if (FileUtilitiy.upload(UploadRequest.fromFile(f, new State())))
+		if (UploadApiUtil.upload(UploadRequest.fromFile(f, new State())))
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
 	}
