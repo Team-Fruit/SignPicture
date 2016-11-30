@@ -20,7 +20,6 @@ public class ShortenerApiUtil {
 			final String key = getKey(factory);
 			if (factory!=null&&key!=null) {
 				content.getPendingState().getMeta().put(GuiTask.HighlightPanel, true);
-				content.getPendingState().getMeta().put(GuiTask.ShowPanel, 3);
 				final IShortener upload = factory.create(content, key);
 				upload.setCallback(new ICommunicateCallback() {
 					@Override

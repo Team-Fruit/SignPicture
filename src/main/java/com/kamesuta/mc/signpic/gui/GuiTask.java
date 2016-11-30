@@ -172,7 +172,7 @@ public class GuiTask extends WPanel {
 
 		@Override
 		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-			return this.opacity.isFinished();
+			return this.opacity.isFinished()&&this.right.isFinished();
 		}
 
 		@Override
