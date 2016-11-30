@@ -81,6 +81,8 @@ signpic.gui.notice.versioning.downloadingAlready=最新版は既にダウンロ�
 signpic.gui.notice.toolongname=名前を付けるためにはURL+メタデータの長さが40文字以下である必要があります
 signpic.gui.notice.toolongplace=設置するためにはURL+メタデータの長さが60文字以下である必要があります
 signpic.gui.notice.startshortening=URLを短縮中です・・・ しばらくお待ちください
+signpic.gui.notice.shortened=URL短縮完了
+signpic.gui.notice.shorteningfailed=URL短縮失敗
 
 # Upload UI
 signpic.ui.description=ファイルアップローダー!
