@@ -77,7 +77,7 @@ public class SignPicLabel extends WBase {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
-		final ImageSize size1 = new ImageSize().setAspectSize(entry.meta.size, content.image.getSize());
+		final ImageSize size1 = new ImageSize().setAspectSize(entry.getMeta().size, content.image.getSize());
 		final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size1, new ImageSize().setArea(a));
 		final ImageSize size = new ImageSize().setImageSize(size2).scale(1f/100f);
 

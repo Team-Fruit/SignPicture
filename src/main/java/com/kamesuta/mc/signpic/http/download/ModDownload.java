@@ -97,7 +97,6 @@ public class ModDownload extends Communicate implements Progressable {
 			Client.notice(I18n.format("signpic.gui.notice.downloaded", local), 2f);
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
-			state.downloading = false;
 			state.downloadedFile = f1;
 
 			this.result = new ModDLResult(chat);
@@ -113,6 +112,7 @@ public class ModDownload extends Communicate implements Progressable {
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(tmp);
+			state.downloading = false;
 		}
 	}
 

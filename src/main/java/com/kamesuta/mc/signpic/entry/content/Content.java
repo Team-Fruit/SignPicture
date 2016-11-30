@@ -13,6 +13,7 @@ public class Content implements IInitable, ICollectable {
 	public final State state;
 	public final ContentLocation location;
 	public Image image;
+	public String meta;
 
 	public Content(final ContentId id) {
 		this.id = id;

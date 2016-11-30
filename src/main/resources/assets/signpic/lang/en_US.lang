@@ -24,6 +24,7 @@ signpic.item.sign.desc.named=Sign Picture§r §7(%s)
 signpic.item.sign.desc.named.prop.size=§7 - size: %s×%s
 signpic.item.sign.desc.named.prop.offset=§7 - offset: ⇨:%s, ⇧:%s, ↗:%s
 signpic.item.sign.desc.named.prop.rotation=§7 - rotation: %s
+signpic.item.sign.desc.named.url=§7url: %s§7
 signpic.item.sign.desc.named.meta=§7meta: %s§7
 signpic.item.sign.desc.named.raw=§7name: [%s§7]
 
@@ -44,25 +45,33 @@ signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.file=Upload
 signpic.gui.editor.paste=Paste
 signpic.gui.editor.textfield=Place URL Here!
+signpic.gui.editor.number.neg=-
+signpic.gui.editor.number.pos=+
+signpic.gui.editor.number.unknown=?
 ### Size
 signpic.gui.editor.size.category=Size
 signpic.gui.editor.size.width=W
 signpic.gui.editor.size.height=H
 signpic.gui.editor.size.width.neg=-
 signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.width.unknown=Aspect Ratio
 signpic.gui.editor.size.height.neg=-
 signpic.gui.editor.size.height.pos=+
+signpic.gui.editor.size.height.unknown=Aspect Ratio
 ### Offset
 signpic.gui.editor.offset.category=Offset
 signpic.gui.editor.offset.x=X
 signpic.gui.editor.offset.x.neg=⇦
 signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.x.unknown=0
 signpic.gui.editor.offset.y=Y
 signpic.gui.editor.offset.y.neg=⇩
 signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.y.unknown=0
 signpic.gui.editor.offset.z=Z
 signpic.gui.editor.offset.z.neg=↗
 signpic.gui.editor.offset.z.pos=↙
+signpic.gui.editor.offset.z.unknown=0
 ### Rotation
 signpic.gui.editor.rotation.category=Rotation
 signpic.gui.editor.rotation.up=↑
@@ -74,6 +83,7 @@ signpic.gui.editor.rotation.remove=-
 signpic.gui.editor.rotation.add=+
 signpic.gui.editor.rotation.neg=-
 signpic.gui.editor.rotation.pos=+
+signpic.gui.editor.rotation.unknown=0
 ## Settings
 signpic.gui.settings.api.upimage=Image Upload Settings
 signpic.gui.settings.api.upimage.type=API Type

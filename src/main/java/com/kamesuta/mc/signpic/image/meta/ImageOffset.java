@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+
 public class ImageOffset extends ImageMeta.MetaParser {
 	public static final float defaultOffset = 0.5f;
 
@@ -56,24 +58,24 @@ public class ImageOffset extends ImageMeta.MetaParser {
 		if (this.x!=0)
 			if (this.x<0)
 				if (this.x==-defaultOffset) stb.append("L");
-				else stb.append("L").append(format(-this.x));
+				else stb.append("L").append(ShortestFloatFormatter.format(-this.x));
 			else
 				if (this.x==defaultOffset) stb.append("R");
-				else stb.append("R").append(format(this.x));
+				else stb.append("R").append(ShortestFloatFormatter.format(this.x));
 		if (this.y!=0)
 			if (this.y<0)
 				if (this.y==-defaultOffset) stb.append("D");
-				else stb.append("D").append(format(-this.y));
+				else stb.append("D").append(ShortestFloatFormatter.format(-this.y));
 			else
 				if (this.y==defaultOffset) stb.append("U");
-				else stb.append("U").append(format(this.y));
+				else stb.append("U").append(ShortestFloatFormatter.format(this.y));
 		if (this.z!=0)
 			if (this.z<0)
 				if (this.z==-defaultOffset) stb.append("B");
-				else stb.append("B").append(format(-this.z));
+				else stb.append("B").append(ShortestFloatFormatter.format(-this.z));
 			else
 				if (this.z==defaultOffset) stb.append("F");
-				else stb.append("F").append(format(this.z));
+				else stb.append("F").append(ShortestFloatFormatter.format(this.z));
 		return stb.toString();
 		/* @formatter:on */
 	}
