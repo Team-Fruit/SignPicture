@@ -172,13 +172,14 @@ public class GuiTask extends WPanel {
 
 		@Override
 		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-			return this.opacity.isFinished()&&this.right.isFinished();
+			return this.opacity.isFinished();
 		}
 
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 			final Area a = getGuiPosition(pgp);
-			if (pgp.areaInside(a))
+			final Area b = new Area(pgp.x1(), a.y1(), pgp.x2(), a.y2());
+			if (pgp.areaInside(b))
 				super.draw(ev, pgp, p, frame, popacity);
 		}
 
