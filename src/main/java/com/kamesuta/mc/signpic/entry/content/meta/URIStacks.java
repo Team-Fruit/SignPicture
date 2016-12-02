@@ -34,7 +34,7 @@ public class URIStacks {
 		final StringBuilder stb = new StringBuilder();
 		for (final URI uri : this.uristack) {
 			final String frag = uri.getFragment();
-			final String[] metas = StringUtils.substringsBetween(frag, "@[", "]");
+			final String[] metas = StringUtils.substringsBetween(frag, "(=", "=)");
 			if (metas!=null)
 				for (final String meta : metas)
 					stb.append(meta);
