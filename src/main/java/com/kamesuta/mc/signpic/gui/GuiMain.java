@@ -76,8 +76,10 @@ public class GuiMain extends WFrame {
 
 	@Override
 	protected void initWidget() {
-		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+		if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 			CurrentMode.instance.setMode();
+			CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+		}
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
@@ -265,12 +267,17 @@ public class GuiMain extends WFrame {
 							}
 						}.setText(I18n.format("signpic.gui.editor.paste")));
 
-						float bottom = 20*4+5;
+						float bottom = 20*3+5;
 
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
+								if (CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+									CurrentMode.instance.setState(CurrentMode.State.CONTINUE, false);
+									CurrentMode.instance.setMode();
+									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+								} else
+									CurrentMode.instance.setState(CurrentMode.State.CONTINUE, true);
 								return true;
 							}
 
@@ -318,21 +325,6 @@ public class GuiMain extends WFrame {
 								return entry.isValid()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						}.setText(I18n.format("signpic.gui.editor.place")));
-						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
-							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								if (CurrentMode.instance.isMode()) {
-									CurrentMode.instance.setMode();
-									return true;
-								}
-								return false;
-							}
-
-							@Override
-							public boolean isEnabled() {
-								return CurrentMode.instance.isMode();
-							}
-						}.setText(I18n.format("signpic.gui.editor.cancel")));
 					}
 
 					@Override
