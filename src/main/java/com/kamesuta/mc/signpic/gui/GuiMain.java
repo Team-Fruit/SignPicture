@@ -76,10 +76,8 @@ public class GuiMain extends WFrame {
 
 	@Override
 	protected void initWidget() {
-		if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-			CurrentMode.instance.setMode();
-			CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
-		}
+		CurrentMode.instance.setMode();
+		CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
@@ -272,12 +270,7 @@ public class GuiMain extends WFrame {
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								if (CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-									CurrentMode.instance.setState(CurrentMode.State.CONTINUE, false);
-									CurrentMode.instance.setMode();
-									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
-								} else
-									CurrentMode.instance.setState(CurrentMode.State.CONTINUE, true);
+								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
 								return true;
 							}
 
