@@ -11,10 +11,19 @@ public class CurrentMode {
 	private CurrentMode() {
 	}
 
+	private boolean isShortening;
 	private EntryId handSign = EntryId.blank;
 	private EntryId entryId = EntryId.blank;
 	private Mode mode = Mode.NONE;
 	private final EnumSet<State> states = EnumSet.noneOf(State.class);
+
+	public void setShortening(final boolean isShortening) {
+		this.isShortening = isShortening;
+	}
+
+	public boolean isShortening() {
+		return this.isShortening;
+	}
 
 	public void setMode(final Mode mode) {
 		this.mode = mode;

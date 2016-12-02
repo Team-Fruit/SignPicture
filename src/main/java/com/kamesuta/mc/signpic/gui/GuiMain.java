@@ -32,12 +32,10 @@ import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
-import com.kamesuta.mc.signpic.http.shortening.ShorteningRequest;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
-import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -78,6 +76,8 @@ public class GuiMain extends WFrame {
 
 	@Override
 	protected void initWidget() {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+			CurrentMode.instance.setMode();
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
@@ -296,17 +296,14 @@ public class GuiMain extends WFrame {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								if (entry.isValid())
-									if (entry.id.isPlaceable()) {
-										CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
-										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
-										requestClose();
-										return true;
-									} else {
-										final String longurl = entry.contentId.getURI();
-										ShortenerApiUtil.shortening(new ShorteningRequest(longurl, longurl, new State()));
-										Client.notice(I18n.format("signpic.gui.notice.startshortening"), 1f);
-									}
+								if (entry.isValid()) {
+									if (!entry.id.isPlaceable())
+										ShortenerApiUtil.requestShoretning(entry.content().id);
+									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
+									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
+									requestClose();
+									return true;
+								}
 								return false;
 							}
 

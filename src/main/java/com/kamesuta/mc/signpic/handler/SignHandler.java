@@ -7,7 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
@@ -16,6 +19,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
+import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
@@ -85,13 +89,14 @@ public class SignHandler {
 		this.isPlaceMode = CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 		if (handSignValid||this.isPlaceMode) {
 			final EntryId entryId = CurrentMode.instance.getEntryId();
-			if (event.gui instanceof GuiEditSign)
-				check: {
+			if (event.gui instanceof GuiEditSign) {
+				event.setCanceled(true);
+				final EntryId placeSign = handSignValid ? handSign : entryId;
+				if (placeSign.isPlaceable()) {
 					if (guiEditSignTileEntity!=null)
 						try {
 							final TileEntitySign tileSign = (TileEntitySign) guiEditSignTileEntity.get(event.gui);
-							Sign.placeSign(handSignValid ? handSign : entryId, tileSign);
-							event.setCanceled(true);
+							Sign.placeSign(placeSign, tileSign);
 							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 								CurrentMode.instance.setMode();
 								final SignEntity se = Sign.preview;
@@ -104,25 +109,26 @@ public class SignHandler {
 									}
 								}
 							}
-							break check;
 						} catch (final Exception e) {
 							Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
 						}
-					Client.notice(I18n.format("signpic.chat.error.place"));
+					else
+						Client.notice(I18n.format("signpic.chat.error.place"));
+				} else if (CurrentMode.instance.isShortening())
+					Client.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
+				else
+					Client.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+			} else if (event.gui instanceof GuiRepair) {
+				if (!entryId.isNameable())
+					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
+				this.repairGuiTask = (GuiRepair) event.gui;
+				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+					CurrentMode.instance.setMode();
+					Sign.preview.setVisible(false);
+					CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+					CurrentMode.instance.setState(CurrentMode.State.SEE, false);
 				}
-			else if (event.gui instanceof GuiRepair)
-				if (entryId.isNameable()) {
-					this.repairGuiTask = (GuiRepair) event.gui;
-					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-						CurrentMode.instance.setMode();
-						Sign.preview.setVisible(false);
-						CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
-						CurrentMode.instance.setState(CurrentMode.State.SEE, false);
-					}
-				} else {
-					Client.notice(I18n.format("signpic.gui.notice.toolongname"));
-					event.setCanceled(true);
-				}
+			}
 		}
 	}
 
@@ -153,6 +159,8 @@ public class SignHandler {
 			}
 	}
 
+	protected VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
+
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
 		if (event.gui instanceof GuiRepair)
@@ -168,6 +176,11 @@ public class SignHandler {
 				MPanel.drawBack(a);
 				WGui.texture().bindTexture(SignPicLabel.defaultTexture);
 				WGui.drawTextureSize(guiLeft-42, guiTop+3, 42, 42);
+				if (CurrentMode.instance.isShortening()) {
+					final Area b = new Area(guiLeft, guiTop-20, event.gui.width-guiLeft, guiTop);
+					WGui.fontColor(1f, 1f, 1f, this.o.get());
+					WGui.drawString(I18n.format("signpic.gui.notice.shortening"), b, WGui.Align.CENTER, WGui.VerticalAlign.MIDDLE, true);
+				}
 			}
 	}
 

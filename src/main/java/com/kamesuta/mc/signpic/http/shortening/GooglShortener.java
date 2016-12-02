@@ -33,7 +33,7 @@ public class GooglShortener extends Communicate implements Progressable, IShorte
 
 	@Override
 	public State getState() {
-		return this.shortreq.getState("§dBitly: §r%s");
+		return this.shortreq.getState("§dgoo.gl: §r%s");
 	}
 
 	@Override

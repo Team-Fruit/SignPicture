@@ -4,12 +4,15 @@ import java.io.IOException;
 
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.state.State;
 
 import net.minecraft.client.resources.I18n;
 
@@ -26,8 +29,7 @@ public class ShortenerApiUtil {
 					public void onDone(final ICommunicateResponse res) {
 						if (upload.getShortLink()!=null) {
 							final String url = upload.getShortLink();
-							if (!GuiMain.setContentId(url))
-								Client.notice(I18n.format("signpic.gui.notice.shortened", content.getName()), 2);
+							GuiMain.setContentId(url);
 							if (onDone!=null)
 								onDone.run();
 						}
@@ -56,5 +58,20 @@ public class ShortenerApiUtil {
 		if (factory!=null)
 			return new Apis.KeySetting(factory.keys()).getConfigOrRandom();
 		return null;
+	}
+
+	public static void requestShoretning(ContentId id) {
+		if (!CurrentMode.instance.isShortening()) {
+			final String longurl = id.getURI();
+			CurrentMode.instance.setShortening(true);
+			ShortenerApiUtil.shortening(new ShorteningRequest(longurl, longurl, new State()), new Runnable() {
+				@Override
+				public void run() {
+					CurrentMode.instance.setShortening(false);
+				}
+			});
+		} else {
+			Client.notice(I18n.format("signpic.gui.notice.shorteningother"));
+		}
 	}
 }
