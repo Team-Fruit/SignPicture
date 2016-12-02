@@ -67,7 +67,7 @@ public class ContentDownload extends Communicate implements Progressable {
 			final String endid = ContentLocation.hash(end);
 			this.content.meta.setCacheID(endid);
 			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(endid));
-			cachemeta.setDirty(false);
+			cachemeta.setURL(end);
 
 			final File cachefile = ContentLocation.cacheLocation(endid);
 			if (cachemeta.isAvailable()&&!cachemeta.isDirty()&&cachefile.exists()) {
@@ -75,6 +75,8 @@ public class ContentDownload extends Communicate implements Progressable {
 				onDone(new CommunicateResponse(true, null));
 				return;
 			}
+
+			cachemeta.setDirty(false);
 
 			final HttpEntity entity = response.getEntity();
 			cachemeta.setMime(ContentType.getOrDefault(entity).getMimeType());

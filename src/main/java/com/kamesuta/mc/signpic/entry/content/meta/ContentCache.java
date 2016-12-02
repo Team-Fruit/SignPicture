@@ -14,6 +14,16 @@ public class ContentCache {
 		};
 	}
 
+	public String getURL() {
+		return this.cacheio.get().url;
+	}
+
+	public ContentCache setURL(final String url) {
+		this.cacheio.get().url = url;
+		this.cacheio.save();
+		return this;
+	}
+
 	public String getMime() {
 		return this.cacheio.get().mime;
 	}
@@ -73,6 +83,10 @@ public class ContentCache {
 		 * format version
 		 */
 		public int format = FormatVersion;
+		/**
+		 * content End URL
+		 */
+		public String url;
 		/**
 		 * content MIME type
 		 */
