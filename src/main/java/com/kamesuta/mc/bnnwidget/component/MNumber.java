@@ -1,17 +1,15 @@
 package com.kamesuta.mc.bnnwidget.component;
 
-import java.text.DecimalFormat;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta.MetaParser;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -54,7 +52,7 @@ public class MNumber extends WPanel {
 			f = .01f;
 		else
 			f = 1f;
-		MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText())-f));
+		MNumber.this.field.setText(ShortestFloatFormatter.format(NumberUtils.toFloat(MNumber.this.field.getText())-f));
 		return true;
 	}
 
@@ -66,12 +64,12 @@ public class MNumber extends WPanel {
 			f = .01f;
 		else
 			f = 1f;
-		MNumber.this.field.setText(format(NumberUtils.toFloat(MNumber.this.field.getText())+f));
+		MNumber.this.field.setText(ShortestFloatFormatter.format(NumberUtils.toFloat(MNumber.this.field.getText())+f));
 		return true;
 	}
 
 	public MNumber setNumber(final float f) {
-		this.field.setText(Float.isNaN(f) ? "" : MetaParser.format(f));
+		this.field.setText(Float.isNaN(f) ? "" : ShortestFloatFormatter.format(f));
 		return this;
 	}
 
@@ -94,26 +92,5 @@ public class MNumber extends WPanel {
 	}
 
 	protected void onNumberChanged(final String oldText, final String newText) {
-	}
-
-	private static final DecimalFormat signformat = new DecimalFormat(".##");
-
-	public static String format(final float f) {
-		if (f==0)
-			return "0";
-
-		final String str = signformat.format(f);
-
-		final String cut = ".0";
-
-		int end = str.length();
-		int last = cut.length();
-
-		while (end!=0&&last!=0)
-			if (cut.charAt(last-1)==str.charAt(end-1))
-				end--;
-			else
-				last--;
-		return str.substring(0, end);
 	}
 }

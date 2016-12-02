@@ -93,7 +93,7 @@ public class GuiImage extends WFrame {
 				add(new WPanel(new R()) {
 					@Override
 					protected void initWidget() {
-						final VCommon var = V.range(V.a(.5f), V.a(.8f), V.p(.5f));
+						final VCommon var = V.a(.8f);
 						add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
 						add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
 						if (Informations.instance.isUpdateRequired())
