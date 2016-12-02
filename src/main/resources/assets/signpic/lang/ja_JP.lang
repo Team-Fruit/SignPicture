@@ -40,8 +40,10 @@ signpic.gui.editor.offset.category=オフセット
 ### Rotation
 signpic.gui.editor.rotation.category=回転
 ## Settings
-signpic.gui.settings.api.upimage=画像アップロード設定
-signpic.gui.settings.api.urlshortener=URL短縮設定
+signpic.gui.settings.api.upimage=画像
+signpic.gui.settings.api.upimage.desc=画像アップロード設定
+signpic.gui.settings.api.urlshortener=短縮URL
+signpic.gui.settings.api.urlshortener.desc=URL短縮設定
 signpic.gui.settings.api.type=APIの種類
 signpic.gui.settings.api.key=APIキー
 signpic.gui.settings.default=自動

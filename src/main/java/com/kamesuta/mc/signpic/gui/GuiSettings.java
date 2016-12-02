@@ -19,6 +19,7 @@ import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
+import com.kamesuta.mc.bnnwidget.component.MTab;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -142,8 +143,10 @@ public class GuiSettings extends WPanel {
 										drawTexture(a);
 									}
 								});
-								add(new GuiApis<ImageUploaderFactory>(new R(Coord.left(5), Coord.width(200), Coord.top(33), Coord.height(82)), Apis.instance.imageUploaders, I18n.format("signpic.gui.settings.api.upimage")));
-								add(new GuiApis<URLShortenerFactory>(new R(Coord.left(5+200), Coord.width(200), Coord.top(33), Coord.height(82)), Apis.instance.urlShorteners, I18n.format("signpic.gui.settings.api.urlshortener")));
+								final MTab tab = new MTab(new R(Coord.left(5), Coord.width(250), Coord.top(33), Coord.height(82)), Coord.CoordSide.Left, 15f, 15f);
+								tab.addTab(I18n.format("signpic.gui.settings.api.upimage"), new GuiApis<ImageUploaderFactory>(new R(), Apis.instance.imageUploaders, I18n.format("signpic.gui.settings.api.upimage.desc")));
+								tab.addTab(I18n.format("signpic.gui.settings.api.urlshortener"), new GuiApis<URLShortenerFactory>(new R(), Apis.instance.urlShorteners, I18n.format("signpic.gui.settings.api.urlshortener.desc")));
+								add(tab);
 								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected void initWidget() {

@@ -83,8 +83,10 @@ signpic.gui.editor.rotation.neg=-
 signpic.gui.editor.rotation.pos=+
 signpic.gui.editor.rotation.unknown=0
 ## Settings
-signpic.gui.settings.api.upimage=Image Upload Settings
-signpic.gui.settings.api.urlshortener=URL Shortener Settings
+signpic.gui.settings.api.upimage=Image
+signpic.gui.settings.api.upimage.desc=Image Upload Settings
+signpic.gui.settings.api.urlshortener=Shortener
+signpic.gui.settings.api.urlshortener.desc=URL Shortener Settings
 signpic.gui.settings.api.type=API Type
 signpic.gui.settings.api.key=API Key
 signpic.gui.settings.default=Default
