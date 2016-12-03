@@ -95,6 +95,7 @@ public final class Config extends Configuration {
 	public static abstract class ConfigProperty<E> {
 		protected final Configuration config;
 		protected final Property property;
+		private transient E prop;
 
 		protected ConfigProperty(final Configuration config, final Property property) {
 			this.config = config;
@@ -106,7 +107,14 @@ public final class Config extends Configuration {
 			return this;
 		}
 
-		public abstract E get();
+		protected void setProp(final E prop) {
+			if (!this.property.requiresMcRestart())
+				this.prop = prop;
+		}
+
+		public E get() {
+			return this.prop;
+		}
 
 		public abstract ConfigProperty<E> set(E value);
 
@@ -131,22 +139,15 @@ public final class Config extends Configuration {
 		}
 
 		private static class StringConfigProperty extends ConfigProperty<String> {
-			private transient String prop;
-
 			protected StringConfigProperty(final Configuration config, final Property property) {
 				super(config, property);
-				this.prop = this.property.getString();
-			}
-
-			@Override
-			public String get() {
-				return this.prop;
+				setProp(this.property.getString());
 			}
 
 			@Override
 			public StringConfigProperty set(final String value) {
 				this.property.set(value);
-				this.prop = value;
+				setProp(value);
 				this.config.save();
 				return this;
 			}
@@ -155,35 +156,28 @@ public final class Config extends Configuration {
 			public StringConfigProperty reset() {
 				final String p = this.property.getDefault();
 				this.property.set(p);
-				this.prop = p;
+				setProp(p);
 				this.config.save();
 				return this;
 			}
 
 			@Override
 			public ConfigProperty<String> reload() {
-				this.prop = this.property.getString();
+				setProp(this.property.getString());
 				return this;
 			}
 		}
 
 		private static class BooleanConfigProperty extends ConfigProperty<Boolean> {
-			private transient Boolean prop;
-
 			protected BooleanConfigProperty(final Configuration config, final Property property) {
 				super(config, property);
-				this.prop = this.property.getBoolean();
-			}
-
-			@Override
-			public Boolean get() {
-				return this.prop;
+				setProp(this.property.getBoolean());
 			}
 
 			@Override
 			public BooleanConfigProperty set(final Boolean value) {
 				this.property.set(value);
-				this.prop = value;
+				setProp(value);
 				this.config.save();
 				return this;
 			}
@@ -192,35 +186,28 @@ public final class Config extends Configuration {
 			public BooleanConfigProperty reset() {
 				final String p = this.property.getDefault();
 				this.property.set(p);
-				this.prop = this.property.getBoolean();
+				setProp(this.property.getBoolean());
 				this.config.save();
 				return this;
 			}
 
 			@Override
 			public BooleanConfigProperty reload() {
-				this.prop = this.property.getBoolean();
+				setProp(this.property.getBoolean());
 				return this;
 			}
 		}
 
 		private static class DoubleConfigProperty extends ConfigProperty<Double> {
-			private transient Double prop;
-
 			protected DoubleConfigProperty(final Configuration config, final Property property) {
 				super(config, property);
-				this.prop = this.property.getDouble();
-			}
-
-			@Override
-			public Double get() {
-				return this.prop;
+				setProp(this.property.getDouble());
 			}
 
 			@Override
 			public DoubleConfigProperty set(final Double value) {
 				this.property.set(value);
-				this.prop = value;
+				setProp(value);
 				this.config.save();
 				return this;
 			}
@@ -229,36 +216,29 @@ public final class Config extends Configuration {
 			public DoubleConfigProperty reset() {
 				final String p = this.property.getDefault();
 				this.property.set(p);
-				this.prop = this.property.getDouble();
+				setProp(this.property.getDouble());
 				this.config.save();
 				return this;
 			}
 
 			@Override
 			public DoubleConfigProperty reload() {
-				this.prop = this.property.getDouble();
+				setProp(this.property.getDouble());
 				return this;
 			}
 		}
 
 		private static class IntegerConfigProperty extends ConfigProperty<Integer> {
-			private transient Integer prop;
-
 			protected IntegerConfigProperty(final Configuration config, final Property property) {
 				super(config, property);
-				this.prop = this.property.getInt();
+				setProp(this.property.getInt());
 				property.getType();
-			}
-
-			@Override
-			public Integer get() {
-				return this.prop;
 			}
 
 			@Override
 			public IntegerConfigProperty set(final Integer value) {
 				this.property.set(value);
-				this.prop = value;
+				setProp(value);
 				this.config.save();
 				return this;
 			}
@@ -267,14 +247,14 @@ public final class Config extends Configuration {
 			public IntegerConfigProperty reset() {
 				final String p = this.property.getDefault();
 				this.property.set(p);
-				this.prop = this.property.getInt();
+				setProp(this.property.getInt());
 				this.config.save();
 				return this;
 			}
 
 			@Override
 			public IntegerConfigProperty reload() {
-				this.prop = this.property.getInt();
+				setProp(this.property.getInt());
 				return this;
 			}
 		}
