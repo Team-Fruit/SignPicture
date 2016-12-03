@@ -97,9 +97,10 @@ public final class Config extends Configuration {
 		protected final Property property;
 		private transient E prop;
 
-		protected ConfigProperty(final Configuration config, final Property property) {
+		protected ConfigProperty(final Configuration config, final Property property, final E prop) {
 			this.config = config;
 			this.property = property;
+			this.prop = prop;
 		}
 
 		public ConfigProperty<E> setComment(final String comment) {
@@ -140,8 +141,7 @@ public final class Config extends Configuration {
 
 		private static class StringConfigProperty extends ConfigProperty<String> {
 			protected StringConfigProperty(final Configuration config, final Property property) {
-				super(config, property);
-				setProp(this.property.getString());
+				super(config, property, property.getString());
 			}
 
 			@Override
@@ -170,8 +170,7 @@ public final class Config extends Configuration {
 
 		private static class BooleanConfigProperty extends ConfigProperty<Boolean> {
 			protected BooleanConfigProperty(final Configuration config, final Property property) {
-				super(config, property);
-				setProp(this.property.getBoolean());
+				super(config, property, property.getBoolean());
 			}
 
 			@Override
@@ -200,8 +199,7 @@ public final class Config extends Configuration {
 
 		private static class DoubleConfigProperty extends ConfigProperty<Double> {
 			protected DoubleConfigProperty(final Configuration config, final Property property) {
-				super(config, property);
-				setProp(this.property.getDouble());
+				super(config, property, property.getDouble());
 			}
 
 			@Override
@@ -230,8 +228,7 @@ public final class Config extends Configuration {
 
 		private static class IntegerConfigProperty extends ConfigProperty<Integer> {
 			protected IntegerConfigProperty(final Configuration config, final Property property) {
-				super(config, property);
-				setProp(this.property.getInt());
+				super(config, property, property.getInt());
 				property.getType();
 			}
 
