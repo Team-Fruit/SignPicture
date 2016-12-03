@@ -35,32 +35,10 @@ signpic.gui.editor.textfield=請放置網址！
 signpic.gui.editor.size.category=尺寸
 signpic.gui.editor.size.width=寬度
 signpic.gui.editor.size.height=高度
-signpic.gui.editor.size.width.neg=-
-signpic.gui.editor.size.width.pos=+
-signpic.gui.editor.size.height.neg=-
-signpic.gui.editor.size.height.pos=+
 ### Offset
 signpic.gui.editor.offset.category=偏移
-signpic.gui.editor.offset.x=X
-signpic.gui.editor.offset.x.neg=⇦
-signpic.gui.editor.offset.x.pos=⇨
-signpic.gui.editor.offset.y=Y
-signpic.gui.editor.offset.y.neg=⇩
-signpic.gui.editor.offset.y.pos=⇧
-signpic.gui.editor.offset.z=Z
-signpic.gui.editor.offset.z.neg=↗
-signpic.gui.editor.offset.z.pos=↙
 ### Rotation
 signpic.gui.editor.rotation.category=迴轉
-signpic.gui.editor.rotation.up=↑
-signpic.gui.editor.rotation.down=↓
-signpic.gui.editor.rotation.x=X
-signpic.gui.editor.rotation.y=Y
-signpic.gui.editor.rotation.z=Z
-signpic.gui.editor.rotation.remove=-
-signpic.gui.editor.rotation.add=+
-signpic.gui.editor.rotation.neg=-
-signpic.gui.editor.rotation.pos=+
 ## Settings
 signpic.gui.settings.api.upimage=圖像上傳設置
 signpic.gui.settings.api.type=API 類型
@@ -70,7 +48,6 @@ signpic.gui.settings.config=配置
 signpic.gui.settings.paas=防止作弊
 ## Update
 signpic.gui.update.message=新版本的SignPicture！ 可用！ 請點擊這裡更新。
-signpic.gui.update.message.changelog=%s
 ## Prevent Anti-AutoSign
 signpic.gui.paas.count=請稍候 ( %d / %d 字母 )
 signpic.gui.paas.time=Esc取消 ( %.2f / %.2f 秒 )
@@ -116,24 +93,6 @@ signpic.advmsg.ioerror=讀取失敗: §7%s
 signpic.advmsg.unknown=未知的錯誤: §7%s
 signpic.advmsg.format.unsupported=不支援的標誌圖片
 signpic.advmsg.format.needupdate=嘗試新版本！
-
-# Command
-signpic.command.aliases=Aliases: %s
-signpic.command.help=Type '%s' for help.
-signpic.command.list=Available Sub-Commands:
-signpic.command.permlevel=Permission Level: %s
-signpic.command.noperms=You do not have permission to use this command.
-signpic.command.signpic.help=Various commands for Railcraft
-signpic.command.signpic.format=Format: /%s <sub-command>
-signpic.command.signpic.version.desc=- %s : Version Tools
-signpic.command.signpic.version.help=Tools for version manage.
-signpic.command.signpic.version.format=Format: /%s
-signpic.command.signpic.version.check.desc=- %s : Check New Version
-signpic.command.signpic.version.check.help=Run version checker.
-signpic.command.signpic.version.check.format=Format: /%s
-signpic.command.signpic.version.update.desc=- %s : Update SignPicture
-signpic.command.signpic.version.update.help=Start SignPicture updating.
-signpic.command.signpic.version.update.format=Format: /%s
 
 # Version Checking
 signpic.versioning.check.start=開始檢查
