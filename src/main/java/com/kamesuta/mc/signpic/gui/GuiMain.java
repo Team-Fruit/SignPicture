@@ -355,12 +355,10 @@ public class GuiMain extends WFrame {
 				add(OverlayFrame.instance.pane);
 			}
 		});
-		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
+		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta.get() ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
 			Informations.instance.onlineCheck(null);
-		if (!Config.instance.guiExperienced) {
-			Config.instance.get("Internal", "GuiExperienced", false).set(true);
-			Config.instance.save();
-		}
+		if (!Config.instance.guiExperienced.get())
+			Config.instance.guiExperienced.set(true);
 	}
 
 	public MainTextField getTextField() {

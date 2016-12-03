@@ -238,7 +238,7 @@ public class SignHandler {
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
-			} else if (Config.instance.signTooltip||!Config.instance.guiExperienced) {
+			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());

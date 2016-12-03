@@ -31,8 +31,7 @@ public class CommandVersion extends SubCommand {
 
 		@Override
 		public void processCommand(final ICommandSender sender, final String[] args) {
-			Config.instance.get("Version", "JoinBeta", true).set(true);
-			Config.instance.save();
+			Config.instance.informationJoinBeta.set(false);
 			super.processCommand(sender, args);
 		}
 	}

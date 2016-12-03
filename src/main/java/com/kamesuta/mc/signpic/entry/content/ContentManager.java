@@ -22,7 +22,7 @@ import com.kamesuta.mc.signpic.entry.ITickEntry;
 public class ContentManager implements ITickEntry {
 	public static ContentManager instance = new ContentManager();
 
-	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads,
+	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads.get(),
 			new ThreadFactoryBuilder().setNameFormat("signpic-content-%d").build());
 	private final Map<ContentId, ContentSlot> registry = Maps.newConcurrentMap();
 	private final Queue<ContentSlot> loadqueue = Queues.newConcurrentLinkedQueue();
@@ -67,7 +67,7 @@ public class ContentManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		this.loadtick++;
-		if (this.loadtick>Config.instance.contentLoadTick) {
+		if (this.loadtick>Config.instance.contentLoadTick.get()) {
 			this.loadtick = 0;
 			final ContentSlot loadprogress = this.loadqueue.poll();
 			if (loadprogress!=null)
@@ -75,7 +75,7 @@ public class ContentManager implements ITickEntry {
 		}
 
 		this.divisiontick++;
-		if (this.divisiontick>Config.instance.contentSyncTick) {
+		if (this.divisiontick>Config.instance.contentSyncTick.get()) {
 			this.divisiontick = 0;
 			IDivisionProcessable divisionprocess;
 			if ((divisionprocess = this.divisionqueue.peek())!=null)
@@ -135,7 +135,7 @@ public class ContentManager implements ITickEntry {
 
 		@Override
 		protected int getCollectTimes() {
-			return Config.instance.contentGCtick;
+			return Config.instance.contentGCtick.get();
 		}
 	}
 }

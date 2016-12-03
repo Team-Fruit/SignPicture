@@ -72,7 +72,7 @@ public class MButton extends WBase {
 		final Area a = getGuiPosition(pgp);
 		final float opacity = getGuiOpacity(popacity);
 
-		if (Config.instance.informationTryNew) {
+		if (Config.instance.informationTryNew.get()) {
 			RenderHelper.startShape();
 			if (isEnabled()) {
 				OpenGL.glColor4f(.2f, .2f, .2f, opacity*.2f);

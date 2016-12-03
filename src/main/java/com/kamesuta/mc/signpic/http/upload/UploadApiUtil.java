@@ -55,7 +55,7 @@ public class UploadApiUtil {
 
 	public static String getKey(final ImageUploaderFactory factory) {
 		if (factory!=null)
-			return new Apis.KeySetting(factory.keys()).getConfigOrRandom();
+			return factory.keySettings().getConfigOrRandom();
 		return null;
 	}
 }

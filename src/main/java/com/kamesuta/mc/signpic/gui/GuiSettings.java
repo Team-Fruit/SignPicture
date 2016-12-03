@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +36,7 @@ import com.kamesuta.mc.signpic.Apis.Setting;
 import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Config.ConfigProperty;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
@@ -46,7 +46,6 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Property;
 
 public class GuiSettings extends WPanel {
 	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
@@ -70,7 +69,7 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui;
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui.get();
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
@@ -152,17 +151,16 @@ public class GuiSettings extends WPanel {
 									protected void initWidget() {
 										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
 											{
-												check(getConfig().getBoolean(true));
+												check(getConfig().get());
 											}
 
-											private Property getConfig() {
-												return Config.instance.get("Multiplay.PreventAntiAutoSign", "Enable", true);
+											private ConfigProperty<Boolean> getConfig() {
+												return Config.instance.multiplayPAAS;
 											}
 
 											@Override
 											protected void onCheckChanged(final boolean oldCheck) {
 												getConfig().set(isCheck());
-												Config.instance.save();
 											}
 										});
 										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
@@ -347,10 +345,10 @@ public class GuiSettings extends WPanel {
 			@Override
 			protected void initWidget() {
 				final ApiFactory factory = GuiApis.this.typesetting.solve(GuiApis.this.typesetting.getConfig());
-				Set<String> keys = null;
 				if (factory!=null)
-					keys = factory.keys();
-				GuiApis.this.box.add(new Key(new R(), new Apis.KeySetting(keys)));
+					GuiApis.this.box.set(new Key(new R(), factory.keySettings()));
+				else
+					GuiApis.this.box.set(null);
 			}
 		};
 
@@ -392,10 +390,10 @@ public class GuiSettings extends WPanel {
 								if (!StringUtils.equals(newText, GuiApis.this.typesetting.getConfig()))
 									GuiApis.this.typesetting.setConfig(newText);
 								final ApiFactory factory = GuiApis.this.typesetting.solve(newText);
-								Set<String> keys = null;
 								if (factory!=null)
-									keys = factory.keys();
-								GuiApis.this.box.add(new Key(new R(), new Apis.KeySetting(keys)));
+									GuiApis.this.box.set(new Key(new R(), factory.keySettings()));
+								else
+									GuiApis.this.box.set(null);
 							}
 						}
 					});

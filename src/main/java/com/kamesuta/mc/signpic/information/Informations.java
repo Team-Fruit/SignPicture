@@ -57,7 +57,7 @@ public final class Informations {
 		public InfoVersion onlineVersion() {
 			final InfoVersion stable = stableVersion();
 			final InfoVersion unstable = unstableVersion();
-			return Config.instance.informationJoinBeta&&unstable.compare(stable) ? unstable : stable;
+			return Config.instance.informationJoinBeta.get()&&unstable.compare(stable) ? unstable : stable;
 		}
 
 		public static boolean equalsVersion(final InfoSource a, final InfoSource b) {
@@ -264,7 +264,7 @@ public final class Informations {
 
 	public void onTick(final InfoSource source, final InfoState state) {
 		final EntityPlayer player = Client.mc.thePlayer;
-		if (Config.instance.informationNotice&&!state.triedToWarnPlayer)
+		if (Config.instance.informationNotice.get()&&!state.triedToWarnPlayer)
 			notice(source, state, player);
 	}
 

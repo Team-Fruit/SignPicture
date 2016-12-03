@@ -81,7 +81,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
+				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity.get().floatValue());
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
 

@@ -51,28 +51,26 @@ public class Apis {
 	public final MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
 		@Override
 		public String getConfig() {
-			return Config.instance.apiUploaderType;
+			return Config.instance.apiUploaderType.get();
 		}
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Upload", "Type", "").set(setting);
-			Config.instance.get("Api.Upload", "Key", "").set("");
-			Config.instance.save();
+			Config.instance.apiUploaderType.set(setting);
+			Config.instance.apiUploaderKey.set("");
 		};
 	};
 
 	public final MapSetting<URLShortenerFactory> urlShorteners = new MapSetting<URLShortenerFactory>() {
 		@Override
 		public String getConfig() {
-			return Config.instance.apiShortenerType;
+			return Config.instance.apiShortenerType.get();
 		}
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Shortener", "Type", "").set(setting);
-			Config.instance.get("Api.Shortener", "Key", "").set("");
-			Config.instance.save();
+			Config.instance.apiShortenerType.set(setting);
+			Config.instance.apiShortenerKey.set("");
 		};
 	};
 
@@ -84,26 +82,44 @@ public class Apis {
 		this.urlShorteners.registerSetting(name, shortener);
 	}
 
-	public static class KeySetting extends Setting {
-		public KeySetting() {
-		}
-
+	public static abstract class KeySetting extends Setting {
 		public KeySetting(final Set<String> keys) {
 			if (keys!=null)
 				for (final String key : keys)
 					registerSetting(key);
 		}
+	}
+
+	public static class UploaderKeySetting extends KeySetting {
+		public UploaderKeySetting(final Set<String> keys) {
+			super(keys);
+		}
 
 		@Override
 		public String getConfig() {
-			return Config.instance.apiUploaderKey;
+			return Config.instance.apiUploaderKey.get();
 		}
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Upload", "Key", "").set(setting);
-			Config.instance.save();
-		};
+			Config.instance.apiUploaderKey.set(setting);
+		}
+	}
+
+	public static class ShorteningKeySetting extends KeySetting {
+		public ShorteningKeySetting(final Set<String> keys) {
+			super(keys);
+		}
+
+		@Override
+		public String getConfig() {
+			return Config.instance.apiShortenerKey.get();
+		}
+
+		@Override
+		public void setConfig(final String setting) {
+			Config.instance.apiShortenerKey.set(setting);
+		}
 	}
 
 	public static abstract class Setting {
@@ -162,6 +178,8 @@ public class Apis {
 
 	public static interface ApiFactory {
 		Set<String> keys();
+
+		KeySetting keySettings();
 	}
 
 	public static interface ImageUploaderFactory extends ApiFactory {
@@ -192,6 +210,11 @@ public class Apis {
 			public IUploader create(final UploadRequest upload, final String key) throws IOException {
 				return new GyazoUpload(upload, key);
 			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new UploaderKeySetting(keys());
+			}
 		});
 		registerImageUploader("Imgur", new ImageUploaderFactory() {
 			@Override
@@ -211,6 +234,11 @@ public class Apis {
 			@Override
 			public IUploader create(final UploadRequest upload, final String key) throws IOException {
 				return new ImgurUpload(upload, key);
+			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new UploaderKeySetting(keys());
 			}
 		});
 		registerURLShortener("Bitly", new URLShortenerFactory() {
@@ -232,6 +260,11 @@ public class Apis {
 			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
 				return new BitlyShortener(upload, key);
 			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new ShorteningKeySetting(keys());
+			}
 		});
 		registerURLShortener("Googl", new URLShortenerFactory() {
 			@Override
@@ -251,6 +284,11 @@ public class Apis {
 			@Override
 			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
 				return new GooglShortener(upload, key);
+			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new ShorteningKeySetting(keys());
 			}
 		});
 		final Pattern p = Pattern.compile("[^\\w]");

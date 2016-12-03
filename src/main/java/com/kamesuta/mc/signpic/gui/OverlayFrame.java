@@ -34,6 +34,7 @@ public class OverlayFrame extends WFrame {
 	private boolean d;
 
 	private OverlayFrame() {
+		this.mc = Client.mc;
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (Config.instance.renderGuiOverlay)
+		if (Config.instance.renderGuiOverlay.get())
 			if (!isDelegated()) {
 				setWidth(event.gui.width);
 				setHeight(event.gui.height);
@@ -108,7 +109,7 @@ public class OverlayFrame extends WFrame {
 
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-					if (Config.instance.renderOverlayPanel||instance.isDelegated())
+					if (Config.instance.renderOverlayPanel.get()||instance.isDelegated())
 						super.draw(ev, pgp, p, frame, popacity);
 				}
 			});

@@ -88,9 +88,9 @@ public class Downloader {
 			this.manager = new PoolingHttpClientConnectionManager();
 
 		final Builder requestConfig = RequestConfig.custom();
-		if (Config.instance.communicateDLTimedout>0) {
-			requestConfig.setConnectTimeout(Config.instance.communicateDLTimedout);
-			requestConfig.setSocketTimeout(Config.instance.communicateDLTimedout);
+		if (Config.instance.communicateDLTimedout.get()>0) {
+			requestConfig.setConnectTimeout(Config.instance.communicateDLTimedout.get());
+			requestConfig.setSocketTimeout(Config.instance.communicateDLTimedout.get());
 		}
 
 		final List<Header> headers = new ArrayList<Header>();

@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
-import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
@@ -56,11 +56,11 @@ public class ShortenerApiUtil {
 
 	public static String getKey(final URLShortenerFactory factory) {
 		if (factory!=null)
-			return new Apis.KeySetting(factory.keys()).getConfigOrRandom();
+			return factory.keySettings().getConfigOrRandom();
 		return null;
 	}
 
-	public static void requestShoretning(ContentId id) {
+	public static void requestShoretning(final ContentId id) {
 		if (!CurrentMode.instance.isShortening()) {
 			final String longurl = id.getURI();
 			CurrentMode.instance.setShortening(true);
@@ -70,8 +70,7 @@ public class ShortenerApiUtil {
 					CurrentMode.instance.setShortening(false);
 				}
 			});
-		} else {
+		} else
 			Client.notice(I18n.format("signpic.gui.notice.shorteningother"));
-		}
 	}
 }

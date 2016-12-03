@@ -43,7 +43,7 @@ public class DynamicImageTexture implements ImageTexture {
 			this.id = OpenGL.glGenTextures();
 			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
 			TextureUtil.uploadTextureImage(this.id, this.temp);
-			if (OpenGL.openGl30()&&Config.instance.renderUseMipmap) {
+			if (OpenGL.openGl30()&&Config.instance.renderUseMipmap.get()) {
 				OpenGL.glGenerateMipmap(GL_TEXTURE_2D);
 				this.hasMipmap = true;
 			}

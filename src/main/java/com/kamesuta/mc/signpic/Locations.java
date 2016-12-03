@@ -35,8 +35,8 @@ public class Locations {
 	}
 
 	private File getSignPicDir(final File defaultdir) {
-		final File dir = new File(Config.instance.signpicDir);
-		if (!StringUtils.isEmpty(Config.instance.signpicDir)) {
+		final File dir = new File(Config.instance.signpicDir.get());
+		if (!StringUtils.isEmpty(Config.instance.signpicDir.get())) {
 			if (dir.exists()&&dir.isDirectory()&&!dir.equals(defaultdir))
 				return dir;
 			Reference.logger.debug("invalid signpic dir location! use default dir.");

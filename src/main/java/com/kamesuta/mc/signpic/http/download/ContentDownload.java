@@ -83,7 +83,7 @@ public class ContentDownload extends Communicate implements Progressable {
 
 			tmp = Client.location.createCache("content");
 
-			final long max = Config.instance.contentMaxByte;
+			final long max = Config.instance.contentMaxByte.get();
 			final long size = entity.getContentLength();
 			if (max>0&&(size<0||size>max)) {
 				req.abort();

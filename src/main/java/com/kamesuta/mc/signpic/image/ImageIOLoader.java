@@ -35,8 +35,8 @@ import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader implements ILoadCancelable {
 	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
-			Config.instance.imageWidthLimit>0 ? Config.instance.imageWidthLimit : ImageSize.unknownSize,
-			Config.instance.imageHeightLimit>0 ? Config.instance.imageHeightLimit : ImageSize.unknownSize);
+			Config.instance.imageWidthLimit.get()>0 ? Config.instance.imageWidthLimit.get() : ImageSize.unknownSize,
+			Config.instance.imageHeightLimit.get()>0 ? Config.instance.imageHeightLimit.get() : ImageSize.unknownSize);
 
 	protected Content content;
 	protected InputFactory input;
@@ -59,7 +59,7 @@ public class ImageIOLoader implements ILoadCancelable {
 			this.content.state.setType(StateType.LOADING);
 			this.content.state.setProgress(new Progress());
 			RemoteImageTexture textures;
-			if (Config.instance.imageAnimationGif&&reader.getFormatName()=="gif")
+			if (Config.instance.imageAnimationGif.get()&&reader.getFormatName()=="gif")
 				textures = loadGif();
 			else
 				textures = loadImage(reader, imagestream);
