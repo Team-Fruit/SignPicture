@@ -356,7 +356,7 @@ public class GuiMain extends WFrame {
 			}
 		});
 		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
-			Informations.instance.check(null);
+			Informations.instance.onlineCheck(null);
 		if (!Config.instance.guiExperienced) {
 			Config.instance.get("Internal", "GuiExperienced", false).set(true);
 			Config.instance.save();

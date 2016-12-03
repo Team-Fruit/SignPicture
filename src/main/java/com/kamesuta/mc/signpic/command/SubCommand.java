@@ -41,7 +41,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public final String getCommandName() {
+	public String getCommandName() {
 		return this.name;
 	}
 
@@ -75,7 +75,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public final void processCommand(final ICommandSender sender, final String[] args) {
+	public void processCommand(final ICommandSender sender, final String[] args) {
 		if (!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}
@@ -94,7 +94,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public final int getRequiredPermissionLevel() {
+	public int getRequiredPermissionLevel() {
 		return this.permLevel.permLevel;
 	}
 

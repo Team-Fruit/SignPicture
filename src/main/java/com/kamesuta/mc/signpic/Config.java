@@ -78,16 +78,6 @@ public final class Config extends Configuration {
 		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
 		this.communicateDLTimedout = addComment(get("Http", "DownloadTimedout", this.communicateDLTimedout), "milliseconds of max waiting response time. 0 is infinity.").setRequiresMcRestart(true).getInt(this.communicateDLTimedout);
 
-		this.informationNotice = get("Version", "Notice", this.informationNotice).setRequiresMcRestart(true).getBoolean(this.informationNotice);
-
-		final Property joinBeta = get("Version", "JoinBeta", this.informationJoinBeta);
-		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
-		if (v.length>=4&&StringUtils.equals(v[3], "beta")) {
-			this.informationJoinBeta = true;
-			joinBeta.set(true);
-		}
-		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean(this.informationJoinBeta);
-
 		addCustomCategoryComment("Multiplay.PreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
 
 		addCustomCategoryComment("Api.Upload", "Api Upload Settings");
@@ -109,8 +99,17 @@ public final class Config extends Configuration {
 		this.contentSyncTick = addComment(get("Content", "SyncLoadIntervalTick", this.contentSyncTick), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt(this.contentSyncTick);
 		this.contentMaxRetry = addComment(get("Content", "MaxRetry", this.contentMaxRetry), "limit of retry count. 0 is infinity.").getInt(this.contentMaxRetry);
 
+		this.informationNotice = get("Version", "Notice", this.informationNotice).getBoolean(this.informationNotice);
 		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
 		this.informationTryNew = get("Version", "TryNew", this.informationTryNew).getBoolean(this.informationTryNew);
+
+		final Property joinBeta = get("Version", "JoinBeta", this.informationJoinBeta);
+		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
+		if (v.length>=4&&StringUtils.equals(v[3], "beta")) {
+			this.informationJoinBeta = true;
+			joinBeta.set(true);
+		}
+		this.informationJoinBeta = joinBeta.getBoolean(this.informationJoinBeta);
 
 		this.multiplayPAAS = get("Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS).getBoolean(this.multiplayPAAS);
 		this.multiplayPAASMinEditTime = get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime).getInt(this.multiplayPAASMinEditTime);
@@ -154,5 +153,9 @@ public final class Config extends Configuration {
 
 	public String getFilePath() {
 		return this.configFile.getPath();
+	}
+
+	public static class ConfigProperty<E> {
+
 	}
 }

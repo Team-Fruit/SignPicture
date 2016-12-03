@@ -101,7 +101,7 @@ public final class Informations {
 	}
 
 	public void init() {
-		check(null);
+		onlineCheck(null);
 	}
 
 	private long lastCheck = -1l;
@@ -114,7 +114,14 @@ public final class Informations {
 		return this.lastCheck;
 	}
 
-	public void check(final Runnable after) {
+	public void check() {
+		if (getState()!=null)
+			getState().triedToWarnPlayer = false;
+		if (!isUpdateRequired())
+			Client.notice(I18n.format("signpic.versioning.noupdate"));
+	}
+
+	public void onlineCheck(final Runnable after) {
 		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
 		checker.setCallback(new ICommunicateCallback() {
@@ -198,14 +205,12 @@ public final class Informations {
 			onTick(getSource(), getState());
 	}
 
-	public void onTick(final InfoSource source, final InfoState state) {
-		final EntityPlayer player = Client.mc.thePlayer;
-		if (player!=null&&!state.triedToWarnPlayer&&source!=null) {
+	public void notice(final InfoSource source, final InfoState state, final EntityPlayer player) {
+		if (player!=null&&source!=null&&state!=null) {
 			final String lang = Client.mc.gameSettings.language;
 			if (
 				source.info!=null&&
 						source.info.versions!=null&&
-						Config.instance.informationNotice&&
 						!StringUtils.equals(Reference.VERSION, "${version}")
 			) {
 				final InfoVersion online = source.onlineVersion();
@@ -255,6 +260,12 @@ public final class Informations {
 			}
 			getState().triedToWarnPlayer = true;
 		}
+	}
+
+	public void onTick(final InfoSource source, final InfoState state) {
+		final EntityPlayer player = Client.mc.thePlayer;
+		if (Config.instance.informationNotice&&!state.triedToWarnPlayer)
+			notice(source, state, player);
 	}
 
 	public static class Version {

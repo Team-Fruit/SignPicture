@@ -99,7 +99,6 @@ signpic.versioning.check.start=開始檢查
 signpic.versioning.check.cooldown=檢查失敗：: §7需要冷卻時間
 signpic.versioning.noupdate=沒有可用更新
 signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] 新的版本可用: ",{"text":"$new$","color":"green"},"."," [",{"text":"下載","color":"green","hoverEvent":{"action":"show_text","value":{"text":"單擊此按鈕可自動下載最新版本","color":"green"}},"clickEvent":$download$},"] [",{"text":"網站","color":"green","hoverEvent":{"action":"show_text","value":{"text":"點擊這個去mod的網站","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"單擊此轉到版本更改日誌","color":"green"}},"clickEvent":$changelog$},"]"]
-signpic.versioning.changelog=[§6SignPicture§r] [§aUpdate§r] %s
 signpic.versioning.startingDownload=[{"text":"開始下載 %s. 請不要刪除您的硬盤。 享受 ","color":"aqua"}]
 signpic.versioning.doneDownloading=完成下載 %s. 刪除您的舊簽名圖片.jar並重新載入您的遊戲更新。
 signpic.versioning.doneDownloadingWithFile=已完成下載 %s. 刪除 %s 並重新載入您的遊戲以進行更新。
