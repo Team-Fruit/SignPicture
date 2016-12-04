@@ -21,6 +21,7 @@ import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
+import com.kamesuta.mc.signpic.image.meta.OffsetData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -232,7 +233,8 @@ public class SignHandler {
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final ImageMeta meta = entry.getMeta();
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
+				final OffsetData offset = meta.offset.get();
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x, offset.y, offset.z));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
 				if (useName)
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));

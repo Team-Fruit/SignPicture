@@ -3,14 +3,39 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
-
 public class ImageOffset extends ImageMeta.MetaParser {
-	public static final float defaultOffset = 0.5f;
 
-	public float x;
-	public float y;
-	public float z;
+	private float x;
+	private float y;
+	private float z;
+
+	public OffsetData get() {
+		return new OffsetData(this.x, this.y, this.z);
+	}
+
+	public void setX(final float x) {
+		this.x = x;
+	}
+
+	public void setY(final float y) {
+		this.y = y;
+	}
+
+	public void setZ(final float z) {
+		this.z = z;
+	}
+
+	public float getX() {
+		return this.x;
+	}
+
+	public float getY() {
+		return this.y;
+	}
+
+	public float getZ() {
+		return this.z;
+	}
 
 	@Override
 	public ImageOffset reset() {
@@ -32,12 +57,12 @@ public class ImageOffset extends ImageMeta.MetaParser {
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		/* @formatter:off */
-		if (StringUtils.equals(key, "L")) if (StringUtils.isEmpty(value)) this.x -= defaultOffset; else this.x -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "R")) if (StringUtils.isEmpty(value)) this.x += defaultOffset; else this.x += NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "D")) if (StringUtils.isEmpty(value)) this.y -= defaultOffset; else this.y -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "U")) if (StringUtils.isEmpty(value)) this.y += defaultOffset; else this.y += NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "B")) if (StringUtils.isEmpty(value)) this.z -= defaultOffset; else this.z -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "F")) if (StringUtils.isEmpty(value)) this.z += defaultOffset; else this.z += NumberUtils.toFloat(value, 0f);
+		if (StringUtils.equals(key, "L")) if (StringUtils.isEmpty(value)) this.x -= OffsetData.defaultOffset; else this.x -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "R")) if (StringUtils.isEmpty(value)) this.x += OffsetData.defaultOffset; else this.x += NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "D")) if (StringUtils.isEmpty(value)) this.y -= OffsetData.defaultOffset; else this.y -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "U")) if (StringUtils.isEmpty(value)) this.y += OffsetData.defaultOffset; else this.y += NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "B")) if (StringUtils.isEmpty(value)) this.z -= OffsetData.defaultOffset; else this.z -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, "F")) if (StringUtils.isEmpty(value)) this.z += OffsetData.defaultOffset; else this.z += NumberUtils.toFloat(value, 0f);
 		else return false;
 		return true;
 		/* @formatter:on */
@@ -51,35 +76,13 @@ public class ImageOffset extends ImageMeta.MetaParser {
 	 * B=back
 	 * F=front
 	 */
+	@Deprecated
 	@Override
 	public String compose() {
-		/* @formatter:off */
-		final StringBuilder stb = new StringBuilder();
-		if (this.x!=0)
-			if (this.x<0)
-				if (this.x==-defaultOffset) stb.append("L");
-				else stb.append("L").append(ShortestFloatFormatter.format(-this.x));
-			else
-				if (this.x==defaultOffset) stb.append("R");
-				else stb.append("R").append(ShortestFloatFormatter.format(this.x));
-		if (this.y!=0)
-			if (this.y<0)
-				if (this.y==-defaultOffset) stb.append("D");
-				else stb.append("D").append(ShortestFloatFormatter.format(-this.y));
-			else
-				if (this.y==defaultOffset) stb.append("U");
-				else stb.append("U").append(ShortestFloatFormatter.format(this.y));
-		if (this.z!=0)
-			if (this.z<0)
-				if (this.z==-defaultOffset) stb.append("B");
-				else stb.append("B").append(ShortestFloatFormatter.format(-this.z));
-			else
-				if (this.z==defaultOffset) stb.append("F");
-				else stb.append("F").append(ShortestFloatFormatter.format(this.z));
-		return stb.toString();
-		/* @formatter:on */
+		return get().compose();
 	}
 
+	@Deprecated
 	@Override
 	public String toString() {
 		return compose();

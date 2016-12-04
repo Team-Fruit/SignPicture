@@ -9,6 +9,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.OffsetData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
@@ -38,7 +39,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 
 		OpenGL.glPushMatrix();
 
-		OpenGL.glTranslatef(meta.offset.x, meta.offset.y, meta.offset.z);
+		final OffsetData offset = meta.offset.get();
+		OpenGL.glTranslatef(offset.x, offset.y, offset.z);
 		meta.rotation.rotate();
 
 		OpenGL.glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);

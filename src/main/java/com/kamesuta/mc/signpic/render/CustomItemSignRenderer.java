@@ -7,6 +7,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.image.meta.OffsetData;
 
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Items;
@@ -60,7 +61,8 @@ public class CustomItemSignRenderer implements IItemRenderer {
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
 			OpenGL.glTranslatef(0f, 1f-size.height, 0f);
-			OpenGL.glTranslatef(meta.offset.x, meta.offset.y, meta.offset.z);
+			final OffsetData offset = meta.offset.get();
+			OpenGL.glTranslatef(offset.x, offset.y, offset.z);
 			meta.rotation.rotate();
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
 		}

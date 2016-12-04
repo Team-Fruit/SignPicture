@@ -58,13 +58,13 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected void set(final float f) {
-				GuiOffset.this.offset.x = f;
+				GuiOffset.this.offset.setX(f);
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiOffset.this.offset.x;
+				return GuiOffset.this.offset.getX();
 			}
 
 			@Override
@@ -89,13 +89,13 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected void set(final float f) {
-				GuiOffset.this.offset.y = f;
+				GuiOffset.this.offset.setY(f);
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiOffset.this.offset.y;
+				return GuiOffset.this.offset.getY();
 			}
 
 			@Override
@@ -120,13 +120,13 @@ public class GuiOffset extends WPanel {
 
 			@Override
 			protected void set(final float f) {
-				GuiOffset.this.offset.z = f;
+				GuiOffset.this.offset.setZ(f);
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiOffset.this.offset.z;
+				return GuiOffset.this.offset.getZ();
 			}
 
 			@Override
