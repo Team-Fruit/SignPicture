@@ -20,6 +20,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -59,8 +60,9 @@ public class GuiImage extends WFrame {
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
 							final ImageTextureMap map = GuiImage.this.entry.getMeta().map;
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(map.o*0.1f));
-							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
+							final TextureMapData tex = map.get();
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(tex.o*0.1f));
+							content.image.draw(tex.u, tex.v, tex.w, tex.h, tex.c, tex.s, tex.r, tex.m);
 						} else {
 							RenderHelper.startShape();
 							OpenGL.glLineWidth(1f);

@@ -1,12 +1,18 @@
 package com.kamesuta.mc.signpic.image.meta;
 
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.NumberUtils;
+
+import com.google.common.collect.Maps;
+import com.kamesuta.mc.signpic.Reference;
 
 public class ImageMeta {
+	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
 	public final ImageSize size;
@@ -40,16 +46,38 @@ public class ImageMeta {
 	}
 
 	public ImageMeta parse(final String src) {
-		boolean b = true;
 		Validate.notNull(src);
-		final Matcher m = p.matcher(src);
-		while (m.find()) {
-			final int gcount = m.groupCount();
+
+		final Map<Float, String> timeline = Maps.newHashMap();
+
+		final Matcher mgb = g.matcher(src);
+		final String s = mgb.replaceAll("");
+		timeline.put(0f, s);
+
+		final Matcher mg = g.matcher(src);
+		while (mg.find()) {
+			final int gcount = mg.groupCount();
+			if (2<=gcount) {
+				final float time = NumberUtils.toFloat(mg.group(1));
+				final String before = timeline.get(time);
+				String meta = mg.group(2);
+				if (before!=null)
+					meta = before+meta;
+				timeline.put(time, meta);
+			}
+		}
+
+		Reference.logger.info(timeline);
+
+		boolean b = true;
+		final Matcher mp = p.matcher(s);
+		while (mp.find()) {
+			final int gcount = mp.groupCount();
 			if (1<=gcount) {
-				final String key = m.group(1);
-				final String value = 2<=gcount ? m.group(2) : "";
+				final String key = mp.group(1);
+				final String value = 2<=gcount ? mp.group(2) : "";
 				if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
-					b = parseMeta(src, key, value)&&b;
+					b = parseMeta(s, key, value)&&b;
 			}
 		}
 		this.hasInvalidMeta = this.hasInvalidMeta||!b;

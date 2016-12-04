@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
+import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class Debug {
@@ -62,8 +64,29 @@ public class Debug {
 		//		final float b = (color & 255) / 255.0F;
 		//		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
 
-		final String src = "gyazo.com/114514e";
-		Reference.logger.info(replace(src));
+		//		final String src = "gyazo.com/114514e";
+		//		Reference.logger.info(replace(src));
+
+		parsemeta("U2(o)(4~i)");
+	}
+
+	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
+
+	static void parsemeta(final String src) {
+		final Map<String, String> timeline = Maps.newHashMap();
+		final Matcher mg = g.matcher(src);
+		while (mg.find()) {
+			final int gcount = mg.groupCount();
+			if (2<=gcount) {
+				final String time = mg.group(1);
+				final String meta = mg.group(2);
+				timeline.put(time, meta);
+			} else if (1<=gcount) {
+				final String meta = mg.group(1);
+				timeline.put("def", meta);
+			}
+		}
+		Reference.logger.info(timeline);
 	}
 
 	final static Pattern p = Pattern.compile("[^\\w]");
