@@ -15,6 +15,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.SizeData;
 
 import net.minecraft.client.resources.I18n;
 
@@ -122,7 +123,7 @@ public class GuiSize extends WPanel {
 					if (NumberUtils.isNumber(newText))
 						set(NumberUtils.toFloat(newText));
 					else
-						set(ImageSize.unknownSize);
+						set(SizeData.unknownSize);
 					onUpdate();
 				}
 

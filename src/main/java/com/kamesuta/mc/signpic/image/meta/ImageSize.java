@@ -3,28 +3,22 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.bnnwidget.position.Area;
 
 public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
-	@Deprecated
-	public static final float defaultSize = 1f;
-	@Deprecated
-	public static final float unknownSize = Float.NaN;
-
-	public float width = unknownSize;
-	public float height = unknownSize;
+	public float width = SizeData.unknownSize;
+	public float height = SizeData.unknownSize;
 
 	public SizeData get() {
 		return new SizeData(this.width, this.height);
 	}
 
 	public ImageSize defaultSize() {
-		return setSize(defaultSize, defaultSize);
+		return setSize(SizeData.defaultSize, SizeData.defaultSize);
 	}
 
 	public ImageSize unknownSize() {
-		return setSize(unknownSize, unknownSize);
+		return setSize(SizeData.unknownSize, SizeData.unknownSize);
 	}
 
 	public ImageSize setSize(final float width, final float height) {
@@ -34,12 +28,12 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 	}
 
 	public ImageSize setWidth(final String width) {
-		this.width = NumberUtils.toFloat(width, unknownSize);
+		this.width = NumberUtils.toFloat(width, SizeData.unknownSize);
 		return this;
 	}
 
 	public ImageSize setHeight(final String height) {
-		this.height = NumberUtils.toFloat(height, unknownSize);
+		this.height = NumberUtils.toFloat(height, SizeData.unknownSize);
 		return this;
 	}
 
@@ -63,9 +57,9 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		if (StringUtils.equals(key, ""))
-			this.width = NumberUtils.toFloat(value, unknownSize);
+			this.width = NumberUtils.toFloat(value, SizeData.unknownSize);
 		else if (StringUtils.equals(key, "x"))
-			this.height = NumberUtils.toFloat(value, unknownSize);
+			this.height = NumberUtils.toFloat(value, SizeData.unknownSize);
 		else
 			return false;
 		return true;
@@ -73,7 +67,7 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 
 	@Override
 	public String compose() {
-		return (get().vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(get().vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
+		return get().compose();
 	}
 
 	@Override

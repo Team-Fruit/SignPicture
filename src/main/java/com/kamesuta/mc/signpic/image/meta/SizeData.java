@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image.meta;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+
 public class SizeData {
 	public static final float defaultSize = 1f;
 	public static final float unknownSize = Float.NaN;
@@ -30,6 +32,10 @@ public class SizeData {
 
 	public SizeData scale(final float scale) {
 		return new SizeData(this.width*scale, this.height*scale);
+	}
+
+	public String compose() {
+		return (vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
 	}
 
 	public static SizeData aspectSize(final SizeData imagesize, final SizeData availableaspect) {
