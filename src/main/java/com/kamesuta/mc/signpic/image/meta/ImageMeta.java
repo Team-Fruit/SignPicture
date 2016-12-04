@@ -1,6 +1,8 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.util.Map;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +17,10 @@ public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
+	public TreeMap<Float, SizeData> sizes = Maps.newTreeMap();
+	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
+	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
+	public TreeMap<Float, TextureMapData> maps = Maps.newTreeMap();
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
@@ -37,10 +43,10 @@ public class ImageMeta {
 	}
 
 	public ImageMeta reset() {
-		this.size.reset();
-		this.offset.reset();
-		this.rotation.reset();
-		this.map.reset();
+		this.sizes.clear();
+		this.offsets.clear();
+		this.rotations.clear();
+		this.maps.clear();
 		this.hasInvalidMeta = false;
 		return this;
 	}
@@ -48,7 +54,7 @@ public class ImageMeta {
 	public ImageMeta parse(final String src) {
 		Validate.notNull(src);
 
-		final Map<Float, String> timeline = Maps.newHashMap();
+		final TreeMap<Float, String> timeline = Maps.newTreeMap();
 
 		final Matcher mgb = g.matcher(src);
 		final String s = mgb.replaceAll("");
@@ -70,16 +76,34 @@ public class ImageMeta {
 		Reference.logger.info(timeline);
 
 		boolean b = true;
-		final Matcher mp = p.matcher(s);
-		while (mp.find()) {
-			final int gcount = mp.groupCount();
-			if (1<=gcount) {
-				final String key = mp.group(1);
-				final String value = 2<=gcount ? mp.group(2) : "";
-				if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
-					b = parseMeta(s, key, value)&&b;
+
+		for (final Iterator<Entry<Float, String>> itr = timeline.entrySet().iterator(); itr.hasNext();) {
+			final Entry<Float, String> entry = itr.next();
+			final float time = entry.getKey();
+			final String meta = entry.getValue();
+
+			this.size.reset();
+			this.offset.reset();
+			this.rotation.reset();
+			this.map.reset();
+
+			final Matcher mp = p.matcher(meta);
+			while (mp.find()) {
+				final int gcount = mp.groupCount();
+				if (1<=gcount) {
+					final String key = mp.group(1);
+					final String value = 2<=gcount ? mp.group(2) : "";
+					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
+						b = parseMeta(meta, key, value)&&b;
+				}
 			}
+
+			this.sizes.put(time, this.size.get());
+			this.offsets.put(time, this.offset.get());
+			this.rotations.put(time, this.rotation.get());
+			this.maps.put(time, this.map.get());
 		}
+
 		this.hasInvalidMeta = this.hasInvalidMeta||!b;
 		return this;
 	}

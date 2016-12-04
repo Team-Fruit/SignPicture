@@ -44,7 +44,6 @@ public class ImageRotation extends ImageMeta.MetaParser {
 		return compose();
 	}
 
-	@Deprecated
 	public void rotate() {
 		get().rotate();
 	}
