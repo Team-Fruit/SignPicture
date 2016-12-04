@@ -67,7 +67,7 @@ public class SignPicLabel extends WBase {
 					RenderHelper.startTexture();
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
-					final SizeData size1 = ImageSizes.INNER.defineSize(new SizeData(1, 1), new ImageSize().setArea(a).get());
+					final SizeData size1 = ImageSizes.INNER.defineSize(new SizeData(1, 1), new ImageSize().setSize(a).get());
 					drawTexture(new Area(a.x1()+a.w()/2-size1.width/2, a.y1()+a.h()/2-size1.height/2, a.x1()+a.w()/2+size1.width/2, a.y1()+a.h()/2+size1.height/2));
 				}
 			}
@@ -79,7 +79,7 @@ public class SignPicLabel extends WBase {
 		OpenGL.glPushMatrix();
 
 		final SizeData size1 = SizeData.aspectSize(entry.getMeta().size.get(), content.image.getSize());
-		final SizeData size2 = ImageSizes.INNER.defineSize(size1, new ImageSize().setArea(a).get());
+		final SizeData size2 = ImageSizes.INNER.defineSize(size1, new ImageSize().setSize(a).get());
 		final SizeData size = size2.scale(1f/100f);
 
 		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);

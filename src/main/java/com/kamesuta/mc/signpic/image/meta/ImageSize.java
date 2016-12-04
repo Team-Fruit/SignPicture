@@ -19,6 +19,16 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 		return this;
 	}
 
+	public ImageSize setWidth(final float width) {
+		this.width = width;
+		return this;
+	}
+
+	public ImageSize setHeight(final float height) {
+		this.height = height;
+		return this;
+	}
+
 	public ImageSize setWidth(final String width) {
 		this.width = NumberUtils.toFloat(width, SizeData.Unknown);
 		return this;
@@ -33,11 +43,15 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 		return setWidth(width).setHeight(height);
 	}
 
-	public ImageSize setArea(final Area a) {
+	public ImageSize setSize(final Area a) {
 		return setSize(a.w(), a.h());
 	}
 
-	public ImageSize setImageSize(final ImageSize size) {
+	public ImageSize setSize(final SizeData size) {
+		return setSize(size.width, size.height);
+	}
+
+	public ImageSize setSize(final ImageSize size) {
 		return setSize(size.width, size.height);
 	}
 
@@ -74,7 +88,7 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 		try {
 			return (ImageSize) super.clone();
 		} catch (final Exception e) {
-			return new ImageSize().setImageSize(this);
+			return new ImageSize().setSize(this);
 		}
 	}
 
