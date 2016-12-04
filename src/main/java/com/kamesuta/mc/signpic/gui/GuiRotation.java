@@ -20,8 +20,8 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation;
-import com.kamesuta.mc.signpic.image.meta.ImageRotation.Rotate;
-import com.kamesuta.mc.signpic.image.meta.ImageRotation.RotateType;
+import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
 
 import net.minecraft.client.resources.I18n;
 
@@ -66,7 +66,7 @@ public class GuiRotation extends WPanel {
 		add(this.panel);
 	}
 
-	protected void add(final Rotate rotate) {
+	protected void add(final ImageRotate rotate) {
 		this.panel.add(rotate);
 		this.panel.update();
 	}
@@ -89,7 +89,7 @@ public class GuiRotation extends WPanel {
 			add(new MButton(new R(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f))) {
 				@Override
 				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-					GuiRotation.this.add(new Rotate(RotateType.X, 0));
+					GuiRotation.this.add(new ImageRotate(RotateType.X, 0));
 					return true;
 				}
 			}.setText(I18n.format("signpic.gui.editor.rotation.add")));
@@ -104,15 +104,15 @@ public class GuiRotation extends WPanel {
 	}
 
 	protected class RotationPanel extends WPanel {
-		private final Map<Rotate, RotationElement> map = Maps.newHashMap();
+		private final Map<ImageRotate, RotationElement> map = Maps.newHashMap();
 		protected final ImageRotation rotation;
 
 		public RotationPanel(final R position, final ImageRotation rotation) {
 			super(position);
 			this.rotation = rotation;
-			for (final ListIterator<Rotate> itr = rotation.rotates.listIterator(); itr.hasNext();) {
+			for (final ListIterator<ImageRotate> itr = rotation.rotates.listIterator(); itr.hasNext();) {
 				final int n = itr.nextIndex();
-				final Rotate rotate = itr.next();
+				final ImageRotate rotate = itr.next();
 				addWidget(rotate, n);
 			}
 		}
@@ -122,7 +122,7 @@ public class GuiRotation extends WPanel {
 			update();
 		}
 
-		public void add(final Rotate rotate) {
+		public void add(final ImageRotate rotate) {
 			final int n = this.rotation.rotates.size();
 			if (n<3) {
 				this.rotation.rotates.add(rotate);
@@ -132,32 +132,32 @@ public class GuiRotation extends WPanel {
 
 		public void remove() {
 			if (!this.rotation.rotates.isEmpty()) {
-				final Rotate rotate = this.rotation.rotates.remove(this.rotation.rotates.size()-1);
+				final ImageRotate rotate = this.rotation.rotates.remove(this.rotation.rotates.size()-1);
 				remove(this.map.get(rotate));
 			}
 		}
 
-		public void up(final Rotate rotate) {
+		public void up(final ImageRotate rotate) {
 			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
 			if (i!=-1&&i>0) {
-				final Rotate prev = RotationPanel.this.rotation.rotates.get(i-1);
+				final ImageRotate prev = RotationPanel.this.rotation.rotates.get(i-1);
 				this.rotation.rotates.set(i, prev);
 				this.rotation.rotates.set(i-1, rotate);
 				this.update();
 			}
 		}
 
-		public void down(final Rotate rotate) {
+		public void down(final ImageRotate rotate) {
 			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
 			if (i!=-1&&i<RotationPanel.this.rotation.rotates.size()-1) {
-				final Rotate next = RotationPanel.this.rotation.rotates.get(i+1);
+				final ImageRotate next = RotationPanel.this.rotation.rotates.get(i+1);
 				this.rotation.rotates.set(i, next);
 				this.rotation.rotates.set(i+1, rotate);
 				this.update();
 			}
 		}
 
-		private void addWidget(final Rotate rotate, final int n) {
+		private void addWidget(final ImageRotate rotate, final int n) {
 			final float t = n*15;
 			final VMotion left = V.pm(-1f).add(Motion.blank(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
 			final VMotion top = V.am(t);
@@ -168,7 +168,7 @@ public class GuiRotation extends WPanel {
 
 		public void update() {
 			int i = 0;
-			for (final Rotate rotate : this.rotation.rotates) {
+			for (final ImageRotate rotate : this.rotation.rotates) {
 				final RotationElement element = this.map.get(rotate);
 				element.top.stop().add(Easings.easeInCirc.move(.25f, i++*15)).start();
 			}
@@ -176,11 +176,11 @@ public class GuiRotation extends WPanel {
 		}
 
 		protected class RotationElement extends WPanel {
-			protected Rotate rotate;
+			protected ImageRotate rotate;
 			protected VMotion left;
 			protected VMotion top;
 
-			public RotationElement(final R position, final VMotion left, final VMotion top, final Rotate rotate) {
+			public RotationElement(final R position, final VMotion left, final VMotion top, final ImageRotate rotate) {
 				super(position);
 				this.left = left;
 				this.top = top;
@@ -249,9 +249,9 @@ public class GuiRotation extends WPanel {
 			}
 
 			protected class Type extends MButton {
-				protected Rotate rotate;
+				protected ImageRotate rotate;
 
-				public Type(final R position, final Rotate rotate) {
+				public Type(final R position, final ImageRotate rotate) {
 					super(position);
 					setText(rotate.type.name());
 					this.rotate = rotate;

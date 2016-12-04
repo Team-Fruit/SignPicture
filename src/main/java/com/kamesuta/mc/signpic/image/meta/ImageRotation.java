@@ -2,18 +2,18 @@ package com.kamesuta.mc.signpic.image.meta;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
-import com.kamesuta.mc.signpic.render.OpenGL;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
 
 public class ImageRotation extends ImageMeta.MetaParser {
-	public static final float defaultOffset = 4f;
+	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
 
-	public final List<Rotate> rotates = new LinkedList<Rotate>();
+	public RotationData get() {
+		return new RotationData(this.rotates);
+	}
 
 	@Override
 	public ImageRotation reset() {
@@ -24,11 +24,11 @@ public class ImageRotation extends ImageMeta.MetaParser {
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		if (StringUtils.equals(key, RotateType.X.name()))
-			this.rotates.add(new Rotate(RotateType.X, NumberUtils.toFloat(value, defaultOffset)));
+			this.rotates.add(new ImageRotate(RotateType.X, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 		else if (StringUtils.equals(key, RotateType.Y.name()))
-			this.rotates.add(new Rotate(RotateType.Y, NumberUtils.toFloat(value, defaultOffset)));
+			this.rotates.add(new ImageRotate(RotateType.Y, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 		else if (StringUtils.equals(key, RotateType.Z.name()))
-			this.rotates.add(new Rotate(RotateType.Z, NumberUtils.toFloat(value, defaultOffset)));
+			this.rotates.add(new ImageRotate(RotateType.Z, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 		else
 			return false;
 		return true;
@@ -36,10 +36,7 @@ public class ImageRotation extends ImageMeta.MetaParser {
 
 	@Override
 	public String compose() {
-		final StringBuilder stb = new StringBuilder();
-		for (final Rotate rotate : this.rotates)
-			stb.append(rotate.compose());
-		return stb.toString();
+		return get().compose();
 	}
 
 	@Override
@@ -47,56 +44,18 @@ public class ImageRotation extends ImageMeta.MetaParser {
 		return compose();
 	}
 
+	@Deprecated
 	public void rotate() {
-		for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
-			it.previous().rotate();
+		get().rotate();
 	}
 
-	public static class Rotate {
+	public static class ImageRotate {
 		public RotateType type;
 		public float rotate;
 
-		public Rotate(final RotateType type, final float rotate) {
+		public ImageRotate(final RotateType type, final float rotate) {
 			this.type = type;
 			this.rotate = rotate;
 		}
-
-		public void rotate() {
-			this.type.rotate(this.rotate);
-		}
-
-		public String compose() {
-			final float rotate = (this.rotate%8+8)%8;
-			if (rotate==0)
-				return "";
-			else if (rotate==defaultOffset)
-				return this.type.name();
-			else
-				return this.type.name()+ShortestFloatFormatter.format(rotate);
-		}
-	}
-
-	public static enum RotateType {
-		X {
-			@Override
-			public void rotate(final float f) {
-				OpenGL.glRotatef(f*360f/8f, 1f, 0f, 0f);
-			}
-		},
-		Y {
-			@Override
-			public void rotate(final float f) {
-				OpenGL.glRotatef(f*360f/8f, 0f, 1f, 0f);
-			}
-		},
-		Z {
-			@Override
-			public void rotate(final float f) {
-				OpenGL.glRotatef(f*360f/8f, 0f, 0f, 1f);
-			}
-		},
-		;
-
-		public abstract void rotate(float f);
 	}
 }
