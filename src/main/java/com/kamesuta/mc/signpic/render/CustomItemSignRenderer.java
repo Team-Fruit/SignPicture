@@ -5,9 +5,9 @@ import static org.lwjgl.opengl.GL11.*;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
-import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.image.meta.OffsetData;
+import com.kamesuta.mc.signpic.image.meta.SizeData;
+import com.kamesuta.mc.signpic.image.meta.SizeData.ImageSizes;
 
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Items;
@@ -35,10 +35,10 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		final Entry entry = EntryId.fromItemStack(item).entry();
 		final ImageMeta meta = entry.getMeta();
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(meta.size, entry.content().image.getSize());
+		final SizeData size = SizeData.aspectSize(meta.size.get(), entry.content().image.getSize().get());
 		if (type==ItemRenderType.INVENTORY) {
 			final float slot = 16f;
-			final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size, slot, slot);
+			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
 			OpenGL.glTranslatef((slot-size2.width)/2f, (slot-size2.height)/2f, 0f);
 			OpenGL.glScalef(slot, slot, 1f);
 			entry.gui.drawScreen(0, 0, 0f, 1f, size2.width/slot, size2.height/slot);

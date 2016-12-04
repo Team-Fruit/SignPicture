@@ -24,7 +24,8 @@ import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
-import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.image.meta.SizeData;
+import com.kamesuta.mc.signpic.image.meta.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
 import com.kamesuta.mc.signpic.state.Progress;
@@ -76,7 +77,7 @@ public class ImageIOLoader implements ILoadCancelable {
 			final GifImage gifImage = GifDecoder.read(stream = this.input.createInput());
 			final int width = gifImage.getWidth();
 			final int height = gifImage.getHeight();
-			final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
+			final SizeData newsize = ImageSizes.LIMIT.defineSize(width, height, MAX_SIZE.get());
 
 			final ArrayList<DynamicImageTexture> textures = new ArrayList<DynamicImageTexture>();
 			final int frameCount = gifImage.getFrameCount();
@@ -106,11 +107,11 @@ public class ImageIOLoader implements ILoadCancelable {
 			reader.dispose();
 			imagestream.close();
 		}
-		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
+		final SizeData newsize = ImageSizes.LIMIT.defineSize(canvas.getWidth(), canvas.getHeight(), MAX_SIZE.get());
 		return new RemoteImageTexture(Lists.newArrayList(new DynamicImageTexture(createResizedImage(canvas, newsize))));
 	}
 
-	private BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
+	private BufferedImage createResizedImage(final BufferedImage image, final SizeData newsize) {
 		final int wid = (int) newsize.width;
 		final int hei = (int) newsize.height;
 		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
