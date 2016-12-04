@@ -3,8 +3,11 @@ package com.kamesuta.mc.signpic.image.meta;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 
 public class SizeData {
-	public static final float defaultSize = 1f;
-	public static final float unknownSize = Float.NaN;
+	public static final float Default = 1f;
+	public static final float Unknown = Float.NaN;
+
+	public static final SizeData DefaultSize = new SizeData(Default, Default);
+	public static final SizeData UnknownSize = new SizeData(Unknown, Unknown);
 
 	public final float width;
 	public final float height;
@@ -46,11 +49,11 @@ public class SizeData {
 		else if (imagesize.vaildWidth()&&imagesize.vaildHeight())
 			return imagesize;
 		else if (imagesize.vaildWidth())
-			return ImageSizes.WIDTH.defineSize(availableaspect, imagesize.width, unknownSize);
+			return ImageSizes.WIDTH.defineSize(availableaspect, imagesize.width, Unknown);
 		else if (imagesize.vaildHeight())
-			return ImageSizes.HEIGHT.defineSize(availableaspect, unknownSize, imagesize.height);
+			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, imagesize.height);
 		else
-			return ImageSizes.HEIGHT.defineSize(availableaspect, unknownSize, 1);
+			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, 1);
 	}
 
 	public static enum ImageSizes {

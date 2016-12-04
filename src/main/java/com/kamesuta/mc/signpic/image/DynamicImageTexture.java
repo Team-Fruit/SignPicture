@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -58,8 +59,8 @@ public class DynamicImageTexture implements ImageTexture {
 	}
 
 	@Override
-	public ImageSize getSize() {
-		return this.size;
+	public SizeData getSize() {
+		return this.size.get();
 	}
 
 	public boolean setImage(final BufferedImage image) {

@@ -6,19 +6,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.bnnwidget.position.Area;
 
 public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
-	public float width = SizeData.unknownSize;
-	public float height = SizeData.unknownSize;
+	public float width = SizeData.Unknown;
+	public float height = SizeData.Unknown;
 
 	public SizeData get() {
 		return new SizeData(this.width, this.height);
-	}
-
-	public ImageSize defaultSize() {
-		return setSize(SizeData.defaultSize, SizeData.defaultSize);
-	}
-
-	public ImageSize unknownSize() {
-		return setSize(SizeData.unknownSize, SizeData.unknownSize);
 	}
 
 	public ImageSize setSize(final float width, final float height) {
@@ -28,12 +20,12 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 	}
 
 	public ImageSize setWidth(final String width) {
-		this.width = NumberUtils.toFloat(width, SizeData.unknownSize);
+		this.width = NumberUtils.toFloat(width, SizeData.Unknown);
 		return this;
 	}
 
 	public ImageSize setHeight(final String height) {
-		this.height = NumberUtils.toFloat(height, SizeData.unknownSize);
+		this.height = NumberUtils.toFloat(height, SizeData.Unknown);
 		return this;
 	}
 
@@ -51,15 +43,17 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 
 	@Override
 	public ImageSize reset() {
-		return unknownSize();
+		this.width = SizeData.Unknown;
+		this.height = SizeData.Unknown;
+		return this;
 	}
 
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		if (StringUtils.equals(key, ""))
-			this.width = NumberUtils.toFloat(value, SizeData.unknownSize);
+			this.width = NumberUtils.toFloat(value, SizeData.Unknown);
 		else if (StringUtils.equals(key, "x"))
-			this.height = NumberUtils.toFloat(value, SizeData.unknownSize);
+			this.height = NumberUtils.toFloat(value, SizeData.Unknown);
 		else
 			return false;
 		return true;

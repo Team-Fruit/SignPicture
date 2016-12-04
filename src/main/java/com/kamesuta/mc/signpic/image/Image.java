@@ -9,7 +9,7 @@ import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.StateType;
@@ -17,7 +17,6 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.renderer.Tessellator;
 
 public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
-	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected final Content content;
 
 	public Image(final Content content) {
@@ -28,11 +27,11 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 
 	public abstract String getLocal();
 
-	public ImageSize getSize() {
+	public SizeData getSize() {
 		if (this.content.state.getType()==StateType.AVAILABLE)
 			return getTexture().getSize();
 		else
-			return DefaultSize;
+			return SizeData.DefaultSize;
 	}
 
 	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final boolean r, final boolean m) {

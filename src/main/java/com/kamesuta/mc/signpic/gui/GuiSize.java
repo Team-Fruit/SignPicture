@@ -123,7 +123,7 @@ public class GuiSize extends WPanel {
 					if (NumberUtils.isNumber(newText))
 						set(NumberUtils.toFloat(newText));
 					else
-						set(SizeData.unknownSize);
+						set(SizeData.Unknown);
 					onUpdate();
 				}
 

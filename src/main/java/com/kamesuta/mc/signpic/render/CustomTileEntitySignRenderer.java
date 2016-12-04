@@ -35,7 +35,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		final ImageMeta meta = entry.getMeta();
 
 		// Size
-		final SizeData size = SizeData.aspectSize(meta.size.get(), content.image.getSize().get());
+		final SizeData size = SizeData.aspectSize(meta.size.get(), content.image.getSize());
 
 		OpenGL.glPushMatrix();
 
