@@ -232,10 +232,10 @@ public class SignHandler {
 				else
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final ImageMeta meta = entry.getMeta();
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
-				final OffsetData offset = meta.offset.get();
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.getSize().width, meta.getSize().height));
+				final OffsetData offset = meta.getOffset();
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x, offset.y, offset.z));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.getRotation().compose()));
 				if (useName)
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));

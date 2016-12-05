@@ -10,7 +10,6 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -83,10 +82,10 @@ public class SignPicRender extends WGui {
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
 					final ImageMeta meta = entry.getMeta();
-					final ImageSize signsize = meta.size;
+					final SizeData signsize = meta.getSize();
 					final Content content = entry.content();
 					final SizeData imagesize = content.image.getSize();
-					final SizeData viewsize = SizeData.aspectSize(meta.size.get(), imagesize);
+					final SizeData viewsize = SizeData.aspectSize(meta.getSize(), imagesize);
 					final String advmsg = content.state.getMessage();
 
 					event.left.add("");

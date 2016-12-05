@@ -21,6 +21,23 @@ public class ImageMeta {
 	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
 	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
 	public TreeMap<Float, TextureMapData> maps = Maps.newTreeMap();
+
+	public SizeData getSize() {
+		return this.sizes.get(0f);
+	}
+
+	public OffsetData getOffset() {
+		return this.offsets.get(0f);
+	}
+
+	public RotationData getRotation() {
+		return this.rotations.get(0f);
+	}
+
+	public TextureMapData getMap() {
+		return this.maps.get(0f);
+	}
+
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
