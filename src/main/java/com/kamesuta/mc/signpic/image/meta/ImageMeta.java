@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Reference;
@@ -17,6 +16,7 @@ public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
+	public TreeMap<Float, FrameData> frames = Maps.newTreeMap();
 	public TreeMap<Float, SizeData> sizes = Maps.newTreeMap();
 	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
 	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
@@ -38,6 +38,7 @@ public class ImageMeta {
 		return this.maps.get(0f);
 	}
 
+	public final ImageFrame frame;
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
@@ -45,6 +46,7 @@ public class ImageMeta {
 	private boolean hasInvalidMeta;
 
 	public ImageMeta() {
+		this.frame = new ImageFrame();
 		this.size = new ImageSize();
 		this.offset = new ImageOffset();
 		this.rotation = new ImageRotation();
@@ -60,6 +62,7 @@ public class ImageMeta {
 	}
 
 	public ImageMeta reset() {
+		this.frames.clear();
 		this.sizes.clear();
 		this.offsets.clear();
 		this.rotations.clear();
@@ -81,7 +84,23 @@ public class ImageMeta {
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
-				final float time = NumberUtils.toFloat(mg.group(1));
+				final String timesrc = mg.group(1);
+				final float time;
+				this.frame.reset();
+				if (timesrc!=null) {
+					final Matcher tmp = p.matcher(timesrc);
+					while (tmp.find()) {
+						final int tgcount = tmp.groupCount();
+						if (1<=tgcount) {
+							final String key = tmp.group(1);
+							final String value = 2<=tgcount ? tmp.group(2) : "";
+							if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
+								this.frame.parse(timesrc, key, value);
+						}
+					}
+				}
+				time = this.frame.time;
+				this.frames.put(time, this.frame.get());
 				final String before = timeline.get(time);
 				String meta = mg.group(2);
 				if (before!=null)
