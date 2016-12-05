@@ -76,8 +76,9 @@ public class GuiMain extends WFrame {
 
 	@Override
 	protected void initWidget() {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+			CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 		CurrentMode.instance.setMode();
-		CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
