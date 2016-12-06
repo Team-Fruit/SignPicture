@@ -20,7 +20,7 @@ public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
-	public ICompoundMotion motion = new CompoundMotion().start();
+	public ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
 	public TreeMap<Float, SizeData> sizes = Maps.newTreeMap();
 	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
 	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
@@ -42,7 +42,19 @@ public class ImageMeta {
 	}
 
 	public OffsetData getOffset() {
-		return this.offsets.get(0f);
+		if (this.offsets.size()<=1)
+			return this.offsets.get(0f);
+		final float t = this.motion.get();
+		Entry<Float, OffsetData> before = this.offsets.floorEntry(t);
+		final Entry<Float, OffsetData> after = this.offsets.higherEntry(t);
+		if (before==null)
+			before = this.offsets.firstEntry();
+		if (after!=null) {
+			final float f1 = after.getKey();
+			final float f2 = before.getKey();
+			return after.getValue().per((t-f1)/(f2-f1), before.getValue());
+		} else
+			return before.getValue();
 	}
 
 	public RotationData getRotation() {
