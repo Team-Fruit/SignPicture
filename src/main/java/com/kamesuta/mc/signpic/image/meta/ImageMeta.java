@@ -11,12 +11,16 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
+import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
 import com.kamesuta.mc.signpic.Reference;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
+	public ICompoundMotion motion = new CompoundMotion().start();
 	public TreeMap<Float, SizeData> sizes = Maps.newTreeMap();
 	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
 	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
@@ -24,7 +28,17 @@ public class ImageMeta {
 	public TreeMap<Float, FrameData> frames = Maps.newTreeMap();
 
 	public SizeData getSize() {
-		return this.sizes.get(0f);
+		if (this.sizes.size()<=1)
+			return this.sizes.get(0f);
+		final float t = this.motion.get();
+		Entry<Float, SizeData> before = this.sizes.floorEntry(t);
+		final Entry<Float, SizeData> after = this.sizes.higherEntry(t);
+		if (before==null)
+			before = this.sizes.firstEntry();
+		if (after!=null)
+			return after.getValue().per(after.getKey()-before.getKey(), before.getValue());
+		else
+			return before.getValue();
 	}
 
 	public OffsetData getOffset() {
@@ -68,6 +82,7 @@ public class ImageMeta {
 	}
 
 	public ImageMeta reset() {
+		this.motion.reset();
 		this.sizes.clear();
 		this.offsets.clear();
 		this.rotations.clear();
@@ -103,6 +118,7 @@ public class ImageMeta {
 
 		boolean b = true;
 
+		float lasttime = 0;
 		for (final Iterator<Entry<Float, String>> itr = timeline.entrySet().iterator(); itr.hasNext();) {
 			final Entry<Float, String> entry = itr.next();
 			final float time = entry.getKey();
@@ -125,6 +141,9 @@ public class ImageMeta {
 				}
 			}
 
+			final float difftime = time-lasttime;
+			this.motion.add(Easings.easeLinear.move(difftime, time));
+			lasttime = time;
 			this.sizes.put(time, this.size.get());
 			this.offsets.put(time, this.offset.get());
 			this.rotations.put(time, this.rotation.get());

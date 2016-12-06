@@ -37,6 +37,10 @@ public class SizeData {
 		return new SizeData(this.width*scale, this.height*scale);
 	}
 
+	public SizeData per(final float per, final SizeData before) {
+		return new SizeData(this.width*per+before.width*(1f-per), this.height*per+before.height*(1f-per));
+	}
+
 	public String compose() {
 		return (vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
 	}

@@ -38,6 +38,18 @@ public class TextureMapData {
 		return new TextureMapData(this.u*scale, this.v*scale, this.w*scale, this.h*scale, this.c*scale, this.s*scale, this.o*scale, this.r, this.m);
 	}
 
+	public TextureMapData per(final float per, final TextureMapData before) {
+		return new TextureMapData(
+				this.u*per+before.u*(1f-per),
+				this.v*per+before.v*(1f-per),
+				this.w*per+before.w*(1f-per),
+				this.h*per+before.h*(1f-per),
+				this.c*per+before.c*(1f-per),
+				this.s*per+before.s*(1f-per),
+				this.o*per+before.o*(1f-per),
+				this.r, this.m);
+	}
+
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.u!=defaultUV)

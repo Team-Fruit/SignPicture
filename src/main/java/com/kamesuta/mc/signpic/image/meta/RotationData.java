@@ -37,6 +37,10 @@ public class RotationData {
 		return new RotationData(builder.build());
 	}
 
+	public RotationData per(final float per, final RotationData before) {
+		return this;
+	}
+
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		for (final Rotate rotate : this.rotates)

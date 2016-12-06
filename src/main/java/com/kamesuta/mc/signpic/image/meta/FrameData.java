@@ -17,6 +17,10 @@ public class FrameData {
 		return this;
 	}
 
+	public FrameData per(final float per, final FrameData before) {
+		return this;
+	}
+
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.easing!=Easings.easeLinear)
