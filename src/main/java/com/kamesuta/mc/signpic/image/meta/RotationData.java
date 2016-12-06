@@ -9,45 +9,71 @@ import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
-public class RotationData implements IMotionFrame<RotationData>, IComposable {
+public abstract class RotationData implements IMotionFrame<RotationData>, IComposable {
 	public static final float defaultOffset = 4f;
 
-	public final ImmutableList<Rotate> rotates;
-
-	protected RotationData(final ImmutableList<Rotate> rotates) {
-		this.rotates = rotates;
-	}
-
-	public RotationData(final List<ImageRotate> rotates) {
-		final Builder<Rotate> builder = ImmutableList.builder();
-		for (final ImageRotate rotate : rotates)
-			builder.add(new Rotate(rotate));
-		this.rotates = builder.build();
-	}
+	protected abstract void rotate(final float scale);
 
 	public void rotate() {
-		for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
-			it.previous().rotate();
-	}
-
-	public RotationData scale(final float scale) {
-		final Builder<Rotate> builder = ImmutableList.builder();
-		for (final Rotate rotate : this.rotates)
-			builder.add(new Rotate(rotate.type, rotate.rotate*scale));
-		return new RotationData(builder.build());
+		rotate(1f);
 	}
 
 	@Override
 	public RotationData per(final float per, final RotationData before) {
-		return this;
+		return new PerRotationData(this, before, per);
 	}
 
-	@Override
-	public String compose() {
-		final StringBuilder stb = new StringBuilder();
-		for (final Rotate rotate : this.rotates)
-			stb.append(rotate.compose());
-		return stb.toString();
+	public static RotationData create(final List<ImageRotate> rotates) {
+		final Builder<Rotate> builder = ImmutableList.builder();
+		for (final ImageRotate rotate : rotates)
+			builder.add(new Rotate(rotate));
+		return new AbsRotationData(builder.build());
+	}
+
+	private static class AbsRotationData extends RotationData {
+		private final ImmutableList<Rotate> rotates;
+
+		private AbsRotationData(final ImmutableList<Rotate> rotates) {
+			this.rotates = rotates;
+		}
+
+		@Override
+		protected void rotate(final float scale) {
+			for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
+				it.previous().rotate(scale);
+		}
+
+		@Override
+		public String compose() {
+			final StringBuilder stb = new StringBuilder();
+			for (final Rotate rotate : this.rotates)
+				stb.append(rotate.compose());
+			return stb.toString();
+		}
+	}
+
+	private static class PerRotationData extends RotationData {
+		private final RotationData after;
+		private final RotationData before;
+		private final float per;
+
+		private PerRotationData(final RotationData after, final RotationData before, final float per) {
+			this.after = after;
+			this.before = before;
+			this.per = per;
+		}
+
+		@Override
+		@Deprecated
+		public String compose() {
+			return this.after.compose();
+		}
+
+		@Override
+		protected void rotate(final float scale) {
+			this.before.rotate((1-this.per)*scale);
+			this.after.rotate(this.per*scale);
+		}
 	}
 
 	public static class Rotate {
@@ -63,8 +89,8 @@ public class RotationData implements IMotionFrame<RotationData>, IComposable {
 			this(rotate.type, rotate.rotate);
 		}
 
-		public void rotate() {
-			this.type.rotate(this.rotate);
+		public void rotate(final float scale) {
+			this.type.rotate(this.rotate*scale);
 		}
 
 		public String compose() {

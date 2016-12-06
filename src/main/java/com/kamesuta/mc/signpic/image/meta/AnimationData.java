@@ -13,10 +13,6 @@ public class AnimationData implements IMotionFrame<AnimationData>, IComposable {
 		this.redstone = redstone;
 	}
 
-	public AnimationData scale(final float scale) {
-		return this;
-	}
-
 	@Override
 	public AnimationData per(final float per, final AnimationData before) {
 		return this;

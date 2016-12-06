@@ -12,7 +12,7 @@ public class ImageRotation extends ImageMeta.MetaParser {
 	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
 
 	public RotationData get() {
-		return new RotationData(this.rotates);
+		return RotationData.create(this.rotates);
 	}
 
 	@Override

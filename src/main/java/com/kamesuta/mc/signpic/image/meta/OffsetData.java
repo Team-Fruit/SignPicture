@@ -15,10 +15,6 @@ public class OffsetData implements IMotionFrame<OffsetData>, IComposable {
 		this.z = z;
 	}
 
-	public OffsetData scale(final float scale) {
-		return new OffsetData(this.x*scale, this.y*scale, this.z*scale);
-	}
-
 	@Override
 	public OffsetData per(final float per, final OffsetData before) {
 		return new OffsetData(this.x*per+before.x*(1f-per), this.y*per+before.y*(1f-per), this.z*per+before.z*(1f-per));
