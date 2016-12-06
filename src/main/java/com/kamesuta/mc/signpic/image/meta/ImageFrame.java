@@ -4,14 +4,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.signpic.image.meta.FrameData.RSNeed;
+import com.kamesuta.mc.signpic.image.meta.AnimationData.RSNeed;
 
 public class ImageFrame extends ImageMeta.MetaParser {
 	public Easings easing = Easings.easeLinear;
 	public RSNeed redstone = RSNeed.RS_OFF;
 
-	public FrameData get() {
-		return new FrameData(this.easing, this.redstone);
+	public AnimationData get() {
+		return new AnimationData(this.easing, this.redstone);
 	}
 
 	@Override

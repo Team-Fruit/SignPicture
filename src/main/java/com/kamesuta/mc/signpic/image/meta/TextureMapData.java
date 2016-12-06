@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.image.meta;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 
-public class TextureMapData {
+public class TextureMapData implements IMotionFrame<TextureMapData>, IComposable {
 	public static final float defaultUV = 0f;
 	// Width Height
 	public static final float defaultWH = 1f;
@@ -38,6 +38,7 @@ public class TextureMapData {
 		return new TextureMapData(this.u*scale, this.v*scale, this.w*scale, this.h*scale, this.c*scale, this.s*scale, this.o*scale, this.r, this.m);
 	}
 
+	@Override
 	public TextureMapData per(final float per, final TextureMapData before) {
 		return new TextureMapData(
 				this.u*per+before.u*(1f-per),
@@ -50,6 +51,7 @@ public class TextureMapData {
 				this.r, this.m);
 	}
 
+	@Override
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.u!=defaultUV)

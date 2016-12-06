@@ -9,7 +9,7 @@ import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
-public class RotationData {
+public class RotationData implements IMotionFrame<RotationData>, IComposable {
 	public static final float defaultOffset = 4f;
 
 	public final ImmutableList<Rotate> rotates;
@@ -37,10 +37,12 @@ public class RotationData {
 		return new RotationData(builder.build());
 	}
 
+	@Override
 	public RotationData per(final float per, final RotationData before) {
 		return this;
 	}
 
+	@Override
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		for (final Rotate rotate : this.rotates)

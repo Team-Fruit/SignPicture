@@ -4,23 +4,25 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 
-public class FrameData {
+public class AnimationData implements IMotionFrame<AnimationData>, IComposable {
 	public final Easings easing;
 	public final RSNeed redstone;
 
-	public FrameData(final Easings easing2, final RSNeed redstone) {
+	public AnimationData(final Easings easing2, final RSNeed redstone) {
 		this.easing = easing2;
 		this.redstone = redstone;
 	}
 
-	public FrameData scale(final float scale) {
+	public AnimationData scale(final float scale) {
 		return this;
 	}
 
-	public FrameData per(final float per, final FrameData before) {
+	@Override
+	public AnimationData per(final float per, final AnimationData before) {
 		return this;
 	}
 
+	@Override
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.easing!=Easings.easeLinear)

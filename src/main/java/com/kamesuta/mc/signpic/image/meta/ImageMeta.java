@@ -21,34 +21,16 @@ public class ImageMeta {
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
 	public ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
-	public TreeMap<Float, SizeData> sizes = Maps.newTreeMap();
-	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
-	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
-	public TreeMap<Float, TextureMapData> maps = Maps.newTreeMap();
-	public TreeMap<Float, FrameData> frames = Maps.newTreeMap();
+	public TreeMap<Float, Frame> frames = Maps.newTreeMap();
 
-	public SizeData getSize() {
-		if (this.sizes.size()<=1)
-			return this.sizes.get(0f);
+	public IFrame getFrame() {
+		if (this.frames.size()<=1)
+			return this.frames.get(0f);
 		final float t = this.motion.get();
-		Entry<Float, SizeData> before = this.sizes.floorEntry(t);
-		final Entry<Float, SizeData> after = this.sizes.higherEntry(t);
+		Entry<Float, Frame> before = this.frames.floorEntry(t);
+		final Entry<Float, Frame> after = this.frames.higherEntry(t);
 		if (before==null)
-			before = this.sizes.firstEntry();
-		if (after!=null)
-			return after.getValue().per(after.getKey()-before.getKey(), before.getValue());
-		else
-			return before.getValue();
-	}
-
-	public OffsetData getOffset() {
-		if (this.offsets.size()<=1)
-			return this.offsets.get(0f);
-		final float t = this.motion.get();
-		Entry<Float, OffsetData> before = this.offsets.floorEntry(t);
-		final Entry<Float, OffsetData> after = this.offsets.higherEntry(t);
-		if (before==null)
-			before = this.offsets.firstEntry();
+			before = this.frames.firstEntry();
 		if (after!=null) {
 			final float f1 = after.getKey();
 			final float f2 = before.getKey();
@@ -57,16 +39,24 @@ public class ImageMeta {
 			return before.getValue();
 	}
 
+	public SizeData getSize() {
+		return getFrame().getSize();
+	}
+
+	public OffsetData getOffset() {
+		return getFrame().getOffset();
+	}
+
 	public RotationData getRotation() {
-		return this.rotations.get(0f);
+		return getFrame().getRotation();
 	}
 
 	public TextureMapData getMap() {
-		return this.maps.get(0f);
+		return getFrame().getMap();
 	}
 
-	public FrameData getFrame() {
-		return this.frames.get(0f);
+	public AnimationData getAnimation() {
+		return getFrame().getFrame();
 	}
 
 	public final ImageSize size;
@@ -95,10 +85,6 @@ public class ImageMeta {
 
 	public ImageMeta reset() {
 		this.motion.reset();
-		this.sizes.clear();
-		this.offsets.clear();
-		this.rotations.clear();
-		this.maps.clear();
 		this.frames.clear();
 		this.hasInvalidMeta = false;
 		return this;
@@ -156,11 +142,7 @@ public class ImageMeta {
 			final float difftime = time-lasttime;
 			this.motion.add(Easings.easeLinear.move(difftime, time));
 			lasttime = time;
-			this.sizes.put(time, this.size.get());
-			this.offsets.put(time, this.offset.get());
-			this.rotations.put(time, this.rotation.get());
-			this.maps.put(time, this.map.get());
-			this.frames.put(time, this.frame.get());
+			this.frames.put(time, new Frame(this.size.get(), this.offset.get(), this.rotation.get(), this.map.get(), this.frame.get()));
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!b;

@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.image.meta;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 
-public class SizeData {
+public class SizeData implements IMotionFrame<SizeData>, IComposable {
 	public static final float Default = 1f;
 	public static final float Unknown = Float.NaN;
 
@@ -37,10 +37,12 @@ public class SizeData {
 		return new SizeData(this.width*scale, this.height*scale);
 	}
 
+	@Override
 	public SizeData per(final float per, final SizeData before) {
 		return new SizeData(this.width*per+before.width*(1f-per), this.height*per+before.height*(1f-per));
 	}
 
+	@Override
 	public String compose() {
 		return (vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
 	}

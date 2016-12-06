@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.image.meta;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 
-public class OffsetData {
+public class OffsetData implements IMotionFrame<OffsetData>, IComposable {
 	public static final float defaultOffset = 0.5f;
 
 	public final float x;
@@ -19,6 +19,7 @@ public class OffsetData {
 		return new OffsetData(this.x*scale, this.y*scale, this.z*scale);
 	}
 
+	@Override
 	public OffsetData per(final float per, final OffsetData before) {
 		return new OffsetData(this.x*per+before.x*(1f-per), this.y*per+before.y*(1f-per), this.z*per+before.z*(1f-per));
 	}
@@ -31,6 +32,7 @@ public class OffsetData {
 	 * B=back
 	 * F=front
 	 */
+	@Override
 	public String compose() {
 		/* @formatter:off */
 		final StringBuilder stb = new StringBuilder();
