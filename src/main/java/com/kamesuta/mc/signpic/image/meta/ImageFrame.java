@@ -7,8 +7,6 @@ import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.image.meta.FrameData.RSNeed;
 
 public class ImageFrame extends ImageMeta.MetaParser {
-
-	public float time = 0f;
 	public Easings easing = Easings.easeLinear;
 	public RSNeed redstone = RSNeed.RS_OFF;
 
@@ -18,7 +16,6 @@ public class ImageFrame extends ImageMeta.MetaParser {
 
 	@Override
 	public ImageFrame reset() {
-		this.time = 0f;
 		this.easing = Easings.easeLinear;
 		this.redstone = RSNeed.RS_OFF;
 		return this;
@@ -26,9 +23,7 @@ public class ImageFrame extends ImageMeta.MetaParser {
 
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
-		if (StringUtils.equals(key, ""))
-			this.time = NumberUtils.toFloat(value);
-		else if (StringUtils.equals(key, "k"))
+		if (StringUtils.equals(key, "k"))
 			this.easing = Easings.fromId(NumberUtils.toInt(value));
 		else if (StringUtils.equals(key, "t"))
 			this.redstone = RSNeed.fromId(NumberUtils.toInt(value));

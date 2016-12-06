@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Reference;
@@ -16,11 +17,11 @@ public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
-	public TreeMap<Float, FrameData> frames = Maps.newTreeMap();
 	public TreeMap<Float, SizeData> sizes = Maps.newTreeMap();
 	public TreeMap<Float, OffsetData> offsets = Maps.newTreeMap();
 	public TreeMap<Float, RotationData> rotations = Maps.newTreeMap();
 	public TreeMap<Float, TextureMapData> maps = Maps.newTreeMap();
+	public TreeMap<Float, FrameData> frames = Maps.newTreeMap();
 
 	public SizeData getSize() {
 		return this.sizes.get(0f);
@@ -38,19 +39,19 @@ public class ImageMeta {
 		return this.maps.get(0f);
 	}
 
-	public final ImageFrame frame;
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;
 	public final ImageTextureMap map;
+	public final ImageFrame frame;
 	private boolean hasInvalidMeta;
 
 	public ImageMeta() {
-		this.frame = new ImageFrame();
 		this.size = new ImageSize();
 		this.offset = new ImageOffset();
 		this.rotation = new ImageRotation();
 		this.map = new ImageTextureMap();
+		this.frame = new ImageFrame();
 	}
 
 	protected boolean parseMeta(final String src, final String key, final String value) {
@@ -58,15 +59,16 @@ public class ImageMeta {
 		final boolean b = this.offset.parse(src, key, value);
 		final boolean c = this.rotation.parse(src, key, value);
 		final boolean d = this.map.parse(src, key, value);
-		return a||b||c||d;
+		final boolean e = this.frame.parse(src, key, value);
+		return a||b||c||d||e;
 	}
 
 	public ImageMeta reset() {
-		this.frames.clear();
 		this.sizes.clear();
 		this.offsets.clear();
 		this.rotations.clear();
 		this.maps.clear();
+		this.frames.clear();
 		this.hasInvalidMeta = false;
 		return this;
 	}
@@ -84,23 +86,7 @@ public class ImageMeta {
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
-				final String timesrc = mg.group(1);
-				final float time;
-				this.frame.reset();
-				if (timesrc!=null) {
-					final Matcher tmp = p.matcher(timesrc);
-					while (tmp.find()) {
-						final int tgcount = tmp.groupCount();
-						if (1<=tgcount) {
-							final String key = tmp.group(1);
-							final String value = 2<=tgcount ? tmp.group(2) : "";
-							if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
-								this.frame.parse(timesrc, key, value);
-						}
-					}
-				}
-				time = this.frame.time;
-				this.frames.put(time, this.frame.get());
+				final float time = NumberUtils.toFloat(mg.group(1));
 				final String before = timeline.get(time);
 				String meta = mg.group(2);
 				if (before!=null)
@@ -122,6 +108,7 @@ public class ImageMeta {
 			this.offset.reset();
 			this.rotation.reset();
 			this.map.reset();
+			this.frame.reset();
 
 			final Matcher mp = p.matcher(meta);
 			while (mp.find()) {
@@ -138,6 +125,7 @@ public class ImageMeta {
 			this.offsets.put(time, this.offset.get());
 			this.rotations.put(time, this.rotation.get());
 			this.maps.put(time, this.map.get());
+			this.frames.put(time, this.frame.get());
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!b;
@@ -155,7 +143,7 @@ public class ImageMeta {
 	}
 
 	public String compose() {
-		return "{"+this.size+this.offset+this.rotation+this.map+"}";
+		return "{"+this.size+this.offset+this.rotation+this.map+this.frame+"}";
 	}
 
 	@Override
