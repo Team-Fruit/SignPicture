@@ -34,6 +34,10 @@ public class TextureMapData {
 		this.m = m;
 	}
 
+	public TextureMapData scale(final float scale) {
+		return new TextureMapData(this.u*scale, this.v*scale, this.w*scale, this.h*scale, this.c*scale, this.s*scale, this.o*scale, this.r, this.m);
+	}
+
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.u!=defaultUV)

@@ -39,6 +39,10 @@ public class ImageMeta {
 		return this.maps.get(0f);
 	}
 
+	public FrameData getFrame() {
+		return this.frames.get(0f);
+	}
+
 	public final ImageSize size;
 	public final ImageOffset offset;
 	public final ImageRotation rotation;

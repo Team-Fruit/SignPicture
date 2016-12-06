@@ -13,6 +13,10 @@ public class FrameData {
 		this.redstone = redstone;
 	}
 
+	public FrameData scale(final float scale) {
+		return this;
+	}
+
 	public String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.easing!=Easings.easeLinear)

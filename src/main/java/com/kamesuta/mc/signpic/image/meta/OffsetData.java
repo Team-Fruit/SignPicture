@@ -15,6 +15,10 @@ public class OffsetData {
 		this.z = z;
 	}
 
+	public OffsetData scale(final float scale) {
+		return new OffsetData(this.x*scale, this.y*scale, this.z*scale);
+	}
+
 	/**
 	 * L=left
 	 * R=right

@@ -14,6 +14,10 @@ public class RotationData {
 
 	public final ImmutableList<Rotate> rotates;
 
+	protected RotationData(final ImmutableList<Rotate> rotates) {
+		this.rotates = rotates;
+	}
+
 	public RotationData(final List<ImageRotate> rotates) {
 		final Builder<Rotate> builder = ImmutableList.builder();
 		for (final ImageRotate rotate : rotates)
@@ -24,6 +28,13 @@ public class RotationData {
 	public void rotate() {
 		for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
 			it.previous().rotate();
+	}
+
+	public RotationData scale(final float scale) {
+		final Builder<Rotate> builder = ImmutableList.builder();
+		for (final Rotate rotate : this.rotates)
+			builder.add(new Rotate(rotate.type, rotate.rotate*scale));
+		return new RotationData(builder.build());
 	}
 
 	public String compose() {
@@ -37,9 +48,13 @@ public class RotationData {
 		public RotateType type;
 		public float rotate;
 
+		protected Rotate(final RotateType type, final float rotate) {
+			this.type = type;
+			this.rotate = rotate;
+		}
+
 		public Rotate(final ImageRotate rotate) {
-			this.type = rotate.type;
-			this.rotate = rotate.rotate;
+			this(rotate.type, rotate.rotate);
 		}
 
 		public void rotate() {
