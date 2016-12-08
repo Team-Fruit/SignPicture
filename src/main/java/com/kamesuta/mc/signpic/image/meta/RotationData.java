@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -16,15 +15,7 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 public abstract class RotationData implements IMotionFrame<RotationData>, IComposable {
 	public static final float defaultOffset = 4f;
 
-	protected abstract void unrotate(final float unscale);
-
-	protected abstract void rotate(final float scale);
-
-	protected abstract Quat4f getRotate(float scale);
-
-	public void rotate() {
-		rotate(1f);
-	}
+	public abstract Quat4f getRotate();
 
 	@Override
 	public RotationData per(final float per, final RotationData before) {
@@ -45,22 +36,7 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 		private AbsRotationData(final ImmutableList<Rotate> rotates) {
 			this.rotates = rotates;
 			for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
-				this.quat.mul(it.previous().getRotate(1f));
-		}
-
-		@Override
-		protected void unrotate(final float unscale) {
-			for (final Iterator<Rotate> it = this.rotates.iterator(); it.hasNext();)
-				it.next().rotate(unscale);
-		}
-
-		@Override
-		protected void rotate(final float scale) {
-			// for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
-			//	it.previous().rotate(scale);
-			final AxisAngle4f axis = new AxisAngle4f();
-			axis.set(this.quat);
-			OpenGL.glRotatef((float) Math.toDegrees(axis.angle), axis.x, axis.y, axis.z);
+				this.quat.mul(it.previous().getRotate());
 		}
 
 		@Override
@@ -72,7 +48,7 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 		}
 
 		@Override
-		protected Quat4f getRotate(final float scale) {
+		public Quat4f getRotate() {
 			return this.quat;
 		}
 	}
@@ -95,29 +71,10 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 		}
 
 		@Override
-		protected void unrotate(final float unscale) {
-
-		}
-
-		@Override
-		protected void rotate(final float scale) {
-			final AxisAngle4f axis = new AxisAngle4f();
-			axis.set(getRotate(scale));
-			OpenGL.glRotatef((float) Math.toDegrees(axis.angle), axis.x, axis.y, axis.z);
-			// this.after.rotate(this.per*scale);
-			// this.before.rotate((1-this.per)*scale);
-			// this.before.rotate((1-this.per)*scale);
-			// this.after.rotate(this.per*scale);
-			// this.before.rotate(1);
-			// this.after.unrotate(-this.per*scale);
-			// this.before.unrotate(this.per*scale);
-		}
-
-		@Override
-		protected Quat4f getRotate(final float scale) {
+		public Quat4f getRotate() {
 			final Quat4f quat = new Quat4f();
-			quat.set(this.after.getRotate(scale));
-			quat.interpolate(this.before.getRotate(scale), this.per);
+			quat.set(this.after.getRotate());
+			quat.interpolate(this.before.getRotate(), this.per);
 			return quat;
 		}
 	}
@@ -135,12 +92,8 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 			this(rotate.type, rotate.rotate);
 		}
 
-		public void rotate(final float scale) {
-			this.type.rotate(this.rotate*scale);
-		}
-
-		public Quat4f getRotate(final float scale) {
-			return this.type.getRotate(this.rotate*scale);
+		public Quat4f getRotate() {
+			return this.type.getRotate(this.rotate);
 		}
 
 		public String compose() {
@@ -157,47 +110,74 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 	public static enum RotateType {
 		X {
 			@Override
-			public void rotate(final float f) {
-				OpenGL.glRotatef(f*360f/8f, 1f, 0f, 0f);
-			}
-
-			@Override
 			public Quat4f getRotate(final float f) {
-				final Quat4f q = new Quat4f();
-				q.set(new AxisAngle4f(1f, 0f, 0f, (float) Math.toRadians(f*360f/8f)));
-				return q;
+				return RotationMath.quatDeg(f*360f/8f, 1f, 0f, 0f);
 			}
 		},
 		Y {
 			@Override
-			public void rotate(final float f) {
-				OpenGL.glRotatef(f*360f/8f, 0f, 1f, 0f);
-			}
-
-			@Override
 			public Quat4f getRotate(final float f) {
-				final Quat4f q = new Quat4f();
-				q.set(new AxisAngle4f(0f, 1f, 0f, (float) Math.toRadians(f*360f/8f)));
-				return q;
+				return RotationMath.quatDeg(f*360f/8f, 0f, 1f, 0f);
 			}
 		},
 		Z {
 			@Override
-			public void rotate(final float f) {
-				OpenGL.glRotatef(f*360f/8f, 0f, 0f, 1f);
-			}
-
-			@Override
 			public Quat4f getRotate(final float f) {
-				final Quat4f q = new Quat4f();
-				q.set(new AxisAngle4f(0f, 0f, 1f, (float) Math.toRadians(f*360f/8f)));
-				return q;
+				return RotationMath.quatDeg(f*360f/8f, 0f, 0f, 1f);
 			}
 		},
 		;
 
-		public abstract void rotate(float f);
-
 		public abstract Quat4f getRotate(float f);
+	}
+
+	public static class RotationMath {
+		public static final float PI = (float) Math.PI;
+
+		public static float toRadians(final float angdeg) {
+			return angdeg/180f*PI;
+		}
+
+		public static float toDegrees(final float angrad) {
+			return angrad*180f/PI;
+		}
+
+		public static Quat4f toQuat(final AxisAngle4f axis) {
+			final Quat4f q = new Quat4f();
+			q.set(axis);
+			return q;
+		}
+
+		public static AxisAngle4f toAxis(final Quat4f quat) {
+			final AxisAngle4f q = new AxisAngle4f();
+			q.set(quat);
+			return q;
+		}
+
+		public static AxisAngle4f axisRad(final float angle, final float x, final float y, final float z) {
+			return new AxisAngle4f(x, y, z, angle);
+		}
+
+		public static AxisAngle4f axisDeg(final float angle, final float x, final float y, final float z) {
+			return new AxisAngle4f(x, y, z, RotationMath.toRadians(angle));
+		}
+
+		public static Quat4f quatRad(final float angle, final float x, final float y, final float z) {
+			return toQuat(axisRad(angle, x, y, z));
+		}
+
+		public static Quat4f quatDeg(final float angle, final float x, final float y, final float z) {
+			return toQuat(axisDeg(angle, x, y, z));
+		}
+	}
+
+	public static class RotationGL {
+		public static void glRotate(final AxisAngle4f axis) {
+			OpenGL.glRotatef(RotationMath.toDegrees(axis.angle), axis.x, axis.y, axis.z);
+		}
+
+		public static void glRotate(final Quat4f quat) {
+			glRotate(RotationMath.toAxis(quat));
+		}
 	}
 }

@@ -44,10 +44,6 @@ public class ImageRotation extends ImageMeta.MetaParser {
 		return compose();
 	}
 
-	public void rotate() {
-		get().rotate();
-	}
-
 	public static class ImageRotate {
 		public RotateType type;
 		public float rotate;

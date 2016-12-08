@@ -6,6 +6,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.OffsetData;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.image.meta.SizeData.ImageSizes;
 
@@ -63,7 +64,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			OpenGL.glTranslatef(0f, 1f-size.height, 0f);
 			final OffsetData offset = meta.getOffset();
 			OpenGL.glTranslatef(offset.x, offset.y, offset.z);
-			meta.getRotation().rotate();
+			RotationGL.glRotate(meta.getRotation().getRotate());
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
 		}
 		OpenGL.glPopAttrib();
