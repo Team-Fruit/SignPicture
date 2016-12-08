@@ -20,6 +20,8 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 
 	protected abstract void rotate(final float scale);
 
+	protected abstract Quat4f getRotate(float scale);
+
 	public void rotate() {
 		rotate(1f);
 	}
@@ -68,6 +70,11 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 				stb.append(rotate.compose());
 			return stb.toString();
 		}
+
+		@Override
+		protected Quat4f getRotate(final float scale) {
+			return this.quat;
+		}
 	}
 
 	private static class PerRotationData extends RotationData {
@@ -94,13 +101,24 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 
 		@Override
 		protected void rotate(final float scale) {
-			this.after.rotate(this.per*scale);
-			this.before.rotate((1-this.per)*scale);
+			final AxisAngle4f axis = new AxisAngle4f();
+			axis.set(getRotate(scale));
+			OpenGL.glRotatef((float) Math.toDegrees(axis.angle), axis.x, axis.y, axis.z);
+			// this.after.rotate(this.per*scale);
+			// this.before.rotate((1-this.per)*scale);
 			// this.before.rotate((1-this.per)*scale);
 			// this.after.rotate(this.per*scale);
 			// this.before.rotate(1);
 			// this.after.unrotate(-this.per*scale);
 			// this.before.unrotate(this.per*scale);
+		}
+
+		@Override
+		protected Quat4f getRotate(final float scale) {
+			final Quat4f quat = new Quat4f();
+			quat.set(this.after.getRotate(scale));
+			quat.interpolate(this.before.getRotate(scale), this.per);
+			return quat;
 		}
 	}
 
