@@ -38,7 +38,7 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 
 	private static class AbsRotationData extends RotationData {
 		private final ImmutableList<Rotate> rotates;
-		private Quat4f quat = new Quat4f();
+		private Quat4f quat = new Quat4f(0, 0, 0, 1);
 
 		private AbsRotationData(final ImmutableList<Rotate> rotates) {
 			this.rotates = rotates;
@@ -146,7 +146,7 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 			@Override
 			public Quat4f getRotate(final float f) {
 				final Quat4f q = new Quat4f();
-				q.set(new AxisAngle4f(1f, 0f, 0f, f*360f/8f));
+				q.set(new AxisAngle4f(1f, 0f, 0f, (float) Math.toRadians(f*360f/8f)));
 				return q;
 			}
 		},
@@ -159,7 +159,7 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 			@Override
 			public Quat4f getRotate(final float f) {
 				final Quat4f q = new Quat4f();
-				q.set(new AxisAngle4f(0f, 1f, 0f, f*360f/8f));
+				q.set(new AxisAngle4f(0f, 1f, 0f, (float) Math.toRadians(f*360f/8f)));
 				return q;
 			}
 		},
@@ -172,7 +172,7 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 			@Override
 			public Quat4f getRotate(final float f) {
 				final Quat4f q = new Quat4f();
-				q.set(new AxisAngle4f(0f, 0f, 1f, f*360f/8f));
+				q.set(new AxisAngle4f(0f, 0f, 1f, (float) Math.toRadians(f*360f/8f)));
 				return q;
 			}
 		},
