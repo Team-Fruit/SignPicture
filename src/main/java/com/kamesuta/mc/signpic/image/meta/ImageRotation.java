@@ -7,11 +7,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
+import com.kamesuta.mc.signpic.image.meta.RotationData.SourceRotationData;
 
 public class ImageRotation extends ImageMeta.MetaParser {
 	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
 
-	public RotationData get() {
+	public SourceRotationData get() {
 		return RotationData.create(this.rotates);
 	}
 

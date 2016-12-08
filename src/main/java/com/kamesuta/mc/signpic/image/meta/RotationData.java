@@ -12,31 +12,46 @@ import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
-public abstract class RotationData implements IMotionFrame<RotationData>, IComposable {
+public class RotationData implements IMotionFrame<RotationData> {
 	public static final float defaultOffset = 4f;
+	protected final Quat4f quat;
 
-	public abstract Quat4f getRotate();
+	public RotationData(final Quat4f quat) {
+		this.quat = quat;
+	}
 
 	@Override
 	public RotationData per(final float per, final RotationData before) {
-		return new PerRotationData(this, before, per);
+		final Quat4f quat = new Quat4f();
+		quat.set(getRotate());
+		quat.interpolate(before.getRotate(), per);
+		return new RotationData(quat);
 	}
 
-	public static RotationData create(final List<ImageRotate> rotates) {
+	public Quat4f getRotate() {
+		return this.quat;
+	}
+
+	public static SourceRotationData create(final List<ImageRotate> rotates) {
 		final Builder<Rotate> builder = ImmutableList.builder();
 		for (final ImageRotate rotate : rotates)
 			builder.add(new Rotate(rotate));
-		return new AbsRotationData(builder.build());
+		return new SourceRotationData(builder.build());
 	}
 
-	private static class AbsRotationData extends RotationData {
+	public static class SourceRotationData extends RotationData implements IComposable {
 		private final ImmutableList<Rotate> rotates;
-		private Quat4f quat = new Quat4f(0, 0, 0, 1);
 
-		private AbsRotationData(final ImmutableList<Rotate> rotates) {
+		public SourceRotationData(final ImmutableList<Rotate> rotates) {
+			super(getQuat(rotates));
 			this.rotates = rotates;
-			for (final ListIterator<Rotate> it = this.rotates.listIterator(this.rotates.size()); it.hasPrevious();)
-				this.quat.mul(it.previous().getRotate());
+		}
+
+		private static Quat4f getQuat(final ImmutableList<Rotate> rotates) {
+			final Quat4f quat = new Quat4f(0, 0, 0, 1);
+			for (final ListIterator<Rotate> it = rotates.listIterator(rotates.size()); it.hasPrevious();)
+				quat.mul(it.previous().getRotate());
+			return quat;
 		}
 
 		@Override
@@ -45,37 +60,6 @@ public abstract class RotationData implements IMotionFrame<RotationData>, ICompo
 			for (final Rotate rotate : this.rotates)
 				stb.append(rotate.compose());
 			return stb.toString();
-		}
-
-		@Override
-		public Quat4f getRotate() {
-			return this.quat;
-		}
-	}
-
-	private static class PerRotationData extends RotationData {
-		private final RotationData after;
-		private final RotationData before;
-		private final float per;
-
-		private PerRotationData(final RotationData after, final RotationData before, final float per) {
-			this.after = after;
-			this.before = before;
-			this.per = per;
-		}
-
-		@Override
-		@Deprecated
-		public String compose() {
-			return this.after.compose();
-		}
-
-		@Override
-		public Quat4f getRotate() {
-			final Quat4f quat = new Quat4f();
-			quat.set(this.after.getRotate());
-			quat.interpolate(this.before.getRotate(), this.per);
-			return quat;
 		}
 	}
 
