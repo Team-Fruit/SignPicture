@@ -39,6 +39,11 @@ public class RotationData implements IMotionFrame<RotationData> {
 		return new SourceRotationData(builder.build());
 	}
 
+	@Override
+	public String toString() {
+		return String.format("x=%s, y=%s, z=%s, w=%s", this.quat.x, this.quat.y, this.quat.z, this.quat.w);
+	}
+
 	public static class SourceRotationData extends RotationData implements IComposable {
 		private final ImmutableList<Rotate> rotates;
 
