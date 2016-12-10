@@ -6,6 +6,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Quat4f;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,6 +18,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.google.common.collect.Maps;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationMath;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class Debug {
@@ -67,7 +71,21 @@ public class Debug {
 		//		final String src = "gyazo.com/114514e";
 		//		Reference.logger.info(replace(src));
 
-		parsemeta("U2(o)(4~i)");
+		// parsemeta("U2(o)(4~i)");
+
+		quat();
+	}
+
+	static void quat() {
+		final AxisAngle4f angle1 = new AxisAngle4f(0, 1, 0, RotationMath.toRadians(360+90));
+		Reference.logger.info(angle1+":"+RotationMath.toDegrees(angle1.angle));
+		final Quat4f quat1 = RotationMath.toQuat(angle1);
+		final AxisAngle4f angle2 = RotationMath.toAxis(quat1);
+		Reference.logger.info(angle2+":"+RotationMath.toDegrees(angle2.angle));
+		final Quat4f quat2 = new Quat4f(0, 0, 0, 1);
+		quat2.mul(quat1);
+		final AxisAngle4f angle3 = RotationMath.toAxis(quat2);
+		Reference.logger.info(angle3+":"+RotationMath.toDegrees(angle3.angle));
 	}
 
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
