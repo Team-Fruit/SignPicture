@@ -55,15 +55,15 @@ public class ImageMeta {
 
 		boolean bb = true;
 
+		this.size.reset();
+		this.offset.reset();
+		this.rotation.reset();
+		this.map.reset();
+		this.animation.reset();
+
 		for (final Entry<Float, String> entry : timeline.entrySet()) {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
-
-			this.size.reset();
-			this.offset.reset();
-			this.rotation.reset();
-			this.map.reset();
-			this.animation.reset();
 
 			boolean a = false;
 			boolean b = false;
