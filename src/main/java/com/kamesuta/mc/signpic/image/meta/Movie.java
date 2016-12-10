@@ -8,7 +8,7 @@ import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
 
-public class Movie<E extends IMotionFrame<E>> {
+public class Movie<E extends IMotionFrame<K>, K> {
 	private final ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
 	private final TreeMap<Float, E> frames = Maps.newTreeMap();
 	private float lasttime;
@@ -17,9 +17,9 @@ public class Movie<E extends IMotionFrame<E>> {
 		this.frames.put(0f, defaultframe);
 	}
 
-	public E get() {
+	public K get() {
 		if (this.frames.size()<=1)
-			return this.frames.get(0f);
+			return this.frames.get(0f).per();
 		final float t = this.motion.get();
 		Entry<Float, E> before = this.frames.floorEntry(t);
 		final Entry<Float, E> after = this.frames.higherEntry(t);
@@ -28,12 +28,12 @@ public class Movie<E extends IMotionFrame<E>> {
 		if (after!=null) {
 			final float f1 = after.getKey();
 			final float f2 = before.getKey();
-			return after.getValue().per((t-f2)/(f1-f2), before.getValue());
+			return after.getValue().per((t-f2)/(f1-f2), before.getValue().per());
 		} else
-			return before.getValue();
+			return before.getValue().per();
 	}
 
-	public Movie<E> add(final float time, final E frame) {
+	public Movie<E, K> add(final float time, final E frame) {
 		final float difftime = time-this.lasttime;
 		this.motion.add(Easings.easeLinear.move(difftime, time));
 		this.lasttime = time;

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.image.meta.DiffRotationData.DiffRotationDataKey;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
@@ -23,11 +24,12 @@ public class ImageMeta {
 	public final ImageAnimation animation = new ImageAnimation();
 	private boolean hasInvalidMeta;
 
-	public final Movie<SizeData> sizes = new Movie<SizeData>(this.size.get());
-	public final Movie<OffsetData> offsets = new Movie<OffsetData>(this.offset.get());
-	public final Movie<RotationData> rotations = new Movie<RotationData>(this.rotation.get());
-	public final Movie<TextureMapData> maps = new Movie<TextureMapData>(this.map.get());
-	public final Movie<AnimationData> animations = new Movie<AnimationData>(this.animation.get());
+	public final Movie<SizeData, SizeData> sizes = new Movie<SizeData, SizeData>(this.size.get());
+	public final Movie<OffsetData, OffsetData> offsets = new Movie<OffsetData, OffsetData>(this.offset.get());
+	private DiffRotationDataKey base;
+	public final Movie<DiffRotationDataKey, DiffRotationData> rotations = new Movie<DiffRotationDataKey, DiffRotationData>(this.base = this.rotation.get(this.base));
+	public final Movie<TextureMapData, TextureMapData> maps = new Movie<TextureMapData, TextureMapData>(this.map.get());
+	public final Movie<AnimationData, AnimationData> animations = new Movie<AnimationData, AnimationData>(this.animation.get());
 
 	public ImageMeta(final String src) {
 		Validate.notNull(src);
@@ -57,13 +59,14 @@ public class ImageMeta {
 
 		this.size.reset();
 		this.offset.reset();
-		this.rotation.reset();
 		this.map.reset();
 		this.animation.reset();
 
 		for (final Entry<Float, String> entry : timeline.entrySet()) {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
+
+			this.rotation.reset();
 
 			boolean a = false;
 			boolean b = false;
@@ -98,7 +101,7 @@ public class ImageMeta {
 			if (b)
 				this.offsets.add(time, this.offset.get());
 			if (c)
-				this.rotations.add(time, this.rotation.get());
+				this.rotations.add(time, this.base = this.rotation.get(this.base));
 			if (d)
 				this.maps.add(time, this.map.get());
 			if (e)

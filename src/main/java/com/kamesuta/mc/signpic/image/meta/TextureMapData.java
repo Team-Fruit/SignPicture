@@ -39,6 +39,11 @@ public class TextureMapData implements IMotionFrame<TextureMapData>, IComposable
 	}
 
 	@Override
+	public TextureMapData per() {
+		return this;
+	}
+
+	@Override
 	public TextureMapData per(final float per, final TextureMapData before) {
 		return new TextureMapData(
 				this.u*per+before.u*(1f-per),

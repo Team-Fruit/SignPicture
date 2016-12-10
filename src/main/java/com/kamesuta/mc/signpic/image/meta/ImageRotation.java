@@ -6,14 +6,16 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.signpic.image.meta.DiffRotationData.DiffRotationDataDiff;
+import com.kamesuta.mc.signpic.image.meta.DiffRotationData.DiffRotationDataKey;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
-import com.kamesuta.mc.signpic.image.meta.RotationData.SourceRotationData;
 
 public class ImageRotation extends ImageMeta.MetaParser {
 	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
+	public DiffRotationDataKey base;
 
-	public SourceRotationData get() {
-		return RotationData.create(this.rotates);
+	public DiffRotationDataDiff get(final DiffRotationDataKey base) {
+		return DiffRotationData.create(base, this.rotates);
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class ImageRotation extends ImageMeta.MetaParser {
 
 	@Override
 	public String compose() {
-		return get().compose();
+		return get(null).compose();
 	}
 
 	@Override

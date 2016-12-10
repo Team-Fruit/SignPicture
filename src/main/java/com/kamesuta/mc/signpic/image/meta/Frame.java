@@ -41,6 +41,11 @@ public class Frame implements IFrame {
 	}
 
 	@Override
+	public IFrame per() {
+		return this;
+	}
+
+	@Override
 	public IFrame per(final float per, final IFrame before) {
 		return new Frame(
 				this.size.per(per, before.getSize()),

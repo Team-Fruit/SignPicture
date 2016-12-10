@@ -21,6 +21,11 @@ public class RotationData implements IMotionFrame<RotationData> {
 	}
 
 	@Override
+	public RotationData per() {
+		return this;
+	}
+
+	@Override
 	public RotationData per(final float per, final RotationData before) {
 		final Quat4f quat = new Quat4f();
 		quat.set(getRotate());
@@ -81,8 +86,12 @@ public class RotationData implements IMotionFrame<RotationData> {
 			this(rotate.type, rotate.rotate);
 		}
 
+		public Quat4f getRotate(final float scale) {
+			return this.type.getRotate(this.rotate*scale);
+		}
+
 		public Quat4f getRotate() {
-			return this.type.getRotate(this.rotate);
+			return getRotate(1f);
 		}
 
 		public String compose() {
@@ -93,6 +102,11 @@ public class RotationData implements IMotionFrame<RotationData> {
 				return this.type.name();
 			else
 				return this.type.name()+ShortestFloatFormatter.format(rotate);
+		}
+
+		@Override
+		public String toString() {
+			return "Rotate [type="+this.type+", rotate="+this.rotate+"]";
 		}
 	}
 

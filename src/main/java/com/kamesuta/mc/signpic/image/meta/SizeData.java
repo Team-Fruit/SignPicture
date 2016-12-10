@@ -38,6 +38,11 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 	}
 
 	@Override
+	public SizeData per() {
+		return this;
+	}
+
+	@Override
 	public SizeData per(final float per, final SizeData before) {
 		return new SizeData(this.width*per+before.width*(1f-per), this.height*per+before.height*(1f-per));
 	}

@@ -14,6 +14,11 @@ public class AnimationData implements IMotionFrame<AnimationData>, IComposable {
 	}
 
 	@Override
+	public AnimationData per() {
+		return this;
+	}
+
+	@Override
 	public AnimationData per(final float per, final AnimationData before) {
 		return this;
 	}
