@@ -74,4 +74,9 @@ public class TextureMapData implements IMotionFrame<TextureMapData>, IComposable
 			stb.append("m");
 		return stb.toString();
 	}
+
+	@Override
+	public String toString() {
+		return "TextureMapData [u="+this.u+", v="+this.v+", w="+this.w+", h="+this.h+", c="+this.c+", s="+this.s+", o="+this.o+", r="+this.r+", m="+this.m+"]";
+	}
 }

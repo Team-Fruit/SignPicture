@@ -47,6 +47,11 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 		return (vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
 	}
 
+	@Override
+	public String toString() {
+		return "SizeData [width="+this.width+", height="+this.height+"]";
+	}
+
 	public static SizeData aspectSize(final SizeData imagesize, final SizeData availableaspect) {
 		if (imagesize==null)
 			return availableaspect;

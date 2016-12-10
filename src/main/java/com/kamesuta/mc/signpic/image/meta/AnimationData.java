@@ -28,6 +28,11 @@ public class AnimationData implements IMotionFrame<AnimationData>, IComposable {
 		return stb.toString();
 	}
 
+	@Override
+	public String toString() {
+		return "AnimationData [easing="+this.easing+", redstone="+this.redstone+"]";
+	}
+
 	public static enum RSNeed {
 		IGNORE(0), RS_ON(1), RS_OFF(2),
 		;

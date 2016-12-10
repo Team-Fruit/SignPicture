@@ -56,4 +56,9 @@ public class OffsetData implements IMotionFrame<OffsetData>, IComposable {
 		return stb.toString();
 		/* @formatter:on */
 	}
+
+	@Override
+	public String toString() {
+		return "OffsetData [x="+this.x+", y="+this.y+", z="+this.z+"]";
+	}
 }

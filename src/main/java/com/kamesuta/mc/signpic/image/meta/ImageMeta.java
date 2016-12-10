@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -56,16 +55,21 @@ public class ImageMeta {
 
 		boolean bb = true;
 
-		for (final Iterator<Entry<Float, String>> itr = timeline.entrySet().iterator(); itr.hasNext();) {
-			final Entry<Float, String> entry = itr.next();
+		this.size.reset();
+		this.offset.reset();
+		this.rotation.reset();
+		this.map.reset();
+		this.animation.reset();
+
+		for (final Entry<Float, String> entry : timeline.entrySet()) {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
-			this.size.reset();
-			this.offset.reset();
-			this.rotation.reset();
-			this.map.reset();
-			this.animation.reset();
+			boolean a = false;
+			boolean b = false;
+			boolean c = false;
+			boolean d = false;
+			boolean e = false;
 
 			final Matcher mp = p.matcher(meta);
 			while (mp.find()) {
@@ -74,25 +78,26 @@ public class ImageMeta {
 					final String key = mp.group(1);
 					final String value = 2<=gcount ? mp.group(2) : "";
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
-						final boolean a = this.size.parse(src, key, value);
-						if (a)
-							this.sizes.add(time, this.size.get());
-						final boolean b = this.offset.parse(src, key, value);
-						if (b)
-							this.offsets.add(time, this.offset.get());
-						final boolean c = this.rotation.parse(src, key, value);
-						if (c)
-							this.rotations.add(time, this.rotation.get());
-						final boolean d = this.map.parse(src, key, value);
-						if (d)
-							this.maps.add(time, this.map.get());
-						final boolean e = this.animation.parse(src, key, value);
-						if (e)
-							this.animations.add(time, this.animation.get());
+						a = this.size.parse(src, key, value);
+						b = this.offset.parse(src, key, value);
+						c = this.rotation.parse(src, key, value);
+						d = this.map.parse(src, key, value);
+						e = this.animation.parse(src, key, value);
 						bb = (a||b||c||d||e)&&bb;
 					}
 				}
 			}
+
+			if (a)
+				this.sizes.add(time, this.size.get());
+			if (b)
+				this.offsets.add(time, this.offset.get());
+			if (c)
+				this.rotations.add(time, this.rotation.get());
+			if (d)
+				this.maps.add(time, this.map.get());
+			if (e)
+				this.animations.add(time, this.animation.get());
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!bb;
