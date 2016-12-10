@@ -7,9 +7,9 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.OffsetData;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
@@ -36,7 +36,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		final ImageMeta meta = entry.getMeta();
 
 		// Size
-		final SizeData size = SizeData.aspectSize(meta.sizes.get(), content.image.getSize());
+		final SizeData size = meta.sizes.get().aspectSize(content.image.getSize());
 
 		OpenGL.glPushMatrix();
 

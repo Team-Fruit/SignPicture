@@ -4,9 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.OffsetData;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.image.meta.SizeData.ImageSizes;
 
@@ -36,7 +36,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		final Entry entry = EntryId.fromItemStack(item).entry();
 		final ImageMeta meta = entry.getMeta();
 		// Size
-		final SizeData size = SizeData.aspectSize(meta.sizes.get(), entry.content().image.getSize());
+		final SizeData size = meta.sizes.get().aspectSize(entry.content().image.getSize());
 		if (type==ItemRenderType.INVENTORY) {
 			final float slot = 16f;
 			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);

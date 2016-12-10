@@ -57,17 +57,15 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 		return "SizeData [width="+this.width+", height="+this.height+"]";
 	}
 
-	public static SizeData aspectSize(final SizeData imagesize, final SizeData availableaspect) {
-		if (imagesize==null)
-			return availableaspect;
+	public SizeData aspectSize(final SizeData availableaspect) {
 		if (availableaspect==null)
-			return imagesize;
-		else if (imagesize.vaildWidth()&&imagesize.vaildHeight())
-			return imagesize;
-		else if (imagesize.vaildWidth())
-			return ImageSizes.WIDTH.defineSize(availableaspect, imagesize.width, Unknown);
-		else if (imagesize.vaildHeight())
-			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, imagesize.height);
+			return this;
+		else if (vaildWidth()&&vaildHeight())
+			return this;
+		else if (vaildWidth())
+			return ImageSizes.WIDTH.defineSize(availableaspect, this.width, Unknown);
+		else if (vaildHeight())
+			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, this.height);
 		else
 			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, 1);
 	}
