@@ -39,7 +39,7 @@ public class Entry {
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
 				final String meta1 = this.id.getMetaSource();
 				if (meta1!=null)
-					this.meta = new ImageMeta().init(newmeta).parse(meta1);
+					this.meta = new ImageMeta(meta1+newmeta);
 				this.cmetacache = newmeta;
 			}
 		if (this.meta==null)

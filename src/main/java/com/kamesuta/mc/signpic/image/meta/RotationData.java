@@ -16,7 +16,7 @@ public class RotationData implements IMotionFrame<RotationData> {
 	public static final float defaultOffset = 4f;
 	protected final Quat4f quat;
 
-	public RotationData(final Quat4f quat) {
+	private RotationData(final Quat4f quat) {
 		this.quat = quat;
 	}
 

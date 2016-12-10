@@ -11,86 +11,26 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
-import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
-import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
 import com.kamesuta.mc.signpic.Reference;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
-	public ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
-	public TreeMap<Float, Frame> frames = Maps.newTreeMap();
-
-	public IFrame getFrame() {
-		if (this.frames.size()<=1)
-			return this.frames.get(0f);
-		final float t = this.motion.get();
-		Entry<Float, Frame> before = this.frames.floorEntry(t);
-		final Entry<Float, Frame> after = this.frames.higherEntry(t);
-		if (before==null)
-			before = this.frames.firstEntry();
-		if (after!=null) {
-			final float f1 = after.getKey();
-			final float f2 = before.getKey();
-			return after.getValue().per((t-f1)/(f2-f1), before.getValue());
-		} else
-			return before.getValue();
-	}
-
-	public SizeData getSize() {
-		return getFrame().getSize();
-	}
-
-	public OffsetData getOffset() {
-		return getFrame().getOffset();
-	}
-
-	public RotationData getRotation() {
-		return getFrame().getRotation();
-	}
-
-	public TextureMapData getMap() {
-		return getFrame().getMap();
-	}
-
-	public AnimationData getAnimation() {
-		return getFrame().getFrame();
-	}
-
-	public final ImageSize size;
-	public final ImageOffset offset;
-	public final ImageRotation rotation;
-	public final ImageTextureMap map;
-	public final ImageFrame frame;
+	public final ImageSize size = new ImageSize();
+	public final ImageOffset offset = new ImageOffset();
+	public final ImageRotation rotation = new ImageRotation();
+	public final ImageTextureMap map = new ImageTextureMap();
+	public final ImageAnimation animation = new ImageAnimation();
 	private boolean hasInvalidMeta;
 
-	public ImageMeta() {
-		this.size = new ImageSize();
-		this.offset = new ImageOffset();
-		this.rotation = new ImageRotation();
-		this.map = new ImageTextureMap();
-		this.frame = new ImageFrame();
-	}
+	public final Movie<SizeData> sizes = new Movie<SizeData>(this.size.get());
+	public final Movie<OffsetData> offsets = new Movie<OffsetData>(this.offset.get());
+	public final Movie<RotationData> rotations = new Movie<RotationData>(this.rotation.get());
+	public final Movie<TextureMapData> maps = new Movie<TextureMapData>(this.map.get());
+	public final Movie<AnimationData> animations = new Movie<AnimationData>(this.animation.get());
 
-	protected boolean parseMeta(final String src, final String key, final String value) {
-		final boolean a = this.size.parse(src, key, value);
-		final boolean b = this.offset.parse(src, key, value);
-		final boolean c = this.rotation.parse(src, key, value);
-		final boolean d = this.map.parse(src, key, value);
-		final boolean e = this.frame.parse(src, key, value);
-		return a||b||c||d||e;
-	}
-
-	public ImageMeta reset() {
-		this.motion.reset();
-		this.frames.clear();
-		this.hasInvalidMeta = false;
-		return this;
-	}
-
-	public ImageMeta parse(final String src) {
+	public ImageMeta(final String src) {
 		Validate.notNull(src);
 
 		final TreeMap<Float, String> timeline = Maps.newTreeMap();
@@ -114,9 +54,8 @@ public class ImageMeta {
 
 		Reference.logger.info(timeline);
 
-		boolean b = true;
+		boolean bb = true;
 
-		float lasttime = 0;
 		for (final Iterator<Entry<Float, String>> itr = timeline.entrySet().iterator(); itr.hasNext();) {
 			final Entry<Float, String> entry = itr.next();
 			final float time = entry.getKey();
@@ -126,7 +65,7 @@ public class ImageMeta {
 			this.offset.reset();
 			this.rotation.reset();
 			this.map.reset();
-			this.frame.reset();
+			this.animation.reset();
 
 			final Matcher mp = p.matcher(meta);
 			while (mp.find()) {
@@ -134,25 +73,29 @@ public class ImageMeta {
 				if (1<=gcount) {
 					final String key = mp.group(1);
 					final String value = 2<=gcount ? mp.group(2) : "";
-					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value))
-						b = parseMeta(meta, key, value)&&b;
+					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
+						final boolean a = this.size.parse(src, key, value);
+						if (a)
+							this.sizes.add(time, this.size.get());
+						final boolean b = this.offset.parse(src, key, value);
+						if (b)
+							this.offsets.add(time, this.offset.get());
+						final boolean c = this.rotation.parse(src, key, value);
+						if (c)
+							this.rotations.add(time, this.rotation.get());
+						final boolean d = this.map.parse(src, key, value);
+						if (d)
+							this.maps.add(time, this.map.get());
+						final boolean e = this.animation.parse(src, key, value);
+						if (e)
+							this.animations.add(time, this.animation.get());
+						bb = (a||b||c||d||e)&&bb;
+					}
 				}
 			}
-
-			final float difftime = time-lasttime;
-			this.motion.add(Easings.easeLinear.move(difftime, time));
-			lasttime = time;
-			this.frames.put(time, new Frame(this.size.get(), this.offset.get(), this.rotation.get(), this.map.get(), this.frame.get()));
 		}
 
-		this.hasInvalidMeta = this.hasInvalidMeta||!b;
-		return this;
-	}
-
-	public ImageMeta init(final String src) {
-		reset();
-		parse(src);
-		return this;
+		this.hasInvalidMeta = this.hasInvalidMeta||!bb;
 	}
 
 	public boolean hasInvalidMeta() {
@@ -160,7 +103,7 @@ public class ImageMeta {
 	}
 
 	public String compose() {
-		return "{"+this.size+this.offset+this.rotation+this.map+this.frame+"}";
+		return "{"+this.size+this.offset+this.rotation+this.map+this.animation+"}";
 	}
 
 	@Override

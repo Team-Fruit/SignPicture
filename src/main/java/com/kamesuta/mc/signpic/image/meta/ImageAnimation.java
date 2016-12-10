@@ -6,7 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.image.meta.AnimationData.RSNeed;
 
-public class ImageFrame extends ImageMeta.MetaParser {
+public class ImageAnimation extends ImageMeta.MetaParser {
 	public Easings easing = Easings.easeLinear;
 	public RSNeed redstone = RSNeed.RS_OFF;
 
@@ -15,7 +15,7 @@ public class ImageFrame extends ImageMeta.MetaParser {
 	}
 
 	@Override
-	public ImageFrame reset() {
+	public ImageAnimation reset() {
 		this.easing = Easings.easeLinear;
 		this.redstone = RSNeed.RS_OFF;
 		return this;

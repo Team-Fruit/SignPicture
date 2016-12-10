@@ -25,7 +25,7 @@ public class EntryIdBuilder {
 
 	public ImageMeta getMeta() {
 		if (this.meta==null)
-			return this.meta = new ImageMeta();
+			return this.meta = new ImageMeta("");
 		else
 			return this.meta;
 	}

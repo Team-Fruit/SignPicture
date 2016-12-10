@@ -143,7 +143,7 @@ public class EntryId {
 	public ImageMeta getMeta() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new ImageMeta().init(metasource);
+			return new ImageMeta(metasource);
 		return null;
 	}
 
