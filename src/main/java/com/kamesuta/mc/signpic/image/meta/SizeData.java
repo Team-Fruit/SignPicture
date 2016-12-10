@@ -9,8 +9,16 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 	public static final SizeData DefaultSize = new SizeData(Default, Default);
 	public static final SizeData UnknownSize = new SizeData(Unknown, Unknown);
 
-	public final float width;
-	public final float height;
+	private final float width;
+	private final float height;
+
+	public float getWidth() {
+		return this.width;
+	}
+
+	public float getHeight() {
+		return this.height;
+	}
 
 	public SizeData(final float width, final float height) {
 		this.width = width;

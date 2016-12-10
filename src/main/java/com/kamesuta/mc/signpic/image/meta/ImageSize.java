@@ -48,7 +48,7 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 	}
 
 	public ImageSize setSize(final SizeData size) {
-		return setSize(size.width, size.height);
+		return setSize(size.getWidth(), size.getHeight());
 	}
 
 	public ImageSize setSize(final ImageSize size) {

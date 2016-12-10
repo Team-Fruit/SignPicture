@@ -44,10 +44,10 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glTranslatef(offset.x, offset.y, offset.z);
 		RotationGL.glRotate(meta.rotations.get().getRotate());
 
-		OpenGL.glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
+		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
 		OpenGL.glScalef(1f, -1f, 1f);
 
-		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
 
 		OpenGL.glPopMatrix();
 	}

@@ -68,7 +68,7 @@ public class SignPicLabel extends WBase {
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
 					final SizeData size1 = ImageSizes.INNER.defineSize(new SizeData(1, 1), new ImageSize().setSize(a).get());
-					drawTexture(new Area(a.x1()+a.w()/2-size1.width/2, a.y1()+a.h()/2-size1.height/2, a.x1()+a.w()/2+size1.width/2, a.y1()+a.h()/2+size1.height/2));
+					drawTexture(new Area(a.x1()+a.w()/2-size1.getWidth()/2, a.y1()+a.h()/2-size1.getHeight()/2, a.x1()+a.w()/2+size1.getWidth()/2, a.y1()+a.h()/2+size1.getHeight()/2));
 				}
 			}
 		}
@@ -83,9 +83,9 @@ public class SignPicLabel extends WBase {
 		final SizeData size = size2.scale(1f/100f);
 
 		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
-		OpenGL.glTranslatef((a.w()-size2.width)/2f, (a.h()-size2.height)/2f, 0f);
+		OpenGL.glTranslatef((a.w()-size2.getWidth())/2f, (a.h()-size2.getHeight())/2f, 0f);
 		OpenGL.glScalef(100, 100, 1f);
-		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
 
 		OpenGL.glPopMatrix();
 		OpenGL.glEnable(GL_CULL_FACE);

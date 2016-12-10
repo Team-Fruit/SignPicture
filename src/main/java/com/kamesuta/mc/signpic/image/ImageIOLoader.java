@@ -111,8 +111,8 @@ public class ImageIOLoader implements ILoadCancelable {
 	}
 
 	private BufferedImage createResizedImage(final BufferedImage image, final SizeData newsize) {
-		final int wid = (int) newsize.width;
-		final int hei = (int) newsize.height;
+		final int wid = (int) newsize.getWidth();
+		final int hei = (int) newsize.getHeight();
 		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
 		final Graphics g = thumb.getGraphics();
 		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);
