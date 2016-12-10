@@ -28,7 +28,7 @@ public class Movie<E extends IMotionFrame<E>> {
 		if (after!=null) {
 			final float f1 = after.getKey();
 			final float f2 = before.getKey();
-			return after.getValue().per((t-f1)/(f2-f1), before.getValue());
+			return after.getValue().per((t-f2)/(f1-f2), before.getValue());
 		} else
 			return before.getValue();
 	}

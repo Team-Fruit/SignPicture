@@ -55,15 +55,15 @@ public class ImageMeta {
 
 		boolean bb = true;
 
-		this.size.reset();
-		this.offset.reset();
-		this.rotation.reset();
-		this.map.reset();
-		this.animation.reset();
-
 		for (final Entry<Float, String> entry : timeline.entrySet()) {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
+
+			this.size.reset();
+			this.offset.reset();
+			this.rotation.reset();
+			this.map.reset();
+			this.animation.reset();
 
 			boolean a = false;
 			boolean b = false;
@@ -78,12 +78,17 @@ public class ImageMeta {
 					final String key = mp.group(1);
 					final String value = 2<=gcount ? mp.group(2) : "";
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
-						a = this.size.parse(src, key, value);
-						b = this.offset.parse(src, key, value);
-						c = this.rotation.parse(src, key, value);
-						d = this.map.parse(src, key, value);
-						e = this.animation.parse(src, key, value);
-						bb = (a||b||c||d||e)&&bb;
+						final boolean ia = this.size.parse(src, key, value);
+						final boolean ib = this.offset.parse(src, key, value);
+						final boolean ic = this.rotation.parse(src, key, value);
+						final boolean id = this.map.parse(src, key, value);
+						final boolean ie = this.animation.parse(src, key, value);
+						bb = (ia||ib||ic||id||ie)&&bb;
+						a = a||ia;
+						b = b||ib;
+						c = c||ic;
+						d = d||id;
+						e = e||ie;
 					}
 				}
 			}
