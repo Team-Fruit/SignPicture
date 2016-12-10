@@ -26,23 +26,23 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 	}
 
 	public boolean vaildWidth() {
-		return !Float.isNaN(this.width);
+		return !Float.isNaN(getWidth());
 	}
 
 	public boolean vaildHeight() {
-		return !Float.isNaN(this.height);
+		return !Float.isNaN(getHeight());
 	}
 
 	public float max() {
-		return Math.max(this.width, this.height);
+		return Math.max(getWidth(), getHeight());
 	}
 
 	public float min() {
-		return Math.min(this.width, this.height);
+		return Math.min(getWidth(), getHeight());
 	}
 
 	public SizeData scale(final float scale) {
-		return new SizeData(this.width*scale, this.height*scale);
+		return new SizeData(getWidth()*scale, getHeight()*scale);
 	}
 
 	@Override
@@ -52,17 +52,17 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 
 	@Override
 	public SizeData per(final float per, final SizeData before) {
-		return new SizeData(this.width*per+before.width*(1f-per), this.height*per+before.height*(1f-per));
+		return new SizeData(getWidth()*per+before.getWidth()*(1f-per), getHeight()*per+before.getHeight()*(1f-per));
 	}
 
 	@Override
 	public String compose() {
-		return (vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
+		return (vaildWidth() ? ShortestFloatFormatter.format(getWidth()) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(getHeight()) : "");
 	}
 
 	@Override
 	public String toString() {
-		return "SizeData [width="+this.width+", height="+this.height+"]";
+		return "SizeData [width="+getWidth()+", height="+getHeight()+"]";
 	}
 
 	public SizeData aspectSize(final SizeData availableaspect) {
@@ -71,9 +71,9 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 		else if (vaildWidth()&&vaildHeight())
 			return this;
 		else if (vaildWidth())
-			return ImageSizes.WIDTH.defineSize(availableaspect, this.width, Unknown);
+			return ImageSizes.WIDTH.defineSize(availableaspect, getWidth(), Unknown);
 		else if (vaildHeight())
-			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, this.height);
+			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, getHeight());
 		else
 			return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, 1);
 	}
@@ -178,13 +178,13 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 		public SizeData defineSize(final SizeData raw, final float maxWidth, final float maxHeight) {
 			if (raw==null)
 				return new SizeData(maxWidth, maxHeight);
-			return defineSize(raw.width, raw.height, maxWidth, maxHeight);
+			return defineSize(raw.getWidth(), raw.getHeight(), maxWidth, maxHeight);
 		}
 
 		public SizeData defineSize(final float rawWidth, final float rawHeight, final SizeData max) {
 			if (max==null)
 				return new SizeData(rawWidth, rawHeight);
-			return defineSize(rawWidth, rawHeight, max.width, max.height);
+			return defineSize(rawWidth, rawHeight, max.getWidth(), max.getHeight());
 		}
 
 		public SizeData defineSize(final SizeData raw, final SizeData max) {
@@ -194,7 +194,7 @@ public class SizeData implements IMotionFrame<SizeData>, IComposable {
 				return max;
 			else if (max==null)
 				return raw;
-			return defineSize(raw.width, raw.height, max.width, max.height);
+			return defineSize(raw.getWidth(), raw.getHeight(), max.getWidth(), max.getHeight());
 		}
 	}
 }
