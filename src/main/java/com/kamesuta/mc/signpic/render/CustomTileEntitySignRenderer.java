@@ -7,7 +7,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.DiffRotationData.RotationGL;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.OffsetData;
 import com.kamesuta.mc.signpic.image.meta.SizeData;

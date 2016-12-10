@@ -11,7 +11,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.image.meta.DiffRotationData.DiffRotationDataKey;
+import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
@@ -26,8 +26,8 @@ public class ImageMeta {
 
 	public final Movie<SizeData, SizeData> sizes = new Movie<SizeData, SizeData>(this.size.get());
 	public final Movie<OffsetData, OffsetData> offsets = new Movie<OffsetData, OffsetData>(this.offset.get());
-	private DiffRotationDataKey base;
-	public final Movie<DiffRotationDataKey, DiffRotationData> rotations = new Movie<DiffRotationDataKey, DiffRotationData>(this.base = this.rotation.get(this.base));
+	private KeyRotation base;
+	public final Movie<KeyRotation, RotationData> rotations = new Movie<KeyRotation, RotationData>(this.base = this.rotation.get(this.base));
 	public final Movie<TextureMapData, TextureMapData> maps = new Movie<TextureMapData, TextureMapData>(this.map.get());
 	public final Movie<AnimationData, AnimationData> animations = new Movie<AnimationData, AnimationData>(this.animation.get());
 

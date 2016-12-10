@@ -12,7 +12,7 @@ import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
-public abstract class DiffRotationData {
+public abstract class RotationData {
 	public static final float defaultOffset = 4f;
 
 	public Quat4f getRotate() {
@@ -21,19 +21,19 @@ public abstract class DiffRotationData {
 
 	public abstract Quat4f getRotate(float scale);
 
-	public static DiffRotationDataDiff create(DiffRotationDataKey base, final List<ImageRotate> rotates) {
+	public static DiffRotation create(KeyRotation base, final List<ImageRotate> rotates) {
 		if (base==null)
-			base = new BaseRotationData();
+			base = new BaseRotation();
 		final Builder<Rotate> builder = ImmutableList.builder();
 		for (final ImageRotate rotate : rotates)
 			builder.add(new Rotate(rotate));
-		return new DiffRotationDataDiff(base, builder.build());
+		return new DiffRotation(base, builder.build());
 	}
 
-	public static class DiffRotationDataPer extends DiffRotationData {
+	public static class PerRotation extends RotationData {
 		private Quat4f rotate;
 
-		public DiffRotationDataPer(final Quat4f rotate) {
+		public PerRotation(final Quat4f rotate) {
 			this.rotate = rotate;
 		}
 
@@ -48,17 +48,17 @@ public abstract class DiffRotationData {
 		}
 	}
 
-	public static abstract class DiffRotationDataKey extends DiffRotationData implements IMotionFrame<DiffRotationData>, IComposable {
+	public static abstract class KeyRotation extends RotationData implements IMotionFrame<RotationData>, IComposable {
 		@Override
-		public DiffRotationData per() {
+		public RotationData per() {
 			return this;
 		}
 	}
 
-	public static class BaseRotationData extends DiffRotationDataKey {
+	public static class BaseRotation extends KeyRotation {
 		protected final Quat4f diff;
 
-		private BaseRotationData() {
+		private BaseRotation() {
 			this.diff = new Quat4f(0, 0, 0, 1);
 		}
 
@@ -73,7 +73,7 @@ public abstract class DiffRotationData {
 		}
 
 		@Override
-		public final DiffRotationData per(final float per, final DiffRotationData before) {
+		public final RotationData per(final float per, final RotationData before) {
 			return this;
 		}
 
@@ -83,11 +83,11 @@ public abstract class DiffRotationData {
 		}
 	}
 
-	public static class DiffRotationDataDiff extends DiffRotationDataKey {
-		private final DiffRotationDataKey base;
+	public static class DiffRotation extends KeyRotation {
+		private final KeyRotation base;
 		private final ImmutableList<Rotate> diff;
 
-		public DiffRotationDataDiff(final DiffRotationDataKey base, final ImmutableList<Rotate> diff) {
+		public DiffRotation(final KeyRotation base, final ImmutableList<Rotate> diff) {
 			this.base = base;
 			this.diff = diff;
 		}
@@ -111,8 +111,8 @@ public abstract class DiffRotationData {
 		}
 
 		@Override
-		public DiffRotationData per(final float per, final DiffRotationData before) {
-			return new DiffRotationDataPer(getRotate(per));
+		public RotationData per(final float per, final RotationData before) {
+			return new PerRotation(getRotate(per));
 		}
 
 		@Override
