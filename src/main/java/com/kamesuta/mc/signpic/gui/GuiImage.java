@@ -19,6 +19,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -57,16 +58,17 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(GuiImage.this.entry.getMeta().o.getMovie().get().data*0.1f));
+							final ImageMeta meta = GuiImage.this.entry.getMeta();
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(meta.o.getMovie().get().data*0.1f));
 							content.image.draw(
-									GuiImage.this.entry.getMeta().u.getMovie().get().data,
-									GuiImage.this.entry.getMeta().v.getMovie().get().data,
-									GuiImage.this.entry.getMeta().w.getMovie().get().data,
-									GuiImage.this.entry.getMeta().h.getMovie().get().data,
-									GuiImage.this.entry.getMeta().c.getMovie().get().data,
-									GuiImage.this.entry.getMeta().s.getMovie().get().data,
-									GuiImage.this.entry.getMeta().r.getMovie().get().data,
-									GuiImage.this.entry.getMeta().m.getMovie().get().data);
+									meta.u.getMovie().get().data,
+									meta.v.getMovie().get().data,
+									meta.w.getMovie().get().data,
+									meta.h.getMovie().get().data,
+									meta.c.getMovie().get().data,
+									meta.s.getMovie().get().data,
+									meta.r.getMovie().get().data,
+									meta.m.getMovie().get().data);
 						} else {
 							RenderHelper.startShape();
 							OpenGL.glLineWidth(1f);
