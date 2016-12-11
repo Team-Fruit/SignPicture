@@ -25,12 +25,6 @@ public class ImageRotation extends MetaMovie<DiffRotation, KeyRotation> {
 	}
 
 	@Override
-	public ImageRotation reset() {
-		this.rotates.clear();
-		return this;
-	}
-
-	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		if (StringUtils.equals(key, RotateType.X.name()))
 			this.rotates.add(new ImageRotate(RotateType.X, NumberUtils.toFloat(value, RotationData.defaultOffset)));

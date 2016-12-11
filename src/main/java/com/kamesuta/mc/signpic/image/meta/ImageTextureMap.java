@@ -29,20 +29,6 @@ public class ImageTextureMap extends MetaMovie<TextureMapData, TextureMapData> {
 	}
 
 	@Override
-	public ImageTextureMap reset() {
-		this.u = TextureMapData.defaultUV;
-		this.v = TextureMapData.defaultUV;
-		this.w = TextureMapData.defaultWH;
-		this.h = TextureMapData.defaultWH;
-		this.c = TextureMapData.defaultCS;
-		this.s = TextureMapData.defaultCS;
-		this.o = TextureMapData.defaultOpacity;
-		this.r = TextureMapData.defaultRepeat;
-		this.m = TextureMapData.defaultMipMap;
-		return this;
-	}
-
-	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		/* @formatter:off */
 		if (StringUtils.equals(key, "u")) this.u = NumberUtils.toFloat(value, TextureMapData.defaultUV);

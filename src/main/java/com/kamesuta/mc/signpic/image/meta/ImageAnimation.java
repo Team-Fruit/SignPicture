@@ -21,13 +21,6 @@ public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
 	}
 
 	@Override
-	public ImageAnimation reset() {
-		this.easing = Easings.easeLinear;
-		this.redstone = RSNeed.IGNORE;
-		return this;
-	}
-
-	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		if (StringUtils.equals(key, "k"))
 			this.easing = Easings.fromId(NumberUtils.toInt(value));

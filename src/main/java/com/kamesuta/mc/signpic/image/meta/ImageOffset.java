@@ -47,14 +47,6 @@ public class ImageOffset extends MetaMovie<OffsetData, OffsetData> {
 		return this.z;
 	}
 
-	@Override
-	public ImageOffset reset() {
-		this.x = 0f;
-		this.y = 0f;
-		this.z = 0f;
-		return this;
-	}
-
 	/**
 	 * L=left
 	 * R=right

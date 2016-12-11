@@ -62,13 +62,6 @@ public class ImageSize extends MetaMovie<SizeData, SizeData> implements Cloneabl
 	}
 
 	@Override
-	public ImageSize reset() {
-		this.width = SizeData.Unknown;
-		this.height = SizeData.Unknown;
-		return this;
-	}
-
-	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		if (StringUtils.equals(key, ""))
 			this.width = NumberUtils.toFloat(value, SizeData.Unknown);
