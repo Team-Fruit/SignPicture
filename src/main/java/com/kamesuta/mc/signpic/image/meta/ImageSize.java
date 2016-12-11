@@ -5,10 +5,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 
-public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
+public class ImageSize extends ImageMeta.MetaParser implements MetaBuilder<SizeData, SizeData>, Cloneable {
 	public float width = SizeData.Unknown;
 	public float height = SizeData.Unknown;
 
+	@Override
 	public SizeData get(final SizeData base) {
 		return SizeData.create(base, SizeData.create(this.width, this.height));
 	}

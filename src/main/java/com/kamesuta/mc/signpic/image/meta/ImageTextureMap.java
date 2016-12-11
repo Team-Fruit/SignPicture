@@ -3,7 +3,7 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageTextureMap extends ImageMeta.MetaParser {
+public class ImageTextureMap extends ImageMeta.MetaParser implements MetaBuilder<TextureMapData, TextureMapData> {
 	private float u = TextureMapData.defaultUV;
 	private float v = TextureMapData.defaultUV;
 	private float w = TextureMapData.defaultWH;
@@ -14,8 +14,12 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 	private boolean r = TextureMapData.defaultRepeat;
 	private boolean m = TextureMapData.defaultMipMap;
 
-	public TextureMapData get() {
-		return new TextureMapData(this.u, this.v, this.w, this.h, this.c, this.s, this.o, this.r, this.m);
+	@Override
+	public TextureMapData get(final TextureMapData base) {
+		if (base==null)
+			return new TextureMapData(this.u, this.v, this.w, this.h, this.c, this.s, this.o, this.r, this.m);
+		else
+			return new TextureMapData(base.u+this.u, base.v+this.v, base.w+this.w, base.h+this.h, base.c+this.c, base.s+this.s, base.o+this.o, this.r, this.m);
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class ImageTextureMap extends ImageMeta.MetaParser {
 
 	@Override
 	public String compose() {
-		return get().compose();
+		return get(null).compose();
 	}
 
 	@Override

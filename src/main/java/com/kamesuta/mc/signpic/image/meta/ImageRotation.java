@@ -10,10 +10,11 @@ import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
 
-public class ImageRotation extends ImageMeta.MetaParser {
+public class ImageRotation extends ImageMeta.MetaParser implements MetaBuilder<DiffRotation, KeyRotation> {
 	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
 	public KeyRotation base;
 
+	@Override
 	public DiffRotation get(final KeyRotation base) {
 		return RotationData.create(base, this.rotates);
 	}

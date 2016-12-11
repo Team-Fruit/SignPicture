@@ -6,11 +6,12 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.image.meta.AnimationData.RSNeed;
 
-public class ImageAnimation extends ImageMeta.MetaParser {
+public class ImageAnimation extends ImageMeta.MetaParser implements MetaBuilder<AnimationData, AnimationData> {
 	public Easings easing = Easings.easeLinear;
 	public RSNeed redstone = RSNeed.RS_OFF;
 
-	public AnimationData get() {
+	@Override
+	public AnimationData get(final AnimationData base) {
 		return new AnimationData(this.easing, this.redstone);
 	}
 
@@ -35,7 +36,7 @@ public class ImageAnimation extends ImageMeta.MetaParser {
 	@Deprecated
 	@Override
 	public String compose() {
-		return get().compose();
+		return get(null).compose();
 	}
 
 	@Deprecated

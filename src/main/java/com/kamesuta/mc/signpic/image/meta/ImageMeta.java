@@ -27,11 +27,14 @@ public class ImageMeta {
 
 	private SizeData basesize;
 	public final Movie<SizeData, SizeData> sizes = new Movie<SizeData, SizeData>(this.basesize = this.size.get(this.basesize));
-	public final Movie<OffsetData, OffsetData> offsets = new Movie<OffsetData, OffsetData>(this.offset.get());
+	private OffsetData baseoffset;
+	public final Movie<OffsetData, OffsetData> offsets = new Movie<OffsetData, OffsetData>(this.baseoffset = this.offset.get(this.baseoffset));
 	private KeyRotation baserotation;
 	public final Movie<KeyRotation, RotationData> rotations = new Movie<KeyRotation, RotationData>(this.baserotation = this.rotation.get(this.baserotation));
-	public final Movie<TextureMapData, TextureMapData> maps = new Movie<TextureMapData, TextureMapData>(this.map.get());
-	public final Movie<AnimationData, AnimationData> animations = new Movie<AnimationData, AnimationData>(this.animation.get());
+	private TextureMapData basemap;
+	public final Movie<TextureMapData, TextureMapData> maps = new Movie<TextureMapData, TextureMapData>(this.basemap = this.map.get(this.basemap));
+	private AnimationData baseanimation;
+	public final Movie<AnimationData, AnimationData> animations = new Movie<AnimationData, AnimationData>(this.baseanimation = this.animation.get(this.baseanimation));
 
 	public ImageMeta(final String src) {
 		Validate.notNull(src);
@@ -59,16 +62,15 @@ public class ImageMeta {
 
 		boolean bb = true;
 
-		this.offset.reset();
-		this.map.reset();
-		this.animation.reset();
-
 		for (final Entry<Float, String> entry : timeline.entrySet()) {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
 			this.size.reset();
 			this.rotation.reset();
+			this.offset.reset();
+			this.map.reset();
+			this.animation.reset();
 
 			boolean a = false;
 			boolean b = false;
@@ -100,18 +102,18 @@ public class ImageMeta {
 
 			Easings easing = Easings.easeLinear;
 			if (e) {
-				final AnimationData animation = this.animation.get();
+				final AnimationData animation = this.baseanimation = this.animation.get(this.baseanimation);
 				easing = animation.easing;
 				this.animations.add(time, animation, easing);
 			}
 			if (a)
 				this.sizes.add(time, this.basesize = this.size.get(this.basesize), easing);
 			if (b)
-				this.offsets.add(time, this.offset.get(), easing);
+				this.offsets.add(time, this.baseoffset = this.offset.get(this.baseoffset), easing);
 			if (c)
 				this.rotations.add(time, this.baserotation = this.rotation.get(this.baserotation), easing);
 			if (d)
-				this.maps.add(time, this.map.get(), easing);
+				this.maps.add(time, this.basemap = this.map.get(this.basemap), easing);
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!bb;

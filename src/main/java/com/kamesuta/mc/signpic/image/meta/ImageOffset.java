@@ -3,14 +3,18 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageOffset extends ImageMeta.MetaParser {
+public class ImageOffset extends ImageMeta.MetaParser implements MetaBuilder<OffsetData, OffsetData> {
 
 	private float x;
 	private float y;
 	private float z;
 
-	public OffsetData get() {
-		return new OffsetData(this.x, this.y, this.z);
+	@Override
+	public OffsetData get(final OffsetData base) {
+		if (base==null)
+			return new OffsetData(this.x, this.y, this.z);
+		else
+			return new OffsetData(base.x+this.x, base.y+this.y, base.z+this.z);
 	}
 
 	public void setX(final float x) {
@@ -79,7 +83,7 @@ public class ImageOffset extends ImageMeta.MetaParser {
 	@Deprecated
 	@Override
 	public String compose() {
-		return get().compose();
+		return get(new OffsetData(0, 0, 0)).compose();
 	}
 
 	@Deprecated
