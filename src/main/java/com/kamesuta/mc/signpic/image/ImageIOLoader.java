@@ -34,7 +34,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader implements ILoadCancelable {
-	public static final SizeData MAX_SIZE = new SizeData(
+	public static final SizeData MAX_SIZE = SizeData.create(
 			Config.instance.imageWidthLimit.get()>0 ? Config.instance.imageWidthLimit.get() : SizeData.Unknown,
 			Config.instance.imageHeightLimit.get()>0 ? Config.instance.imageHeightLimit.get() : SizeData.Unknown);
 

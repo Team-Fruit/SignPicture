@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.image.BufferedImage;
 
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
@@ -16,7 +15,7 @@ public class DynamicImageTexture implements ImageTexture {
 	public static float DefaultDelay = .05f;
 
 	protected BufferedImage temp;
-	protected ImageSize size;
+	protected SizeData size;
 	protected int id = -1;
 	protected float delay;
 
@@ -60,14 +59,14 @@ public class DynamicImageTexture implements ImageTexture {
 
 	@Override
 	public SizeData getSize() {
-		return this.size.get();
+		return this.size;
 	}
 
 	public boolean setImage(final BufferedImage image) {
 		if (this.id==-1) {
 			this.temp = image;
 			if (image!=null)
-				this.size = new ImageSize().setSize(image.getWidth(), image.getHeight());
+				this.size = SizeData.create(image.getWidth(), image.getHeight());
 			return true;
 		}
 		return false;

@@ -14,7 +14,6 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.image.meta.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.information.Informations;
@@ -67,7 +66,7 @@ public class SignPicLabel extends WBase {
 					RenderHelper.startTexture();
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
-					final SizeData size1 = ImageSizes.INNER.defineSize(new SizeData(1, 1), new ImageSize().setSize(a).get());
+					final SizeData size1 = ImageSizes.INNER.defineSize(SizeData.create(1, 1), SizeData.create(a));
 					drawTexture(new Area(a.x1()+a.w()/2-size1.getWidth()/2, a.y1()+a.h()/2-size1.getHeight()/2, a.x1()+a.w()/2+size1.getWidth()/2, a.y1()+a.h()/2+size1.getHeight()/2));
 				}
 			}
@@ -79,7 +78,7 @@ public class SignPicLabel extends WBase {
 		OpenGL.glPushMatrix();
 
 		final SizeData size1 = entry.getMeta().sizes.get().aspectSize(content.image.getSize());
-		final SizeData size2 = ImageSizes.INNER.defineSize(size1, new ImageSize().setSize(a).get());
+		final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(a));
 		final SizeData size = size2.scale(1f/100f);
 
 		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);

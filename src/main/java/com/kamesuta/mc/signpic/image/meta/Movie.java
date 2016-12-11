@@ -33,9 +33,9 @@ public class Movie<E extends IMotionFrame<K>, K> {
 			return before.getValue().per();
 	}
 
-	public Movie<E, K> add(final float time, final E frame) {
+	public Movie<E, K> add(final float time, final E frame, final Easings easing) {
 		final float difftime = time-this.lasttime;
-		this.motion.add(Easings.easeLinear.move(difftime, time));
+		this.motion.add(easing.move(difftime, time));
 		this.lasttime = time;
 		this.frames.put(time, frame);
 		return this;

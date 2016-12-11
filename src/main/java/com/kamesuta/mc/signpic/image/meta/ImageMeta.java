@@ -10,6 +10,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 
@@ -24,10 +25,11 @@ public class ImageMeta {
 	public final ImageAnimation animation = new ImageAnimation();
 	private boolean hasInvalidMeta;
 
-	public final Movie<SizeData, SizeData> sizes = new Movie<SizeData, SizeData>(this.size.get());
+	private SizeData basesize;
+	public final Movie<SizeData, SizeData> sizes = new Movie<SizeData, SizeData>(this.basesize = this.size.get(this.basesize));
 	public final Movie<OffsetData, OffsetData> offsets = new Movie<OffsetData, OffsetData>(this.offset.get());
-	private KeyRotation base;
-	public final Movie<KeyRotation, RotationData> rotations = new Movie<KeyRotation, RotationData>(this.base = this.rotation.get(this.base));
+	private KeyRotation baserotation;
+	public final Movie<KeyRotation, RotationData> rotations = new Movie<KeyRotation, RotationData>(this.baserotation = this.rotation.get(this.baserotation));
 	public final Movie<TextureMapData, TextureMapData> maps = new Movie<TextureMapData, TextureMapData>(this.map.get());
 	public final Movie<AnimationData, AnimationData> animations = new Movie<AnimationData, AnimationData>(this.animation.get());
 
@@ -57,7 +59,6 @@ public class ImageMeta {
 
 		boolean bb = true;
 
-		this.size.reset();
 		this.offset.reset();
 		this.map.reset();
 		this.animation.reset();
@@ -66,6 +67,7 @@ public class ImageMeta {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
+			this.size.reset();
 			this.rotation.reset();
 
 			boolean a = false;
@@ -96,16 +98,20 @@ public class ImageMeta {
 				}
 			}
 
+			Easings easing = Easings.easeLinear;
+			if (e) {
+				final AnimationData animation = this.animation.get();
+				easing = animation.easing;
+				this.animations.add(time, animation, easing);
+			}
 			if (a)
-				this.sizes.add(time, this.size.get());
+				this.sizes.add(time, this.basesize = this.size.get(this.basesize), easing);
 			if (b)
-				this.offsets.add(time, this.offset.get());
+				this.offsets.add(time, this.offset.get(), easing);
 			if (c)
-				this.rotations.add(time, this.base = this.rotation.get(this.base));
+				this.rotations.add(time, this.baserotation = this.rotation.get(this.baserotation), easing);
 			if (d)
-				this.maps.add(time, this.map.get());
-			if (e)
-				this.animations.add(time, this.animation.get());
+				this.maps.add(time, this.map.get(), easing);
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!bb;

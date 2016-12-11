@@ -9,8 +9,8 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 	public float width = SizeData.Unknown;
 	public float height = SizeData.Unknown;
 
-	public SizeData get() {
-		return new SizeData(this.width, this.height);
+	public SizeData get(final SizeData base) {
+		return SizeData.create(base, SizeData.create(this.width, this.height));
 	}
 
 	public ImageSize setSize(final float width, final float height) {
@@ -75,7 +75,7 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 
 	@Override
 	public String compose() {
-		return get().compose();
+		return get(null).compose();
 	}
 
 	@Override
