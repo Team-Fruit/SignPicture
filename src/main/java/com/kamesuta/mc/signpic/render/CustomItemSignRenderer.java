@@ -36,7 +36,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		final Entry entry = EntryId.fromItemStack(item).entry();
 		final ImageMeta meta = entry.getMeta();
 		// Size
-		final SizeData size = meta.sizes.movie.get().aspectSize(entry.content().image.getSize());
+		final SizeData size = meta.sizes.getMovie().get().aspectSize(entry.content().image.getSize());
 		if (type==ItemRenderType.INVENTORY) {
 			final float slot = 16f;
 			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
@@ -64,7 +64,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
 			final OffsetData offset = meta.offsets.get();
 			OpenGL.glTranslatef(offset.x, offset.y, offset.z);
-			RotationGL.glRotate(meta.rotations.get().getRotate());
+			RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
 		}
 		OpenGL.glPopAttrib();

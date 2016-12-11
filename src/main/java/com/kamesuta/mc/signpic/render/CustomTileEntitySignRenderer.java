@@ -36,13 +36,13 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		final ImageMeta meta = entry.getMeta();
 
 		// Size
-		final SizeData size = meta.sizes.movie.get().aspectSize(content.image.getSize());
+		final SizeData size = meta.sizes.getMovie().get().aspectSize(content.image.getSize());
 
 		OpenGL.glPushMatrix();
 
 		final OffsetData offset = meta.offsets.get();
 		OpenGL.glTranslatef(offset.x, offset.y, offset.z);
-		RotationGL.glRotate(meta.rotations.get().getRotate());
+		RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 
 		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
 		OpenGL.glScalef(1f, -1f, 1f);

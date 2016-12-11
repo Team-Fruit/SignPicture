@@ -12,8 +12,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.image.meta.MovieMeta.RotationMovieMeta;
 import com.kamesuta.mc.signpic.image.meta.MovieMeta.SizeMovieMeta;
-import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
@@ -23,7 +23,7 @@ public class ImageMeta {
 
 	public final SizeMovieMeta sizes = new SizeMovieMeta();
 	public final Movie<OffsetData, OffsetData> offsets;
-	public final Movie<KeyRotation, RotationData> rotations;
+	public final RotationMovieMeta rotations = new RotationMovieMeta();
 	public final Movie<TextureMapData, TextureMapData> maps;
 	public final Movie<AnimationData, AnimationData> animations;
 
@@ -52,12 +52,10 @@ public class ImageMeta {
 		Reference.logger.info(timeline);
 
 		OffsetData baseoffset;
-		KeyRotation baserotation;
 		TextureMapData basemap;
 		AnimationData baseanimation;
 
 		this.offsets = new Movie<OffsetData, OffsetData>(baseoffset = new ImageOffset().diff(null));
-		this.rotations = new Movie<KeyRotation, RotationData>(baserotation = new ImageRotation().diff(null));
 		this.maps = new Movie<TextureMapData, TextureMapData>(basemap = new ImageTextureMap().diff(null));
 		this.animations = new Movie<AnimationData, AnimationData>(baseanimation = new ImageAnimation().diff(null));
 
@@ -68,12 +66,10 @@ public class ImageMeta {
 			final String meta = entry.getValue();
 
 			final ImageOffset offset = new ImageOffset();
-			final ImageRotation rotation = new ImageRotation();
 			final ImageTextureMap map = new ImageTextureMap();
 			final ImageAnimation animation = new ImageAnimation();
 
 			boolean b = false;
-			boolean c = false;
 			boolean d = false;
 			boolean e = false;
 
@@ -86,12 +82,11 @@ public class ImageMeta {
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
 						final boolean ia = this.sizes.parse(src, key, value);
 						final boolean ib = offset.parse(src, key, value);
-						final boolean ic = rotation.parse(src, key, value);
+						final boolean ic = this.rotations.parse(src, key, value);
 						final boolean id = map.parse(src, key, value);
 						final boolean ie = animation.parse(src, key, value);
 						bb = (ia||ib||ic||id||ie)&&bb;
 						b = b||ib;
-						c = c||ic;
 						d = d||id;
 						e = e||ie;
 					}
@@ -107,8 +102,7 @@ public class ImageMeta {
 			this.sizes.next(time, easing);
 			if (b)
 				this.offsets.add(time, baseoffset = offset.diff(baseoffset), easing);
-			if (c)
-				this.rotations.add(time, baserotation = rotation.diff(baserotation), easing);
+			this.rotations.next(time, easing);
 			if (d)
 				this.maps.add(time, basemap = map.diff(basemap), easing);
 		}
