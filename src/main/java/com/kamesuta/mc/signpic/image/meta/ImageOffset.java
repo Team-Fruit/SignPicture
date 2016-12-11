@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image.meta;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -9,7 +11,7 @@ public class ImageOffset implements MetaMovie<OffsetData, OffsetData> {
 	private float z;
 
 	@Override
-	public OffsetData diff(final OffsetData base) {
+	public OffsetData diff(@Nullable final OffsetData base) {
 		if (base==null)
 			return new OffsetData(this.x, this.y, this.z);
 		else
