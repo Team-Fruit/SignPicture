@@ -235,7 +235,7 @@ public class SignHandler {
 				final ImageMeta meta = entry.getMeta();
 				final SizeData size = meta.sizes.getMovie().get();
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
-				final OffsetData offset = meta.offsets.get();
+				final OffsetData offset = meta.offsets.getMovie().get();
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x, offset.y, offset.z));
 				// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
 				if (useName)

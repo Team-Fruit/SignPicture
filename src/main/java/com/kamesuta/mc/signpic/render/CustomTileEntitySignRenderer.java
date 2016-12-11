@@ -40,7 +40,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 
 		OpenGL.glPushMatrix();
 
-		final OffsetData offset = meta.offsets.get();
+		final OffsetData offset = meta.offsets.getMovie().get();
 		OpenGL.glTranslatef(offset.x, offset.y, offset.z);
 		RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 

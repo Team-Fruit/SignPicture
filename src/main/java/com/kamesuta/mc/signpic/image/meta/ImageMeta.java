@@ -21,21 +21,36 @@ public class ImageMeta {
 
 	private boolean hasInvalidMeta;
 
+	public final MovieMeta<AnimationData, AnimationData, AnimationData> animations = new MovieMeta<AnimationData, AnimationData, AnimationData>() {
+		@Override
+		public MetaMovie<AnimationData, AnimationData> builder() {
+			return new ImageAnimation();
+		}
+	};
 	public final MovieMeta<SizeData, SizeData, SizeData> sizes = new MovieMeta<SizeData, SizeData, SizeData>() {
 		@Override
 		public ImageSize builder() {
 			return new ImageSize();
 		}
 	};
-	public final Movie<OffsetData, OffsetData> offsets;
+	public final MovieMeta<OffsetData, OffsetData, OffsetData> offsets = new MovieMeta<OffsetData, OffsetData, OffsetData>() {
+		@Override
+		public MetaMovie<OffsetData, OffsetData> builder() {
+			return new ImageOffset();
+		}
+	};
 	public final MovieMeta<KeyRotation, RotationData, DiffRotation> rotations = new MovieMeta<KeyRotation, RotationData, DiffRotation>() {
 		@Override
 		public ImageRotation builder() {
 			return new ImageRotation();
 		}
 	};
-	public final Movie<TextureMapData, TextureMapData> maps;
-	public final Movie<AnimationData, AnimationData> animations;
+	public final MovieMeta<TextureMapData, TextureMapData, TextureMapData> maps = new MovieMeta<TextureMapData, TextureMapData, TextureMapData>() {
+		@Override
+		public MetaMovie<TextureMapData, TextureMapData> builder() {
+			return new ImageTextureMap();
+		}
+	};
 
 	public ImageMeta(final String src) {
 		Validate.notNull(src);
@@ -61,27 +76,13 @@ public class ImageMeta {
 
 		Reference.logger.info(timeline);
 
-		OffsetData baseoffset;
-		TextureMapData basemap;
-		AnimationData baseanimation;
-
-		this.offsets = new Movie<OffsetData, OffsetData>(baseoffset = new ImageOffset().diff(null));
-		this.maps = new Movie<TextureMapData, TextureMapData>(basemap = new ImageTextureMap().diff(null));
-		this.animations = new Movie<AnimationData, AnimationData>(baseanimation = new ImageAnimation().diff(null));
-
 		boolean bb = true;
 
 		for (final Entry<Float, String> entry : timeline.entrySet()) {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
-			final ImageOffset offset = new ImageOffset();
-			final ImageTextureMap map = new ImageTextureMap();
-			final ImageAnimation animation = new ImageAnimation();
-
-			boolean b = false;
-			boolean d = false;
-			boolean e = false;
+			final boolean e = false;
 
 			final Matcher mp = p.matcher(meta);
 			while (mp.find()) {
@@ -91,30 +92,25 @@ public class ImageMeta {
 					final String value = 2<=gcount ? mp.group(2) : "";
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
 						final boolean ia = this.sizes.parse(src, key, value);
-						final boolean ib = offset.parse(src, key, value);
+						final boolean ib = this.offsets.parse(src, key, value);
 						final boolean ic = this.rotations.parse(src, key, value);
-						final boolean id = map.parse(src, key, value);
-						final boolean ie = animation.parse(src, key, value);
+						final boolean id = this.maps.parse(src, key, value);
+						final boolean ie = this.animations.parse(src, key, value);
 						bb = (ia||ib||ic||id||ie)&&bb;
-						b = b||ib;
-						d = d||id;
-						e = e||ie;
 					}
 				}
 			}
 
 			Easings easing = Easings.easeLinear;
 			if (e) {
-				final AnimationData anim = baseanimation = animation.diff(baseanimation);
+				final AnimationData anim = this.animations.getDiff();
 				easing = anim.easing;
-				this.animations.add(time, anim, easing);
+				this.animations.next(time, easing);
 			}
 			this.sizes.next(time, easing);
-			if (b)
-				this.offsets.add(time, baseoffset = offset.diff(baseoffset), easing);
+			this.offsets.next(time, easing);
 			this.rotations.next(time, easing);
-			if (d)
-				this.maps.add(time, basemap = map.diff(basemap), easing);
+			this.maps.next(time, easing);
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!bb;

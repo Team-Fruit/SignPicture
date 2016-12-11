@@ -15,9 +15,13 @@ public abstract class MovieMeta<KeyFrame extends IMotionFrame<InterFrame>, Inter
 		return this.parsed = this.builder.parse(src, key, value)||this.parsed;
 	}
 
+	public KeyFrame getDiff() {
+		return this.builder.diff(this.base);
+	}
+
 	public void next(final float time, final Easings easing) {
 		if (this.parsed)
-			this.movie.add(time, this.base = this.builder.diff(this.base), easing);
+			this.movie.add(time, this.base = getDiff(), easing);
 		this.parsed = false;
 		this.builder = builder();
 	}

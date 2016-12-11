@@ -58,7 +58,7 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							final TextureMapData tex = GuiImage.this.entry.getMeta().maps.get();
+							final TextureMapData tex = GuiImage.this.entry.getMeta().maps.getMovie().get();
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(tex.o*0.1f));
 							content.image.draw(tex.u, tex.v, tex.w, tex.h, tex.c, tex.s, tex.r, tex.m);
 						} else {

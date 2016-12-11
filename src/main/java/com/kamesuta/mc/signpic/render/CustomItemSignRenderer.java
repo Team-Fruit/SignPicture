@@ -62,7 +62,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
-			final OffsetData offset = meta.offsets.get();
+			final OffsetData offset = meta.offsets.getMovie().get();
 			OpenGL.glTranslatef(offset.x, offset.y, offset.z);
 			RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
