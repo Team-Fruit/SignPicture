@@ -5,13 +5,25 @@ import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
+import com.kamesuta.mc.signpic.image.meta.ImageTextureMap.ImageTextureMapBoolean;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataType;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataTypeBoolean;
+
 public class MetaBuilder {
 	public final ImageSize size = new ImageSize();
 	public final ImageOffset xoffset = new ImageOffset("L", "R");
 	public final ImageOffset yoffset = new ImageOffset("D", "U");
 	public final ImageOffset zoffset = new ImageOffset("B", "F");
 	public final ImageRotation rotation = new ImageRotation();
-	public final ImageTextureMap map = new ImageTextureMap();
+	public final ImageTextureMap u = new ImageTextureMap(DataType.U);
+	public final ImageTextureMap v = new ImageTextureMap(DataType.U);
+	public final ImageTextureMap w = new ImageTextureMap(DataType.U);
+	public final ImageTextureMap h = new ImageTextureMap(DataType.U);
+	public final ImageTextureMap c = new ImageTextureMap(DataType.U);
+	public final ImageTextureMap s = new ImageTextureMap(DataType.U);
+	public final ImageTextureMap o = new ImageTextureMap(DataType.U);
+	public final ImageTextureMapBoolean r = new ImageTextureMapBoolean(DataTypeBoolean.R);
+	public final ImageTextureMapBoolean m = new ImageTextureMapBoolean(DataTypeBoolean.M);
 	public final ImageAnimation animation = new ImageAnimation();
 
 	public MetaBuilder() {
@@ -31,13 +43,21 @@ public class MetaBuilder {
 				final String key = mp.group(1);
 				final String value = 2<=gcount ? mp.group(2) : "";
 				if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
+					this.animation.parse(src, key, value);
 					this.size.parse(src, key, value);
 					this.xoffset.parse(src, key, value);
 					this.yoffset.parse(src, key, value);
 					this.zoffset.parse(src, key, value);
 					this.rotation.parse(src, key, value);
-					this.map.parse(src, key, value);
-					this.animation.parse(src, key, value);
+					this.u.parse(src, key, value);
+					this.v.parse(src, key, value);
+					this.w.parse(src, key, value);
+					this.h.parse(src, key, value);
+					this.c.parse(src, key, value);
+					this.s.parse(src, key, value);
+					this.o.parse(src, key, value);
+					this.r.parse(src, key, value);
+					this.m.parse(src, key, value);
 				}
 			}
 		}
@@ -50,7 +70,15 @@ public class MetaBuilder {
 				this.yoffset.compose()+
 				this.zoffset.compose()+
 				this.rotation.compose()+
-				this.map.compose()+
+				this.u.compose()+
+				this.v.compose()+
+				this.w.compose()+
+				this.h.compose()+
+				this.c.compose()+
+				this.s.compose()+
+				this.o.compose()+
+				this.r.compose()+
+				this.m.compose()+
 				this.animation.compose()+
 				"}";
 	}
