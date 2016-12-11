@@ -56,11 +56,11 @@ public class ImageMeta {
 		TextureMapData basemap;
 		AnimationData baseanimation;
 
-		this.sizes = new Movie<SizeData, SizeData>(basesize = new ImageSize().get(null));
-		this.offsets = new Movie<OffsetData, OffsetData>(baseoffset = new ImageOffset().get(null));
-		this.rotations = new Movie<KeyRotation, RotationData>(baserotation = new ImageRotation().get(null));
-		this.maps = new Movie<TextureMapData, TextureMapData>(basemap = new ImageTextureMap().get(null));
-		this.animations = new Movie<AnimationData, AnimationData>(baseanimation = new ImageAnimation().get(null));
+		this.sizes = new Movie<SizeData, SizeData>(basesize = new ImageSize().diff(null));
+		this.offsets = new Movie<OffsetData, OffsetData>(baseoffset = new ImageOffset().diff(null));
+		this.rotations = new Movie<KeyRotation, RotationData>(baserotation = new ImageRotation().diff(null));
+		this.maps = new Movie<TextureMapData, TextureMapData>(basemap = new ImageTextureMap().diff(null));
+		this.animations = new Movie<AnimationData, AnimationData>(baseanimation = new ImageAnimation().diff(null));
 
 		boolean bb = true;
 
@@ -104,18 +104,18 @@ public class ImageMeta {
 
 			Easings easing = Easings.easeLinear;
 			if (e) {
-				final AnimationData anim = baseanimation = animation.get(baseanimation);
+				final AnimationData anim = baseanimation = animation.diff(baseanimation);
 				easing = anim.easing;
 				this.animations.add(time, anim, easing);
 			}
 			if (a)
-				this.sizes.add(time, basesize = size.get(basesize), easing);
+				this.sizes.add(time, basesize = size.diff(basesize), easing);
 			if (b)
-				this.offsets.add(time, baseoffset = offset.get(baseoffset), easing);
+				this.offsets.add(time, baseoffset = offset.diff(baseoffset), easing);
 			if (c)
-				this.rotations.add(time, baserotation = rotation.get(baserotation), easing);
+				this.rotations.add(time, baserotation = rotation.diff(baserotation), easing);
 			if (d)
-				this.maps.add(time, basemap = map.get(basemap), easing);
+				this.maps.add(time, basemap = map.diff(basemap), easing);
 		}
 
 		this.hasInvalidMeta = this.hasInvalidMeta||!bb;

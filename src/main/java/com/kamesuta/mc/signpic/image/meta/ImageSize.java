@@ -15,7 +15,7 @@ public class ImageSize extends MetaMovie<SizeData, SizeData> implements Cloneabl
 	public float height = SizeData.Unknown;
 
 	@Override
-	public SizeData get(final SizeData base) {
+	public SizeData diff(final SizeData base) {
 		return SizeData.create(base, SizeData.create(this.width, this.height));
 	}
 
@@ -74,7 +74,7 @@ public class ImageSize extends MetaMovie<SizeData, SizeData> implements Cloneabl
 
 	@Override
 	public String compose() {
-		return get(null).compose();
+		return diff(null).compose();
 	}
 
 	@Override

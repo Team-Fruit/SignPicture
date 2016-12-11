@@ -21,7 +21,7 @@ public class ImageTextureMap extends MetaMovie<TextureMapData, TextureMapData> {
 	private boolean m = TextureMapData.defaultMipMap;
 
 	@Override
-	public TextureMapData get(final TextureMapData base) {
+	public TextureMapData diff(final TextureMapData base) {
 		if (base==null)
 			return new TextureMapData(this.u, this.v, this.w, this.h, this.c, this.s, this.o, this.r, this.m);
 		else
@@ -47,7 +47,7 @@ public class ImageTextureMap extends MetaMovie<TextureMapData, TextureMapData> {
 
 	@Override
 	public String compose() {
-		return get(null).compose();
+		return diff(null).compose();
 	}
 
 	@Override

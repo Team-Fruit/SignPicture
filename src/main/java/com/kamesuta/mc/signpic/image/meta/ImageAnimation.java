@@ -16,7 +16,7 @@ public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
 	public RSNeed redstone = RSNeed.IGNORE;
 
 	@Override
-	public AnimationData get(final AnimationData base) {
+	public AnimationData diff(final AnimationData base) {
 		return new AnimationData(this.easing, this.redstone);
 	}
 
@@ -34,7 +34,7 @@ public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
 	@Deprecated
 	@Override
 	public String compose() {
-		return get(null).compose();
+		return diff(null).compose();
 	}
 
 	@Deprecated

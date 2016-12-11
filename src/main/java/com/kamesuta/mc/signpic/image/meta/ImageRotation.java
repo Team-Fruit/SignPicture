@@ -20,7 +20,7 @@ public class ImageRotation extends MetaMovie<DiffRotation, KeyRotation> {
 	public KeyRotation base;
 
 	@Override
-	public DiffRotation get(final KeyRotation base) {
+	public DiffRotation diff(final KeyRotation base) {
 		return RotationData.create(base, this.rotates);
 	}
 
@@ -39,7 +39,7 @@ public class ImageRotation extends MetaMovie<DiffRotation, KeyRotation> {
 
 	@Override
 	public String compose() {
-		return get(null).compose();
+		return diff(null).compose();
 	}
 
 	@Override

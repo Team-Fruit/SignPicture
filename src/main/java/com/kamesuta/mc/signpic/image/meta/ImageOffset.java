@@ -16,7 +16,7 @@ public class ImageOffset extends MetaMovie<OffsetData, OffsetData> {
 	private float z;
 
 	@Override
-	public OffsetData get(final OffsetData base) {
+	public OffsetData diff(final OffsetData base) {
 		if (base==null)
 			return new OffsetData(this.x, this.y, this.z);
 		else
@@ -81,7 +81,7 @@ public class ImageOffset extends MetaMovie<OffsetData, OffsetData> {
 	@Deprecated
 	@Override
 	public String compose() {
-		return get(new OffsetData(0, 0, 0)).compose();
+		return diff(new OffsetData(0, 0, 0)).compose();
 	}
 
 	@Deprecated
