@@ -3,9 +3,14 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.common.collect.ImmutableSet;
 import com.kamesuta.mc.bnnwidget.position.Area;
 
-public class ImageSize implements MetaParser, MetaBuilder<SizeData, SizeData>, Cloneable {
+public class ImageSize extends MetaMovie<SizeData, SizeData> implements Cloneable {
+	public ImageSize() {
+		super(ImmutableSet.of("", "x"));
+	}
+
 	public float width = SizeData.Unknown;
 	public float height = SizeData.Unknown;
 

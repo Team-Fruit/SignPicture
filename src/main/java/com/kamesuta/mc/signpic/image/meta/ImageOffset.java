@@ -3,7 +3,13 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageOffset implements MetaParser, MetaBuilder<OffsetData, OffsetData> {
+import com.google.common.collect.ImmutableSet;
+
+public class ImageOffset extends MetaMovie<OffsetData, OffsetData> {
+
+	public ImageOffset() {
+		super(ImmutableSet.of("L", "R", "D", "U", "B", "F"));
+	}
 
 	private float x;
 	private float y;

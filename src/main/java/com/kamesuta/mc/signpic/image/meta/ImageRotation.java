@@ -6,11 +6,16 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.common.collect.ImmutableSet;
 import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
 
-public class ImageRotation implements MetaParser, MetaBuilder<DiffRotation, KeyRotation> {
+public class ImageRotation extends MetaMovie<DiffRotation, KeyRotation> {
+	public ImageRotation() {
+		super(ImmutableSet.of(RotateType.X.name(), RotateType.Y.name(), RotateType.Z.name()));
+	}
+
 	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
 	public KeyRotation base;
 
