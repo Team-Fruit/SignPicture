@@ -12,8 +12,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.Reference;
-import com.kamesuta.mc.signpic.image.meta.MovieMeta.RotationMovieMeta;
-import com.kamesuta.mc.signpic.image.meta.MovieMeta.SizeMovieMeta;
+import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
+import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
@@ -21,9 +21,19 @@ public class ImageMeta {
 
 	private boolean hasInvalidMeta;
 
-	public final SizeMovieMeta sizes = new SizeMovieMeta();
+	public final MovieMeta<SizeData, SizeData, SizeData> sizes = new MovieMeta<SizeData, SizeData, SizeData>() {
+		@Override
+		public ImageSize builder() {
+			return new ImageSize();
+		}
+	};
 	public final Movie<OffsetData, OffsetData> offsets;
-	public final RotationMovieMeta rotations = new RotationMovieMeta();
+	public final MovieMeta<KeyRotation, RotationData, DiffRotation> rotations = new MovieMeta<KeyRotation, RotationData, DiffRotation>() {
+		@Override
+		public ImageRotation builder() {
+			return new ImageRotation();
+		}
+	};
 	public final Movie<TextureMapData, TextureMapData> maps;
 	public final Movie<AnimationData, AnimationData> animations;
 
