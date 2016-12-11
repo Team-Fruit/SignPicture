@@ -5,41 +5,33 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+
 public class ImageOffset implements MetaMovie<OffsetData, OffsetData> {
-	private float x;
-	private float y;
-	private float z;
+	public final String neg;
+	public final String pos;
+
+	private float offset;
+
+	public ImageOffset(final String neg, final String pos) {
+		this.neg = neg;
+		this.pos = pos;
+	}
 
 	@Override
 	public OffsetData diff(@Nullable final OffsetData base) {
 		if (base==null)
-			return new OffsetData(this.x, this.y, this.z);
+			return new OffsetData(this.offset);
 		else
-			return new OffsetData(base.x+this.x, base.y+this.y, base.z+this.z);
+			return new OffsetData(base.offset+this.offset);
 	}
 
-	public void setX(final float x) {
-		this.x = x;
+	public void set(final float offset) {
+		this.offset = offset;
 	}
 
-	public void setY(final float y) {
-		this.y = y;
-	}
-
-	public void setZ(final float z) {
-		this.z = z;
-	}
-
-	public float getX() {
-		return this.x;
-	}
-
-	public float getY() {
-		return this.y;
-	}
-
-	public float getZ() {
-		return this.z;
+	public float get() {
+		return this.offset;
 	}
 
 	/**
@@ -54,12 +46,8 @@ public class ImageOffset implements MetaMovie<OffsetData, OffsetData> {
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
 		/* @formatter:off */
-		if (StringUtils.equals(key, "L")) if (StringUtils.isEmpty(value)) this.x -= OffsetData.defaultOffset; else this.x -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "R")) if (StringUtils.isEmpty(value)) this.x += OffsetData.defaultOffset; else this.x += NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "D")) if (StringUtils.isEmpty(value)) this.y -= OffsetData.defaultOffset; else this.y -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "U")) if (StringUtils.isEmpty(value)) this.y += OffsetData.defaultOffset; else this.y += NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "B")) if (StringUtils.isEmpty(value)) this.z -= OffsetData.defaultOffset; else this.z -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, "F")) if (StringUtils.isEmpty(value)) this.z += OffsetData.defaultOffset; else this.z += NumberUtils.toFloat(value, 0f);
+		if (StringUtils.equals(key, this.neg)) if (StringUtils.isEmpty(value)) this.offset -= OffsetData.defaultOffset; else this.offset -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, this.pos)) if (StringUtils.isEmpty(value)) this.offset += OffsetData.defaultOffset; else this.offset += NumberUtils.toFloat(value, 0f);
 		else return false;
 		return true;
 		/* @formatter:on */
@@ -73,15 +61,18 @@ public class ImageOffset implements MetaMovie<OffsetData, OffsetData> {
 	 * B=back
 	 * F=front
 	 */
-	@Deprecated
 	@Override
 	public String compose() {
-		return diff(new OffsetData(0, 0, 0)).compose();
-	}
-
-	@Deprecated
-	@Override
-	public String toString() {
-		return compose();
+		/* @formatter:off */
+		final StringBuilder stb = new StringBuilder();
+		if (this.offset!=0)
+			if (this.offset<0)
+				if (this.offset==-OffsetData.defaultOffset) stb.append(this.neg);
+				else stb.append(this.neg).append(ShortestFloatFormatter.format(-this.offset));
+			else
+				if (this.offset==OffsetData.defaultOffset) stb.append(this.pos);
+				else stb.append(this.pos).append(ShortestFloatFormatter.format(this.offset));
+		return stb.toString();
+		/* @formatter:on */
 	}
 }

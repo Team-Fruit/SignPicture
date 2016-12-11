@@ -7,7 +7,9 @@ import org.apache.commons.lang3.Validate;
 
 public class MetaBuilder {
 	public final ImageSize size = new ImageSize();
-	public final ImageOffset offset = new ImageOffset();
+	public final ImageOffset xoffset = new ImageOffset("L", "R");
+	public final ImageOffset yoffset = new ImageOffset("D", "U");
+	public final ImageOffset zoffset = new ImageOffset("B", "F");
 	public final ImageRotation rotation = new ImageRotation();
 	public final ImageTextureMap map = new ImageTextureMap();
 	public final ImageAnimation animation = new ImageAnimation();
@@ -30,7 +32,9 @@ public class MetaBuilder {
 				final String value = 2<=gcount ? mp.group(2) : "";
 				if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
 					this.size.parse(src, key, value);
-					this.offset.parse(src, key, value);
+					this.xoffset.parse(src, key, value);
+					this.yoffset.parse(src, key, value);
+					this.zoffset.parse(src, key, value);
 					this.rotation.parse(src, key, value);
 					this.map.parse(src, key, value);
 					this.animation.parse(src, key, value);
@@ -40,6 +44,14 @@ public class MetaBuilder {
 	}
 
 	public String compose() {
-		return "{"+this.size+this.offset+this.rotation+this.map+this.animation+"}";
+		return "{"+
+				this.size.compose()+
+				this.xoffset.compose()+
+				this.yoffset.compose()+
+				this.zoffset.compose()+
+				this.rotation.compose()+
+				this.map.compose()+
+				this.animation.compose()+
+				"}";
 	}
 }

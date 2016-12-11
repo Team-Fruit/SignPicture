@@ -129,7 +129,10 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiMain.this.signbuilder.getMeta().offset) {
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)),
+						GuiMain.this.signbuilder.getMeta().xoffset,
+						GuiMain.this.signbuilder.getMeta().yoffset,
+						GuiMain.this.signbuilder.getMeta().zoffset) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();

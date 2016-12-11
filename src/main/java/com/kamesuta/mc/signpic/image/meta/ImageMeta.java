@@ -33,10 +33,22 @@ public class ImageMeta {
 			return new ImageSize();
 		}
 	};
-	public final MovieMeta<OffsetData, OffsetData, OffsetData> offsets = new MovieMeta<OffsetData, OffsetData, OffsetData>() {
+	public final MovieMeta<OffsetData, OffsetData, OffsetData> xoffsets = new MovieMeta<OffsetData, OffsetData, OffsetData>() {
 		@Override
 		public MetaMovie<OffsetData, OffsetData> builder() {
-			return new ImageOffset();
+			return new ImageOffset("L", "R");
+		}
+	};
+	public final MovieMeta<OffsetData, OffsetData, OffsetData> yoffsets = new MovieMeta<OffsetData, OffsetData, OffsetData>() {
+		@Override
+		public MetaMovie<OffsetData, OffsetData> builder() {
+			return new ImageOffset("D", "U");
+		}
+	};
+	public final MovieMeta<OffsetData, OffsetData, OffsetData> zoffsets = new MovieMeta<OffsetData, OffsetData, OffsetData>() {
+		@Override
+		public MetaMovie<OffsetData, OffsetData> builder() {
+			return new ImageOffset("B", "F");
 		}
 	};
 	public final MovieMeta<KeyRotation, RotationData, DiffRotation> rotations = new MovieMeta<KeyRotation, RotationData, DiffRotation>() {
@@ -91,10 +103,12 @@ public class ImageMeta {
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
 						final boolean ia = this.animations.parse(src, key, value);
 						final boolean ib = this.sizes.parse(src, key, value);
-						final boolean ic = this.offsets.parse(src, key, value);
+						final boolean ic1 = this.xoffsets.parse(src, key, value);
+						final boolean ic2 = this.yoffsets.parse(src, key, value);
+						final boolean ic3 = this.zoffsets.parse(src, key, value);
 						final boolean id = this.rotations.parse(src, key, value);
 						final boolean ie = this.maps.parse(src, key, value);
-						bb = (ia||ib||ic||id||ie)&&bb;
+						bb = (ia||ib||ic1||ic2||ic3||id||ie)&&bb;
 					}
 				}
 			}
@@ -106,7 +120,9 @@ public class ImageMeta {
 			}
 			this.animations.next(time, easing);
 			this.sizes.next(time, easing);
-			this.offsets.next(time, easing);
+			this.xoffsets.next(time, easing);
+			this.yoffsets.next(time, easing);
+			this.zoffsets.next(time, easing);
 			this.rotations.next(time, easing);
 			this.maps.next(time, easing);
 		}
