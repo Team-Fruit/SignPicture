@@ -3,15 +3,10 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.google.common.collect.ImmutableSet;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.image.meta.AnimationData.RSNeed;
 
-public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
-	public ImageAnimation() {
-		super(ImmutableSet.of("k", "t"));
-	}
-
+public class ImageAnimation implements MetaMovie<AnimationData, AnimationData> {
 	public Easings easing = Easings.easeLinear;
 	public RSNeed redstone = RSNeed.IGNORE;
 

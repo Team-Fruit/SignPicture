@@ -19,6 +19,10 @@ public abstract class MovieMeta<KeyFrame extends IMotionFrame<InterFrame>, Inter
 		return this.builder.diff(this.base);
 	}
 
+	public boolean isParsed() {
+		return this.parsed;
+	}
+
 	public void next(final float time, final Easings easing) {
 		if (this.parsed)
 			this.movie.add(time, this.base = getDiff(), easing);

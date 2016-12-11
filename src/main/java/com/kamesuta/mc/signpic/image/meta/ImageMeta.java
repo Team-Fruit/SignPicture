@@ -82,8 +82,6 @@ public class ImageMeta {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
-			final boolean e = false;
-
 			final Matcher mp = p.matcher(meta);
 			while (mp.find()) {
 				final int gcount = mp.groupCount();
@@ -102,11 +100,11 @@ public class ImageMeta {
 			}
 
 			Easings easing = Easings.easeLinear;
-			if (e) {
+			if (this.animations.isParsed()) {
 				final AnimationData anim = this.animations.getDiff();
 				easing = anim.easing;
-				this.animations.next(time, easing);
 			}
+			this.animations.next(time, easing);
 			this.sizes.next(time, easing);
 			this.offsets.next(time, easing);
 			this.rotations.next(time, easing);

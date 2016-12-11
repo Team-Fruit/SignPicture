@@ -3,13 +3,7 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import com.google.common.collect.ImmutableSet;
-
-public class ImageTextureMap extends MetaMovie<TextureMapData, TextureMapData> {
-	public ImageTextureMap() {
-		super(ImmutableSet.of("u", "v", "w", "h", "c", "s", "o", "r", "m"));
-	}
-
+public class ImageTextureMap implements MetaMovie<TextureMapData, TextureMapData> {
 	private float u = TextureMapData.defaultUV;
 	private float v = TextureMapData.defaultUV;
 	private float w = TextureMapData.defaultWH;
