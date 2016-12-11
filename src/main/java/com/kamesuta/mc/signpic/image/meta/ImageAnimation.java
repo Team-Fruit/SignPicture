@@ -31,7 +31,6 @@ public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
 		return true;
 	}
 
-	@Deprecated
 	@Override
 	public String compose() {
 		return diff(null).compose();

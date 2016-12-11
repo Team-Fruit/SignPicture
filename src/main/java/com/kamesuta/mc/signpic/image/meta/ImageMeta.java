@@ -91,11 +91,11 @@ public class ImageMeta {
 					final String key = mp.group(1);
 					final String value = 2<=gcount ? mp.group(2) : "";
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
-						final boolean ia = this.sizes.parse(src, key, value);
-						final boolean ib = this.offsets.parse(src, key, value);
-						final boolean ic = this.rotations.parse(src, key, value);
-						final boolean id = this.maps.parse(src, key, value);
-						final boolean ie = this.animations.parse(src, key, value);
+						final boolean ia = this.animations.parse(src, key, value);
+						final boolean ib = this.sizes.parse(src, key, value);
+						final boolean ic = this.offsets.parse(src, key, value);
+						final boolean id = this.rotations.parse(src, key, value);
+						final boolean ie = this.maps.parse(src, key, value);
 						bb = (ia||ib||ic||id||ie)&&bb;
 					}
 				}
