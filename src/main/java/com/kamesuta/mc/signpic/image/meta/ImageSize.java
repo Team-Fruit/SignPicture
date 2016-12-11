@@ -5,7 +5,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 
-public class ImageSize extends ImageMeta.MetaParser implements MetaBuilder<SizeData, SizeData>, Cloneable {
+public class ImageSize implements MetaParser, MetaBuilder<SizeData, SizeData>, Cloneable {
 	public float width = SizeData.Unknown;
 	public float height = SizeData.Unknown;
 

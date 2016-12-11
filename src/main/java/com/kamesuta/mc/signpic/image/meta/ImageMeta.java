@@ -131,12 +131,4 @@ public class ImageMeta {
 	public String toString() {
 		return compose();
 	}
-
-	public static abstract class MetaParser {
-		public abstract boolean parse(String src, String key, String value);
-
-		public abstract MetaParser reset();
-
-		public abstract String compose();
-	}
 }

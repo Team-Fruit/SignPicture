@@ -3,7 +3,7 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageTextureMap extends ImageMeta.MetaParser implements MetaBuilder<TextureMapData, TextureMapData> {
+public class ImageTextureMap implements MetaParser, MetaBuilder<TextureMapData, TextureMapData> {
 	private float u = TextureMapData.defaultUV;
 	private float v = TextureMapData.defaultUV;
 	private float w = TextureMapData.defaultWH;

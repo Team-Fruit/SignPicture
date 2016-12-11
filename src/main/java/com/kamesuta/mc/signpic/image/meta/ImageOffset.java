@@ -3,7 +3,7 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-public class ImageOffset extends ImageMeta.MetaParser implements MetaBuilder<OffsetData, OffsetData> {
+public class ImageOffset implements MetaParser, MetaBuilder<OffsetData, OffsetData> {
 
 	private float x;
 	private float y;
