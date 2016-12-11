@@ -6,6 +6,7 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
+import com.kamesuta.mc.signpic.image.meta.MovieCreator;
 
 public class Entry {
 	public final EntryId id;
@@ -45,5 +46,12 @@ public class Entry {
 		if (this.meta==null)
 			this.meta = this.id.getMeta();
 		return this.meta;
+	}
+
+	public MovieCreator getMetaBuilder() {
+		final String newmeta = content().imagemeta;
+		if (this.contentId!=null&&newmeta!=null)
+			return new MovieCreator(this.id.getMetaSource()+newmeta);
+		return this.id.getMetaBuilder();
 	}
 }

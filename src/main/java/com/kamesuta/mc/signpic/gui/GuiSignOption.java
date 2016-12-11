@@ -153,7 +153,7 @@ public class GuiSignOption extends WFrame {
 										final Entry old = CurrentMode.instance.getEntryId().entry();
 										final EntryIdBuilder idb = new EntryIdBuilder();
 										idb.setURI(content ? GuiSignOption.this.entry.contentId.getID() : old.contentId.getID());
-										idb.setMeta(meta ? GuiSignOption.this.entry.getMeta() : old.getMeta());
+										idb.setMeta(meta ? GuiSignOption.this.entry.getMetaBuilder() : old.getMetaBuilder());
 										CurrentMode.instance.setEntryId(idb.build());
 									}
 								});

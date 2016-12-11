@@ -12,9 +12,4 @@ public abstract class MetaMovie<E, B> implements MetaParser, MetaBuilder<E, B> {
 	public Set<String> getIdentifier() {
 		return this.identifier;
 	}
-
-	public MetaMovie<E, B> register() {
-
-		return this;
-	}
 }

@@ -13,7 +13,7 @@ public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
 	}
 
 	public Easings easing = Easings.easeLinear;
-	public RSNeed redstone = RSNeed.RS_OFF;
+	public RSNeed redstone = RSNeed.IGNORE;
 
 	@Override
 	public AnimationData get(final AnimationData base) {
@@ -23,7 +23,7 @@ public class ImageAnimation extends MetaMovie<AnimationData, AnimationData> {
 	@Override
 	public ImageAnimation reset() {
 		this.easing = Easings.easeLinear;
-		this.redstone = RSNeed.RS_OFF;
+		this.redstone = RSNeed.IGNORE;
 		return this;
 	}
 

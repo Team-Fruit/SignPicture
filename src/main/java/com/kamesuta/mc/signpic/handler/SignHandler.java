@@ -237,10 +237,10 @@ public class SignHandler {
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
 				final OffsetData offset = meta.offsets.get();
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x, offset.y, offset.z));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+				// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
 				if (useName)
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+				// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;

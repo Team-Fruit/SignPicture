@@ -411,7 +411,7 @@ public class GuiMain extends WFrame {
 		public void apply() {
 			final EntryId entryId = EntryId.from(getText());
 			if (entryId.hasMeta())
-				GuiMain.this.signbuilder.setMeta(entryId.getMeta());
+				GuiMain.this.signbuilder.setMeta(entryId.getMetaBuilder());
 			if (entryId.hasContentId()) {
 				String url = entryId.getContentId().getURI();
 				setText(url = Apis.instance.replaceURL(url));
