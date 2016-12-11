@@ -1,7 +1,7 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-public interface IMotionFrame<E> {
-	public E per();
+public interface IMotionFrame<InterFrame> {
+	public InterFrame per();
 
-	public E per(final float per, final E before);
+	public InterFrame per(final float per, final InterFrame before);
 }
