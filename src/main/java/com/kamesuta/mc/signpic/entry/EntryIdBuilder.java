@@ -1,10 +1,10 @@
 package com.kamesuta.mc.signpic.entry;
 
 import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.image.meta.MovieCreator;
+import com.kamesuta.mc.signpic.image.meta.MetaBuilder;
 
 public class EntryIdBuilder {
-	private MovieCreator meta;
+	private MetaBuilder meta;
 	private String uri;
 
 	public EntryIdBuilder() {
@@ -19,13 +19,13 @@ public class EntryIdBuilder {
 		return this;
 	}
 
-	public void setMeta(final MovieCreator meta) {
+	public void setMeta(final MetaBuilder meta) {
 		this.meta = meta;
 	}
 
-	public MovieCreator getMeta() {
+	public MetaBuilder getMeta() {
 		if (this.meta==null)
-			return this.meta = new MovieCreator();
+			return this.meta = new MetaBuilder();
 		else
 			return this.meta;
 	}

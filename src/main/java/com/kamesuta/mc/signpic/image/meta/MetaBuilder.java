@@ -5,18 +5,18 @@ import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
-public class MovieCreator {
+public class MetaBuilder {
 	public final ImageSize size = new ImageSize();
 	public final ImageOffset offset = new ImageOffset();
 	public final ImageRotation rotation = new ImageRotation();
 	public final ImageTextureMap map = new ImageTextureMap();
 	public final ImageAnimation animation = new ImageAnimation();
 
-	public MovieCreator() {
+	public MetaBuilder() {
 
 	}
 
-	public MovieCreator(final String src) {
+	public MetaBuilder(final String src) {
 		Validate.notNull(src);
 
 		final Matcher mgb = ImageMeta.g.matcher(src);

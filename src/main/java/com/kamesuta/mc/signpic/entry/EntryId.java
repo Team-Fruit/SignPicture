@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.MovieCreator;
+import com.kamesuta.mc.signpic.image.meta.MetaBuilder;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
@@ -148,10 +148,10 @@ public class EntryId {
 		return null;
 	}
 
-	public MovieCreator getMetaBuilder() {
+	public MetaBuilder getMetaBuilder() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new MovieCreator(metasource);
+			return new MetaBuilder(metasource);
 		return null;
 	}
 
