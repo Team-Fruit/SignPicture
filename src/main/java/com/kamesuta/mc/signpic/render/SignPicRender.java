@@ -82,10 +82,10 @@ public class SignPicRender extends WGui {
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
 					final ImageMeta meta = entry.getMeta();
-					final SizeData signsize = meta.sizes.get();
+					final SizeData signsize = meta.sizes.movie.get();
 					final Content content = entry.content();
 					final SizeData imagesize = content.image.getSize();
-					final SizeData viewsize = meta.sizes.get().aspectSize(imagesize);
+					final SizeData viewsize = signsize.aspectSize(imagesize);
 					final String advmsg = content.state.getMessage();
 
 					event.left.add("");

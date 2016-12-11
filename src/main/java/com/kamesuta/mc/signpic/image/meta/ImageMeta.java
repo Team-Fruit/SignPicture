@@ -12,6 +12,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.image.meta.MovieMeta.SizeMovieMeta;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 
 public class ImageMeta {
@@ -20,7 +21,7 @@ public class ImageMeta {
 
 	private boolean hasInvalidMeta;
 
-	public final Movie<SizeData, SizeData> sizes;
+	public final SizeMovieMeta sizes = new SizeMovieMeta();
 	public final Movie<OffsetData, OffsetData> offsets;
 	public final Movie<KeyRotation, RotationData> rotations;
 	public final Movie<TextureMapData, TextureMapData> maps;
@@ -50,13 +51,11 @@ public class ImageMeta {
 
 		Reference.logger.info(timeline);
 
-		SizeData basesize;
 		OffsetData baseoffset;
 		KeyRotation baserotation;
 		TextureMapData basemap;
 		AnimationData baseanimation;
 
-		this.sizes = new Movie<SizeData, SizeData>(basesize = new ImageSize().diff(null));
 		this.offsets = new Movie<OffsetData, OffsetData>(baseoffset = new ImageOffset().diff(null));
 		this.rotations = new Movie<KeyRotation, RotationData>(baserotation = new ImageRotation().diff(null));
 		this.maps = new Movie<TextureMapData, TextureMapData>(basemap = new ImageTextureMap().diff(null));
@@ -68,13 +67,11 @@ public class ImageMeta {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
-			final ImageSize size = new ImageSize();
 			final ImageOffset offset = new ImageOffset();
 			final ImageRotation rotation = new ImageRotation();
 			final ImageTextureMap map = new ImageTextureMap();
 			final ImageAnimation animation = new ImageAnimation();
 
-			boolean a = false;
 			boolean b = false;
 			boolean c = false;
 			boolean d = false;
@@ -87,13 +84,12 @@ public class ImageMeta {
 					final String key = mp.group(1);
 					final String value = 2<=gcount ? mp.group(2) : "";
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
-						final boolean ia = size.parse(src, key, value);
+						final boolean ia = this.sizes.parse(src, key, value);
 						final boolean ib = offset.parse(src, key, value);
 						final boolean ic = rotation.parse(src, key, value);
 						final boolean id = map.parse(src, key, value);
 						final boolean ie = animation.parse(src, key, value);
 						bb = (ia||ib||ic||id||ie)&&bb;
-						a = a||ia;
 						b = b||ib;
 						c = c||ic;
 						d = d||id;
@@ -108,8 +104,7 @@ public class ImageMeta {
 				easing = anim.easing;
 				this.animations.add(time, anim, easing);
 			}
-			if (a)
-				this.sizes.add(time, basesize = size.diff(basesize), easing);
+			this.sizes.next(time, easing);
 			if (b)
 				this.offsets.add(time, baseoffset = offset.diff(baseoffset), easing);
 			if (c)

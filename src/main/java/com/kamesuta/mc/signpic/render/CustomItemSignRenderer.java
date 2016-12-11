@@ -36,7 +36,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		final Entry entry = EntryId.fromItemStack(item).entry();
 		final ImageMeta meta = entry.getMeta();
 		// Size
-		final SizeData size = meta.sizes.get().aspectSize(entry.content().image.getSize());
+		final SizeData size = meta.sizes.movie.get().aspectSize(entry.content().image.getSize());
 		if (type==ItemRenderType.INVENTORY) {
 			final float slot = 16f;
 			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
