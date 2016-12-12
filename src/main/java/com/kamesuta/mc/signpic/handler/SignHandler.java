@@ -17,6 +17,7 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -221,22 +222,19 @@ public class SignHandler {
 	@CoreEvent
 	public void onTooltip(final ItemTooltipEvent event) {
 		if (event.itemStack.getItem()==Items.sign) {
-			final String dspname = event.itemStack.getDisplayName();
-			final String name = StringUtils.substringAfterLast(dspname, "}");
-			final boolean useName = !StringUtils.isEmpty(name);
-			final EntryId id = EntryId.fromItemStack(event.itemStack);
+			final ItemEntryId id = EntryId.fromItemStack(event.itemStack);
 			final Entry entry = id.entry();
 			if (entry.isValid()) {
 				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
-				if (useName)
-					event.toolTip.set(0, name);
+				if (id.hasName())
+					event.toolTip.set(0, id.getName());
 				else
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final ImageMeta meta = entry.getMeta();
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-				if (useName)
+				if (id.hasName())
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
