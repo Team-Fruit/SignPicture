@@ -14,7 +14,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
@@ -57,7 +57,7 @@ public class SignHandler {
 					guiEditSignTileEntity = field;
 				}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook TileEntitySign field included in GuiEditSign", e);
+			Log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
 		try {
 			final Field[] fields = GuiRepair.class.getDeclaredFields();
@@ -72,7 +72,7 @@ public class SignHandler {
 				}
 			}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
+			Log.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
 		}
 	}
 
@@ -110,14 +110,14 @@ public class SignHandler {
 								}
 							}
 						} catch (final Exception e) {
-							Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+							Log.notice(I18n.format("signpic.chat.error.place"));
 						}
 					else
-						Client.notice(I18n.format("signpic.chat.error.place"));
+						Log.notice(I18n.format("signpic.chat.error.place"));
 				} else if (CurrentMode.instance.isShortening())
-					Client.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
+					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
 				else
-					Client.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
 			} else if (event.gui instanceof GuiRepair) {
 				if (!entryId.isNameable())
 					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
@@ -153,9 +153,9 @@ public class SignHandler {
 						}
 						break check;
 					} catch (final Exception e) {
-						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+						Log.notice(I18n.format("signpic.chat.error.place"));
 					}
-				Client.notice(I18n.format("signpic.chat.error.place"));
+				Log.notice(I18n.format("signpic.chat.error.place"));
 			}
 	}
 

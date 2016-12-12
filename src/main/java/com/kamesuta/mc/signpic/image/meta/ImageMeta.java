@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
+import com.kamesuta.mc.signpic.Log;
+
 public class ImageMeta {
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
@@ -52,6 +54,7 @@ public class ImageMeta {
 					b = parseMeta(src, key, value)&&b;
 			}
 		}
+		Log.debuginfo(src);
 		this.hasInvalidMeta = this.hasInvalidMeta||!b;
 		return this;
 	}

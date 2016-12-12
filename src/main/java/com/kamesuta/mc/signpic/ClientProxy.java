@@ -60,7 +60,7 @@ public class ClientProxy extends CommonProxy {
 		try {
 			return file.getCanonicalFile();
 		} catch (final IOException e) {
-			Reference.logger.debug("Could not canonize path!", e);
+			Log.debugerror("Could not canonize path!", e);
 		}
 		return file;
 	}

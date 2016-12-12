@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
-import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiTask;
@@ -34,14 +34,14 @@ public class ShortenerApiUtil {
 								onDone.run();
 						}
 						if (!res.isSuccess())
-							Client.notice(I18n.format("signpic.gui.notice.shorteningfailed", res.getError()), 2);
+							Log.notice(I18n.format("signpic.gui.notice.shorteningfailed", res.getError()));
 					}
 				});
 				Communicator.instance.communicate(upload);
 			}
 			return true;
 		} catch (final IOException e) {
-			Client.notice(I18n.format("signpic.gui.notice.shorteningfailed", e), 2);
+			Log.notice(I18n.format("signpic.gui.notice.shorteningfailed", e));
 		}
 		return false;
 	}
@@ -71,6 +71,6 @@ public class ShortenerApiUtil {
 				}
 			});
 		} else
-			Client.notice(I18n.format("signpic.gui.notice.shorteningother"));
+			Log.notice(I18n.format("signpic.gui.notice.shorteningother"));
 	}
 }

@@ -26,6 +26,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -260,7 +261,7 @@ public class GuiMain extends WFrame {
 									final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 									FileUtilitiy.transfer(transferable);
 								} catch (final Exception e) {
-									Client.notice(I18n.format("signpic.gui.notice.paste.unsupported", e), 2);
+									Log.notice(I18n.format("signpic.gui.notice.paste.unsupported", e));
 								}
 								return true;
 							}

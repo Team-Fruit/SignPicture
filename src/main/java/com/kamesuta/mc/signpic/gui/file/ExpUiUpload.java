@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 
 public class ExpUiUpload extends UiUpload {
 	/**
@@ -41,11 +41,11 @@ public class ExpUiUpload extends UiUpload {
 
 	@Override
 	protected void apply(final File f) {
-		Reference.logger.info(f.getAbsolutePath());
+		Log.info(f.getAbsolutePath());
 	}
 
 	@Override
 	protected void transfer(final Transferable transferable) {
-		Reference.logger.info(transferable);
+		Log.info(transferable);
 	}
 };

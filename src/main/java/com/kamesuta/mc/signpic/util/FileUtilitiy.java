@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.http.upload.UploadApiUtil;
 import com.kamesuta.mc.signpic.http.upload.UploadRequest;
@@ -44,18 +45,18 @@ public class FileUtilitiy {
 						}
 					});
 				} catch (final IOException e) {
-					Client.notice(I18n.format("signpic.gui.notice.paste.error", e), 2);
+					Log.notice(I18n.format("signpic.gui.notice.paste.error", e));
 					return false;
 				}
 			} else {
-				Client.notice(I18n.format("signpic.gui.notice.paste.typeunsupported"), 2);
+				Log.notice(I18n.format("signpic.gui.notice.paste.typeunsupported"));
 				return false;
 			}
 		} catch (final IOException e) {
-			Client.notice(I18n.format("signpic.gui.notice.paste.error", e), 2);
+			Log.notice(I18n.format("signpic.gui.notice.paste.error", e));
 			return false;
 		} catch (final UnsupportedFlavorException e) {
-			Client.notice(I18n.format("signpic.gui.notice.paste.unsupported", e), 2);
+			Log.notice(I18n.format("signpic.gui.notice.paste.unsupported", e));
 		}
 		return true;
 	}

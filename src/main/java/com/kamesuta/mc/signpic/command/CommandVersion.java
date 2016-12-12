@@ -2,8 +2,8 @@ package com.kamesuta.mc.signpic.command;
 
 import java.util.concurrent.TimeUnit;
 
-import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.information.Informations;
 
 import net.minecraft.client.resources.I18n;
@@ -46,7 +46,7 @@ public class CommandVersion extends SubCommand {
 		public void processSubCommand(final ICommandSender sender, final String[] args) {
 			final long cooldown = TimeUnit.HOURS.toMillis(2l);
 			if (Informations.instance.shouldCheck(cooldown)) {
-				Client.notice(I18n.format("signpic.versioning.check.start"), 2f);
+				Log.notice(I18n.format("signpic.versioning.check.start"));
 				Informations.instance.onlineCheck(new Runnable() {
 					@Override
 					public void run() {
@@ -77,13 +77,13 @@ public class CommandVersion extends SubCommand {
 						if (Informations.instance.isUpdateRequired())
 							Informations.instance.runUpdate();
 						else
-							Client.notice(I18n.format("signpic.versioning.noupdate"));
+							Log.notice(I18n.format("signpic.versioning.noupdate"));
 					}
 				});
 			else if (Informations.instance.isUpdateRequired())
 				Informations.instance.runUpdate();
 			else
-				Client.notice(I18n.format("signpic.versioning.noupdate"));
+				Log.notice(I18n.format("signpic.versioning.noupdate"));
 		}
 	}
 }
