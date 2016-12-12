@@ -8,10 +8,10 @@ import java.io.InputStream;
 
 import com.kamesuta.mc.signpic.state.State;
 
-public abstract class UploadContent {
+public abstract class UploadRequest {
 	protected final State state;
 
-	public UploadContent(final State state) {
+	public UploadRequest(final State state) {
 		this.state = state;
 	}
 
@@ -32,15 +32,15 @@ public abstract class UploadContent {
 
 	public abstract InputStream getStream() throws IOException;
 
-	public static UploadContent fromStream(final String name, final InputStream stream, final long size, final State state) {
+	public static UploadRequest fromStream(final String name, final InputStream stream, final long size, final State state) {
 		return new StreamUploadContent(name, stream, size, state);
 	}
 
-	public static UploadContent fromFile(final File file, final State state) {
+	public static UploadRequest fromFile(final File file, final State state) {
 		return new FileUploadContent(file, state);
 	}
 
-	private static class StreamUploadContent extends UploadContent {
+	private static class StreamUploadContent extends UploadRequest {
 		private final String name;
 		private final InputStream stream;
 		private final long size;
@@ -68,7 +68,7 @@ public abstract class UploadContent {
 		}
 	}
 
-	private static class FileUploadContent extends UploadContent {
+	private static class FileUploadContent extends UploadRequest {
 		private final File file;
 
 		public FileUploadContent(final File file, final State state) {

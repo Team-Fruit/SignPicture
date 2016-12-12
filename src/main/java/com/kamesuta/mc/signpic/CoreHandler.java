@@ -6,12 +6,18 @@ import org.lwjgl.util.Timer;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
+import com.kamesuta.mc.signpic.http.Communicator;
+import com.kamesuta.mc.signpic.http.ICommunicate;
+import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.SignPicRender;
+import com.kamesuta.mc.signpic.state.Progressable;
+import com.kamesuta.mc.signpic.state.State;
 
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -138,6 +144,41 @@ public class CoreHandler {
 		// Client.openEditor();
 		// Reference.logger.info("try to delete: "+Client.location.modFile.getName());
 		// Client.deleteMod();
-		Client.notice("Debug Message!", 3f);
+		// Client.notice("Debug Message!", 3f);
+		final DebugCommunicate debug = new DebugCommunicate();
+		debug.getState().getMeta().put(GuiTask.HighlightPanel, true);
+		Communicator.instance.communicate(debug);
+	}
+
+	private static class DebugCommunicate implements ICommunicate, Progressable {
+		State state = new State();
+		{
+			this.state.setName("Debug Progress").getProgress().setOverall(10);
+		}
+
+		@Override
+		public void cancel() {
+		}
+
+		@Override
+		public State getState() {
+			return this.state;
+		}
+
+		@Override
+		public void communicate() {
+			try {
+				for (int i = 0; i<10; i++) {
+					Thread.sleep(100);
+					this.state.getProgress().setDone(i+1);
+				}
+			} catch (final InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void setCallback(final ICommunicateCallback callback) {
+		}
 	}
 }

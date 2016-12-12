@@ -131,14 +131,21 @@ public class EntryId {
 		return null;
 	}
 
-	public ImageMeta getMeta() {
+	public String getMetaSource() {
 		if (hasMeta())
 			if (StringUtils.endsWith(this.id, "}"))
-				return new ImageMeta().init(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1));
+				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1);
 			else
-				return new ImageMeta().init(StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1));
+				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1);
 		else
 			return null;
+	}
+
+	public ImageMeta getMeta() {
+		final String metasource = getMetaSource();
+		if (metasource!=null)
+			return new ImageMeta().init(metasource);
+		return null;
 	}
 
 	public boolean isPlaceable() {

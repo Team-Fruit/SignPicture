@@ -9,6 +9,16 @@
 				"ja_JP": "iChunUtil Modとの競合を解決しました"
 			}
 		},
+		"1.7.10-beta": {
+			"version": "2.6.0.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.6.0.beta/SignPicture-1.7.10-2.6.0.beta-universal.jar",
+			"local": "SignPicture-1.7.10-2.6.0.beta-universal.jar",
+			"image":"https://i.gyazo.com/182e0ec582a8bbb656517edf411ca169.png",
+			"message": "Auto short URL",
+			"message_local": {
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
+			}
+		},
 		"1.8.9": {
 			"version": "2.5.1",
 			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.5.1/SignPicture-1.8.9-2.5.1-universal.jar",
@@ -59,6 +69,22 @@
 				"config": [
 					{
 						"clientid": "7896a166a54f0bc"
+					}
+				]
+			}
+		},
+		"shortener": {
+			"bitly": {
+				"config": [
+					{
+						"key": "9a2bae8d0385870dfad9e4ad0b874c468df04149"
+					}
+				]
+			},
+			"googl": {
+				"config": [
+					{
+						"key": "AIzaSyCbJC4zTqtSRMGrMj1C4_jOesDhrB-TOuM"
 					}
 				]
 			}

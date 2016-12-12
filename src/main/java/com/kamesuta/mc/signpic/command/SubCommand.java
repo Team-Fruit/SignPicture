@@ -78,7 +78,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public final void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
+	public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
 		if (!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}

@@ -13,9 +13,9 @@ import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.Validate;
 
+import com.google.gson.Gson;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
-import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import net.minecraft.block.Block;
@@ -31,6 +31,8 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class Client {
 	public final static Minecraft mc = FMLClientHandler.instance().getClient();
+
+	public static final Gson gson = new Gson();
 
 	public static CustomTileEntitySignRenderer renderer;
 	public static CoreHandler handler;
@@ -63,15 +65,6 @@ public class Client {
 				return (TileEntitySign) tile;
 		}
 		return null;
-	}
-
-	@SuppressWarnings("deprecation")
-	public static void notice(final String notice, final float duration) {
-		OverlayFrame.instance.pane.addNotice1(notice, duration);
-	}
-
-	public static void notice(final String notice) {
-		Client.notice(notice, 2f);
 	}
 
 	public static class MovePos {
@@ -147,7 +140,7 @@ public class Client {
 		if (!mod.delete()) {
 			mod.deleteOnExit();
 			final String msg = Reference.NAME+" was unable to delete file "+mod.getPath()+" the game will now try to delete it on exit. If this dialog appears again, delete it manually.";
-			Reference.logger.error(msg);
+			Log.error(msg);
 			if (!GraphicsEnvironment.isHeadless())
 				JOptionPane.showMessageDialog(null, msg, "An update error has occured", JOptionPane.ERROR_MESSAGE);
 		}

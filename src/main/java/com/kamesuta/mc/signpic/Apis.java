@@ -12,10 +12,14 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.signpic.http.shortening.BitlyShortener;
+import com.kamesuta.mc.signpic.http.shortening.GooglShortener;
+import com.kamesuta.mc.signpic.http.shortening.IShortener;
+import com.kamesuta.mc.signpic.http.shortening.ShorteningRequest;
 import com.kamesuta.mc.signpic.http.upload.GyazoUpload;
 import com.kamesuta.mc.signpic.http.upload.IUploader;
 import com.kamesuta.mc.signpic.http.upload.ImgurUpload;
-import com.kamesuta.mc.signpic.http.upload.UploadContent;
+import com.kamesuta.mc.signpic.http.upload.UploadRequest;
 import com.kamesuta.mc.signpic.information.Info;
 import com.kamesuta.mc.signpic.information.Informations;
 
@@ -44,17 +48,29 @@ public class Apis {
 
 	private static final Random rnd = new Random();
 
-	public final MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<Apis.ImageUploaderFactory>() {
+	public final MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
 		@Override
 		public String getConfig() {
-			return Config.instance.apiType;
+			return Config.instance.apiUploaderType.get();
 		}
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Upload", "Type", "").set(setting);
-			Config.instance.get("Api.Upload", "Key", "").set("");
-			Config.instance.save();
+			Config.instance.apiUploaderType.set(setting);
+			Config.instance.apiUploaderKey.set("");
+		};
+	};
+
+	public final MapSetting<URLShortenerFactory> urlShorteners = new MapSetting<URLShortenerFactory>() {
+		@Override
+		public String getConfig() {
+			return Config.instance.apiShortenerType.get();
+		}
+
+		@Override
+		public void setConfig(final String setting) {
+			Config.instance.apiShortenerType.set(setting);
+			Config.instance.apiShortenerKey.set("");
 		};
 	};
 
@@ -62,26 +78,48 @@ public class Apis {
 		this.imageUploaders.registerSetting(name, uploader);
 	}
 
-	public static class KeySetting extends Setting {
-		public KeySetting() {
-		}
+	public void registerURLShortener(final String name, final URLShortenerFactory shortener) {
+		this.urlShorteners.registerSetting(name, shortener);
+	}
 
+	public static abstract class KeySetting extends Setting {
 		public KeySetting(final Set<String> keys) {
 			if (keys!=null)
 				for (final String key : keys)
 					registerSetting(key);
 		}
+	}
+
+	public static class UploaderKeySetting extends KeySetting {
+		public UploaderKeySetting(final Set<String> keys) {
+			super(keys);
+		}
 
 		@Override
 		public String getConfig() {
-			return Config.instance.apiKey;
+			return Config.instance.apiUploaderKey.get();
 		}
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.instance.get("Api.Upload", "Key", "").set(setting);
-			Config.instance.save();
-		};
+			Config.instance.apiUploaderKey.set(setting);
+		}
+	}
+
+	public static class ShorteningKeySetting extends KeySetting {
+		public ShorteningKeySetting(final Set<String> keys) {
+			super(keys);
+		}
+
+		@Override
+		public String getConfig() {
+			return Config.instance.apiShortenerKey.get();
+		}
+
+		@Override
+		public void setConfig(final String setting) {
+			Config.instance.apiShortenerKey.set(setting);
+		}
 	}
 
 	public static abstract class Setting {
@@ -138,10 +176,18 @@ public class Apis {
 		}
 	}
 
-	public static interface ImageUploaderFactory {
-		IUploader create(UploadContent upload, String key) throws IOException;
-
+	public static interface ApiFactory {
 		Set<String> keys();
+
+		KeySetting keySettings();
+	}
+
+	public static interface ImageUploaderFactory extends ApiFactory {
+		IUploader create(UploadRequest upload, String key) throws IOException;
+	}
+
+	public static interface URLShortenerFactory extends ApiFactory {
+		IShortener create(ShorteningRequest upload, String key) throws IOException;
 	}
 
 	public void init() {
@@ -161,8 +207,13 @@ public class Apis {
 			}
 
 			@Override
-			public IUploader create(final UploadContent upload, final String key) throws IOException {
+			public IUploader create(final UploadRequest upload, final String key) throws IOException {
 				return new GyazoUpload(upload, key);
+			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new UploaderKeySetting(keys());
 			}
 		});
 		registerImageUploader("Imgur", new ImageUploaderFactory() {
@@ -181,8 +232,63 @@ public class Apis {
 			}
 
 			@Override
-			public IUploader create(final UploadContent upload, final String key) throws IOException {
+			public IUploader create(final UploadRequest upload, final String key) throws IOException {
 				return new ImgurUpload(upload, key);
+			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new UploaderKeySetting(keys());
+			}
+		});
+		registerURLShortener("Bitly", new URLShortenerFactory() {
+			@Override
+			public Set<String> keys() {
+				final Set<String> keys = Sets.newHashSet();
+				List<Info.Api.Shortener.Bitly.Config> configs = null;
+				try {
+					configs = Informations.instance.getSource().info.apis.shortener.bitly.config;
+					for (final Info.Api.Shortener.Bitly.Config config : configs)
+						if (config!=null)
+							keys.add(config.key);
+				} catch (final NullPointerException e) {
+				}
+				return keys;
+			}
+
+			@Override
+			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
+				return new BitlyShortener(upload, key);
+			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new ShorteningKeySetting(keys());
+			}
+		});
+		registerURLShortener("Googl", new URLShortenerFactory() {
+			@Override
+			public Set<String> keys() {
+				final Set<String> keys = Sets.newHashSet();
+				List<Info.Api.Shortener.Googl.Config> configs = null;
+				try {
+					configs = Informations.instance.getSource().info.apis.shortener.googl.config;
+					for (final Info.Api.Shortener.Googl.Config config : configs)
+						if (config!=null)
+							keys.add(config.key);
+				} catch (final NullPointerException e) {
+				}
+				return keys;
+			}
+
+			@Override
+			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
+				return new GooglShortener(upload, key);
+			}
+
+			@Override
+			public KeySetting keySettings() {
+				return new ShorteningKeySetting(keys());
 			}
 		});
 		final Pattern p = Pattern.compile("[^\\w]");

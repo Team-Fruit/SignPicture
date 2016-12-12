@@ -67,7 +67,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glPopMatrix();
 	}
 
-	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z, final float rotateratio) {
+	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z) {
 		// Vanilla Translate
 		final Block block = tile.getBlockType();
 		final float f1 = 0.6666667F;
@@ -76,7 +76,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (block==Blocks.standing_sign) {
 			OpenGL.glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
 			final float f2 = tile.getBlockMetadata()*360/16.0F;
-			OpenGL.glRotatef(-f2*rotateratio, 0.0F, 1.0F, 0.0F);
+			OpenGL.glRotatef(-f2, 0.0F, 1.0F, 0.0F);
 		} else {
 			final int j = tile.getBlockMetadata();
 			f3 = 0.0F;
@@ -89,7 +89,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 				f3 = -90.0F;
 
 			OpenGL.glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
-			OpenGL.glRotatef(-f3*rotateratio, 0.0F, 1.0F, 0.0F);
+			OpenGL.glRotatef(-f3, 0.0F, 1.0F, 0.0F);
 			OpenGL.glTranslatef(0.0F, 0.0F, -0.4375F);
 		}
 	}
@@ -99,12 +99,12 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				RenderHelper.startTexture();
-				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity);
+				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity.get().floatValue());
 				super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 
 			OpenGL.glPushMatrix();
-			translateBase(tile, x, y, z, 1f);
+			translateBase(tile, x, y, z);
 
 			// Draw Canvas
 			OpenGL.glDisable(GL_CULL_FACE);

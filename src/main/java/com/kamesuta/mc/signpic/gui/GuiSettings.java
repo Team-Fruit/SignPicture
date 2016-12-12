@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +18,7 @@ import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelect;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
+import com.kamesuta.mc.bnnwidget.component.MTab;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -29,10 +29,15 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
+import com.kamesuta.mc.signpic.Apis.ApiFactory;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
+import com.kamesuta.mc.signpic.Apis.MapSetting;
 import com.kamesuta.mc.signpic.Apis.Setting;
+import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Config.ConfigProperty;
+import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -41,7 +46,6 @@ import com.kamesuta.mc.signpic.render.RenderHelper;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.config.Property;
 
 public class GuiSettings extends WPanel {
 	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
@@ -65,7 +69,7 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui;
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui.get();
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
@@ -138,99 +142,45 @@ public class GuiSettings extends WPanel {
 										drawTexture(a);
 									}
 								});
-								add(new WPanel(new R(Coord.left(5), Coord.width(200), Coord.top(33), Coord.height(82))) {
-									@Override
-									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-										final Area a = getGuiPosition(pgp);
-										RenderHelper.startShape();
-										OpenGL.glColor4f(0f, 0f, 0f, .2f);
-										OpenGL.glLineWidth(.5f);
-										draw(a, GL_LINE_LOOP);
-										super.draw(ev, pgp, p, frame, opacity);
-									}
-
-									protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
-										@Override
-										protected void initWidget() {
-											final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(Apis.instance.imageUploaders.getConfig());
-											Set<String> keys = null;
-											if (factory!=null)
-												keys = factory.keys();
-											box.add(new Key(new R(), new Apis.KeySetting(keys)));
-										}
-									};
-
-									@Override
-									protected void initWidget() {
-										float top = 1;
-										add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage")));
-										add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
-											@Override
-											public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-												final Area a = getGuiPosition(pgp);
-												RenderHelper.startShape();
-												OpenGL.glColor4f(0f, 0f, 0f, .2f);
-												OpenGL.glLineWidth(.5f);
-												draw(a, GL_LINE_LOOP);
-												super.draw(ev, pgp, p, frame, opacity);
-											}
-
-											@Override
-											protected void initWidget() {
-												add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage.type")));
-												add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
-													@Override
-													protected void initWidget() {
-														setSelector(new ListSelector() {
-															{
-																final List<String> settings = Lists.newArrayList("");
-																settings.addAll(Apis.instance.imageUploaders.getSettings());
-																setList(settings);
-															}
-														});
-														this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
-														setText(Apis.instance.imageUploaders.getConfig());
-													}
-
-													@Override
-													protected void onChanged(final String oldText, final String newText) {
-														if (!StringUtils.equals(oldText, newText)) {
-															if (!StringUtils.equals(newText, Apis.instance.imageUploaders.getConfig()))
-																Apis.instance.imageUploaders.setConfig(newText);
-															final ImageUploaderFactory factory = Apis.instance.imageUploaders.solve(newText);
-															Set<String> keys = null;
-															if (factory!=null)
-																keys = factory.keys();
-															box.add(new Key(new R(), new Apis.KeySetting(keys)));
-														}
-													}
-												});
-											}
-										});
-										add(this.box);
-									}
-								});
-								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
+								final MTab tab = new MTab(new R(Coord.left(5), Coord.width(250), Coord.top(33), Coord.height(82)), Coord.CoordSide.Left, 15f, 15f);
+								tab.addTab(I18n.format("signpic.gui.settings.api.upimage"), new GuiApis<ImageUploaderFactory>(new R(), Apis.instance.imageUploaders, I18n.format("signpic.gui.settings.api.upimage.desc")));
+								tab.addTab(I18n.format("signpic.gui.settings.api.urlshortener"), new GuiApis<URLShortenerFactory>(new R(), Apis.instance.urlShorteners, I18n.format("signpic.gui.settings.api.urlshortener.desc")));
+								add(tab);
+								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected void initWidget() {
 										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
 											{
-												check(getConfig().getBoolean(true));
+												check(getConfig().get());
 											}
 
-											private Property getConfig() {
-												return Config.instance.get("Multiplay.PreventAntiAutoSign", "Enable", true);
+											private ConfigProperty<Boolean> getConfig() {
+												return Config.instance.multiplayPAAS;
 											}
 
 											@Override
 											protected void onCheckChanged(final boolean oldCheck) {
 												getConfig().set(isCheck());
-												Config.instance.save();
 											}
 										});
 										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
 									}
 								});
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+40), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										ContentManager.instance.reloadAll();
+										return true;
+									}
+								}.setText(I18n.format("signpic.gui.settings.sign.reloadall")));
+								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+										ContentManager.instance.redownloadAll();
+										OverlayFrame.instance.pane.task.show(2f);
+										return true;
+									}
+								}.setText(I18n.format("signpic.gui.settings.sign.redownloadall")));
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -371,7 +321,89 @@ public class GuiSettings extends WPanel {
 		});
 	}
 
-	class Key extends WPanel {
+	static class GuiApis<E extends ApiFactory> extends WPanel {
+		protected MapSetting<E> typesetting;
+		protected String title;
+
+		public GuiApis(final R position, final MapSetting<E> typesetting, final String title) {
+			super(position);
+			this.typesetting = typesetting;
+			this.title = title;
+		}
+
+		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+			final Area a = getGuiPosition(pgp);
+			RenderHelper.startShape();
+			OpenGL.glColor4f(0f, 0f, 0f, .2f);
+			OpenGL.glLineWidth(.5f);
+			draw(a, GL_LINE_LOOP);
+			super.draw(ev, pgp, p, frame, opacity);
+		}
+
+		protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
+			@Override
+			protected void initWidget() {
+				final ApiFactory factory = GuiApis.this.typesetting.solve(GuiApis.this.typesetting.getConfig());
+				if (factory!=null)
+					GuiApis.this.box.set(new Key(new R(), factory.keySettings()));
+				else
+					GuiApis.this.box.set(null);
+			}
+		};
+
+		@Override
+		protected void initWidget() {
+			float top = 1;
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(this.title));
+			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
+				@Override
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+					final Area a = getGuiPosition(pgp);
+					RenderHelper.startShape();
+					OpenGL.glColor4f(0f, 0f, 0f, .2f);
+					OpenGL.glLineWidth(.5f);
+					draw(a, GL_LINE_LOOP);
+					super.draw(ev, pgp, p, frame, opacity);
+				}
+
+				@Override
+				protected void initWidget() {
+					add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.type")));
+					add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
+						@Override
+						protected void initWidget() {
+							setSelector(new ListSelector() {
+								{
+									final List<String> settings = Lists.newArrayList("");
+									settings.addAll(GuiApis.this.typesetting.getSettings());
+									setList(settings);
+								}
+							});
+							this.field.setWatermark(I18n.format("signpic.gui.settings.default"));
+							setText(GuiApis.this.typesetting.getConfig());
+						}
+
+						@Override
+						protected void onChanged(final String oldText, final String newText) {
+							if (!StringUtils.equals(oldText, newText)) {
+								if (!StringUtils.equals(newText, GuiApis.this.typesetting.getConfig()))
+									GuiApis.this.typesetting.setConfig(newText);
+								final ApiFactory factory = GuiApis.this.typesetting.solve(newText);
+								if (factory!=null)
+									GuiApis.this.box.set(new Key(new R(), factory.keySettings()));
+								else
+									GuiApis.this.box.set(null);
+							}
+						}
+					});
+				}
+			});
+			add(this.box);
+		}
+	}
+
+	static class Key extends WPanel {
 		protected Setting setting;
 
 		public Key(final R position, final Setting setting) {
@@ -391,7 +423,7 @@ public class GuiSettings extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.upimage.key")));
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.key")));
 			add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {

@@ -22,12 +22,6 @@ public class ConfigGui extends GuiConfig {
 		final List<IConfigElement> list = new ArrayList<IConfigElement>();
 
 		for (final String cat : Config.instance.getCategoryNames()) {
-			if (cat.equals("versionchecker"))
-				continue;
-
-			if (cat.equals("settings"))
-				continue;
-
 			final ConfigCategory cc = Config.instance.getCategory(cat);
 
 			if (cc.isChild())

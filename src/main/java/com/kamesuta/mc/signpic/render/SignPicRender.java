@@ -32,10 +32,10 @@ public class SignPicRender extends WGui {
 
 	@CoreEvent
 	public void onRender(final RenderWorldLastEvent event) {
-		float opacity = Config.instance.renderPreviewFixedOpacity;
+		float opacity = Config.instance.renderPreviewFixedOpacity.get().floatValue();
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
-			opacity = Config.instance.renderPreviewFloatedOpacity;
+			opacity = Config.instance.renderPreviewFloatedOpacity.get().floatValue();
 		}
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
 			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {

@@ -12,7 +12,7 @@ public class Communicator {
 	public static Communicator instance = new Communicator();
 
 	private final NotifyArrayDeque<Progressable> tasks = new NotifyArrayDeque<Progressable>();
-	private final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.communicateThreads,
+	private final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.communicateThreads.get(),
 			new ThreadFactoryBuilder().setNameFormat("signpic-http-%d").build());
 
 	public NotifyArrayDeque<Progressable> getTasks() {

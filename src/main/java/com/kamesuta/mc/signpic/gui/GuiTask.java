@@ -15,6 +15,7 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -34,6 +35,12 @@ public class GuiTask extends WPanel {
 		super(position);
 	}
 
+	protected Timer showtime = new Timer();
+
+	public void show(final float j) {
+		this.showtime.set(-j);
+	}
+
 	protected boolean oshow;
 	protected VMotion oright = V.am(0f);
 
@@ -46,11 +53,6 @@ public class GuiTask extends WPanel {
 			@Override
 			protected void initWidget() {
 				add(new WPanel(new R(Coord.right(V.per(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
-					protected Timer showtime = new Timer();
-
-					public void show(final float j) {
-						this.showtime.set(-j);
-					}
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
@@ -65,8 +67,8 @@ public class GuiTask extends WPanel {
 					public void update(final WEvent ev, final Area pgp, final Point p) {
 						final Area a = getGuiPosition(pgp);
 						if (a.pointInside(p))
-							this.showtime.set(-1f);
-						final boolean b = this.showtime.getTime()<0f;
+							GuiTask.this.showtime.set(-1f);
+						final boolean b = GuiTask.this.showtime.getTime()<0f;
 						if (b) {
 							if (!GuiTask.this.show) {
 								GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 1f)).start();
@@ -149,12 +151,15 @@ public class GuiTask extends WPanel {
 
 		State state;
 		Progress progress;
+		ILoadCancelable cancelable;
 
 		public TaskElement(final R position, final VMotion top, final Progressable progressable) {
 			super(position);
 			this.top = top;
 			this.state = progressable.getState();
 			this.progress = progressable.getState().getProgress();
+			if (progressable instanceof ILoadCancelable)
+				this.cancelable = (ILoadCancelable) progressable;
 		}
 
 		@Override
@@ -173,8 +178,20 @@ public class GuiTask extends WPanel {
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 			final Area a = getGuiPosition(pgp);
-			if (pgp.areaInside(a))
+			final Area b = new Area(pgp.x1(), a.y1(), pgp.x2(), a.y2());
+			if (pgp.areaInside(b))
 				super.draw(ev, pgp, p, frame, popacity);
+		}
+
+		@Override
+		public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+			final Area a = getGuiPosition(pgp);
+			if (a.pointInside(p)) {
+				if (this.cancelable!=null)
+					this.cancelable.cancel();
+				return true;
+			}
+			return false;
 		}
 
 		@Override

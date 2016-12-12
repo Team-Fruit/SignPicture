@@ -8,9 +8,11 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.http.upload.UploadContent;
+import com.kamesuta.mc.signpic.http.upload.UploadApiUtil;
+import com.kamesuta.mc.signpic.http.upload.UploadRequest;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.state.State;
+import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +49,7 @@ public class McUiUpload extends UiUpload {
 
 	@Override
 	protected void apply(final File f) {
-		if (FileUtilitiy.upload(UploadContent.fromFile(f, new State())))
+		if (UploadApiUtil.upload(UploadRequest.fromFile(f, new State())))
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
 	}

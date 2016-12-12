@@ -24,7 +24,7 @@ public class ResourceImage extends Image {
 
 	@Override
 	public String getLocal() {
-		return "Resource:" + StringUtils.substring(this.content.id.id(), 1);
+		return "Resource:"+StringUtils.substring(this.content.id.id(), 1);
 	}
 
 	@Override
@@ -48,5 +48,9 @@ public class ResourceImage extends Image {
 
 	@Override
 	public void onCollect() {
+	}
+
+	@Override
+	public void cancel() {
 	}
 }
