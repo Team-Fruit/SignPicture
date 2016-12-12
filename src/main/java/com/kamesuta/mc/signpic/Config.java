@@ -58,6 +58,8 @@ public final class Config extends Configuration {
 	public final ConfigProperty<String> apiShortenerType = ConfigProperty.propertyString(this, get("Api.Shortener", "Type", ""));
 	public final ConfigProperty<String> apiShortenerKey = ConfigProperty.propertyString(this, get("Api.Shortener", "Key", ""));
 
+	public final ConfigProperty<Boolean> debugLog = ConfigProperty.propertyBoolean(this, get("Debug", "DebugLog", false)).setComment("Output Debug Log");
+
 	public ConfigProperty<Boolean> guiExperienced = ConfigProperty.propertyBoolean(this, get("Internal", "GuiExperienced", false)).setComment("Have you ever opened SignPicture GUI yet?");
 
 	public Config(final File configFile) {
