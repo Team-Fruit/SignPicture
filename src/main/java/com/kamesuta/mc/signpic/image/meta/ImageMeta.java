@@ -54,7 +54,7 @@ public class ImageMeta {
 					b = parseMeta(src, key, value)&&b;
 			}
 		}
-		Log.debuginfo(src);
+		Log.debuginfo("signmeta={"+src+"}, unsupported="+!b);
 		this.hasInvalidMeta = this.hasInvalidMeta||!b;
 		return this;
 	}
