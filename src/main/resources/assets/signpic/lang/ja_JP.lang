@@ -8,6 +8,7 @@ signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 
 # Item
+signpic.item.hold=§3§o%s §7キーを押すと詳細を表示します
 signpic.item.sign.desc=§a%s§d を押してSignPictureを編集
 signpic.item.sign.desc.keyconflict=§a%s§c の §a%s§c を開き、キー競合を解決してください！
 signpic.item.sign.desc.keyconflict.key=§c - 競合 §a%s§c の §a%s

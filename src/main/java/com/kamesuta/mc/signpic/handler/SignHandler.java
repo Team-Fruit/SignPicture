@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
@@ -228,14 +229,19 @@ public class SignHandler {
 					event.toolTip.set(0, id.getName());
 				else
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
-				final ImageMeta meta = entry.getMeta();
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-				if (id.hasName())
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
+				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
+					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
+				else {
+					final ImageMeta meta = entry.getMeta();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					if (id.hasName())
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+				}
 			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
