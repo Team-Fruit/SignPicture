@@ -9,7 +9,7 @@ import com.kamesuta.mc.signpic.CoreEvent;
 public class EntryManager implements ITickEntry {
 	public static final EntryManager instance = new EntryManager();
 
-	private final Map<EntryId, EntrySlot<Entry>> registry = Maps.newHashMap();
+	private final Map<EntryId, EntrySlot<Entry>> registry = Maps.newConcurrentMap();
 
 	protected Entry get(final EntryId id) {
 		final EntrySlot<Entry> entries = this.registry.get(id);
@@ -29,9 +29,8 @@ public class EntryManager implements ITickEntry {
 			final Map.Entry<EntryId, EntrySlot<Entry>> entry = itr.next();
 			final EntrySlot<Entry> collectableSignEntry = entry.getValue();
 
-			if (collectableSignEntry.shouldCollect()) {
+			if (collectableSignEntry.shouldCollect())
 				itr.remove();
-			}
 		}
 	}
 }

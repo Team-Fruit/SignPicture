@@ -2,6 +2,8 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.Color;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
@@ -48,18 +50,18 @@ public class MButton extends WBase {
 		final Area abs = getGuiPosition(pgp);
 		if (abs.pointInside(p)) {
 			if (isEnabled())
-			if (onClicked(ev, pgp, p, button)) {
-				if (this.actionCommand != null)
-					ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
+				if (onClicked(ev, pgp, p, button)) {
+					if (this.actionCommand!=null)
+						ev.eventDispatch(this.actionCommand, Integer.valueOf(button));
 					playPressButtonSound();
-			}
+				}
 			return true;
-	}
+		}
 		return false;
 	}
 
 	public static void playPressButtonSound() {
-				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 
 	protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -71,12 +73,12 @@ public class MButton extends WBase {
 		final Area a = getGuiPosition(pgp);
 		final float opacity = getGuiOpacity(popacity);
 
-		if (Config.instance.informationTryNew) {
+		if (Config.instance.informationTryNew.get()) {
 			RenderHelper.startShape();
 			if (isEnabled()) {
 				OpenGL.glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
-		}
+			}
 			OpenGL.glColor4f(1f, 1f, 1f, opacity*this.o.get()*.3f);
 			draw(a);
 			OpenGL.glLineWidth(1f);
@@ -86,9 +88,9 @@ public class MButton extends WBase {
 				OpenGL.glColor4f(.5f, .5f, .5f, opacity);
 			draw(a, GL_LINE_LOOP);
 		} else {
-		RenderHelper.startTexture();
-			OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		texture().bindTexture(button);
+			RenderHelper.startTexture();
+			OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity);
+			texture().bindTexture(button);
 			final int state = !isEnabled() ? 0 : a.pointInside(p) ? 2 : 1;
 
 			drawTextureModalSize(a.x1(), a.y1(), a.w()/2, a.h()/2, 0, state*80, a.w()/2, a.h()/2);
@@ -97,7 +99,7 @@ public class MButton extends WBase {
 			drawTextureModalSize(a.x1()+a.w()/2, a.y1()+a.h()/2, a.w()/2, a.h()/2, 256-a.w()/2, state*80+80-a.h()/2, a.w()/2, a.h()/2);
 		}
 		if (this.text!=null)
-			drawText(ev, pgp, p, frame);
+			drawText(ev, pgp, p, frame, opacity);
 	}
 
 	protected VMotion o = V.pm(0).start();
@@ -117,10 +119,11 @@ public class MButton extends WBase {
 		}
 	}
 
-	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		RenderHelper.startTexture();
-		fontColor(getTextColour(ev, pgp, p, frame));
+		final Color c = new Color(getTextColour(ev, pgp, p, frame));
+		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) (c.getAlpha()*opacity));
 		drawString(this.text, a, Align.CENTER, VerticalAlign.MIDDLE, true);
 	}
 

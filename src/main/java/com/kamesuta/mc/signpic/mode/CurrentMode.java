@@ -11,10 +11,19 @@ public class CurrentMode {
 	private CurrentMode() {
 	}
 
+	private boolean isShortening;
 	private EntryId handSign = EntryId.blank;
 	private EntryId entryId = EntryId.blank;
 	private Mode mode = Mode.NONE;
 	private final EnumSet<State> states = EnumSet.noneOf(State.class);
+
+	public void setShortening(final boolean isShortening) {
+		this.isShortening = isShortening;
+	}
+
+	public boolean isShortening() {
+		return this.isShortening;
+	}
 
 	public void setMode(final Mode mode) {
 		this.mode = mode;
@@ -69,7 +78,7 @@ public class CurrentMode {
 	}
 
 	public static enum Mode {
-		PLACE("signpic.over.mode.place"), LOAD("signpic.over.mode.load"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
+		PLACE("signpic.over.mode.place"), OPTION("signpic.over.mode.option"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
 		;
 
 		public final String message;
@@ -80,7 +89,7 @@ public class CurrentMode {
 	}
 
 	public static enum State {
-		CONTINUE, SEE, PREVIEW, LOAD_CONTENT, LOAD_META,
+		CONTINUE, SEE, PREVIEW,
 		;
 	}
 }

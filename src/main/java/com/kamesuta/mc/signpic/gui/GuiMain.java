@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.lwjgl.input.Keyboard;
 
-import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -15,7 +14,6 @@ import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.bnnwidget.component.MSelectButton;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
@@ -28,16 +26,18 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.gui.file.FileUtilitiy;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
+import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
+import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -72,10 +72,14 @@ public class GuiMain extends WFrame {
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		OverlayFrame.instance.delegate();
+		setGuiPauseGame(false);
 	}
 
 	@Override
 	protected void initWidget() {
+		if (CurrentMode.instance.isMode(CurrentMode.Mode.PLACE))
+			CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+		CurrentMode.instance.setMode();
 		add(new WPanel(new R()) {
 			@Override
 			protected void initWidget() {
@@ -257,13 +261,13 @@ public class GuiMain extends WFrame {
 									final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 									FileUtilitiy.transfer(transferable);
 								} catch (final Exception e) {
-									Client.notice(I18n.format("signpic.gui.notice.paste.unsupported", e), 2);
+									Log.notice(I18n.format("signpic.gui.notice.paste.unsupported", e));
 								}
 								return true;
 							}
 						}.setText(I18n.format("signpic.gui.editor.paste")));
 
-						float bottom = 20*4+5;
+						float bottom = 20*3+5;
 
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
@@ -277,59 +281,31 @@ public class GuiMain extends WFrame {
 								return CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 							}
 						}.setText(I18n.format("signpic.gui.editor.continue")));
-						add(new MSelectButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15)), 15) {
+						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected void initWidget() {
-								setSelector(new ButtonSelector() {
-									{
-										setList(Lists.<MButton> newArrayList(
-												new LoadButton(new R()) {
-													@Override
-													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, true);
-														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-														requestClose();
-														return true;
-													}
-												}.setText(I18n.format("signpic.gui.editor.load")),
-												new LoadButton(new R()) {
-													@Override
-													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, true);
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, false);
-														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-														requestClose();
-														return true;
-													}
-												}.setText(I18n.format("signpic.gui.editor.load.content")),
-												new LoadButton(new R()) {
-													@Override
-													protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_CONTENT, false);
-														CurrentMode.instance.setState(CurrentMode.State.LOAD_META, true);
-														CurrentMode.instance.setMode(CurrentMode.Mode.LOAD);
-														requestClose();
-														return true;
-													}
-												}.setText(I18n.format("signpic.gui.editor.load.meta"))));
-									}
-								});
-								super.initWidget();
+							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+								CurrentMode.instance.setMode(CurrentMode.Mode.OPTION);
+								requestClose();
+								return true;
 							}
-						});
+
+							@Override
+							public boolean isHighlight() {
+								return CurrentMode.instance.isMode(CurrentMode.Mode.OPTION);
+							}
+						}.setText(I18n.format("signpic.gui.editor.option")));
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								if (entry.isValid())
-									if (entry.id.isPlaceable()) {
-										CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
-										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
-										requestClose();
-										return true;
-									} else
-										Client.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+								if (entry.isValid()) {
+									if (!entry.id.isPlaceable())
+										ShortenerApiUtil.requestShoretning(entry.content().id);
+									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
+									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
+									requestClose();
+									return true;
+								}
 								return false;
 							}
 
@@ -344,21 +320,6 @@ public class GuiMain extends WFrame {
 								return entry.isValid()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						}.setText(I18n.format("signpic.gui.editor.place")));
-						add(new MButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
-							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-								if (CurrentMode.instance.isMode()) {
-									CurrentMode.instance.setMode();
-									return true;
-								}
-								return false;
-							}
-
-							@Override
-							public boolean isEnabled() {
-								return CurrentMode.instance.isMode();
-							}
-						}.setText(I18n.format("signpic.gui.editor.cancel")));
 					}
 
 					@Override
@@ -396,12 +357,10 @@ public class GuiMain extends WFrame {
 				add(OverlayFrame.instance.pane);
 			}
 		});
-		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
-			Informations.instance.check(null);
-		if (!Config.instance.guiExperienced) {
-			Config.instance.get("Internal", "GuiExperienced", false).set(true);
-			Config.instance.save();
-		}
+		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta.get() ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
+			Informations.instance.onlineCheck(null);
+		if (!Config.instance.guiExperienced.get())
+			Config.instance.guiExperienced.set(true);
 	}
 
 	public MainTextField getTextField() {
@@ -415,11 +374,6 @@ public class GuiMain extends WFrame {
 		OverlayFrame.instance.release();
 	}
 
-	@Override
-	public boolean doesGuiPauseGame() {
-		return super.sDoesGuiPauseGame();
-	}
-
 	public static boolean setContentId(final String id) {
 		if (Client.mc.currentScreen instanceof GuiMain) {
 			final GuiMain editor = (GuiMain) Client.mc.currentScreen;
@@ -431,25 +385,6 @@ public class GuiMain extends WFrame {
 			signbuilder.setURI(id);
 			CurrentMode.instance.setEntryId(signbuilder.build());
 			return false;
-		}
-	}
-
-	public abstract class LoadButton extends FunnyButton {
-		public LoadButton(final R position) {
-			super(position);
-		}
-
-		@Override
-		protected abstract boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button);
-
-		@Override
-		public boolean isHighlight() {
-			return CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
-		}
-
-		@Override
-		public boolean isEnabled() {
-			return !CurrentMode.instance.isMode(CurrentMode.Mode.LOAD);
 		}
 	}
 

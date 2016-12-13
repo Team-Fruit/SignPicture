@@ -7,7 +7,7 @@ import java.util.BitSet;
 import org.lwjgl.opengl.EXTFramebufferObject;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -88,7 +88,7 @@ public class StencilClip {
 					ReflectionHelper.<BitSet, MinecraftForgeClient> getPrivateValue(MinecraftForgeClient.class, null, "stencilBits").set(0, 8);
 				}
 			} catch (final Throwable e) {
-				Reference.logger.info("Failed to enable stencil buffer", e);
+				Log.info("Failed to enable stencil buffer", e);
 			}
 	}
 }

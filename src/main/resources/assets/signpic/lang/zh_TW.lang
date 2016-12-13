@@ -1,0 +1,108 @@
+# Thanks for this translation. It is from "Minecraft RTM鐵路總局" ( http://bit.ly/signpic-Chinese )
+
+﻿# Overlay
+## Overlay
+signpic.over.mode.place=放置告示牌和運用圖像
+signpic.over.mode.setpreview=單擊方塊和設置預覽位置
+
+## F3
+signpic.over.sign=[§6告示牌§r] §7[§r%s§7]
+signpic.over.id=[§6告示牌-網址§r] %s
+signpic.over.size=[§6告示牌-尺寸§r] §7[§r%s§7] [§d告示牌:§7[§r%s§7×§r%s§7], §d圖像:§7[§r%s§7×§r%s§7], §d視圖:§7[§r%s§7×§r%s§7]]
+signpic.over.status=[§6告示牌-狀態§r] %s
+signpic.over.advmsg=[§6告示牌-資訊§r] %s
+signpic.over.raw=[§6告示牌-未加工§r] [[§r%s§7], [§r%s§7], [§r%s§7], [§r%s§7]]
+signpic.over.local=[§6告示牌-地方§r] §7[§r%s§7]
+
+# Chat
+signpic.chat.error.place=[§6標誌圖片§r] 很抱歉，由於發生錯誤，您無法使用此功能。
+
+# Key
+signpic.key.category=告示牌圖片
+signpic.key.gui=開起GUI
+
+# GUI
+## Sign Editor
+signpic.gui.editor.see=查看標誌
+signpic.gui.editor.preview=預覽
+signpic.gui.editor.continue=繼續
+signpic.gui.editor.place=地點
+signpic.gui.editor.cancel=取消
+signpic.gui.editor.file=上傳
+signpic.gui.editor.paste=貼文
+signpic.gui.editor.textfield=請放置網址！
+### Size
+signpic.gui.editor.size.category=尺寸
+signpic.gui.editor.size.width=寬度
+signpic.gui.editor.size.height=高度
+### Offset
+signpic.gui.editor.offset.category=偏移
+### Rotation
+signpic.gui.editor.rotation.category=迴轉
+## Settings
+signpic.gui.settings.api.upimage=圖像上傳設置
+signpic.gui.settings.api.type=API 類型
+signpic.gui.settings.api.key=API 密碼
+signpic.gui.settings.default=預設
+signpic.gui.settings.config=配置
+signpic.gui.settings.paas=防止作弊
+## Update
+signpic.gui.update.message=新版本的SignPicture！ 可用！ 請點擊這裡更新。
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=請稍候 ( %d / %d 字母 )
+signpic.gui.paas.time=Esc取消 ( %.2f / %.2f 秒 )
+
+# Notice
+signpic.gui.notice.paste.unsupported=不支援
+signpic.gui.notice.paste.typeunsupported=不支援的類型
+signpic.gui.notice.paste.error=貼上時錯誤: %s
+signpic.gui.notice.uploading=上傳中... %s
+signpic.gui.notice.uploaded=上傳完成 %s
+signpic.gui.notice.uploadfailed=上傳失敗: §7%s
+signpic.gui.notice.downloading=下載中... %s
+signpic.gui.notice.downloaded=下載完成 %s
+signpic.gui.notice.downloadfailed=下載失敗: §7%s
+signpic.gui.notice.versioning.downloadedAlready=關閉您的遊戲，刪除舊版本，並重新加載更新！
+signpic.gui.notice.versioning.downloadingAlready=已下載更新！
+
+# Upload UI
+signpic.ui.title=SignPicture!檔案
+signpic.ui.description=檔案上傳！
+signpic.ui.drop=拖放圖像
+signpic.ui.select=或選擇要上傳的圖像
+signpic.ui.title.file=SignPicture!檔案
+
+# Image State
+signpic.state.init=等候中...
+signpic.state.initalized=初始化！
+signpic.state.downloading=正在下載...(%d%%)
+signpic.state.downloaded=下載完成！
+signpic.state.loading=載入中... (%d%%)
+signpic.state.loaded=已完成加載！
+signpic.state.available=可用！ (%d%%)
+signpic.state.failed=加載失敗... (%d%%)
+signpic.state.error=錯誤
+signpic.state.format.unsupported=不支援，嘗試新版本！
+
+# Image State Additional Message
+signpic.advmsg.invalidurl=無效的網址
+signpic.advmsg.loadstopped=停止下載中...
+signpic.advmsg.capacityover=容量結束
+signpic.advmsg.invalidimage=無效的圖片
+signpic.advmsg.ioerror=讀取失敗: §7%s
+signpic.advmsg.unknown=未知的錯誤: §7%s
+signpic.advmsg.format.unsupported=不支援的標誌圖片
+signpic.advmsg.format.needupdate=嘗試新版本！
+
+# Version Checking
+signpic.versioning.check.start=開始檢查
+signpic.versioning.check.cooldown=檢查失敗：: §7需要冷卻時間
+signpic.versioning.noupdate=沒有可用更新
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] 新的版本可用: ",{"text":"$new$","color":"green"},"."," [",{"text":"下載","color":"green","hoverEvent":{"action":"show_text","value":{"text":"單擊此按鈕可自動下載最新版本","color":"green"}},"clickEvent":$download$},"] [",{"text":"網站","color":"green","hoverEvent":{"action":"show_text","value":{"text":"點擊這個去mod的網站","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"單擊此轉到版本更改日誌","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.startingDownload=[{"text":"開始下載 %s. 請不要刪除您的硬盤。 享受 ","color":"aqua"}]
+signpic.versioning.doneDownloading=完成下載 %s. 刪除您的舊簽名圖片.jar並重新載入您的遊戲更新。
+signpic.versioning.doneDownloadingWithFile=已完成下載 %s. 刪除 %s 並重新載入您的遊戲以進行更新。
+signpic.versioning.downloadedAlready=您已經下載了最新版本。 關閉您的遊戲，從您的mods文件夾中刪除舊版本，並重新加載更新！
+signpic.versioning.downloadingAlready=更新已經下載，需要一些時間，你會嗎？
+signpic.versioning.error=哇！ 嘗試下載標誌圖片更新時似乎發生了問題。
+signpic.versioning.disabled=抱歉。 此功能目前已停用，盡快恢復。

@@ -24,7 +24,7 @@ public class EntrySlot<T> {
 	}
 
 	public boolean shouldCollect() {
-		return times - this.time > getCollectTimes();
+		return times-this.time>getCollectTimes();
 	}
 
 	public static void Tick() {
@@ -32,6 +32,6 @@ public class EntrySlot<T> {
 	}
 
 	protected int getCollectTimes() {
-		return Config.instance.entryGCtick;
+		return Config.instance.entryGCtick.get();
 	}
 }

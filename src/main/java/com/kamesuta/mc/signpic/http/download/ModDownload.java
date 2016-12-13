@@ -18,9 +18,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.LoadCanceledException;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.http.Communicate;
-import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -48,6 +48,7 @@ public class ModDownload extends Communicate implements Progressable {
 		InputStream input = null;
 		OutputStream output = null;
 		try {
+			setCurrent();
 			final String stringurl = online.version.remote;
 			final String stringlocal = online.version.local;
 			final String local;
@@ -58,7 +59,7 @@ public class ModDownload extends Communicate implements Progressable {
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
-			Client.notice(I18n.format("signpic.gui.notice.downloading", local), 2f);
+			Log.notice(I18n.format("signpic.gui.notice.downloading", local));
 
 			state.downloading = true;
 
@@ -77,7 +78,7 @@ public class ModDownload extends Communicate implements Progressable {
 				protected void afterWrite(final int n) throws IOException {
 					if (ModDownload.this.canceled) {
 						req.abort();
-						throw new CommunicateCanceledException();
+						throw new LoadCanceledException();
 					}
 					ModDownload.this.status.getProgress().setDone(getByteCount());
 				}
@@ -94,7 +95,7 @@ public class ModDownload extends Communicate implements Progressable {
 				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
-			Client.notice(I18n.format("signpic.gui.notice.downloaded", local), 2f);
+			Log.notice(I18n.format("signpic.gui.notice.downloaded", local));
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloadedFile = f1;
@@ -103,12 +104,13 @@ public class ModDownload extends Communicate implements Progressable {
 			onDone(new CommunicateResponse(true, null));
 			return;
 		} catch (final Throwable e) {
-			Reference.logger.warn("Updater Downloading Error", e);
+			Log.warn("Updater Downloading Error", e);
 			final ITextComponent chat = new ChatBuilder().setChat(new TextComponentTranslation("signpic.versioning.error").setStyle(new Style().setColor(TextFormatting.RED))).build();
 			this.result = new ModDLResult(chat);
 			onDone(new CommunicateResponse(false, e));
 			return;
 		} finally {
+			unsetCurrent();
 			IOUtils.closeQuietly(input);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(tmp);
@@ -124,6 +126,7 @@ public class ModDownload extends Communicate implements Progressable {
 	@Override
 	public void cancel() {
 		this.canceled = true;
+		super.cancel();
 	}
 
 	public static class ModDLResult {
