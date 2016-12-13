@@ -1,8 +1,11 @@
 package com.kamesuta.mc.signpic;
 
 import java.io.File;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+
+import com.google.common.collect.Sets;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -12,139 +15,277 @@ public final class Config extends Configuration {
 	public static Config instance;
 
 	private final File configFile;
-	public boolean updatable;
+	private final Set<IReloadableConfig> configs = Sets.newHashSet();
 
-	public String signpicDir = "";
-	public boolean signTooltip = false;
+	public static interface IReloadableConfig {
+		void reload();
+	}
 
-	public int imageWidthLimit = 512;
-	public int imageHeightLimit = 512;
-	public boolean imageAnimationGif = true;
+	public <T extends IReloadableConfig> T registerReload(final T config) {
+		this.configs.add(config);
+		return config;
+	}
 
-	public int entryGCtick = 15*20;
+	public void reload() {
+		for (final IReloadableConfig config : this.configs)
+			config.reload();
+	}
 
-	public int communicateThreads = 3;
+	public final ConfigProperty<String> signpicDir = propertyString(get("General", "SignpicDir", "").setRequiresMcRestart(true));
+	public final ConfigProperty<Boolean> signTooltip = propertyBoolean(get("General", "SignToolTip", false)).setComment("add tooltip line to sign");
 
-	public int contentLoadThreads = 3;
-	public int contentMaxByte = 32*1024*1024;
-	public int contentGCtick = 15*20;
-	public int contentLoadTick = 0;
-	public int contentSyncTick = 0;
+	public final ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512).setRequiresMcRestart(true));
+	public final ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512).setRequiresMcRestart(true));
+	public final ConfigProperty<Boolean> imageAnimationGif = propertyBoolean(get("Image", "AnimateGif", true).setRequiresMcRestart(true));
 
-	public boolean informationNotice = true;
-	public boolean informationJoinBeta = false;
-	public boolean informationUpdateGui = true;
-	public boolean informationTryNew = false;
+	public final ConfigProperty<Integer> entryGCtick = propertyInteger(get("Entry", "GCDelayTick", 15*20));
 
-	public boolean multiplayPAAS = true;
+	public final ConfigProperty<Integer> communicateThreads = propertyInteger(get("Http", "HttpThreads", 3).setRequiresMcRestart(true)).setComment("parallel processing number such as Downloading");
+	public final ConfigProperty<Integer> communicateDLTimedout = propertyInteger(get("Http", "DownloadTimedout", 15000).setRequiresMcRestart(true)).setComment("milliseconds of max waiting response time. 0 is infinity.");
+
+	public final ConfigProperty<Integer> contentLoadThreads = propertyInteger(get("Content", "LoadThreads", 3).setRequiresMcRestart(true)).setComment("parallel processing number such as Image Loading");
+	public final ConfigProperty<Integer> contentMaxByte = propertyInteger(get("Content", "MaxByte", 32*1024*1024)).setComment("limit of size before downloading. 0 is infinity.");
+	public final ConfigProperty<Integer> contentGCtick = propertyInteger(get("Content", "GCDelayTick", 15*20)).setComment("delay ticks of Garbage Collection");
+	public final ConfigProperty<Integer> contentLoadTick = propertyInteger(get("Content", "LoadStartIntervalTick", 0)).setComment("ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...");
+	public final ConfigProperty<Integer> contentSyncTick = propertyInteger(get("Content", "SyncLoadIntervalTick", 0)).setComment("ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading");
+	public final ConfigProperty<Integer> contentMaxRetry = propertyInteger(get("Content", "MaxRetry", 3)).setComment("limit of retry count. 0 is infinity.");
+
+	public final ConfigProperty<Boolean> informationNotice = propertyBoolean(get("Version", "Notice", true));
+	public final ConfigProperty<Boolean> informationJoinBeta;
+	public final ConfigProperty<Boolean> informationUpdateGui = propertyBoolean(get("Version", "UpdateGui", true));
+	public final ConfigProperty<Boolean> informationTryNew = propertyBoolean(get("Version", "TryNew", false));
+
+	public final ConfigProperty<Boolean> multiplayPAAS = propertyBoolean(get("Multiplay.PreventAntiAutoSign", "Enable", true));
 	/** Fastest time "possible" estimate for an empty sign. */
-	public int multiplayPAASMinEditTime = 150;
+	public final ConfigProperty<Integer> multiplayPAASMinEditTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", 150));
 	/** Minimum time needed to add one extra line (not the first). */
-	public int multiplayPAASMinLineTime = 50;
+	public final ConfigProperty<Integer> multiplayPAASMinLineTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minLineTime", 50));
 	/** Minimum time needed to type a character. */
-	public int multiplayPAASMinCharTime = 50;
+	public final ConfigProperty<Integer> multiplayPAASMinCharTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", 50));
 
-	public boolean renderOverlayPanel = true;
-	public boolean renderGuiOverlay = true;
-	public boolean renderUseMipmap = true;
-	public boolean renderMipmapTypeNearest = false;
-	public float renderSeeOpacity = .5f;
-	public float renderPreviewFixedOpacity = .7f;
-	public float renderPreviewFloatedOpacity = .7f*.7f;
+	public final ConfigProperty<Boolean> renderOverlayPanel = propertyBoolean(get("Render", "OverlayPanel", true)).setComment("Overlay signpic!online");
+	public final ConfigProperty<Boolean> renderGuiOverlay = propertyBoolean(get("Render", "GuiOverlay", true)).setComment("Overlay on GUI");
+	public final ConfigProperty<Boolean> renderUseMipmap = propertyBoolean(get("Render", "Mipmap", true)).setComment("Require OpenGL 3.0 or later");
+	public final ConfigProperty<Boolean> renderMipmapTypeNearest = propertyBoolean(get("Render", "MipmapTypeNearest", false)).setComment("true = Nearest, false = Linear");
+	public final ConfigProperty<Double> renderSeeOpacity = propertyDouble(get("Render.Opacity", "ViewSign", .5f));
+	public final ConfigProperty<Double> renderPreviewFixedOpacity = propertyDouble(get("Render.Opacity", "PreviewFixedSign", .7f));
+	public final ConfigProperty<Double> renderPreviewFloatedOpacity = propertyDouble(get("Render.Opacity", "PreviewFloatedSign", .7f*.7f));
 
-	public String apiType = "";
-	public String apiKey = "";
+	public final ConfigProperty<String> apiUploaderType = propertyString(get("Api.Upload", "Type", ""));
+	public final ConfigProperty<String> apiUploaderKey = propertyString(get("Api.Upload", "Key", ""));
+	public final ConfigProperty<String> apiShortenerType = propertyString(get("Api.Shortener", "Type", ""));
+	public final ConfigProperty<String> apiShortenerKey = propertyString(get("Api.Shortener", "Key", ""));
 
-	public boolean guiExperienced = false;
+	public final ConfigProperty<Boolean> debugLog = propertyBoolean(get("Debug", "DebugLog", false)).setComment("Output Debug Log");
+
+	public final ConfigProperty<Boolean> guiExperienced = propertyBoolean(get("Internal", "GuiExperienced", false)).setComment("Have you ever opened SignPicture GUI yet?");
 
 	public Config(final File configFile) {
 		super(configFile);
 		this.configFile = configFile;
 
-		this.signpicDir = get("General", "SignpicDir", this.signpicDir).setRequiresMcRestart(true).getString();
-
-		this.imageWidthLimit = get("Image", "WidthLimit", this.imageWidthLimit).setRequiresMcRestart(true).getInt(this.imageWidthLimit);
-		this.imageHeightLimit = get("Image", "HeightLimit", this.imageHeightLimit).setRequiresMcRestart(true).getInt(this.imageHeightLimit);
-		this.imageAnimationGif = get("Image", "AnimateGif", this.imageAnimationGif).setRequiresMcRestart(true).getBoolean(this.imageAnimationGif);
-
 		addCustomCategoryComment("Entry", "Entry(sign text parse cache) Management");
-
 		addCustomCategoryComment("Content", "Content Data Management");
-
-		this.informationNotice = get("Version", "Notice", this.informationNotice).setRequiresMcRestart(true).getBoolean(this.informationNotice);
-
-		final Property joinBeta = get("Version", "JoinBeta", this.informationJoinBeta);
-		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
-		if (v.length>=4&&StringUtils.equals(v[3], "beta")) {
-			this.informationJoinBeta = true;
-			joinBeta.set(true);
-		}
-		this.informationJoinBeta = joinBeta.setRequiresMcRestart(true).getBoolean(this.informationJoinBeta);
-
 		addCustomCategoryComment("Multiplay.PreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
-
 		addCustomCategoryComment("Api.Upload", "Api Upload Settings");
 
-		changeableSync();
-
-		this.updatable = true;
-	}
-
-	private void changeableSync() {
-		this.signTooltip = addComment(get("General", "SignToolTip", this.signTooltip), "add tooltip line to sign").getBoolean(this.signTooltip);
-
-		this.entryGCtick = get("Entry", "GCDelayTick", this.entryGCtick).getInt(this.entryGCtick);
-
-		this.communicateThreads = addComment(get("Http", "HttpThreads", this.communicateThreads), "parallel processing number such as Downloading").setRequiresMcRestart(true).getInt(this.communicateThreads);
-
-		this.contentLoadThreads = addComment(get("Content", "LoadThreads", this.contentLoadThreads), "parallel processing number such as Image Loading").setRequiresMcRestart(true).getInt(this.contentLoadThreads);
-		this.contentMaxByte = addComment(get("Content", "MaxByte", this.contentMaxByte), "limit of size before downloading. 0 is infinity.").getInt(this.contentMaxByte);
-		this.contentGCtick = addComment(get("Content", "GCDelayTick", this.contentGCtick), "delay ticks of Garbage Collection").getInt(this.contentGCtick);
-		this.contentLoadTick = addComment(get("Content", "LoadStartIntervalTick", this.contentLoadTick), "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...").getInt(this.contentLoadTick);
-		this.contentSyncTick = addComment(get("Content", "SyncLoadIntervalTick", this.contentSyncTick), "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading").getInt(this.contentSyncTick);
-
-		this.informationUpdateGui = get("Version", "UpdateGui", this.informationUpdateGui).getBoolean(this.informationUpdateGui);
-		this.informationTryNew = get("Version", "TryNew", this.informationTryNew).getBoolean(this.informationTryNew);
-
-		this.multiplayPAAS = get("Multiplay.PreventAntiAutoSign", "Enable", this.multiplayPAAS).getBoolean(this.multiplayPAAS);
-		this.multiplayPAASMinEditTime = get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", this.multiplayPAASMinEditTime).getInt(this.multiplayPAASMinEditTime);
-		this.multiplayPAASMinLineTime = get("Multiplay.PreventAntiAutoSign.Time", "minLineTime", this.multiplayPAASMinLineTime).getInt(this.multiplayPAASMinLineTime);
-		this.multiplayPAASMinCharTime = get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", this.multiplayPAASMinCharTime).getInt(this.multiplayPAASMinCharTime);
-
-		this.renderOverlayPanel = addComment(get("Render", "OverlayPanel", this.renderOverlayPanel), "Overlay signpic!online").getBoolean(this.renderOverlayPanel);
-		this.renderGuiOverlay = addComment(get("Render", "GuiOverlay", this.renderGuiOverlay), "Overlay on GUI").getBoolean(this.renderGuiOverlay);
-		this.renderUseMipmap = addComment(get("Render", "Mipmap", this.renderUseMipmap), "Require OpenGL 3.0 or later").getBoolean(this.renderUseMipmap);
-		this.renderMipmapTypeNearest = addComment(get("Render", "MipmapTypeNearest", this.renderMipmapTypeNearest), "true = Nearest, false = Linear").getBoolean(this.renderMipmapTypeNearest);
-		this.renderSeeOpacity = (float) get("Render.Opacity", "ViewSign", this.renderSeeOpacity).getDouble(this.renderSeeOpacity);
-		this.renderPreviewFixedOpacity = (float) get("Render.Opacity", "PreviewFixedSign", this.renderPreviewFixedOpacity).getDouble(this.renderPreviewFixedOpacity);
-		this.renderPreviewFloatedOpacity = (float) get("Render.Opacity", "PreviewFloatedSign", this.renderPreviewFloatedOpacity).getDouble(this.renderPreviewFloatedOpacity);
-
-		this.apiType = get("Api.Upload", "Type", this.apiType).getString();
-		this.apiKey = get("Api.Upload", "Key", this.apiKey).getString();
-
-		this.guiExperienced = addComment(get("Internal", "GuiExperienced", this.guiExperienced), "Have you ever opened SignPicture GUI yet?").getBoolean(this.guiExperienced);
-	}
-
-	private Property addComment(final Property prop, final String comment) {
-		prop.setComment(comment);
-		return prop;
+		final Property joinBeta = get("Version", "JoinBeta", false);
+		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
+		if (v.length>=4&&StringUtils.equals(v[3], "beta"))
+			joinBeta.set(true);
+		this.informationJoinBeta = propertyBoolean(joinBeta);
 	}
 
 	@Override
 	public void save() {
 		if (hasChanged())
 			super.save();
-		changeableSync();
 	}
 
 	@CoreEvent
 	public void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		if (StringUtils.equals(eventArgs.getModID(), Reference.MODID))
-			if (this.updatable)
-				save();
+		if (StringUtils.equals(eventArgs.getModID(), Reference.MODID)) {
+			save();
+			reload();
+		}
 	}
 
 	public String getFilePath() {
 		return this.configFile.getPath();
+	}
+
+	public ConfigProperty<String> propertyString(final Property property) {
+		return registerReload(ConfigProperty.propertyString(this, property));
+	}
+
+	public ConfigProperty<Boolean> propertyBoolean(final Property property) {
+		return registerReload(ConfigProperty.propertyBoolean(this, property));
+	}
+
+	public ConfigProperty<Double> propertyDouble(final Property property) {
+		return registerReload(ConfigProperty.propertyDouble(this, property));
+	}
+
+	public ConfigProperty<Integer> propertyInteger(final Property property) {
+		return registerReload(ConfigProperty.propertyInteger(this, property));
+	}
+
+	public static abstract class ConfigProperty<E> implements IReloadableConfig {
+		protected final Configuration config;
+		protected final Property property;
+		private transient E prop;
+
+		protected ConfigProperty(final Configuration config, final Property property, final E prop) {
+			this.config = config;
+			this.property = property;
+			this.prop = prop;
+		}
+
+		public ConfigProperty<E> setComment(final String comment) {
+			this.property.setComment(comment);
+			return this;
+		}
+
+		protected void setProp(final E prop) {
+			if (!this.property.requiresMcRestart())
+				this.prop = prop;
+		}
+
+		public E get() {
+			return this.prop;
+		}
+
+		public abstract ConfigProperty<E> set(E value);
+
+		public abstract ConfigProperty<E> reset();
+
+		public static ConfigProperty<String> propertyString(final Config config, final Property property) {
+			return new StringConfigProperty(config, property);
+		}
+
+		public static ConfigProperty<Boolean> propertyBoolean(final Config config, final Property property) {
+			return new BooleanConfigProperty(config, property);
+		}
+
+		public static ConfigProperty<Double> propertyDouble(final Config config, final Property property) {
+			return new DoubleConfigProperty(config, property);
+		}
+
+		public static ConfigProperty<Integer> propertyInteger(final Config config, final Property property) {
+			return new IntegerConfigProperty(config, property);
+		}
+
+		private static class StringConfigProperty extends ConfigProperty<String> {
+			protected StringConfigProperty(final Configuration config, final Property property) {
+				super(config, property, property.getString());
+			}
+
+			@Override
+			public StringConfigProperty set(final String value) {
+				this.property.set(value);
+				setProp(value);
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public StringConfigProperty reset() {
+				final String p = this.property.getDefault();
+				this.property.set(p);
+				setProp(p);
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public void reload() {
+				setProp(this.property.getString());
+			}
+		}
+
+		private static class BooleanConfigProperty extends ConfigProperty<Boolean> {
+			protected BooleanConfigProperty(final Configuration config, final Property property) {
+				super(config, property, property.getBoolean());
+			}
+
+			@Override
+			public BooleanConfigProperty set(final Boolean value) {
+				this.property.set(value);
+				setProp(value);
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public BooleanConfigProperty reset() {
+				final String p = this.property.getDefault();
+				this.property.set(p);
+				setProp(this.property.getBoolean());
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public void reload() {
+				setProp(this.property.getBoolean());
+			}
+		}
+
+		private static class DoubleConfigProperty extends ConfigProperty<Double> {
+			protected DoubleConfigProperty(final Configuration config, final Property property) {
+				super(config, property, property.getDouble());
+			}
+
+			@Override
+			public DoubleConfigProperty set(final Double value) {
+				this.property.set(value);
+				setProp(value);
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public DoubleConfigProperty reset() {
+				final String p = this.property.getDefault();
+				this.property.set(p);
+				setProp(this.property.getDouble());
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public void reload() {
+				setProp(this.property.getDouble());
+			}
+		}
+
+		private static class IntegerConfigProperty extends ConfigProperty<Integer> {
+			protected IntegerConfigProperty(final Configuration config, final Property property) {
+				super(config, property, property.getInt());
+				property.getType();
+			}
+
+			@Override
+			public IntegerConfigProperty set(final Integer value) {
+				this.property.set(value);
+				setProp(value);
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public IntegerConfigProperty reset() {
+				final String p = this.property.getDefault();
+				this.property.set(p);
+				setProp(this.property.getInt());
+				this.config.save();
+				return this;
+			}
+
+			@Override
+			public void reload() {
+				setProp(this.property.getInt());
+			}
+		}
 	}
 }

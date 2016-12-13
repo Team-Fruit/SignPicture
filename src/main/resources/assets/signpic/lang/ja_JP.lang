@@ -1,13 +1,14 @@
 # Overlay
 ## Overlay
 signpic.over.mode.place=看板を置いて画像を適用
-signpic.over.mode.load=画像看板をクリックしてロード
+signpic.over.mode.option=画像看板をクリックして詳細設定を表示
 signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位置を設定
 
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 
 # Item
+signpic.item.hold=§3§o%s §7キーを押すと詳細を表示します
 signpic.item.sign.desc=§a%s§d を押してSignPictureを編集
 signpic.item.sign.desc.keyconflict=§a%s§c の §a%s§c を開き、キー競合を解決してください！
 signpic.item.sign.desc.keyconflict.key=§c - 競合 §a%s§c の §a%s
@@ -23,9 +24,7 @@ signpic.item.sign.desc.named.raw=§7名前: [%s§7]
 signpic.gui.editor.see=実体表示
 signpic.gui.editor.preview=プレビュー
 signpic.gui.editor.continue=連続
-signpic.gui.editor.load=ロード
-signpic.gui.editor.load.content=URL
-signpic.gui.editor.load.meta=メタ情報
+signpic.gui.editor.option=詳細設定
 signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.file=アップロード
@@ -42,12 +41,27 @@ signpic.gui.editor.offset.category=オフセット
 ### Rotation
 signpic.gui.editor.rotation.category=回転
 ## Settings
-signpic.gui.settings.api.upimage=画像アップロード設定
-signpic.gui.settings.api.upimage.type=APIの種類
-signpic.gui.settings.api.upimage.key=APIキー
+signpic.gui.settings.api.upimage=画像
+signpic.gui.settings.api.upimage.desc=画像アップロード設定
+signpic.gui.settings.api.urlshortener=短縮URL
+signpic.gui.settings.api.urlshortener.desc=URL短縮設定
+signpic.gui.settings.api.type=APIの種類
+signpic.gui.settings.api.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
 signpic.gui.settings.paas=チート回避
+### Sign Option
+signpic.gui.settings.sign=看板オプション
+signpic.gui.settings.sign.load=URLとメタ情報をロード
+signpic.gui.settings.sign.load.content=URLをロード
+signpic.gui.settings.sign.load.meta=メタ情報をロード
+signpic.gui.settings.sign.loadcancel=ロードキャンセル
+signpic.gui.settings.sign.reload=再読み込み
+signpic.gui.settings.sign.redownload=再ダウンロード
+signpic.gui.settings.sign.block=ブロック
+signpic.gui.settings.sign.unblock=ブロック解除
+signpic.gui.settings.sign.reloadall=全再読み込み
+signpic.gui.settings.sign.redownloadall=全再ダウンロード
 ## Update
 signpic.gui.update.message=SignPictureの新しいバージョンがリリースされています！こちらをクリックしてアップデートして下さい。
 signpic.gui.update.message.changelog=%s
@@ -69,6 +83,10 @@ signpic.gui.notice.versioning.downloadedAlready=古いバージョンのファ�
 signpic.gui.notice.versioning.downloadingAlready=最新版は既にダウンロード中です！
 signpic.gui.notice.toolongname=名前を付けるためにはURL+メタデータの長さが40文字以下である必要があります
 signpic.gui.notice.toolongplace=設置するためにはURL+メタデータの長さが60文字以下である必要があります
+signpic.gui.notice.shortening=URLを短縮中です・・・ しばらくお待ちください
+signpic.gui.notice.shortened=URL短縮完了
+signpic.gui.notice.shorteningfailed=URL短縮失敗
+signpic.gui.notice.shorteningother=短縮URLタスクが終了していません・・・ しばらくお待ちください
 
 # Upload UI
 signpic.ui.description=ファイルアップローダー!
@@ -89,8 +107,10 @@ signpic.state.format.unsupported=未対応 新しいバージョンをお試し�
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=不正なURL
-signpic.advmsg.dlstopped=ダウンロード中止
+signpic.advmsg.loadstopped=ロード中止
 signpic.advmsg.capacityover=容量オーバー
+signpic.advmsg.blocked=ブロックした画像
+signpic.advmsg.retryover=最大再試行回数制限オーバー
 signpic.advmsg.invalidimage=不正な画像
 signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s

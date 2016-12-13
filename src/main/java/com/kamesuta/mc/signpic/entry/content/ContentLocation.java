@@ -9,21 +9,23 @@ import org.apache.commons.codec.digest.DigestUtils;
 import com.kamesuta.mc.signpic.Client;
 
 public class ContentLocation {
-	public final ContentId id;
-
-	public ContentLocation(final ContentId id) {
-		this.id = id;
+	public static URI remoteLocation(final String url) throws URISyntaxException {
+		return new URI(url);
 	}
 
-	public URI remoteLocation() throws URISyntaxException {
-		return new URI(this.id.getURI());
+	public static String hash(final String url) {
+		return DigestUtils.md5Hex(url);
 	}
 
-	public File metaLocation() {
-		return new File(Client.location.metaDir, DigestUtils.md5Hex(this.id.getURI()));
+	public static File metaLocation(final String name) {
+		return new File(Client.location.metaDir, name+".json");
 	}
 
-	public File cacheLocation() {
-		return new File(Client.location.cacheDir, DigestUtils.md5Hex(this.id.getURI()));
+	public static File cachemetaLocation(final String name) {
+		return new File(Client.location.cacheDir, name+".json");
+	}
+
+	public static File cacheLocation(final String name) {
+		return new File(Client.location.cacheDir, name);
 	}
 }

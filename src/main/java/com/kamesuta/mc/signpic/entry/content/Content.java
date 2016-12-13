@@ -1,23 +1,31 @@
 package com.kamesuta.mc.signpic.entry.content;
 
+import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
+import com.kamesuta.mc.signpic.entry.content.meta.ContentCache;
+import com.kamesuta.mc.signpic.entry.content.meta.ContentMeta;
 import com.kamesuta.mc.signpic.image.Image;
 import com.kamesuta.mc.signpic.image.RemoteImage;
 import com.kamesuta.mc.signpic.image.ResourceImage;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.state.StateType;
 
-public class Content implements IInitable, ICollectable {
+public class Content implements IInitable, ICollectable, ILoadCancelable {
 	public final ContentId id;
+	public final ContentMeta meta;
 	public final State state;
-	public final ContentLocation location;
 	public Image image;
-	public String meta;
+	public String imagemeta;
+	private boolean dirty;
 
 	public Content(final ContentId id) {
 		this.id = id;
-		this.location = new ContentLocation(id);
+		final String url = id.getURI();
+		final String hash = ContentLocation.hash(url);
+		this.meta = new ContentMeta(ContentLocation.metaLocation(hash));
+		this.meta.setURL(url);
+		this.meta.setMetaID(hash);
 		this.state = new State().setName(id.id());
 		if (id.isResource())
 			this.image = new ResourceImage(this);
@@ -34,5 +42,25 @@ public class Content implements IInitable, ICollectable {
 	@Override
 	public void onCollect() {
 		this.image.onCollect();
+	}
+
+	public boolean shouldCollect() {
+		return this.dirty;
+	}
+
+	@Override
+	public void cancel() {
+		this.image.cancel();
+	}
+
+	public void markDirty() {
+		this.dirty = true;
+	}
+
+	public void markDirtyWithCache() {
+		this.meta.setTryCount(0);
+		final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.meta.getCacheID()));
+		cachemeta.setDirty(true);
+		markDirty();
 	}
 }

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
@@ -57,7 +58,7 @@ public final class Informations {
 		public InfoVersion onlineVersion() {
 			final InfoVersion stable = stableVersion();
 			final InfoVersion unstable = unstableVersion();
-			return Config.instance.informationJoinBeta&&unstable.compare(stable) ? unstable : stable;
+			return Config.instance.informationJoinBeta.get()&&unstable.compare(stable) ? unstable : stable;
 		}
 
 		public static boolean equalsVersion(final InfoSource a, final InfoSource b) {
@@ -101,7 +102,7 @@ public final class Informations {
 	}
 
 	public void init() {
-		check(null);
+		onlineCheck(null);
 	}
 
 	private long lastCheck = -1l;
@@ -114,7 +115,14 @@ public final class Informations {
 		return this.lastCheck;
 	}
 
-	public void check(final Runnable after) {
+	public void check() {
+		if (getState()!=null)
+			getState().triedToWarnPlayer = false;
+		if (!isUpdateRequired())
+			Log.notice(I18n.format("signpic.versioning.noupdate"));
+	}
+
+	public void onlineCheck(final Runnable after) {
 		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
 		checker.setCallback(new ICommunicateCallback() {
@@ -123,7 +131,7 @@ public final class Informations {
 				if (checker.result!=null)
 					setSource(checker.result);
 				if (res.getError()!=null)
-					Reference.logger.warn("Could not check version information", res.getError());
+					Log.warn("Could not check version information", res.getError());
 				if (after!=null)
 					after.run();
 			}
@@ -167,15 +175,15 @@ public final class Informations {
 		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
 			if (state.isDownloaded()) {
 				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new Style().setColor(TextFormatting.RED)).chatClient();
-				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
+				Log.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"));
 				try {
 					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 				} catch (final IOException e) {
-					Reference.logger.error(e.getMessage(), e);
+					Log.error(e.getMessage(), e);
 				}
 			} else if (state.downloading) {
 				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new Style().setColor(TextFormatting.RED)).chatClient();
-				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
+				Log.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"));
 			} else {
 				final ModDownload downloader = new ModDownload();
 				downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
@@ -198,14 +206,12 @@ public final class Informations {
 			onTick(getSource(), getState());
 	}
 
-	public void onTick(final InfoSource source, final InfoState state) {
-		final EntityPlayer player = Client.mc.thePlayer;
-		if (player!=null&&!state.triedToWarnPlayer&&source!=null) {
+	public void notice(final InfoSource source, final InfoState state, final EntityPlayer player) {
+		if (player!=null&&source!=null&&state!=null) {
 			final String lang = Client.mc.gameSettings.language;
 			if (
 				source.info!=null&&
 						source.info.versions!=null&&
-						Config.instance.informationNotice&&
 						!StringUtils.equals(Reference.VERSION, "${version}")
 			) {
 				final InfoVersion online = source.onlineVersion();
@@ -255,6 +261,12 @@ public final class Informations {
 			}
 			getState().triedToWarnPlayer = true;
 		}
+	}
+
+	public void onTick(final InfoSource source, final InfoState state) {
+		final EntityPlayer player = Client.mc.thePlayer;
+		if (Config.instance.informationNotice.get()&&!state.triedToWarnPlayer)
+			notice(source, state, player);
 	}
 
 	public static class Version {
