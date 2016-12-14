@@ -2,8 +2,10 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -40,12 +42,34 @@ public class DynamicImageTexture implements ImageTexture {
 
 	public DynamicImageTexture load() {
 		if (this.id==-1&&this.temp!=null) {
+			// generate id
 			this.id = OpenGL.glGenTextures();
-			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
-			TextureUtil.uploadTextureImage(this.id, this.temp);
+			// get size
+			final int width = this.temp.getWidth();
+			final int height = this.temp.getHeight();
 			if (OpenGL.openGl30()&&Config.instance.renderUseMipmap.get()) {
-				OpenGL.glGenerateMipmap(GL_TEXTURE_2D);
+				final int lvmip = Client.mc.gameSettings.mipmapLevels;
+				final int unitmip = 2<<lvmip;
+				// get resized mipmap size unit
+				final int nwidth = (int) Math.ceil(width/(double) unitmip)*unitmip;
+				final int nheight = (int) Math.ceil(height/(double) unitmip)*unitmip;
+				// resize
+				final BufferedImage s = new BufferedImage(nwidth, nheight, this.temp.getType());
+				final Graphics2D g = s.createGraphics();
+				g.drawImage(this.temp.getScaledInstance(nwidth, nheight, java.awt.Image.SCALE_FAST), 0, 0, null);
+				g.dispose();
+				// generate mipmap
+				final int[][] aint = new int[lvmip+1][];
+				aint[0] = s.getRGB(0, 0, nwidth, nheight, null, 0, nwidth);
+				final int[][] bint = TextureUtil.generateMipmapData(lvmip, nwidth, aint);
+				// apply
+				TextureUtil.allocateTextureImpl(this.id, lvmip, nwidth, nheight);
+				TextureUtil.uploadTextureMipmap(bint, nwidth, nheight, 0, 0, false, false);
 				this.hasMipmap = true;
+			} else {
+				// apply
+				TextureUtil.allocateTexture(this.id, width, height);
+				TextureUtil.uploadTextureImage(this.id, this.temp);
 			}
 			this.temp = null;
 		}
