@@ -2,86 +2,50 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
 
-public class DynamicImageTexture implements ImageTexture {
-	public static final DynamicImageTexture NULL = new DynamicImageTexture(null);
-	public static float DefaultDelay = .05f;
+public abstract class DynamicImageTexture implements ImageTexture {
+	public static final DynamicImageTexture NULL = new DynamicTexture(null, 1, 1);
 
-	protected BufferedImage temp;
-	protected ImageSize size;
-	protected int id = -1;
-	protected float delay;
+	protected final int width;
+	protected final int height;
+	private final ImageSize size;
+	private int id = -1;
 
-	public DynamicImageTexture(final BufferedImage image, final float delay) {
-		setImage(image);
-		this.delay = delay;
+	public DynamicImageTexture(final int width, final int height) {
+		this.width = width;
+		this.height = height;
+		this.size = new ImageSize().setSize(width, height);
 	}
-
-	public DynamicImageTexture(final BufferedImage image) {
-		this(image, DefaultDelay);
-	}
-
-	public DynamicImageTexture(final float delay) {
-		this(null, delay);
-	}
-
-	public DynamicImageTexture() {
-		this(null, DefaultDelay);
-	}
-
-	private boolean hasMipmap;
 
 	public DynamicImageTexture load() {
-		if (this.id==-1&&this.temp!=null) {
+		if (this.id==-1) {
 			this.id = OpenGL.glGenTextures();
-			TextureUtil.allocateTexture(this.id, this.temp.getWidth(), this.temp.getHeight());
-			TextureUtil.uploadTextureImage(this.id, this.temp);
-			if (OpenGL.openGl30()&&Config.instance.renderUseMipmap.get()) {
-				OpenGL.glGenerateMipmap(GL_TEXTURE_2D);
-				this.hasMipmap = true;
-			}
-			this.temp = null;
+			loadDirect();
 		}
 		return this;
 	}
 
+	protected abstract DynamicImageTexture loadDirect();
+
 	@Override
-	public boolean hasMipmap() {
-		return this.hasMipmap;
-	}
+	public abstract boolean hasMipmap();
 
 	@Override
 	public ImageSize getSize() {
 		return this.size;
 	}
 
-	public boolean setImage(final BufferedImage image) {
-		if (this.id==-1) {
-			this.temp = image;
-			if (image!=null)
-				this.size = new ImageSize().setSize(image.getWidth(), image.getHeight());
-			return true;
-		}
-		return false;
-	}
-
 	public int getId() {
 		return this.id;
-	}
-
-	public void setDelay(final float delay) {
-		this.delay = delay;
-	}
-
-	public float getDelay() {
-		return this.delay;
 	}
 
 	@Override
@@ -93,7 +57,137 @@ public class DynamicImageTexture implements ImageTexture {
 	public void delete() {
 		if (this.id!=-1)
 			OpenGL.glDeleteTextures(this.id);
-		if (this.temp!=null)
-			this.temp = null;
+		this.id = -1;
+	}
+
+	public static DynamicImageTexture create(final BufferedImage image, final int width, final int height) {
+		if (Config.instance.renderUseMipmap.get())
+			return MipmapDynamicTexture.createFromImage(image, width, height, Client.mc.gameSettings.mipmapLevels);
+		else
+			return DynamicTexture.createFromImage(image, width, height);
+	}
+
+	public static class DynamicTexture extends DynamicImageTexture {
+		private int[] image;
+
+		private DynamicTexture(final int[] image, final int width, final int height) {
+			super(width, height);
+			this.image = image;
+		}
+
+		@Override
+		protected DynamicImageTexture loadDirect() {
+			if (this.image!=null) {
+				final int id = getId();
+				TextureUtil.allocateTexture(id, this.width, this.height);
+				TextureUtil.uploadTexture(id, this.image, this.width, this.height);
+				this.image = null;
+			}
+			return this;
+		}
+
+		@Override
+		public boolean hasMipmap() {
+			return false;
+		}
+
+		@Override
+		public void delete() {
+			super.delete();
+			if (this.image!=null)
+				this.image = null;
+		}
+
+		public static DynamicTexture createFromRawData(final int[] image, final int width, final int height) {
+			return new DynamicTexture(image, width, height);
+		}
+
+		public static DynamicTexture createFromSizedImage(final BufferedImage sizedImage) {
+			final int width = sizedImage.getWidth();
+			final int height = sizedImage.getHeight();
+			return createFromRawData(sizedImage.getRGB(0, 0, width, height, null, 0, width), width, height);
+		}
+
+		public static DynamicTexture createFromImage(final BufferedImage image, final int width, final int height) {
+			// return same size
+			if (width==image.getWidth()&&height==image.getHeight())
+				return createFromSizedImage(image);
+			// resize
+			final BufferedImage s = new BufferedImage(width, height, image.getType());
+			final Graphics2D g = s.createGraphics();
+			g.drawImage(image.getScaledInstance(width, height, java.awt.Image.SCALE_FAST), 0, 0, null);
+			g.dispose();
+			return createFromSizedImage(s);
+		}
+	}
+
+	public static class MipmapDynamicTexture extends DynamicImageTexture {
+		private int[][] mipdata;
+		private final int miplevel;
+
+		private MipmapDynamicTexture(final int[][] mipdata, final int width, final int height, final int miplevel) {
+			super(width, height);
+			this.mipdata = mipdata;
+			this.miplevel = miplevel;
+		}
+
+		@Override
+		public DynamicImageTexture loadDirect() {
+			if (this.mipdata!=null) {
+				TextureUtil.allocateTextureImpl(getId(), this.miplevel, this.width, this.height, Client.mc.gameSettings.anisotropicFiltering);
+				TextureUtil.uploadTextureMipmap(this.mipdata, this.width, this.height, 0, 0, false, false);
+				this.mipdata = null;
+			}
+			return this;
+		}
+
+		@Override
+		public boolean hasMipmap() {
+			return true;
+		}
+
+		@Override
+		public void delete() {
+			super.delete();
+			if (this.mipdata!=null)
+				this.mipdata = null;
+		}
+
+		public static MipmapDynamicTexture createFromRawMipmap(final int[][] mipdata, final int width, final int height, final int miplevel) {
+			return new MipmapDynamicTexture(mipdata, width, height, miplevel);
+		}
+
+		public static MipmapDynamicTexture createFromRawData(final int[] image, final int width, final int height, final int miplevel) {
+			final int[][] aint = new int[miplevel+1][];
+			aint[0] = image;
+			final int[][] bint = TextureUtil.generateMipmapData(miplevel, width, aint);
+			return new MipmapDynamicTexture(bint, width, height, miplevel);
+		}
+
+		public static MipmapDynamicTexture createFromSizedImage(final BufferedImage sizedImage, final int miplevel) {
+			final int width = sizedImage.getWidth();
+			final int height = sizedImage.getHeight();
+			return createFromRawData(sizedImage.getRGB(0, 0, width, height, null, 0, width), width, height, miplevel);
+		}
+
+		public static MipmapDynamicTexture createFromImage(final BufferedImage image, final int width, final int height, final int miplevel) {
+			// get resized mipmap size unit
+			final int unitmip = 2<<miplevel;
+			final int nwidth = (int) Math.ceil(width/(double) unitmip)*unitmip;
+			final int nheight = (int) Math.ceil(height/(double) unitmip)*unitmip;
+			// return same size
+			if (nwidth==image.getWidth()&&nheight==image.getHeight())
+				return createFromSizedImage(image, miplevel);
+			// resize
+			final BufferedImage s = new BufferedImage(nwidth, nheight, image.getType());
+			final Graphics2D g = s.createGraphics();
+			g.drawImage(image.getScaledInstance(nwidth, nheight, java.awt.Image.SCALE_FAST), 0, 0, null);
+			g.dispose();
+			return createFromSizedImage(s, miplevel);
+		}
+
+		public static MipmapDynamicTexture createFromImage(final BufferedImage image, final int miplevel) {
+			return createFromImage(image, image.getWidth(), image.getHeight(), miplevel);
+		}
 	}
 }

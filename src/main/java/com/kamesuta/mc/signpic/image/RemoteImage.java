@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.LoadCanceledException;
@@ -102,12 +103,12 @@ public class RemoteImage extends Image {
 
 	@Override
 	public boolean onDivisionProcess() {
-		final List<DynamicImageTexture> texs = this.texture.getAll();
+		final List<Pair<Float, DynamicImageTexture>> texs = this.texture.getAll();
 		if (this.canceled) {
 			this.content.state.setErrorMessage(new LoadCanceledException());
 			return true;
 		} else if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
-			final DynamicImageTexture tex = texs.get(this.processing);
+			final DynamicImageTexture tex = texs.get(this.processing).getRight();
 			tex.load();
 			this.processing++;
 			this.content.state.getProgress().done = this.processing;
