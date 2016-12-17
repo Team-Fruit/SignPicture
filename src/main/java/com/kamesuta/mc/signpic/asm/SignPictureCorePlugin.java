@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 
 @MCVersion(value = ForgeVersion.mcVersion)
-public class SignPictureLoadingPlugin implements IFMLLoadingPlugin {
+public class SignPictureCorePlugin implements IFMLLoadingPlugin {
 	@Override
 	public String[] getASMTransformerClass() {
 		return new String[] {
