@@ -35,11 +35,11 @@ public class Locations {
 	}
 
 	private File getSignPicDir(final File defaultdir) {
-		final File dir = new File(Config.instance.signpicDir);
-		if (!StringUtils.isEmpty(Config.instance.signpicDir)) {
+		final File dir = new File(Config.instance.signpicDir.get());
+		if (!StringUtils.isEmpty(Config.instance.signpicDir.get())) {
 			if (dir.exists()&&dir.isDirectory()&&!dir.equals(defaultdir))
 				return dir;
-			Reference.logger.debug("invalid signpic dir location! use default dir.");
+			Log.debugerror("invalid signpic dir location! use default dir.");
 		}
 		return new File(defaultdir, "signpic");
 	}
@@ -53,7 +53,7 @@ public class Locations {
 				i++;
 			} while (to.exists());
 			cachedir.renameTo(to);
-			Reference.logger.warn("non-directory conflicting file exists. renamed to "+to.getName());
+			Log.warn("non-directory conflicting file exists. renamed to "+to.getName());
 			return true;
 		}
 		cachedir.mkdir();

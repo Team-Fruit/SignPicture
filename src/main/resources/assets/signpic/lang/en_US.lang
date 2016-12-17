@@ -1,7 +1,7 @@
 # Overlay
 ## Overlay
 signpic.over.mode.place=Place Sign and Apply Image
-signpic.over.mode.load=Click Sign Picture and Load Image
+signpic.over.mode.option=Click Sign Picture and Open Sign Option GUI.
 signpic.over.mode.setpreview=Click Block and Set Preview Location
 
 ## F3
@@ -17,6 +17,7 @@ signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
 signpic.chat.error.place=[§6SignPicture§r] Sorry, you will not be able to use this feature because of an error.
 
 # Item
+signpic.item.hold=§7Hold §3§o%s §7for Details
 signpic.item.sign.desc=§dPress §a%s§d to edit SignPicture
 signpic.item.sign.desc.keyconflict=§cOpen §a%2$s§c in §a%1$s§c and solve key conflict!
 signpic.item.sign.desc.keyconflict.key=§c - conflict §a%2$s§c in §a%1$s
@@ -24,6 +25,7 @@ signpic.item.sign.desc.named=Sign Picture§r §7(%s)
 signpic.item.sign.desc.named.prop.size=§7 - size: %s×%s
 signpic.item.sign.desc.named.prop.offset=§7 - offset: ⇨:%s, ⇧:%s, ↗:%s
 signpic.item.sign.desc.named.prop.rotation=§7 - rotation: %s
+signpic.item.sign.desc.named.url=§7url: %s§7
 signpic.item.sign.desc.named.meta=§7meta: %s§7
 signpic.item.sign.desc.named.raw=§7name: [%s§7]
 
@@ -36,33 +38,39 @@ signpic.key.gui=Open GUI
 signpic.gui.editor.see=View Sign
 signpic.gui.editor.preview=Preview
 signpic.gui.editor.continue=Continue
-signpic.gui.editor.load=Load
-signpic.gui.editor.load.content=URL
-signpic.gui.editor.load.meta=Meta
+signpic.gui.editor.option=Option
 signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.file=Upload
 signpic.gui.editor.paste=Paste
 signpic.gui.editor.textfield=Place URL Here!
+signpic.gui.editor.number.neg=-
+signpic.gui.editor.number.pos=+
+signpic.gui.editor.number.unknown=?
 ### Size
 signpic.gui.editor.size.category=Size
 signpic.gui.editor.size.width=W
 signpic.gui.editor.size.height=H
 signpic.gui.editor.size.width.neg=-
 signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.width.unknown=Aspect Ratio
 signpic.gui.editor.size.height.neg=-
 signpic.gui.editor.size.height.pos=+
+signpic.gui.editor.size.height.unknown=Aspect Ratio
 ### Offset
 signpic.gui.editor.offset.category=Offset
 signpic.gui.editor.offset.x=X
 signpic.gui.editor.offset.x.neg=⇦
 signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.x.unknown=0
 signpic.gui.editor.offset.y=Y
 signpic.gui.editor.offset.y.neg=⇩
 signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.y.unknown=0
 signpic.gui.editor.offset.z=Z
 signpic.gui.editor.offset.z.neg=↗
 signpic.gui.editor.offset.z.pos=↙
+signpic.gui.editor.offset.z.unknown=0
 ### Rotation
 signpic.gui.editor.rotation.category=Rotation
 signpic.gui.editor.rotation.up=↑
@@ -74,13 +82,29 @@ signpic.gui.editor.rotation.remove=-
 signpic.gui.editor.rotation.add=+
 signpic.gui.editor.rotation.neg=-
 signpic.gui.editor.rotation.pos=+
+signpic.gui.editor.rotation.unknown=0
 ## Settings
-signpic.gui.settings.api.upimage=Image Upload Settings
-signpic.gui.settings.api.upimage.type=API Type
-signpic.gui.settings.api.upimage.key=API Key
+signpic.gui.settings.api.upimage=Image
+signpic.gui.settings.api.upimage.desc=Image Upload Settings
+signpic.gui.settings.api.urlshortener=Shortener
+signpic.gui.settings.api.urlshortener.desc=URL Shortener Settings
+signpic.gui.settings.api.type=API Type
+signpic.gui.settings.api.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
 signpic.gui.settings.paas=Prevent Cheat
+### Sign Option
+signpic.gui.settings.sign=Sign Option
+signpic.gui.settings.sign.load=Load URL and Meta
+signpic.gui.settings.sign.load.content=Load URL
+signpic.gui.settings.sign.load.meta=Load Meta
+signpic.gui.settings.sign.loadcancel=Cancel Loading
+signpic.gui.settings.sign.reload=Reload
+signpic.gui.settings.sign.redownload=Redownload
+signpic.gui.settings.sign.block=Block
+signpic.gui.settings.sign.unblock=Unblock
+signpic.gui.settings.sign.reloadall=Reload All
+signpic.gui.settings.sign.redownloadall=Redownload All
 ## Update
 signpic.gui.update.message=A new version of SignPicture! is available!  Please click here to update.
 signpic.gui.update.message.changelog=%s
@@ -102,6 +126,10 @@ signpic.gui.notice.versioning.downloadedAlready=Close your game, delete the old 
 signpic.gui.notice.versioning.downloadingAlready=The update is already downloading!
 signpic.gui.notice.toolongname=URL+metadata length must be less than 40 characters to name!
 signpic.gui.notice.toolongplace=URL+metadata length must be less than 60 characters to place!
+signpic.gui.notice.shortening=Please wait... The URL is being shortened
+signpic.gui.notice.shortened=URL shortening completed
+signpic.gui.notice.shorteningfailed=URL shortening failed
+signpic.gui.notice.shorteningother=Please wait... Other shortening URL tasks are not finished
 
 # Upload UI
 signpic.ui.title=SignPicture!File
@@ -124,8 +152,10 @@ signpic.state.format.unsupported=Unsupported. Try a new Version!
 
 # Image State Additional Message
 signpic.advmsg.invalidurl=Invalid URL
-signpic.advmsg.dlstopped=Stopped Downloading
+signpic.advmsg.loadstopped=Stopped Downloading
 signpic.advmsg.capacityover=CapacityOver
+signpic.advmsg.blocked=Blocked Image
+signpic.advmsg.retryover=MaxRetryCountOver
 signpic.advmsg.invalidimage=Invalid Image
 signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s

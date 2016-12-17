@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image.meta;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.bnnwidget.position.Area;
 
 public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
@@ -140,7 +141,7 @@ public class ImageSize extends ImageMeta.MetaParser implements Cloneable {
 
 	@Override
 	public String compose() {
-		return (vaildWidth() ? format(this.width) : "")+(vaildHeight() ? "x"+format(this.height) : "");
+		return (vaildWidth() ? ShortestFloatFormatter.format(this.width) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(this.height) : "");
 	}
 
 	@Override

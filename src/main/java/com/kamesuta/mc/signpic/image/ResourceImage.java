@@ -49,4 +49,8 @@ public class ResourceImage extends Image {
 	@Override
 	public void onCollect() {
 	}
+
+	@Override
+	public void cancel() {
+	}
 }

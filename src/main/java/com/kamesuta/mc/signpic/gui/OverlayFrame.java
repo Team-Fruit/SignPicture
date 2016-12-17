@@ -34,6 +34,7 @@ public class OverlayFrame extends WFrame {
 	private boolean d;
 
 	private OverlayFrame() {
+		this.mc = Client.mc;
 	}
 
 	@Override
@@ -43,7 +44,7 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (Config.instance.renderGuiOverlay)
+		if (Config.instance.renderGuiOverlay.get())
 			if (!isDelegated()) {
 				setWidth(event.getGui().width);
 				setHeight(event.getGui().height);
@@ -91,8 +92,11 @@ public class OverlayFrame extends WFrame {
 	}
 
 	public static class GuiOverlay extends WPanel {
+		public final GuiTask task;
+
 		private GuiOverlay(final R position) {
 			super(position);
+			this.task = new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20)));
 		}
 
 		@Override
@@ -100,12 +104,12 @@ public class OverlayFrame extends WFrame {
 			add(new WPanel(new R()) {
 				@Override
 				protected void initWidget() {
-					add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20))));
+					add(GuiOverlay.this.task);
 				}
 
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-					if (Config.instance.renderOverlayPanel||instance.isDelegated())
+					if (Config.instance.renderOverlayPanel.get()||instance.isDelegated())
 						super.draw(ev, pgp, p, frame, popacity);
 				}
 			});

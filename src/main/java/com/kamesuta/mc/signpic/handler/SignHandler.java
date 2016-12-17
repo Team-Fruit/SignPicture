@@ -4,18 +4,25 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
+import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
+import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
+import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -53,7 +60,7 @@ public class SignHandler {
 					guiEditSignTileEntity = field;
 				}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook TileEntitySign field included in GuiEditSign", e);
+			Log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
 		try {
 			final Field[] fields = GuiRepair.class.getDeclaredFields();
@@ -68,7 +75,7 @@ public class SignHandler {
 				}
 			}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
+			Log.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
 		}
 	}
 
@@ -85,13 +92,14 @@ public class SignHandler {
 		this.isPlaceMode = CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 		if (handSignValid||this.isPlaceMode) {
 			final EntryId entryId = CurrentMode.instance.getEntryId();
-			if (event.getGui() instanceof GuiEditSign)
-				check: {
+			if (event.getGui() instanceof GuiEditSign) {
+				event.setCanceled(true);
+				final EntryId placeSign = handSignValid ? handSign : entryId;
+				if (placeSign.isPlaceable()) {
 					if (guiEditSignTileEntity!=null)
 						try {
 							final TileEntitySign tileSign = (TileEntitySign) guiEditSignTileEntity.get(event.getGui());
 							Sign.placeSign(handSignValid ? handSign : entryId, tileSign);
-							event.setCanceled(true);
 							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 								CurrentMode.instance.setMode();
 								final SignEntity se = Sign.preview;
@@ -105,25 +113,26 @@ public class SignHandler {
 									}
 								}
 							}
-							break check;
 						} catch (final Exception e) {
-							Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+							Log.notice(I18n.format("signpic.chat.error.place"));
 						}
-					Client.notice(I18n.format("signpic.chat.error.place"));
+					else
+						Log.notice(I18n.format("signpic.chat.error.place"));
+				} else if (CurrentMode.instance.isShortening())
+					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
+				else
+					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+			} else if (event.getGui() instanceof GuiRepair) {
+				if (!entryId.isNameable())
+					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
+				this.repairGuiTask = (GuiRepair) event.getGui();
+				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+					CurrentMode.instance.setMode();
+					Sign.preview.setVisible(false);
+					CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+					CurrentMode.instance.setState(CurrentMode.State.SEE, false);
 				}
-			else if (event.getGui() instanceof GuiRepair)
-				if (entryId.isNameable()) {
-					this.repairGuiTask = (GuiRepair) event.getGui();
-					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-						CurrentMode.instance.setMode();
-						Sign.preview.setVisible(false);
-						CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
-						CurrentMode.instance.setState(CurrentMode.State.SEE, false);
-					}
-				} else {
-					Client.notice(I18n.format("signpic.gui.notice.toolongname"));
-					event.setCanceled(true);
-				}
+			}
 		}
 	}
 
@@ -148,11 +157,13 @@ public class SignHandler {
 						}
 						break check;
 					} catch (final Exception e) {
-						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+						Log.notice(I18n.format("signpic.chat.error.place"));
 					}
-				Client.notice(I18n.format("signpic.chat.error.place"));
+				Log.notice(I18n.format("signpic.chat.error.place"));
 			}
 	}
+
+	protected VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
 
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
@@ -169,6 +180,11 @@ public class SignHandler {
 				MPanel.drawBack(a);
 				WGui.texture().bindTexture(SignPicLabel.defaultTexture);
 				WGui.drawTextureSize(guiLeft-42, guiTop+3, 42, 42);
+				if (CurrentMode.instance.isShortening()) {
+					final Area b = new Area(guiLeft, guiTop-20, event.getGui().width-guiLeft, guiTop);
+					WGui.fontColor(1f, 1f, 1f, this.o.get());
+					WGui.drawString(I18n.format("signpic.gui.notice.shortening"), b, WGui.Align.CENTER, WGui.VerticalAlign.MIDDLE, true);
+				}
 			}
 	}
 
@@ -189,7 +205,7 @@ public class SignHandler {
 				event.setCanceled(true);
 				CurrentMode.instance.setMode();
 				Client.openEditor();
-			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.LOAD)) {
+			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.OPTION)) {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				Entry entry = null;
 				if (tilesign!=null)
@@ -197,13 +213,8 @@ public class SignHandler {
 				else if (handEntry!=null)
 					entry = handEntry.entry();
 				if (entry!=null&&entry.isValid()) {
-					final Entry old = CurrentMode.instance.getEntryId().entry();
-					final EntryIdBuilder idb = new EntryIdBuilder();
-					idb.setURI(CurrentMode.instance.isState(CurrentMode.State.LOAD_CONTENT) ? entry.contentId.getID() : old.contentId.getID());
-					idb.setMeta(CurrentMode.instance.isState(CurrentMode.State.LOAD_META) ? entry.meta : old.meta);
-					CurrentMode.instance.setEntryId(idb.build());
 					event.setCanceled(true);
-					Client.openEditor();
+					Client.mc.displayGuiScreen(new GuiSignOption(entry));
 					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 						CurrentMode.instance.setMode();
 				}
@@ -214,18 +225,29 @@ public class SignHandler {
 	@CoreEvent
 	public void onTooltip(final ItemTooltipEvent event) {
 		if (event.getItemStack().getItem()==Items.SIGN) {
-			final EntryId id = EntryId.fromItemStack(event.getItemStack());
+			final ItemEntryId id = EntryId.fromItemStack(event.getItemStack());
 			final Entry entry = id.entry();
 			final List<String> tip = event.getToolTip();
 			if (entry.isValid()) {
 				final String raw = !tip.isEmpty() ? tip.get(0) : "";
-				tip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
-				tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", entry.meta.size.width, entry.meta.size.height));
-				tip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z));
-				tip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", entry.meta.rotation.compose()));
-				tip.add(I18n.format("signpic.item.sign.desc.named.meta", entry.meta.compose()));
-				tip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
-			} else if (Config.instance.signTooltip||!Config.instance.guiExperienced) {
+				if (id.hasName())
+					tip.set(0, id.getName());
+				else
+					tip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
+				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
+				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
+					tip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
+				else {
+					final ImageMeta meta = entry.getMeta();
+					tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
+					tip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
+					tip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					if (id.hasName())
+						tip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+					tip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					tip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+				}
+			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());

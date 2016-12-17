@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
@@ -16,7 +17,7 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
-public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable {
+public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
 	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected final Content content;
 
@@ -54,9 +55,9 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 				OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 			}
 			if (image.hasMipmap())
-				if (m&&OpenGL.openGl30()&&Config.instance.renderUseMipmap) {
-					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST : GL_LINEAR);
-					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
+				if (m&&OpenGL.openGl30()&&Config.instance.renderUseMipmap.get()) {
+					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest.get() ? GL_NEAREST : GL_LINEAR);
+					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest.get() ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
 				} else {
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

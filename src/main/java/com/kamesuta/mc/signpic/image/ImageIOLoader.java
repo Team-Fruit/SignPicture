@@ -1,16 +1,13 @@
 package com.kamesuta.mc.signpic.image;
 
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -18,11 +15,14 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.ILoadCancelable;
+import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
@@ -33,13 +33,15 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
-public class ImageIOLoader {
+public class ImageIOLoader implements ILoadCancelable {
 	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
-			Config.instance.imageWidthLimit>0 ? Config.instance.imageWidthLimit : ImageSize.unknownSize,
-			Config.instance.imageHeightLimit>0 ? Config.instance.imageHeightLimit : ImageSize.unknownSize);
+			Config.instance.imageWidthLimit.get()>0 ? Config.instance.imageWidthLimit.get() : ImageSize.unknownSize,
+			Config.instance.imageHeightLimit.get()>0 ? Config.instance.imageHeightLimit.get() : ImageSize.unknownSize);
+	public static float DefaultDelay = .05f;
 
 	protected Content content;
 	protected InputFactory input;
+	private boolean canceled;
 
 	public ImageIOLoader(final Content content, final InputFactory inputFactory) throws IOException {
 		this.content = content;
@@ -47,41 +49,51 @@ public class ImageIOLoader {
 	}
 
 	public RemoteImageTexture load() throws IOException {
-		final ImageInputStream imagestream = ImageIO.createImageInputStream(this.input.createInput());
-		final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
-		if (!iter.hasNext())
-			throw new InvaildImageException();
-		final ImageReader reader = iter.next();
+		InputStream stream = null;
+		try {
+			final ImageInputStream imagestream = ImageIO.createImageInputStream(stream = this.input.createInput());
+			final Iterator<ImageReader> iter = ImageIO.getImageReaders(imagestream);
+			if (!iter.hasNext())
+				throw new InvaildImageException();
+			final ImageReader reader = iter.next();
 
-		this.content.state.setType(StateType.LOADING);
-		this.content.state.setProgress(new Progress());
-		RemoteImageTexture textures;
-		if (Config.instance.imageAnimationGif&&reader.getFormatName()=="gif")
-			textures = loadGif();
-		else
-			textures = loadImage(reader, imagestream);
-		this.content.state.setType(StateType.LOADED);
-		this.input.close();
-		return textures;
+			this.content.state.setType(StateType.LOADING);
+			this.content.state.setProgress(new Progress());
+			RemoteImageTexture textures;
+			if (Config.instance.imageAnimationGif.get()&&reader.getFormatName()=="gif")
+				textures = loadGif();
+			else
+				textures = loadImage(reader, imagestream);
+			this.content.state.setType(StateType.LOADED);
+			return textures;
+		} finally {
+			IOUtils.closeQuietly(stream);
+		}
 	}
 
 	private RemoteImageTexture loadGif() throws IOException {
-		final GifImage gifImage = GifDecoder.read(this.input.createInput());
-		final int width = gifImage.getWidth();
-		final int height = gifImage.getHeight();
-		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
+		InputStream stream = null;
+		try {
+			final GifImage gifImage = GifDecoder.read(stream = this.input.createInput());
+			final int width = gifImage.getWidth();
+			final int height = gifImage.getHeight();
+			final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
 
-		final ArrayList<DynamicImageTexture> textures = new ArrayList<DynamicImageTexture>();
-		final int frameCount = gifImage.getFrameCount();
-		this.content.state.getProgress().overall = frameCount;
-		for (int i = 0; i<frameCount; i++) {
-			final BufferedImage image = gifImage.getFrame(i);
-			final int delay = gifImage.getDelay(i);
-			final DynamicImageTexture texture = new DynamicImageTexture(createResizedImage(image, newsize), (float) delay/100);
-			textures.add(texture);
-			this.content.state.getProgress().done = i;
+			final List<Pair<Float, DynamicImageTexture>> textures = Lists.newArrayList();
+			final int frameCount = gifImage.getFrameCount();
+			this.content.state.getProgress().overall = frameCount;
+			for (int i = 0; i<frameCount; i++) {
+				if (this.canceled)
+					throw new LoadCanceledException();
+				final BufferedImage image = gifImage.getFrame(i);
+				final int delay = gifImage.getDelay(i);
+				textures.add(Pair.of(delay/100f, DynamicImageTexture.create(image, (int) newsize.width, (int) newsize.height)));
+				this.content.state.getProgress().done = i;
+			}
+			return new RemoteImageTexture(textures);
+		} finally {
+			IOUtils.closeQuietly(stream);
 		}
-		return new RemoteImageTexture(textures);
 	}
 
 	private RemoteImageTexture loadImage(final ImageReader reader, final ImageInputStream imagestream) throws IOException {
@@ -95,36 +107,15 @@ public class ImageIOLoader {
 			imagestream.close();
 		}
 		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
-		return new RemoteImageTexture(Lists.newArrayList(new DynamicImageTexture(createResizedImage(canvas, newsize))));
+		final List<Pair<Float, DynamicImageTexture>> textures = Lists.newArrayList();
+		textures.add(Pair.of(0f, DynamicImageTexture.create(canvas, (int) newsize.width, (int) newsize.height)));
+		return new RemoteImageTexture(textures);
 	}
 
-	private BufferedImage createResizedImage(final BufferedImage image, final ImageSize newsize) {
-		final int wid = (int) newsize.width;
-		final int hei = (int) newsize.height;
-		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
-		final Graphics g = thumb.getGraphics();
-		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);
-		g.dispose();
-		return thumb;
-	}
-
-	public static interface InputFactory extends Closeable {
+	public static interface InputFactory {
 		InputStream createInput() throws IOException;
 
-		@Override
-		void close();
-
-		public static abstract class AbstractInputFactory implements InputFactory {
-			protected Set<Closeable> closables = Sets.newHashSet();
-
-			@Override
-			public void close() {
-				for (final Closeable closable : closables)
-					IOUtils.closeQuietly(closable);
-			}
-		}
-
-		public static class FileInputFactory extends AbstractInputFactory {
+		public static class FileInputFactory implements InputFactory {
 			private final File file;
 
 			public FileInputFactory(final File file) {
@@ -133,21 +124,19 @@ public class ImageIOLoader {
 
 			@Override
 			public InputStream createInput() throws FileNotFoundException {
-				final InputStream stream = new FileInputStream(file);
-				closables.add(stream);
-				return stream;
+				return new FileInputStream(file);
 			}
 		}
 
 		public static class ContentInputFactory extends FileInputFactory {
 			public ContentInputFactory(final Content content) {
-				super(content.location.cacheLocation());
+				super(ContentLocation.cacheLocation(content.meta.getCacheID()));
 			}
 		}
 
-		public static class ResourceInputFactory extends AbstractInputFactory {
-			private final IResourceManager manager;
-			private final ResourceLocation location;
+		public static class ResourceInputFactory implements InputFactory {
+			private IResourceManager manager;
+			private ResourceLocation location;
 
 			public ResourceInputFactory(final IResourceManager manager, final ResourceLocation location) {
 				this.manager = manager;
@@ -156,10 +145,13 @@ public class ImageIOLoader {
 
 			@Override
 			public InputStream createInput() throws IOException {
-				final InputStream stream = manager.getResource(location).getInputStream();
-				closables.add(stream);
-				return stream;
+				return manager.getResource(location).getInputStream();
 			}
 		}
+	}
+
+	@Override
+	public void cancel() {
+		this.canceled = true;
 	}
 }
