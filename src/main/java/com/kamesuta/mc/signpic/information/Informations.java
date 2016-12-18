@@ -131,7 +131,7 @@ public final class Informations {
 				if (checker.result!=null)
 					setSource(checker.result);
 				if (res.getError()!=null)
-					Log.warn("Could not check version information", res.getError());
+					Log.log.warn("Could not check version information", res.getError());
 				if (after!=null)
 					after.run();
 			}
@@ -179,7 +179,7 @@ public final class Informations {
 				try {
 					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 				} catch (final IOException e) {
-					Log.error(e.getMessage(), e);
+					Log.log.error(e.getMessage(), e);
 				}
 			} else if (state.downloading) {
 				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new Style().setColor(TextFormatting.RED)).chatClient();

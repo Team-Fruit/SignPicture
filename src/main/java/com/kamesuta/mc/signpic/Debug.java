@@ -5,6 +5,10 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.math.AxisAlignedBB;
+
 public class Debug {
 	public static void main(final String[] args) throws Exception {
 		// Reference.logger.info(ImageSizes.LIMIT.size(32, 24, 10, 12));
@@ -53,7 +57,7 @@ public class Debug {
 		//		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
 
 		final String src = "gyazo.com/114514e";
-		Log.info(replace(src));
+		Log.log.info(replace(src));
 	}
 
 	final static Pattern p = Pattern.compile("[^\\w]");
@@ -89,6 +93,15 @@ public class Debug {
 
 	static boolean isPlaceable(final String entryId) {
 		return StringUtils.length(entryId)<=15*4;
+	}
+
+	public static class DebugSign extends TileEntitySign {
+		@Override
+		public AxisAlignedBB getRenderBoundingBox() {
+			if (this instanceof TileEntitySign)
+				return TileEntity.INFINITE_EXTENT_AABB;
+			return super.getRenderBoundingBox();
+		}
 	}
 
 	// TODO: Fix and test this method.

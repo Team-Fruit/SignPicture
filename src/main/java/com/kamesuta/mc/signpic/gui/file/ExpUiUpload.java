@@ -41,11 +41,11 @@ public class ExpUiUpload extends UiUpload {
 
 	@Override
 	protected void apply(final File f) {
-		Log.info(f.getAbsolutePath());
+		Log.log.info(f.getAbsolutePath());
 	}
 
 	@Override
 	protected void transfer(final Transferable transferable) {
-		Log.info(transferable);
+		Log.log.info(transferable);
 	}
 };

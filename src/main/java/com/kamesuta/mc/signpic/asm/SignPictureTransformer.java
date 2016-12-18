@@ -9,19 +9,19 @@ import com.kamesuta.mc.signpic.asm.lib.VisitorHelper.TransformProvider;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 
-public class SignPictureClassTransformer implements IClassTransformer {
+public class SignPictureTransformer implements IClassTransformer {
 
 	@Override
 	public byte[] transform(final String name, final String transformedName, final byte[] bytes) {
 		if (bytes==null)
 			return bytes;
 
-		if (transformedName.equals("net.minecraft.block.BlockSign"))
+		if (transformedName.equals("net.minecraft.tileentity.TileEntity"))
 			return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
 				@Override
 				public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
-					Log.info(String.format("Trying to patch BlockSign.getCollisionBoundingBox (class: %s)", name));
-					return new BlockSignVisitor(name, cv);
+					Log.log.info(String.format("Patching TileEntity.getRenderBoundingBox (class: %s)", name));
+					return new TileEntityVisitor(name, cv);
 				}
 			});
 
