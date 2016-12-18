@@ -53,7 +53,7 @@ public class Debug {
 		//		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
 
 		final String src = "gyazo.com/114514e";
-		Log.info(replace(src));
+		Log.log.info(replace(src));
 	}
 
 	final static Pattern p = Pattern.compile("[^\\w]");

@@ -104,7 +104,7 @@ public class ModDownload extends Communicate implements Progressable {
 			onDone(new CommunicateResponse(true, null));
 			return;
 		} catch (final Throwable e) {
-			Log.warn("Updater Downloading Error", e);
+			Log.log.warn("Updater Downloading Error", e);
 			final IChatComponent chat = new ChatBuilder().setChat(new ChatComponentTranslation("signpic.versioning.error").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))).build();
 			this.result = new ModDLResult(chat);
 			onDone(new CommunicateResponse(false, e));

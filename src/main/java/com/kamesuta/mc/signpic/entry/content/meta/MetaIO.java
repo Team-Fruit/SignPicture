@@ -41,7 +41,7 @@ public abstract class MetaIO<E extends IData> {
 					return data;
 			}
 		} catch (final Exception e) {
-			Log.warn("content meta data is broken. aborted. ["+this.location.getName()+"]");
+			Log.log.warn("content meta data is broken. aborted. ["+this.location.getName()+"]");
 		} finally {
 			IOUtils.closeQuietly(reader);
 		}
