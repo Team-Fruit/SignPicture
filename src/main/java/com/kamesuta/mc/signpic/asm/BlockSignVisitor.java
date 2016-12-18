@@ -17,7 +17,7 @@ public class BlockSignVisitor extends ClassVisitor {
 		@Override
 		public void visitFieldInsn(final int opcode, final String owner, final String name, final String desc) {
 			super.visitFieldInsn(opcode, "net/minecraft/tileentity/TileEntity", "INFINITE_EXTENT_AABB", desc);
-			Log.info("BlockSign patch applied. You can see the sign from any angle");
+			Log.log.info("BlockSign patch applied. You can see the sign from any angle");
 		}
 	}
 

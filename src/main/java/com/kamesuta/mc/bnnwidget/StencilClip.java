@@ -88,7 +88,7 @@ public class StencilClip {
 					ReflectionHelper.<BitSet, MinecraftForgeClient> getPrivateValue(MinecraftForgeClient.class, null, "stencilBits").set(0, 8);
 				}
 			} catch (final Throwable e) {
-				Log.info("Failed to enable stencil buffer", e);
+				Log.log.info("Failed to enable stencil buffer", e);
 			}
 	}
 }
