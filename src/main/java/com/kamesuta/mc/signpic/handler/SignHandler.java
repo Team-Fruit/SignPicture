@@ -59,7 +59,7 @@ public class SignHandler {
 					guiEditSignTileEntity = field;
 				}
 		} catch (final SecurityException e) {
-			Log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
+			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
 		try {
 			final Field[] fields = GuiRepair.class.getDeclaredFields();
@@ -74,7 +74,7 @@ public class SignHandler {
 				}
 			}
 		} catch (final SecurityException e) {
-			Log.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
+			Log.log.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
 		}
 	}
 

@@ -6,7 +6,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy {
 	public void preInit(final FMLPreInitializationEvent event) {
-		Log.logger = event.getModLog();
+		Log.log = event.getModLog();
 		Config.instance = new Config(event.getSuggestedConfigurationFile());
 	}
 
