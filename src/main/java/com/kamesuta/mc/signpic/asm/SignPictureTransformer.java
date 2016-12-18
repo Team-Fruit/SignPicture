@@ -20,7 +20,7 @@ public class SignPictureTransformer implements IClassTransformer {
 			return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
 				@Override
 				public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
-					Log.info(String.format("Patching TileEntity.getRenderBoundingBox (class: %s)", name));
+					Log.log.info(String.format("Patching TileEntity.getRenderBoundingBox (class: %s)", name));
 					return new TileEntityVisitor(name, cv);
 				}
 			});
