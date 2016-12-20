@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.entry;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
@@ -41,7 +43,7 @@ public class EntryIdBuilder {
 			return this.uri;
 	}
 
-	public EntryId build() {
+	public @Nonnull EntryId build() {
 		return new EntryId("#"+new ContentId(getURI()).getID()+getMeta());
 	}
 }

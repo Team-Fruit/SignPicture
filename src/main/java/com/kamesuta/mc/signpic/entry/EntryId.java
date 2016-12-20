@@ -156,7 +156,7 @@ public class EntryId {
 		return hasContentId()&&hasMeta();
 	}
 
-	public ContentId getContentId() {
+	public @Nullable ContentId getContentId() {
 		if (hasContentId()) {
 			String id;
 			if (StringUtils.contains(this.id, "["))
@@ -180,7 +180,7 @@ public class EntryId {
 			return null;
 	}
 
-	public ImageMeta getMeta() {
+	public @Nullable ImageMeta getMeta() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
 			return new ImageMeta().init(metasource);
@@ -209,7 +209,7 @@ public class EntryId {
 		toStrings(tile.signText);
 	}
 
-	public Entry entry() {
+	public @Nonnull Entry entry() {
 		return EntryManager.instance.get(this);
 	}
 }
