@@ -3,20 +3,28 @@ package com.kamesuta.mc.signpic.image.meta;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.vecmath.AxisAngle4f;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationMath;
 
 public class ImageRotation implements MetaMovie<DiffRotation, KeyRotation> {
+
 	public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
+	public float x = 0;
+	public float y = 0;
+	public float z = 0;
+	public float angle = 0;
 	public KeyRotation base;
 
 	@Override
 	public DiffRotation diff(final KeyRotation base) {
-		return RotationData.create(base, this.rotates);
+		return RotationData.create(base, new AxisAngle4f(this.x, this.y, this.z, this.angle), this.rotates);
 	}
 
 	@Override
@@ -27,6 +35,23 @@ public class ImageRotation implements MetaMovie<DiffRotation, KeyRotation> {
 			this.rotates.add(new ImageRotate(RotateType.Y, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 		else if (StringUtils.equals(key, RotateType.Z.name()))
 			this.rotates.add(new ImageRotate(RotateType.Z, NumberUtils.toFloat(value, RotationData.defaultOffset)));
+		else if (StringUtils.equals(key, "A"))
+			this.angle += RotationMath.toRadians(NumberUtils.toFloat(value, RotationData.defaultAngle)*360f/8f);
+		else if (StringUtils.equals(key, "P"))
+			if (StringUtils.isEmpty(value))
+				this.x += RotationData.defaultAxis;
+			else
+				this.x += NumberUtils.toFloat(value, RotationData.defaultAxis);
+		else if (StringUtils.equals(key, "Q"))
+			if (StringUtils.isEmpty(value))
+				this.y += RotationData.defaultAxis;
+			else
+				this.y += NumberUtils.toFloat(value, RotationData.defaultAxis);
+		else if (StringUtils.equals(key, "R"))
+			if (StringUtils.isEmpty(value))
+				this.z += RotationData.defaultAxis;
+			else
+				this.z += NumberUtils.toFloat(value, RotationData.defaultAxis);
 		else
 			return false;
 		return true;

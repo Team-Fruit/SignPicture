@@ -14,6 +14,8 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 
 public abstract class RotationData {
 	public static final float defaultOffset = 4f;
+	public static final float defaultAngle = 0f;
+	public static final float defaultAxis = 1f;
 
 	public Quat4f getRotate() {
 		return getRotate(1f);
@@ -21,13 +23,13 @@ public abstract class RotationData {
 
 	public abstract Quat4f getRotate(float scale);
 
-	public static DiffRotation create(KeyRotation base, final List<ImageRotate> rotates) {
+	public static DiffRotation create(KeyRotation base, final AxisAngle4f axisrotate, final List<ImageRotate> rotates) {
 		if (base==null)
 			base = new BaseRotation();
 		final Builder<Rotate> builder = ImmutableList.builder();
 		for (final ImageRotate rotate : rotates)
 			builder.add(new Rotate(rotate));
-		return new DiffRotation(base, builder.build());
+		return new DiffRotation(base, axisrotate, builder.build());
 	}
 
 	public static class PerRotation extends RotationData {
@@ -44,7 +46,7 @@ public abstract class RotationData {
 
 		@Override
 		public String toString() {
-			return "DiffRotationDataPer [rotate="+this.rotate+"]";
+			return "PerDiffRotation [rotate="+this.rotate+"]";
 		}
 	}
 
@@ -59,7 +61,7 @@ public abstract class RotationData {
 		protected final Quat4f diff;
 
 		private BaseRotation() {
-			this.diff = new Quat4f(0, 0, 0, 1);
+			this.diff = RotationMath.newQuat();
 		}
 
 		@Override
@@ -85,29 +87,32 @@ public abstract class RotationData {
 
 	public static class DiffRotation extends KeyRotation {
 		private final KeyRotation base;
-		private final ImmutableList<Rotate> diff;
+		private final AxisAngle4f diffangleaxis;
+		private final ImmutableList<Rotate> diffglobalaxis;
 
-		public DiffRotation(final KeyRotation base, final ImmutableList<Rotate> diff) {
+		public DiffRotation(final KeyRotation base, final AxisAngle4f diffangleaxis, final ImmutableList<Rotate> diffglobalaxis) {
 			this.base = base;
-			this.diff = diff;
+			this.diffangleaxis = diffangleaxis;
+			this.diffglobalaxis = diffglobalaxis;
 		}
 
 		@Override
 		public Quat4f getRotate(final float scale) {
-			final Quat4f base = new Quat4f(this.base.getRotate(1f));
-			final Quat4f qdiff = getDiffQuat(scale);
-			// qdiff.interpolate(new Quat4f(0, 0, 0, 1), qdiff, scale);
-			qdiff.mul(base);
-			return qdiff;
-			// base.mul(qdiff);
-			// return base;
+			final Quat4f quat = new Quat4f(this.base.getRotate(1f));
+			quat.mul(getDiffAngleQuat(scale));
+			quat.mul(getDiffGlobalQuat(scale));
+			return quat;
 		}
 
-		private Quat4f getDiffQuat(final float scale) {
-			final Quat4f quat = new Quat4f(0, 0, 0, 1);
-			for (final ListIterator<Rotate> it = this.diff.listIterator(this.diff.size()); it.hasPrevious();)
+		private Quat4f getDiffGlobalQuat(final float scale) {
+			final Quat4f quat = RotationMath.newQuat();
+			for (final ListIterator<Rotate> it = this.diffglobalaxis.listIterator(this.diffglobalaxis.size()); it.hasPrevious();)
 				quat.mul(it.previous().getRotate(scale));
 			return quat;
+		}
+
+		private Quat4f getDiffAngleQuat(final float scale) {
+			return RotationMath.toQuat(new AxisAngle4f(this.diffangleaxis.x, this.diffangleaxis.y, this.diffangleaxis.z, this.diffangleaxis.angle*scale));
 		}
 
 		@Override
@@ -118,14 +123,31 @@ public abstract class RotationData {
 		@Override
 		public String compose() {
 			final StringBuilder stb = new StringBuilder(this.base.compose());
-			for (final Rotate rotate : this.diff)
+			if (this.diffangleaxis.angle!=defaultAngle)
+				stb.append("A").append(ShortestFloatFormatter.format(RotationMath.toDegrees(this.diffangleaxis.angle)*8f/360f));
+			if (this.diffangleaxis.x!=0)
+				if (this.diffangleaxis.x==defaultAxis)
+					stb.append("P");
+				else
+					stb.append("P").append(ShortestFloatFormatter.format(this.diffangleaxis.x));
+			if (this.diffangleaxis.y!=0)
+				if (this.diffangleaxis.y==defaultAxis)
+					stb.append("Q");
+				else
+					stb.append("Q").append(ShortestFloatFormatter.format(this.diffangleaxis.y));
+			if (this.diffangleaxis.z!=0)
+				if (this.diffangleaxis.z==defaultAxis)
+					stb.append("R");
+				else
+					stb.append("R").append(ShortestFloatFormatter.format(this.diffangleaxis.z));
+			for (final Rotate rotate : this.diffglobalaxis)
 				stb.append(rotate.compose());
 			return stb.toString();
 		}
 
 		@Override
 		public String toString() {
-			return "DiffRotationDataDiff [base="+this.base+", diff="+this.diff+"]";
+			return "DiffRotation [base="+this.base+", diffAxisAngle="+this.diffangleaxis+", diffGlobal="+this.diffglobalaxis+"]";
 		}
 	}
 
@@ -193,6 +215,10 @@ public abstract class RotationData {
 	public static class RotationMath {
 		public static final float PI = (float) Math.PI;
 
+		public static Quat4f newQuat() {
+			return new Quat4f(0, 0, 0, 1);
+		}
+
 		public static float toRadians(final float angdeg) {
 			return angdeg/180f*PI;
 		}
@@ -202,6 +228,8 @@ public abstract class RotationData {
 		}
 
 		public static Quat4f toQuat(final AxisAngle4f axis) {
+			if (axis.angle==0f)
+				return newQuat();
 			final Quat4f q = new Quat4f();
 			q.set(axis);
 			return q;
