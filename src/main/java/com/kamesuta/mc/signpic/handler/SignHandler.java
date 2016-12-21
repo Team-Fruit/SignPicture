@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
@@ -14,9 +15,10 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -58,7 +60,7 @@ public class SignHandler {
 					guiEditSignTileEntity = field;
 				}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook TileEntitySign field included in GuiEditSign", e);
+			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
 		try {
 			final Field[] fields = GuiRepair.class.getDeclaredFields();
@@ -73,7 +75,7 @@ public class SignHandler {
 				}
 			}
 		} catch (final SecurityException e) {
-			Reference.logger.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
+			Log.log.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
 		}
 	}
 
@@ -111,14 +113,14 @@ public class SignHandler {
 								}
 							}
 						} catch (final Exception e) {
-							Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+							Log.notice(I18n.format("signpic.chat.error.place"));
 						}
 					else
-						Client.notice(I18n.format("signpic.chat.error.place"));
+						Log.notice(I18n.format("signpic.chat.error.place"));
 				} else if (CurrentMode.instance.isShortening())
-					Client.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
+					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
 				else
-					Client.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
 			} else if (event.gui instanceof GuiRepair) {
 				if (!entryId.isNameable())
 					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
@@ -154,9 +156,9 @@ public class SignHandler {
 						}
 						break check;
 					} catch (final Exception e) {
-						Reference.logger.error(I18n.format("signpic.chat.error.place"), e);
+						Log.notice(I18n.format("signpic.chat.error.place"));
 					}
-				Client.notice(I18n.format("signpic.chat.error.place"));
+				Log.notice(I18n.format("signpic.chat.error.place"));
 			}
 	}
 
@@ -220,26 +222,28 @@ public class SignHandler {
 	@CoreEvent
 	public void onTooltip(final ItemTooltipEvent event) {
 		if (event.itemStack.getItem()==Items.sign) {
-			final String dspname = event.itemStack.getDisplayName();
-			final String name = StringUtils.substringAfterLast(dspname, "}");
-			final boolean useName = !StringUtils.isEmpty(name);
-			final EntryId id = EntryId.fromItemStack(event.itemStack);
+			final ItemEntryId id = EntryId.fromItemStack(event.itemStack);
 			final Entry entry = id.entry();
 			if (entry.isValid()) {
 				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
-				if (useName)
-					event.toolTip.set(0, name);
+				if (id.hasName())
+					event.toolTip.set(0, id.getName());
 				else
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
-				final ImageMeta meta = entry.getMeta();
-				final SizeData size = meta.sizes.getMovie().get();
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.xoffsets.getMovie().get().offset, meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset));
-				// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-				if (useName)
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-				// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
-				event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
+				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
+					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
+				else {
+					final ImageMeta meta = entry.getMeta();
+					final SizeData size = meta.sizes.getMovie().get();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.xoffsets.getMovie().get().offset, meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					if (id.hasName())
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+				}
 			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);

@@ -12,7 +12,7 @@ import org.apache.commons.io.IOUtils;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 
 public abstract class MetaIO<E extends IData> {
 	public final File location;
@@ -41,7 +41,7 @@ public abstract class MetaIO<E extends IData> {
 					return data;
 			}
 		} catch (final Exception e) {
-			Reference.logger.info("content meta data is broken. aborted. ["+this.location.getName()+"]");
+			Log.log.warn("content meta data is broken. aborted. ["+this.location.getName()+"]");
 		} finally {
 			IOUtils.closeQuietly(reader);
 		}

@@ -7,6 +7,8 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -50,7 +52,7 @@ public class ContentManager implements ITickEntry {
 		this.divisionqueue.offer(divisionProcessable);
 	}
 
-	protected Content get(final ContentId id) {
+	protected @Nonnull Content get(final ContentId id) {
 		final ContentSlot entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();

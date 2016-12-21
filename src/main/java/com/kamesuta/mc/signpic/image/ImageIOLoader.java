@@ -1,14 +1,13 @@
 package com.kamesuta.mc.signpic.image;
 
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReadParam;
@@ -16,6 +15,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.Config;
@@ -37,6 +37,7 @@ public class ImageIOLoader implements ILoadCancelable {
 	public static final SizeData MAX_SIZE = SizeData.create(
 			Config.instance.imageWidthLimit.get()>0 ? Config.instance.imageWidthLimit.get() : SizeData.Unknown,
 			Config.instance.imageHeightLimit.get()>0 ? Config.instance.imageHeightLimit.get() : SizeData.Unknown);
+	public static float DefaultDelay = .05f;
 
 	protected Content content;
 	protected InputFactory input;
@@ -78,7 +79,7 @@ public class ImageIOLoader implements ILoadCancelable {
 			final int height = gifImage.getHeight();
 			final SizeData newsize = ImageSizes.LIMIT.defineSize(width, height, MAX_SIZE);
 
-			final ArrayList<DynamicImageTexture> textures = new ArrayList<DynamicImageTexture>();
+			final List<Pair<Float, DynamicImageTexture>> textures = Lists.newArrayList();
 			final int frameCount = gifImage.getFrameCount();
 			this.content.state.getProgress().overall = frameCount;
 			for (int i = 0; i<frameCount; i++) {
@@ -86,8 +87,7 @@ public class ImageIOLoader implements ILoadCancelable {
 					throw new LoadCanceledException();
 				final BufferedImage image = gifImage.getFrame(i);
 				final int delay = gifImage.getDelay(i);
-				final DynamicImageTexture texture = new DynamicImageTexture(createResizedImage(image, newsize), (float) delay/100);
-				textures.add(texture);
+				textures.add(Pair.of(delay/100f, DynamicImageTexture.create(image, (int) newsize.getWidth(), (int) newsize.getHeight())));
 				this.content.state.getProgress().done = i;
 			}
 			return new RemoteImageTexture(textures);
@@ -107,24 +107,16 @@ public class ImageIOLoader implements ILoadCancelable {
 			imagestream.close();
 		}
 		final SizeData newsize = ImageSizes.LIMIT.defineSize(canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
-		return new RemoteImageTexture(Lists.newArrayList(new DynamicImageTexture(createResizedImage(canvas, newsize))));
-	}
-
-	private BufferedImage createResizedImage(final BufferedImage image, final SizeData newsize) {
-		final int wid = (int) newsize.getWidth();
-		final int hei = (int) newsize.getHeight();
-		final BufferedImage thumb = new BufferedImage(wid, hei, image.getType());
-		final Graphics g = thumb.getGraphics();
-		g.drawImage(image.getScaledInstance(wid, hei, java.awt.Image.SCALE_AREA_AVERAGING), 0, 0, wid, hei, null);
-		g.dispose();
-		return thumb;
+		final List<Pair<Float, DynamicImageTexture>> textures = Lists.newArrayList();
+		textures.add(Pair.of(0f, DynamicImageTexture.create(canvas, (int) newsize.getWidth(), (int) newsize.getHeight())));
+		return new RemoteImageTexture(textures);
 	}
 
 	public static interface InputFactory {
 		InputStream createInput() throws IOException;
 
 		public static class FileInputFactory implements InputFactory {
-			private File file;
+			private final File file;
 
 			public FileInputFactory(final File file) {
 				this.file = file;

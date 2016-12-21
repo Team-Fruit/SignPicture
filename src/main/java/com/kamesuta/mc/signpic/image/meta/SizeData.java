@@ -46,11 +46,6 @@ public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
 		return (vaildWidth() ? ShortestFloatFormatter.format(getWidth()) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(getHeight()) : "");
 	}
 
-	@Override
-	public String toString() {
-		return "SizeData [width="+getWidth()+", height="+getHeight()+"]";
-	}
-
 	public abstract SizeData aspectSize(final SizeData availableaspect);
 
 	public static SizeData create(final float width, final float height) {
@@ -110,6 +105,11 @@ public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
 			else
 				return ImageSizes.HEIGHT.defineSize(availableaspect, Unknown, 1);
 		}
+
+		@Override
+		public String toString() {
+			return "AbsSizeData [width="+getWidth()+", height="+getHeight()+"]";
+		}
 	}
 
 	public static class PerSizeData extends SizeData {
@@ -147,6 +147,11 @@ public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
 		public SizeData aspectSize(final SizeData availableaspect) {
 			return new PerSizeData(this.after.aspectSize(availableaspect), this.before.aspectSize(availableaspect), this.per);
 		}
+
+		@Override
+		public String toString() {
+			return "PerSizeData [after="+this.after+", before="+this.before+", per="+this.per+", (width="+getWidth()+", height="+getHeight()+")]";
+		}
 	}
 
 	public static class DiffSizeData extends SizeData {
@@ -180,8 +185,12 @@ public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
 
 		@Override
 		public SizeData aspectSize(final SizeData availableaspect) {
-			final SizeData baseaspect = this.base.aspectSize(availableaspect);
-			return new DiffSizeData(baseaspect, this.diff.aspectSize(baseaspect));
+			return this.diff.aspectSize(this.base.aspectSize(availableaspect));
+		}
+
+		@Override
+		public String toString() {
+			return "PerSizeData [base="+this.base+", diff="+this.diff+", (width="+getWidth()+", height="+getHeight()+")]";
 		}
 	}
 

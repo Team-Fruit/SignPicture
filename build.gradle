@@ -87,9 +87,12 @@ dependencies {
 }
 
 def commonManifest = {
-    if (project.hasProperty('extra_fmlat')) {
+    if (project.hasProperty('extra_fmlcore'))
+        attributes 'FMLCorePlugin': project.extra_fmlcore
+    if (project.hasProperty('extra_fmlmod'))
+        attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlcore
+    if (project.hasProperty('extra_fmlat'))
         attributes 'FMLAT': project.extra_fmlat
-    }
 }
 
 jar {

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
@@ -118,7 +119,7 @@ public final class Informations {
 		if (getState()!=null)
 			getState().triedToWarnPlayer = false;
 		if (!isUpdateRequired())
-			Client.notice(I18n.format("signpic.versioning.noupdate"));
+			Log.notice(I18n.format("signpic.versioning.noupdate"));
 	}
 
 	public void onlineCheck(final Runnable after) {
@@ -130,7 +131,7 @@ public final class Informations {
 				if (checker.result!=null)
 					setSource(checker.result);
 				if (res.getError()!=null)
-					Reference.logger.warn("Could not check version information", res.getError());
+					Log.log.warn("Could not check version information", res.getError());
 				if (after!=null)
 					after.run();
 			}
@@ -174,15 +175,15 @@ public final class Informations {
 		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
 			if (state.isDownloaded()) {
 				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
+				Log.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"));
 				try {
 					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 				} catch (final IOException e) {
-					Reference.logger.error(e.getMessage(), e);
+					Log.log.error(e.getMessage(), e);
 				}
 			} else if (state.downloading) {
 				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
+				Log.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"));
 			} else {
 				final ModDownload downloader = new ModDownload();
 				downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);

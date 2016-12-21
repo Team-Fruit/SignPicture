@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
-import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
@@ -28,19 +28,19 @@ public class UploadApiUtil {
 						if (upload.getLink()!=null) {
 							final String url = upload.getLink();
 							if (!GuiMain.setContentId(url))
-								Client.notice(I18n.format("signpic.gui.notice.uploaded", content.getName()), 2);
+								Log.notice(I18n.format("signpic.gui.notice.uploaded", content.getName()));
 							if (onDone!=null)
 								onDone.run();
 						}
 						if (!res.isSuccess())
-							Client.notice(I18n.format("signpic.gui.notice.uploadfailed", res.getError()), 2);
+							Log.notice(I18n.format("signpic.gui.notice.uploadfailed", res.getError()));
 					}
 				});
 				Communicator.instance.communicate(upload);
 			}
 			return true;
 		} catch (final IOException e) {
-			Client.notice(I18n.format("signpic.gui.notice.uploadfailed", e), 2);
+			Log.notice(I18n.format("signpic.gui.notice.uploadfailed", e));
 		}
 		return false;
 	}

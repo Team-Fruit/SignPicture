@@ -13,7 +13,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.image.meta.ImageTextureMap.ImageTextureMapBoolean;
 import com.kamesuta.mc.signpic.image.meta.MovieMeta.MovieBuilder;
 import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
@@ -132,8 +132,6 @@ public class ImageMeta {
 			}
 		}
 
-		Reference.logger.info(timeline);
-
 		boolean bb = true;
 
 		for (final Entry<Float, String> entry : timeline.entrySet()) {
@@ -165,7 +163,9 @@ public class ImageMeta {
 				m.next(time, easing);
 		}
 
-		this.hasInvalidMeta = this.hasInvalidMeta||!bb;
+		this.hasInvalidMeta = !bb;
+
+		Log.dev.info("signmeta={"+src+"}, unsupported="+!bb);
 	}
 
 	public boolean hasInvalidMeta() {

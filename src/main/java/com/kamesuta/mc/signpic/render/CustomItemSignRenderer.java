@@ -45,23 +45,25 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		} else {
 			if (type==ItemRenderType.ENTITY) {
 				if (RenderItem.renderInFrame) {
-					OpenGL.glRotatef(90f, 0f, 1f, 0f);
-					OpenGL.glScalef(-1f, -1f, 1f);
-					OpenGL.glTranslatef(.5f, -.62f, 0f);
+					OpenGL.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
+					OpenGL.glTranslatef(0f, 0.025f, 0f);
+					OpenGL.glScalef(1.6F, -1.6F, 1f);
+					final float f = 0.0078125F; // vanilla map offset
+					OpenGL.glTranslatef(-size.getWidth()/2f, -.5f, f*4);
 				} else {
 					OpenGL.glRotatef(180f, 1f, 0f, 0f);
 					OpenGL.glScalef(2f, 2f, 1f);
 					OpenGL.glTranslatef(.5f, -1f, 0f);
+					OpenGL.glScalef(-1f, 1f, 1f);
+					OpenGL.glTranslatef(-(size.getWidth()-1f)/2f, .125f, 0f);
 				}
-				OpenGL.glScalef(-1f, 1f, 1f);
-				OpenGL.glTranslatef(-(size.getWidth()-1f)/2f, .125f, 0f);
 			} else {
 				OpenGL.glScalef(2f, 2f, 1f);
 				OpenGL.glTranslatef(.5f, 1f, 0f);
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
-			OpenGL.glTranslatef(meta.xoffsets.getMovie().get().offset, meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset);
+			OpenGL.glTranslatef(meta.xoffsets.getMovie().get().offset, -meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset);
 			RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
 		}

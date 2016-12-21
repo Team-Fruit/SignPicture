@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.LoadCanceledException;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.content.ContentBlockedException;
 import com.kamesuta.mc.signpic.entry.content.ContentCapacityOverException;
 import com.kamesuta.mc.signpic.entry.content.RetryCountOverException;
@@ -72,6 +73,7 @@ public class State {
 			} catch (final Throwable e) {
 				setMessage(I18n.format("signpic.advmsg.unknown", e));
 			}
+			Log.dev.error(getMessage(), throwable);
 		}
 		return this;
 	}

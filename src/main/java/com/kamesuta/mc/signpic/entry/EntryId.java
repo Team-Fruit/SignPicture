@@ -1,5 +1,8 @@
 package com.kamesuta.mc.signpic.entry;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.entry.content.ContentId;
@@ -7,6 +10,7 @@ import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.image.meta.MetaBuilder;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IChatComponent;
 
@@ -79,12 +83,48 @@ public class EntryId {
 		return from(stb.toString());
 	}
 
-	public static EntryId fromItemStack(final ItemStack itemStack) {
-		if (itemStack==null)
-			return blank;
-		final String name = itemStack.getDisplayName();
-		final int index = StringUtils.lastIndexOf(name, "}");
-		return from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0));
+	public static class ItemEntryId extends EntryId {
+		public static final ItemEntryId blank = new ItemEntryId(EntryId.blank, null);
+
+		private final @Nullable String name;
+
+		protected ItemEntryId(final EntryId id, @Nullable final String name) {
+			super(id.id());
+			this.name = name;
+		}
+
+		public boolean hasName() {
+			return this.name!=null;
+		}
+
+		public @Nullable String getName() {
+			return this.name;
+		}
+
+		public static boolean hasName(@Nonnull final NBTTagCompound nbt) {
+			if (nbt.hasKey("display", 10)) {
+				final NBTTagCompound nbttagcompound = nbt.getCompoundTag("display");
+				if (nbttagcompound.hasKey("Name", 8))
+					return true;
+			}
+			return false;
+		}
+	}
+
+	public static ItemEntryId fromItemStack(final ItemStack itemStack) {
+		if (itemStack!=null) {
+			final NBTTagCompound nbt = itemStack.getTagCompound();
+			if (nbt!=null)
+				if (ItemEntryId.hasName(nbt)) {
+					final String name = itemStack.getDisplayName();
+					final int index = StringUtils.lastIndexOf(name, "}");
+					String itemname = StringUtils.substringAfterLast(name, "}");
+					if (StringUtils.isEmpty(itemname))
+						itemname = null;
+					return new ItemEntryId(from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0)), itemname);
+				}
+		}
+		return ItemEntryId.blank;
 	}
 
 	public boolean hasContentId() {
@@ -117,7 +157,7 @@ public class EntryId {
 		return hasContentId()&&hasMeta();
 	}
 
-	public ContentId getContentId() {
+	public @Nullable ContentId getContentId() {
 		if (hasContentId()) {
 			String id;
 			if (StringUtils.contains(this.id, "["))
@@ -141,7 +181,7 @@ public class EntryId {
 			return null;
 	}
 
-	public ImageMeta getMeta() {
+	public @Nullable ImageMeta getMeta() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
 			return new ImageMeta(metasource);
@@ -177,7 +217,7 @@ public class EntryId {
 		toStrings(tile.signText);
 	}
 
-	public Entry entry() {
+	public @Nonnull Entry entry() {
 		return EntryManager.instance.get(this);
 	}
 }

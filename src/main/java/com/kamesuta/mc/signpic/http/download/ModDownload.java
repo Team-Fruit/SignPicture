@@ -19,7 +19,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.LoadCanceledException;
-import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.information.Informations;
@@ -59,7 +59,7 @@ public class ModDownload extends Communicate implements Progressable {
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
-			Client.notice(I18n.format("signpic.gui.notice.downloading", local), 2f);
+			Log.notice(I18n.format("signpic.gui.notice.downloading", local));
 
 			state.downloading = true;
 
@@ -95,7 +95,7 @@ public class ModDownload extends Communicate implements Progressable {
 				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
-			Client.notice(I18n.format("signpic.gui.notice.downloaded", local), 2f);
+			Log.notice(I18n.format("signpic.gui.notice.downloaded", local));
 
 			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
 			state.downloadedFile = f1;
@@ -104,7 +104,7 @@ public class ModDownload extends Communicate implements Progressable {
 			onDone(new CommunicateResponse(true, null));
 			return;
 		} catch (final Throwable e) {
-			Reference.logger.warn("Updater Downloading Error", e);
+			Log.log.warn("Updater Downloading Error", e);
 			final IChatComponent chat = new ChatBuilder().setChat(new ChatComponentTranslation("signpic.versioning.error").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))).build();
 			this.result = new ModDLResult(chat);
 			onDone(new CommunicateResponse(false, e));

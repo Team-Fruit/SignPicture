@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -50,18 +53,15 @@ public class SignPicLabel extends WBase {
 			final Entry entry = entryId.entry();
 			if (entry!=null&&entry.isValid()) {
 				final Content content = entry.content();
+				@Nullable
 				Entry upentry = null;
-				Content upcontent = null;
-				if (this.update!=null) {
+				if (this.update!=null)
 					upentry = this.update.entry();
-					if (upentry!=null&&upentry.isValid())
-						upcontent = upentry.content();
-				}
 
-				if (content!=null&&!StringUtils.isEmpty(content.id.id()))
-					drawEntry(a, opacity, entry, content);
-				else if (upentry!=null&&upcontent!=null)
-					drawEntry(a, opacity, upentry, upcontent);
+				if (!StringUtils.isEmpty(content.id.id()))
+					drawEntry(a, opacity, entry);
+				else if (upentry!=null&&upentry.isValid())
+					drawEntry(a, opacity, upentry);
 				else {
 					RenderHelper.startTexture();
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
@@ -73,11 +73,11 @@ public class SignPicLabel extends WBase {
 		}
 	}
 
-	private void drawEntry(final Area a, final float opacity, final Entry entry, final Content content) {
+	public static void drawEntry(final Area a, final float opacity, @Nonnull final Entry entry) {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
-		final SizeData size1 = entry.getMeta().sizes.getMovie().get().aspectSize(content.image.getSize());
+		final SizeData size1 = entry.getMeta().sizes.getMovie().get().aspectSize(entry.content().image.getSize());
 		final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(a));
 		final SizeData size = size2.scale(1f/100f);
 

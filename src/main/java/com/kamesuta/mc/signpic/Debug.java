@@ -78,14 +78,14 @@ public class Debug {
 
 	static void quat() {
 		final AxisAngle4f angle1 = new AxisAngle4f(0, 1, 0, RotationMath.toRadians(360+90));
-		Reference.logger.info(angle1+":"+RotationMath.toDegrees(angle1.angle));
+		Log.log.info(angle1+":"+RotationMath.toDegrees(angle1.angle));
 		final Quat4f quat1 = RotationMath.toQuat(angle1);
 		final AxisAngle4f angle2 = RotationMath.toAxis(quat1);
-		Reference.logger.info(angle2+":"+RotationMath.toDegrees(angle2.angle));
+		Log.log.info(angle2+":"+RotationMath.toDegrees(angle2.angle));
 		final Quat4f quat2 = new Quat4f(0, 0, 0, 1);
 		quat2.mul(quat1);
 		final AxisAngle4f angle3 = RotationMath.toAxis(quat2);
-		Reference.logger.info(angle3+":"+RotationMath.toDegrees(angle3.angle));
+		Log.log.info(angle3+":"+RotationMath.toDegrees(angle3.angle));
 	}
 
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
@@ -104,7 +104,7 @@ public class Debug {
 				timeline.put("def", meta);
 			}
 		}
-		Reference.logger.info(timeline);
+		Log.log.info(timeline);
 	}
 
 	final static Pattern p = Pattern.compile("[^\\w]");
