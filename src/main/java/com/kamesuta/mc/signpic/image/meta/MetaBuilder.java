@@ -11,8 +11,8 @@ import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.image.meta.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataType;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataTypeBoolean;
-import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
 
 public class MetaBuilder {
 	public final SizeBuilder size = new SizeBuilder();
@@ -21,12 +21,12 @@ public class MetaBuilder {
 	public final OffsetBuilder zoffset = new OffsetBuilder("B", "F");
 	public final RotationBuilder rotation = new RotationBuilder();
 	public final TextureMapBuilder u = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder v = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder w = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder h = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder c = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder s = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder o = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder v = new TextureMapBuilder(DataType.V);
+	public final TextureMapBuilder w = new TextureMapBuilder(DataType.W);
+	public final TextureMapBuilder h = new TextureMapBuilder(DataType.H);
+	public final TextureMapBuilder c = new TextureMapBuilder(DataType.C);
+	public final TextureMapBuilder s = new TextureMapBuilder(DataType.S);
+	public final TextureMapBuilder o = new TextureMapBuilder(DataType.O);
 	public final TextureMapBooleanBuilder r = new TextureMapBooleanBuilder(DataTypeBoolean.R);
 	public final TextureMapBooleanBuilder m = new TextureMapBooleanBuilder(DataTypeBoolean.M);
 	public final AnimationBuilder animation = new AnimationBuilder();

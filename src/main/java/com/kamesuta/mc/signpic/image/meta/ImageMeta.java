@@ -23,13 +23,15 @@ import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.image.meta.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataType;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataTypeBoolean;
-import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapDataBoolean;
 
 public class ImageMeta {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
+
+	public static final float defaultInterval = 1f;
 
 	private boolean hasInvalidMeta;
 
@@ -124,16 +126,18 @@ public class ImageMeta {
 		final String s = mgb.replaceAll("");
 		timeline.put(0f, s);
 
+		float current = 0;
 		final Matcher mg = g.matcher(src);
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
-				final float time = NumberUtils.toFloat(mg.group(1));
-				final String before = timeline.get(time);
+				final float time = NumberUtils.toFloat(mg.group(1), defaultInterval);
+				current += time;
+				final String before = timeline.get(current);
 				String meta = mg.group(2);
 				if (before!=null)
 					meta = before+meta;
-				timeline.put(time, meta);
+				timeline.put(current, meta);
 			}
 		}
 
