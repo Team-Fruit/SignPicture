@@ -17,6 +17,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -237,7 +238,8 @@ public class SignHandler {
 					final CompoundAttr meta = entry.getMeta();
 					final SizeData size = meta.sizes.getMovie().get();
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.xoffsets.getMovie().get().offset, meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset));
+					final OffsetData offset = meta.offsets.getMovie().get();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
 					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
 					if (id.hasName())
 						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));

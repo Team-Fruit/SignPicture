@@ -3,8 +3,9 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
-import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -63,7 +64,8 @@ public class CustomItemSignRenderer implements IItemRenderer {
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
-			OpenGL.glTranslatef(meta.xoffsets.getMovie().get().offset, -meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset);
+			final OffsetData offset = meta.offsets.getMovie().get();
+			OpenGL.glTranslatef(offset.x.offset, -offset.y.offset, offset.z.offset);
 			RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
 		}

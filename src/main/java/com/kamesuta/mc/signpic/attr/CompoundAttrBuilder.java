@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
-import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetPropBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataType;
@@ -16,9 +16,9 @@ import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBuilder;
 
 public class CompoundAttrBuilder {
 	public final SizeBuilder size = new SizeBuilder();
-	public final OffsetBuilder xoffset = new OffsetBuilder("L", "R");
-	public final OffsetBuilder yoffset = new OffsetBuilder("D", "U");
-	public final OffsetBuilder zoffset = new OffsetBuilder("B", "F");
+	public final OffsetPropBuilder xoffset = new OffsetPropBuilder("L", "R");
+	public final OffsetPropBuilder yoffset = new OffsetPropBuilder("D", "U");
+	public final OffsetPropBuilder zoffset = new OffsetPropBuilder("B", "F");
 	public final RotationBuilder rotation = new RotationBuilder();
 	public final TextureMapBuilder u = new TextureMapBuilder(DataType.U);
 	public final TextureMapBuilder v = new TextureMapBuilder(DataType.V);

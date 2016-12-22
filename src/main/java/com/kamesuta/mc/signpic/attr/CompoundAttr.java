@@ -16,16 +16,16 @@ import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.PropAnimator.IPropBuilderBuilder;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData;
-import com.kamesuta.mc.signpic.attr.prop.OffsetData;
-import com.kamesuta.mc.signpic.attr.prop.RotationData;
-import com.kamesuta.mc.signpic.attr.prop.SizeData;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.attr.prop.RotationData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.KeyRotation;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureMapData;
 import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataType;
 import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataTypeBoolean;
 import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBooleanBuilder;
@@ -60,24 +60,12 @@ public class CompoundAttr {
 		}
 	}));
 
-	private static class OffsetDataBuilder implements IPropBuilderBuilder<OffsetData, OffsetData> {
-		private String neg;
-		private String pos;
-
-		public OffsetDataBuilder(final String neg, final String pos) {
-			this.neg = neg;
-			this.pos = pos;
-		}
-
+	public final PropAnimator<OffsetData, OffsetData, OffsetData> offsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new IPropBuilderBuilder<OffsetData, OffsetData>() {
 		@Override
 		public OffsetBuilder builder() {
-			return new OffsetBuilder(this.neg, this.pos);
+			return new OffsetBuilder();
 		}
-	}
-
-	public final PropAnimator<OffsetData, OffsetData, OffsetData> xoffsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new OffsetDataBuilder("L", "R")));
-	public final PropAnimator<OffsetData, OffsetData, OffsetData> yoffsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new OffsetDataBuilder("D", "U")));
-	public final PropAnimator<OffsetData, OffsetData, OffsetData> zoffsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new OffsetDataBuilder("B", "F")));
+	}));
 	public final PropAnimator<KeyRotation, RotationData, DiffRotation> rotations = add(new PropAnimator<KeyRotation, RotationData, DiffRotation>(new IPropBuilderBuilder<DiffRotation, KeyRotation>() {
 		@Override
 		public RotationBuilder builder() {
