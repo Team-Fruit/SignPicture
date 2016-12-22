@@ -44,6 +44,8 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
+		if (event==null||event.gui==null)
+			return;
 		if (Config.instance.renderGuiOverlay.get())
 			if (!isDelegated()) {
 				setWidth(event.gui.width);
@@ -57,6 +59,8 @@ public class OverlayFrame extends WFrame {
 
 	@CoreEvent
 	public void onDraw(final RenderGameOverlayEvent.Post event) {
+		if (event==null||event.resolution==null)
+			return;
 		if (event.type==ElementType.CHAT&&Client.mc.currentScreen==null)
 			if (!isDelegated()) {
 				setWidth(event.resolution.getScaledWidth());
