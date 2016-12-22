@@ -16,14 +16,14 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
@@ -234,7 +234,7 @@ public class SignHandler {
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
 					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
-					final ImageMeta meta = entry.getMeta();
+					final CompoundAttr meta = entry.getMeta();
 					final SizeData size = meta.sizes.getMovie().get();
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.xoffsets.getMovie().get().offset, meta.yoffsets.getMovie().get().offset, meta.zoffsets.getMovie().get().offset));

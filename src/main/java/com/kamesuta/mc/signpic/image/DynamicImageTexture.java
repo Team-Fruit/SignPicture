@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.texture.TextureUtil;

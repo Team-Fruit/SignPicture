@@ -1,12 +1,14 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr.prop;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 
-public class TextureMapData implements IMotionFrame<TextureMapData> {
+public class TextureMapData implements IPropInterpolatable<TextureMapData> {
 	public static final float defaultUV = 0f;
 	// Width Height
 	public static final float defaultWH = 1f;
@@ -34,7 +36,7 @@ public class TextureMapData implements IMotionFrame<TextureMapData> {
 		return new TextureMapData(this.type, this.data*per+before.data*(1f-per));
 	}
 
-	public static class TextureMapDataBoolean implements IMotionFrame<TextureMapDataBoolean> {
+	public static class TextureMapDataBoolean implements IPropInterpolatable<TextureMapDataBoolean> {
 		public final DataTypeBoolean type;
 		public final boolean data;
 
@@ -80,7 +82,7 @@ public class TextureMapData implements IMotionFrame<TextureMapData> {
 		}
 	}
 
-	public static class TextureMapBuilder implements MetaMovie<TextureMapData, TextureMapData> {
+	public static class TextureMapBuilder implements IPropBuilder<TextureMapData, TextureMapData> {
 		private final DataType type;
 		private float data;
 
@@ -115,7 +117,7 @@ public class TextureMapData implements IMotionFrame<TextureMapData> {
 		}
 	}
 
-	public static class TextureMapBooleanBuilder implements MetaMovie<TextureMapDataBoolean, TextureMapDataBoolean> {
+	public static class TextureMapBooleanBuilder implements IPropBuilder<TextureMapDataBoolean, TextureMapDataBoolean> {
 		private final DataTypeBoolean type;
 		private boolean data;
 

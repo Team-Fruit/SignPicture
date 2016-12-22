@@ -4,12 +4,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.StateType;

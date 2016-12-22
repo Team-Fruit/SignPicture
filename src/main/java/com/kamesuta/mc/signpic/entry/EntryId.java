@@ -5,9 +5,9 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.MetaBuilder;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -181,17 +181,17 @@ public class EntryId {
 			return null;
 	}
 
-	public @Nullable ImageMeta getMeta() {
+	public @Nullable CompoundAttr getMeta() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new ImageMeta(metasource);
+			return new CompoundAttr(metasource);
 		return null;
 	}
 
-	public MetaBuilder getMetaBuilder() {
+	public CompoundAttrBuilder getMetaBuilder() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new MetaBuilder(metasource);
+			return new CompoundAttrBuilder(metasource);
 		return null;
 	}
 

@@ -1,20 +1,20 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr;
 
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
-import com.kamesuta.mc.signpic.image.meta.AnimationData.AnimationBuilder;
-import com.kamesuta.mc.signpic.image.meta.OffsetData.OffsetBuilder;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
-import com.kamesuta.mc.signpic.image.meta.SizeData.SizeBuilder;
-import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataType;
-import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataTypeBoolean;
-import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBooleanBuilder;
-import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
+import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataType;
+import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataTypeBoolean;
+import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBuilder;
 
-public class MetaBuilder {
+public class CompoundAttrBuilder {
 	public final SizeBuilder size = new SizeBuilder();
 	public final OffsetBuilder xoffset = new OffsetBuilder("L", "R");
 	public final OffsetBuilder yoffset = new OffsetBuilder("D", "U");
@@ -31,17 +31,17 @@ public class MetaBuilder {
 	public final TextureMapBooleanBuilder m = new TextureMapBooleanBuilder(DataTypeBoolean.M);
 	public final AnimationBuilder animation = new AnimationBuilder();
 
-	public MetaBuilder() {
+	public CompoundAttrBuilder() {
 
 	}
 
-	public MetaBuilder(final String src) {
+	public CompoundAttrBuilder(final String src) {
 		Validate.notNull(src);
 
-		final Matcher mgb = ImageMeta.g.matcher(src);
+		final Matcher mgb = CompoundAttr.g.matcher(src);
 		final String meta = mgb.replaceAll("");
 
-		final Matcher mp = ImageMeta.p.matcher(meta);
+		final Matcher mp = CompoundAttr.p.matcher(meta);
 		while (mp.find()) {
 			final int gcount = mp.groupCount();
 			if (1<=gcount) {

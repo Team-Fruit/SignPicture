@@ -4,12 +4,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
@@ -32,7 +32,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		// Load Image
 		final Content content = entry.content();
 
-		final ImageMeta meta = entry.getMeta();
+		final CompoundAttr meta = entry.getMeta();
 
 		// Size
 		final SizeData size = meta.sizes.getMovie().get().aspectSize(content.image.getSize());

@@ -6,11 +6,11 @@ import com.kamesuta.mc.bnnwidget.WGui;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -81,7 +81,7 @@ public class SignPicRender extends WGui {
 				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
-					final ImageMeta meta = entry.getMeta();
+					final CompoundAttr meta = entry.getMeta();
 					final SizeData signsize = meta.sizes.getMovie().get();
 					final Content content = entry.content();
 					final SizeData imagesize = content.image.getSize();

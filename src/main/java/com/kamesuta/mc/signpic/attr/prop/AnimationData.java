@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr.prop;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -6,8 +6,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.signpic.attr.IPropComposable;
+import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 
-public class AnimationData implements IMotionFrame<AnimationData>, IComposable {
+public class AnimationData implements IPropInterpolatable<AnimationData>, IPropComposable {
 	public final Easings easing;
 	public final RSNeed redstone;
 
@@ -68,7 +71,7 @@ public class AnimationData implements IMotionFrame<AnimationData>, IComposable {
 		}
 	}
 
-	public static class AnimationBuilder implements MetaMovie<AnimationData, AnimationData> {
+	public static class AnimationBuilder implements IPropBuilder<AnimationData, AnimationData> {
 		public Easings easing = Easings.easeLinear;
 		public RSNeed redstone = RSNeed.IGNORE;
 

@@ -1,18 +1,18 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr;
 
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 
-public class MovieMeta<KeyFrame extends IMotionFrame<InterFrame>, InterFrame, Diffed extends KeyFrame> {
+public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame, Diffed extends KeyFrame> {
 	private KeyFrame base;
-	private final MovieBuilder<Diffed, KeyFrame> metabuilder;
-	private MetaMovie<Diffed, KeyFrame> builder;
-	private final Movie<KeyFrame, InterFrame> movie;
+	private final IPropBuilderBuilder<Diffed, KeyFrame> metabuilder;
+	private IPropBuilder<Diffed, KeyFrame> builder;
+	private final PropAnimation<KeyFrame, InterFrame> movie;
 	private boolean parsed;
 
-	public MovieMeta(final MovieBuilder<Diffed, KeyFrame> metabuilder) {
+	public PropAnimator(final IPropBuilderBuilder<Diffed, KeyFrame> metabuilder) {
 		this.metabuilder = metabuilder;
 		this.builder = metabuilder.builder();
-		this.movie = new Movie<KeyFrame, InterFrame>(this.base = this.builder.diff(this.base));
+		this.movie = new PropAnimation<KeyFrame, InterFrame>(this.base = this.builder.diff(this.base));
 	}
 
 	public boolean parse(final String src, final String key, final String value) {
@@ -34,11 +34,11 @@ public class MovieMeta<KeyFrame extends IMotionFrame<InterFrame>, InterFrame, Di
 		this.builder = this.metabuilder.builder();
 	}
 
-	public Movie<KeyFrame, InterFrame> getMovie() {
+	public PropAnimation<KeyFrame, InterFrame> getMovie() {
 		return this.movie;
 	}
 
-	public static interface MovieBuilder<Diffed, KeyFrame> {
-		MetaMovie<Diffed, KeyFrame> builder();
+	public static interface IPropBuilderBuilder<Diffed, KeyFrame> {
+		IPropBuilder<Diffed, KeyFrame> builder();
 	}
 }

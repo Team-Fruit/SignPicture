@@ -14,8 +14,8 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
-import com.kamesuta.mc.signpic.image.meta.SizeData.SizeBuilder;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 
 import net.minecraft.client.resources.I18n;
 

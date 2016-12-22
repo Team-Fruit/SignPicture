@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr;
 
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -8,12 +8,12 @@ import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
 
-public class Movie<KeyFrame extends IMotionFrame<InterFrame>, InterFrame> {
+public class PropAnimation<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame> {
 	private final ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
 	private final TreeMap<Float, KeyFrame> frames = Maps.newTreeMap();
 	private float lasttime;
 
-	public Movie(final KeyFrame defaultframe) {
+	public PropAnimation(final KeyFrame defaultframe) {
 		this.frames.put(0f, defaultframe);
 	}
 
@@ -33,7 +33,7 @@ public class Movie<KeyFrame extends IMotionFrame<InterFrame>, InterFrame> {
 			return before.getValue().per();
 	}
 
-	public Movie<KeyFrame, InterFrame> add(final float time, final KeyFrame frame, final Easings easing) {
+	public PropAnimation<KeyFrame, InterFrame> add(final float time, final KeyFrame frame, final Easings easing) {
 		final float difftime = time-this.lasttime;
 		this.motion.add(easing.move(difftime, time));
 		this.lasttime = time;

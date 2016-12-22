@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr.prop;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -13,6 +13,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.signpic.attr.IPropComposable;
+import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public abstract class RotationData {
@@ -44,7 +47,7 @@ public abstract class RotationData {
 		}
 	}
 
-	public static abstract class KeyRotation extends RotationData implements IMotionFrame<RotationData>, IComposable {
+	public static abstract class KeyRotation extends RotationData implements IPropInterpolatable<RotationData>, IPropComposable {
 		@Override
 		public RotationData per() {
 			return this;
@@ -258,7 +261,7 @@ public abstract class RotationData {
 		}
 	}
 
-	public static class RotationBuilder implements MetaMovie<DiffRotation, KeyRotation> {
+	public static class RotationBuilder implements IPropBuilder<DiffRotation, KeyRotation> {
 
 		public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
 		public float x = 0;

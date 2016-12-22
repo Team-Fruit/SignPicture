@@ -2,11 +2,11 @@ package com.kamesuta.mc.signpic.entry;
 
 import javax.annotation.Nonnull;
 
+import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.image.meta.MetaBuilder;
 
 public class EntryIdBuilder {
-	private MetaBuilder meta;
+	private CompoundAttrBuilder meta;
 	private String uri;
 
 	public EntryIdBuilder() {
@@ -21,13 +21,13 @@ public class EntryIdBuilder {
 		return this;
 	}
 
-	public void setMeta(final MetaBuilder meta) {
+	public void setMeta(final CompoundAttrBuilder meta) {
 		this.meta = meta;
 	}
 
-	public MetaBuilder getMeta() {
+	public CompoundAttrBuilder getMeta() {
 		if (this.meta==null)
-			return this.meta = new MetaBuilder();
+			return this.meta = new CompoundAttrBuilder();
 		else
 			return this.meta;
 	}

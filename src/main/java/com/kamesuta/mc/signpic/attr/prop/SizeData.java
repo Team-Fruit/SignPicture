@@ -1,12 +1,15 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr.prop;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.signpic.attr.IPropComposable;
+import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 
-public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
+public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropComposable {
 	public static final float Default = 1f;
 	public static final float Unknown = Float.NaN;
 
@@ -317,7 +320,7 @@ public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
 		}
 	}
 
-	public static class SizeBuilder implements MetaMovie<SizeData, SizeData>, Cloneable {
+	public static class SizeBuilder implements IPropBuilder<SizeData, SizeData>, Cloneable {
 		public float width = SizeData.Unknown;
 		public float height = SizeData.Unknown;
 

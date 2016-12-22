@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr.prop;
 
 import javax.annotation.Nullable;
 
@@ -6,8 +6,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 
-public class OffsetData implements IMotionFrame<OffsetData> {
+public class OffsetData implements IPropInterpolatable<OffsetData> {
 	public static final float defaultOffset = 0.5f;
 
 	public final float offset;
@@ -31,7 +33,7 @@ public class OffsetData implements IMotionFrame<OffsetData> {
 		return "OffsetData [offset="+this.offset+"]";
 	}
 
-	public static class OffsetBuilder implements MetaMovie<OffsetData, OffsetData> {
+	public static class OffsetBuilder implements IPropBuilder<OffsetData, OffsetData> {
 		public final String neg;
 		public final String pos;
 

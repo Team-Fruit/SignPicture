@@ -19,9 +19,9 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder.ImageRotate;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotateType;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder.ImageRotate;
 
 import net.minecraft.client.resources.I18n;
 

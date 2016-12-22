@@ -3,7 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;

@@ -2,12 +2,12 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationGL;
-import com.kamesuta.mc.signpic.image.meta.SizeData;
-import com.kamesuta.mc.signpic.image.meta.SizeData.ImageSizes;
 
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Items;
@@ -33,7 +33,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
-		final ImageMeta meta = entry.getMeta();
+		final CompoundAttr meta = entry.getMeta();
 		// Size
 		final SizeData size = meta.sizes.getMovie().get().aspectSize(entry.content().image.getSize());
 		if (type==ItemRenderType.INVENTORY) {

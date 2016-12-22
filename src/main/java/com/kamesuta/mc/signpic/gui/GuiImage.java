@@ -17,9 +17,9 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -58,7 +58,7 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							final ImageMeta meta = GuiImage.this.entry.getMeta();
+							final CompoundAttr meta = GuiImage.this.entry.getMeta();
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(meta.o.getMovie().get().data*0.1f));
 							content.image.draw(
 									meta.u.getMovie().get().data,

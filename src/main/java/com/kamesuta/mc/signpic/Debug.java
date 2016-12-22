@@ -18,7 +18,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.google.common.collect.Maps;
-import com.kamesuta.mc.signpic.image.meta.RotationData.RotationMath;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class Debug {

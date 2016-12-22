@@ -1,6 +1,6 @@
-package com.kamesuta.mc.signpic.image.meta;
+package com.kamesuta.mc.signpic.attr;
 
-public interface IMotionFrame<InterFrame> {
+public interface IPropInterpolatable<InterFrame> {
 	public InterFrame per();
 
 	public InterFrame per(final float per, final InterFrame before);
