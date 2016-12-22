@@ -20,8 +20,8 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
-import com.kamesuta.mc.signpic.image.meta.ImageRotation;
-import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder.ImageRotate;
 
 import net.minecraft.client.resources.I18n;
 
@@ -29,7 +29,7 @@ public class GuiRotation extends WPanel {
 	protected RotationEditor editor;
 	protected RotationPanel panel;
 
-	public GuiRotation(final R position, final ImageRotation rotation) {
+	public GuiRotation(final R position, final RotationBuilder rotation) {
 		super(position);
 		final VMotion left = V.pm(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		this.editor = new RotationEditor(new R(Coord.left(left), Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
@@ -105,9 +105,9 @@ public class GuiRotation extends WPanel {
 
 	protected class RotationPanel extends WPanel {
 		private final Map<ImageRotate, RotationElement> map = Maps.newHashMap();
-		protected final ImageRotation rotation;
+		protected final RotationBuilder rotation;
 
-		public RotationPanel(final R position, final ImageRotation rotation) {
+		public RotationPanel(final R position, final RotationBuilder rotation) {
 			super(position);
 			this.rotation = rotation;
 			for (final ListIterator<ImageRotate> itr = rotation.rotates.listIterator(); itr.hasNext();) {

@@ -1,5 +1,8 @@
 package com.kamesuta.mc.signpic.image.meta;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.bnnwidget.position.Area;
 
@@ -311,6 +314,113 @@ public abstract class SizeData implements IMotionFrame<SizeData>, IComposable {
 			else if (max==null)
 				return raw;
 			return defineSize(raw.getWidth(), raw.getHeight(), max.getWidth(), max.getHeight());
+		}
+	}
+
+	public static class SizeBuilder implements MetaMovie<SizeData, SizeData>, Cloneable {
+		public float width = SizeData.Unknown;
+		public float height = SizeData.Unknown;
+
+		@Override
+		public SizeData diff(final SizeData base) {
+			return SizeData.create(base, SizeData.create(this.width, this.height));
+		}
+
+		public SizeBuilder setSize(final float width, final float height) {
+			this.width = width;
+			this.height = height;
+			return this;
+		}
+
+		public SizeBuilder setWidth(final float width) {
+			this.width = width;
+			return this;
+		}
+
+		public SizeBuilder setHeight(final float height) {
+			this.height = height;
+			return this;
+		}
+
+		public SizeBuilder setWidth(final String width) {
+			this.width = NumberUtils.toFloat(width, SizeData.Unknown);
+			return this;
+		}
+
+		public SizeBuilder setHeight(final String height) {
+			this.height = NumberUtils.toFloat(height, SizeData.Unknown);
+			return this;
+		}
+
+		public SizeBuilder setSize(final String width, final String height) {
+			return setWidth(width).setHeight(height);
+		}
+
+		public SizeBuilder setSize(final Area a) {
+			return setSize(a.w(), a.h());
+		}
+
+		public SizeBuilder setSize(final SizeData size) {
+			return setSize(size.getWidth(), size.getHeight());
+		}
+
+		public SizeBuilder setSize(final SizeBuilder size) {
+			return setSize(size.width, size.height);
+		}
+
+		@Override
+		public boolean parse(final String src, final String key, final String value) {
+			if (StringUtils.equals(key, ""))
+				this.width = NumberUtils.toFloat(value, SizeData.Unknown);
+			else if (StringUtils.equals(key, "x"))
+				this.height = NumberUtils.toFloat(value, SizeData.Unknown);
+			else
+				return false;
+			return true;
+		}
+
+		@Override
+		public String compose() {
+			return diff(null).compose();
+		}
+
+		@Override
+		public String toString() {
+			return compose();
+		}
+
+		@Override
+		public SizeBuilder clone() {
+			try {
+				return (SizeBuilder) super.clone();
+			} catch (final Exception e) {
+				return new SizeBuilder().setSize(this);
+			}
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime*result+Float.floatToIntBits(this.height);
+			result = prime*result+Float.floatToIntBits(this.width);
+			return result;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (this==obj)
+				return true;
+			if (obj==null)
+				return false;
+			if (!(obj instanceof SizeBuilder))
+				return false;
+			final SizeBuilder other = (SizeBuilder) obj;
+			if (Float.floatToIntBits(this.height)!=Float.floatToIntBits(other.height))
+				return false;
+			if (Float.floatToIntBits(this.width)!=Float.floatToIntBits(other.width))
+				return false;
+			return true;
 		}
 	}
 }

@@ -14,16 +14,16 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
-import com.kamesuta.mc.signpic.image.meta.ImageOffset;
+import com.kamesuta.mc.signpic.image.meta.OffsetData.OffsetBuilder;
 
 import net.minecraft.client.resources.I18n;
 
 public class GuiOffset extends WPanel {
-	protected ImageOffset x;
-	protected ImageOffset y;
-	protected ImageOffset z;
+	protected OffsetBuilder x;
+	protected OffsetBuilder y;
+	protected OffsetBuilder z;
 
-	public GuiOffset(final R position, final ImageOffset x, final ImageOffset y, final ImageOffset z) {
+	public GuiOffset(final R position, final OffsetBuilder x, final OffsetBuilder y, final OffsetBuilder z) {
 		super(position);
 		this.x = x;
 		this.y = y;
@@ -114,9 +114,9 @@ public class GuiOffset extends WPanel {
 		public MLabel label;
 		public MNumber number;
 		protected VMotion left;
-		protected ImageOffset offset;
+		protected OffsetBuilder offset;
 
-		public OffsetElement(final R position, final VMotion left, final int i, final ImageOffset offset) {
+		public OffsetElement(final R position, final VMotion left, final int i, final OffsetBuilder offset) {
 			super(position);
 			this.label = new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)));
 			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {

@@ -14,12 +14,17 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.Log;
-import com.kamesuta.mc.signpic.image.meta.ImageTextureMap.ImageTextureMapBoolean;
+import com.kamesuta.mc.signpic.image.meta.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.image.meta.MovieMeta.MovieBuilder;
+import com.kamesuta.mc.signpic.image.meta.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.image.meta.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataType;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataTypeBoolean;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBooleanBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapDataBoolean;
 
 public class ImageMeta {
@@ -38,13 +43,13 @@ public class ImageMeta {
 	public final MovieMeta<AnimationData, AnimationData, AnimationData> animations = add(new MovieMeta<AnimationData, AnimationData, AnimationData>(new MovieBuilder<AnimationData, AnimationData>() {
 		@Override
 		public MetaMovie<AnimationData, AnimationData> builder() {
-			return new ImageAnimation();
+			return new AnimationBuilder();
 		}
 	}));
 	public final MovieMeta<SizeData, SizeData, SizeData> sizes = add(new MovieMeta<SizeData, SizeData, SizeData>(new MovieBuilder<SizeData, SizeData>() {
 		@Override
-		public ImageSize builder() {
-			return new ImageSize();
+		public SizeBuilder builder() {
+			return new SizeBuilder();
 		}
 	}));
 
@@ -58,8 +63,8 @@ public class ImageMeta {
 		}
 
 		@Override
-		public ImageOffset builder() {
-			return new ImageOffset(this.neg, this.pos);
+		public OffsetBuilder builder() {
+			return new OffsetBuilder(this.neg, this.pos);
 		}
 	}
 
@@ -68,8 +73,8 @@ public class ImageMeta {
 	public final MovieMeta<OffsetData, OffsetData, OffsetData> zoffsets = add(new MovieMeta<OffsetData, OffsetData, OffsetData>(new OffsetDataBuilder("B", "F")));
 	public final MovieMeta<KeyRotation, RotationData, DiffRotation> rotations = add(new MovieMeta<KeyRotation, RotationData, DiffRotation>(new MovieBuilder<DiffRotation, KeyRotation>() {
 		@Override
-		public ImageRotation builder() {
-			return new ImageRotation();
+		public RotationBuilder builder() {
+			return new RotationBuilder();
 		}
 	}));
 
@@ -82,7 +87,7 @@ public class ImageMeta {
 
 		@Override
 		public MetaMovie<TextureMapData, TextureMapData> builder() {
-			return new ImageTextureMap(this.type);
+			return new TextureMapBuilder(this.type);
 		}
 	}
 
@@ -102,8 +107,8 @@ public class ImageMeta {
 		}
 
 		@Override
-		public ImageTextureMapBoolean builder() {
-			return new ImageTextureMapBoolean(this.type);
+		public TextureMapBooleanBuilder builder() {
+			return new TextureMapBooleanBuilder(this.type);
 		}
 	}
 

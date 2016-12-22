@@ -5,26 +5,31 @@ import java.util.regex.Matcher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
-import com.kamesuta.mc.signpic.image.meta.ImageTextureMap.ImageTextureMapBoolean;
+import com.kamesuta.mc.signpic.image.meta.AnimationData.AnimationBuilder;
+import com.kamesuta.mc.signpic.image.meta.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.image.meta.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.image.meta.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataType;
 import com.kamesuta.mc.signpic.image.meta.TextureMapData.DataTypeBoolean;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBuilder;
+import com.kamesuta.mc.signpic.image.meta.TextureMapData.TextureMapBooleanBuilder;
 
 public class MetaBuilder {
-	public final ImageSize size = new ImageSize();
-	public final ImageOffset xoffset = new ImageOffset("L", "R");
-	public final ImageOffset yoffset = new ImageOffset("D", "U");
-	public final ImageOffset zoffset = new ImageOffset("B", "F");
-	public final ImageRotation rotation = new ImageRotation();
-	public final ImageTextureMap u = new ImageTextureMap(DataType.U);
-	public final ImageTextureMap v = new ImageTextureMap(DataType.U);
-	public final ImageTextureMap w = new ImageTextureMap(DataType.U);
-	public final ImageTextureMap h = new ImageTextureMap(DataType.U);
-	public final ImageTextureMap c = new ImageTextureMap(DataType.U);
-	public final ImageTextureMap s = new ImageTextureMap(DataType.U);
-	public final ImageTextureMap o = new ImageTextureMap(DataType.U);
-	public final ImageTextureMapBoolean r = new ImageTextureMapBoolean(DataTypeBoolean.R);
-	public final ImageTextureMapBoolean m = new ImageTextureMapBoolean(DataTypeBoolean.M);
-	public final ImageAnimation animation = new ImageAnimation();
+	public final SizeBuilder size = new SizeBuilder();
+	public final OffsetBuilder xoffset = new OffsetBuilder("L", "R");
+	public final OffsetBuilder yoffset = new OffsetBuilder("D", "U");
+	public final OffsetBuilder zoffset = new OffsetBuilder("B", "F");
+	public final RotationBuilder rotation = new RotationBuilder();
+	public final TextureMapBuilder u = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder v = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder w = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder h = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder c = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder s = new TextureMapBuilder(DataType.U);
+	public final TextureMapBuilder o = new TextureMapBuilder(DataType.U);
+	public final TextureMapBooleanBuilder r = new TextureMapBooleanBuilder(DataTypeBoolean.R);
+	public final TextureMapBooleanBuilder m = new TextureMapBooleanBuilder(DataTypeBoolean.M);
+	public final AnimationBuilder animation = new AnimationBuilder();
 
 	public MetaBuilder() {
 
