@@ -120,11 +120,13 @@ public class CompoundAttr {
 		timeline.put(0f, s);
 
 		float current = 0;
+		float lastinterval = defaultInterval;
 		final Matcher mg = g.matcher(src);
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
-				final float time = NumberUtils.toFloat(mg.group(1), defaultInterval);
+				final float time = NumberUtils.toFloat(mg.group(1), lastinterval);
+				lastinterval = time;
 				current += time;
 				final String before = timeline.get(current);
 				String meta = mg.group(2);
