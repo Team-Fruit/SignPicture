@@ -8,7 +8,6 @@ import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Quat4f;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.ImmutableList;
@@ -86,7 +85,6 @@ public abstract class RotationData {
 		private final ImmutableList<Rotate> diffglobalaxis;
 
 		public DiffRotation(final KeyRotation base, final AxisAngle4f diffangleaxis, final ImmutableList<Rotate> diffglobalaxis) {
-			Validate.notNull(base);
 			this.base = base;
 			this.diffangleaxis = diffangleaxis;
 			this.diffglobalaxis = diffglobalaxis;
@@ -270,7 +268,9 @@ public abstract class RotationData {
 		public KeyRotation base;
 
 		@Override
-		public DiffRotation diff(final KeyRotation base) {
+		public DiffRotation diff(KeyRotation base) {
+			if (base==null)
+				base = new BaseRotation();
 			final AxisAngle4f axis = new AxisAngle4f(this.x, this.y, this.z, this.angle);
 			final Builder<Rotate> builder = ImmutableList.builder();
 			for (final ImageRotate rotate : this.rotates)
