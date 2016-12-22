@@ -1,15 +1,12 @@
 package com.kamesuta.mc.signpic.image.meta;
 
-import java.util.List;
 import java.util.ListIterator;
 
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Quat4f;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
-import com.kamesuta.mc.signpic.image.meta.ImageRotation.ImageRotate;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public abstract class RotationData {
@@ -22,15 +19,6 @@ public abstract class RotationData {
 	}
 
 	public abstract Quat4f getRotate(float scale);
-
-	public static DiffRotation create(KeyRotation base, final AxisAngle4f axisrotate, final List<ImageRotate> rotates) {
-		if (base==null)
-			base = new BaseRotation();
-		final Builder<Rotate> builder = ImmutableList.builder();
-		for (final ImageRotate rotate : rotates)
-			builder.add(new Rotate(rotate));
-		return new DiffRotation(base, axisrotate, builder.build());
-	}
 
 	public static class PerRotation extends RotationData {
 		private Quat4f rotate;
@@ -155,13 +143,9 @@ public abstract class RotationData {
 		public RotateType type;
 		public float rotate;
 
-		protected Rotate(final RotateType type, final float rotate) {
+		public Rotate(final RotateType type, final float rotate) {
 			this.type = type;
 			this.rotate = rotate;
-		}
-
-		public Rotate(final ImageRotate rotate) {
-			this(rotate.type, rotate.rotate);
 		}
 
 		public Quat4f getRotate(final float scale) {

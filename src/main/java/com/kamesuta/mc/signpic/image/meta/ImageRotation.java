@@ -8,8 +8,11 @@ import javax.vecmath.AxisAngle4f;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.kamesuta.mc.signpic.image.meta.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.image.meta.RotationData.KeyRotation;
+import com.kamesuta.mc.signpic.image.meta.RotationData.Rotate;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotateType;
 import com.kamesuta.mc.signpic.image.meta.RotationData.RotationMath;
 
@@ -24,7 +27,11 @@ public class ImageRotation implements MetaMovie<DiffRotation, KeyRotation> {
 
 	@Override
 	public DiffRotation diff(final KeyRotation base) {
-		return RotationData.create(base, new AxisAngle4f(this.x, this.y, this.z, this.angle), this.rotates);
+		final AxisAngle4f axis = new AxisAngle4f(this.x, this.y, this.z, this.angle);
+		final Builder<Rotate> builder = ImmutableList.builder();
+		for (final ImageRotate rotate : this.rotates)
+			builder.add(rotate.build());
+		return new DiffRotation(base, axis, builder.build());
 	}
 
 	@Override
@@ -74,6 +81,10 @@ public class ImageRotation implements MetaMovie<DiffRotation, KeyRotation> {
 		public ImageRotate(final RotateType type, final float rotate) {
 			this.type = type;
 			this.rotate = rotate;
+		}
+
+		public Rotate build() {
+			return new Rotate(this.type, this.rotate);
 		}
 	}
 }

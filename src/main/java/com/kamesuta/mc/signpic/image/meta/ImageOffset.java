@@ -45,12 +45,19 @@ public class ImageOffset implements MetaMovie<OffsetData, OffsetData> {
 	 */
 	@Override
 	public boolean parse(final String src, final String key, final String value) {
-		/* @formatter:off */
-		if (StringUtils.equals(key, this.neg)) if (StringUtils.isEmpty(value)) this.offset -= OffsetData.defaultOffset; else this.offset -= NumberUtils.toFloat(value, 0f);
-		else if (StringUtils.equals(key, this.pos)) if (StringUtils.isEmpty(value)) this.offset += OffsetData.defaultOffset; else this.offset += NumberUtils.toFloat(value, 0f);
-		else return false;
+		if (StringUtils.equals(key, this.neg))
+			if (StringUtils.isEmpty(value))
+				this.offset -= OffsetData.defaultOffset;
+			else
+				this.offset -= NumberUtils.toFloat(value, 0f);
+		else if (StringUtils.equals(key, this.pos))
+			if (StringUtils.isEmpty(value))
+				this.offset += OffsetData.defaultOffset;
+			else
+				this.offset += NumberUtils.toFloat(value, 0f);
+		else
+			return false;
 		return true;
-		/* @formatter:on */
 	}
 
 	/**
@@ -63,16 +70,17 @@ public class ImageOffset implements MetaMovie<OffsetData, OffsetData> {
 	 */
 	@Override
 	public String compose() {
-		/* @formatter:off */
 		final StringBuilder stb = new StringBuilder();
 		if (this.offset!=0)
 			if (this.offset<0)
-				if (this.offset==-OffsetData.defaultOffset) stb.append(this.neg);
-				else stb.append(this.neg).append(ShortestFloatFormatter.format(-this.offset));
+				if (this.offset==-OffsetData.defaultOffset)
+					stb.append(this.neg);
+				else
+					stb.append(this.neg).append(ShortestFloatFormatter.format(-this.offset));
+			else if (this.offset==OffsetData.defaultOffset)
+				stb.append(this.pos);
 			else
-				if (this.offset==OffsetData.defaultOffset) stb.append(this.pos);
-				else stb.append(this.pos).append(ShortestFloatFormatter.format(this.offset));
+				stb.append(this.pos).append(ShortestFloatFormatter.format(this.offset));
 		return stb.toString();
-		/* @formatter:on */
 	}
 }
