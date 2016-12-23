@@ -10,17 +10,14 @@ import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
 
 public interface TextureData {
-	public static final float defaultUV = 0f;
-	// Width Height
-	public static final float defaultWH = 1f;
-	// Crossing Slitting
-	public static final float defaultCS = 1f;
-	public static final float defaultOpacity = 10f;
-	public static final BlendType defaultBlend = null;
-	public static final boolean defaultRepeat = true;
-	public static final boolean defaultMipMap = true;
-
 	public static class TextureFloat implements IPropInterpolatable<TextureFloat> {
+		public static final float defaultUV = 0f;
+		// Width Height
+		public static final float defaultWH = 1f;
+		// Crossing Slitting
+		public static final float defaultCS = 1f;
+		public static final float defaultOpacity = 10f;
+
 		public final TextureFloatType type;
 		public final float data;
 
@@ -89,6 +86,9 @@ public interface TextureData {
 	}
 
 	public static class TextureBoolean implements IPropInterpolatable<TextureBoolean> {
+		public static final boolean defaultRepeat = true;
+		public static final boolean defaultMipMap = true;
+
 		public final TextureBooleanType type;
 		public final boolean data;
 
@@ -153,10 +153,12 @@ public interface TextureData {
 	}
 
 	public static class TextureBlend implements IPropInterpolatable<TextureBlend> {
-		public final TextureBlendType type;
-		public final boolean data;
+		public static final BlendType defaultBlend = null;
 
-		public TextureBlend(final TextureBlendType type, final boolean data) {
+		public final TextureBlendType type;
+		public final BlendType data;
+
+		public TextureBlend(final TextureBlendType type, final BlendType data) {
 			this.type = type;
 			this.data = data;
 		}
@@ -172,13 +174,13 @@ public interface TextureData {
 		}
 
 		public static enum TextureBlendType {
-			B("b", defaultRepeat), D("d", defaultMipMap),
+			B("b", defaultBlend), D("d", defaultBlend),
 			;
 
 			public final String identifier;
-			public final boolean defaultValue;
+			public final BlendType defaultValue;
 
-			TextureBlendType(final String identifier, final boolean defaultValue) {
+			TextureBlendType(final String identifier, final BlendType defaultValue) {
 				this.identifier = identifier;
 				this.defaultValue = defaultValue;
 			}
@@ -186,7 +188,7 @@ public interface TextureData {
 
 		public static class TextureBlendBuilder implements IPropBuilder<TextureBlend, TextureBlend> {
 			private final TextureBlendType type;
-			private boolean data;
+			private BlendType data;
 
 			public TextureBlendBuilder(final TextureBlendType type) {
 				this.type = type;
@@ -200,8 +202,8 @@ public interface TextureData {
 
 			@Override
 			public boolean parse(final String src, final String key, final String value) {
-				if (StringUtils.equals(key, this.type.identifier)) {
-					this.data = !this.type.defaultValue;
+				if (StringUtils.equals(key, this.type.identifier)&&NumberUtils.isNumber(value)) {
+					data = BlendType.fromId(NumberUtils.toInt(value));
 					return true;
 				}
 				return false;
