@@ -191,7 +191,7 @@ public class EntryId {
 	public CompoundAttrBuilder getMetaBuilder() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new CompoundAttrBuilder(metasource);
+			return new CompoundAttrBuilder().parse(metasource);
 		return null;
 	}
 

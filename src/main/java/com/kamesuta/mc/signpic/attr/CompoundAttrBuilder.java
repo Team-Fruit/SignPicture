@@ -1,12 +1,14 @@
 package com.kamesuta.mc.signpic.attr;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
+import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
-import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetPropBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataType;
@@ -16,26 +18,31 @@ import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBuilder;
 
 public class CompoundAttrBuilder {
 	public final SizeBuilder size = new SizeBuilder();
-	public final OffsetPropBuilder xoffset = new OffsetPropBuilder("L", "R");
-	public final OffsetPropBuilder yoffset = new OffsetPropBuilder("D", "U");
-	public final OffsetPropBuilder zoffset = new OffsetPropBuilder("B", "F");
-	public final RotationBuilder rotation = new RotationBuilder();
-	public final TextureMapBuilder u = new TextureMapBuilder(DataType.U);
-	public final TextureMapBuilder v = new TextureMapBuilder(DataType.V);
-	public final TextureMapBuilder w = new TextureMapBuilder(DataType.W);
-	public final TextureMapBuilder h = new TextureMapBuilder(DataType.H);
-	public final TextureMapBuilder c = new TextureMapBuilder(DataType.C);
-	public final TextureMapBuilder s = new TextureMapBuilder(DataType.S);
-	public final TextureMapBuilder o = new TextureMapBuilder(DataType.O);
-	public final TextureMapBooleanBuilder r = new TextureMapBooleanBuilder(DataTypeBoolean.R);
-	public final TextureMapBooleanBuilder m = new TextureMapBooleanBuilder(DataTypeBoolean.M);
-	public final AnimationBuilder animation = new AnimationBuilder();
+	public final OffsetBuilder offset = add(new OffsetBuilder());
+	public final RotationBuilder rotation = add(new RotationBuilder());
+	public final TextureMapBuilder u = add(new TextureMapBuilder(DataType.U));
+	public final TextureMapBuilder v = add(new TextureMapBuilder(DataType.V));
+	public final TextureMapBuilder w = add(new TextureMapBuilder(DataType.W));
+	public final TextureMapBuilder h = add(new TextureMapBuilder(DataType.H));
+	public final TextureMapBuilder c = add(new TextureMapBuilder(DataType.C));
+	public final TextureMapBuilder s = add(new TextureMapBuilder(DataType.S));
+	public final TextureMapBuilder o = add(new TextureMapBuilder(DataType.O));
+	public final TextureMapBooleanBuilder r = add(new TextureMapBooleanBuilder(DataTypeBoolean.R));
+	public final TextureMapBooleanBuilder m = add(new TextureMapBooleanBuilder(DataTypeBoolean.M));
+	public final AnimationBuilder animation = add(new AnimationBuilder());
+
+	private Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
+
+	private <E extends IPropBuilder<?, ?>> E add(final E e) {
+		this.metas.add(e);
+		return e;
+	}
 
 	public CompoundAttrBuilder() {
 
 	}
 
-	public CompoundAttrBuilder(final String src) {
+	public CompoundAttrBuilder parse(final String src) {
 		Validate.notNull(src);
 
 		final Matcher mgb = CompoundAttr.g.matcher(src);
@@ -48,43 +55,20 @@ public class CompoundAttrBuilder {
 				final String key = mp.group(1);
 				final String value = 2<=gcount ? mp.group(2) : "";
 				if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
-					this.animation.parse(src, key, value);
 					this.size.parse(src, key, value);
-					this.xoffset.parse(src, key, value);
-					this.yoffset.parse(src, key, value);
-					this.zoffset.parse(src, key, value);
-					this.rotation.parse(src, key, value);
-					this.u.parse(src, key, value);
-					this.v.parse(src, key, value);
-					this.w.parse(src, key, value);
-					this.h.parse(src, key, value);
-					this.c.parse(src, key, value);
-					this.s.parse(src, key, value);
-					this.o.parse(src, key, value);
-					this.r.parse(src, key, value);
-					this.m.parse(src, key, value);
+					for (final IPropBuilder<?, ?> m : this.metas)
+						m.parse(src, key, value);
 				}
 			}
 		}
+		return this;
 	}
 
 	public String compose() {
-		return "{"+
-				this.size.compose()+
-				this.xoffset.compose()+
-				this.yoffset.compose()+
-				this.zoffset.compose()+
-				this.rotation.compose()+
-				this.u.compose()+
-				this.v.compose()+
-				this.w.compose()+
-				this.h.compose()+
-				this.c.compose()+
-				this.s.compose()+
-				this.o.compose()+
-				this.r.compose()+
-				this.m.compose()+
-				this.animation.compose()+
-				"}";
+		final StringBuilder stb = new StringBuilder("{");
+		stb.append(this.size.compose());
+		for (final IPropBuilder<?, ?> m : this.metas)
+			stb.append(m.compose());
+		return stb.append("}").toString();
 	}
 }

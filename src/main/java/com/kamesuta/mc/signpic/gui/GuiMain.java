@@ -27,6 +27,7 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -130,10 +131,8 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)),
-						GuiMain.this.signbuilder.getMeta().xoffset,
-						GuiMain.this.signbuilder.getMeta().yoffset,
-						GuiMain.this.signbuilder.getMeta().zoffset) {
+				final OffsetBuilder offset = GuiMain.this.signbuilder.getMeta().offset;
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), offset.x, offset.y, offset.z) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();

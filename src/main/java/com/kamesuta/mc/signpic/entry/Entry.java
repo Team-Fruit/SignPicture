@@ -54,7 +54,7 @@ public class Entry {
 	public CompoundAttrBuilder getMetaBuilder() {
 		final String newmeta = content().imagemeta;
 		if (this.contentId!=null&&newmeta!=null)
-			return new CompoundAttrBuilder(this.id.getMetaSource()+newmeta);
+			return new CompoundAttrBuilder().parse(this.id.getMetaSource()+newmeta);
 		return this.id.getMetaBuilder();
 	}
 }
