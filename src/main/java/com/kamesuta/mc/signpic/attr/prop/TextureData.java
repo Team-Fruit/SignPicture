@@ -202,8 +202,9 @@ public interface TextureData {
 
 			@Override
 			public boolean parse(final String src, final String key, final String value) {
-				if (StringUtils.equals(key, this.type.identifier)&&NumberUtils.isNumber(value)) {
-					data = BlendType.fromId(NumberUtils.toInt(value));
+				if (StringUtils.equals(key, this.type.identifier)) {
+					if (NumberUtils.isNumber(value))
+						data = BlendType.fromId(NumberUtils.toInt(value));
 					return true;
 				}
 				return false;
@@ -212,7 +213,7 @@ public interface TextureData {
 			@Override
 			public String compose() {
 				if (this.data!=this.type.defaultValue)
-					return this.type.identifier;
+					return this.type.identifier+data.id;
 				return "";
 			}
 		}
