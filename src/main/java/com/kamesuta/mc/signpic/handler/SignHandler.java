@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WGui;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -28,7 +29,6 @@ import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiRepair;
@@ -174,7 +174,7 @@ public class SignHandler {
 				final int guiLeft = (event.gui.width-xSize)/2;
 				final int guiTop = (event.gui.height-ySize)/2;
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				WGui.texture().bindTexture(MPanel.background);
 				final Area a = new Area(guiLeft-42, guiTop, guiLeft, guiTop+49);
 				MPanel.drawBack(a);

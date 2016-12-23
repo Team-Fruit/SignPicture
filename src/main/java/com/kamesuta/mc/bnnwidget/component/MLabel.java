@@ -6,11 +6,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 public class MLabel extends WBase {
 	protected int textcolor = 14737632;
@@ -128,7 +128,7 @@ public class MLabel extends WBase {
 		OpenGL.glTranslated(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
 		OpenGL.glScaled(getScaleWidth(a), getScaleHeight(a), 1);
 		OpenGL.glTranslated(-(a.x1()+a.w()/2), -(a.y1()+a.h()/2), 0);
-		RenderHelper.startTexture();
+		WRenderer.startTexture();
 		final Color c = new Color(getColor());
 		OpenGL.glColor4f(1f, 1f, 1f, opacity);
 		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));

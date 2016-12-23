@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
@@ -83,7 +84,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		final Entry entry = EntryId.fromTile(tile).entry();
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity.get().floatValue());
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
@@ -103,7 +104,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			OpenGL.glPopMatrix();
 		} else {
 			if (opacity<1f) {
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);

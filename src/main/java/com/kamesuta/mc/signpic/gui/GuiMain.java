@@ -10,6 +10,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
@@ -37,7 +38,6 @@ import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -89,7 +89,7 @@ public class GuiMain extends WFrame {
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-						RenderHelper.startShape();
+						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
 						draw(getGuiPosition(pgp));
 					}

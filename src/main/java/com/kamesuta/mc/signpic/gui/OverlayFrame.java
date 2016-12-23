@@ -6,6 +6,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
@@ -19,7 +20,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -157,7 +157,7 @@ public class OverlayFrame extends WFrame {
 								@Override
 								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
-									RenderHelper.startShape();
+									WRenderer.startShape();
 									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
 									draw(a);
 								}

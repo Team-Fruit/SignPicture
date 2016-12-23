@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
@@ -50,7 +51,7 @@ public class SignPicRender extends WGui {
 				if ((int) (System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
 
-					RenderHelper.startTexture();
+					WRenderer.startTexture();
 					OpenGL.glPushMatrix();
 					OpenGL.glTranslatef(5f, 5f, 0f);
 					OpenGL.glScalef(2f, 2f, 1f);
@@ -60,7 +61,7 @@ public class SignPicRender extends WGui {
 					OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 					texture().bindTexture(resSign);
-					RenderHelper.startTexture();
+					WRenderer.startTexture();
 					RenderHelper.drawRectTexture(GL_QUADS);
 
 					OpenGL.glPopMatrix();

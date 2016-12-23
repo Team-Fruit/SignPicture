@@ -12,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MCheckBox;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
@@ -41,7 +42,6 @@ import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
@@ -122,7 +122,7 @@ public class GuiSettings extends WPanel {
 							@Override
 							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 								final Area a = getGuiPosition(pgp);
-								RenderHelper.startShape();
+								WRenderer.startShape();
 								OpenGL.glColor4f(0f, 0f, 0f, .6f);
 								draw(a);
 								OpenGL.glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
@@ -138,7 +138,7 @@ public class GuiSettings extends WPanel {
 										final Area a = getGuiPosition(pgp);
 										texture().bindTexture(settings);
 										OpenGL.glColor4f(1, 1, 1, 1);
-										RenderHelper.startTexture();
+										WRenderer.startTexture();
 										drawTexture(a);
 									}
 								});
@@ -202,7 +202,7 @@ public class GuiSettings extends WPanel {
 										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 											final Area a = getGuiPosition(pgp);
 											OpenGL.glColor4f(0f, 0f, 0f, .4f);
-											RenderHelper.startShape();
+											WRenderer.startShape();
 											draw(a);
 											super.draw(ev, pgp, p, frame, popacity);
 										}
@@ -256,7 +256,7 @@ public class GuiSettings extends WPanel {
 															// glColor4f(1, 1, 1, 1);
 															final float f = state.get();
 															OpenGL.glColor4f(256f*(1-f)/256f+144*f/256f, 256f*(1-f)/256f+191*f/256f, 256f*(1-f)/256f+48*f/256f, 1f);
-															RenderHelper.startTexture();
+															WRenderer.startTexture();
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 															OpenGL.glRotatef((orot+rot.get())*360, 0, 0, 1);
@@ -334,7 +334,7 @@ public class GuiSettings extends WPanel {
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
-			RenderHelper.startShape();
+			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
@@ -360,7 +360,7 @@ public class GuiSettings extends WPanel {
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 					final Area a = getGuiPosition(pgp);
-					RenderHelper.startShape();
+					WRenderer.startShape();
 					OpenGL.glColor4f(0f, 0f, 0f, .2f);
 					OpenGL.glLineWidth(.5f);
 					draw(a, GL_LINE_LOOP);
@@ -414,7 +414,7 @@ public class GuiSettings extends WPanel {
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
-			RenderHelper.startShape();
+			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);

@@ -6,6 +6,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -18,7 +19,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
 import net.minecraft.block.Block;
@@ -55,7 +55,7 @@ public class GuiPAAS extends WFrame {
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-						RenderHelper.startShape();
+						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.c.get());
 						draw(getGuiPosition(pgp));
 					}
@@ -67,7 +67,7 @@ public class GuiPAAS extends WFrame {
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 						final Area a = getGuiPosition(pgp);
 
-						RenderHelper.startTexture();
+						WRenderer.startTexture();
 						OpenGL.glColor4f(1f, 1f, 1f, 1f);
 						OpenGL.glPushMatrix();
 						OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1(), 0f);

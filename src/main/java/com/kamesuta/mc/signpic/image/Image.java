@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -11,7 +12,6 @@ import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.renderer.Tessellator;
@@ -37,7 +37,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			final Tessellator t = Tessellator.instance;
-			RenderHelper.startTexture();
+			WRenderer.startTexture();
 			final ImageTexture image = getTexture();
 			image.bind();
 
