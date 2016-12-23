@@ -11,8 +11,10 @@ import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
-import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBlend.TextureBlendBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBlend.TextureBlendType;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
@@ -31,6 +33,8 @@ public class CompoundAttrBuilder {
 	public final TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
 	public final TextureBooleanBuilder r = add(new TextureBooleanBuilder(TextureBooleanType.R));
 	public final TextureBooleanBuilder m = add(new TextureBooleanBuilder(TextureBooleanType.M));
+	public final TextureBlendBuilder b = add(new TextureBlendBuilder(TextureBlendType.B));
+	public final TextureBlendBuilder d = add(new TextureBlendBuilder(TextureBlendType.D));
 	public final AnimationBuilder animation = add(new AnimationBuilder());
 
 	private <E extends IPropBuilder<?, ?>> E add(final E e) {

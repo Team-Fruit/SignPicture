@@ -25,9 +25,12 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.KeyRotation;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBlend;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBlend.TextureBlendBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBlend.TextureBlendType;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean;
-import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
@@ -73,10 +76,10 @@ public class CompoundAttr {
 		}
 	}));
 
-	private static class TexDataBuilder implements IPropBuilderBuilder<TextureFloat, TextureFloat> {
+	private static class TexFloatBuilder implements IPropBuilderBuilder<TextureFloat, TextureFloat> {
 		private TextureFloatType type;
 
-		public TexDataBuilder(final TextureFloatType type) {
+		public TexFloatBuilder(final TextureFloatType type) {
 			this.type = type;
 		}
 
@@ -86,18 +89,18 @@ public class CompoundAttr {
 		}
 	}
 
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> u = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.U)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> v = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.V)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> w = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.W)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> h = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.H)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.C)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.S)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.O)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> u = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.U)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> v = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.V)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> w = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.W)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> h = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.H)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.C)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.S)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.O)));
 
-	private static class TexDataBooleanBuilder implements IPropBuilderBuilder<TextureBoolean, TextureBoolean> {
+	private static class TexBooleanBuilder implements IPropBuilderBuilder<TextureBoolean, TextureBoolean> {
 		private TextureBooleanType type;
 
-		public TexDataBooleanBuilder(final TextureBooleanType type) {
+		public TexBooleanBuilder(final TextureBooleanType type) {
 			this.type = type;
 		}
 
@@ -107,8 +110,24 @@ public class CompoundAttr {
 		}
 	}
 
-	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexDataBooleanBuilder(TextureBooleanType.R)));
-	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexDataBooleanBuilder(TextureBooleanType.M)));
+	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.R)));
+	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.M)));
+
+	private static class TexBlendBuilder implements IPropBuilderBuilder<TextureBlend, TextureBlend> {
+		private TextureBlendType type;
+
+		public TexBlendBuilder(final TextureBlendType type) {
+			this.type = type;
+		}
+
+		@Override
+		public TextureBlendBuilder builder() {
+			return new TextureBlendBuilder(this.type);
+		}
+	}
+
+	public final PropAnimator<TextureBlend, TextureBlend, TextureBlend> b = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.B)));
+	public final PropAnimator<TextureBlend, TextureBlend, TextureBlend> d = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.D)));
 
 	public CompoundAttr(final String src) {
 		Validate.notNull(src);
