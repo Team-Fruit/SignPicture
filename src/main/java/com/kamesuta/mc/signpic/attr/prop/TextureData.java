@@ -5,6 +5,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
 
@@ -15,6 +16,7 @@ public interface TextureData {
 	// Crossing Slitting
 	public static final float defaultCS = 1f;
 	public static final float defaultOpacity = 10f;
+	public static final BlendType defaultBlend = null;
 	public static final boolean defaultRepeat = true;
 	public static final boolean defaultMipMap = true;
 
@@ -118,11 +120,11 @@ public interface TextureData {
 			}
 		}
 
-		public static class TextureMapBooleanBuilder implements IPropBuilder<TextureBoolean, TextureBoolean> {
+		public static class TextureBooleanBuilder implements IPropBuilder<TextureBoolean, TextureBoolean> {
 			private final TextureBooleanType type;
 			private boolean data;
 
-			public TextureMapBooleanBuilder(final TextureBooleanType type) {
+			public TextureBooleanBuilder(final TextureBooleanType type) {
 				this.type = type;
 				this.data = type.defaultValue;
 			}
@@ -130,6 +132,70 @@ public interface TextureData {
 			@Override
 			public TextureBoolean diff(final TextureBoolean base) {
 				return new TextureBoolean(this.type, this.data);
+			}
+
+			@Override
+			public boolean parse(final String src, final String key, final String value) {
+				if (StringUtils.equals(key, this.type.identifier)) {
+					this.data = !this.type.defaultValue;
+					return true;
+				}
+				return false;
+			}
+
+			@Override
+			public String compose() {
+				if (this.data!=this.type.defaultValue)
+					return this.type.identifier;
+				return "";
+			}
+		}
+	}
+
+	public static class TextureBlend implements IPropInterpolatable<TextureBlend> {
+		public final TextureBlendType type;
+		public final boolean data;
+
+		public TextureBlend(final TextureBlendType type, final boolean data) {
+			this.type = type;
+			this.data = data;
+		}
+
+		@Override
+		public TextureBlend per() {
+			return this;
+		}
+
+		@Override
+		public TextureBlend per(final float per, final TextureBlend before) {
+			return this;
+		}
+
+		public static enum TextureBlendType {
+			B("b", defaultRepeat), D("d", defaultMipMap),
+			;
+
+			public final String identifier;
+			public final boolean defaultValue;
+
+			TextureBlendType(final String identifier, final boolean defaultValue) {
+				this.identifier = identifier;
+				this.defaultValue = defaultValue;
+			}
+		}
+
+		public static class TextureBlendBuilder implements IPropBuilder<TextureBlend, TextureBlend> {
+			private final TextureBlendType type;
+			private boolean data;
+
+			public TextureBlendBuilder(final TextureBlendType type) {
+				this.type = type;
+				this.data = type.defaultValue;
+			}
+
+			@Override
+			public TextureBlend diff(final TextureBlend base) {
+				return new TextureBlend(this.type, this.data);
 			}
 
 			@Override

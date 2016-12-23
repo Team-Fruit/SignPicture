@@ -27,7 +27,7 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
-import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
@@ -102,8 +102,8 @@ public class CompoundAttr {
 		}
 
 		@Override
-		public TextureMapBooleanBuilder builder() {
-			return new TextureMapBooleanBuilder(this.type);
+		public TextureBooleanBuilder builder() {
+			return new TextureBooleanBuilder(this.type);
 		}
 	}
 

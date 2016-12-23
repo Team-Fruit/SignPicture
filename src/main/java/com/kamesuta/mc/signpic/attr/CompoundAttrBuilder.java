@@ -12,7 +12,7 @@ import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
-import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
@@ -29,8 +29,8 @@ public class CompoundAttrBuilder {
 	public final TextureFloatBuilder c = add(new TextureFloatBuilder(TextureFloatType.C));
 	public final TextureFloatBuilder s = add(new TextureFloatBuilder(TextureFloatType.S));
 	public final TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
-	public final TextureMapBooleanBuilder r = add(new TextureMapBooleanBuilder(TextureBooleanType.R));
-	public final TextureMapBooleanBuilder m = add(new TextureMapBooleanBuilder(TextureBooleanType.M));
+	public final TextureBooleanBuilder r = add(new TextureBooleanBuilder(TextureBooleanType.R));
+	public final TextureBooleanBuilder m = add(new TextureBooleanBuilder(TextureBooleanType.M));
 	public final AnimationBuilder animation = add(new AnimationBuilder());
 
 	private <E extends IPropBuilder<?, ?>> E add(final E e) {
