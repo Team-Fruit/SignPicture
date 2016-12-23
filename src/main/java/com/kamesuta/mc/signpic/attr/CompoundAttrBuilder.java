@@ -17,6 +17,8 @@ import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBooleanBuilder
 import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBuilder;
 
 public class CompoundAttrBuilder {
+	private Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
+
 	public final SizeBuilder size = new SizeBuilder();
 	public final OffsetBuilder offset = add(new OffsetBuilder());
 	public final RotationBuilder rotation = add(new RotationBuilder());
@@ -30,8 +32,6 @@ public class CompoundAttrBuilder {
 	public final TextureMapBooleanBuilder r = add(new TextureMapBooleanBuilder(DataTypeBoolean.R));
 	public final TextureMapBooleanBuilder m = add(new TextureMapBooleanBuilder(DataTypeBoolean.M));
 	public final AnimationBuilder animation = add(new AnimationBuilder());
-
-	private Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
 
 	private <E extends IPropBuilder<?, ?>> E add(final E e) {
 		this.metas.add(e);
