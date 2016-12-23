@@ -11,10 +11,10 @@ import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataType;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataTypeBoolean;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBooleanBuilder;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class CompoundAttrBuilder {
 	private Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
@@ -22,15 +22,15 @@ public class CompoundAttrBuilder {
 	public final SizeBuilder size = new SizeBuilder();
 	public final OffsetBuilder offset = add(new OffsetBuilder());
 	public final RotationBuilder rotation = add(new RotationBuilder());
-	public final TextureMapBuilder u = add(new TextureMapBuilder(DataType.U));
-	public final TextureMapBuilder v = add(new TextureMapBuilder(DataType.V));
-	public final TextureMapBuilder w = add(new TextureMapBuilder(DataType.W));
-	public final TextureMapBuilder h = add(new TextureMapBuilder(DataType.H));
-	public final TextureMapBuilder c = add(new TextureMapBuilder(DataType.C));
-	public final TextureMapBuilder s = add(new TextureMapBuilder(DataType.S));
-	public final TextureMapBuilder o = add(new TextureMapBuilder(DataType.O));
-	public final TextureMapBooleanBuilder r = add(new TextureMapBooleanBuilder(DataTypeBoolean.R));
-	public final TextureMapBooleanBuilder m = add(new TextureMapBooleanBuilder(DataTypeBoolean.M));
+	public final TextureFloatBuilder u = add(new TextureFloatBuilder(TextureFloatType.U));
+	public final TextureFloatBuilder v = add(new TextureFloatBuilder(TextureFloatType.V));
+	public final TextureFloatBuilder w = add(new TextureFloatBuilder(TextureFloatType.W));
+	public final TextureFloatBuilder h = add(new TextureFloatBuilder(TextureFloatType.H));
+	public final TextureFloatBuilder c = add(new TextureFloatBuilder(TextureFloatType.C));
+	public final TextureFloatBuilder s = add(new TextureFloatBuilder(TextureFloatType.S));
+	public final TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
+	public final TextureMapBooleanBuilder r = add(new TextureMapBooleanBuilder(TextureBooleanType.R));
+	public final TextureMapBooleanBuilder m = add(new TextureMapBooleanBuilder(TextureBooleanType.M));
 	public final AnimationBuilder animation = add(new AnimationBuilder());
 
 	private <E extends IPropBuilder<?, ?>> E add(final E e) {

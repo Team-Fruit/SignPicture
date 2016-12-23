@@ -59,6 +59,8 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
+							WRenderer.startTexture();
+							OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 							final CompoundAttr meta = GuiImage.this.entry.getMeta();
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(meta.o.getMovie().get().data*0.1f));
 							content.image.draw(

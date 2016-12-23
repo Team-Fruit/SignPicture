@@ -25,12 +25,12 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.KeyRotation;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataType;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.DataTypeBoolean;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBooleanBuilder;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapBuilder;
-import com.kamesuta.mc.signpic.attr.prop.TextureMapData.TextureMapDataBoolean;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBooleanType;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureMapBooleanBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
+import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class CompoundAttr {
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
@@ -73,31 +73,31 @@ public class CompoundAttr {
 		}
 	}));
 
-	private static class TexDataBuilder implements IPropBuilderBuilder<TextureMapData, TextureMapData> {
-		private DataType type;
+	private static class TexDataBuilder implements IPropBuilderBuilder<TextureFloat, TextureFloat> {
+		private TextureFloatType type;
 
-		public TexDataBuilder(final DataType type) {
+		public TexDataBuilder(final TextureFloatType type) {
 			this.type = type;
 		}
 
 		@Override
-		public IPropBuilder<TextureMapData, TextureMapData> builder() {
-			return new TextureMapBuilder(this.type);
+		public IPropBuilder<TextureFloat, TextureFloat> builder() {
+			return new TextureFloatBuilder(this.type);
 		}
 	}
 
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> u = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.U)));
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> v = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.V)));
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> w = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.W)));
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> h = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.H)));
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> c = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.C)));
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> s = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.S)));
-	public final PropAnimator<TextureMapData, TextureMapData, TextureMapData> o = add(new PropAnimator<TextureMapData, TextureMapData, TextureMapData>(new TexDataBuilder(DataType.O)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> u = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.U)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> v = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.V)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> w = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.W)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> h = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.H)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.C)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.S)));
+	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexDataBuilder(TextureFloatType.O)));
 
-	private static class TexDataBooleanBuilder implements IPropBuilderBuilder<TextureMapDataBoolean, TextureMapDataBoolean> {
-		private DataTypeBoolean type;
+	private static class TexDataBooleanBuilder implements IPropBuilderBuilder<TextureBoolean, TextureBoolean> {
+		private TextureBooleanType type;
 
-		public TexDataBooleanBuilder(final DataTypeBoolean type) {
+		public TexDataBooleanBuilder(final TextureBooleanType type) {
 			this.type = type;
 		}
 
@@ -107,8 +107,8 @@ public class CompoundAttr {
 		}
 	}
 
-	public final PropAnimator<TextureMapDataBoolean, TextureMapDataBoolean, TextureMapDataBoolean> r = add(new PropAnimator<TextureMapData.TextureMapDataBoolean, TextureMapData.TextureMapDataBoolean, TextureMapData.TextureMapDataBoolean>(new TexDataBooleanBuilder(DataTypeBoolean.R)));
-	public final PropAnimator<TextureMapDataBoolean, TextureMapDataBoolean, TextureMapDataBoolean> m = add(new PropAnimator<TextureMapData.TextureMapDataBoolean, TextureMapData.TextureMapDataBoolean, TextureMapData.TextureMapDataBoolean>(new TexDataBooleanBuilder(DataTypeBoolean.M)));
+	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexDataBooleanBuilder(TextureBooleanType.R)));
+	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexDataBooleanBuilder(TextureBooleanType.M)));
 
 	public CompoundAttr(final String src) {
 		Validate.notNull(src);
