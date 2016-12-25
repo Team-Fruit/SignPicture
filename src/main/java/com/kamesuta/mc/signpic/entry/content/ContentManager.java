@@ -52,7 +52,7 @@ public class ContentManager implements ITickEntry {
 		this.divisionqueue.offer(divisionProcessable);
 	}
 
-	protected @Nonnull Content get(final ContentId id) {
+	protected @Nonnull Content get(final @Nonnull ContentId id) {
 		final ContentSlot entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
