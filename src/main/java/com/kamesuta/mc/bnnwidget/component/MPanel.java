@@ -2,6 +2,8 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.WRenderer;
@@ -14,14 +16,14 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import net.minecraft.util.ResourceLocation;
 
 public class MPanel extends WPanel {
-	public static final ResourceLocation background = new ResourceLocation("signpic", "textures/gui/background.png");
+	public static final @Nonnull ResourceLocation background = new ResourceLocation("signpic", "textures/gui/background.png");
 
-	public MPanel(final R position) {
+	public MPanel(final @Nonnull R position) {
 		super(position);
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 		final Area a = getGuiPosition(pgp);
 		final float op = getGuiOpacity(popacity);
 
@@ -41,7 +43,7 @@ public class MPanel extends WPanel {
 		super.draw(ev, pgp, p, frame, popacity);
 	}
 
-	public static void drawBack(final Area a) {
+	public static void drawBack(final @Nonnull Area a) {
 		drawTextureModalSize(a.x1(), a.y1(), a.w()/2, a.h()/2, 0, 0, a.w()/2, a.h()/2);
 		drawTextureModalSize(a.x1()+a.w()/2, a.y1(), a.w()/2, a.h()/2, 256-a.w()/2, 0, a.w()/2, a.h()/2);
 		drawTextureModalSize(a.x1(), a.y1()+a.h()/2, a.w()/2, a.h()/2, 0, 256-a.h()/2, a.w()/2, a.h()/2);

@@ -373,7 +373,7 @@ public class GuiSettings extends WPanel {
 					add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 						@Override
 						protected void initWidget() {
-							setSelector(new ListSelector() {
+							setSelector(new StringSelector() {
 								{
 									final List<String> settings = Lists.newArrayList("");
 									settings.addAll(GuiApis.this.typesetting.getSettings());
@@ -427,7 +427,7 @@ public class GuiSettings extends WPanel {
 			add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {
-					setSelector(new ListSelector() {
+					setSelector(new StringSelector() {
 						{
 							final List<String> settings = Lists.newArrayList("");
 							if (Key.this.setting!=null)
@@ -446,6 +446,17 @@ public class GuiSettings extends WPanel {
 						Key.this.setting.setConfig(newText);
 				}
 			});
+		}
+
+		protected WCommon getField() {
+			return null;
+		}
+
+		protected Selector<String> getSelector() {
+			return null;
+		}
+
+		public void setSelector(final @Nonnull Selector<String> selector) {
 		}
 	}
 }
