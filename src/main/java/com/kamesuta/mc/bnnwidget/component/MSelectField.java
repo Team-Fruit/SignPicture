@@ -6,8 +6,12 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 public class MSelectField extends MSelect<String> {
-	protected @Nonnull MChatTextField field;
-	private @Nonnull Selector<String> selector = new StringSelector();
+	protected final @Nonnull MChatTextField field;
+	private @Nonnull StringSelector selector = new StringSelector();
+
+	public void setSelector(final @Nonnull StringSelector selector) {
+		this.selector = selector;
+	}
 
 	@Override
 	protected @Nonnull Selector<String> getSelector() {

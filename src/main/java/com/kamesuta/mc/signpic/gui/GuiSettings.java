@@ -5,6 +5,9 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Color;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -17,7 +20,7 @@ import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MCheckBox;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
-import com.kamesuta.mc.bnnwidget.component.MSelect;
+import com.kamesuta.mc.bnnwidget.component.MSelectField;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
 import com.kamesuta.mc.bnnwidget.component.MTab;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
@@ -63,7 +66,7 @@ public class GuiSettings extends WPanel {
 		this.bottom.stop().add(Easings.easeOutBounce.move(.7f, 0f)).start();
 	}
 
-	public GuiSettings(final R area) {
+	public GuiSettings(final @Nonnull R area) {
 		super(area);
 	}
 
@@ -78,7 +81,7 @@ public class GuiSettings extends WPanel {
 			protected void initWidget() {
 				add(new WPanel(new R(Coord.bottom(V.per(V.combine(V.p(-1), V.a(hitarea)), V.p(0f), GuiSettings.this.bottom)))) {
 					@Override
-					public void update(final WEvent ev, final Area pgp, final Point p) {
+					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						final Area a = getGuiPosition(pgp);
 						final boolean b = a.pointInside(p);
 						if (!GuiSettings.this.closing)
@@ -104,12 +107,12 @@ public class GuiSettings extends WPanel {
 					}
 
 					@Override
-					public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+					public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						return GuiSettings.this.bottom.isFinished();
 					}
 
 					@Override
-					public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+					public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 						final Area a = getGuiPosition(pgp);
 						return super.mouseClicked(ev, pgp, p, button)||a.pointInside(p);
 					}
@@ -120,7 +123,7 @@ public class GuiSettings extends WPanel {
 							protected R line = new R(Coord.top(0), Coord.top(2));
 
 							@Override
-							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 								final Area a = getGuiPosition(pgp);
 								WRenderer.startShape();
 								OpenGL.glColor4f(0f, 0f, 0f, .6f);
@@ -168,14 +171,14 @@ public class GuiSettings extends WPanel {
 								});
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+40), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										ContentManager.instance.reloadAll();
 										return true;
 									}
 								}.setText(I18n.format("signpic.gui.settings.sign.reloadall")));
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+20), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										ContentManager.instance.redownloadAll();
 										OverlayFrame.instance.pane.task.show(2f);
 										return true;
@@ -183,7 +186,7 @@ public class GuiSettings extends WPanel {
 								}.setText(I18n.format("signpic.gui.settings.sign.redownloadall")));
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										Client.mc.displayGuiScreen(new ConfigGui(ev.owner));
 										return true;
 									}
@@ -199,7 +202,7 @@ public class GuiSettings extends WPanel {
 
 									add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
 										@Override
-										public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+										public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 											final Area a = getGuiPosition(pgp);
 											OpenGL.glColor4f(0f, 0f, 0f, .4f);
 											WRenderer.startShape();
@@ -216,7 +219,7 @@ public class GuiSettings extends WPanel {
 												protected float orot = 0f;
 
 												@Override
-												public void update(final WEvent ev, final Area pgp, final Point p) {
+												public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 													final Area a = getGuiPosition(pgp);
 													if (a.pointInside(p)) {
 														if (!this.in) {
@@ -237,7 +240,7 @@ public class GuiSettings extends WPanel {
 												}
 
 												@Override
-												public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+												public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 													final Area a = getGuiPosition(pgp);
 													if (a.pointInside(p)) {
 														Informations.instance.runUpdate();
@@ -281,7 +284,7 @@ public class GuiSettings extends WPanel {
 														}
 
 														@Override
-														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
@@ -301,7 +304,7 @@ public class GuiSettings extends WPanel {
 														}
 
 														@Override
-														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(0, 0, 10f);
 															super.draw(ev, pgp, p, frame, popacity);
@@ -322,17 +325,17 @@ public class GuiSettings extends WPanel {
 	}
 
 	static class GuiApis<E extends ApiFactory> extends WPanel {
-		protected MapSetting<E> typesetting;
-		protected String title;
+		protected @Nonnull MapSetting<E> typesetting;
+		protected @Nonnull String title;
 
-		public GuiApis(final R position, final MapSetting<E> typesetting, final String title) {
+		public GuiApis(final @Nonnull R position, final @Nonnull MapSetting<E> typesetting, final @Nonnull String title) {
 			super(position);
 			this.typesetting = typesetting;
 			this.title = title;
 		}
 
 		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
@@ -358,7 +361,7 @@ public class GuiSettings extends WPanel {
 			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(this.title));
 			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 				@Override
-				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 					final Area a = getGuiPosition(pgp);
 					WRenderer.startShape();
 					OpenGL.glColor4f(0f, 0f, 0f, .2f);
@@ -404,15 +407,15 @@ public class GuiSettings extends WPanel {
 	}
 
 	static class Key extends WPanel {
-		protected Setting setting;
+		protected @Nonnull Setting setting;
 
-		public Key(final R position, final Setting setting) {
+		public Key(final @Nonnull R position, final @Nullable Setting setting) {
 			super(position);
 			this.setting = setting;
 		}
 
 		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
@@ -424,14 +427,13 @@ public class GuiSettings extends WPanel {
 		@Override
 		protected void initWidget() {
 			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.key")));
-			add(new MSelect(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
+			add(new MSelectField(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {
 					setSelector(new StringSelector() {
 						{
 							final List<String> settings = Lists.newArrayList("");
-							if (Key.this.setting!=null)
-								settings.addAll(Key.this.setting.getSettings());
+							settings.addAll(Key.this.setting.getSettings());
 							setList(settings);
 						}
 					});
@@ -446,17 +448,6 @@ public class GuiSettings extends WPanel {
 						Key.this.setting.setConfig(newText);
 				}
 			});
-		}
-
-		protected WCommon getField() {
-			return null;
-		}
-
-		protected Selector<String> getSelector() {
-			return null;
-		}
-
-		public void setSelector(final @Nonnull Selector<String> selector) {
 		}
 	}
 }

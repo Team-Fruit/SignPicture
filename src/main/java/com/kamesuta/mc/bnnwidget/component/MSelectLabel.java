@@ -4,7 +4,6 @@ import javax.annotation.Nonnull;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WRenderer;
-import com.kamesuta.mc.bnnwidget.component.MSelectButton.ButtonSelector;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -12,19 +11,19 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class MSelectLabel extends MSelect<String> {
-	protected MLabel field;
+	protected final @Nonnull MLabel field;
 	private @Nonnull StringSelector selector = new StringSelector();
 
-	public void setSelector(final @Nonnull ButtonSelector selector) {
+	public void setSelector(final @Nonnull StringSelector selector) {
 		this.selector = selector;
 	}
 
 	@Override
-	protected Selector<String> getSelector() {
+	protected @Nonnull Selector<String> getSelector() {
 		return this.selector;
 	}
 
-	public MSelectLabel(final R position, final float buttonwidth) {
+	public MSelectLabel(final @Nonnull R position, final float buttonwidth) {
 		super(position, buttonwidth);
 		add(this.field = new MLabel(new R(Coord.left(this.buttonwidth), Coord.right(this.buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override

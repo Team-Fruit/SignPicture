@@ -12,7 +12,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 public class MSelectButton extends MSelect<MButton> {
-	public @Nonnull WBox field;
+	public final @Nonnull WBox field;
 
 	public @Nonnull ButtonSelector selector = new ButtonSelector();
 
