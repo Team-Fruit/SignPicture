@@ -7,7 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import net.minecraft.util.ResourceLocation;
 
 public class ContentId {
-	private final String id;
+	private final @Nonnull String id;
 
 	public ContentId(String uri) {
 		if (StringUtils.contains(uri, "http://"))
@@ -21,7 +21,7 @@ public class ContentId {
 		return this.id;
 	}
 
-	public String getURI() {
+	public @Nonnull String getURI() {
 		if (!StringUtils.startsWith(this.id, "!"))
 			if (StringUtils.startsWith(this.id, "$"))
 				return "https://"+StringUtils.substring(this.id, 1);

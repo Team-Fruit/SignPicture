@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.attr.prop;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -32,8 +34,11 @@ public interface TextureData {
 		}
 
 		@Override
-		public TextureFloat per(final float per, final TextureFloat before) {
-			return new TextureFloat(this.type, this.data*per+before.data*(1f-per));
+		public TextureFloat per(final float per, final @Nullable TextureFloat before) {
+			if (before==null)
+				return this;
+			else
+				return new TextureFloat(this.type, this.data*per+before.data*(1f-per));
 		}
 
 		public static enum TextureFloatType {
@@ -60,7 +65,7 @@ public interface TextureData {
 			}
 
 			@Override
-			public TextureFloat diff(final TextureFloat base) {
+			public TextureFloat diff(final @Nullable TextureFloat base) {
 				if (base==null)
 					return new TextureFloat(this.type, this.data);
 				else
@@ -103,7 +108,7 @@ public interface TextureData {
 		}
 
 		@Override
-		public TextureBoolean per(final float per, final TextureBoolean before) {
+		public TextureBoolean per(final float per, final @Nullable TextureBoolean before) {
 			return this;
 		}
 
@@ -130,7 +135,7 @@ public interface TextureData {
 			}
 
 			@Override
-			public TextureBoolean diff(final TextureBoolean base) {
+			public TextureBoolean diff(final @Nullable TextureBoolean base) {
 				return new TextureBoolean(this.type, this.data);
 			}
 
@@ -169,7 +174,7 @@ public interface TextureData {
 		}
 
 		@Override
-		public TextureBlend per(final float per, final TextureBlend before) {
+		public TextureBlend per(final float per, final @Nullable TextureBlend before) {
 			return this;
 		}
 
@@ -196,7 +201,7 @@ public interface TextureData {
 			}
 
 			@Override
-			public TextureBlend diff(final TextureBlend base) {
+			public TextureBlend diff(final @Nullable TextureBlend base) {
 				return new TextureBlend(this.type, this.data);
 			}
 

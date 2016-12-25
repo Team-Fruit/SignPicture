@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.annotation.Nullable;
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Quat4f;
 
@@ -13,9 +14,9 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropComposable;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
-import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public abstract class RotationData {
@@ -72,7 +73,7 @@ public abstract class RotationData {
 		}
 
 		@Override
-		public final RotationData per(final float per, final RotationData before) {
+		public final RotationData per(final float per, final @Nullable RotationData before) {
 			return this;
 		}
 
@@ -113,7 +114,7 @@ public abstract class RotationData {
 		}
 
 		@Override
-		public RotationData per(final float per, final RotationData before) {
+		public RotationData per(final float per, final @Nullable RotationData before) {
 			return new PerRotation(getRotate(per));
 		}
 
@@ -271,7 +272,7 @@ public abstract class RotationData {
 		public KeyRotation base;
 
 		@Override
-		public DiffRotation diff(KeyRotation base) {
+		public DiffRotation diff(@Nullable KeyRotation base) {
 			if (base==null)
 				base = new BaseRotation();
 			final AxisAngle4f axis = new AxisAngle4f(this.x, this.y, this.z, this.angle);

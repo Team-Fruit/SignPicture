@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -59,8 +61,9 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							final CompoundAttr meta = GuiImage.this.entry.getMeta();
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(meta.o.getMovie().get().data*0.1f));
+							final @Nullable CompoundAttr meta = GuiImage.this.entry.getMeta();
+							final float o = meta.o.getMovie().get().data*0.1f;
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
 							content.image.draw(
 									meta.u.getMovie().get().data,
 									meta.v.getMovie().get().data,

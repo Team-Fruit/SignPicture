@@ -127,33 +127,28 @@ public class EntryId {
 		return ItemEntryId.blank;
 	}
 
-	public boolean hasContentId() {
+	private boolean hasContentId() {
 		return !(StringUtils.isEmpty(this.id)||StringUtils.containsOnly(this.id, "!")||StringUtils.containsOnly(this.id, "$"));
 	}
 
-	public boolean hasMeta() {
+	private boolean hasMeta() {
 		return StringUtils.endsWith(this.id, "]")&&StringUtils.contains(this.id, "[")||
 				hasPrefix()&&StringUtils.endsWith(this.id, "}")&&StringUtils.contains(this.id, "{");
 	}
 
-	public boolean hasPrefix() {
+	private boolean hasPrefix() {
 		final int i = StringUtils.indexOf(this.id, "#");
 		return 0<=i&&i<2;
 	}
 
-	public boolean hasPrePrefix() {
-		final int i = StringUtils.indexOf(this.id, "#");
-		return i==1;
-	}
-
-	public String getPrePrefix() {
-		if (hasPrePrefix())
+	public @Nullable String getPrePrefix() {
+		if (StringUtils.indexOf(this.id, "#")==1)
 			return StringUtils.substring(this.id, 0, 0);
 		else
-			return "";
+			return null;
 	}
 
-	public boolean isValid() {
+	private boolean isValid() {
 		return hasContentId()&&hasMeta();
 	}
 
@@ -177,8 +172,7 @@ public class EntryId {
 				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1);
 			else
 				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1);
-		else
-			return null;
+		return null;
 	}
 
 	public @Nullable CompoundAttr getMeta() {

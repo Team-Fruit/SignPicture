@@ -1,13 +1,15 @@
 package com.kamesuta.mc.signpic.attr.prop;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.bnnwidget.position.Area;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropComposable;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
-import com.kamesuta.mc.signpic.attr.IPropBuilder;
 
 public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropComposable {
 	public static final float Default = 1f;
@@ -42,7 +44,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 	}
 
 	@Override
-	public SizeData per(final float per, final SizeData before) {
+	public SizeData per(final float per, final @Nullable SizeData before) {
 		// return new SizeData(getWidth()*per+before.getWidth()*(1f-per), getHeight()*per+before.getHeight()*(1f-per));
 		return new PerSizeData(this, before, per);
 	}
@@ -58,7 +60,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		return new AbsSizeData(width, height);
 	}
 
-	public static SizeData create(final SizeData base, final SizeData diff) {
+	public static SizeData create(final @Nullable SizeData base, final SizeData diff) {
 		if (base==null)
 			return create(diff.getWidth(), diff.getHeight());
 		else
@@ -325,7 +327,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		public float height = SizeData.Unknown;
 
 		@Override
-		public SizeData diff(final SizeData base) {
+		public SizeData diff(final @Nullable SizeData base) {
 			return SizeData.create(base, SizeData.create(this.width, this.height));
 		}
 

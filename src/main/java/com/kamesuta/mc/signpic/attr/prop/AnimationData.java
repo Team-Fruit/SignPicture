@@ -1,14 +1,16 @@
 package com.kamesuta.mc.signpic.attr.prop;
 
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropComposable;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
-import com.kamesuta.mc.signpic.attr.IPropBuilder;
 
 public class AnimationData implements IPropInterpolatable<AnimationData>, IPropComposable {
 	public final Easings easing;
@@ -25,7 +27,7 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 	}
 
 	@Override
-	public AnimationData per(final float per, final AnimationData before) {
+	public AnimationData per(final float per, final @Nullable AnimationData before) {
 		return this;
 	}
 
@@ -76,7 +78,7 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 		public RSNeed redstone = RSNeed.IGNORE;
 
 		@Override
-		public AnimationData diff(final AnimationData base) {
+		public AnimationData diff(final @Nullable AnimationData base) {
 			return new AnimationData(this.easing, this.redstone);
 		}
 

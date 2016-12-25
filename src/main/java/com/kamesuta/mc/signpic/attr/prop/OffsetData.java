@@ -28,8 +28,11 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 	}
 
 	@Override
-	public OffsetData per(final float per, final OffsetData before) {
-		return new OffsetData(this.x.per(per, before.x), this.y.per(per, before.y), this.z.per(per, before.z));
+	public OffsetData per(final float per, final @Nullable OffsetData before) {
+		if (before==null)
+			return this;
+		else
+			return new OffsetData(this.x.per(per, before.x), this.y.per(per, before.y), this.z.per(per, before.z));
 	}
 
 	@Override
@@ -56,7 +59,7 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 		}
 
 		@Override
-		public OffsetData diff(final OffsetData base) {
+		public OffsetData diff(final @Nullable OffsetData base) {
 			if (base==null)
 				return new OffsetData(this.x.diff(null), this.y.diff(null), this.z.diff(null));
 			else
@@ -82,8 +85,11 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 		}
 
 		@Override
-		public OffsetPropData per(final float per, final OffsetPropData before) {
-			return new OffsetPropData(this.offset*per+before.offset*(1f-per));
+		public OffsetPropData per(final float per, final @Nullable OffsetPropData before) {
+			if (before==null)
+				return this;
+			else
+				return new OffsetPropData(this.offset*per+before.offset*(1f-per));
 		}
 
 		@Override

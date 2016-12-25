@@ -25,12 +25,15 @@ public class Entry {
 		this.gui = new GuiImage(this);
 	}
 
-	public @Nonnull Content content() {
-		return this.contentId.content();
+	public @Nullable Content getContent() {
+		if (this.contentId!=null)
+			return this.contentId.content();
+		else
+			return null;
 	}
 
 	public boolean isNotSupported() {
-		return getMeta().hasInvalidMeta()||this.id.hasPrePrefix();
+		return getMeta().hasInvalidMeta()||this.id.getPrePrefix()!=null;
 	}
 
 	public boolean isValid() {

@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.entry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
@@ -12,11 +13,12 @@ public class EntryIdBuilder {
 	public EntryIdBuilder() {
 	}
 
-	public EntryIdBuilder load(final EntryId source) {
+	public EntryIdBuilder load(final @Nullable EntryId source) {
 		if (source!=null) {
 			this.meta = source.getMetaBuilder();
-			if (source.hasContentId())
-				this.uri = source.getContentId().getURI();
+			final ContentId id = source.getContentId();
+			if (id!=null)
+				this.uri = id.getURI();
 		}
 		return this;
 	}
