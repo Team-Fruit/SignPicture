@@ -24,7 +24,7 @@ public class ResourceImage extends Image {
 
 	@Override
 	public String getLocal() {
-		return "Resource:"+StringUtils.substring(this.content.id.id(), 1);
+		return "Resource:"+StringUtils.substring(this.content.id.getID(), 1);
 	}
 
 	@Override

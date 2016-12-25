@@ -29,7 +29,8 @@ public class Content implements IInitable, ICollectable, ILoadCancelable {
 		this.meta = new ContentMeta(ContentLocation.metaLocation(hash));
 		this.meta.setURL(url);
 		this.meta.setMetaID(hash);
-		this.state = new State().setName(id.id());
+		this.state = new State();
+		this.state.setName(id.getID());
 		if (id.isResource())
 			this.image = new ResourceImage(this);
 		else
@@ -62,8 +63,11 @@ public class Content implements IInitable, ICollectable, ILoadCancelable {
 
 	public void markDirtyWithCache() {
 		this.meta.setTryCount(0);
-		final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.meta.getCacheID()));
-		cachemeta.setDirty(true);
+		final String id = this.meta.getCacheID();
+		if (id!=null) {
+			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(id));
+			cachemeta.setDirty(true);
+		}
 		markDirty();
 	}
 }

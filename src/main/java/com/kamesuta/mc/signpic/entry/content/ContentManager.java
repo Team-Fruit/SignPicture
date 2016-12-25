@@ -116,7 +116,7 @@ public class ContentManager implements ITickEntry {
 	}
 
 	public static class ContentSlot extends EntrySlot<Content> implements IInitable, ICollectable {
-		public ContentSlot(final Content entry) {
+		public ContentSlot(final @Nonnull Content entry) {
 			super(entry);
 		}
 

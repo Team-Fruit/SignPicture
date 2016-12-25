@@ -17,43 +17,43 @@ import com.kamesuta.mc.signpic.image.InvaildImageException;
 import net.minecraft.client.resources.I18n;
 
 public class State {
-	private String name = "";
-	private Progress progress = new Progress();
-	private StateType type = StateType.INIT;
+	private @Nonnull String name = "";
+	private @Nonnull Progress progress = new Progress();
+	private @Nonnull StateType type = StateType.INIT;
 	private @Nonnull String message = "";
-	private Map<String, Object> map = Maps.newHashMap();
+	private final @Nonnull Map<String, Object> map = Maps.newHashMap();
 
 	public State() {
 	}
 
-	public State setName(final String name) {
+	public @Nonnull State setName(final @Nonnull String name) {
 		this.name = name;
 		return this;
 	}
 
-	public String getName() {
+	public @Nonnull String getName() {
 		return this.name;
 	}
 
-	public State setProgress(final Progress progress) {
+	public @Nonnull State setProgress(final @Nonnull Progress progress) {
 		this.progress = progress;
 		return this;
 	}
 
-	public Progress getProgress() {
+	public @Nonnull Progress getProgress() {
 		return this.progress;
 	}
 
-	public State setMessage(final @Nonnull String message) {
+	public @Nonnull State setMessage(final @Nonnull String message) {
 		this.message = message;
 		return this;
 	}
 
-	public Map<String, Object> getMeta() {
+	public @Nonnull Map<String, Object> getMeta() {
 		return this.map;
 	}
 
-	public State setErrorMessage(final Throwable throwable) {
+	public @Nonnull State setErrorMessage(final Throwable throwable) {
 		if (throwable!=null) {
 			setType(StateType.ERROR);
 			try {
@@ -84,16 +84,16 @@ public class State {
 		return this.message;
 	}
 
-	public State setType(final StateType type) {
+	public @Nonnull State setType(final @Nonnull StateType type) {
 		this.type = type;
 		return this;
 	}
 
-	public StateType getType() {
+	public @Nonnull StateType getType() {
 		return this.type;
 	}
 
-	public String getStateMessage() {
+	public @Nonnull String getStateMessage() {
 		return I18n.format(this.type.msg, (int) (this.progress.getProgress()*100));
 	}
 }

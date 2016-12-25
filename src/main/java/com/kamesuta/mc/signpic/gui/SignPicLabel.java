@@ -60,7 +60,7 @@ public class SignPicLabel extends WBase {
 				if (this.update!=null)
 					upentry = this.update.entry();
 
-				if (!StringUtils.isEmpty(content.id.id()))
+				if (!StringUtils.isEmpty(content.id.getID()))
 					drawEntry(a, opacity, entry);
 				else if (upentry!=null&&upentry.isValid())
 					drawEntry(a, opacity, upentry);
