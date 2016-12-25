@@ -27,7 +27,7 @@ public class MSelectLabel extends MSelect<String> {
 		super(position, buttonwidth);
 		add(this.field = new MLabel(new R(Coord.left(this.buttonwidth), Coord.right(this.buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 				final Area a = getGuiPosition(pgp);
 				WRenderer.startShape();
 				OpenGL.glColor4f(0f, 0f, 0f, .4f);
@@ -51,7 +51,7 @@ public class MSelectLabel extends MSelect<String> {
 	}
 
 	@Override
-	public MSelectLabel setText(final String text) {
+	public MSelectLabel setText(final @Nonnull String text) {
 		this.field.setText(text);
 		return this;
 	}

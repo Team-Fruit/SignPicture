@@ -1,12 +1,15 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.lwjgl.util.Timer;
 
 public abstract class Motion implements IMotion {
 
-	protected final Timer timer;
+	protected final @Nonnull Timer timer;
 	protected final float duration;
-	protected Runnable after;
+	protected @Nullable Runnable after;
 
 	public Motion(final float duration) {
 		this.timer = new Timer();
@@ -51,7 +54,7 @@ public abstract class Motion implements IMotion {
 	}
 
 	@Override
-	public IMotion setAfter(final Runnable r) {
+	public IMotion setAfter(final @Nullable Runnable r) {
 		this.after = r;
 		return this;
 	}
@@ -62,14 +65,15 @@ public abstract class Motion implements IMotion {
 	}
 
 	@Override
-	public Runnable getAfter() {
+	public @Nullable Runnable getAfter() {
 		return this.after;
 	}
 
 	@Override
 	public void onFinished() {
-		if (getAfter()!=null)
-			getAfter().run();
+		final Runnable r = getAfter();
+		if (r!=null)
+			r.run();
 	}
 
 	public static IMotion easing(final float duration, final Easing easing, final float end) {
