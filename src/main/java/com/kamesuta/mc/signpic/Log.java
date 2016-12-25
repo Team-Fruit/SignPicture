@@ -13,12 +13,8 @@ import org.apache.logging.log4j.spi.AbstractLogger;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 
 public class Log {
-	public static @Nonnull Logger log;
+	public static @Nonnull Logger log = LogManager.getLogger(Reference.MODID);
 	public static Logger dev = new DevLogger(log);
-
-	static {
-		log = LogManager.getLogger(Reference.MODID);
-	}
 
 	private static class DevLogger extends AbstractLogger {
 		private Logger logger;

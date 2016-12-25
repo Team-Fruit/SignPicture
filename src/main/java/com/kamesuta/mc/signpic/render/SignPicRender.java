@@ -81,26 +81,29 @@ public class SignPicRender extends WGui {
 			if (tilesign!=null) {
 				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
-					final String uri = entry.contentId.getURI();
 					final CompoundAttr meta = entry.getMeta();
 					final SizeData signsize = meta.sizes.getMovie().get();
-					final Content content = entry.content();
-					final SizeData imagesize = content.image.getSize();
-					final SizeData viewsize = signsize.aspectSize(imagesize);
-					final String advmsg = content.state.getMessage();
 
 					event.left.add("");
 					event.left.add(I18n.format("signpic.over.sign", entry.id.id()));
-					event.left.add(I18n.format("signpic.over.id", uri));
+					if (entry.contentId!=null)
+						event.left.add(I18n.format("signpic.over.id", entry.contentId.getURI()));
+					final Content content = entry.getContent();
+					final SizeData imagesize = content!=null ? content.image.getSize() : SizeData.UnknownSize;
+					final SizeData viewsize = signsize.aspectSize(imagesize);
 					event.left.add(I18n.format("signpic.over.size", signsize, signsize.getWidth(), signsize.getHeight(), imagesize.getWidth(), imagesize.getHeight(), viewsize.getWidth(), viewsize.getHeight()));
-					event.left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
+					if (content!=null)
+						event.left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
 					if (entry.isNotSupported())
 						event.left.add(I18n.format("signpic.over.advmsg", I18n.format("signpic.state.format.unsupported")));
-					else if (advmsg!=null)
+					else if (content!=null) {
+						final String advmsg = content.state.getMessage();
 						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
+					}
 					if (tilesign.signText!=null)
 						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
-					event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
+					if (content!=null)
+						event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
 				}
 			}
 		}

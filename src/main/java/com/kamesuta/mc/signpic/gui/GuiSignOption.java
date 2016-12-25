@@ -21,6 +21,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
@@ -150,10 +151,14 @@ public class GuiSignOption extends WFrame {
 									}
 
 									protected void load(final boolean content, final boolean meta) {
-										final Entry old = CurrentMode.instance.getEntryId().entry();
+										final Entry oldentry = CurrentMode.instance.getEntryId().entry();
+										final Entry newentry = GuiSignOption.this.entry;
 										final EntryIdBuilder idb = new EntryIdBuilder();
-										idb.setURI(content ? GuiSignOption.this.entry.contentId.getID() : old.contentId.getID());
-										idb.setMeta(meta ? GuiSignOption.this.entry.getMetaBuilder() : old.getMetaBuilder());
+										if (newentry.contentId!=null&&content)
+											idb.setURI(newentry.contentId.getID());
+										else if (oldentry.contentId!=null)
+											idb.setURI(oldentry.contentId.getID());
+										idb.setMeta(meta ? GuiSignOption.this.entry.getMetaBuilder() : oldentry.getMetaBuilder());
 										CurrentMode.instance.setEntryId(idb.build());
 									}
 								});
@@ -167,8 +172,9 @@ public class GuiSignOption extends WFrame {
 
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-										if (GuiSignOption.this.entry.isValid()) {
-											GuiSignOption.this.entry.content().markDirty();
+										final Content c = GuiSignOption.this.entry.getContent();
+										if (c!=null) {
+											c.markDirty();
 											return true;
 										}
 										return false;
@@ -184,8 +190,9 @@ public class GuiSignOption extends WFrame {
 
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-										if (GuiSignOption.this.entry.isValid()) {
-											GuiSignOption.this.entry.content().markDirtyWithCache();
+										final Content c = GuiSignOption.this.entry.getContent();
+										if (c!=null) {
+											c.markDirtyWithCache();
 											return true;
 										}
 										return false;
@@ -201,8 +208,9 @@ public class GuiSignOption extends WFrame {
 
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-										if (GuiSignOption.this.entry.isValid()) {
-											GuiSignOption.this.entry.content().cancel();
+										final Content c = GuiSignOption.this.entry.getContent();
+										if (c!=null) {
+											c.cancel();
 											return true;
 										}
 										return false;
@@ -216,7 +224,9 @@ public class GuiSignOption extends WFrame {
 									}
 
 									protected void setBlock() {
-										setBlock(!GuiSignOption.this.entry.content().meta.isBlocked());
+										final Content c = GuiSignOption.this.entry.getContent();
+										if (c!=null)
+											setBlock(!c.meta.isBlocked());
 									}
 
 									protected void setBlock(final boolean b) {
@@ -233,11 +243,12 @@ public class GuiSignOption extends WFrame {
 
 									@Override
 									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-										if (GuiSignOption.this.entry.isValid()) {
-											final boolean blocked = GuiSignOption.this.entry.content().meta.isBlocked();
-											GuiSignOption.this.entry.content().meta.setBlocked(!blocked);
+										final Content c = GuiSignOption.this.entry.getContent();
+										if (c!=null) {
+											final boolean blocked = c.meta.isBlocked();
+											c.meta.setBlocked(!blocked);
 											setBlock();
-											GuiSignOption.this.entry.content().markDirty();
+											c.markDirty();
 											return true;
 										}
 										return false;

@@ -28,10 +28,13 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -301,8 +304,9 @@ public class GuiMain extends WFrame {
 							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								if (entry.isValid()) {
-									if (!entry.id.isPlaceable())
-										ShortenerApiUtil.requestShoretning(entry.content().id);
+									Content content = null;
+									if (!entry.id.isPlaceable()&&(content = entry.getContent())!=null)
+										ShortenerApiUtil.requestShoretning(content.id);
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 									requestClose();
@@ -402,8 +406,9 @@ public class GuiMain extends WFrame {
 			setWatermark(I18n.format("signpic.gui.editor.textfield"));
 
 			final EntryId id = CurrentMode.instance.getEntryId();
-			if (id.hasContentId())
-				setText(id.getContentId().getID());
+			Content content = null;
+			if ((content = id.entry().getContent())!=null)
+				setText(content.id.getID());
 		}
 
 		@Override
@@ -413,10 +418,12 @@ public class GuiMain extends WFrame {
 
 		public void apply() {
 			final EntryId entryId = EntryId.from(getText());
-			if (entryId.hasMeta())
-				GuiMain.this.signbuilder.setMeta(entryId.getMetaBuilder());
-			if (entryId.hasContentId()) {
-				String url = entryId.getContentId().getURI();
+			final CompoundAttrBuilder atb = entryId.getMetaBuilder();
+			if (atb!=null)
+				GuiMain.this.signbuilder.setMeta(atb);
+			final ContentId cid = entryId.getContentId();
+			if (cid!=null) {
+				String url = cid.getURI();
 				setText(url = Apis.instance.replaceURL(url));
 				GuiMain.this.signbuilder.setURI(url);
 			} else

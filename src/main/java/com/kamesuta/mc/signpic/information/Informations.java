@@ -4,6 +4,9 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -61,7 +64,7 @@ public final class Informations {
 			return Config.instance.informationJoinBeta.get()&&unstable.compare(stable) ? unstable : stable;
 		}
 
-		public static boolean equalsVersion(final InfoSource a, final InfoSource b) {
+		public static boolean equalsVersion(final @Nullable InfoSource a, final @Nullable InfoSource b) {
 			if (a==null||b==null)
 				return false;
 			final InfoVersion stable = a.stableVersion();
@@ -84,7 +87,7 @@ public final class Informations {
 		}
 	}
 
-	private InfoSource source;
+	private @Nonnull InfoSource source;
 	private InfoState state = new InfoState();
 
 	public void setSource(final InfoSource source) {
@@ -93,7 +96,7 @@ public final class Informations {
 		this.source = source;
 	}
 
-	public InfoSource getSource() {
+	public @Nonnull InfoSource getSource() {
 		return this.source;
 	}
 
@@ -170,9 +173,9 @@ public final class Informations {
 
 	public void runUpdate() {
 		final Informations.InfoState state = getState();
-		final Informations.InfoSource source = getSource();
+		final @Nonnull Informations.InfoSource source = getSource();
 		final Informations.InfoVersion online = source.onlineVersion();
-		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
+		if (online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
 			if (state.isDownloaded()) {
 				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
 				Log.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"));

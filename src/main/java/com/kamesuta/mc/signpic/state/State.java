@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Log;
@@ -18,7 +20,7 @@ public class State {
 	private String name = "";
 	private Progress progress = new Progress();
 	private StateType type = StateType.INIT;
-	private String message = "";
+	private @Nonnull String message = "";
 	private Map<String, Object> map = Maps.newHashMap();
 
 	public State() {
@@ -42,7 +44,7 @@ public class State {
 		return this.progress;
 	}
 
-	public State setMessage(final String message) {
+	public State setMessage(final @Nonnull String message) {
 		this.message = message;
 		return this;
 	}
@@ -78,7 +80,7 @@ public class State {
 		return this;
 	}
 
-	public String getMessage() {
+	public @Nonnull String getMessage() {
 		return this.message;
 	}
 

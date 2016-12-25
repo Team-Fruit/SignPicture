@@ -13,6 +13,7 @@ import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -50,9 +51,10 @@ public class SignPicLabel extends WBase {
 		final float opacity = getGuiOpacity(popacity);
 		final EntryId entryId = getEntryId();
 		if (entryId!=null) {
-			final Entry entry = entryId.entry();
-			if (entry!=null&&entry.isValid()) {
-				final Content content = entry.content();
+			final @Nonnull Entry entry = entryId.entry();
+			@Nullable
+			Content content = null;
+			if (entry.isValid()&&(content = entry.getContent())!=null) {
 				@Nullable
 				Entry upentry = null;
 				if (this.update!=null)
@@ -77,7 +79,11 @@ public class SignPicLabel extends WBase {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
-		final SizeData size1 = entry.getMeta().sizes.getMovie().get().aspectSize(entry.content().image.getSize());
+		final CompoundAttr attr = entry.getMeta();
+		final Content content = entry.getContent();
+		final SizeData size00 = attr!=null ? attr.sizes.getMovie().get() : SizeData.DefaultSize;
+		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+		final SizeData size1 = size00.aspectSize(size01);
 		final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(a));
 		final SizeData size = size2.scale(1f/100f);
 

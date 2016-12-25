@@ -36,6 +36,8 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBu
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class CompoundAttr {
+	public static final CompoundAttr Blank = new CompoundAttr();
+
 	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
 	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
@@ -128,6 +130,9 @@ public class CompoundAttr {
 
 	public final PropAnimator<TextureBlend, TextureBlend, TextureBlend> b = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.B)));
 	public final PropAnimator<TextureBlend, TextureBlend, TextureBlend> d = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.D)));
+
+	private CompoundAttr() {
+	}
 
 	public CompoundAttr(final String src) {
 		Validate.notNull(src);

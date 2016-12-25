@@ -148,10 +148,6 @@ public class EntryId {
 			return null;
 	}
 
-	private boolean isValid() {
-		return hasContentId()&&hasMeta();
-	}
-
 	public @Nullable ContentId getContentId() {
 		if (hasContentId()) {
 			String id;
@@ -166,7 +162,7 @@ public class EntryId {
 		return null;
 	}
 
-	public String getMetaSource() {
+	public @Nullable String getMetaSource() {
 		if (hasMeta())
 			if (StringUtils.endsWith(this.id, "}"))
 				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1);
@@ -182,7 +178,7 @@ public class EntryId {
 		return null;
 	}
 
-	public CompoundAttrBuilder getMetaBuilder() {
+	public @Nullable CompoundAttrBuilder getMetaBuilder() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
 			return new CompoundAttrBuilder().parse(metasource);

@@ -33,15 +33,17 @@ public class Entry {
 	}
 
 	public boolean isNotSupported() {
-		return getMeta().hasInvalidMeta()||this.id.getPrePrefix()!=null;
+		final CompoundAttr meta = getMeta();
+		return meta==null||meta.hasInvalidMeta()||this.id.getPrePrefix()!=null;
 	}
 
 	public boolean isValid() {
 		return this.contentId!=null&&getMeta()!=null;
 	}
 
-	public @Nullable CompoundAttr getMeta() {
-		final String newmeta = content().imagemeta;
+	public @Nonnull CompoundAttr getMeta() {
+		final Content cntnt = getContent();
+		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
 				final String meta1 = this.id.getMetaSource();
@@ -51,11 +53,14 @@ public class Entry {
 			}
 		if (this.meta==null)
 			this.meta = this.id.getMeta();
+		if (this.meta==null)
+			this.meta = CompoundAttr.Blank;
 		return this.meta;
 	}
 
 	public CompoundAttrBuilder getMetaBuilder() {
-		final String newmeta = content().imagemeta;
+		final Content cntnt = getContent();
+		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)
 			return new CompoundAttrBuilder().parse(this.id.getMetaSource()+newmeta);
 		return this.id.getMetaBuilder();

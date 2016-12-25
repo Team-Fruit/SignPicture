@@ -51,8 +51,6 @@ public class GuiImage extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
-						final Content content = GuiImage.this.entry.content();
-
 						float opacity = getGuiOpacity(popacity);
 
 						OpenGL.glPushMatrix();
@@ -60,8 +58,12 @@ public class GuiImage extends WFrame {
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
-						if (content.state.getType()==StateType.AVAILABLE) {
-							final @Nullable CompoundAttr meta = GuiImage.this.entry.getMeta();
+
+						@Nullable
+						final Content content = GuiImage.this.entry.getContent();
+						@Nullable
+						CompoundAttr meta = null;
+						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&(meta = GuiImage.this.entry.getMeta())!=null&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
 							content.image.draw(
@@ -89,7 +91,7 @@ public class GuiImage extends WFrame {
 						}
 						OpenGL.glTranslatef(a.w()/2, a.h()/2, 0);
 						OpenGL.glScalef(.5f, .5f, 1f);
-						if (content.state.getType()!=StateType.AVAILABLE) {
+						if (content!=null&&content.state.getType()!=StateType.AVAILABLE) {
 							if (content.state.getType()==StateType.ERROR) {
 								OpenGL.glPushMatrix();
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);

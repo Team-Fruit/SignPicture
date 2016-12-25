@@ -229,22 +229,24 @@ public class SignHandler {
 				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
 				if (id.hasName())
 					event.toolTip.set(0, id.getName());
-				else
+				else if (entry.contentId!=null)
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
 					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
 					final CompoundAttr meta = entry.getMeta();
-					final SizeData size = meta.sizes.getMovie().get();
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
-					final OffsetData offset = meta.offsets.getMovie().get();
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
-					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-					if (id.hasName())
-						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+					if (meta!=null) {
+						final SizeData size = meta.sizes.getMovie().get();
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
+						final OffsetData offset = meta.offsets.getMovie().get();
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
+						// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+						if (id.hasName()&&entry.contentId!=null)
+							event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+						// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+					}
 				}
 			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
