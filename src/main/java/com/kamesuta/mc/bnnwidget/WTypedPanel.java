@@ -1,32 +1,36 @@
 package com.kamesuta.mc.bnnwidget;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.collect.Lists;
+import com.google.common.collect.Queues;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 public abstract class WTypedPanel<W extends WCommon> extends WBase implements WContainer<W> {
-	private final List<W> widgets = new ArrayList<W>();
-	protected final Deque<W> removelist = new ArrayDeque<W>();
+	private final @Nonnull List<W> widgets = Lists.newArrayList();
+	protected final @Nonnull Deque<W> removelist = Queues.newArrayDeque();
 	protected boolean initialized;
-	protected Deque<Runnable> eventQueue = new ArrayDeque<Runnable>();
+	protected @Nonnull Deque<Runnable> eventQueue = Queues.newArrayDeque();
 
-	public WTypedPanel(final R position) {
+	public WTypedPanel(final @Nonnull R position) {
 		super(position);
 	}
 
-	public void invokeLater(final Runnable doRun) {
-		this.eventQueue.push(doRun);
+	public void invokeLater(final @Nullable Runnable doRun) {
+		if (doRun!=null)
+			this.eventQueue.push(doRun);
 	}
 
 	@Override
-	public List<W> getContainer() {
+	public @Nonnull List<W> getContainer() {
 		return this.widgets;
 	}
 
@@ -187,7 +191,7 @@ public abstract class WTypedPanel<W extends WCommon> extends WBase implements WC
 	}
 
 	@Override
-	public WCommon top(final WEvent ev, final Area pgp, final Point point) {
+	public @Nullable WCommon top(final WEvent ev, final Area pgp, final Point point) {
 		final Area gp = getGuiPosition(pgp);
 		if (gp.pointInside(point)) {
 			WCommon topwidget = null;

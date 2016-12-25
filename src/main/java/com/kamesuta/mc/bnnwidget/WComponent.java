@@ -1,5 +1,8 @@
 package com.kamesuta.mc.bnnwidget;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 
@@ -41,12 +44,12 @@ public class WComponent extends WGui implements WCommon {
 	}
 
 	@Override
-	public boolean mouseDragged(final WEvent ev, final Area pgp, final Point p, final int button, final long time) {
+	public boolean mouseDragged(final WEvent ev, final Area pgp, final @Nonnull Point p, final int button, final long time) {
 		return false;
 	}
 
 	@Override
-	public boolean mouseReleased(final WEvent ev, final Area pgp, final Point mouse, final int button) {
+	public boolean mouseReleased(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse, final int button) {
 		return false;
 	}
 
@@ -56,12 +59,12 @@ public class WComponent extends WGui implements WCommon {
 	}
 
 	@Override
-	public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+	public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 		return true;
 	}
 
 	@Override
-	public WCommon top(final WEvent ev, final Area pgp, final Point point) {
+	public @Nullable WCommon top(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point point) {
 		return null;
 	}
 }

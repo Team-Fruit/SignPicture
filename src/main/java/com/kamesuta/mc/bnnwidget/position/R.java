@@ -1,42 +1,44 @@
 package com.kamesuta.mc.bnnwidget.position;
 
+import javax.annotation.Nonnull;
+
 public class R {
-	private static final Coord default_x1 = Coord.left(0f);
-	private static final Coord default_y1 = Coord.top(0f);
-	private static final Coord default_x2 = Coord.pwidth(1f);
-	private static final Coord default_y2 = Coord.pheight(1f);
+	private static final @Nonnull Coord default_x1 = Coord.left(0f);
+	private static final @Nonnull Coord default_y1 = Coord.top(0f);
+	private static final @Nonnull Coord default_x2 = Coord.pwidth(1f);
+	private static final @Nonnull Coord default_y2 = Coord.pheight(1f);
 
-	protected R parent;
-	protected Coord x1 = default_x1;
-	protected Coord y1 = default_y1;
-	protected Coord x2 = default_x2;
-	protected Coord y2 = default_y2;
+	protected @Nonnull R parent;
+	protected @Nonnull Coord x1 = default_x1;
+	protected @Nonnull Coord y1 = default_y1;
+	protected @Nonnull Coord x2 = default_x2;
+	protected @Nonnull Coord y2 = default_y2;
 
-	public R(final Coord... a) {
+	public R(final @Nonnull Coord... a) {
 		for (final Coord c : a)
 			set(c);
 	}
 
-	public R(final R parent, final Coord... a) {
+	public R(final @Nonnull R parent, final @Nonnull Coord... a) {
 		this(a);
 		setParent(parent);
 	}
 
-	public R(final R a) {
+	public R(final @Nonnull R a) {
 		set(a);
 	}
 
-	public R(final R parent, final R a) {
+	public R(final @Nonnull R parent, final @Nonnull R a) {
 		this(a);
 		setParent(parent);
 	}
 
 	@Deprecated
-	public static R diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
+	public static @Nonnull R diff(final float diff_x1, final float diff_y1, final float diff_x2, final float diff_y2) {
 		return new R(Coord.left(diff_x1), Coord.top(diff_y1), Coord.right(-diff_x2), Coord.bottom(-diff_y2));
 	}
 
-	public Area getAbsolute(Area a) {
+	public @Nonnull Area getAbsolute(@Nonnull Area a) {
 		if (this.parent!=null)
 			a = this.parent.getAbsolute(a);
 		final float tx1 = this.x1.base(a);
@@ -50,18 +52,18 @@ public class R {
 		return new Area(rx1, ry1, rx2, ry2);
 	}
 
-	protected void setParent(final R parent) {
+	protected void setParent(final @Nonnull R parent) {
 		this.parent = parent;
 	}
 
-	protected void set(final R a) {
+	protected void set(final @Nonnull R a) {
 		this.x1 = a.x1;
 		this.y1 = a.y1;
 		this.x2 = a.x2;
 		this.y2 = a.y2;
 	}
 
-	protected void set(final Coord n) {
+	protected void set(final @Nonnull Coord n) {
 		if (n==null)
 			throw new IllegalStateException(String.format("null coord [%s]", this));
 		if (n.getSide()==null)
@@ -93,16 +95,16 @@ public class R {
 		}
 	}
 
-	public R child(final Coord... a) {
+	public @Nonnull R child(final @Nonnull Coord... a) {
 		return new R(this, a);
 	}
 
-	public R child(final R a) {
+	public @Nonnull R child(final @Nonnull R a) {
 		return new R(this, a);
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("RArea[x1=%s, y1=%s, x2=%s, y2=%s]", this.x1, this.y1, this.x2, this.y2);
 	}
 }

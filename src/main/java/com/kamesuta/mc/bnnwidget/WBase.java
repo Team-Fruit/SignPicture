@@ -1,5 +1,8 @@
 package com.kamesuta.mc.bnnwidget;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
@@ -8,8 +11,8 @@ import com.kamesuta.mc.bnnwidget.var.VCommon;
 
 public abstract class WBase extends WComponent {
 
-	protected R position;
-	protected VCommon opacity;
+	protected @Nonnull R position;
+	protected @Nonnull VCommon opacity;
 
 	public WBase(final R position) {
 		initPosition(position);
@@ -49,7 +52,7 @@ public abstract class WBase extends WComponent {
 	}
 
 	@Override
-	public WCommon top(final WEvent ev, final Area pgp, final Point point) {
+	public @Nullable WCommon top(final WEvent ev, final Area pgp, final Point point) {
 		final Area a = getGuiPosition(pgp);
 		if (a.pointInside(point))
 			return this;

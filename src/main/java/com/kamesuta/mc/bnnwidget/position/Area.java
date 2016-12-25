@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.position;
 
+import javax.annotation.Nonnull;
+
 public class Area {
 	/**
 	 * anchor x, usually, same as
@@ -56,11 +58,11 @@ public class Area {
 		return Math.max(y1(), y2());
 	}
 
-	public Area child(final R p) {
+	public @Nonnull Area child(final R p) {
 		return p.getAbsolute(this);
 	}
 
-	public Area child(final float ax1, final float ay1, final float ax2, final float ay2) {
+	public @Nonnull Area child(final float ax1, final float ay1, final float ax2, final float ay2) {
 		return new Area(this.x1+ax1, this.y1+ay1, this.x2+ax2, this.y2+ay2);
 	}
 
@@ -68,15 +70,15 @@ public class Area {
 		return this.x1!=this.x2&&this.y1!=this.y2;
 	}
 
-	public boolean pointInside(final Point p) {
+	public boolean pointInside(final @Nonnull Point p) {
 		return p.x>=this.x1&&p.x<this.x2&&p.y>=this.y1&&p.y<this.y2;
 	}
 
-	public boolean areaOverlap(final Area a) {
+	public boolean areaOverlap(final @Nonnull Area a) {
 		return !(a.maxX()<minX()||a.minX()>maxX()||a.minY()>maxY()||a.maxY()<minY());
 	}
 
-	public boolean areaInside(final Area a) {
+	public boolean areaInside(final @Nonnull Area a) {
 		return a.minX()>=minX()&&a.minY()>=minY()&&a.maxX()<=maxX()&&a.maxY()<=maxY();
 	}
 
@@ -112,7 +114,7 @@ public class Area {
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("Area [x1=%s, y1=%s, x2=%s, y2=%s]", this.x1, this.y1, this.x2, this.y2);
 	}
 }
