@@ -31,13 +31,13 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion add(final @Nonnull IMotion animation) {
+	public @Nonnull CompoundMotion add(final @Nonnull IMotion animation) {
 		this.tasks.add(animation);
 		return this;
 	}
 
 	@Override
-	public CompoundMotion setLoop(final boolean b) {
+	public @Nonnull CompoundMotion setLoop(final boolean b) {
 		this.looplast = b;
 		return this;
 	}
@@ -49,28 +49,28 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion stopFirst() {
+	public @Nonnull CompoundMotion stopFirst() {
 		this.tasks.finish();
 		setCurrent(null);
 		return this;
 	}
 
 	@Override
-	public CompoundMotion stop() {
+	public @Nonnull CompoundMotion stop() {
 		this.coord = get();
 		stopFirst();
 		return this;
 	}
 
 	@Override
-	public CompoundMotion stopLast() {
+	public @Nonnull CompoundMotion stopLast() {
 		this.coord = getLast();
 		stopFirst();
 		return this;
 	}
 
 	@Override
-	public CompoundMotion pause() {
+	public @Nonnull CompoundMotion pause() {
 		this.paused = true;
 		if (this.current!=null)
 			this.current.pause();
@@ -78,7 +78,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion start() {
+	public @Nonnull CompoundMotion start() {
 		this.paused = false;
 		if (this.current!=null)
 			this.current.resume();
@@ -92,14 +92,14 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion next() {
+	public @Nonnull CompoundMotion next() {
 		nextCurrent();
 		start();
 		return this;
 	}
 
 	@Override
-	public CompoundMotion stopNext() {
+	public @Nonnull CompoundMotion stopNext() {
 		final boolean notfinish = this.current!=null&&!this.current.isFinished();
 		if (!notfinish&&!this.paused) {
 			if (this.current!=null)
@@ -158,7 +158,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion restart() {
+	public @Nonnull CompoundMotion restart() {
 		for (final IMotion m : this.tasks)
 			m.pause().restart();
 		this.coord = this.firstcoord;
@@ -168,7 +168,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion reset() {
+	public @Nonnull CompoundMotion reset() {
 		this.tasks.reset();
 		this.coord = this.firstcoord;
 		setCurrent(null);
@@ -176,19 +176,19 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 	}
 
 	@Override
-	public CompoundMotion finish() {
+	public @Nonnull CompoundMotion finish() {
 		stopLast();
 		return this;
 	}
 
 	@Override
-	public CompoundMotion resume() {
+	public @Nonnull CompoundMotion resume() {
 		start();
 		return this;
 	}
 
 	@Override
-	public CompoundMotion setTime(final float time) {
+	public @Nonnull CompoundMotion setTime(final float time) {
 		float t = 0;
 		while (true) {
 			final IMotion m = nextCurrent();
@@ -238,7 +238,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 			this.after.run();
 	}
 
-	public static CompoundMotion of(final @Nonnull IMotion... motions) {
+	public static @Nonnull CompoundMotion of(final @Nonnull IMotion... motions) {
 		final CompoundMotion compound = new CompoundMotion();
 		for (final IMotion motion : motions)
 			if (motion!=null)
@@ -246,7 +246,7 @@ public class CompoundMotion implements IMotion, ICompoundMotion {
 		return compound;
 	}
 
-	public static CompoundMotion of(final float coord, final @Nonnull IMotion... motions) {
+	public static @Nonnull CompoundMotion of(final float coord, final @Nonnull IMotion... motions) {
 		final CompoundMotion compound = new CompoundMotion(coord);
 		for (final IMotion motion : motions)
 			if (motion!=null)
