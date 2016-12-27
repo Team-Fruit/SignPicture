@@ -36,7 +36,7 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return ROOT_COMMAND_NAME;
 	}
 
@@ -46,15 +46,15 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public List<String> getCommandAliases() {
+	public List<String> getAliases() {
 		final ArrayList<String> aliases = Lists.newArrayList();
 		aliases.add("signpicture");
 		return aliases;
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender sender) {
-		return "/"+getCommandName()+" help";
+	public String getUsage(final ICommandSender sender) {
+		return "/"+getName()+" help";
 	}
 
 	@Override
@@ -64,13 +64,13 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, @Nullable final BlockPos pos) {
+	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, @Nullable final BlockPos pos) {
 		return CommandHelpers.completeCommands(sender, this, args);
 	}
 
 	@Override
 	public String getFullCommandString() {
-		return getCommandName();
+		return getName();
 	}
 
 	@Override

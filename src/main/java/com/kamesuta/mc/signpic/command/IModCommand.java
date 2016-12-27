@@ -10,7 +10,7 @@ public interface IModCommand extends ICommand {
 	String getFullCommandString();
 
 	@Override
-	List<String> getCommandAliases();
+	List<String> getAliases();
 
 	int getRequiredPermissionLevel();
 

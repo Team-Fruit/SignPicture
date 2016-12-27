@@ -19,11 +19,11 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class CommandHelpers {
 	public static void throwWrongUsage(final ICommandSender sender, final IModCommand command) throws WrongUsageException {
-		throw new WrongUsageException(I18n.format("signpic.command.help", command.getCommandUsage(sender)));
+		throw new WrongUsageException(I18n.format("signpic.command.help", command.getUsage(sender)));
 	}
 
 	public static void processChildCommand(final ICommandSender sender, final SubCommand child, final String[] args) throws CommandException {
-		if (!sender.canCommandSenderUseCommand(child.getRequiredPermissionLevel(), child.getFullCommandString()))
+		if (!sender.canUseCommand(child.getRequiredPermissionLevel(), child.getFullCommandString()))
 			throw new WrongUsageException(I18n.format("signpic.command.noperms"));
 		else
 			child.execute(FMLClientHandler.instance().getServer(), sender, Arrays.copyOfRange(args, 1, args.length));
@@ -39,7 +39,7 @@ public class CommandHelpers {
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".format").useTranslation().setStyle(header).setParams(command.getFullCommandString()).sendPlayer(sender);
 		final Style body = new Style();
 		body.setColor(TextFormatting.GRAY);
-		ChatBuilder.create("signpic.command.aliases").useTranslation().setStyle(body).setParams(command.getCommandAliases().toString().replace("[", "").replace("]", "")).sendPlayer(sender);
+		ChatBuilder.create("signpic.command.aliases").useTranslation().setStyle(body).setParams(command.getAliases().toString().replace("[", "").replace("]", "")).sendPlayer(sender);
 		ChatBuilder.create("signpic.command.permlevel").useTranslation().setStyle(body).setParams(Integer.valueOf(command.getRequiredPermissionLevel())).sendPlayer(sender);
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".help").useTranslation().setStyle(body).sendPlayer(sender);
 		if (!command.getChildren().isEmpty()) {
@@ -47,7 +47,7 @@ public class CommandHelpers {
 			final Iterator<SubCommand> arg3 = command.getChildren().iterator();
 			while (arg3.hasNext()) {
 				final SubCommand child = arg3.next();
-				ChatBuilder.create("signpic.command."+child.getFullCommandString().replace(" ", ".")+".desc").useTranslation().setParams(child.getCommandName()).sendPlayer(sender);
+				ChatBuilder.create("signpic.command."+child.getFullCommandString().replace(" ", ".")+".desc").useTranslation().setParams(child.getName()).sendPlayer(sender);
 			}
 		}
 
@@ -58,18 +58,18 @@ public class CommandHelpers {
 			final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 			while (arg2.hasNext()) {
 				final SubCommand child = arg2.next();
-				if (StringUtils.equals(args[0], child.getCommandName()))
+				if (StringUtils.equals(args[0], child.getName()))
 					return completeChildCommand(sender, child, args);
 			}
 			return null;
 		}
 		final List<String> complete = Lists.newArrayList();
-		if (!StringUtils.equals("help", command.getCommandName()))
+		if (!StringUtils.equals("help", command.getName()))
 			complete.add("help");
 		final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 		while (arg2.hasNext()) {
 			final SubCommand child = arg2.next();
-			complete.add(child.getCommandName());
+			complete.add(child.getName());
 		}
 		return complete;
 	}
@@ -94,11 +94,11 @@ public class CommandHelpers {
 	}
 
 	public static boolean matches(final String commandName, final IModCommand command) {
-		if (commandName.equals(command.getCommandName()))
+		if (commandName.equals(command.getName()))
 			return true;
 		else {
-			if (command.getCommandAliases()!=null) {
-				final Iterator<String> arg1 = command.getCommandAliases().iterator();
+			if (command.getAliases()!=null) {
+				final Iterator<String> arg1 = command.getAliases().iterator();
 				while (arg1.hasNext()) {
 					final String alias = arg1.next();
 					if (commandName.equals(alias))

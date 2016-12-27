@@ -191,9 +191,9 @@ public class SignHandler {
 	@CoreEvent
 	public void onClick(final MouseEvent event) {
 		if (event.isButtonstate()&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.getButton()-100) {
-			ItemStack handItem = Client.mc.thePlayer.getHeldItemMainhand();
+			ItemStack handItem = Client.mc.player.getHeldItemMainhand();
 			if (handItem==null||handItem.getItem()!=Items.SIGN)
-				handItem = Client.mc.thePlayer.getHeldItemOffhand();
+				handItem = Client.mc.player.getHeldItemOffhand();
 			EntryId handEntry = null;
 			if (handItem!=null&&handItem.getItem()==Items.SIGN) {
 				handEntry = EntryId.fromItemStack(handItem);

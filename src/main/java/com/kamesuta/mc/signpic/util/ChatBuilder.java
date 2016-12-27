@@ -142,22 +142,22 @@ public class ChatBuilder {
 	@SideOnly(Side.CLIENT)
 	public static void chatClient(final ChatBuilder chat) {
 		final Minecraft mc = Client.mc;
-		if (mc.thePlayer!=null) {
+		if (mc.player!=null) {
 			final ITextComponent msg = chat.build();
 			if (chat.useId)
 				mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(msg, chat.id);
 			else
-				mc.thePlayer.addChatComponentMessage(msg, false);
+				mc.player.sendStatusMessage(msg, false);
 		}
 	}
 
 	public static void sendPlayer(final ICommandSender target, final ChatBuilder chat) {
-		target.addChatMessage(chat.build());
+		target.sendMessage(chat.build());
 	}
 
 	@SideOnly(Side.SERVER)
 	public static void sendServer(final ChatBuilder chat) {
 		final PlayerList player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
-		player.sendChatMsg(chat.build());
+		player.sendMessage(chat.build());
 	}
 }

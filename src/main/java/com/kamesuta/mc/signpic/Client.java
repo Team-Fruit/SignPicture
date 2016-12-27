@@ -62,7 +62,7 @@ public class Client {
 		if (MovePos.getBlock() instanceof BlockSign) {
 			final TileEntity tile = MovePos.getTile();
 			if (tile instanceof TileEntitySign)
-				return (TileEntitySign)tile;
+				return (TileEntitySign) tile;
 		}
 		return null;
 	}
@@ -81,7 +81,7 @@ public class Client {
 
 		public static MovePos getBlockPos() {
 			final RayTraceResult movingPos = getMovingPos();
-			if (movingPos != null) {
+			if (movingPos!=null) {
 				final BlockPos pos = movingPos.getBlockPos();
 				if (pos!=null)
 					return new MovePos(pos);
@@ -91,21 +91,21 @@ public class Client {
 
 		public static IBlockState getBlockState() {
 			final MovePos movePos = getBlockPos();
-			if (movePos != null)
-				return mc.theWorld.getBlockState(movePos.pos);
+			if (movePos!=null)
+				return mc.world.getBlockState(movePos.pos);
 			return null;
 		}
 
 		public static TileEntity getTile() {
 			final MovePos movePos = getBlockPos();
-			if (movePos != null)
-				return mc.theWorld.getTileEntity(movePos.pos);
+			if (movePos!=null)
+				return mc.world.getTileEntity(movePos.pos);
 			return null;
 		}
 
 		public static Block getBlock() {
 			final IBlockState blockState = getBlockState();
-			if (blockState != null)
+			if (blockState!=null)
 				return blockState.getBlock();
 			return null;
 		}

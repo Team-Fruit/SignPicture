@@ -209,11 +209,9 @@ public final class Informations {
 	public void notice(final InfoSource source, final InfoState state, final EntityPlayer player) {
 		if (player!=null&&source!=null&&state!=null) {
 			final String lang = Client.mc.gameSettings.language;
-			if (
-				source.info!=null&&
-						source.info.versions!=null&&
-						!StringUtils.equals(Reference.VERSION, "${version}")
-			) {
+			if (source.info!=null&&
+					source.info.versions!=null&&
+					!StringUtils.equals(Reference.VERSION, "${version}")) {
 				final InfoVersion online = source.onlineVersion();
 
 				if (online.compare(VersionClient))
@@ -264,7 +262,7 @@ public final class Informations {
 	}
 
 	public void onTick(final InfoSource source, final InfoState state) {
-		final EntityPlayer player = Client.mc.thePlayer;
+		final EntityPlayer player = Client.mc.player;
 		if (Config.instance.informationNotice.get()&&!state.triedToWarnPlayer)
 			notice(source, state, player);
 	}

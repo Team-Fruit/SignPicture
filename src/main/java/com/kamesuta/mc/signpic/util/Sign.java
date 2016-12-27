@@ -45,7 +45,7 @@ public class Sign {
 	}
 
 	public static void sendRepairName(final String name) {
-		Client.mc.thePlayer.connection.sendPacket(new CPacketCustomPayload("MC|ItemName", new PacketBuffer(Unpooled.buffer()).writeString(name)));
+		Client.mc.player.connection.sendPacket(new CPacketCustomPayload("MC|ItemName", new PacketBuffer(Unpooled.buffer()).writeString(name)));
 	}
 
 	public static void setRepairName(final String name, final GuiTextField textField, final ContainerRepair containerRepair) {

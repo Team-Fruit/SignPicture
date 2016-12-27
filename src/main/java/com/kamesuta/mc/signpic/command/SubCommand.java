@@ -47,7 +47,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public final String getCommandName() {
+	public final String getName() {
 		return this.name;
 	}
 
@@ -71,12 +71,12 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public List<String> getCommandAliases() {
+	public List<String> getAliases() {
 		return this.aliases;
 	}
 
 	@Override
-	public List<String> getTabCompletionOptions(final MinecraftServer server, final ICommandSender sender, final String[] args, @Nullable final BlockPos pos) {
+	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, @Nullable final BlockPos pos) {
 		return null;
 	}
 
@@ -106,7 +106,7 @@ public abstract class SubCommand implements IModCommand {
 
 	@Override
 	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
+		return sender.canUseCommand(getRequiredPermissionLevel(), getName());
 	}
 
 	@Override
@@ -115,7 +115,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender sender) {
+	public String getUsage(final ICommandSender sender) {
 		return "/"+getFullCommandString()+" help";
 	}
 
@@ -126,11 +126,11 @@ public abstract class SubCommand implements IModCommand {
 
 	@Override
 	public String getFullCommandString() {
-		return this.parent.getFullCommandString()+" "+getCommandName();
+		return this.parent.getFullCommandString()+" "+getName();
 	}
 
 	@Override
 	public int compareTo(final ICommand command) {
-		return getCommandName().compareTo(command.getCommandName());
+		return getName().compareTo(command.getName());
 	}
 }
