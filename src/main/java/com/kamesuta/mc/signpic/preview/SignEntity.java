@@ -33,7 +33,7 @@ public class SignEntity {
 
 				if (side==EnumFacing.UP) {
 					this.tileSign.setBlockType(Blocks.STANDING_SIGN);
-					final int i = MathHelper.floor_double((playerIn.rotationYaw + 180.0F) * 16.0F / 360.0F + 0.5D) & 15;
+					final int i = MathHelper.floor((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
 					this.tileSign.setBlockMetadata(i);
 				} else {
 					this.tileSign.setBlockType(Blocks.WALL_SIGN);
@@ -47,15 +47,14 @@ public class SignEntity {
 		}
 	}
 
-
 	public TileEntitySign capturePlace() {
 		final Minecraft mc = Client.mc;
-		if (mc.thePlayer != null) {
+		if (mc.player!=null) {
 			final RayTraceResult m = MovePos.getMovingPos();
 			final MovePos p = MovePos.getBlockPos();
-			if (m!=null && p!=null) {
+			if (m!=null&&p!=null) {
 				setVisible(true);
-				return onItemUse(mc.thePlayer, mc.theWorld, p.pos, m.sideHit);
+				return onItemUse(mc.player, mc.world, p.pos, m.sideHit);
 			}
 		}
 		return null;
