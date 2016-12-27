@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -15,6 +17,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
@@ -150,8 +153,8 @@ public class OverlayFrame extends WFrame {
 							this.timer.set(-showtime);
 							add(new WBase(new R(Coord.top(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()), Coord.bottom(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()))) {
 								@Override
-								protected void initOpacity() {
-									super.setOpacity(o);
+								protected @Nonnull VCommon initOpacity() {
+									return o;
 								}
 
 								@Override
@@ -165,8 +168,8 @@ public class OverlayFrame extends WFrame {
 							add(new WPanel(new R()) {
 
 								@Override
-								protected void initOpacity() {
-									super.setOpacity(o);
+								protected @Nonnull VCommon initOpacity() {
+									return o;
 								}
 
 								@Override

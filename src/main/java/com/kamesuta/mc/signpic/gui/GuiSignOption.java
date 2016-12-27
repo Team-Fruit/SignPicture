@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -42,8 +44,8 @@ public class GuiSignOption extends WFrame {
 			protected VMotion opac;
 
 			@Override
-			protected void initOpacity() {
-				setOpacity(this.opa = V.pm(1f).start());
+			protected @Nonnull VCommon initOpacity() {
+				return this.opa = V.pm(1f).start();
 			}
 
 			@Override
@@ -61,8 +63,8 @@ public class GuiSignOption extends WFrame {
 				add(new WBase(new R()) {
 
 					@Override
-					protected void initOpacity() {
-						setOpacity(opac = V.pm(0f).add(Easings.easeLinear.move(.5f, .5f)).start());
+					protected @Nonnull VCommon initOpacity() {
+						return opac = V.pm(0f).add(Easings.easeLinear.move(.5f, .5f)).start();
 					}
 
 					@Override
@@ -101,16 +103,16 @@ public class GuiSignOption extends WFrame {
 								final VCommon o0 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
 								add(new MLabel(new R(Coord.left(v0), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
-									protected void initOpacity() {
-										setOpacity(o0);
+									protected @Nonnull VCommon initOpacity() {
+										return o0;
 									}
 								}.setText(I18n.format("signpic.gui.settings.sign")));
 								final VCommon v1 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o1 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
 								add(new MSelectButton(new R(Coord.left(v1), Coord.top(top += 25f), Coord.height(20f)), 15) {
 									@Override
-									protected void initOpacity() {
-										setOpacity(o1);
+									protected @Nonnull VCommon initOpacity() {
+										return o1;
 									}
 
 									@Override
@@ -166,8 +168,8 @@ public class GuiSignOption extends WFrame {
 								final VCommon o2 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
 								add(new MButton(new R(Coord.right(v2), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
-									protected void initOpacity() {
-										setOpacity(o2);
+									protected @Nonnull VCommon initOpacity() {
+										return o2;
 									}
 
 									@Override
@@ -184,8 +186,8 @@ public class GuiSignOption extends WFrame {
 								final VCommon o3 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
 								add(new MButton(new R(Coord.left(v3), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
-									protected void initOpacity() {
-										setOpacity(o3);
+									protected @Nonnull VCommon initOpacity() {
+										return o3;
 									}
 
 									@Override
@@ -202,8 +204,8 @@ public class GuiSignOption extends WFrame {
 								final VCommon o4 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
 								add(new MButton(new R(Coord.right(v4), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
-									protected void initOpacity() {
-										setOpacity(o4);
+									protected @Nonnull VCommon initOpacity() {
+										return o4;
 									}
 
 									@Override
@@ -237,8 +239,8 @@ public class GuiSignOption extends WFrame {
 									}
 
 									@Override
-									protected void initOpacity() {
-										setOpacity(o5);
+									protected @Nonnull VCommon initOpacity() {
+										return o5;
 									}
 
 									@Override

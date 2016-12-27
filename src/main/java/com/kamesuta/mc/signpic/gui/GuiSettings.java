@@ -273,8 +273,8 @@ public class GuiSettings extends WPanel {
 													final String update = Informations.instance.getUpdateMessage();
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 														@Override
-														protected void initOpacity() {
-															super.setOpacity(o);
+														protected @Nonnull VCommon initOpacity() {
+															return o;
 														}
 
 														@Override
@@ -293,8 +293,8 @@ public class GuiSettings extends WPanel {
 													}.setShadow(true).setText(message));
 													add(new MScaledLabel(new R(Coord.pheight(.4f), Coord.ptop(.5f)).child(Coord.ptop(-.5f), Coord.pheight(1f))) {
 														@Override
-														protected void initOpacity() {
-															super.setOpacity(V.per(V.p(1f), V.p(0f), o));
+														protected @Nonnull VCommon initOpacity() {
+															return V.per(V.p(1f), V.p(0f), o);
 														}
 
 														@Override

@@ -1,6 +1,9 @@
 package com.kamesuta.mc.bnnwidget.position;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.apache.commons.lang3.Validate;
 
 public class R {
 	private static final @Nonnull Coord default_x1 = Coord.left(0f);
@@ -8,11 +11,11 @@ public class R {
 	private static final @Nonnull Coord default_x2 = Coord.pwidth(1f);
 	private static final @Nonnull Coord default_y2 = Coord.pheight(1f);
 
-	protected @Nonnull R parent;
-	protected @Nonnull Coord x1 = default_x1;
-	protected @Nonnull Coord y1 = default_y1;
-	protected @Nonnull Coord x2 = default_x2;
-	protected @Nonnull Coord y2 = default_y2;
+	protected @Nullable R parent;
+	protected @Nullable Coord x1 = default_x1;
+	protected @Nullable Coord y1 = default_y1;
+	protected @Nullable Coord x2 = default_x2;
+	protected @Nullable Coord y2 = default_y2;
 
 	public R(final @Nonnull Coord... a) {
 		for (final Coord c : a)
@@ -39,17 +42,24 @@ public class R {
 	}
 
 	public @Nonnull Area getAbsolute(@Nonnull Area a) {
-		if (this.parent!=null)
-			a = this.parent.getAbsolute(a);
-		final float tx1 = this.x1.base(a);
-		final float ty1 = this.y1.base(a);
-		final float tx2 = this.x2.next(a, this.x1);
-		final float ty2 = this.y2.next(a, this.y1);
-		final float rx1 = Math.min(tx1, tx2);
-		final float ry1 = Math.min(ty1, ty2);
-		final float rx2 = Math.max(tx1, tx2);
-		final float ry2 = Math.max(ty1, ty2);
-		return new Area(rx1, ry1, rx2, ry2);
+		final Coord x1 = this.x1;
+		final Coord y1 = this.y1;
+		final Coord x2 = this.x2;
+		final Coord y2 = this.y2;
+		if (x1!=null&&y1!=null&&x2!=null&&y2!=null) {
+			if (this.parent!=null)
+				a = this.parent.getAbsolute(a);
+			final float tx1 = x1.base(a);
+			final float ty1 = y1.base(a);
+			final float tx2 = x2.next(a, x1);
+			final float ty2 = y2.next(a, y1);
+			final float rx1 = Math.min(tx1, tx2);
+			final float ry1 = Math.min(ty1, ty2);
+			final float rx2 = Math.max(tx1, tx2);
+			final float ry2 = Math.max(ty1, ty2);
+			return new Area(rx1, ry1, rx2, ry2);
+		} else
+			throw new IllegalStateException("attempt to get absolute from uncompleted relative");
 	}
 
 	protected void setParent(final @Nonnull R parent) {
@@ -64,10 +74,8 @@ public class R {
 	}
 
 	protected void set(final @Nonnull Coord n) {
-		if (n==null)
-			throw new IllegalStateException(String.format("null coord [%s]", this));
-		if (n.getSide()==null)
-			throw new IllegalStateException(String.format("invaild coord [%s]", this));
+		Validate.notNull(n, String.format("null coord [%s]", this));
+		Validate.notNull(n.getSide(), String.format("invaild coord [%s]", this));
 		switch (n.getSide()) {
 			case Left:
 			case Right:

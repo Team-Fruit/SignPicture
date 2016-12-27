@@ -1,5 +1,8 @@
 package com.kamesuta.mc.bnnwidget.position;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class Point implements java.io.Serializable {
 
 	protected float x;
@@ -12,7 +15,7 @@ public class Point implements java.io.Serializable {
 		this(0, 0);
 	}
 
-	public Point(final Point p) {
+	public Point(final @Nonnull Point p) {
 		this(p.x, p.y);
 	}
 
@@ -29,18 +32,18 @@ public class Point implements java.io.Serializable {
 		return this.y;
 	}
 
-	public float d2(final Point p) {
+	public float d2(final @Nonnull Point p) {
 		final float dx = x()-p.x();
 		final float dy = y()-p.y();
 		return dx*dx+dy*dy;
 	}
 
-	public float d(final Point p) {
+	public float d(final @Nonnull Point p) {
 		return (float) Math.sqrt(d2(p));
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("Point[x=%s, y=%s]", this.x, this.y);
 	}
 
@@ -54,7 +57,7 @@ public class Point implements java.io.Serializable {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (this==obj)
 			return true;
 		if (obj==null)

@@ -10,40 +10,31 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 
 public abstract class WBase extends WComponent {
-
 	protected @Nonnull R position;
 	protected @Nonnull VCommon opacity;
 
-	public WBase(final R position) {
-		initPosition(position);
-		initOpacity();
+	public WBase(final @Nonnull R position) {
+		this.position = initPosition(position);
+		this.opacity = initOpacity();
 	}
 
-	public void setPosition(final R position) {
-		this.position = position;
+	protected @Nonnull R initPosition(final @Nonnull R position) {
+		return position;
 	}
 
-	public void setOpacity(final VCommon c) {
-		this.opacity = c;
+	protected @Nonnull VCommon initOpacity() {
+		return V.p(1f);
 	}
 
-	protected void initPosition(final R position) {
-		setPosition(position);
-	}
-
-	protected void initOpacity() {
-		setOpacity(V.p(1f));
-	}
-
-	public R getGuiPosition() {
+	public @Nonnull R getGuiPosition() {
 		return this.position;
 	}
 
-	public VCommon getGuiOpacity() {
+	public @Nonnull VCommon getGuiOpacity() {
 		return this.opacity;
 	}
 
-	public Area getGuiPosition(final Area pgp) {
+	public @Nonnull Area getGuiPosition(final @Nonnull Area pgp) {
 		return pgp.child(getGuiPosition());
 	}
 
@@ -52,7 +43,7 @@ public abstract class WBase extends WComponent {
 	}
 
 	@Override
-	public @Nullable WCommon top(final WEvent ev, final Area pgp, final Point point) {
+	public @Nullable WCommon top(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point point) {
 		final Area a = getGuiPosition(pgp);
 		if (a.pointInside(point))
 			return this;

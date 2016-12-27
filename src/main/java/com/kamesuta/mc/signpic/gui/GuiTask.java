@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -14,6 +16,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.ILoadCancelable;
@@ -113,7 +116,7 @@ public class GuiTask extends WPanel {
 
 						add(new WList<Progressable, TaskElement>(new R(Coord.top(16), Coord.bottom(0)), Communicator.instance.getTasks()) {
 							@Override
-							protected TaskElement createWidget(final Progressable t, final int i) {
+							protected @Nonnull TaskElement createWidget(final Progressable t, final int i) {
 								final Object j = t.getState().getMeta().get(ShowPanel);
 								if (j instanceof Number)
 									show(((Number) j).floatValue());
@@ -140,13 +143,13 @@ public class GuiTask extends WPanel {
 		protected VMotion opacity;
 
 		@Override
-		protected void initPosition(final R position) {
-			super.initPosition(position.child(Coord.right(this.right = V.pm(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start())));
+		protected @Nonnull R initPosition(final R position) {
+			return position.child(Coord.right(this.right = V.pm(-1f).add(Easings.easeOutQuart.move(.5f, 0f)).start()));
 		}
 
 		@Override
-		protected void initOpacity() {
-			super.setOpacity(this.opacity = V.pm(1f));
+		protected @Nonnull VCommon initOpacity() {
+			return this.opacity = V.pm(1f);
 		}
 
 		State state;

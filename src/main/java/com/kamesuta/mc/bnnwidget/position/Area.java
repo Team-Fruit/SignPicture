@@ -1,6 +1,7 @@
 package com.kamesuta.mc.bnnwidget.position;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Area {
 	/**
@@ -94,7 +95,7 @@ public class Area {
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (this==obj)
 			return true;
 		if (obj==null)
