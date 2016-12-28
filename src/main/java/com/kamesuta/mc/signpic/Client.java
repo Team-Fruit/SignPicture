@@ -9,6 +9,8 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
@@ -26,27 +28,27 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MovingObjectPosition;
 
 public class Client {
-	public static final Minecraft mc = FMLClientHandler.instance().getClient();
+	public static final @Nonnull Minecraft mc = FMLClientHandler.instance().getClient();
 
 	public static final Gson gson = new Gson();
 
-	public static CustomTileEntitySignRenderer renderer;
-	public static CoreHandler handler;
-	public static Locations location;
+	public static @Nullable CustomTileEntitySignRenderer renderer;
+	public static @Nullable CoreHandler handler;
+	public static @Nullable Locations location;
 
-	public static String mcversion;
-	public static String forgeversion;
+	public static @Nullable String mcversion;
+	public static @Nullable String forgeversion;
 
-	public static String id;
-	public static String name;
+	public static @Nullable String id;
+	public static @Nullable String name;
 
-	public static RootCommand rootCommand;
+	public static @Nullable RootCommand rootCommand;
 
 	public static void openEditor() {
 		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
 	}
 
-	public static void startSection(final String sec) {
+	public static void startSection(final @Nonnull String sec) {
 		mc.mcProfiler.startSection(sec);
 	}
 
@@ -54,7 +56,7 @@ public class Client {
 		mc.mcProfiler.endSection();
 	}
 
-	public static TileEntitySign getTileSignLooking() {
+	public static @Nullable TileEntitySign getTileSignLooking() {
 		if (MovePos.getBlock() instanceof BlockSign) {
 			final TileEntity tile = MovePos.getTile();
 			if (tile instanceof TileEntitySign)
@@ -74,25 +76,25 @@ public class Client {
 			this.z = z;
 		}
 
-		public static MovingObjectPosition getMovingPos() {
+		public static @Nullable MovingObjectPosition getMovingPos() {
 			return mc.objectMouseOver;
 		}
 
-		public static MovePos getBlockPos() {
+		public static @Nullable MovePos getBlockPos() {
 			final MovingObjectPosition movingPos = getMovingPos();
 			if (movingPos!=null)
 				return new MovePos(movingPos.blockX, movingPos.blockY, movingPos.blockZ);
 			return null;
 		}
 
-		public static TileEntity getTile() {
+		public static @Nullable TileEntity getTile() {
 			final MovePos movePos = getBlockPos();
 			if (movePos!=null)
 				return mc.theWorld.getTileEntity(movePos.x, movePos.y, movePos.z);
 			return null;
 		}
 
-		public static Block getBlock() {
+		public static @Nullable Block getBlock() {
 			final MovePos movePos = getBlockPos();
 			if (movePos!=null)
 				return mc.theWorld.getBlock(movePos.x, movePos.y, movePos.z);
@@ -101,7 +103,7 @@ public class Client {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void deleteMod(final File mod) {
+	public static void deleteMod(final @Nonnull File mod) {
 		if (mod.delete())
 			return;
 
@@ -135,7 +137,7 @@ public class Client {
 		}
 	}
 
-	public static String urlNoFragString(final URL url) {
+	public static @Nonnull String urlNoFragString(final @Nonnull URL url) {
 		final StringBuilder strForm = new StringBuilder();
 
 		String protocol = url.getProtocol();

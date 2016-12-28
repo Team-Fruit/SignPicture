@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
@@ -22,7 +24,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preInit(final FMLPreInitializationEvent event) {
+	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
 		super.preInit(event);
 
 		// Setup stencil clip

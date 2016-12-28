@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
@@ -24,22 +27,23 @@ import com.kamesuta.mc.signpic.information.Info;
 import com.kamesuta.mc.signpic.information.Informations;
 
 public class Apis {
-	public static final Apis instance = new Apis();
+	public static final @Nonnull Apis instance = new Apis();
 
 	private Apis() {
 	}
 
 	public static interface URLReplacer {
-		String replace(String src);
+		@Nonnull
+		String replace(@Nonnull String src);
 	}
 
-	public final Set<URLReplacer> urlReplacers = Sets.newHashSet();
+	public final @Nonnull Set<URLReplacer> urlReplacers = Sets.newHashSet();
 
-	public void registerURLReplacer(final URLReplacer replacer) {
+	public void registerURLReplacer(final @Nonnull URLReplacer replacer) {
 		this.urlReplacers.add(replacer);
 	}
 
-	public String replaceURL(final String src) {
+	public @Nonnull String replaceURL(final @Nonnull String src) {
 		String url = src;
 		for (final URLReplacer replacer : this.urlReplacers)
 			url = replacer.replace(url);
@@ -48,9 +52,9 @@ public class Apis {
 
 	private static final Random rnd = new Random();
 
-	public final MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
+	public final @Nonnull MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
 		@Override
-		public String getConfig() {
+		public @Nonnull String getConfig() {
 			return Config.instance.apiUploaderType.get();
 		}
 
@@ -61,79 +65,79 @@ public class Apis {
 		};
 	};
 
-	public final MapSetting<URLShortenerFactory> urlShorteners = new MapSetting<URLShortenerFactory>() {
+	public final @Nonnull MapSetting<URLShortenerFactory> urlShorteners = new MapSetting<URLShortenerFactory>() {
 		@Override
-		public String getConfig() {
+		public @Nonnull String getConfig() {
 			return Config.instance.apiShortenerType.get();
 		}
 
 		@Override
-		public void setConfig(final String setting) {
+		public void setConfig(final @Nonnull String setting) {
 			Config.instance.apiShortenerType.set(setting);
 			Config.instance.apiShortenerKey.set("");
 		};
 	};
 
-	public void registerImageUploader(final String name, final ImageUploaderFactory uploader) {
+	public void registerImageUploader(final @Nonnull String name, final @Nonnull ImageUploaderFactory uploader) {
 		this.imageUploaders.registerSetting(name, uploader);
 	}
 
-	public void registerURLShortener(final String name, final URLShortenerFactory shortener) {
+	public void registerURLShortener(final @Nonnull String name, final @Nonnull URLShortenerFactory shortener) {
 		this.urlShorteners.registerSetting(name, shortener);
 	}
 
 	public static abstract class KeySetting extends Setting {
-		public KeySetting(final Set<String> keys) {
-			if (keys!=null)
-				for (final String key : keys)
+		public KeySetting(final @Nonnull Set<String> keys) {
+			for (final String key : keys)
+				if (key!=null)
 					registerSetting(key);
 		}
 	}
 
 	public static class UploaderKeySetting extends KeySetting {
-		public UploaderKeySetting(final Set<String> keys) {
+		public UploaderKeySetting(final @Nonnull Set<String> keys) {
 			super(keys);
 		}
 
 		@Override
-		public String getConfig() {
+		public @Nonnull String getConfig() {
 			return Config.instance.apiUploaderKey.get();
 		}
 
 		@Override
-		public void setConfig(final String setting) {
+		public void setConfig(final @Nonnull String setting) {
 			Config.instance.apiUploaderKey.set(setting);
 		}
 	}
 
 	public static class ShorteningKeySetting extends KeySetting {
-		public ShorteningKeySetting(final Set<String> keys) {
+		public ShorteningKeySetting(final @Nonnull Set<String> keys) {
 			super(keys);
 		}
 
 		@Override
-		public String getConfig() {
+		public @Nonnull String getConfig() {
 			return Config.instance.apiShortenerKey.get();
 		}
 
 		@Override
-		public void setConfig(final String setting) {
+		public void setConfig(final @Nonnull String setting) {
 			Config.instance.apiShortenerKey.set(setting);
 		}
 	}
 
 	public static abstract class Setting {
-		private final Set<String> settings = Sets.newHashSet();
+		private final @Nonnull Set<String> settings = Sets.newHashSet();
 
-		public void registerSetting(final String name) {
+		public void registerSetting(final @Nonnull String name) {
 			getSettings().add(name);
 		}
 
-		public Set<String> getSettings() {
+		public @Nonnull Set<String> getSettings() {
 			return this.settings;
 		}
 
-		public String getRandom() {
+		public @Nullable String getRandom() {
 			final int size = getSettings().size();
 			if (size>0) {
 				final int item = rnd.nextInt(size);
@@ -147,53 +151,55 @@ public class Apis {
 			return null;
 		}
 
-		public String getConfigOrRandom() {
+		public @Nullable String getConfigOrRandom() {
 			String cfg = getConfig();
 			if (StringUtils.isEmpty(cfg))
 				cfg = getRandom();
 			return cfg;
 		}
 
-		public abstract String getConfig();
+		public abstract @Nonnull String getConfig();
 
-		public abstract void setConfig(String setting);
+		public abstract void setConfig(@Nonnull String setting);
 	}
 
 	public static abstract class MapSetting<E> extends Setting {
-		private final Map<String, E> settingmap = Maps.newHashMap();
+		private final @Nonnull Map<String, E> settingmap = Maps.newHashMap();
 
-		public void registerSetting(final String name, final E uploader) {
+		public void registerSetting(final @Nonnull String name, final @Nonnull E uploader) {
 			registerSetting(name);
 			this.getSettingMap().put(name, uploader);
 		}
 
-		public Map<String, E> getSettingMap() {
+		public @Nonnull Map<String, E> getSettingMap() {
 			return this.settingmap;
 		}
 
-		public E solve(final String name) {
+		public @Nonnull E solve(final @Nonnull String name) {
 			return getSettingMap().get(name);
 		}
 	}
 
 	public static interface ApiFactory {
+		@Nonnull
 		Set<String> keys();
 
+		@Nonnull
 		KeySetting keySettings();
 	}
 
 	public static interface ImageUploaderFactory extends ApiFactory {
-		IUploader create(UploadRequest upload, String key) throws IOException;
+		IUploader create(@Nonnull UploadRequest upload, @Nonnull String key) throws IOException;
 	}
 
 	public static interface URLShortenerFactory extends ApiFactory {
-		IShortener create(ShorteningRequest upload, String key) throws IOException;
+		IShortener create(@Nonnull ShorteningRequest upload, @Nonnull String key) throws IOException;
 	}
 
 	public void init() {
 		registerImageUploader("Gyazo", new ImageUploaderFactory() {
 			@Override
-			public Set<String> keys() {
+			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
 				List<Info.Api.Image.Gyazo.Config> configs = null;
 				try {
@@ -207,18 +213,18 @@ public class Apis {
 			}
 
 			@Override
-			public IUploader create(final UploadRequest upload, final String key) throws IOException {
+			public @Nonnull IUploader create(final UploadRequest upload, final String key) throws IOException {
 				return new GyazoUpload(upload, key);
 			}
 
 			@Override
-			public KeySetting keySettings() {
+			public @Nonnull KeySetting keySettings() {
 				return new UploaderKeySetting(keys());
 			}
 		});
 		registerImageUploader("Imgur", new ImageUploaderFactory() {
 			@Override
-			public Set<String> keys() {
+			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
 				List<Info.Api.Image.Imgur.Config> configs = null;
 				try {
@@ -232,18 +238,18 @@ public class Apis {
 			}
 
 			@Override
-			public IUploader create(final UploadRequest upload, final String key) throws IOException {
+			public @Nonnull IUploader create(final @Nonnull UploadRequest upload, final @Nonnull String key) throws IOException {
 				return new ImgurUpload(upload, key);
 			}
 
 			@Override
-			public KeySetting keySettings() {
+			public @Nonnull KeySetting keySettings() {
 				return new UploaderKeySetting(keys());
 			}
 		});
 		registerURLShortener("Bitly", new URLShortenerFactory() {
 			@Override
-			public Set<String> keys() {
+			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
 				List<Info.Api.Shortener.Bitly.Config> configs = null;
 				try {
@@ -257,18 +263,18 @@ public class Apis {
 			}
 
 			@Override
-			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
+			public @Nonnull IShortener create(final @Nonnull ShorteningRequest upload, final @Nonnull String key) throws IOException {
 				return new BitlyShortener(upload, key);
 			}
 
 			@Override
-			public KeySetting keySettings() {
+			public @Nonnull KeySetting keySettings() {
 				return new ShorteningKeySetting(keys());
 			}
 		});
 		registerURLShortener("Googl", new URLShortenerFactory() {
 			@Override
-			public Set<String> keys() {
+			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
 				List<Info.Api.Shortener.Googl.Config> configs = null;
 				try {
@@ -282,19 +288,19 @@ public class Apis {
 			}
 
 			@Override
-			public IShortener create(final ShorteningRequest upload, final String key) throws IOException {
+			public @Nonnull IShortener create(final @Nonnull ShorteningRequest upload, final @Nonnull String key) throws IOException {
 				return new GooglShortener(upload, key);
 			}
 
 			@Override
-			public KeySetting keySettings() {
+			public @Nonnull KeySetting keySettings() {
 				return new ShorteningKeySetting(keys());
 			}
 		});
 		final Pattern p = Pattern.compile("[^\\w]");
 		registerURLReplacer(new URLReplacer() {
 			@Override
-			public String replace(String src) {
+			public @Nonnull String replace(@Nonnull String src) {
 				if (StringUtils.containsIgnoreCase(src, "gyazo.com")) {
 					if (!StringUtils.containsIgnoreCase(src, "i.gyazo.com"))
 						src = StringUtils.replace(src, "gyazo.com", "i.gyazo.com");
@@ -315,7 +321,7 @@ public class Apis {
 		});
 		registerURLReplacer(new URLReplacer() {
 			@Override
-			public String replace(String src) {
+			public @Nonnull String replace(@Nonnull String src) {
 				if (StringUtils.containsIgnoreCase(src, "imgur.com")) {
 					if (!StringUtils.containsIgnoreCase(src, "i.imgur.com"))
 						src = StringUtils.replace(src, "imgur.com", "i.imgur.com");
