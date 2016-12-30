@@ -3,21 +3,23 @@ package com.kamesuta.mc.signpic.attr;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
 
 public class PropAnimation<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame> {
-	private final ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
-	private final TreeMap<Float, KeyFrame> frames = Maps.newTreeMap();
+	private final @Nonnull ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
+	private final @Nonnull TreeMap<Float, KeyFrame> frames = Maps.newTreeMap();
 	private float lasttime;
 
-	public PropAnimation(final KeyFrame defaultframe) {
+	public PropAnimation(final @Nonnull KeyFrame defaultframe) {
 		this.frames.put(0f, defaultframe);
 	}
 
-	public InterFrame get() {
+	public @Nonnull InterFrame get() {
 		if (this.frames.size()<=1)
 			return this.frames.get(0f).per();
 		final float t = this.motion.get();
@@ -33,7 +35,7 @@ public class PropAnimation<KeyFrame extends IPropInterpolatable<InterFrame>, Int
 			return before.getValue().per();
 	}
 
-	public PropAnimation<KeyFrame, InterFrame> add(final float time, final KeyFrame frame, final Easings easing) {
+	public @Nonnull PropAnimation<KeyFrame, InterFrame> add(final float time, final @Nonnull KeyFrame frame, final @Nonnull Easings easing) {
 		final float difftime = time-this.lasttime;
 		this.motion.add(easing.move(difftime, time));
 		this.lasttime = time;

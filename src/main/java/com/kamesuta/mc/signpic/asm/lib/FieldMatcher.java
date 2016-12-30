@@ -8,22 +8,24 @@
  */
 package com.kamesuta.mc.signpic.asm.lib;
 
+import javax.annotation.Nonnull;
+
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 public class FieldMatcher {
-	private final String clsName;
-	private final String description;
-	private final String srgName;
-	private final String mcpName;
+	private final @Nonnull String clsName;
+	private final @Nonnull String description;
+	private final @Nonnull String srgName;
+	private final @Nonnull String mcpName;
 
-	public FieldMatcher(final String clsName, final String description, final String mcpName, final String srgName) {
+	public FieldMatcher(final @Nonnull String clsName, final @Nonnull String description, final @Nonnull String mcpName, final @Nonnull String srgName) {
 		this.clsName = clsName;
 		this.description = description;
 		this.srgName = srgName;
 		this.mcpName = mcpName;
 	}
 
-	public boolean match(final String fieldName, final String fieldDesc) {
+	public boolean match(final @Nonnull String fieldName, final @Nonnull String fieldDesc) {
 		if (!fieldDesc.equals(this.description))
 			return false;
 		if (fieldName.equals(this.mcpName))

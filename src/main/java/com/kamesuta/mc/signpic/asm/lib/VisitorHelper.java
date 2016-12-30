@@ -8,11 +8,12 @@
  */
 package com.kamesuta.mc.signpic.asm.lib;
 
+import javax.annotation.Nonnull;
+
+import org.apache.commons.lang3.Validate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-
-import com.google.common.base.Preconditions;
 
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraft.launchwrapper.Launch;
@@ -26,11 +27,11 @@ public class VisitorHelper {
 			this.flags = flags;
 		}
 
-		public abstract ClassVisitor createVisitor(String name, ClassVisitor cv);
+		public abstract @Nonnull ClassVisitor createVisitor(@Nonnull String name, @Nonnull ClassVisitor cv);
 	}
 
-	public static byte[] apply(final byte[] bytes, final String name, final TransformProvider context) {
-		Preconditions.checkNotNull(bytes);
+	public static byte[] apply(final @Nonnull byte[] bytes, final @Nonnull String name, final @Nonnull TransformProvider context) {
+		Validate.notNull(bytes);
 		final ClassReader cr = new ClassReader(bytes);
 		final ClassWriter cw = new ClassWriter(cr, context.flags);
 		final ClassVisitor mod = context.createVisitor(name, cw);
@@ -48,7 +49,7 @@ public class VisitorHelper {
 		return deobfuscated==null||!deobfuscated;
 	}
 
-	public static String getMappedName(final String clsName) {
+	public static @Nonnull String getMappedName(final @Nonnull String clsName) {
 		return useSrgNames() ? FMLDeobfuscatingRemapper.INSTANCE.unmap(clsName) : clsName;
 	}
 }

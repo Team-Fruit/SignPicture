@@ -6,6 +6,8 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -36,78 +38,78 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBu
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class CompoundAttr {
-	public static final CompoundAttr Blank = new CompoundAttr();
+	public static final @Nonnull CompoundAttr Blank = new CompoundAttr();
 
-	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
-	protected static final Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
+	protected static final @Nonnull Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
+	protected static final @Nonnull Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
 	public static final float defaultInterval = 1f;
 
 	private boolean hasInvalidMeta;
 
-	private Set<PropAnimator<?, ?, ?>> metas = Sets.newHashSet();
+	private @Nonnull Set<PropAnimator<?, ?, ?>> metas = Sets.newHashSet();
 
-	private <E extends PropAnimator<?, ?, ?>> E add(final E e) {
+	private @Nonnull <E extends PropAnimator<?, ?, ?>> E add(final @Nonnull E e) {
 		this.metas.add(e);
 		return e;
 	}
 
-	public final PropAnimator<AnimationData, AnimationData, AnimationData> animations = add(new PropAnimator<AnimationData, AnimationData, AnimationData>(new IPropBuilderBuilder<AnimationData, AnimationData>() {
+	public final @Nonnull PropAnimator<AnimationData, AnimationData, AnimationData> animations = add(new PropAnimator<AnimationData, AnimationData, AnimationData>(new IPropBuilderBuilder<AnimationData, AnimationData>() {
 		@Override
-		public IPropBuilder<AnimationData, AnimationData> builder() {
+		public @Nonnull IPropBuilder<AnimationData, AnimationData> builder() {
 			return new AnimationBuilder();
 		}
 	}));
-	public final PropAnimator<SizeData, SizeData, SizeData> sizes = add(new PropAnimator<SizeData, SizeData, SizeData>(new IPropBuilderBuilder<SizeData, SizeData>() {
+	public final @Nonnull PropAnimator<SizeData, SizeData, SizeData> sizes = add(new PropAnimator<SizeData, SizeData, SizeData>(new IPropBuilderBuilder<SizeData, SizeData>() {
 		@Override
-		public SizeBuilder builder() {
+		public @Nonnull SizeBuilder builder() {
 			return new SizeBuilder();
 		}
 	}));
 
-	public final PropAnimator<OffsetData, OffsetData, OffsetData> offsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new IPropBuilderBuilder<OffsetData, OffsetData>() {
+	public final @Nonnull PropAnimator<OffsetData, OffsetData, OffsetData> offsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new IPropBuilderBuilder<OffsetData, OffsetData>() {
 		@Override
-		public OffsetBuilder builder() {
+		public @Nonnull OffsetBuilder builder() {
 			return new OffsetBuilder();
 		}
 	}));
-	public final PropAnimator<KeyRotation, RotationData, DiffRotation> rotations = add(new PropAnimator<KeyRotation, RotationData, DiffRotation>(new IPropBuilderBuilder<DiffRotation, KeyRotation>() {
+	public final @Nonnull PropAnimator<KeyRotation, RotationData, DiffRotation> rotations = add(new PropAnimator<KeyRotation, RotationData, DiffRotation>(new IPropBuilderBuilder<DiffRotation, KeyRotation>() {
 		@Override
-		public RotationBuilder builder() {
+		public @Nonnull RotationBuilder builder() {
 			return new RotationBuilder();
 		}
 	}));
 
 	private static class TexFloatBuilder implements IPropBuilderBuilder<TextureFloat, TextureFloat> {
-		private TextureFloatType type;
+		private @Nonnull TextureFloatType type;
 
-		public TexFloatBuilder(final TextureFloatType type) {
+		public TexFloatBuilder(final @Nonnull TextureFloatType type) {
 			this.type = type;
 		}
 
 		@Override
-		public IPropBuilder<TextureFloat, TextureFloat> builder() {
+		public @Nonnull IPropBuilder<TextureFloat, TextureFloat> builder() {
 			return new TextureFloatBuilder(this.type);
 		}
 	}
 
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> u = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.U)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> v = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.V)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> w = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.W)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> h = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.H)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.C)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.S)));
-	public final PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.O)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> u = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.U)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> v = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.V)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> w = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.W)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> h = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.H)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.C)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.S)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.O)));
 
 	private static class TexBooleanBuilder implements IPropBuilderBuilder<TextureBoolean, TextureBoolean> {
-		private TextureBooleanType type;
+		private @Nonnull TextureBooleanType type;
 
-		public TexBooleanBuilder(final TextureBooleanType type) {
+		public TexBooleanBuilder(final @Nonnull TextureBooleanType type) {
 			this.type = type;
 		}
 
 		@Override
-		public TextureBooleanBuilder builder() {
+		public @Nonnull TextureBooleanBuilder builder() {
 			return new TextureBooleanBuilder(this.type);
 		}
 	}
