@@ -23,14 +23,14 @@ public class ContentLocation {
 	}
 
 	public static @Nonnull File metaLocation(final @Nonnull String name) {
-		return new File(Client.location.metaDir, name+".json");
+		return new File(Client.getLocation().metaDir, name+".json");
 	}
 
 	public static @Nonnull File cachemetaLocation(final @Nonnull String name) {
-		return new File(Client.location.cacheDir, name+".json");
+		return new File(Client.getLocation().cacheDir, name+".json");
 	}
 
 	public static @Nonnull File cacheLocation(final @Nonnull String name) {
-		return new File(Client.location.cacheDir, name);
+		return new File(Client.getLocation().cacheDir, name);
 	}
 }

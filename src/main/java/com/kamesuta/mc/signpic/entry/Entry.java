@@ -16,8 +16,8 @@ public class Entry {
 	public final @Nullable ContentId contentId;
 	public final @Nonnull GuiImage gui;
 
-	private transient CompoundAttr meta;
-	private String cmetacache;
+	private transient @Nullable CompoundAttr meta;
+	private @Nullable String cmetacache;
 
 	protected Entry(final @Nonnull EntryId id) {
 		this.id = id;
@@ -34,11 +34,11 @@ public class Entry {
 
 	public boolean isNotSupported() {
 		final CompoundAttr meta = getMeta();
-		return meta==null||meta.hasInvalidMeta()||this.id.getPrePrefix()!=null;
+		return meta.hasInvalidMeta()||this.id.getPrePrefix()!=null;
 	}
 
 	public boolean isValid() {
-		return this.contentId!=null&&getMeta()!=null;
+		return this.contentId!=null;
 	}
 
 	public @Nonnull CompoundAttr getMeta() {
@@ -53,12 +53,12 @@ public class Entry {
 			}
 		if (this.meta==null)
 			this.meta = this.id.getMeta();
-		if (this.meta==null)
-			this.meta = CompoundAttr.Blank;
-		return this.meta;
+		if (this.meta!=null)
+			return this.meta;
+		return this.meta = CompoundAttr.Blank;
 	}
 
-	public CompoundAttrBuilder getMetaBuilder() {
+	public @Nullable CompoundAttrBuilder getMetaBuilder() {
 		final Content cntnt = getContent();
 		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)

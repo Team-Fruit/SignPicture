@@ -37,7 +37,17 @@ public class Client {
 
 	public static @Nonnull CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer();
 	public static @Nonnull CoreHandler handler = new CoreHandler();
-	public static @Nullable Locations location;
+	private static @Nullable Locations location;
+
+	public static @Nonnull Locations getLocation() {
+		if (location!=null)
+			return location;
+		throw new IllegalStateException("signpic location not initialized");
+	}
+
+	public static void initLocation(final @Nonnull Locations locations) {
+		location = locations;
+	}
 
 	public static @Nonnull String mcversion = MinecraftForge.MC_VERSION;
 	public static @Nonnull String forgeversion = ForgeVersion.getVersion();

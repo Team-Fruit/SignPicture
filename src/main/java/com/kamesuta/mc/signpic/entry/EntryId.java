@@ -15,15 +15,15 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.IChatComponent;
 
 public class EntryId {
-	public static final EntryId blank = new EntryId("");
+	public static final @Nonnull EntryId blank = new EntryId("");
 
-	private final String id;
+	private final @Nonnull String id;
 
-	protected EntryId(final String id) {
+	protected EntryId(final @Nonnull String id) {
 		this.id = id;
 	}
 
-	public String id() {
+	public @Nonnull String id() {
 		return this.id;
 	}
 
@@ -31,12 +31,12 @@ public class EntryId {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime*result+(this.id==null ? 0 : this.id.hashCode());
+		result = prime*result+this.id.hashCode();
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (this==obj)
 			return true;
 		if (obj==null)
@@ -44,36 +44,33 @@ public class EntryId {
 		if (!(obj instanceof EntryId))
 			return false;
 		final EntryId other = (EntryId) obj;
-		if (this.id==null) {
-			if (other.id!=null)
-				return false;
-		} else if (!this.id.equals(other.id))
+		if (!this.id.equals(other.id))
 			return false;
 		return true;
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("EntryId [id=%s]", this.id);
 	}
 
-	public static EntryId from(final String string) {
+	public static @Nonnull EntryId from(final @Nullable String string) {
 		if (StringUtils.isEmpty(string))
 			return blank;
 		return new EntryId(string);
 	}
 
-	public static EntryId fromStrings(final String[] strings) {
+	public static @Nonnull EntryId fromStrings(final @Nullable String[] strings) {
 		return from(StringUtils.join(strings));
 	}
 
-	public static EntryId fromTile(final TileEntitySign tile) {
+	public static @Nonnull EntryId fromTile(final @Nullable TileEntitySign tile) {
 		if (tile==null)
 			return blank;
 		return fromStrings(tile.signText);
 	}
 
-	public static EntryId fromChats(final IChatComponent[] chats) {
+	public static @Nonnull EntryId fromChats(final @Nullable IChatComponent[] chats) {
 		if (chats==null)
 			return blank;
 		final StringBuilder stb = new StringBuilder();
@@ -84,11 +81,11 @@ public class EntryId {
 	}
 
 	public static class ItemEntryId extends EntryId {
-		public static final ItemEntryId blank = new ItemEntryId(EntryId.blank, null);
+		public static final @Nonnull ItemEntryId blank = new ItemEntryId(EntryId.blank, null);
 
 		private final @Nullable String name;
 
-		protected ItemEntryId(final EntryId id, @Nullable final String name) {
+		protected ItemEntryId(final @Nonnull EntryId id, final @Nullable String name) {
 			super(id.id());
 			this.name = name;
 		}
@@ -101,8 +98,8 @@ public class EntryId {
 			return this.name;
 		}
 
-		public static boolean hasName(@Nonnull final NBTTagCompound nbt) {
-			if (nbt.hasKey("display", 10)) {
+		public static boolean hasName(final @Nullable NBTTagCompound nbt) {
+			if (nbt!=null&&nbt.hasKey("display", 10)) {
 				final NBTTagCompound nbttagcompound = nbt.getCompoundTag("display");
 				if (nbttagcompound.hasKey("Name", 8))
 					return true;
@@ -111,7 +108,7 @@ public class EntryId {
 		}
 	}
 
-	public static ItemEntryId fromItemStack(final ItemStack itemStack) {
+	public static @Nonnull ItemEntryId fromItemStack(final @Nullable ItemStack itemStack) {
 		if (itemStack!=null) {
 			final NBTTagCompound nbt = itemStack.getTagCompound();
 			if (nbt!=null)
@@ -193,18 +190,21 @@ public class EntryId {
 		return StringUtils.length(this.id)<=40;
 	}
 
-	public void toStrings(final String[] sign) {
-		final int length = StringUtils.length(this.id);
-		for (int i = 0; i<4; i++)
-			sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
+	public void toStrings(final @Nullable String[] sign) {
+		if (sign!=null) {
+			final int length = StringUtils.length(this.id);
+			for (int i = 0; i<4; i++)
+				sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
+		}
 	}
 
 	public int getLastLine() {
 		return StringUtils.length(this.id)/15;
 	}
 
-	public void toEntity(final TileEntitySign tile) {
-		toStrings(tile.signText);
+	public void toEntity(final @Nullable TileEntitySign tile) {
+		if (tile!=null)
+			toStrings(tile.signText);
 	}
 
 	public @Nonnull Entry entry() {

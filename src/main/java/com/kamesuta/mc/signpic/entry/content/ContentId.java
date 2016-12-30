@@ -62,7 +62,7 @@ public class ContentId {
 		return this.id.startsWith("!");
 	}
 
-	public ResourceLocation getResource() {
+	public @Nonnull ResourceLocation getResource() {
 		return new ResourceLocation(StringUtils.substring(this.id, 1));
 	}
 
@@ -70,7 +70,7 @@ public class ContentId {
 		return ContentManager.instance.get(this);
 	}
 
-	public static ContentId fromResource(final ResourceLocation location) {
+	public static @Nonnull ContentId fromResource(final @Nonnull ResourceLocation location) {
 		return new ContentId("!"+location.toString());
 	}
 }

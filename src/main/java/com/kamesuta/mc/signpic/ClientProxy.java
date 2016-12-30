@@ -26,7 +26,7 @@ public class ClientProxy extends CommonProxy {
 		// StencilClip.init();
 
 		// Setup location
-		Client.location = new Locations(event, getDataDirectory());
+		Client.initLocation(new Locations(event.getSourceFile(), getDataDirectory()));
 
 		// Get Id
 		final String id = Client.mc.getSession().getPlayerID();
