@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.attr.prop;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,26 +14,26 @@ import com.kamesuta.mc.signpic.attr.IPropComposable;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
 
 public class AnimationData implements IPropInterpolatable<AnimationData>, IPropComposable {
-	public final Easings easing;
-	public final RSNeed redstone;
+	public final @Nonnull Easings easing;
+	public final @Nonnull RSNeed redstone;
 
-	public AnimationData(final Easings easing2, final RSNeed redstone) {
-		this.easing = easing2;
+	public AnimationData(final @Nonnull Easings easing, final @Nonnull RSNeed redstone) {
+		this.easing = easing;
 		this.redstone = redstone;
 	}
 
 	@Override
-	public AnimationData per() {
+	public @Nonnull AnimationData per() {
 		return this;
 	}
 
 	@Override
-	public AnimationData per(final float per, final @Nullable AnimationData before) {
+	public @Nonnull AnimationData per(final float per, final @Nullable AnimationData before) {
 		return this;
 	}
 
 	@Override
-	public String compose() {
+	public @Nonnull String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.easing!=Easings.easeLinear)
 			stb.append("k").append(this.easing.id);
@@ -42,7 +43,7 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return "AnimationData [easing="+this.easing+", redstone="+this.redstone+"]";
 	}
 
@@ -56,9 +57,9 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 			this.id = id;
 		}
 
-		private static final ImmutableMap<Integer, RSNeed> rsIds;
+		private static final @Nonnull ImmutableMap<Integer, RSNeed> rsIds;
 
-		public static RSNeed fromId(final int id) {
+		public static @Nonnull RSNeed fromId(final int id) {
 			RSNeed rs = rsIds.get(id);
 			if (rs==null)
 				rs = IGNORE;
@@ -74,16 +75,16 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 	}
 
 	public static class AnimationBuilder implements IPropBuilder<AnimationData, AnimationData> {
-		public Easings easing = Easings.easeLinear;
-		public RSNeed redstone = RSNeed.IGNORE;
+		public @Nonnull Easings easing = Easings.easeLinear;
+		public @Nonnull RSNeed redstone = RSNeed.IGNORE;
 
 		@Override
-		public AnimationData diff(final @Nullable AnimationData base) {
+		public @Nonnull AnimationData diff(final @Nullable AnimationData base) {
 			return new AnimationData(this.easing, this.redstone);
 		}
 
 		@Override
-		public boolean parse(final String src, final String key, final String value) {
+		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
 			if (StringUtils.equals(key, "k"))
 				this.easing = Easings.fromId(NumberUtils.toInt(value));
 			else if (StringUtils.equals(key, "t"))
@@ -94,13 +95,13 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 		}
 
 		@Override
-		public String compose() {
+		public @Nonnull String compose() {
 			return diff(null).compose();
 		}
 
 		@Deprecated
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return compose();
 		}
 	}

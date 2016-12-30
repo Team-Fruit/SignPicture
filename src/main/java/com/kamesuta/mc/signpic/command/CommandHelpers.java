@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -16,22 +18,22 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 
 public class CommandHelpers {
-	public static void throwWrongUsage(final ICommandSender sender, final IModCommand command) throws WrongUsageException {
+	public static void throwWrongUsage(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command) throws WrongUsageException {
 		throw new WrongUsageException(I18n.format("signpic.command.help", command.getCommandUsage(sender)));
 	}
 
-	public static void processChildCommand(final ICommandSender sender, final SubCommand child, final String[] args) {
+	public static void processChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) {
 		if (!sender.canCommandSenderUseCommand(child.getRequiredPermissionLevel(), child.getFullCommandString()))
 			throw new WrongUsageException(I18n.format("signpic.command.noperms"));
 		else
 			child.processCommand(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
 
-	public static List<String> completeChildCommand(final ICommandSender sender, final SubCommand child, final String[] args) {
+	public static @Nonnull List<String> completeChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) {
 		return child.completeCommand(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
 
-	public static void printHelp(final ICommandSender sender, final IModCommand command) {
+	public static void printHelp(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command) {
 		final ChatStyle header = new ChatStyle();
 		header.setColor(EnumChatFormatting.BLUE);
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".format").useTranslation().setStyle(header).setParams(command.getFullCommandString()).sendPlayer(sender);
@@ -51,7 +53,7 @@ public class CommandHelpers {
 
 	}
 
-	public static List<String> completeCommands(final ICommandSender sender, final IModCommand command, final String[] args) {
+	public static @Nonnull List<String> completeCommands(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command, final @Nonnull String[] args) {
 		if (args.length>=2) {
 			final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 			while (arg2.hasNext()) {
@@ -72,7 +74,7 @@ public class CommandHelpers {
 		return complete;
 	}
 
-	public static boolean processCommands(final ICommandSender sender, final IModCommand command, final String[] args) {
+	public static boolean processCommands(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command, final @Nonnull String[] args) {
 		if (args.length>=1) {
 			if (args[0].equals("help")) {
 				command.printHelp(sender);
@@ -91,7 +93,7 @@ public class CommandHelpers {
 		return false;
 	}
 
-	public static boolean matches(final String commandName, final IModCommand command) {
+	public static boolean matches(final @Nonnull String commandName, final @Nonnull IModCommand command) {
 		if (commandName.equals(command.getCommandName()))
 			return true;
 		else {

@@ -114,29 +114,29 @@ public class CompoundAttr {
 		}
 	}
 
-	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.R)));
-	public final PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.M)));
+	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.R)));
+	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.M)));
 
 	private static class TexBlendBuilder implements IPropBuilderBuilder<TextureBlend, TextureBlend> {
-		private TextureBlendType type;
+		private @Nonnull TextureBlendType type;
 
-		public TexBlendBuilder(final TextureBlendType type) {
+		public TexBlendBuilder(final @Nonnull TextureBlendType type) {
 			this.type = type;
 		}
 
 		@Override
-		public TextureBlendBuilder builder() {
+		public @Nonnull TextureBlendBuilder builder() {
 			return new TextureBlendBuilder(this.type);
 		}
 	}
 
-	public final PropAnimator<TextureBlend, TextureBlend, TextureBlend> b = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.B)));
-	public final PropAnimator<TextureBlend, TextureBlend, TextureBlend> d = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.D)));
+	public final @Nonnull PropAnimator<TextureBlend, TextureBlend, TextureBlend> b = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.B)));
+	public final @Nonnull PropAnimator<TextureBlend, TextureBlend, TextureBlend> d = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(new TexBlendBuilder(TextureBlendType.D)));
 
 	private CompoundAttr() {
 	}
 
-	public CompoundAttr(final String src) {
+	public CompoundAttr(final @Nonnull String src) {
 		Validate.notNull(src);
 
 		final TreeMap<Float, String> timeline = Maps.newTreeMap();

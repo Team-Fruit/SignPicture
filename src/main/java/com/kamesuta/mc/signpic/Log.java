@@ -63,22 +63,22 @@ public class Log {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void notice(final Object notice, final float duration) {
+	public static void notice(final @Nonnull Object notice, final float duration) {
 		OverlayFrame.instance.pane.addNotice1(notice.toString(), duration);
 		dev.info(notice);
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void notice(final String notice, final Throwable e, final float duration) {
+	public static void notice(final @Nonnull String notice, final @Nonnull Throwable e, final float duration) {
 		OverlayFrame.instance.pane.addNotice1(notice, duration);
 		dev.info(notice, e);
 	}
 
-	public static void notice(final String notice) {
+	public static void notice(final @Nonnull String notice) {
 		notice(notice, 2f);
 	}
 
-	public static void notice(final String notice, final Throwable e) {
+	public static void notice(final @Nonnull String notice, final @Nonnull Throwable e) {
 		notice(notice, e, 2f);
 	}
 }

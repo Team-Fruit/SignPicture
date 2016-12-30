@@ -164,7 +164,7 @@ public interface TextureData {
 		public final @Nonnull TextureBlendType type;
 		public final @Nullable BlendType data;
 
-		public TextureBlend(final @Nullable TextureBlendType type, final @Nullable BlendType data) {
+		public TextureBlend(final @Nonnull TextureBlendType type, final @Nullable BlendType data) {
 			this.type = type;
 			this.data = data;
 		}
@@ -194,7 +194,7 @@ public interface TextureData {
 
 		public static class TextureBlendBuilder implements IPropBuilder<TextureBlend, TextureBlend> {
 			private final @Nonnull TextureBlendType type;
-			private @Nonnull BlendType data;
+			private @Nullable BlendType data;
 
 			public TextureBlendBuilder(final @Nonnull TextureBlendType type) {
 				this.type = type;
@@ -218,7 +218,8 @@ public interface TextureData {
 
 			@Override
 			public @Nonnull String compose() {
-				if (this.data!=this.type.defaultValue)
+				final BlendType data = this.data;
+				if (data!=null&&data!=this.type.defaultValue)
 					return this.type.identifier+data.id;
 				return "";
 			}
