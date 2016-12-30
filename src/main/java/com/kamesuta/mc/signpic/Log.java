@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Level;
@@ -14,7 +15,7 @@ import com.kamesuta.mc.signpic.gui.OverlayFrame;
 
 public class Log {
 	public static @Nonnull Logger log = LogManager.getLogger(Reference.MODID);
-	public static Logger dev = new DevLogger(log);
+	public static @Nonnull Logger dev = new DevLogger(log);
 
 	private static class DevLogger extends AbstractLogger {
 		private Logger logger;
@@ -24,38 +25,39 @@ public class Log {
 		}
 
 		private boolean isEnabled() {
-			Validate.notNull(Config.instance, "internal error: debug logger can be used after config loaded!");
-			return Config.instance.debugLog.get();
+			final Config cfg = Config.getConfig();
+			Validate.notNull(cfg, "internal error: debug logger can be used after config loaded!");
+			return Config.getConfig().debugLog.get();
 		}
 
 		@Override
-		protected boolean isEnabled(final Level level, final Marker marker, final Message data, final Throwable t) {
+		protected boolean isEnabled(final @Nullable Level level, final @Nullable Marker marker, final @Nullable Message data, final @Nullable Throwable t) {
 			return isEnabled();
 		}
 
 		@Override
-		protected boolean isEnabled(final Level level, final Marker marker, final Object data, final Throwable t) {
+		protected boolean isEnabled(final @Nullable Level level, final @Nullable Marker marker, final @Nullable Object data, final @Nullable Throwable t) {
 			return isEnabled();
 		}
 
 		@Override
-		protected boolean isEnabled(final Level level, final Marker marker, final String data) {
+		protected boolean isEnabled(final @Nullable Level level, final @Nullable Marker marker, final @Nullable String data) {
 			return isEnabled();
 		}
 
 		@Override
-		protected boolean isEnabled(final Level level, final Marker marker, final String data, final Object... p1) {
+		protected boolean isEnabled(final @Nullable Level level, final @Nullable Marker marker, final @Nullable String data, final @Nullable Object... p1) {
 			return isEnabled();
 		}
 
 		@Override
-		protected boolean isEnabled(final Level level, final Marker marker, final String data, final Throwable t) {
+		protected boolean isEnabled(final @Nullable Level level, final @Nullable Marker marker, final @Nullable String data, final @Nullable Throwable t) {
 			return isEnabled();
 		}
 
 		@Override
-		public void log(final Marker marker, final String fqcn, final Level level, final Message data, final Throwable t) {
-			if (isEnabled())
+		public void log(final @Nullable Marker marker, final @Nullable String fqcn, final @Nullable Level level, final @Nullable Message data, final @Nullable Throwable t) {
+			if (isEnabled()&&data!=null)
 				this.logger.log(level, marker, "[DEBUG] "+data.getFormattedMessage(), t);
 		}
 	}
@@ -63,15 +65,13 @@ public class Log {
 	@SuppressWarnings("deprecation")
 	public static void notice(final Object notice, final float duration) {
 		OverlayFrame.instance.pane.addNotice1(notice.toString(), duration);
-		if (dev!=null)
-			dev.info(notice);
+		dev.info(notice);
 	}
 
 	@SuppressWarnings("deprecation")
 	public static void notice(final String notice, final Throwable e, final float duration) {
 		OverlayFrame.instance.pane.addNotice1(notice, duration);
-		if (dev!=null)
-			dev.info(notice, e);
+		dev.info(notice, e);
 	}
 
 	public static void notice(final String notice) {

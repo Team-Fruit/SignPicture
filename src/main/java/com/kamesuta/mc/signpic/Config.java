@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Sets;
@@ -12,7 +15,17 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 public final class Config extends Configuration {
-	public static Config instance;
+	private static @Nullable Config instance;
+
+	public static @Nonnull Config getConfig() {
+		if (instance!=null)
+			return instance;
+		throw new IllegalStateException("config not initialized");
+	}
+
+	public static void init(final @Nonnull File cfgFile) {
+		instance = new Config(cfgFile);
+	}
 
 	private final File configFile;
 	private final Set<IReloadableConfig> configs = Sets.newHashSet();
@@ -80,7 +93,7 @@ public final class Config extends Configuration {
 
 	public final ConfigProperty<Boolean> guiExperienced = propertyBoolean(get("Internal", "GuiExperienced", false)).setComment("Have you ever opened SignPicture GUI yet?");
 
-	public Config(final File configFile) {
+	private Config(final File configFile) {
 		super(configFile);
 		this.configFile = configFile;
 

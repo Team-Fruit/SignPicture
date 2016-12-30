@@ -1,6 +1,7 @@
 package com.kamesuta.mc.bnnwidget.var;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
@@ -51,30 +52,30 @@ public class VMotion extends VBase implements ICompoundMotion {
 	}
 
 	@Override
-	public VMotion start() {
+	public @Nonnull VMotion start() {
 		this.compoundMotion.start();
 		return this;
 	}
 
 	@Override
-	public VMotion next() {
+	public @Nonnull VMotion next() {
 		this.compoundMotion.next();
 		return this;
 	}
 
 	@Override
-	public VMotion stopNext() {
+	public @Nonnull VMotion stopNext() {
 		this.compoundMotion.stopNext();
 		return this;
 	}
 
 	@Override
-	public IMotion getAnimation() {
+	public @Nullable IMotion getAnimation() {
 		return this.compoundMotion.getAnimation();
 	}
 
 	@Override
-	public IMotion getAnimationLast() {
+	public @Nullable IMotion getAnimationLast() {
 		return this.compoundMotion.getAnimationLast();
 	}
 

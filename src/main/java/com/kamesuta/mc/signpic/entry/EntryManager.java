@@ -9,7 +9,7 @@ import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.CoreEvent;
 
 public class EntryManager implements ITickEntry {
-	public static final EntryManager instance = new EntryManager();
+	public static final @Nonnull EntryManager instance = new EntryManager();
 
 	private final Map<EntryId, EntrySlot<Entry>> registry = Maps.newConcurrentMap();
 

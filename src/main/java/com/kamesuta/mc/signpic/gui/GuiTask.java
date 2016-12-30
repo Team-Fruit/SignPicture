@@ -30,25 +30,25 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTask extends WPanel {
-	public static final ResourceLocation panel = new ResourceLocation("signpic", "textures/gui/panel.png");
-	public static final String ShowPanel = "gui.showpanel";
-	public static final String HighlightPanel = "gui.highlight";
+	public static final @Nonnull ResourceLocation panel = new ResourceLocation("signpic", "textures/gui/panel.png");
+	public static final @Nonnull String ShowPanel = "gui.showpanel";
+	public static final @Nonnull String HighlightPanel = "gui.highlight";
 
-	public GuiTask(final R position) {
+	public GuiTask(final @Nonnull R position) {
 		super(position);
 	}
 
-	protected Timer showtime = new Timer();
+	protected @Nonnull Timer showtime = new Timer();
 
 	public void show(final float j) {
 		this.showtime.set(-j);
 	}
 
 	protected boolean oshow;
-	protected VMotion oright = V.am(0f);
+	protected @Nonnull VMotion oright = V.am(0f);
 
 	protected boolean show;
-	protected VMotion right = V.pm(0f);
+	protected @Nonnull VMotion right = V.pm(0f);
 
 	@Override
 	protected void initWidget() {
@@ -58,7 +58,7 @@ public class GuiTask extends WPanel {
 				add(new WPanel(new R(Coord.right(V.per(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 						final Area a = getGuiPosition(pgp);
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, .6f);
@@ -67,7 +67,7 @@ public class GuiTask extends WPanel {
 					}
 
 					@Override
-					public void update(final WEvent ev, final Area pgp, final Point p) {
+					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						final Area a = getGuiPosition(pgp);
 						if (a.pointInside(p))
 							GuiTask.this.showtime.set(-1f);
@@ -96,7 +96,7 @@ public class GuiTask extends WPanel {
 					}
 
 					@Override
-					public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+					public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 						final Area a = getGuiPosition(pgp);
 						return super.mouseClicked(ev, pgp, p, button)||a.pointInside(p);
 					}
@@ -105,7 +105,7 @@ public class GuiTask extends WPanel {
 					protected void initWidget() {
 						add(new WBase(new R(Coord.top(1), Coord.left(1), Coord.width(80), Coord.height(16))) {
 							@Override
-							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 								final Area a = getGuiPosition(pgp);
 								texture().bindTexture(panel);
 								OpenGL.glColor4f(1, 1, 1, 1);
@@ -116,7 +116,7 @@ public class GuiTask extends WPanel {
 
 						add(new WList<Progressable, TaskElement>(new R(Coord.top(16), Coord.bottom(0)), Communicator.instance.getTasks()) {
 							@Override
-							protected @Nonnull TaskElement createWidget(final Progressable t, final int i) {
+							protected @Nonnull TaskElement createWidget(final @Nonnull Progressable t, final int i) {
 								final Object j = t.getState().getMeta().get(ShowPanel);
 								if (j instanceof Number)
 									show(((Number) j).floatValue());
@@ -125,7 +125,7 @@ public class GuiTask extends WPanel {
 							}
 
 							@Override
-							protected void onMoved(final Progressable t, final TaskElement w, final int from, final int to) {
+							protected void onMoved(final @Nonnull Progressable t, final @Nonnull TaskElement w, final int from, final int to) {
 								w.top.stop().add(Motion.blank(.75f)).add(Easings.easeInCirc.move(.25f, to*15)).start();
 							};
 						});

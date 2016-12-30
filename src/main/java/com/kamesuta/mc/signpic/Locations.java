@@ -17,6 +17,7 @@ public class Locations {
 	public File modFile;
 
 	public Locations(final FMLPreInitializationEvent event, final File mcdir) {
+		this.mcDir = mcdir;
 		this.signpicDir = getSignPicDir(mcdir);
 		securementDirectory(this.signpicDir);
 		this.tempDir = new File(this.signpicDir, "temp");
@@ -35,8 +36,8 @@ public class Locations {
 	}
 
 	private File getSignPicDir(final File defaultdir) {
-		final File dir = new File(Config.instance.signpicDir.get());
-		if (!StringUtils.isEmpty(Config.instance.signpicDir.get())) {
+		final File dir = new File(Config.getConfig().signpicDir.get());
+		if (!StringUtils.isEmpty(Config.getConfig().signpicDir.get())) {
 			if (dir.exists()&&dir.isDirectory()&&!dir.equals(defaultdir))
 				return dir;
 			Log.dev.error("invalid signpic dir location! use default dir.");

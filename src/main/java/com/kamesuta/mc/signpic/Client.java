@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
 
 import com.google.gson.Gson;
+import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -26,23 +27,30 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Client {
 	public static final @Nonnull Minecraft mc = FMLClientHandler.instance().getClient();
 
 	public static final Gson gson = new Gson();
 
-	public static @Nullable CustomTileEntitySignRenderer renderer;
-	public static @Nullable CoreHandler handler;
+	public static @Nonnull CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer();
+	public static @Nonnull CoreHandler handler = new CoreHandler();
 	public static @Nullable Locations location;
 
-	public static @Nullable String mcversion;
-	public static @Nullable String forgeversion;
+	public static @Nonnull String mcversion = MinecraftForge.MC_VERSION;
+	public static @Nonnull String forgeversion = ForgeVersion.getVersion();
 
 	public static @Nullable String id;
 	public static @Nullable String name;
 
 	public static @Nullable RootCommand rootCommand;
+
+	static {
+		rootCommand = new RootCommand();
+		rootCommand.addChildCommand(new CommandVersion());
+	}
 
 	public static void openEditor() {
 		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
@@ -171,7 +179,8 @@ public class Client {
 	}
 
 	public static void deleteMod() {
-		if (Client.location.modFile.isFile())
-			deleteMod(Client.location.modFile);
+		final Locations loc = location;
+		if (loc!=null&&loc.modFile.isFile())
+			deleteMod(loc.modFile);
 	}
 }

@@ -11,6 +11,7 @@ import org.lwjgl.input.Mouse;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.Minecraft;
@@ -56,6 +57,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 
 	public WFrame(final @Nullable GuiScreen parent) {
 		this.parent = parent;
+		this.mc = Client.mc;
 	}
 
 	public WFrame() {

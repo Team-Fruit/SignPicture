@@ -27,7 +27,7 @@ public class MPanel extends WPanel {
 		final Area a = getGuiPosition(pgp);
 		final float op = getGuiOpacity(popacity);
 
-		if (Config.instance.informationTryNew.get()) {
+		if (Config.getConfig().informationTryNew.get()) {
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, op*.5f);
 			draw(a);
