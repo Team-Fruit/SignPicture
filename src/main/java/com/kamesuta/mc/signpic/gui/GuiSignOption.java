@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -30,9 +31,9 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import net.minecraft.client.resources.I18n;
 
 public class GuiSignOption extends WFrame {
-	protected final Entry entry;
+	protected final @Nonnull Entry entry;
 
-	public GuiSignOption(final Entry entry) {
+	public GuiSignOption(final @Nonnull Entry entry) {
 		this.entry = entry;
 		setGuiPauseGame(false);
 	}
@@ -40,8 +41,8 @@ public class GuiSignOption extends WFrame {
 	@Override
 	protected void initWidget() {
 		add(new WPanel(new R()) {
-			protected VMotion opa;
-			protected VMotion opac;
+			protected @Nullable VMotion opa;
+			protected @Nullable VMotion opac;
 
 			@Override
 			protected @Nonnull VCommon initOpacity() {
@@ -49,13 +50,13 @@ public class GuiSignOption extends WFrame {
 			}
 
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 				super.draw(ev, pgp, p, frame, popacity);
 			}
 
 			@Override
-			public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				return this.opac.isFinished()&&super.mouseClicked(ev, pgp, p, button);
+			public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+				return this.opac!=null&&this.opac.isFinished()&&super.mouseClicked(ev, pgp, p, button);
 			}
 
 			@Override
@@ -69,18 +70,22 @@ public class GuiSignOption extends WFrame {
 
 					@Override
 					public boolean onCloseRequest() {
-						opac.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
-						opa.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
+						if (opac!=null)
+							opac.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
+						if (opa!=null)
+							opa.stop().add(Easings.easeLinear.move(.2f, 0f)).start();
 						return false;
 					}
 
 					@Override
-					public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
-						return opac.isFinished();
+					public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
+						if (opac!=null)
+							return opac.isFinished();
+						return true;
 					}
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity));
@@ -122,21 +127,21 @@ public class GuiSignOption extends WFrame {
 												setList(Lists.<MButton> newArrayList(
 														new MButton(new R()) {
 															@Override
-															protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+															protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 																loadAndOpen(true, true);
 																return true;
 															}
 														}.setText(I18n.format("signpic.gui.settings.sign.load")),
 														new MButton(new R()) {
 															@Override
-															protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+															protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 																loadAndOpen(true, false);
 																return true;
 															}
 														}.setText(I18n.format("signpic.gui.settings.sign.load.content")),
 														new MButton(new R()) {
 															@Override
-															protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+															protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 																loadAndOpen(false, true);
 																return true;
 															}
@@ -173,7 +178,7 @@ public class GuiSignOption extends WFrame {
 									}
 
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										final Content c = GuiSignOption.this.entry.getContent();
 										if (c!=null) {
 											c.markDirty();
@@ -191,7 +196,7 @@ public class GuiSignOption extends WFrame {
 									}
 
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										final Content c = GuiSignOption.this.entry.getContent();
 										if (c!=null) {
 											c.markDirtyWithCache();
@@ -209,7 +214,7 @@ public class GuiSignOption extends WFrame {
 									}
 
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										final Content c = GuiSignOption.this.entry.getContent();
 										if (c!=null) {
 											c.cancel();
@@ -244,7 +249,7 @@ public class GuiSignOption extends WFrame {
 									}
 
 									@Override
-									protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 										final Content c = GuiSignOption.this.entry.getContent();
 										if (c!=null) {
 											final boolean blocked = c.meta.isBlocked();

@@ -6,7 +6,6 @@ import java.awt.Color;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,11 +50,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiSettings extends WPanel {
-	public static final ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
-	public static final ResourceLocation update = new ResourceLocation("signpic", "textures/gui/update.png");
+	public static final @Nonnull ResourceLocation settings = new ResourceLocation("signpic", "textures/gui/settings.png");
+	public static final @Nonnull ResourceLocation update = new ResourceLocation("signpic", "textures/gui/update.png");
 
 	protected boolean show = true;
-	protected VMotion bottom = V.pm(0f);
+	protected @Nonnull VMotion bottom = V.pm(0f);
 	protected boolean closing;
 
 	public void show() {
@@ -72,7 +71,7 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.instance.informationUpdateGui.get();
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.getConfig().informationUpdateGui.get();
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
@@ -137,7 +136,7 @@ public class GuiSettings extends WPanel {
 							protected void initWidget() {
 								add(new WBase(new R(Coord.top(5), Coord.left(3), Coord.width(90), Coord.height(26))) {
 									@Override
-									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+									public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 										final Area a = getGuiPosition(pgp);
 										texture().bindTexture(settings);
 										OpenGL.glColor4f(1, 1, 1, 1);
@@ -157,8 +156,8 @@ public class GuiSettings extends WPanel {
 												check(getConfig().get());
 											}
 
-											private ConfigProperty<Boolean> getConfig() {
-												return Config.instance.multiplayPAAS;
+											private @Nonnull ConfigProperty<Boolean> getConfig() {
+												return Config.getConfig().multiplayPAAS;
 											}
 
 											@Override
@@ -388,7 +387,7 @@ public class GuiSettings extends WPanel {
 						}
 
 						@Override
-						protected void onChanged(final String oldText, final String newText) {
+						protected void onChanged(final @Nonnull String oldText, final @Nonnull String newText) {
 							if (!StringUtils.equals(oldText, newText)) {
 								if (!StringUtils.equals(newText, GuiApis.this.typesetting.getConfig()))
 									GuiApis.this.typesetting.setConfig(newText);
@@ -409,7 +408,7 @@ public class GuiSettings extends WPanel {
 	static class Key extends WPanel {
 		protected @Nonnull Setting setting;
 
-		public Key(final @Nonnull R position, final @Nullable Setting setting) {
+		public Key(final @Nonnull R position, final @Nonnull Setting setting) {
 			super(position);
 			this.setting = setting;
 		}
@@ -443,7 +442,7 @@ public class GuiSettings extends WPanel {
 				}
 
 				@Override
-				protected void onChanged(final String oldText, final String newText) {
+				protected void onChanged(final @Nonnull String oldText, final @Nonnull String newText) {
 					if (!StringUtils.equals(oldText, newText)&&!StringUtils.equals(newText, Key.this.setting.getConfig()))
 						Key.this.setting.setConfig(newText);
 				}

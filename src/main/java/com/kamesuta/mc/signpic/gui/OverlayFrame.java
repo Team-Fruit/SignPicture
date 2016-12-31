@@ -134,7 +134,7 @@ public class OverlayFrame extends WFrame {
 				public void run() {
 					final @Nonnull VMotion o = V.pm(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
-						protected Timer timer = new Timer();
+						protected @Nonnull Timer timer = new Timer();
 
 						private boolean removed;
 
@@ -157,7 +157,7 @@ public class OverlayFrame extends WFrame {
 								}
 
 								@Override
-								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
 									WRenderer.startShape();
 									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
@@ -184,7 +184,7 @@ public class OverlayFrame extends WFrame {
 								}
 
 								@Override
-								public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+								public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 									return o.isFinished();
 								}
 							});

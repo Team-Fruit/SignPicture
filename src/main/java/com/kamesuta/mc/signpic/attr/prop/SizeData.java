@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.attr.prop;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +16,8 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 	public static final float Default = 1f;
 	public static final float Unknown = Float.NaN;
 
-	public static final SizeData DefaultSize = new AbsSizeData(Default, Default);
-	public static final SizeData UnknownSize = new AbsSizeData(Unknown, Unknown);
+	public static final @Nonnull SizeData DefaultSize = new AbsSizeData(Default, Default);
+	public static final @Nonnull SizeData UnknownSize = new AbsSizeData(Unknown, Unknown);
 
 	public abstract float getWidth();
 
@@ -34,40 +35,42 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		return Math.min(getWidth(), getHeight());
 	}
 
-	public SizeData scale(final float scale) {
+	public @Nonnull SizeData scale(final float scale) {
 		return new AbsSizeData(getWidth()*scale, getHeight()*scale);
 	}
 
 	@Override
-	public SizeData per() {
+	public @Nonnull SizeData per() {
 		return this;
 	}
 
 	@Override
-	public SizeData per(final float per, final @Nullable SizeData before) {
+	public @Nonnull SizeData per(final float per, final @Nullable SizeData before) {
 		// return new SizeData(getWidth()*per+before.getWidth()*(1f-per), getHeight()*per+before.getHeight()*(1f-per));
-		return new PerSizeData(this, before, per);
+		if (before!=null)
+			return new PerSizeData(this, before, per);
+		return this;
 	}
 
 	@Override
-	public String compose() {
+	public @Nonnull String compose() {
 		return (vaildWidth() ? ShortestFloatFormatter.format(getWidth()) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(getHeight()) : "");
 	}
 
-	public abstract SizeData aspectSize(final SizeData availableaspect);
+	public abstract @Nonnull SizeData aspectSize(final @Nullable SizeData availableaspect);
 
-	public static SizeData create(final float width, final float height) {
+	public static @Nonnull SizeData create(final float width, final float height) {
 		return new AbsSizeData(width, height);
 	}
 
-	public static SizeData create(final @Nullable SizeData base, final SizeData diff) {
+	public static @Nonnull SizeData create(final @Nullable SizeData base, final @Nonnull SizeData diff) {
 		if (base==null)
 			return create(diff.getWidth(), diff.getHeight());
 		else
 			return new DiffSizeData(base, diff);
 	}
 
-	public static SizeData create(final Area area) {
+	public static @Nonnull SizeData create(final @Nonnull Area area) {
 		return create(area.w(), area.h());
 	}
 
@@ -101,7 +104,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public SizeData aspectSize(final SizeData availableaspect) {
+		public @Nonnull SizeData aspectSize(final @Nullable SizeData availableaspect) {
 			if (availableaspect==null)
 				return this;
 			else if (vaildWidth()&&vaildHeight())
@@ -115,17 +118,17 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return "AbsSizeData [width="+getWidth()+", height="+getHeight()+"]";
 		}
 	}
 
 	public static class PerSizeData extends SizeData {
-		private final SizeData after;
-		private final SizeData before;
+		private final @Nonnull SizeData after;
+		private final @Nonnull SizeData before;
 		private final float per;
 
-		public PerSizeData(final SizeData after, final SizeData before, final float per) {
+		public PerSizeData(final @Nonnull SizeData after, final @Nonnull SizeData before, final float per) {
 			this.after = after;
 			this.before = before;
 			this.per = per;
@@ -152,21 +155,21 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public SizeData aspectSize(final SizeData availableaspect) {
+		public @Nonnull SizeData aspectSize(final @Nullable SizeData availableaspect) {
 			return new PerSizeData(this.after.aspectSize(availableaspect), this.before.aspectSize(availableaspect), this.per);
 		}
 
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return "PerSizeData [after="+this.after+", before="+this.before+", per="+this.per+", (width="+getWidth()+", height="+getHeight()+")]";
 		}
 	}
 
 	public static class DiffSizeData extends SizeData {
-		private final SizeData base;
-		private final SizeData diff;
+		private final @Nonnull SizeData base;
+		private final @Nonnull SizeData diff;
 
-		public DiffSizeData(final SizeData base, final SizeData diff) {
+		public DiffSizeData(final @Nonnull SizeData base, final @Nonnull SizeData diff) {
 			this.base = base;
 			this.diff = diff;
 		}
@@ -192,12 +195,12 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public SizeData aspectSize(final SizeData availableaspect) {
+		public @Nonnull SizeData aspectSize(final @Nullable SizeData availableaspect) {
 			return this.diff.aspectSize(this.base.aspectSize(availableaspect));
 		}
 
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return "PerSizeData [base="+this.base+", diff="+this.diff+", (width="+getWidth()+", height="+getHeight()+")]";
 		}
 	}
@@ -205,31 +208,31 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 	public static enum ImageSizes {
 		RAW {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				return new AbsSizeData(w, h);
 			}
 		},
 		MAX {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				return new AbsSizeData(maxw, maxh);
 			}
 		},
 		WIDTH {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				return new AbsSizeData(maxw, h*maxw/w);
 			}
 		},
 		HEIGHT {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				return new AbsSizeData(w*maxh/h, maxh);
 			}
 		},
 		INNER {
 			@Override
-			public SizeData size(final float w, final float h, float maxw, float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, float maxw, float maxh) {
 				if (w<0)
 					maxw *= -1;
 				if (h<0)
@@ -240,7 +243,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		},
 		OUTER {
 			@Override
-			public SizeData size(final float w, final float h, float maxw, float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, float maxw, float maxh) {
 				if (w<0)
 					maxw *= -1;
 				if (h<0)
@@ -251,7 +254,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		},
 		WIDTH_LIMIT {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				if (w<maxw)
 					return new AbsSizeData(w, h);
 				else
@@ -260,7 +263,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		},
 		HEIGHT_LIMIT {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				if (h<maxh)
 					return new AbsSizeData(w, h);
 				else
@@ -269,7 +272,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		},
 		LIMIT {
 			@Override
-			public SizeData size(final float w, final float h, final float maxw, final float maxh) {
+			public @Nonnull SizeData size(final float w, final float h, final float maxw, final float maxh) {
 				if (w>h)
 					if (w<maxw)
 						return new AbsSizeData(w, h);
@@ -283,9 +286,9 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		},
 		;
 
-		public abstract SizeData size(float w, float h, float maxw, float maxh);
+		public abstract @Nonnull SizeData size(float w, float h, float maxw, float maxh);
 
-		public SizeData defineSize(float rawWidth, float rawHeight, float maxWidth, float maxHeight) {
+		public @Nonnull SizeData defineSize(float rawWidth, float rawHeight, float maxWidth, float maxHeight) {
 			if (Float.isNaN(rawWidth)&&Float.isNaN(maxWidth)||Float.isNaN(rawHeight)&&Float.isNaN(maxHeight))
 				throw new IllegalArgumentException("No Size Defined");
 			if (Float.isNaN(rawWidth))
@@ -299,26 +302,27 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 			return size(rawWidth, rawHeight, maxWidth, maxHeight);
 		}
 
-		public SizeData defineSize(final SizeData raw, final float maxWidth, final float maxHeight) {
+		public @Nonnull SizeData defineSize(final @Nullable SizeData raw, final float maxWidth, final float maxHeight) {
 			if (raw==null)
 				return new AbsSizeData(maxWidth, maxHeight);
 			return defineSize(raw.getWidth(), raw.getHeight(), maxWidth, maxHeight);
 		}
 
-		public SizeData defineSize(final float rawWidth, final float rawHeight, final SizeData max) {
-			if (max==null)
-				return new AbsSizeData(rawWidth, rawHeight);
-			return defineSize(rawWidth, rawHeight, max.getWidth(), max.getHeight());
+		public @Nonnull SizeData defineSize(final float rawWidth, final float rawHeight, final @Nullable SizeData max) {
+			if (max!=null)
+				return defineSize(rawWidth, rawHeight, max.getWidth(), max.getHeight());
+			return new AbsSizeData(rawWidth, rawHeight);
 		}
 
-		public SizeData defineSize(final SizeData raw, final SizeData max) {
-			if (raw==null&&max==null)
-				throw new IllegalArgumentException("No Size Defined");
-			else if (raw==null)
+		public @Nonnull SizeData defineSize(final @Nullable SizeData raw, final @Nullable SizeData max) {
+			if (raw!=null&&max!=null)
+				return defineSize(raw.getWidth(), raw.getHeight(), max.getWidth(), max.getHeight());
+			else if (raw==null&&max!=null)
 				return max;
-			else if (max==null)
+			else if (max==null&&raw!=null)
 				return raw;
-			return defineSize(raw.getWidth(), raw.getHeight(), max.getWidth(), max.getHeight());
+			else
+				throw new IllegalArgumentException("No Size Defined");
 		}
 	}
 
@@ -327,54 +331,54 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		public float height = SizeData.Unknown;
 
 		@Override
-		public SizeData diff(final @Nullable SizeData base) {
+		public @Nonnull SizeData diff(final @Nullable SizeData base) {
 			return SizeData.create(base, SizeData.create(this.width, this.height));
 		}
 
-		public SizeBuilder setSize(final float width, final float height) {
+		public @Nonnull SizeBuilder setSize(final float width, final float height) {
 			this.width = width;
 			this.height = height;
 			return this;
 		}
 
-		public SizeBuilder setWidth(final float width) {
+		public @Nonnull SizeBuilder setWidth(final float width) {
 			this.width = width;
 			return this;
 		}
 
-		public SizeBuilder setHeight(final float height) {
+		public @Nonnull SizeBuilder setHeight(final float height) {
 			this.height = height;
 			return this;
 		}
 
-		public SizeBuilder setWidth(final String width) {
+		public @Nonnull SizeBuilder setWidth(final @Nullable String width) {
 			this.width = NumberUtils.toFloat(width, SizeData.Unknown);
 			return this;
 		}
 
-		public SizeBuilder setHeight(final String height) {
+		public @Nonnull SizeBuilder setHeight(final @Nullable String height) {
 			this.height = NumberUtils.toFloat(height, SizeData.Unknown);
 			return this;
 		}
 
-		public SizeBuilder setSize(final String width, final String height) {
+		public @Nonnull SizeBuilder setSize(final @Nullable String width, final @Nullable String height) {
 			return setWidth(width).setHeight(height);
 		}
 
-		public SizeBuilder setSize(final Area a) {
+		public @Nonnull SizeBuilder setSize(final @Nonnull Area a) {
 			return setSize(a.w(), a.h());
 		}
 
-		public SizeBuilder setSize(final SizeData size) {
+		public @Nonnull SizeBuilder setSize(final @Nonnull SizeData size) {
 			return setSize(size.getWidth(), size.getHeight());
 		}
 
-		public SizeBuilder setSize(final SizeBuilder size) {
+		public @Nonnull SizeBuilder setSize(final @Nonnull SizeBuilder size) {
 			return setSize(size.width, size.height);
 		}
 
 		@Override
-		public boolean parse(final String src, final String key, final String value) {
+		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
 			if (StringUtils.equals(key, ""))
 				this.width = NumberUtils.toFloat(value, SizeData.Unknown);
 			else if (StringUtils.equals(key, "x"))
@@ -385,17 +389,17 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public String compose() {
+		public @Nonnull String compose() {
 			return diff(null).compose();
 		}
 
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return compose();
 		}
 
 		@Override
-		public SizeBuilder clone() {
+		public @Nonnull SizeBuilder clone() {
 			try {
 				return (SizeBuilder) super.clone();
 			} catch (final Exception e) {
@@ -413,7 +417,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public boolean equals(final Object obj) {
+		public boolean equals(final @Nullable Object obj) {
 			if (this==obj)
 				return true;
 			if (obj==null)

@@ -99,23 +99,23 @@ public class ContentMeta {
 		/**
 		 * content Base URL
 		 */
-		public String url;
+		public @Nullable String url;
 		/**
 		 * content URL Stacks
 		 */
-		public URIStacks urlstack;
+		public @Nullable URIStacks urlstack;
 		/**
 		 * image meta data
 		 */
-		public String imagemeta;
+		public @Nullable String imagemeta;
 		/**
 		 * meta ID
 		 */
-		public String metaid;
+		public @Nullable String metaid;
 		/**
 		 * cache ID
 		 */
-		public String cacheid;
+		public @Nullable String cacheid;
 		/**
 		 * download try count
 		 */

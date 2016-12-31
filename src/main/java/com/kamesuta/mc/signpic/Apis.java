@@ -175,7 +175,7 @@ public class Apis {
 			return this.settingmap;
 		}
 
-		public @Nonnull E solve(final @Nonnull String name) {
+		public @Nullable E solve(final @Nonnull String name) {
 			return getSettingMap().get(name);
 		}
 	}

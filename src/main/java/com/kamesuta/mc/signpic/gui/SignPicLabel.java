@@ -27,12 +27,12 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import net.minecraft.util.ResourceLocation;
 
 public class SignPicLabel extends WBase {
-	public static final ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
-	protected EntryId entryId;
-	protected ContentManager manager;
-	protected EntryId update;
+	public static final @Nonnull ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
+	protected @Nullable EntryId entryId;
+	protected @Nonnull ContentManager manager;
+	protected @Nullable EntryId update;
 
-	public SignPicLabel(final R position, final ContentManager manager) {
+	public SignPicLabel(final @Nonnull R position, final @Nonnull ContentManager manager) {
 		super(position);
 		this.manager = manager;
 		if (Informations.instance.isUpdateRequired()) {
@@ -46,7 +46,7 @@ public class SignPicLabel extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 		final Area a = getGuiPosition(pgp);
 		final float opacity = getGuiOpacity(popacity);
 		final EntryId entryId = getEntryId();
@@ -75,13 +75,13 @@ public class SignPicLabel extends WBase {
 		}
 	}
 
-	public static void drawEntry(final Area a, final float opacity, @Nonnull final Entry entry) {
+	public static void drawEntry(final @Nonnull Area a, final float opacity, final @Nonnull Entry entry) {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
 		final CompoundAttr attr = entry.getMeta();
 		final Content content = entry.getContent();
-		final SizeData size00 = attr!=null ? attr.sizes.getMovie().get() : SizeData.DefaultSize;
+		final SizeData size00 = attr.sizes.getMovie().get();
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 		final SizeData size1 = size00.aspectSize(size01);
 		final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(a));
@@ -96,11 +96,11 @@ public class SignPicLabel extends WBase {
 		OpenGL.glEnable(GL_CULL_FACE);
 	}
 
-	public EntryId getEntryId() {
+	public @Nullable EntryId getEntryId() {
 		return this.entryId;
 	}
 
-	public SignPicLabel setEntryId(final EntryId entryId) {
+	public @Nonnull SignPicLabel setEntryId(final @Nullable EntryId entryId) {
 		this.entryId = entryId;
 		return this;
 	}

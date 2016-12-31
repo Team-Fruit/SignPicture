@@ -31,13 +31,13 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected int lastbutton = -1;
 	protected boolean closeRequest;
 
-	public WFrame setWidth(final float width) {
+	public @Nonnull WFrame setWidth(final float width) {
 		this.width = width;
 		super.width = (int) width;
 		return this;
 	}
 
-	public WFrame setHeight(final float height) {
+	public @Nonnull WFrame setHeight(final float height) {
 		this.height = height;
 		super.height = (int) height;
 		return this;
@@ -63,35 +63,35 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	public WFrame() {
 	}
 
-	public Area getAbsolute() {
+	public @Nonnull Area getAbsolute() {
 		return new Area(0, 0, width(), height());
 	}
 
-	public Point getMouseAbsolute() {
+	public @Nonnull Point getMouseAbsolute() {
 		return new Point(Mouse.getX()*width()/this.mc.displayWidth,
 				height()-Mouse.getY()*height()/this.mc.displayHeight-1);
 	}
 
 	@Override
-	public List<WCommon> getContainer() {
+	public @Nonnull List<WCommon> getContainer() {
 		return getContentPane().getContainer();
 	}
 
 	@Override
-	public boolean add(final WCommon widget) {
+	public boolean add(final @Nonnull WCommon widget) {
 		return getContentPane().add(widget);
 	}
 
 	@Override
-	public boolean remove(final WCommon widget) {
+	public boolean remove(final @Nonnull WCommon widget) {
 		return getContentPane().remove(widget);
 	}
 
-	public WPanel getContentPane() {
+	public @Nonnull WPanel getContentPane() {
 		return this.contentPane;
 	}
 
-	public void setContentPane(final WPanel panel) {
+	public void setContentPane(final @Nonnull WPanel panel) {
 		this.contentPane = panel;
 	}
 
@@ -294,7 +294,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		return this.parent!=null&&this.parent.doesGuiPauseGame();
 	}
 
-	public WFrame setGuiPauseGame(final boolean doesPause) {
+	public @Nonnull WFrame setGuiPauseGame(final boolean doesPause) {
 		this.doesPauseGui = doesPause;
 		return this;
 	}

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -19,11 +21,11 @@ import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetPropBuilder;
 import net.minecraft.client.resources.I18n;
 
 public class GuiOffset extends WPanel {
-	protected OffsetPropBuilder x;
-	protected OffsetPropBuilder y;
-	protected OffsetPropBuilder z;
+	protected @Nonnull OffsetPropBuilder x;
+	protected @Nonnull OffsetPropBuilder y;
+	protected @Nonnull OffsetPropBuilder z;
 
-	public GuiOffset(final R position, final OffsetPropBuilder x, final OffsetPropBuilder y, final OffsetPropBuilder z) {
+	public GuiOffset(final @Nonnull R position, final @Nonnull OffsetPropBuilder x, final @Nonnull OffsetPropBuilder y, final @Nonnull OffsetPropBuilder z) {
 		super(position);
 		this.x = x;
 		this.y = y;
@@ -41,7 +43,7 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 				return label.isFinished();
 			}
 		}.setText(I18n.format("signpic.gui.editor.offset.category")));
@@ -61,7 +63,7 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			protected VMotion addDelay(final VMotion c) {
+			protected VMotion addDelay(final @Nonnull VMotion c) {
 				return c.add(Motion.blank(1*.025f));
 			}
 		});
@@ -81,7 +83,7 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			protected VMotion addDelay(final VMotion c) {
+			protected VMotion addDelay(final @Nonnull VMotion c) {
 				return c.add(Motion.blank(2*.025f));
 			}
 		});
@@ -101,7 +103,7 @@ public class GuiOffset extends WPanel {
 			}
 
 			@Override
-			protected VMotion addDelay(final VMotion c) {
+			protected VMotion addDelay(final @Nonnull VMotion c) {
 				return c.add(Motion.blank(3*.025f));
 			}
 		});
@@ -111,17 +113,17 @@ public class GuiOffset extends WPanel {
 	}
 
 	protected abstract class OffsetElement extends WPanel {
-		public MLabel label;
-		public MNumber number;
-		protected VMotion left;
-		protected OffsetPropBuilder offset;
+		public @Nonnull MLabel label;
+		public @Nonnull MNumber number;
+		protected @Nonnull VMotion left;
+		protected @Nonnull OffsetPropBuilder offset;
 
-		public OffsetElement(final R position, final VMotion left, final int i, final OffsetPropBuilder offset) {
+		public OffsetElement(final @Nonnull R position, final @Nonnull VMotion left, final int i, final @Nonnull OffsetPropBuilder offset) {
 			super(position);
 			this.label = new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)));
 			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
 				@Override
-				protected void onNumberChanged(final String oldText, final String newText) {
+				protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
 					if (NumberUtils.isNumber(newText))
 						set(NumberUtils.toFloat(newText));
 					else
@@ -167,7 +169,7 @@ public class GuiOffset extends WPanel {
 			return this.offset.get();
 		}
 
-		protected VMotion addDelay(final VMotion c) {
+		protected VMotion addDelay(final @Nonnull VMotion c) {
 			return c;
 		}
 
@@ -178,7 +180,7 @@ public class GuiOffset extends WPanel {
 		}
 
 		@Override
-		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+		public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 			return this.left.isFinished();
 		}
 	}

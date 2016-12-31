@@ -2,20 +2,22 @@ package com.kamesuta.mc.signpic.mode;
 
 import java.util.EnumSet;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.util.Sign;
 
 public class CurrentMode {
-	public static final CurrentMode instance = new CurrentMode();
+	public static final @Nonnull CurrentMode instance = new CurrentMode();
 
 	private CurrentMode() {
 	}
 
 	private boolean isShortening;
-	private EntryId handSign = EntryId.blank;
-	private EntryId entryId = EntryId.blank;
-	private Mode mode = Mode.NONE;
-	private final EnumSet<State> states = EnumSet.noneOf(State.class);
+	private @Nonnull EntryId handSign = EntryId.blank;
+	private @Nonnull EntryId entryId = EntryId.blank;
+	private @Nonnull Mode mode = Mode.NONE;
+	private final @Nonnull EnumSet<State> states = EnumSet.noneOf(State.class);
 
 	public void setShortening(final boolean isShortening) {
 		this.isShortening = isShortening;
@@ -25,7 +27,7 @@ public class CurrentMode {
 		return this.isShortening;
 	}
 
-	public void setMode(final Mode mode) {
+	public void setMode(final @Nonnull Mode mode) {
 		this.mode = mode;
 	}
 
@@ -37,15 +39,15 @@ public class CurrentMode {
 		return getMode()!=Mode.NONE;
 	}
 
-	public boolean isMode(final Mode mode) {
+	public boolean isMode(final @Nonnull Mode mode) {
 		return getMode()==mode;
 	}
 
-	public Mode getMode() {
+	public @Nonnull Mode getMode() {
 		return this.mode;
 	}
 
-	public void setState(final State state, final boolean enable) {
+	public void setState(final @Nonnull State state, final boolean enable) {
 		if (enable)
 			this.states.add(state);
 		else
@@ -56,24 +58,24 @@ public class CurrentMode {
 		return !this.states.isEmpty();
 	}
 
-	public boolean isState(final State state) {
+	public boolean isState(final @Nonnull State state) {
 		return this.states.contains(state);
 	}
 
-	public void setEntryId(final EntryId sign) {
+	public void setEntryId(final @Nonnull EntryId sign) {
 		this.entryId = sign;
 		Sign.updatePreview(sign);
 	}
 
-	public EntryId getEntryId() {
+	public @Nonnull EntryId getEntryId() {
 		return this.entryId;
 	}
 
-	public void setHandSign(final EntryId sign) {
+	public void setHandSign(final @Nonnull EntryId sign) {
 		this.handSign = sign;
 	}
 
-	public EntryId getHandSign() {
+	public @Nonnull EntryId getHandSign() {
 		return this.handSign;
 	}
 
@@ -81,9 +83,9 @@ public class CurrentMode {
 		PLACE("signpic.over.mode.place"), OPTION("signpic.over.mode.option"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
 		;
 
-		public final String message;
+		public final @Nonnull String message;
 
-		private Mode(final String message) {
+		private Mode(final @Nonnull String message) {
 			this.message = message;
 		}
 	}

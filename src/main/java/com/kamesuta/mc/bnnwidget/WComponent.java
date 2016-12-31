@@ -12,39 +12,39 @@ public class WComponent extends WGui implements WCommon {
 	}
 
 	@Override
-	public void onInit(final WEvent ev, final Area pgp, final Point p) {
+	public void onInit(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 	}
 
 	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 	}
 
 	@Override
-	public boolean keyTyped(final WEvent ev, final Area pgp, final Point p, final char c, final int keycode) {
+	public boolean keyTyped(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final char c, final int keycode) {
 		return false;
 	}
 
 	@Override
-	public boolean mouseScrolled(final WEvent ev, final Area pgp, final Point p, final int scroll) {
+	public boolean mouseScrolled(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int scroll) {
 		return false;
 	}
 
 	@Override
-	public boolean mouseMoved(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseMoved(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 		return false;
 	}
 
 	@Override
-	public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 		return false;
 	}
 
 	@Override
-	public boolean mouseDragged(final WEvent ev, final Area pgp, final @Nonnull Point p, final int button, final long time) {
+	public boolean mouseDragged(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button, final long time) {
 		return false;
 	}
 
