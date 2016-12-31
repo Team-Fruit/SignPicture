@@ -79,12 +79,10 @@ public class StateRender {
 		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2)/2, 0, 0xffffff);
 		OpenGL.glPopMatrix();
 		final String msg3 = content.state.getMessage();
-		if (msg3!=null) {
-			OpenGL.glPushMatrix();
-			OpenGL.glScalef(f3, f3, 1f);
-			fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3)/2, fontrenderer.FONT_HEIGHT, 0xffffff);
-			OpenGL.glPopMatrix();
-		}
+		OpenGL.glPushMatrix();
+		OpenGL.glScalef(f3, f3, 1f);
+		fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3)/2, fontrenderer.FONT_HEIGHT, 0xffffff);
+		OpenGL.glPopMatrix();
 	}
 
 	public static enum LoadingCircleType {
