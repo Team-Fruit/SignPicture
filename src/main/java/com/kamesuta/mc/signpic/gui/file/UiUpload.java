@@ -67,7 +67,7 @@ public abstract class UiUpload {
 	 * @wbp.parser.entryPoint
 	 */
 	protected void initialize() {
-		final JDialog frame = new JDialog();
+		final JDialog frame = this.frame = new JDialog();
 		frame.setTitle(getString("signpic.ui.title"));
 		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		frame.setUndecorated(true);
@@ -190,7 +190,7 @@ public abstract class UiUpload {
 		btnselect.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(final @Nullable ActionEvent ev) {
-				final FileDialog fileDialog = new FileDialog(UiUpload.this.frame, getString("signpic.ui.title.file"), FileDialog.LOAD);
+				final FileDialog fileDialog = new FileDialog(frame, getString("signpic.ui.title.file"), FileDialog.LOAD);
 				fileDialog.setVisible(true);
 				final String dir = fileDialog.getDirectory();
 				final String name = fileDialog.getFile();
@@ -231,19 +231,17 @@ public abstract class UiUpload {
 		frame.setMinimumSize(minsize);
 
 		final ComponentResizer cr = new ComponentResizer();
-		cr.registerComponent(this.frame);
+		cr.registerComponent(frame);
 		cr.setMinimumSize(minsize);
 		cr.setEdgeInsets(null);
 
-		final ComponentMover cm = new ComponentMover(this.frame);
+		final ComponentMover cm = new ComponentMover(frame);
 		cm.registerComponent(title);
 		cm.setChangeCursor(false);
 		cm.setEdgeInsets(null);
 
 		frame.setSize(400, 400);
 		frame.setLocationRelativeTo(null);
-
-		this.frame = frame;
 	}
 
 	protected abstract @Nullable BufferedImage getImage(final @Nonnull String path);

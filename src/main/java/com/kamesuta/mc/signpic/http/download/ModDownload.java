@@ -25,6 +25,7 @@ import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
+import com.kamesuta.mc.signpic.information.Info.Version;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
@@ -46,19 +47,26 @@ public class ModDownload extends Communicate implements Progressable {
 	public void communicate() {
 		final Informations.InfoState state = Informations.instance.getState();
 		final Informations.InfoSource source = Informations.instance.getSource();
-		final Informations.InfoVersion online = source.onlineVersion();
 		File tmp = null;
 		InputStream input = null;
 		OutputStream output = null;
 		try {
 			setCurrent();
-			final String stringurl = online.version.remote;
-			final String stringlocal = online.version.local;
+			if (source==null)
+				throw new IllegalStateException("No update data available");
+			final Informations.InfoVersion online = source.onlineVersion();
+			final Version version = online.version;
+			if (version==null)
+				throw new IllegalStateException("Invalid version data");
+			final String stringremote = version.remote;
+			final String stringlocal = version.local;
 			final String local;
-			if (!StringUtils.isEmpty(stringlocal))
+			if (stringlocal!=null&&!StringUtils.isEmpty(stringlocal))
 				local = stringlocal;
+			else if (stringremote!=null&&!StringUtils.isEmpty(stringremote))
+				local = stringremote.substring(stringremote.lastIndexOf("/")+1, stringremote.length());
 			else
-				local = stringurl.substring(stringurl.lastIndexOf("/")+1, stringurl.length());
+				throw new IllegalStateException("No update url provided in repository");
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
@@ -66,7 +74,7 @@ public class ModDownload extends Communicate implements Progressable {
 
 			state.downloading = true;
 
-			final HttpUriRequest req = new HttpGet(new URI(online.version.remote));
+			final HttpUriRequest req = new HttpGet(new URI(version.remote));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 
