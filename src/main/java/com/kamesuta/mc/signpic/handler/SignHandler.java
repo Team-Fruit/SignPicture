@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
@@ -48,9 +51,9 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static Field guiEditSignTileEntity;
-	private static Field guiRepairTextField;
-	private static Field guiRepairContainer;
+	private static @Nullable Field guiEditSignTileEntity;
+	private static @Nullable Field guiRepairTextField;
+	private static @Nullable Field guiRepairContainer;
 
 	public static void init() {
 		try {
@@ -80,12 +83,12 @@ public class SignHandler {
 		}
 	}
 
-	private GuiRepair repairGuiTask;
-	private String repairGuiTextFieldCache;
+	private @Nullable GuiRepair repairGuiTask;
+	private @Nullable String repairGuiTextFieldCache;
 	private boolean isPlaceMode;
 
 	@CoreEvent
-	public void onSign(final GuiOpenEvent event) {
+	public void onSign(final @Nonnull GuiOpenEvent event) {
 		this.repairGuiTask = null;
 		this.repairGuiTextFieldCache = null;
 		final EntryId handSign = CurrentMode.instance.getHandSign();
@@ -143,10 +146,12 @@ public class SignHandler {
 				final EntryId entryId = CurrentMode.instance.getEntryId();
 				if (!entryId.isNameable())
 					break check;
-				if (guiRepairTextField!=null&&guiRepairContainer!=null)
+				final Field fTextField = guiRepairTextField;
+				final Field fContainer = guiRepairContainer;
+				if (fTextField!=null&&fContainer!=null)
 					try {
-						final GuiTextField textField = (GuiTextField) guiRepairTextField.get(this.repairGuiTask);
-						final ContainerRepair containerRepair = (ContainerRepair) guiRepairContainer.get(this.repairGuiTask);
+						final GuiTextField textField = (GuiTextField) fTextField.get(this.repairGuiTask);
+						final ContainerRepair containerRepair = (ContainerRepair) fContainer.get(this.repairGuiTask);
 						if (textField!=null&&containerRepair!=null) {
 							final String text = textField.getText();
 							if (!StringUtils.isEmpty(text)&&!StringUtils.equals(this.repairGuiTextFieldCache, text)) {
@@ -163,10 +168,10 @@ public class SignHandler {
 			}
 	}
 
-	protected VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
+	protected @Nonnull VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
 
 	@CoreEvent
-	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
+	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
 		if (event.gui instanceof GuiRepair)
 			if (this.repairGuiTask!=null&&this.isPlaceMode) {
 				final int xSize = 176;
@@ -189,7 +194,7 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onClick(final MouseEvent event) {
+	public void onClick(final @Nonnull MouseEvent event) {
 		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100) {
 			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
 			EntryId handEntry = null;
@@ -221,7 +226,7 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onTooltip(final ItemTooltipEvent event) {
+	public void onTooltip(final @Nonnull ItemTooltipEvent event) {
 		if (event.itemStack.getItem()==Items.sign) {
 			final ItemEntryId id = EntryId.fromItemStack(event.itemStack);
 			final Entry entry = id.entry();
@@ -236,19 +241,17 @@ public class SignHandler {
 					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
 					final CompoundAttr meta = entry.getMeta();
-					if (meta!=null) {
-						final SizeData size = meta.sizes.getMovie().get();
-						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
-						final OffsetData offset = meta.offsets.getMovie().get();
-						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
-						// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-						if (id.hasName()&&entry.contentId!=null)
-							event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-						// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
-						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
-					}
+					final SizeData size = meta.sizes.getMovie().get();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
+					final OffsetData offset = meta.offsets.getMovie().get();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					if (id.hasName()&&entry.contentId!=null)
+						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 				}
-			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
+			} else if (Config.getConfig().signTooltip.get()||!Config.getConfig().guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());

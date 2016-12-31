@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -13,7 +14,7 @@ public interface IModCommand extends ICommand {
 	String getFullCommandString();
 
 	@Override
-	@Nonnull
+	@Nullable
 	List<String> getCommandAliases();
 
 	int getRequiredPermissionLevel();

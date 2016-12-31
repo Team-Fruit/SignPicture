@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -39,7 +40,9 @@ public class CommandHelpers {
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".format").useTranslation().setStyle(header).setParams(command.getFullCommandString()).sendPlayer(sender);
 		final ChatStyle body = new ChatStyle();
 		body.setColor(EnumChatFormatting.GRAY);
-		ChatBuilder.create("signpic.command.aliases").useTranslation().setStyle(body).setParams(command.getCommandAliases().toString().replace("[", "").replace("]", "")).sendPlayer(sender);
+		final List<String> aliases = command.getCommandAliases();
+		if (aliases!=null)
+			ChatBuilder.create("signpic.command.aliases").useTranslation().setStyle(body).setParams(aliases.toString().replace("[", "").replace("]", "")).sendPlayer(sender);
 		ChatBuilder.create("signpic.command.permlevel").useTranslation().setStyle(body).setParams(Integer.valueOf(command.getRequiredPermissionLevel())).sendPlayer(sender);
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".help").useTranslation().setStyle(body).sendPlayer(sender);
 		if (!command.getChildren().isEmpty()) {
@@ -53,7 +56,7 @@ public class CommandHelpers {
 
 	}
 
-	public static @Nonnull List<String> completeCommands(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command, final @Nonnull String[] args) {
+	public static @Nullable List<String> completeCommands(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command, final @Nonnull String[] args) {
 		if (args.length>=2) {
 			final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 			while (arg2.hasNext()) {
@@ -83,7 +86,8 @@ public class CommandHelpers {
 			final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 			while (arg2.hasNext()) {
 				final SubCommand child = arg2.next();
-				if (matches(args[0], child)) {
+				final String arg = args[0];
+				if (arg!=null&&child!=null&&matches(arg, child)) {
 					processChildCommand(sender, child, args);
 					return true;
 				}
@@ -97,8 +101,9 @@ public class CommandHelpers {
 		if (commandName.equals(command.getCommandName()))
 			return true;
 		else {
-			if (command.getCommandAliases()!=null) {
-				final Iterator<String> arg1 = command.getCommandAliases().iterator();
+			final List<String> aliases = command.getCommandAliases();
+			if (aliases!=null) {
+				final Iterator<String> arg1 = aliases.iterator();
 				while (arg1.hasNext()) {
 					final String alias = arg1.next();
 					if (commandName.equals(alias))

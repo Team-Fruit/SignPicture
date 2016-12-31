@@ -55,9 +55,9 @@ public class EntryId {
 	}
 
 	public static @Nonnull EntryId from(final @Nullable String string) {
-		if (StringUtils.isEmpty(string))
-			return blank;
-		return new EntryId(string);
+		if (string!=null&&!StringUtils.isEmpty(string))
+			return new EntryId(string);
+		return blank;
 	}
 
 	public static @Nonnull EntryId fromStrings(final @Nullable String[] strings) {

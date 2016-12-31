@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -17,8 +18,10 @@ public class RootCommand extends CommandBase implements IModCommand {
 	public static final @Nonnull String ROOT_COMMAND_NAME = "signpic";
 	private final @Nonnull SortedSet<SubCommand> children = new TreeSet<SubCommand>(new Comparator<SubCommand>() {
 		@Override
-		public int compare(final @Nonnull SubCommand o1, final @Nonnull SubCommand o2) {
-			return o1.compareTo(o2);
+		public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
+			if (o1!=null&&o2!=null)
+				return o1.compareTo(o2);
+			return 0;
 		}
 	});
 
@@ -43,26 +46,29 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public @Nonnull List<String> getCommandAliases() {
+	public @Nullable List<String> getCommandAliases() {
 		final ArrayList<String> aliases = Lists.newArrayList();
 		aliases.add("signpicture");
 		return aliases;
 	}
 
 	@Override
-	public @Nonnull String getCommandUsage(final @Nonnull ICommandSender sender) {
+	public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
 		return "/"+getCommandName()+" help";
 	}
 
 	@Override
-	public void processCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
-		if (!CommandHelpers.processCommands(sender, this, args))
-			CommandHelpers.throwWrongUsage(sender, this);
+	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+		if (sender!=null&&args!=null)
+			if (!CommandHelpers.processCommands(sender, this, args))
+				CommandHelpers.throwWrongUsage(sender, this);
 	}
 
 	@Override
-	public @Nonnull List<String> addTabCompletionOptions(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
-		return CommandHelpers.completeCommands(sender, this, args);
+	public @Nullable List<String> addTabCompletionOptions(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+		if (sender!=null&&args!=null)
+			return CommandHelpers.completeCommands(sender, this, args);
+		return null;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.command;
 import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
@@ -32,7 +33,7 @@ public class CommandVersion extends SubCommand {
 		}
 
 		@Override
-		public void processCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
+		public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) {
 			Config.getConfig().informationJoinBeta.set(false);
 			super.processCommand(sender, args);
 		}

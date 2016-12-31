@@ -6,7 +6,7 @@ import static java.lang.annotation.RetentionPolicy.*;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-@Retention(SOURCE)
+@Retention(RUNTIME)
 @Target(PACKAGE)
 public @interface NonNullByDefault {
 

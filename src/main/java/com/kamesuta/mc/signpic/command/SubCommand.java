@@ -6,6 +6,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 
@@ -16,7 +17,7 @@ public abstract class SubCommand implements IModCommand {
 	private final @Nonnull String name;
 	private final @Nonnull List<String> aliases = Lists.newArrayList();
 	private @Nonnull SubCommand.PermLevel permLevel;
-	private @Nonnull IModCommand parent;
+	private @Nullable IModCommand parent;
 	private final @Nonnull SortedSet<SubCommand> children;
 
 	public static enum PermLevel {
@@ -34,8 +35,10 @@ public abstract class SubCommand implements IModCommand {
 
 		this.children = new TreeSet<SubCommand>(new Comparator<SubCommand>() {
 			@Override
-			public int compare(final @Nonnull SubCommand o1, final @Nonnull SubCommand o2) {
-				return o1.compareTo(o2);
+			public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
+				if (o1!=null&&o2!=null)
+					return o1.compareTo(o2);
+				return 0;
 			}
 		});
 		this.name = name;
@@ -52,7 +55,7 @@ public abstract class SubCommand implements IModCommand {
 		return this;
 	}
 
-	void setParent(final @Nonnull IModCommand parent) {
+	void setParent(final @Nullable IModCommand parent) {
 		this.parent = parent;
 	}
 
@@ -71,17 +74,17 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nonnull List<?> addTabCompletionOptions(final @Nonnull ICommandSender p_71516_1_, final @Nonnull String[] p_71516_2_) {
+	public @Nullable List<?> addTabCompletionOptions(final @Nullable ICommandSender p_71516_1_, final @Nullable String[] p_71516_2_) {
 		return null;
 	}
 
 	@Override
-	public void processCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
-		if (!CommandHelpers.processCommands(sender, this, args))
+	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+		if (sender!=null&&args!=null&&!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}
 
-	public @Nonnull List<String> completeCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
+	public @Nullable List<String> completeCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
 		return CommandHelpers.completeCommands(sender, this, args);
 	}
 
@@ -100,17 +103,19 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(final @Nonnull ICommandSender sender) {
-		return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
-	}
-
-	@Override
-	public boolean isUsernameIndex(final @Nonnull String[] args, final int index) {
+	public boolean canCommandSenderUseCommand(final @Nullable ICommandSender sender) {
+		if (sender!=null)
+			return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
 		return false;
 	}
 
 	@Override
-	public @Nonnull String getCommandUsage(final @Nonnull ICommandSender sender) {
+	public boolean isUsernameIndex(final @Nullable String[] args, final int index) {
+		return false;
+	}
+
+	@Override
+	public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
 		return "/"+getFullCommandString()+" help";
 	}
 
@@ -121,15 +126,19 @@ public abstract class SubCommand implements IModCommand {
 
 	@Override
 	public @Nonnull String getFullCommandString() {
-		return this.parent.getFullCommandString()+" "+getCommandName();
+		if (this.parent!=null)
+			return this.parent.getFullCommandString()+" "+getCommandName();
+		return " "+getCommandName();
 	}
 
-	public int compareTo(final @Nonnull ICommand command) {
-		return getCommandName().compareTo(command.getCommandName());
+	public int compareTo(final @Nullable ICommand command) {
+		if (command!=null)
+			return getCommandName().compareTo(command.getCommandName());
+		return 0;
 	}
 
 	@Override
-	public int compareTo(final @Nonnull Object command) {
+	public int compareTo(final @Nullable Object command) {
 		return this.compareTo((ICommand) command);
 	}
 }

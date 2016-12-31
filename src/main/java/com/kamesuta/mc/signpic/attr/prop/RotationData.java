@@ -270,7 +270,7 @@ public abstract class RotationData {
 		public float y = 0;
 		public float z = 0;
 		public float angle = 0;
-		public @Nonnull KeyRotation base;
+		public @Nullable KeyRotation base;
 
 		@Override
 		public @Nonnull DiffRotation diff(@Nullable KeyRotation base) {
