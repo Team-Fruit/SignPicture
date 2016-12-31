@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -17,13 +17,13 @@ public abstract class DynamicImageTexture implements ImageTexture {
 
 	protected final int width;
 	protected final int height;
-	private final ImageSize size;
+	private final SizeData size;
 	private int id = -1;
 
 	public DynamicImageTexture(final int width, final int height) {
 		this.width = width;
 		this.height = height;
-		this.size = new ImageSize().setSize(width, height);
+		this.size = SizeData.create(width, height);
 	}
 
 	public DynamicImageTexture load() {
@@ -40,7 +40,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 	public abstract boolean hasMipmap();
 
 	@Override
-	public ImageSize getSize() {
+	public SizeData getSize() {
 		return this.size;
 	}
 

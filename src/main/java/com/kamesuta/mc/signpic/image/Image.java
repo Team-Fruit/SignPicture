@@ -2,22 +2,22 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.bnnwidget.WRenderer;
+import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.renderer.Tessellator;
 
 public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
-	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
 	protected final Content content;
 
 	public Image(final Content content) {
@@ -28,17 +28,17 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 
 	public abstract String getLocal();
 
-	public ImageSize getSize() {
+	public SizeData getSize() {
 		if (this.content.state.getType()==StateType.AVAILABLE)
 			return getTexture().getSize();
 		else
-			return DefaultSize;
+			return SizeData.DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final boolean r, final boolean m) {
+	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final BlendType b, final BlendType d, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
+			WRenderer.startTexture(b, d);
 			final Tessellator t = Tessellator.instance;
-			RenderHelper.startTexture();
 			final ImageTexture image = getTexture();
 			image.bind();
 
@@ -73,6 +73,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 				OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag);
 				OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min);
 			}
+			WRenderer.startTexture();
 		}
 	}
 }

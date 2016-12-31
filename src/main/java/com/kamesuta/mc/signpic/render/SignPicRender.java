@@ -3,14 +3,15 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.WGui;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -50,7 +51,7 @@ public class SignPicRender extends WGui {
 				if ((int) (System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
 
-					RenderHelper.startTexture();
+					WRenderer.startTexture();
 					OpenGL.glPushMatrix();
 					OpenGL.glTranslatef(5f, 5f, 0f);
 					OpenGL.glScalef(2f, 2f, 1f);
@@ -60,7 +61,7 @@ public class SignPicRender extends WGui {
 					OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 					texture().bindTexture(resSign);
-					RenderHelper.startTexture();
+					WRenderer.startTexture();
 					RenderHelper.drawRectTexture(GL_QUADS);
 
 					OpenGL.glPopMatrix();
@@ -81,17 +82,17 @@ public class SignPicRender extends WGui {
 				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
 					final String uri = entry.contentId.getURI();
-					final ImageMeta meta = entry.getMeta();
-					final ImageSize signsize = meta.size;
+					final CompoundAttr meta = entry.getMeta();
+					final SizeData signsize = meta.sizes.getMovie().get();
 					final Content content = entry.content();
-					final ImageSize imagesize = content.image.getSize();
-					final ImageSize viewsize = new ImageSize().setAspectSize(meta.size, imagesize);
+					final SizeData imagesize = content.image.getSize();
+					final SizeData viewsize = signsize.aspectSize(imagesize);
 					final String advmsg = content.state.getMessage();
 
 					event.left.add("");
 					event.left.add(I18n.format("signpic.over.sign", entry.id.id()));
 					event.left.add(I18n.format("signpic.over.id", uri));
-					event.left.add(I18n.format("signpic.over.size", signsize, signsize.width, signsize.height, imagesize.width, imagesize.height, viewsize.width, viewsize.height));
+					event.left.add(I18n.format("signpic.over.size", signsize, signsize.getWidth(), signsize.getHeight(), imagesize.getWidth(), imagesize.getHeight(), viewsize.getWidth(), viewsize.getHeight()));
 					event.left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
 					if (entry.isNotSupported())
 						event.left.add(I18n.format("signpic.over.advmsg", I18n.format("signpic.state.format.unsupported")));

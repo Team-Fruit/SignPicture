@@ -6,6 +6,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
@@ -17,9 +18,9 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -58,11 +59,21 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 						if (content.state.getType()==StateType.AVAILABLE) {
-							final ImageTextureMap map = GuiImage.this.entry.getMeta().map;
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(map.o*0.1f));
-							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
+							final CompoundAttr meta = GuiImage.this.entry.getMeta();
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(meta.o.getMovie().get().data*0.1f));
+							content.image.draw(
+									meta.u.getMovie().get().data,
+									meta.v.getMovie().get().data,
+									meta.w.getMovie().get().data,
+									meta.h.getMovie().get().data,
+									meta.c.getMovie().get().data,
+									meta.s.getMovie().get().data,
+									meta.b.getMovie().get().data,
+									meta.d.getMovie().get().data,
+									meta.r.getMovie().get().data,
+									meta.m.getMovie().get().data);
 						} else {
-							RenderHelper.startShape();
+							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
 							OpenGL.glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
 							draw(0, 0, 1, 1, GL_LINE_LOOP);
@@ -79,7 +90,7 @@ public class GuiImage extends WFrame {
 							if (content.state.getType()==StateType.ERROR) {
 								OpenGL.glPushMatrix();
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
-								RenderHelper.startTexture();
+								WRenderer.startTexture();
 								texture().bindTexture(resError);
 								RenderHelper.drawRectTexture(GL_QUADS);
 								OpenGL.glPopMatrix();
@@ -103,7 +114,7 @@ public class GuiImage extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 						if (GuiImage.this.entry.isNotSupported()) {
-							RenderHelper.startShape();
+							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
 							OpenGL.glColor4f(1f, 1f, 1f, 1f);
 							OpenGL.glPushMatrix();
@@ -129,7 +140,7 @@ public class GuiImage extends WFrame {
 			final Area a = getGuiPosition(pgp);
 			texture().bindTexture(GuiSettings.update);
 			OpenGL.glColor4f(144f/256f, 191f/256f, 48f/256f, 1f);
-			RenderHelper.startTexture();
+			WRenderer.startTexture();
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 			OpenGL.glRotatef(this.rot.get()*360, 0, 0, 1);

@@ -10,6 +10,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
@@ -27,6 +28,7 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -36,7 +38,6 @@ import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -88,7 +89,7 @@ public class GuiMain extends WFrame {
 
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-						RenderHelper.startShape();
+						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
 						draw(getGuiPosition(pgp));
 					}
@@ -130,7 +131,8 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiMain.this.signbuilder.getMeta().offset) {
+				final OffsetBuilder offset = GuiMain.this.signbuilder.getMeta().offset;
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), offset.x, offset.y, offset.z) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
@@ -412,7 +414,7 @@ public class GuiMain extends WFrame {
 		public void apply() {
 			final EntryId entryId = EntryId.from(getText());
 			if (entryId.hasMeta())
-				GuiMain.this.signbuilder.setMeta(entryId.getMeta());
+				GuiMain.this.signbuilder.setMeta(entryId.getMetaBuilder());
 			if (entryId.hasContentId()) {
 				String url = entryId.getContentId().getURI();
 				setText(url = Apis.instance.replaceURL(url));

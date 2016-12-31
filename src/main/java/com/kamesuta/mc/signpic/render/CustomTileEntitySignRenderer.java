@@ -2,13 +2,16 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
@@ -31,20 +34,21 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		// Load Image
 		final Content content = entry.content();
 
-		final ImageMeta meta = entry.getMeta();
+		final CompoundAttr meta = entry.getMeta();
 
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(meta.size, content.image.getSize());
+		final SizeData size = meta.sizes.getMovie().get().aspectSize(content.image.getSize());
 
 		OpenGL.glPushMatrix();
 
-		OpenGL.glTranslatef(meta.offset.x, meta.offset.y, meta.offset.z);
-		meta.rotation.rotate();
+		final OffsetData offset = meta.offsets.getMovie().get();
+		OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
+		RotationGL.glRotate(meta.rotations.getMovie().get().getRotate());
 
-		OpenGL.glTranslatef(-size.width/2, size.height+(size.height>=0 ? 0 : -size.height)-.5f, 0f);
+		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
 		OpenGL.glScalef(1f, -1f, 1f);
 
-		entry.gui.drawScreen(0, 0, 0, opacity, size.width, size.height);
+		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
 
 		OpenGL.glPopMatrix();
 	}
@@ -80,7 +84,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		final Entry entry = EntryId.fromTile(tile).entry();
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.instance.renderSeeOpacity.get().floatValue());
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
@@ -100,7 +104,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			OpenGL.glPopMatrix();
 		} else {
 			if (opacity<1f) {
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);

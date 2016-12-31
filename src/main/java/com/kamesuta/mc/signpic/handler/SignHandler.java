@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WGui;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -16,17 +17,18 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiRepair;
@@ -172,7 +174,7 @@ public class SignHandler {
 				final int guiLeft = (event.gui.width-xSize)/2;
 				final int guiTop = (event.gui.height-ySize)/2;
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				WGui.texture().bindTexture(MPanel.background);
 				final Area a = new Area(guiLeft-42, guiTop, guiLeft, guiTop+49);
 				MPanel.drawBack(a);
@@ -233,13 +235,15 @@ public class SignHandler {
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
 					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
-					final ImageMeta meta = entry.getMeta();
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					final CompoundAttr meta = entry.getMeta();
+					final SizeData size = meta.sizes.getMovie().get();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
+					final OffsetData offset = meta.offsets.getMovie().get();
+					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
 					if (id.hasName())
 						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 				}
 			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {

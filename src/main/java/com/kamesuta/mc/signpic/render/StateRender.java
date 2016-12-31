@@ -2,6 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import org.lwjgl.util.Color;
 
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.state.Progress;
 
@@ -37,7 +38,7 @@ public class StateRender {
 	public static void drawLoading(final Progress progress, final LoadingCircle type, final LoadingCircleType speed) {
 		if (type!=LoadingCircle.DEFAULT) {
 			OpenGL.glLineWidth(3f);
-			RenderHelper.startShape();
+			WRenderer.startShape();
 
 			OpenGL.glPushMatrix();
 			OpenGL.glScalef(.5f, .5f, 1f);
@@ -60,7 +61,7 @@ public class StateRender {
 	}
 
 	public static void drawMessage(final Content content, final FontRenderer fontrenderer) {
-		RenderHelper.startTexture();
+		WRenderer.startTexture();
 		final float f1 = 0.6666667F;
 		float f3 = 0.06666668F*f1;
 		OpenGL.glTranslatef(0f, 1f, 0f);

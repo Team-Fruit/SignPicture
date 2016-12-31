@@ -5,6 +5,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelectButton;
@@ -22,7 +23,6 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.resources.I18n;
 
@@ -79,7 +79,7 @@ public class GuiSignOption extends WFrame {
 					@Override
 					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
-						RenderHelper.startShape();
+						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity));
 						draw(a);
 						super.draw(ev, pgp, p, frame, popacity);
@@ -153,7 +153,7 @@ public class GuiSignOption extends WFrame {
 										final Entry old = CurrentMode.instance.getEntryId().entry();
 										final EntryIdBuilder idb = new EntryIdBuilder();
 										idb.setURI(content ? GuiSignOption.this.entry.contentId.getID() : old.contentId.getID());
-										idb.setMeta(meta ? GuiSignOption.this.entry.getMeta() : old.getMeta());
+										idb.setMeta(meta ? GuiSignOption.this.entry.getMetaBuilder() : old.getMetaBuilder());
 										CurrentMode.instance.setEntryId(idb.build());
 									}
 								});

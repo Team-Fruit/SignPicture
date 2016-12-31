@@ -6,6 +6,7 @@ import java.awt.Color;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -14,7 +15,6 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
@@ -73,7 +73,7 @@ public class MButton extends WBase {
 		final float opacity = getGuiOpacity(popacity);
 
 		if (Config.instance.informationTryNew.get()) {
-			RenderHelper.startShape();
+			WRenderer.startShape();
 			if (isEnabled()) {
 				OpenGL.glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
@@ -87,7 +87,7 @@ public class MButton extends WBase {
 				OpenGL.glColor4f(.5f, .5f, .5f, opacity);
 			draw(a, GL_LINE_LOOP);
 		} else {
-			RenderHelper.startTexture();
+			WRenderer.startTexture();
 			OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity);
 			texture().bindTexture(button);
 			final int state = !isEnabled() ? 0 : a.pointInside(p) ? 2 : 1;
@@ -120,7 +120,7 @@ public class MButton extends WBase {
 
 	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
-		RenderHelper.startTexture();
+		WRenderer.startTexture();
 		final Color c = new Color(getTextColour(ev, pgp, p, frame));
 		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) (c.getAlpha()*opacity));
 		drawString(this.text, a, Align.CENTER, VerticalAlign.MIDDLE, true);

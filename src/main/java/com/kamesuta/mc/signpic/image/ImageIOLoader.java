@@ -21,10 +21,10 @@ import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.LoadCanceledException;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
-import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
 import com.kamesuta.mc.signpic.lib.GifDecoder;
 import com.kamesuta.mc.signpic.lib.GifDecoder.GifImage;
 import com.kamesuta.mc.signpic.state.Progress;
@@ -34,9 +34,9 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader implements ILoadCancelable {
-	public static final ImageSize MAX_SIZE = new ImageSize().setSize(
-			Config.instance.imageWidthLimit.get()>0 ? Config.instance.imageWidthLimit.get() : ImageSize.unknownSize,
-			Config.instance.imageHeightLimit.get()>0 ? Config.instance.imageHeightLimit.get() : ImageSize.unknownSize);
+	public static final SizeData MAX_SIZE = SizeData.create(
+			Config.instance.imageWidthLimit.get()>0 ? Config.instance.imageWidthLimit.get() : SizeData.Unknown,
+			Config.instance.imageHeightLimit.get()>0 ? Config.instance.imageHeightLimit.get() : SizeData.Unknown);
 	public static float DefaultDelay = .05f;
 
 	protected Content content;
@@ -77,7 +77,7 @@ public class ImageIOLoader implements ILoadCancelable {
 			final GifImage gifImage = GifDecoder.read(stream = this.input.createInput());
 			final int width = gifImage.getWidth();
 			final int height = gifImage.getHeight();
-			final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, width, height, MAX_SIZE);
+			final SizeData newsize = ImageSizes.LIMIT.defineSize(width, height, MAX_SIZE);
 
 			final List<Pair<Float, DynamicImageTexture>> textures = Lists.newArrayList();
 			final int frameCount = gifImage.getFrameCount();
@@ -87,7 +87,7 @@ public class ImageIOLoader implements ILoadCancelable {
 					throw new LoadCanceledException();
 				final BufferedImage image = gifImage.getFrame(i);
 				final int delay = gifImage.getDelay(i);
-				textures.add(Pair.of(delay/100f, DynamicImageTexture.create(image, (int) newsize.width, (int) newsize.height)));
+				textures.add(Pair.of(delay/100f, DynamicImageTexture.create(image, (int) newsize.getWidth(), (int) newsize.getHeight())));
 				this.content.state.getProgress().done = i;
 			}
 			return new RemoteImageTexture(textures);
@@ -106,9 +106,9 @@ public class ImageIOLoader implements ILoadCancelable {
 			reader.dispose();
 			imagestream.close();
 		}
-		final ImageSize newsize = new ImageSize().setSize(ImageSizes.LIMIT, canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
+		final SizeData newsize = ImageSizes.LIMIT.defineSize(canvas.getWidth(), canvas.getHeight(), MAX_SIZE);
 		final List<Pair<Float, DynamicImageTexture>> textures = Lists.newArrayList();
-		textures.add(Pair.of(0f, DynamicImageTexture.create(canvas, (int) newsize.width, (int) newsize.height)));
+		textures.add(Pair.of(0f, DynamicImageTexture.create(canvas, (int) newsize.getWidth(), (int) newsize.getHeight())));
 		return new RemoteImageTexture(textures);
 	}
 
