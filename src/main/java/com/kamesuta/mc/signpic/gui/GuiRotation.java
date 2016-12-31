@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.gui;
 import java.util.ListIterator;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
@@ -26,10 +28,10 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder.ImageRotat
 import net.minecraft.client.resources.I18n;
 
 public class GuiRotation extends WPanel {
-	protected RotationEditor editor;
-	protected RotationPanel panel;
+	protected @Nonnull RotationEditor editor;
+	protected @Nonnull RotationPanel panel;
 
-	public GuiRotation(final R position, final RotationBuilder rotation) {
+	public GuiRotation(final @Nonnull R position, final @Nonnull RotationBuilder rotation) {
 		super(position);
 		final VMotion left = V.pm(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		this.editor = new RotationEditor(new R(Coord.left(left), Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
@@ -40,7 +42,7 @@ public class GuiRotation extends WPanel {
 			}
 
 			@Override
-			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 				return left.isFinished();
 			}
 		};
@@ -58,7 +60,7 @@ public class GuiRotation extends WPanel {
 			}
 
 			@Override
-			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 				return label.isFinished();
 			}
 		}.setText(I18n.format("signpic.gui.editor.rotation.category")));
@@ -66,7 +68,7 @@ public class GuiRotation extends WPanel {
 		add(this.panel);
 	}
 
-	protected void add(final ImageRotate rotate) {
+	protected void add(final @Nonnull ImageRotate rotate) {
 		this.panel.add(rotate);
 		this.panel.update();
 	}
@@ -80,7 +82,7 @@ public class GuiRotation extends WPanel {
 	}
 
 	protected class RotationEditor extends WPanel {
-		public RotationEditor(final R position) {
+		public RotationEditor(final @Nonnull R position) {
 			super(position);
 		}
 
@@ -88,14 +90,14 @@ public class GuiRotation extends WPanel {
 		protected void initWidget() {
 			add(new MButton(new R(Coord.ptop(0), Coord.right(15), Coord.width(15), Coord.pheight(1f))) {
 				@Override
-				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+				protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 					GuiRotation.this.add(new ImageRotate(RotateType.X, 0));
 					return true;
 				}
 			}.setText(I18n.format("signpic.gui.editor.rotation.add")));
 			add(new MButton(new R(Coord.ptop(0), Coord.right(0), Coord.width(15), Coord.pheight(1f))) {
 				@Override
-				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+				protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 					GuiRotation.this.remove();
 					return true;
 				}
@@ -104,10 +106,10 @@ public class GuiRotation extends WPanel {
 	}
 
 	protected class RotationPanel extends WPanel {
-		private final Map<ImageRotate, RotationElement> map = Maps.newHashMap();
-		protected final RotationBuilder rotation;
+		private final @Nonnull Map<ImageRotate, RotationElement> map = Maps.newHashMap();
+		protected final @Nonnull RotationBuilder rotation;
 
-		public RotationPanel(final R position, final RotationBuilder rotation) {
+		public RotationPanel(final @Nonnull R position, final @Nonnull RotationBuilder rotation) {
 			super(position);
 			this.rotation = rotation;
 			for (final ListIterator<ImageRotate> itr = rotation.rotates.listIterator(); itr.hasNext();) {
@@ -122,7 +124,7 @@ public class GuiRotation extends WPanel {
 			update();
 		}
 
-		public void add(final ImageRotate rotate) {
+		public void add(final @Nonnull ImageRotate rotate) {
 			final int n = this.rotation.rotates.size();
 			if (n<3) {
 				this.rotation.rotates.add(rotate);
@@ -137,7 +139,7 @@ public class GuiRotation extends WPanel {
 			}
 		}
 
-		public void up(final ImageRotate rotate) {
+		public void up(final @Nonnull ImageRotate rotate) {
 			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
 			if (i!=-1&&i>0) {
 				final ImageRotate prev = RotationPanel.this.rotation.rotates.get(i-1);
@@ -147,7 +149,7 @@ public class GuiRotation extends WPanel {
 			}
 		}
 
-		public void down(final ImageRotate rotate) {
+		public void down(final @Nonnull ImageRotate rotate) {
 			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
 			if (i!=-1&&i<RotationPanel.this.rotation.rotates.size()-1) {
 				final ImageRotate next = RotationPanel.this.rotation.rotates.get(i+1);
@@ -157,7 +159,7 @@ public class GuiRotation extends WPanel {
 			}
 		}
 
-		private void addWidget(final ImageRotate rotate, final int n) {
+		private void addWidget(final @Nonnull ImageRotate rotate, final int n) {
 			final float t = n*15;
 			final VMotion left = V.pm(-1f).add(Motion.blank(t/15f*.025f)).add(Easings.easeOutBack.move(.25f, 0f)).start();
 			final VMotion top = V.am(t);
@@ -176,11 +178,11 @@ public class GuiRotation extends WPanel {
 		}
 
 		protected class RotationElement extends WPanel {
-			protected ImageRotate rotate;
-			protected VMotion left;
-			protected VMotion top;
+			protected @Nonnull ImageRotate rotate;
+			protected @Nonnull VMotion left;
+			protected @Nonnull VMotion top;
 
-			public RotationElement(final R position, final VMotion left, final VMotion top, final ImageRotate rotate) {
+			public RotationElement(final @Nonnull R position, final @Nonnull VMotion left, final @Nonnull VMotion top, final @Nonnull ImageRotate rotate) {
 				super(position);
 				this.left = left;
 				this.top = top;
@@ -197,7 +199,7 @@ public class GuiRotation extends WPanel {
 					}
 
 					@Override
-					protected void onNumberChanged(final String oldText, final String newText) {
+					protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
 						if (NumberUtils.isNumber(newText))
 							RotationElement.this.rotate.rotate = NumberUtils.toFloat(newText);
 						else
@@ -223,14 +225,14 @@ public class GuiRotation extends WPanel {
 				}.setNegLabel(I18n.format("signpic.gui.editor.rotation.neg")).setPosLabel(I18n.format("signpic.gui.editor.rotation.pos")).setUnknownLabel(I18n.format("signpic.gui.editor.rotation.unknown")));
 				add(new MButton(new R(Coord.right(15*1), Coord.top(0), Coord.width(15), Coord.bottom(0))) {
 					@Override
-					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+					protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 						up(RotationElement.this.rotate);
 						return true;
 					}
 				}.setText(I18n.format("signpic.gui.editor.rotation.up")));
 				add(new MButton(new R(Coord.right(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0))) {
 					@Override
-					protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+					protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 						down(RotationElement.this.rotate);
 						return true;
 					}
@@ -244,26 +246,26 @@ public class GuiRotation extends WPanel {
 			}
 
 			@Override
-			public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 				return this.left.isFinished();
 			}
 
 			protected class Type extends MButton {
 				protected ImageRotate rotate;
 
-				public Type(final R position, final ImageRotate rotate) {
+				public Type(final @Nonnull R position, final @Nonnull ImageRotate rotate) {
 					super(position);
 					setText(rotate.type.name());
 					this.rotate = rotate;
 				}
 
 				@Override
-				protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+				protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 					next();
 					return true;
 				}
 
-				protected RotateType nextType(RotateType type) {
+				protected RotateType nextType(@Nonnull RotateType type) {
 					final RotateType[] rotateTypes = RotateType.values();
 					if (rotateTypes.length>0) {
 						RotateType rotateType = rotateTypes[0];
@@ -287,7 +289,7 @@ public class GuiRotation extends WPanel {
 					setText(this.rotate.type.name());
 				}
 
-				public RotateType getType() {
+				public @Nonnull RotateType getType() {
 					return this.rotate.type;
 				}
 			}

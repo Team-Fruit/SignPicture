@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
@@ -23,6 +26,7 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -48,9 +52,9 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static Field guiEditSignTileEntity;
-	private static Field guiRepairTextField;
-	private static Field guiRepairContainer;
+	private static @Nullable Field guiEditSignTileEntity;
+	private static @Nullable Field guiRepairTextField;
+	private static @Nullable Field guiRepairContainer;
 
 	public static void init() {
 		try {
@@ -80,12 +84,12 @@ public class SignHandler {
 		}
 	}
 
-	private GuiRepair repairGuiTask;
-	private String repairGuiTextFieldCache;
+	private @Nullable GuiRepair repairGuiTask;
+	private @Nullable String repairGuiTextFieldCache;
 	private boolean isPlaceMode;
 
 	@CoreEvent
-	public void onSign(final GuiOpenEvent event) {
+	public void onSign(final @Nonnull GuiOpenEvent event) {
 		this.repairGuiTask = null;
 		this.repairGuiTextFieldCache = null;
 		final EntryId handSign = CurrentMode.instance.getHandSign();
@@ -123,8 +127,11 @@ public class SignHandler {
 				else
 					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
 			} else if (event.gui instanceof GuiRepair) {
-				if (!entryId.isNameable())
-					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
+				if (!entryId.isNameable()) {
+					final ContentId id = entryId.entry().contentId;
+					if (id!=null)
+						ShortenerApiUtil.requestShoretning(id);
+				}
 				this.repairGuiTask = (GuiRepair) event.gui;
 				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 					CurrentMode.instance.setMode();
@@ -143,10 +150,12 @@ public class SignHandler {
 				final EntryId entryId = CurrentMode.instance.getEntryId();
 				if (!entryId.isNameable())
 					break check;
-				if (guiRepairTextField!=null&&guiRepairContainer!=null)
+				final Field fTextField = guiRepairTextField;
+				final Field fContainer = guiRepairContainer;
+				if (fTextField!=null&&fContainer!=null)
 					try {
-						final GuiTextField textField = (GuiTextField) guiRepairTextField.get(this.repairGuiTask);
-						final ContainerRepair containerRepair = (ContainerRepair) guiRepairContainer.get(this.repairGuiTask);
+						final GuiTextField textField = (GuiTextField) fTextField.get(this.repairGuiTask);
+						final ContainerRepair containerRepair = (ContainerRepair) fContainer.get(this.repairGuiTask);
 						if (textField!=null&&containerRepair!=null) {
 							final String text = textField.getText();
 							if (!StringUtils.isEmpty(text)&&!StringUtils.equals(this.repairGuiTextFieldCache, text)) {
@@ -163,10 +172,10 @@ public class SignHandler {
 			}
 	}
 
-	protected VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
+	protected @Nonnull VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
 
 	@CoreEvent
-	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
+	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
 		if (event.gui instanceof GuiRepair)
 			if (this.repairGuiTask!=null&&this.isPlaceMode) {
 				final int xSize = 176;
@@ -189,7 +198,7 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onClick(final MouseEvent event) {
+	public void onClick(final @Nonnull MouseEvent event) {
 		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100) {
 			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
 			EntryId handEntry = null;
@@ -221,7 +230,7 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onTooltip(final ItemTooltipEvent event) {
+	public void onTooltip(final @Nonnull ItemTooltipEvent event) {
 		if (event.itemStack.getItem()==Items.sign) {
 			final ItemEntryId id = EntryId.fromItemStack(event.itemStack);
 			final Entry entry = id.entry();
@@ -229,7 +238,7 @@ public class SignHandler {
 				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
 				if (id.hasName())
 					event.toolTip.set(0, id.getName());
-				else
+				else if (entry.contentId!=null)
 					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
@@ -241,12 +250,12 @@ public class SignHandler {
 					final OffsetData offset = meta.offsets.getMovie().get();
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
 					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-					if (id.hasName())
+					if (id.hasName()&&entry.contentId!=null)
 						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
 					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 				}
-			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
+			} else if (Config.getConfig().signTooltip.get()||!Config.getConfig().guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());

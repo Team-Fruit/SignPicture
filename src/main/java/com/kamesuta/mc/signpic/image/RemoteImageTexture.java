@@ -3,20 +3,22 @@ package com.kamesuta.mc.signpic.image;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.util.Timer;
 
 public class RemoteImageTexture {
 
-	protected final Timer timer = new Timer();
-	protected final List<Pair<Float, DynamicImageTexture>> textures;
+	protected final @Nonnull Timer timer = new Timer();
+	protected final @Nonnull List<Pair<Float, DynamicImageTexture>> textures;
 	protected int currenttexture = 0;
 
-	public RemoteImageTexture(final List<Pair<Float, DynamicImageTexture>> textures) {
+	public RemoteImageTexture(final @Nonnull List<Pair<Float, DynamicImageTexture>> textures) {
 		this.textures = textures;
 	}
 
-	public ImageTexture get() {
+	public @Nonnull ImageTexture get() {
 		if (this.textures.size()==1)
 			return this.textures.get(0).getRight().load();
 		else if (this.textures.size()>1) {
@@ -31,7 +33,7 @@ public class RemoteImageTexture {
 			return DynamicImageTexture.NULL;
 	}
 
-	public List<Pair<Float, DynamicImageTexture>> getAll() {
+	public @Nonnull List<Pair<Float, DynamicImageTexture>> getAll() {
 		return this.textures;
 	}
 

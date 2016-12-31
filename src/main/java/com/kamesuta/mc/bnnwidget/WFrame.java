@@ -2,33 +2,42 @@ package com.kamesuta.mc.bnnwidget;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public class WFrame extends GuiScreen implements WContainer<WCommon> {
-	protected GuiScreen parent;
-	protected WPanel contentPane = new WPanel(new R());
-	protected final WEvent event = new WEvent(this);
+	protected @Nullable GuiScreen parent;
+	protected @Nonnull WPanel contentPane = new WPanel(new R());
+	protected final @Nonnull WEvent event = new WEvent(this);
 	protected boolean initialized;
 	protected boolean doesPauseGui = true;
 	public float width;
 	public float height;
 
-	public WFrame setWidth(final float width) {
+	protected int mousebutton = -1;
+	protected @Nullable Point mouselast;
+	protected int lastbutton = -1;
+	protected boolean closeRequest;
+
+	public @Nonnull WFrame setWidth(final float width) {
 		this.width = width;
 		super.width = (int) width;
 		return this;
 	}
 
-	public WFrame setHeight(final float height) {
+	public @Nonnull WFrame setHeight(final float height) {
 		this.height = height;
 		super.height = (int) height;
 		return this;
@@ -46,42 +55,43 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		return this.height;
 	}
 
-	public WFrame(final GuiScreen parent) {
+	public WFrame(final @Nullable GuiScreen parent) {
 		this.parent = parent;
+		this.mc = Client.mc;
 	}
 
 	public WFrame() {
 	}
 
-	public Area getAbsolute() {
+	public @Nonnull Area getAbsolute() {
 		return new Area(0, 0, width(), height());
 	}
 
-	public Point getMouseAbsolute() {
+	public @Nonnull Point getMouseAbsolute() {
 		return new Point(Mouse.getX()*width()/this.mc.displayWidth,
 				height()-Mouse.getY()*height()/this.mc.displayHeight-1);
 	}
 
 	@Override
-	public List<WCommon> getContainer() {
+	public @Nonnull List<WCommon> getContainer() {
 		return getContentPane().getContainer();
 	}
 
 	@Override
-	public boolean add(final WCommon widget) {
+	public boolean add(final @Nonnull WCommon widget) {
 		return getContentPane().add(widget);
 	}
 
 	@Override
-	public boolean remove(final WCommon widget) {
+	public boolean remove(final @Nonnull WCommon widget) {
 		return getContentPane().remove(widget);
 	}
 
-	public WPanel getContentPane() {
+	public @Nonnull WPanel getContentPane() {
 		return this.contentPane;
 	}
 
-	public void setContentPane(final WPanel panel) {
+	public void setContentPane(final @Nonnull WPanel panel) {
 		this.contentPane = panel;
 	}
 
@@ -111,11 +121,11 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	@Override
-	public void setWorldAndResolution(final Minecraft mc, final int i, final int j) {
+	public void setWorldAndResolution(final @Nullable Minecraft mc, final int i, final int j) {
 		sSetWorldAndResolution(mc, i, j);
 	}
 
-	protected void sSetWorldAndResolution(final Minecraft mc, final int i, final int j) {
+	protected void sSetWorldAndResolution(final @Nullable Minecraft mc, final int i, final int j) {
 		if (this.parent!=null)
 			this.parent.setWorldAndResolution(mc, i, j);
 		super.setWorldAndResolution(mc, i, j);
@@ -138,16 +148,15 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	}
 
 	protected void sDrawScreen(final int mousex, final int mousey, final float f) {
-		if (this.parent!=null) {
+		final GuiScreen parent = this.parent;
+		if (parent!=null) {
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0, 0, -200f);
-			this.parent.drawScreen(mousex, mousey, f);
+			parent.drawScreen(mousex, mousey, f);
 			OpenGL.glPopMatrix();
 		}
 		super.drawScreen(mousex, mousey, f);
 	}
-
-	protected int mousebutton = -1;
 
 	@Override
 	protected void mouseClicked(final int x, final int y, final int button) {
@@ -182,9 +191,6 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 	protected void sMouseClickMove(final int x, final int y, final int button, final long time) {
 		super.mouseClickMove(x, y, button, time);
 	}
-
-	protected Point mouselast;
-	protected int lastbutton = -1;
 
 	@Override
 	public void updateScreen() {
@@ -224,8 +230,6 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		if (keycode==Keyboard.KEY_ESCAPE)
 			requestClose();
 	}
-
-	protected boolean closeRequest;
 
 	protected void onCloseRequest() {
 		final Area gp = getAbsolute();
@@ -290,7 +294,7 @@ public class WFrame extends GuiScreen implements WContainer<WCommon> {
 		return this.parent!=null&&this.parent.doesGuiPauseGame();
 	}
 
-	public WFrame setGuiPauseGame(final boolean doesPause) {
+	public @Nonnull WFrame setGuiPauseGame(final boolean doesPause) {
 		this.doesPauseGui = doesPause;
 		return this;
 	}

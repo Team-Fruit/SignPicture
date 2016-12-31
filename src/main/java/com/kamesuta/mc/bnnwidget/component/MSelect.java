@@ -2,8 +2,10 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.bnnwidget.WCommon;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -11,24 +13,13 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
-public class MSelect extends WPanel {
-	public MButton neg;
-	public MChatTextField field;
-	public MButton pos;
+public abstract class MSelect<E> extends WPanel {
+	protected final float buttonwidth;
 
-	protected float buttonwidth;
+	public @Nonnull MButton neg;
+	public @Nonnull MButton pos;
 
-	public Selector<String> selector = new ListSelector();
-
-	public void setSelector(final Selector<String> selector) {
-		this.selector = selector;
-	}
-
-	protected Selector<String> getSelector() {
-		return this.selector;
-	}
-
-	public MSelect(final R position, final float buttonwidth) {
+	public MSelect(@Nonnull final R position, final float buttonwidth) {
 		super(position);
 		this.buttonwidth = buttonwidth;
 		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
@@ -40,7 +31,6 @@ public class MSelect extends WPanel {
 			}
 		}.setText("<");
 		add(this.neg);
-		add(getField());
 		this.pos = new MButton(new R(Coord.right(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -52,39 +42,22 @@ public class MSelect extends WPanel {
 		add(this.pos);
 	}
 
-	@Override
-	protected void initWidget() {
-		setText(getSelector().get());
-	}
+	public abstract MSelect<E> setText(final @Nonnull E text);
 
-	protected WCommon getField() {
-		return this.field = new MChatTextField(new R(Coord.left(this.buttonwidth), Coord.right(this.buttonwidth), Coord.top(0), Coord.bottom(0))) {
-			@Override
-			protected void onTextChanged(final String oldText) {
-				onChanged(oldText, getText());
-			}
-		};
-	}
+	protected abstract @Nonnull Selector<E> getSelector();
 
-	protected void onChanged(final String oldText, final String newText) {
-	}
-
-	public MSelect setText(final String text) {
-		this.field.setText(text);
-		return this;
-	}
-
-	public MSelect setPosLabel(final String s) {
+	public @Nonnull MSelect<E> setPosLabel(final @Nullable String s) {
 		this.pos.setText(s);
 		return this;
 	}
 
-	public MSelect setNegLabel(final String s) {
+	public @Nonnull MSelect<E> setNegLabel(final @Nullable String s) {
 		this.neg.setText(s);
 		return this;
 	}
 
 	public static interface Selector<E> {
+		@Nonnull
 		E get();
 
 		void next();
@@ -109,13 +82,13 @@ public class MSelect extends WPanel {
 			this.current = current;
 		}
 
-		public void setCurrentPos(final E o) {
+		public void setCurrentPos(final @Nullable E o) {
 			final int i = this.indexOf(o);
 			if (i>=0)
 				setCurrentPos(i);
 		}
 
-		protected abstract int indexOf(E o);
+		protected abstract int indexOf(@Nullable E o);
 
 		protected abstract int length();
 
@@ -127,10 +100,10 @@ public class MSelect extends WPanel {
 		}
 	}
 
-	public static class ListSelector extends PosSelector<String> {
-		protected List<?> list = Lists.newArrayList();
+	public static class StringSelector extends PosSelector<String> {
+		protected @Nonnull List<?> list = Lists.newArrayList();
 
-		public void setList(final List<String> list) {
+		public void setList(final List<?> list) {
 			this.list = list;
 		}
 
@@ -144,12 +117,12 @@ public class MSelect extends WPanel {
 		}
 
 		@Override
-		protected int indexOf(final String o) {
+		protected int indexOf(final @Nullable String o) {
 			return this.list.indexOf(o);
 		}
 
 		@Override
-		public String get() {
+		public @Nonnull String get() {
 			final int length = length();
 			final int current = getCurrentPos();
 			if (current<0||current>=length)

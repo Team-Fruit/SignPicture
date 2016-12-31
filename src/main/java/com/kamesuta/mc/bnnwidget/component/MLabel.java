@@ -2,6 +2,9 @@ package com.kamesuta.mc.bnnwidget.component;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -14,45 +17,45 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class MLabel extends WBase {
 	protected int textcolor = 14737632;
-	protected String text = "";
+	protected @Nonnull String text = "";
 	protected boolean shadow;
-	protected String watermark;
+	protected @Nullable String watermark;
 	protected int watermarkcolor = 0x777777;
-	protected Align align = Align.CENTER;
-	protected VerticalAlign valign = VerticalAlign.MIDDLE;
+	protected @Nonnull Align align = Align.CENTER;
+	protected @Nonnull VerticalAlign valign = VerticalAlign.MIDDLE;
 
-	public MLabel(final R position) {
+	public @Nonnull MLabel(final @Nonnull R position) {
 		super(position);
 	}
 
-	public MLabel setAlign(final Align align) {
+	public @Nonnull MLabel setAlign(final @Nonnull Align align) {
 		this.align = align;
 		return this;
 	}
 
-	public Align getAlign() {
+	public @Nonnull Align getAlign() {
 		return this.align;
 	}
 
-	public MLabel setVerticalAlign(final VerticalAlign valign) {
+	public @Nonnull MLabel setVerticalAlign(final @Nonnull VerticalAlign valign) {
 		this.valign = valign;
 		return this;
 	}
 
-	public VerticalAlign getVerticalAlign() {
+	public @Nonnull VerticalAlign getVerticalAlign() {
 		return this.valign;
 	}
 
-	public MLabel setWatermark(final String watermark) {
+	public @Nonnull MLabel setWatermark(final @Nullable String watermark) {
 		this.watermark = watermark;
 		return this;
 	}
 
-	public String getWatermark() {
+	public @Nullable String getWatermark() {
 		return this.watermark;
 	}
 
-	public MLabel setWatermarkColor(final int watermark) {
+	public @Nonnull MLabel setWatermarkColor(final int watermark) {
 		this.watermarkcolor = watermark;
 		return this;
 	}
@@ -61,7 +64,7 @@ public class MLabel extends WBase {
 		return this.watermarkcolor;
 	}
 
-	public MLabel setShadow(final boolean b) {
+	public @Nonnull MLabel setShadow(final boolean b) {
 		this.shadow = b;
 		return this;
 	}
@@ -70,7 +73,7 @@ public class MLabel extends WBase {
 		return this.shadow;
 	}
 
-	public MLabel setColor(final int color) {
+	public @Nonnull MLabel setColor(final int color) {
 		this.textcolor = color;
 		return this;
 	}
@@ -79,7 +82,7 @@ public class MLabel extends WBase {
 		return this.textcolor;
 	}
 
-	public MLabel setText(final String s) {
+	public @Nonnull MLabel setText(final @Nonnull String s) {
 		if (StringUtils.equals(s, getText()))
 			return this;
 		final String oldText = getText();
@@ -88,42 +91,42 @@ public class MLabel extends WBase {
 		return this;
 	}
 
-	public String getText() {
+	public @Nonnull String getText() {
 		return this.text;
 	}
 
-	protected void onTextChanged(final String oldText) {
+	protected void onTextChanged(final @Nonnull String oldText) {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 		final Area out = getGuiPosition(pgp);
 		drawText(out, getGuiOpacity(popacity));
 	}
 
 	protected float wscale = 1f;
 
-	public MLabel setScaleWidth(final float f) {
+	public @Nonnull MLabel setScaleWidth(final float f) {
 		this.wscale = f;
 		return this;
 	}
 
-	public float getScaleWidth(final Area a) {
+	public float getScaleWidth(final @Nonnull Area a) {
 		return this.wscale;
 	}
 
 	protected float hscale = 1f;
 
-	public MLabel setScaleHeight(final float f) {
+	public @Nonnull MLabel setScaleHeight(final float f) {
 		this.hscale = f;
 		return this;
 	}
 
-	public float getScaleHeight(final Area a) {
+	public float getScaleHeight(final @Nonnull Area a) {
 		return this.hscale;
 	}
 
-	protected void drawText(final Area a, final float opacity) {
+	protected void drawText(final @Nonnull Area a, final float opacity) {
 		OpenGL.glPushMatrix();
 		OpenGL.glTranslated(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);
 		OpenGL.glScaled(getScaleWidth(a), getScaleHeight(a), 1);
@@ -133,10 +136,11 @@ public class MLabel extends WBase {
 		OpenGL.glColor4f(1f, 1f, 1f, opacity);
 		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
 		drawString(getText(), a, getAlign(), getVerticalAlign(), isShadow());
-		if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())) {
+		final String watermark = getWatermark();
+		if (watermark!=null&&!StringUtils.isEmpty(watermark)&&StringUtils.isEmpty(getText())) {
 			final Color w = new Color(getWatermarkColor());
 			fontColor(w.getRed(), w.getGreen(), w.getBlue(), (int) Math.max(4, opacity*c.getAlpha()));
-			drawString(getWatermark(), a, getAlign(), getVerticalAlign(), isShadow());
+			drawString(watermark, a, getAlign(), getVerticalAlign(), isShadow());
 		}
 		OpenGL.glPopMatrix();
 	}

@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.image;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.Config;
@@ -18,15 +21,15 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.renderer.Tessellator;
 
 public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
-	protected final Content content;
+	protected final @Nonnull Content content;
 
-	public Image(final Content content) {
+	public Image(final @Nonnull Content content) {
 		this.content = content;
 	}
 
-	public abstract ImageTexture getTexture() throws IllegalStateException;
+	public abstract @Nonnull ImageTexture getTexture() throws IllegalStateException;
 
-	public abstract String getLocal();
+	public abstract @Nonnull String getLocal();
 
 	public SizeData getSize() {
 		if (this.content.state.getType()==StateType.AVAILABLE)
@@ -35,7 +38,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			return SizeData.DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final BlendType b, final BlendType d, final boolean r, final boolean m) {
+	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			WRenderer.startTexture(b, d);
 			final Tessellator t = Tessellator.instance;
@@ -54,9 +57,9 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 				OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 			}
 			if (image.hasMipmap())
-				if (m&&OpenGL.openGl30()&&Config.instance.renderUseMipmap.get()) {
-					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.instance.renderMipmapTypeNearest.get() ? GL_NEAREST : GL_LINEAR);
-					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.instance.renderMipmapTypeNearest.get() ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
+				if (m&&OpenGL.openGl30()&&Config.getConfig().renderUseMipmap.get()) {
+					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.getConfig().renderMipmapTypeNearest.get() ? GL_NEAREST : GL_LINEAR);
+					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.getConfig().renderMipmapTypeNearest.get() ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
 				} else {
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

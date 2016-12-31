@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WCommon;
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -12,16 +14,16 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 
 public class MTab extends WPanel {
-	protected final CoordSide side;
+	protected final @Nonnull CoordSide side;
 	protected final float widthadd;
 	protected final float height;
-	protected final R tabarea;
-	protected final R boxarea;
-	protected Tab tab;
-	protected WBox box;
+	protected final @Nonnull R tabarea;
+	protected final @Nonnull R boxarea;
+	protected @Nonnull Tab tab;
+	protected @Nonnull WBox box;
 	protected float verticalWidth = 0f;
 
-	public MTab(final R position, final CoordSide side, final float widthadd, final float height) {
+	public MTab(final @Nonnull R position, final @Nonnull CoordSide side, final float widthadd, final float height) {
 		super(position);
 		this.side = side;
 		this.height = height;
@@ -69,11 +71,11 @@ public class MTab extends WPanel {
 	public class Tab extends WPanel {
 		protected float ileft;
 
-		public Tab(final R position) {
+		public Tab(final @Nonnull R position) {
 			super(position);
 		}
 
-		public void addTab(final String name, final WCommon widget) {
+		public void addTab(final @Nonnull String name, final @Nonnull WCommon widget) {
 			Coord cleft;
 			Coord cwidth;
 			Coord ctop;
@@ -100,21 +102,21 @@ public class MTab extends WPanel {
 	}
 
 	public class TabButton extends MButton {
-		public final WCommon widget;
+		public final @Nonnull WCommon widget;
 
-		public TabButton(final R position, final WCommon widget) {
+		public TabButton(final @Nonnull R position, final @Nonnull WCommon widget) {
 			super(position);
 			this.widget = widget;
 		}
 
 		@Override
-		protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+		protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 			MTab.this.box.add(this.widget);
 			return true;
 		}
 	}
 
-	public void addTab(final String name, final WCommon widget) {
+	public void addTab(final @Nonnull String name, final @Nonnull WCommon widget) {
 		if (this.tab.getContainer().isEmpty())
 			this.box.add(widget);
 		this.tab.addTab(name, widget);

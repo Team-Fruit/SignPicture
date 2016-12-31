@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -28,18 +31,18 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class GyazoUpload extends Communicate implements Progressable, IUploader {
-	protected UploadRequest upreq;
-	protected String key;
+	protected @Nonnull UploadRequest upreq;
+	protected @Nonnull String key;
 	protected boolean canceled;
-	protected GyazoResult result;
+	protected @Nullable GyazoResult result;
 
-	public GyazoUpload(final UploadRequest upload, final String key) {
+	public GyazoUpload(final @Nonnull UploadRequest upload, final @Nonnull String key) {
 		this.upreq = upload;
 		this.key = key;
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.upreq.getState("§3Gyazo: §r%s");
 	}
 
@@ -53,7 +56,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 		JsonReader jsonReader1 = null;
 		try {
 			setCurrent();
-			tmp = Client.location.createCache("gyazo");
+			tmp = Client.getLocation().createCache("gyazo");
 			FileUtils.copyInputStreamToFile(this.upreq.getStream(), tmp);
 
 			// create the post request.
@@ -120,16 +123,16 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 	}
 
 	public static class GyazoResult {
-		public String created_at;
-		public String image_id;
-		public String permalink_url;
-		public String thumb_url;
-		public String type;
-		public String url;
+		public @Nullable String created_at;
+		public @Nullable String image_id;
+		public @Nullable String permalink_url;
+		public @Nullable String thumb_url;
+		public @Nullable String type;
+		public @Nullable String url;
 	}
 
 	@Override
-	public String getLink() {
+	public @Nullable String getLink() {
 		if (this.result!=null)
 			return this.result.url;
 		return null;

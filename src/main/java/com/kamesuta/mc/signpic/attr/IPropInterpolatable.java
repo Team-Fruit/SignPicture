@@ -1,7 +1,10 @@
 package com.kamesuta.mc.signpic.attr;
 
-public interface IPropInterpolatable<InterFrame> {
-	public InterFrame per();
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-	public InterFrame per(final float per, final InterFrame before);
+public interface IPropInterpolatable<InterFrame> {
+	public @Nonnull InterFrame per();
+
+	public @Nonnull InterFrame per(final float per, final @Nullable InterFrame before);
 }

@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.image;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -17,16 +20,17 @@ import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ContentDownload;
+import com.kamesuta.mc.signpic.image.ImageIOLoader.InputFactory.FileInputFactory;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.StateType;
 
 public class RemoteImage extends Image {
-	protected RemoteImageTexture texture;
-	private ContentDownload downloader;
-	private ImageIOLoader ioloader;
+	protected @Nullable RemoteImageTexture texture;
+	private @Nullable ContentDownload downloader;
+	private @Nullable ImageIOLoader ioloader;
 	private boolean canceled;
 
-	public RemoteImage(final Content content) {
+	public RemoteImage(final @Nonnull Content content) {
 		super(content);
 	}
 
@@ -49,10 +53,10 @@ public class RemoteImage extends Image {
 
 			final String cacheid = this.content.meta.getCacheID();
 			ContentCache cachemeta = null;
-			if (!StringUtils.isEmpty(cacheid))
+			if (cacheid!=null&&!StringUtils.isEmpty(cacheid))
 				cachemeta = new ContentCache(ContentLocation.cachemetaLocation(cacheid));
-			if (cachemeta==null||cachemeta.isDirty()||!cachemeta.isAvailable()||!ContentLocation.cacheLocation(cacheid).exists()) {
-				if (Config.instance.contentMaxRetry.get()>0&&this.content.meta.getTryCount()>Config.instance.contentMaxRetry.get())
+			if (cachemeta==null||cachemeta.isDirty()||!cachemeta.isAvailable()||!(cacheid!=null&&ContentLocation.cacheLocation(cacheid).exists())) {
+				if (Config.getConfig().contentMaxRetry.get()>0&&this.content.meta.getTryCount()>Config.getConfig().contentMaxRetry.get())
 					throw new RetryCountOverException();
 				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);
 				this.content.state.setType(StateType.DOWNLOADING);
@@ -60,16 +64,20 @@ public class RemoteImage extends Image {
 				this.downloader = new ContentDownload(this.content);
 				this.downloader.setCallback(new ICommunicateCallback() {
 					@Override
-					public void onDone(final ICommunicateResponse res) {
+					public void onDone(final @Nonnull ICommunicateResponse res) {
 						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
 						if (res.isSuccess())
 							onDoneInit();
-						else if (res.getError()!=null)
-							RemoteImage.this.content.state.setErrorMessage(res.getError());
+						else {
+							final Throwable t = res.getError();
+							if (t!=null)
+								RemoteImage.this.content.state.setErrorMessage(t);
+						}
 						RemoteImage.this.downloader = null;
 					}
 				});
-				Communicator.instance.communicate(this.downloader);
+				if (this.downloader!=null)
+					Communicator.instance.communicate(this.downloader);
 			} else
 				onDoneInit();
 		} catch (final RetryCountOverException e) {
@@ -87,11 +95,14 @@ public class RemoteImage extends Image {
 	@Override
 	public void onAsyncProcess() {
 		try {
-			this.ioloader = new ImageIOLoader(this.content, new ImageIOLoader.InputFactory.ContentInputFactory(this.content));
-			this.texture = this.ioloader.load();
-			this.content.state.setType(StateType.LOADING);
-			this.content.state.setProgress(new Progress());
-			onDoneAsyncProcess();
+			final FileInputFactory factory = ImageIOLoader.InputFactory.FileInputFactory.createFromContent(this.content);
+			if (factory!=null) {
+				this.ioloader = new ImageIOLoader(this.content, factory);
+				this.texture = this.ioloader.load();
+				this.content.state.setType(StateType.LOADING);
+				this.content.state.setProgress(new Progress());
+				onDoneAsyncProcess();
+			}
 		} catch (final Throwable e) {
 			this.content.state.setErrorMessage(e);
 		}
@@ -102,29 +113,35 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
-	public boolean onDivisionProcess() {
-		final List<Pair<Float, DynamicImageTexture>> texs = this.texture.getAll();
-		if (this.canceled) {
-			this.content.state.setErrorMessage(new LoadCanceledException());
-			return true;
-		} else if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
-			final DynamicImageTexture tex = texs.get(this.processing).getRight();
-			tex.load();
-			this.processing++;
-			this.content.state.getProgress().done = this.processing;
-			return false;
-		} else {
-			onDoneDivisionProcess();
-			return true;
-		}
+	public boolean onDivisionProcess() throws InvaildImageException {
+		if (this.texture!=null) {
+			final List<Pair<Float, DynamicImageTexture>> texs = this.texture.getAll();
+			if (this.canceled) {
+				this.content.state.setErrorMessage(new LoadCanceledException());
+				return true;
+			} else if (this.processing<(this.content.state.getProgress().overall = texs.size())) {
+				final DynamicImageTexture tex = texs.get(this.processing).getRight();
+				tex.load();
+				this.processing++;
+				this.content.state.getProgress().done = this.processing;
+				return false;
+			} else {
+				onDoneDivisionProcess();
+				return true;
+			}
+		} else
+			throw new InvaildImageException();
 	}
 
 	private void onDoneDivisionProcess() {
 		this.content.state.setType(StateType.AVAILABLE);
 		this.content.state.getProgress().done = this.content.state.getProgress().overall;
 		this.content.meta.setTryCount(0);
-		final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.content.meta.getCacheID()));
-		cachemeta.setAvailable(true);
+		final String id = this.content.meta.getCacheID();
+		if (id!=null) {
+			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(id));
+			cachemeta.setAvailable(true);
+		}
 	}
 
 	@Override
@@ -136,24 +153,24 @@ public class RemoteImage extends Image {
 	}
 
 	@Override
-	public ImageTexture getTexture() throws IllegalStateException {
+	public @Nonnull ImageTexture getTexture() throws IllegalStateException {
 		return getTextures().get();
 	}
 
-	public RemoteImageTexture getTextures() {
-		if (this.content.state.getType()==StateType.AVAILABLE)
+	public @Nonnull RemoteImageTexture getTextures() {
+		if (this.content.state.getType()==StateType.AVAILABLE&&this.texture!=null)
 			return this.texture;
 		else
 			throw new IllegalStateException("Not Available");
 	}
 
 	@Override
-	public String getLocal() {
+	public @Nonnull String getLocal() {
 		return String.format("RemoteImage:{Meta:%s,Cache:%s}", this.content.meta.getMetaID(), this.content.meta.getCacheID());
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("RemoteImage[%s]", this.content.id);
 	}
 }

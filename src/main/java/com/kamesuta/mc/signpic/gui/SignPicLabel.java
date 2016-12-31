@@ -13,6 +13,7 @@ import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -26,12 +27,12 @@ import com.kamesuta.mc.signpic.render.OpenGL;
 import net.minecraft.util.ResourceLocation;
 
 public class SignPicLabel extends WBase {
-	public static final ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
-	protected EntryId entryId;
-	protected ContentManager manager;
-	protected EntryId update;
+	public static final @Nonnull ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
+	protected @Nullable EntryId entryId;
+	protected @Nonnull ContentManager manager;
+	protected @Nullable EntryId update;
 
-	public SignPicLabel(final R position, final ContentManager manager) {
+	public SignPicLabel(final @Nonnull R position, final @Nonnull ContentManager manager) {
 		super(position);
 		this.manager = manager;
 		if (Informations.instance.isUpdateRequired()) {
@@ -45,20 +46,21 @@ public class SignPicLabel extends WBase {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 		final Area a = getGuiPosition(pgp);
 		final float opacity = getGuiOpacity(popacity);
 		final EntryId entryId = getEntryId();
 		if (entryId!=null) {
-			final Entry entry = entryId.entry();
-			if (entry!=null&&entry.isValid()) {
-				final Content content = entry.content();
+			final @Nonnull Entry entry = entryId.entry();
+			@Nullable
+			Content content = null;
+			if (entry.isValid()&&(content = entry.getContent())!=null) {
 				@Nullable
 				Entry upentry = null;
 				if (this.update!=null)
 					upentry = this.update.entry();
 
-				if (!StringUtils.isEmpty(content.id.id()))
+				if (!StringUtils.isEmpty(content.id.getID()))
 					drawEntry(a, opacity, entry);
 				else if (upentry!=null&&upentry.isValid())
 					drawEntry(a, opacity, upentry);
@@ -73,11 +75,15 @@ public class SignPicLabel extends WBase {
 		}
 	}
 
-	public static void drawEntry(final Area a, final float opacity, @Nonnull final Entry entry) {
+	public static void drawEntry(final @Nonnull Area a, final float opacity, final @Nonnull Entry entry) {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
-		final SizeData size1 = entry.getMeta().sizes.getMovie().get().aspectSize(entry.content().image.getSize());
+		final CompoundAttr attr = entry.getMeta();
+		final Content content = entry.getContent();
+		final SizeData size00 = attr.sizes.getMovie().get();
+		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+		final SizeData size1 = size00.aspectSize(size01);
 		final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(a));
 		final SizeData size = size2.scale(1f/100f);
 
@@ -90,11 +96,11 @@ public class SignPicLabel extends WBase {
 		OpenGL.glEnable(GL_CULL_FACE);
 	}
 
-	public EntryId getEntryId() {
+	public @Nullable EntryId getEntryId() {
 		return this.entryId;
 	}
 
-	public SignPicLabel setEntryId(final EntryId entryId) {
+	public @Nonnull SignPicLabel setEntryId(final @Nullable EntryId entryId) {
 		this.entryId = entryId;
 		return this;
 	}

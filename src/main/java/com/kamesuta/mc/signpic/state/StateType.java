@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.state;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.render.StateRender.LoadingCircle;
 import com.kamesuta.mc.signpic.render.StateRender.LoadingCircleType;
 
@@ -14,16 +16,16 @@ public enum StateType {
 	ERROR("signpic.state.error"),
 	;
 
-	public final String msg;
-	public final LoadingCircle circle;
-	public final LoadingCircleType speed;
-	private StateType(final String s, final LoadingCircle circle, final LoadingCircleType speed) {
+	public final @Nonnull String msg;
+	public final @Nonnull LoadingCircle circle;
+	public final @Nonnull LoadingCircleType speed;
+	private StateType(final @Nonnull String s, final @Nonnull LoadingCircle circle, final @Nonnull LoadingCircleType speed) {
 		this.msg = s;
 		this.circle = circle;
 		this.speed = speed;
 	}
 
-	private StateType(final String s) {
+	private StateType(final @Nonnull String s) {
 		this(s, LoadingCircle.DEFAULT, LoadingCircleType.DEFAULT);
 	}
 }

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -10,13 +12,15 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class FunnyButton extends MButton {
-	public FunnyButton(final R position) {
+	public FunnyButton(final @Nonnull R position) {
 		super(position);
 	}
 
 	private boolean isHighlight = true;
 	private boolean highlighted;
+	@Nonnull
 	VMotion m = V.pm(0);
+	@Nonnull
 	VMotion s = V.pm(1);
 
 	public boolean isHighlight() {
@@ -28,7 +32,7 @@ public class FunnyButton extends MButton {
 	}
 
 	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 		if (isHighlight()) {
 			if (!this.highlighted) {
 				this.highlighted = true;
@@ -44,7 +48,7 @@ public class FunnyButton extends MButton {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		OpenGL.glPushMatrix();
 		OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0);

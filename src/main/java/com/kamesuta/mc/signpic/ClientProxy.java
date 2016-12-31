@@ -3,10 +3,9 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.io.IOException;
 
-import com.kamesuta.mc.signpic.command.CommandVersion;
-import com.kamesuta.mc.signpic.command.RootCommand;
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
-import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -17,25 +16,17 @@ import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preInit(final FMLPreInitializationEvent event) {
+	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
 		super.preInit(event);
 
 		// Setup stencil clip
 		// StencilClip.init();
 
-		// Setup image
-		Client.renderer = new CustomTileEntitySignRenderer();
-
-		Client.mcversion = MinecraftForge.MC_VERSION;
-		Client.forgeversion = ForgeVersion.getVersion();
-
 		// Setup location
-		Client.location = new Locations(event, getDataDirectory());
+		Client.initLocation(new Locations(event.getSourceFile(), getDataDirectory()));
 
 		// Get Id
 		final String id = Client.mc.getSession().getPlayerID();
@@ -47,12 +38,6 @@ public class ClientProxy extends CommonProxy {
 			}
 		} catch (final IllegalArgumentException e) {
 		}
-
-		// Setup
-		Client.handler = new CoreHandler();
-		Client.rootCommand = new RootCommand();
-
-		Client.rootCommand.addChildCommand(new CommandVersion());
 	}
 
 	private File getDataDirectory() {

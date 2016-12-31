@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
@@ -292,13 +294,13 @@ public enum Easings implements Easing {
 		this.id = id;
 	}
 
-	public IMotion move(final float time, final float to) {
+	public @Nonnull IMotion move(final float time, final float to) {
 		return Motion.easing(time, this, to);
 	}
 
-	private static final ImmutableMap<Integer, Easings> easingIds;
+	private static final @Nonnull ImmutableMap<Integer, Easings> easingIds;
 
-	public static Easings fromId(final int id) {
+	public static @Nonnull Easings fromId(final int id) {
 		Easings easing = easingIds.get(id);
 		if (easing==null)
 			easing = easeLinear;

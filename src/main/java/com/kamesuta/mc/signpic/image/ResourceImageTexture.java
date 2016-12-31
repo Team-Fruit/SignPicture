@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.image;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Client;
@@ -9,10 +11,10 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImageTexture implements ImageTexture {
-	protected static final ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
-	protected ResourceLocation location;
+	protected static final @Nonnull ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
+	protected @Nonnull ResourceLocation location;
 
-	public ResourceImageTexture(final ResourceLocation location) {
+	public ResourceImageTexture(final @Nonnull ResourceLocation location) {
 		this.location = location;
 	}
 
@@ -25,7 +27,7 @@ public class ResourceImageTexture implements ImageTexture {
 	}
 
 	@Override
-	public SizeData getSize() {
+	public @Nonnull SizeData getSize() {
 		return SizeData.DefaultSize;
 	}
 

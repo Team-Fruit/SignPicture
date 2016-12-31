@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.attr;
 import java.util.Set;
 import java.util.regex.Matcher;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 
@@ -19,25 +21,25 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBu
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class CompoundAttrBuilder {
-	private Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
+	private @Nonnull Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
 
-	public final SizeBuilder size = new SizeBuilder();
-	public final OffsetBuilder offset = add(new OffsetBuilder());
-	public final RotationBuilder rotation = add(new RotationBuilder());
-	public final TextureFloatBuilder u = add(new TextureFloatBuilder(TextureFloatType.U));
-	public final TextureFloatBuilder v = add(new TextureFloatBuilder(TextureFloatType.V));
-	public final TextureFloatBuilder w = add(new TextureFloatBuilder(TextureFloatType.W));
-	public final TextureFloatBuilder h = add(new TextureFloatBuilder(TextureFloatType.H));
-	public final TextureFloatBuilder c = add(new TextureFloatBuilder(TextureFloatType.C));
-	public final TextureFloatBuilder s = add(new TextureFloatBuilder(TextureFloatType.S));
-	public final TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
-	public final TextureBooleanBuilder r = add(new TextureBooleanBuilder(TextureBooleanType.R));
-	public final TextureBooleanBuilder m = add(new TextureBooleanBuilder(TextureBooleanType.M));
-	public final TextureBlendBuilder b = add(new TextureBlendBuilder(TextureBlendType.B));
-	public final TextureBlendBuilder d = add(new TextureBlendBuilder(TextureBlendType.D));
-	public final AnimationBuilder animation = add(new AnimationBuilder());
+	public final @Nonnull SizeBuilder size = new SizeBuilder();
+	public final @Nonnull OffsetBuilder offset = add(new OffsetBuilder());
+	public final @Nonnull RotationBuilder rotation = add(new RotationBuilder());
+	public final @Nonnull TextureFloatBuilder u = add(new TextureFloatBuilder(TextureFloatType.U));
+	public final @Nonnull TextureFloatBuilder v = add(new TextureFloatBuilder(TextureFloatType.V));
+	public final @Nonnull TextureFloatBuilder w = add(new TextureFloatBuilder(TextureFloatType.W));
+	public final @Nonnull TextureFloatBuilder h = add(new TextureFloatBuilder(TextureFloatType.H));
+	public final @Nonnull TextureFloatBuilder c = add(new TextureFloatBuilder(TextureFloatType.C));
+	public final @Nonnull TextureFloatBuilder s = add(new TextureFloatBuilder(TextureFloatType.S));
+	public final @Nonnull TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
+	public final @Nonnull TextureBooleanBuilder r = add(new TextureBooleanBuilder(TextureBooleanType.R));
+	public final @Nonnull TextureBooleanBuilder m = add(new TextureBooleanBuilder(TextureBooleanType.M));
+	public final @Nonnull TextureBlendBuilder b = add(new TextureBlendBuilder(TextureBlendType.B));
+	public final @Nonnull TextureBlendBuilder d = add(new TextureBlendBuilder(TextureBlendType.D));
+	public final @Nonnull AnimationBuilder animation = add(new AnimationBuilder());
 
-	private <E extends IPropBuilder<?, ?>> E add(final E e) {
+	private @Nonnull <E extends IPropBuilder<?, ?>> E add(final @Nonnull E e) {
 		this.metas.add(e);
 		return e;
 	}
@@ -46,7 +48,7 @@ public class CompoundAttrBuilder {
 
 	}
 
-	public CompoundAttrBuilder parse(final String src) {
+	public @Nonnull CompoundAttrBuilder parse(final @Nonnull String src) {
 		Validate.notNull(src);
 
 		final Matcher mgb = CompoundAttr.g.matcher(src);
@@ -68,7 +70,7 @@ public class CompoundAttrBuilder {
 		return this;
 	}
 
-	public String compose() {
+	public @Nonnull String compose() {
 		final StringBuilder stb = new StringBuilder("{");
 		stb.append(this.size.compose());
 		for (final IPropBuilder<?, ?> m : this.metas)

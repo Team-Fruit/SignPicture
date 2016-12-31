@@ -8,26 +8,28 @@
  */
 package com.kamesuta.mc.signpic.asm.lib;
 
+import javax.annotation.Nonnull;
+
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 public class MethodMatcher {
-	private final String clsName;
-	private final String description;
-	private final String srgName;
-	private final String mcpName;
+	private final @Nonnull String clsName;
+	private final @Nonnull String description;
+	private final @Nonnull String srgName;
+	private final @Nonnull String mcpName;
 
-	public MethodMatcher(final String clsName, final String description, final String mcpName, final String srgName) {
+	public MethodMatcher(final @Nonnull String clsName, final @Nonnull String description, final @Nonnull String mcpName, final @Nonnull String srgName) {
 		this.clsName = clsName;
 		this.description = description;
 		this.srgName = srgName;
 		this.mcpName = mcpName;
 	}
 
-	public MethodMatcher(final MappedType cls, final String description, final String mcpName, final String srgName) {
+	public MethodMatcher(final @Nonnull MappedType cls, final @Nonnull String description, final @Nonnull String mcpName, final @Nonnull String srgName) {
 		this(cls.name(), description, mcpName, srgName);
 	}
 
-	public boolean match(final String methodName, final String methodDesc) {
+	public boolean match(final @Nonnull String methodName, final @Nonnull String methodDesc) {
 		if (methodName.equals(this.mcpName))
 			return true;
 		if (!VisitorHelper.useSrgNames())
@@ -40,7 +42,7 @@ public class MethodMatcher {
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("Matcher: %s.[%s,%s] %s", this.clsName, this.srgName, this.mcpName, this.description);
 	}
 

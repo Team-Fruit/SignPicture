@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -34,15 +37,15 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ContentDownload extends Communicate implements Progressable {
-	private final Content content;
+	private final @Nonnull Content content;
 	private boolean canceled;
 
-	public ContentDownload(final Content content) {
+	public ContentDownload(final @Nonnull Content content) {
 		this.content = content;
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.content.state;
 	}
 
@@ -53,7 +56,10 @@ public class ContentDownload extends Communicate implements Progressable {
 		OutputStream output = null;
 		try {
 			setCurrent();
-			final URI base = ContentLocation.remoteLocation(this.content.meta.getURL());
+			final String url = this.content.meta.getURL();
+			if (url==null)
+				throw new URISyntaxException("", "URL input is null");
+			final URI base = ContentLocation.remoteLocation(url);
 			final HttpUriRequest req = new HttpGet(base);
 			final HttpClientContext context = HttpClientContext.create();
 			final HttpResponse response = Downloader.downloader.client.execute(req, context);
@@ -81,9 +87,9 @@ public class ContentDownload extends Communicate implements Progressable {
 			final HttpEntity entity = response.getEntity();
 			cachemeta.setMime(ContentType.getOrDefault(entity).getMimeType());
 
-			tmp = Client.location.createCache("content");
+			tmp = Client.getLocation().createCache("content");
 
-			final long max = Config.instance.contentMaxByte.get();
+			final long max = Config.getConfig().contentMaxByte.get();
 			final long size = entity.getContentLength();
 			if (max>0&&(size<0||size>max)) {
 				req.abort();

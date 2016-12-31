@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -31,11 +34,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiImage extends WFrame {
-	protected Entry entry;
+	protected @Nonnull Entry entry;
 
-	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
+	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
-	public GuiImage(final Entry entry) {
+	public GuiImage(final @Nonnull Entry entry) {
 		this.entry = entry;
 		setWorldAndResolution(Client.mc, 0, 0);
 	}
@@ -47,10 +50,8 @@ public class GuiImage extends WFrame {
 			protected void initWidget() {
 				add(new WBase(new R()) {
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
-						final Content content = GuiImage.this.entry.content();
-
 						float opacity = getGuiOpacity(popacity);
 
 						OpenGL.glPushMatrix();
@@ -58,9 +59,14 @@ public class GuiImage extends WFrame {
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
-						if (content.state.getType()==StateType.AVAILABLE) {
-							final CompoundAttr meta = GuiImage.this.entry.getMeta();
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(meta.o.getMovie().get().data*0.1f));
+
+						@Nullable
+						final Content content = GuiImage.this.entry.getContent();
+						@Nonnull
+						CompoundAttr meta;
+						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!(meta = GuiImage.this.entry.getMeta()).hasInvalidMeta()) {
+							final float o = meta.o.getMovie().get().data*0.1f;
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
 							content.image.draw(
 									meta.u.getMovie().get().data,
 									meta.v.getMovie().get().data,
@@ -86,7 +92,7 @@ public class GuiImage extends WFrame {
 						}
 						OpenGL.glTranslatef(a.w()/2, a.h()/2, 0);
 						OpenGL.glScalef(.5f, .5f, 1f);
-						if (content.state.getType()!=StateType.AVAILABLE) {
+						if (content!=null&&content.state.getType()!=StateType.AVAILABLE) {
 							if (content.state.getType()==StateType.ERROR) {
 								OpenGL.glPushMatrix();
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
@@ -112,7 +118,7 @@ public class GuiImage extends WFrame {
 					}
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 						if (GuiImage.this.entry.isNotSupported()) {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -129,14 +135,14 @@ public class GuiImage extends WFrame {
 	}
 
 	protected class UpdateLogo extends WBase {
-		protected VMotion rot = V.pm(0).add(Motion.of(0, Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).setLoop(true).start();
+		protected @Nonnull VMotion rot = V.pm(0).add(Motion.of(0, Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).setLoop(true).start();
 
-		public UpdateLogo(final R position) {
+		public UpdateLogo(final @Nonnull R position) {
 			super(position);
 		}
 
 		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			texture().bindTexture(GuiSettings.update);
 			OpenGL.glColor4f(144f/256f, 191f/256f, 48f/256f, 1f);

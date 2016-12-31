@@ -6,46 +6,48 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.state.State;
 
 public abstract class UploadRequest {
-	protected final State state;
+	protected final @Nonnull State state;
 
-	public UploadRequest(final State state) {
+	public UploadRequest(final @Nonnull State state) {
 		this.state = state;
 	}
 
-	public State getState(final String format) {
+	public State getState(final @Nonnull String format) {
 		final State state = getPendingState();
 		state.setName(String.format(format, getName()));
 		state.getProgress().setOverall(getSize());
 		return state;
 	}
 
-	public State getPendingState() {
+	public @Nonnull State getPendingState() {
 		return this.state;
 	}
 
-	public abstract String getName();
+	public abstract @Nonnull String getName();
 
 	public abstract long getSize();
 
-	public abstract InputStream getStream() throws IOException;
+	public abstract @Nonnull InputStream getStream() throws IOException;
 
-	public static UploadRequest fromStream(final String name, final InputStream stream, final long size, final State state) {
+	public static @Nonnull UploadRequest fromStream(final @Nonnull String name, final @Nonnull InputStream stream, final long size, final @Nonnull State state) {
 		return new StreamUploadContent(name, stream, size, state);
 	}
 
-	public static UploadRequest fromFile(final File file, final State state) {
+	public static @Nonnull UploadRequest fromFile(final @Nonnull File file, final @Nonnull State state) {
 		return new FileUploadContent(file, state);
 	}
 
 	private static class StreamUploadContent extends UploadRequest {
-		private final String name;
-		private final InputStream stream;
+		private final @Nonnull String name;
+		private final @Nonnull InputStream stream;
 		private final long size;
 
-		public StreamUploadContent(final String name, final InputStream stream, final long size, final State state) {
+		public StreamUploadContent(final @Nonnull String name, final @Nonnull InputStream stream, final long size, final @Nonnull State state) {
 			super(state);
 			this.name = name;
 			this.stream = stream;
@@ -53,7 +55,7 @@ public abstract class UploadRequest {
 		}
 
 		@Override
-		public String getName() {
+		public @Nonnull String getName() {
 			return this.name;
 		}
 
@@ -63,21 +65,21 @@ public abstract class UploadRequest {
 		}
 
 		@Override
-		public InputStream getStream() {
+		public @Nonnull InputStream getStream() {
 			return this.stream;
 		}
 	}
 
 	private static class FileUploadContent extends UploadRequest {
-		private final File file;
+		private final @Nonnull File file;
 
-		public FileUploadContent(final File file, final State state) {
+		public FileUploadContent(final @Nonnull File file, final @Nonnull State state) {
 			super(state);
 			this.file = file;
 		}
 
 		@Override
-		public String getName() {
+		public @Nonnull String getName() {
 			return this.file.getName();
 		}
 
@@ -87,7 +89,7 @@ public abstract class UploadRequest {
 		}
 
 		@Override
-		public InputStream getStream() throws FileNotFoundException {
+		public @Nonnull InputStream getStream() throws FileNotFoundException {
 			return new FileInputStream(this.file);
 		}
 	}

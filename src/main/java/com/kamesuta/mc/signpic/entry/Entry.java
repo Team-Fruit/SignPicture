@@ -16,8 +16,8 @@ public class Entry {
 	public final @Nullable ContentId contentId;
 	public final @Nonnull GuiImage gui;
 
-	private transient CompoundAttr meta;
-	private String cmetacache;
+	private transient @Nullable CompoundAttr meta;
+	private @Nullable String cmetacache;
 
 	protected Entry(final @Nonnull EntryId id) {
 		this.id = id;
@@ -25,20 +25,25 @@ public class Entry {
 		this.gui = new GuiImage(this);
 	}
 
-	public @Nonnull Content content() {
-		return this.contentId.content();
+	public @Nullable Content getContent() {
+		if (this.contentId!=null)
+			return this.contentId.content();
+		else
+			return null;
 	}
 
 	public boolean isNotSupported() {
-		return getMeta().hasInvalidMeta()||this.id.hasPrePrefix();
+		final CompoundAttr meta = getMeta();
+		return meta.hasInvalidMeta()||this.id.getPrePrefix()!=null;
 	}
 
 	public boolean isValid() {
-		return this.contentId!=null&&getMeta()!=null;
+		return this.contentId!=null;
 	}
 
-	public @Nullable CompoundAttr getMeta() {
-		final String newmeta = content().imagemeta;
+	public @Nonnull CompoundAttr getMeta() {
+		final Content cntnt = getContent();
+		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
 				final String meta1 = this.id.getMetaSource();
@@ -48,11 +53,14 @@ public class Entry {
 			}
 		if (this.meta==null)
 			this.meta = this.id.getMeta();
-		return this.meta;
+		if (this.meta!=null)
+			return this.meta;
+		return this.meta = CompoundAttr.Blank;
 	}
 
-	public CompoundAttrBuilder getMetaBuilder() {
-		final String newmeta = content().imagemeta;
+	public @Nullable CompoundAttrBuilder getMetaBuilder() {
+		final Content cntnt = getContent();
+		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)
 			return new CompoundAttrBuilder().parse(this.id.getMetaSource()+newmeta);
 		return this.id.getMetaBuilder();

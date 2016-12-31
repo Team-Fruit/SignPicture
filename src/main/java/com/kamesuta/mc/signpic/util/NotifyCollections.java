@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import javax.annotation.Nonnull;
+
 public class NotifyCollections {
 	public static interface IModCount<E> extends Collection<E> {
 		int getModCount();
@@ -19,7 +21,7 @@ public class NotifyCollections {
 			super();
 		}
 
-		public NotifyArrayList(final Collection<? extends E> c) {
+		public NotifyArrayList(final @Nonnull Collection<? extends E> c) {
 			super(c);
 		}
 
@@ -34,7 +36,7 @@ public class NotifyCollections {
 			super();
 		}
 
-		public NotifyLinkedList(final Collection<? extends E> c) {
+		public NotifyLinkedList(final @Nonnull Collection<? extends E> c) {
 			super(c);
 		}
 
@@ -49,7 +51,7 @@ public class NotifyCollections {
 			super();
 		}
 
-		public NotifyArrayDeque(final Collection<? extends E> c) {
+		public NotifyArrayDeque(final @Nonnull Collection<? extends E> c) {
 			super(c);
 		}
 
