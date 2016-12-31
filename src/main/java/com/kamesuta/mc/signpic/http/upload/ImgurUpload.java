@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -30,18 +33,18 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ImgurUpload extends Communicate implements Progressable, IUploader {
-	protected UploadRequest upreq;
-	protected String key;
+	protected @Nonnull UploadRequest upreq;
+	protected @Nonnull String key;
 	protected boolean canceled;
-	protected ImgurResult result;
+	protected @Nullable ImgurResult result;
 
-	public ImgurUpload(final UploadRequest upload, final String key) {
+	public ImgurUpload(final @Nonnull UploadRequest upload, final @Nonnull String key) {
 		this.upreq = upload;
 		this.key = key;
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.upreq.getState("§3Imgur: §r%s");
 	}
 
@@ -55,7 +58,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 		JsonReader jsonReader1 = null;
 		try {
 			setCurrent();
-			tmp = Client.location.createCache("imgur");
+			tmp = Client.getLocation().createCache("imgur");
 			FileUtils.copyInputStreamToFile(this.upreq.getStream(), tmp);
 
 			// create the post request.
@@ -94,7 +97,9 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 					final String link = getLink();
 					if (link!=null) {
 						final Content content = new ContentId(link).content();
-						FileUtils.moveFile(tmp, ContentLocation.cacheLocation(content.meta.getCacheID()));
+						final String id = content.meta.getCacheID();
+						if (id!=null)
+							FileUtils.moveFile(tmp, ContentLocation.cacheLocation(id));
 					}
 					onDone(new CommunicateResponse(this.result!=null&&this.result.success, null));
 					return;
@@ -124,42 +129,42 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 	}
 
 	public static class ImgurResult {
-		public Data data;
+		public @Nullable Data data;
 		public boolean success;
 		public int status;
 
 		public static class Data {
-			public String id;
-			public String title;
-			public String description;
+			public @Nullable String id;
+			public @Nullable String title;
+			public @Nullable String description;
 			public int datetime;
-			public String type;
+			public @Nullable String type;
 			public boolean animated;
 			public int width;
 			public int height;
 			public int size;
 			public int views;
 			public int bandwidth;
-			public String vote;
+			public @Nullable String vote;
 			public boolean favorite;
-			public String nsfw;
-			public String section;
-			public String account_url;
+			public @Nullable String nsfw;
+			public @Nullable String section;
+			public @Nullable String account_url;
 			public int account_id;
 			public boolean is_ad;
 			public boolean in_gallery;
-			public String deletehash;
-			public String name;
-			public String link;
-			public String gifv;
-			public String mp4;
+			public @Nullable String deletehash;
+			public @Nullable String name;
+			public @Nullable String link;
+			public @Nullable String gifv;
+			public @Nullable String mp4;
 			public int mp4_size;
 			public boolean looping;
 		}
 	}
 
 	@Override
-	public String getLink() {
+	public @Nullable String getLink() {
 		if (this.result!=null&&this.result.data!=null)
 			return this.result.data.link;
 		return null;
