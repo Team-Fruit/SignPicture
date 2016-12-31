@@ -55,7 +55,7 @@ public class RemoteImage extends Image {
 			ContentCache cachemeta = null;
 			if (cacheid!=null&&!StringUtils.isEmpty(cacheid))
 				cachemeta = new ContentCache(ContentLocation.cachemetaLocation(cacheid));
-			if (cacheid!=null&&(cachemeta==null||cachemeta.isDirty()||!cachemeta.isAvailable()||!ContentLocation.cacheLocation(cacheid).exists())) {
+			if (cachemeta==null||cachemeta.isDirty()||!cachemeta.isAvailable()||!(cacheid!=null&&ContentLocation.cacheLocation(cacheid).exists())) {
 				if (Config.getConfig().contentMaxRetry.get()>0&&this.content.meta.getTryCount()>Config.getConfig().contentMaxRetry.get())
 					throw new RetryCountOverException();
 				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);
@@ -68,8 +68,11 @@ public class RemoteImage extends Image {
 						RemoteImage.this.content.state.setType(StateType.DOWNLOADED);
 						if (res.isSuccess())
 							onDoneInit();
-						else if (res.getError()!=null)
-							RemoteImage.this.content.state.setErrorMessage(res.getError());
+						else {
+							final Throwable t = res.getError();
+							if (t!=null)
+								RemoteImage.this.content.state.setErrorMessage(t);
+						}
 						RemoteImage.this.downloader = null;
 					}
 				});
