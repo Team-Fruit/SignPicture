@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
@@ -36,8 +39,8 @@ import net.minecraft.util.IChatComponent;
 
 public class ModDownload extends Communicate implements Progressable {
 	protected boolean canceled;
-	protected State status = new State().setName("§6SignPicture Mod Update");
-	public ModDLResult result;
+	protected @Nonnull State status = new State().setName("§6SignPicture Mod Update");
+	public @Nullable ModDLResult result;
 
 	@Override
 	public void communicate() {
@@ -70,8 +73,8 @@ public class ModDownload extends Communicate implements Progressable {
 			this.status.getProgress().overall = entity.getContentLength();
 			input = entity.getContent();
 
-			tmp = Client.location.createCache("modupdate");
-			final File f1 = new File(Client.location.modDir, local);
+			tmp = Client.getLocation().createCache("modupdate");
+			final File f1 = new File(Client.getLocation().modDir, local);
 
 			output = new CountingOutputStream(new FileOutputStream(tmp)) {
 				@Override
@@ -91,13 +94,13 @@ public class ModDownload extends Communicate implements Progressable {
 				FileUtils.moveFile(tmp, f1);
 
 			IChatComponent chat;
-			if (Client.location.modFile.isFile())
-				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
+			if (Client.getLocation().modFile.isFile())
+				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.getLocation().modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
 			Log.notice(I18n.format("signpic.gui.notice.downloaded", local));
 
-			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
+			Desktop.getDesktop().open(Client.getLocation().modDir.getCanonicalFile());
 			state.downloadedFile = f1;
 
 			this.result = new ModDLResult(chat);
@@ -130,9 +133,9 @@ public class ModDownload extends Communicate implements Progressable {
 	}
 
 	public static class ModDLResult {
-		public final IChatComponent response;
+		public final @Nonnull IChatComponent response;
 
-		public ModDLResult(final IChatComponent response) {
+		public ModDLResult(final @Nonnull IChatComponent response) {
 			this.response = response;
 		}
 	}

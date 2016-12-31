@@ -11,7 +11,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import com.kamesuta.mc.signpic.Client;
 
 public class ContentLocation {
-	public static URI remoteLocation(final String url) throws URISyntaxException {
+	public static URI remoteLocation(final @Nonnull String url) throws URISyntaxException {
 		return new URI(url);
 	}
 

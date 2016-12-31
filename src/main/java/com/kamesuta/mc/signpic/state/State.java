@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.LoadCanceledException;
@@ -53,7 +54,7 @@ public class State {
 		return this.map;
 	}
 
-	public @Nonnull State setErrorMessage(final Throwable throwable) {
+	public @Nonnull State setErrorMessage(final @Nullable Throwable throwable) {
 		if (throwable!=null) {
 			setType(StateType.ERROR);
 			try {
