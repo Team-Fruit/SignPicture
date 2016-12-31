@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.image;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
@@ -37,7 +38,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			return SizeData.DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nonnull BlendType b, final @Nonnull BlendType d, final boolean r, final boolean m) {
+	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			WRenderer.startTexture(b, d);
 			final Tessellator t = Tessellator.instance;

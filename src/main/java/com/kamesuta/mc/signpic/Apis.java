@@ -25,6 +25,7 @@ import com.kamesuta.mc.signpic.http.upload.ImgurUpload;
 import com.kamesuta.mc.signpic.http.upload.UploadRequest;
 import com.kamesuta.mc.signpic.information.Info;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.information.Informations.InfoSource;
 
 public class Apis {
 	public static final @Nonnull Apis instance = new Apis();
@@ -201,13 +202,22 @@ public class Apis {
 			@Override
 			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
-				List<Info.Api.Image.Gyazo.Config> configs = null;
-				try {
-					configs = Informations.instance.getSource().info.apis.image.gyazo.config;
-					for (final Info.Api.Image.Gyazo.Config config : configs)
-						if (config!=null)
-							keys.add(config.clientid);
-				} catch (final NullPointerException e) {
+				final InfoSource source = Informations.instance.getSource();
+				if (source!=null) {
+					final Info.Api api = source.info.apis;
+					if (api!=null) {
+						final Info.Api.Image image = api.image;
+						if (image!=null) {
+							final Info.Api.Image.Gyazo gyazo = image.gyazo;
+							if (gyazo!=null) {
+								final List<Info.Api.Image.Gyazo.Config> configs = gyazo.config;
+								if (configs!=null)
+									for (final Info.Api.Image.Gyazo.Config config : configs)
+										if (config!=null)
+											keys.add(config.clientid);
+							}
+						}
+					}
 				}
 				return keys;
 			}
@@ -226,13 +236,22 @@ public class Apis {
 			@Override
 			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
-				List<Info.Api.Image.Imgur.Config> configs = null;
-				try {
-					configs = Informations.instance.getSource().info.apis.image.imgur.config;
-					for (final Info.Api.Image.Imgur.Config config : configs)
-						if (config!=null)
-							keys.add(config.clientid);
-				} catch (final NullPointerException e) {
+				final InfoSource source = Informations.instance.getSource();
+				if (source!=null) {
+					final Info.Api api = source.info.apis;
+					if (api!=null) {
+						final Info.Api.Image image = api.image;
+						if (image!=null) {
+							final Info.Api.Image.Imgur imgur = image.imgur;
+							if (imgur!=null) {
+								final List<Info.Api.Image.Imgur.Config> configs = imgur.config;
+								if (configs!=null)
+									for (final Info.Api.Image.Imgur.Config config : configs)
+										if (config!=null)
+											keys.add(config.clientid);
+							}
+						}
+					}
 				}
 				return keys;
 			}
@@ -251,13 +270,22 @@ public class Apis {
 			@Override
 			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
-				List<Info.Api.Shortener.Bitly.Config> configs = null;
-				try {
-					configs = Informations.instance.getSource().info.apis.shortener.bitly.config;
-					for (final Info.Api.Shortener.Bitly.Config config : configs)
-						if (config!=null)
-							keys.add(config.key);
-				} catch (final NullPointerException e) {
+				final InfoSource source = Informations.instance.getSource();
+				if (source!=null) {
+					final Info.Api api = source.info.apis;
+					if (api!=null) {
+						final Info.Api.Shortener shortener = api.shortener;
+						if (shortener!=null) {
+							final Info.Api.Shortener.Bitly bitly = shortener.bitly;
+							if (bitly!=null) {
+								final List<Info.Api.Shortener.Bitly.Config> configs = bitly.config;
+								if (configs!=null)
+									for (final Info.Api.Shortener.Bitly.Config config : configs)
+										if (config!=null)
+											keys.add(config.key);
+							}
+						}
+					}
 				}
 				return keys;
 			}
@@ -276,13 +304,22 @@ public class Apis {
 			@Override
 			public @Nonnull Set<String> keys() {
 				final Set<String> keys = Sets.newHashSet();
-				List<Info.Api.Shortener.Googl.Config> configs = null;
-				try {
-					configs = Informations.instance.getSource().info.apis.shortener.googl.config;
-					for (final Info.Api.Shortener.Googl.Config config : configs)
-						if (config!=null)
-							keys.add(config.key);
-				} catch (final NullPointerException e) {
+				final InfoSource source = Informations.instance.getSource();
+				if (source!=null) {
+					final Info.Api api = source.info.apis;
+					if (api!=null) {
+						final Info.Api.Shortener shortener = api.shortener;
+						if (shortener!=null) {
+							final Info.Api.Shortener.Googl googl = shortener.googl;
+							if (googl!=null) {
+								final List<Info.Api.Shortener.Googl.Config> configs = googl.config;
+								if (configs!=null)
+									for (final Info.Api.Shortener.Googl.Config config : configs)
+										if (config!=null)
+											keys.add(config.key);
+							}
+						}
+					}
 				}
 				return keys;
 			}

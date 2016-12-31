@@ -230,9 +230,10 @@ public final class Informations {
 			) {
 				final InfoVersion online = source.onlineVersion();
 
-				if (online.compare(VersionClient))
-					if (online.version!=null) {
-						final Info.Version version = online.version;
+				if (online.compare(VersionClient)) {
+					final Info.Version version = online.version;
+					if (version!=null&&version.version!=null) {
+						final String ver = version.version;
 						final Map<String, String> local = version.message_local;
 						if (local!=null&&local.containsKey(lang))
 							ChatBuilder.create("signpic.versioning.changelog").useTranslation().setParams(local.get(lang)).chatClient();
@@ -257,12 +258,13 @@ public final class Informations {
 
 						ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson()
 								.replace("$old$", Reference.VERSION)
-								.replace("$new$", version.version)
+								.replace("$new$", ver)
 								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic version update\"}")
 								.replace("$website$", "{\"action\":\"open_url\",\"value\":\""+website+"\"}")
 								.replace("$changelog$", "{\"action\":\"open_url\",\"value\":\""+changelog+"\"}")
 								.chatClient();
 					}
+				}
 			}
 			final PrivateMsg msg = source.privateMsg;
 			if (msg!=null) {
@@ -270,11 +272,14 @@ public final class Informations {
 				final Map<String, String> local = msg.message_local;
 				if (local!=null&&local.containsKey(lang))
 					ctb.setText(local.get(lang));
-				else if (!StringUtils.isEmpty(msg.message))
-					ctb.setText(msg.message);
-				if (msg.json)
-					ctb.useJson();
-				ctb.chatClient();
+				else {
+					final String m = msg.message;
+					if (m!=null&&!StringUtils.isEmpty(m))
+						ctb.setText(m);
+					if (msg.json)
+						ctb.useJson();
+					ctb.chatClient();
+				}
 			}
 			getState().triedToWarnPlayer = true;
 		}

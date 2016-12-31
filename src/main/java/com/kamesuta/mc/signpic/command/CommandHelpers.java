@@ -30,7 +30,7 @@ public class CommandHelpers {
 			child.processCommand(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
 
-	public static @Nonnull List<String> completeChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) {
+	public static @Nullable List<String> completeChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) {
 		return child.completeCommand(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
 
