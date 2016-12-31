@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
@@ -23,14 +26,14 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
-	protected final Tessellator t = Tessellator.instance;
+	protected final @Nonnull Tessellator t = Tessellator.instance;
 
-	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
+	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
 	public CustomTileEntitySignRenderer() {
 	}
 
-	public void renderSignPicture(final Entry entry, final float opacity) {
+	public void renderSignPicture(final @Nonnull Entry entry, final float opacity) {
 		// Load Image
 		final Content content = entry.getContent();
 
@@ -54,7 +57,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glPopMatrix();
 	}
 
-	public void translateBase(final TileEntitySign tile, final double x, final double y, final double z) {
+	public void translateBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z) {
 		// Vanilla Translate
 		final Block block = tile.getBlockType();
 		final float f1 = 0.6666667F;
@@ -81,7 +84,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		}
 	}
 
-	public void renderSignPictureBase(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
+	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
 		final Entry entry = EntryId.fromTile(tile).entry();
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
@@ -113,14 +116,16 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntitySign tile, final double x, final double y, final double z, final float partialTicks) {
-		Client.startSection("signpic-render");
-		renderSignPictureBase(tile, x, y, z, partialTicks, 1f);
-		Client.endSection();
+	public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks) {
+		if (tile!=null) {
+			Client.startSection("signpic-render");
+			renderSignPictureBase(tile, x, y, z, partialTicks, 1f);
+			Client.endSection();
+		}
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity tile, final double x, final double y, final double z, final float partialTicks) {
+	public void renderTileEntityAt(final @Nullable TileEntity tile, final double x, final double y, final double z, final float partialTicks) {
 		this.renderTileEntityAt((TileEntitySign) tile, x, y, z, partialTicks);
 	}
 }

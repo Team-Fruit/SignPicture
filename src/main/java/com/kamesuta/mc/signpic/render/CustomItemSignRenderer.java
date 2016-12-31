@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
@@ -18,19 +20,19 @@ import net.minecraftforge.client.IItemRenderer;
 
 public class CustomItemSignRenderer implements IItemRenderer {
 	@Override
-	public boolean handleRenderType(final ItemStack item, final ItemRenderType type) {
-		if (item.getItem()!=Items.sign)
+	public boolean handleRenderType(final @Nullable ItemStack item, final @Nullable ItemRenderType type) {
+		if (item!=null&&item.getItem()!=Items.sign)
 			return false;
 		return EntryId.fromItemStack(item).entry().isValid();
 	}
 
 	@Override
-	public boolean shouldUseRenderHelper(final ItemRenderType type, final ItemStack item, final ItemRendererHelper helper) {
+	public boolean shouldUseRenderHelper(final @Nullable ItemRenderType type, final @Nullable ItemStack item, final @Nullable ItemRendererHelper helper) {
 		return type==ItemRenderType.ENTITY;
 	}
 
 	@Override
-	public void renderItem(final ItemRenderType type, final ItemStack item, final Object... data) {
+	public void renderItem(final @Nullable ItemRenderType type, final @Nullable ItemStack item, final @Nullable Object... data) {
 		OpenGL.glPushMatrix();
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);

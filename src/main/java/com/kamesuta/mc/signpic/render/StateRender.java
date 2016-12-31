@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.render;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.util.Color;
 
 import com.kamesuta.mc.bnnwidget.WRenderer;
@@ -12,11 +14,11 @@ public class StateRender {
 	public static enum LoadingCircle {
 		INIT(new Color(0, 255, 255, 255), new Color(160, 160, 160, 255), new Color(120, 120, 120, 255)), DOWNLOAD(new Color(0, 255, 255, 255), new Color(0, 102, 204, 255), new Color(23, 121, 232, 255)), CONTENTLOAD(new Color(0, 255, 255, 255), new Color(0, 144, 55), new Color(23, 177, 55, 255)), DEFAULT(new Color(), new Color(), new Color());
 
-		private final Color loading;
-		private final Color progress;
-		private final Color design;
+		private final @Nonnull Color loading;
+		private final @Nonnull Color progress;
+		private final @Nonnull Color design;
 
-		private LoadingCircle(final Color loading, final Color progress, final Color design) {
+		private LoadingCircle(final @Nonnull Color loading, final @Nonnull Color progress, final @Nonnull Color design) {
 			this.loading = loading;
 			this.progress = progress;
 			this.design = design;
@@ -35,7 +37,7 @@ public class StateRender {
 		}
 	}
 
-	public static void drawLoading(final Progress progress, final LoadingCircle type, final LoadingCircleType speed) {
+	public static void drawLoading(final @Nonnull Progress progress, final @Nonnull LoadingCircle type, final @Nonnull LoadingCircleType speed) {
 		if (type!=LoadingCircle.DEFAULT) {
 			OpenGL.glLineWidth(3f);
 			WRenderer.startShape();
@@ -60,7 +62,7 @@ public class StateRender {
 		}
 	}
 
-	public static void drawMessage(final Content content, final FontRenderer fontrenderer) {
+	public static void drawMessage(final @Nonnull Content content, final @Nonnull FontRenderer fontrenderer) {
 		WRenderer.startTexture();
 		final float f1 = 0.6666667F;
 		float f3 = 0.06666668F*f1;

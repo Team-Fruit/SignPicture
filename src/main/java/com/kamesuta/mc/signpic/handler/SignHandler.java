@@ -26,6 +26,7 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -126,8 +127,11 @@ public class SignHandler {
 				else
 					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
 			} else if (event.gui instanceof GuiRepair) {
-				if (!entryId.isNameable())
-					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
+				if (!entryId.isNameable()) {
+					final ContentId id = entryId.entry().contentId;
+					if (id!=null)
+						ShortenerApiUtil.requestShoretning(id);
+				}
 				this.repairGuiTask = (GuiRepair) event.gui;
 				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 					CurrentMode.instance.setMode();

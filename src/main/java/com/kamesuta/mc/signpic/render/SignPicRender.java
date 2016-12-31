@@ -1,8 +1,10 @@
 package com.kamesuta.mc.signpic.render;
 
+import static com.kamesuta.mc.bnnwidget.WGui.*;
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.bnnwidget.WGui;
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
@@ -24,14 +26,14 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
-public class SignPicRender extends WGui {
-	public static final ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
+public class SignPicRender {
+	public static final @Nonnull ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
 
 	public SignPicRender() {
 	}
 
 	@CoreEvent
-	public void onRender(final RenderWorldLastEvent event) {
+	public void onRender(final @Nonnull RenderWorldLastEvent event) {
 		float opacity = Config.getConfig().renderPreviewFixedOpacity.get().floatValue();
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
@@ -45,7 +47,7 @@ public class SignPicRender extends WGui {
 	}
 
 	@CoreEvent
-	public void onDraw(final RenderGameOverlayEvent.Post event) {
+	public void onDraw(final @Nonnull RenderGameOverlayEvent.Post event) {
 		if (event.type==ElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode())
 				if ((int) (System.currentTimeMillis()/500)%2==0) {
@@ -75,7 +77,7 @@ public class SignPicRender extends WGui {
 	}
 
 	@CoreEvent
-	public void onText(final RenderGameOverlayEvent.Text event) {
+	public void onText(final @Nonnull RenderGameOverlayEvent.Text event) {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
 			if (tilesign!=null) {

@@ -40,34 +40,33 @@ public class ChatBuilder {
 
 	public @Nonnull IChatComponent build() {
 		IChatComponent chat;
-		if (this.chat==null) {
-			if (this.useTranslation&&!this.useJson)
-				chat = new ChatComponentTranslation(this.text, this.params);
-			else {
-				String s;
-				if (this.useTranslation)
-					s = StatCollector.translateToLocal(this.text);
-				else
-					s = this.text;
-
-				for (final Map.Entry<String, String> entry : this.replace.entrySet())
-					s = StringUtils.replace(s, entry.getKey(), entry.getValue());
-
-				if (this.params.length>0)
-					s = String.format(s, this.params);
-
-				if (this.useJson)
-					try {
-						chat = IChatComponent.Serializer.func_150699_a(s);
-					} catch (final Exception e) {
-						chat = new ChatComponentText("Invaild Json: "+this.text);
-					}
-				else
-					chat = new ChatComponentText(this.text);
-			}
-		} else
+		if (this.chat!=null)
 			chat = this.chat;
-		if (chat!=null&&this.style!=null)
+		else if (this.useTranslation&&!this.useJson)
+			chat = new ChatComponentTranslation(this.text, this.params);
+		else {
+			String s;
+			if (this.useTranslation)
+				s = StatCollector.translateToLocal(this.text);
+			else
+				s = this.text;
+
+			for (final Map.Entry<String, String> entry : this.replace.entrySet())
+				s = StringUtils.replace(s, entry.getKey(), entry.getValue());
+
+			if (this.params.length>0)
+				s = String.format(s, this.params);
+
+			if (this.useJson)
+				try {
+					chat = IChatComponent.Serializer.func_150699_a(s);
+				} catch (final Exception e) {
+					chat = new ChatComponentText("Invaild Json: "+this.text);
+				}
+			else
+				chat = new ChatComponentText(this.text);
+		}
+		if (this.style!=null)
 			chat.setChatStyle(this.style);
 		return chat;
 	}
