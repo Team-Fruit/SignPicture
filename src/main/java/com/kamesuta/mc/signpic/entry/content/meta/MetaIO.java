@@ -28,9 +28,9 @@ public abstract class MetaIO<E extends IData> {
 	}
 
 	public @Nonnull E get() {
-		if (this.data==null)
-			this.data = loadData();
-		return this.data;
+		if (this.data!=null)
+			return this.data;
+		return this.data = loadData();
 	}
 
 	private @Nonnull E loadData() {
@@ -57,7 +57,7 @@ public abstract class MetaIO<E extends IData> {
 		saveData(this.data);
 	}
 
-	private void saveData(final @Nonnull E data) {
+	private void saveData(final @Nullable E data) {
 		JsonWriter writer = null;
 		try {
 			writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(this.location), Charsets.UTF_8));

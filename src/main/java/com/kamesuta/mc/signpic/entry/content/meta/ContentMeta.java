@@ -8,10 +8,10 @@ import javax.annotation.Nullable;
 public class ContentMeta {
 	private final MetaIO<MetaData> metaio;
 
-	public ContentMeta(final File location) {
+	public ContentMeta(final @Nonnull File location) {
 		this.metaio = new MetaIO<MetaData>(location, MetaData.class) {
 			@Override
-			public MetaData createBlank() {
+			public @Nonnull MetaData createBlank() {
 				return new MetaData();
 			}
 		};

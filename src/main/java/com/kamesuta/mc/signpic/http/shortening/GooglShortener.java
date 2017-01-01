@@ -84,7 +84,7 @@ public class GooglShortener extends Communicate implements Progressable, IShorte
 	}
 
 	public static class GooglRequest {
-		private @Nonnull String longUrl;
+		public @Nonnull String longUrl;
 
 		public GooglRequest(final @Nonnull String longUrl) {
 			this.longUrl = longUrl;

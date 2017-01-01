@@ -183,7 +183,7 @@ public final class Informations {
 
 	public void runUpdate() {
 		final Informations.InfoState state = getState();
-		final @Nonnull Informations.InfoSource source = getSource();
+		final @Nullable Informations.InfoSource source = getSource();
 		if (source!=null) {
 			final Info.Version version = source.onlineVersion().version;
 			if (version!=null&&!StringUtils.isEmpty(version.remote))

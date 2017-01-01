@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,7 +45,7 @@ public class URIStacks {
 		return stb.toString();
 	}
 
-	public static @Nonnull URIStacks from(final @Nonnull URI base, final @Nonnull List<URI> redirects) {
+	public static @Nonnull URIStacks from(final @Nonnull URI base, final @Nullable List<URI> redirects) {
 		URI end;
 		LinkedList<URI> reds;
 		if (redirects!=null&&!redirects.isEmpty()) {
