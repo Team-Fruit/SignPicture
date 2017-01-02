@@ -3,11 +3,12 @@ package com.kamesuta.mc.signpic.command;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -17,11 +18,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class SubCommand implements IModCommand {
-	private final String name;
-	private final List<String> aliases = Lists.newArrayList();
-	private SubCommand.PermLevel permLevel;
-	private IModCommand parent;
-	private final SortedSet<SubCommand> children;
+	private final @Nonnull String name;
+	private final @Nonnull List<String> aliases = Lists.newArrayList();
+	private @Nonnull SubCommand.PermLevel permLevel;
+	private @Nullable IModCommand parent;
+	private final @Nonnull SortedSet<SubCommand> children;
 
 	public static enum PermLevel {
 		EVERYONE(0), ADMIN(2);
@@ -33,104 +34,111 @@ public abstract class SubCommand implements IModCommand {
 		}
 	}
 
-	public SubCommand(final String name) {
+	public SubCommand(final @Nonnull String name) {
 		this.permLevel = SubCommand.PermLevel.EVERYONE;
 
-		this.children = new TreeSet<SubCommand>(new Comparator<SubCommand>() {
+		this.children = Sets.newTreeSet(new Comparator<SubCommand>() {
 			@Override
-			public int compare(final SubCommand o1, final SubCommand o2) {
-				return o1.compareTo(o2);
-
+			public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
+				if (o1!=null&&o2!=null)
+					return o1.compareTo(o2);
+				return 0;
 			}
 		});
 		this.name = name;
 	}
 
 	@Override
-	public final String getName() {
+	public @Nonnull String getName() {
 		return this.name;
 	}
 
-	public SubCommand addChildCommand(final SubCommand child) {
+	public @Nonnull SubCommand addChildCommand(final @Nonnull SubCommand child) {
 		child.setParent(this);
 		this.children.add(child);
 		return this;
 	}
 
-	void setParent(final IModCommand parent) {
+	void setParent(final @Nullable IModCommand parent) {
 		this.parent = parent;
 	}
 
 	@Override
-	public SortedSet<SubCommand> getChildren() {
+	public @Nonnull SortedSet<SubCommand> getChildren() {
 		return this.children;
 	}
 
-	public void addAlias(final String alias) {
+	public void addAlias(final @Nonnull String alias) {
 		this.aliases.add(alias);
 	}
 
 	@Override
-	public List<String> getAliases() {
+	public @Nonnull List<String> getAliases() {
 		return this.aliases;
 	}
 
 	@Override
-	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, @Nullable final BlockPos pos) {
+	public @Nullable List<String> getTabCompletions(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
 		return null;
 	}
 
 	@Override
-	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
-		if (!CommandHelpers.processCommands(sender, this, args))
+	public void execute(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
+		if (sender!=null&&args!=null&&!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}
 
-	public List<String> completeCommand(final ICommandSender sender, final String[] args) {
+	public @Nullable List<String> completeCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
 		return CommandHelpers.completeCommands(sender, this, args);
 	}
 
-	public void processSubCommand(final ICommandSender sender, final String[] args) throws WrongUsageException {
+	public void processSubCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) throws WrongUsageException {
 		CommandHelpers.throwWrongUsage(sender, this);
 	}
 
-	public SubCommand setPermLevel(final SubCommand.PermLevel permLevel) {
+	public @Nonnull SubCommand setPermLevel(final @Nonnull SubCommand.PermLevel permLevel) {
 		this.permLevel = permLevel;
 		return this;
 	}
 
 	@Override
-	public final int getRequiredPermissionLevel() {
+	public int getRequiredPermissionLevel() {
 		return this.permLevel.permLevel;
 	}
 
 	@Override
-	public boolean checkPermission(final MinecraftServer server, final ICommandSender sender) {
-		return sender.canUseCommand(getRequiredPermissionLevel(), getName());
-	}
-
-	@Override
-	public boolean isUsernameIndex(final String[] args, final int index) {
+	public boolean checkPermission(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender) {
+		if (sender!=null)
+			return sender.canUseCommand(getRequiredPermissionLevel(), getName());
 		return false;
 	}
 
 	@Override
-	public String getUsage(final ICommandSender sender) {
+	public boolean isUsernameIndex(final @Nullable String[] args, final int index) {
+		return false;
+	}
+
+	@Override
+	public @Nonnull String getUsage(final @Nullable ICommandSender sender) {
 		return "/"+getFullCommandString()+" help";
 	}
 
 	@Override
-	public void printHelp(final ICommandSender sender) {
+	public void printHelp(final @Nonnull ICommandSender sender) {
 		CommandHelpers.printHelp(sender, this);
 	}
 
 	@Override
-	public String getFullCommandString() {
-		return this.parent.getFullCommandString()+" "+getName();
+	public @Nonnull String getFullCommandString() {
+		if (this.parent!=null)
+			return this.parent.getFullCommandString()+" "+getName();
+		return " "+getName();
 	}
 
 	@Override
-	public int compareTo(final ICommand command) {
-		return getName().compareTo(command.getName());
+	public int compareTo(final @Nullable ICommand command) {
+		if (command!=null)
+			return getName().compareTo(command.getName());
+		return 0;
 	}
 }

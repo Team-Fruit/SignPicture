@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -23,8 +26,8 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class InformationCheck extends Communicate implements Progressable {
-	protected State status = new State().setName("§6SignPicture Update Check");
-	public Informations.InfoSource result;
+	protected @Nonnull State status = new State().setName("§6SignPicture Update Check");
+	public @Nullable Informations.InfoSource result;
 
 	@Override
 	public void communicate() {
@@ -44,7 +47,7 @@ public class InformationCheck extends Communicate implements Progressable {
 				if (!StringUtils.isEmpty(info.private_msg)) {
 					InputStream input1 = null;
 					try {
-						if (!StringUtils.isEmpty(Client.name)&&!StringUtils.isEmpty(Client.id)) {
+						if (!StringUtils.isEmpty(Client.name)&&!StringUtils.isEmpty(Client.id)&&info.private_msg!=null) {
 							final String msgurl = info.private_msg
 									.replace("%name%", Client.name)
 									.replace("%id%", Client.id)
@@ -83,7 +86,7 @@ public class InformationCheck extends Communicate implements Progressable {
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.status;
 	}
 

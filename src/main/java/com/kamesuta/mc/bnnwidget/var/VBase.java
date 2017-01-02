@@ -1,10 +1,12 @@
 package com.kamesuta.mc.bnnwidget.var;
 
+import javax.annotation.Nonnull;
+
 public class VBase implements VCommon {
 	private final float coord;
-	private VType type;
+	private @Nonnull VType type;
 
-	public VBase(final float coord, final VType type) {
+	public VBase(final float coord, final @Nonnull VType type) {
 		this.coord = coord;
 		this.type = type;
 	}

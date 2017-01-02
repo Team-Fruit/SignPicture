@@ -7,6 +7,8 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -20,20 +22,20 @@ import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
 
 public class ContentManager implements ITickEntry {
-	public static ContentManager instance = new ContentManager();
+	public static @Nonnull ContentManager instance = new ContentManager();
 
-	public final ExecutorService threadpool = Executors.newFixedThreadPool(Config.instance.contentLoadThreads.get(),
+	public final @Nonnull ExecutorService threadpool = Executors.newFixedThreadPool(Config.getConfig().contentLoadThreads.get(),
 			new ThreadFactoryBuilder().setNameFormat("signpic-content-%d").build());
-	private final Map<ContentId, ContentSlot> registry = Maps.newConcurrentMap();
-	private final Queue<ContentSlot> loadqueue = Queues.newConcurrentLinkedQueue();
-	private final Queue<IDivisionProcessable> divisionqueue = Queues.newConcurrentLinkedQueue();
+	private final @Nonnull Map<ContentId, ContentSlot> registry = Maps.newConcurrentMap();
+	private final @Nonnull Queue<ContentSlot> loadqueue = Queues.newConcurrentLinkedQueue();
+	private final @Nonnull Queue<IDivisionProcessable> divisionqueue = Queues.newConcurrentLinkedQueue();
 	private int loadtick = 0;
 	private int divisiontick = 0;
 
 	private ContentManager() {
 	}
 
-	public void enqueueAsync(final IAsyncProcessable asyncProcessable) {
+	public void enqueueAsync(final @Nonnull IAsyncProcessable asyncProcessable) {
 		this.threadpool.execute(new Runnable() {
 			@Override
 			public void run() {
@@ -46,11 +48,11 @@ public class ContentManager implements ITickEntry {
 		});
 	}
 
-	public void enqueueDivision(final IDivisionProcessable divisionProcessable) {
+	public void enqueueDivision(final @Nonnull IDivisionProcessable divisionProcessable) {
 		this.divisionqueue.offer(divisionProcessable);
 	}
 
-	protected Content get(final ContentId id) {
+	protected @Nonnull Content get(final @Nonnull ContentId id) {
 		final ContentSlot entries = this.registry.get(id);
 		if (entries!=null)
 			return entries.get();
@@ -67,7 +69,7 @@ public class ContentManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		this.loadtick++;
-		if (this.loadtick>Config.instance.contentLoadTick.get()) {
+		if (this.loadtick>Config.getConfig().contentLoadTick.get()) {
 			this.loadtick = 0;
 			final ContentSlot loadprogress = this.loadqueue.poll();
 			if (loadprogress!=null)
@@ -75,7 +77,7 @@ public class ContentManager implements ITickEntry {
 		}
 
 		this.divisiontick++;
-		if (this.divisiontick>Config.instance.contentSyncTick.get()) {
+		if (this.divisiontick>Config.getConfig().contentSyncTick.get()) {
 			this.divisiontick = 0;
 			IDivisionProcessable divisionprocess;
 			if ((divisionprocess = this.divisionqueue.peek())!=null)
@@ -114,7 +116,7 @@ public class ContentManager implements ITickEntry {
 	}
 
 	public static class ContentSlot extends EntrySlot<Content> implements IInitable, ICollectable {
-		public ContentSlot(final Content entry) {
+		public ContentSlot(final @Nonnull Content entry) {
 			super(entry);
 		}
 
@@ -135,7 +137,7 @@ public class ContentManager implements ITickEntry {
 
 		@Override
 		protected int getCollectTimes() {
-			return Config.instance.contentGCtick.get();
+			return Config.getConfig().contentGCtick.get();
 		}
 	}
 }

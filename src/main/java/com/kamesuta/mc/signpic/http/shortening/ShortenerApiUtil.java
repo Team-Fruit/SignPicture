@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.http.shortening;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
 import com.kamesuta.mc.signpic.Log;
@@ -17,7 +20,7 @@ import com.kamesuta.mc.signpic.state.State;
 import net.minecraft.client.resources.I18n;
 
 public class ShortenerApiUtil {
-	public static boolean shortening(final ShorteningRequest content, final Runnable onDone) {
+	public static boolean shortening(final @Nonnull ShorteningRequest content, final @Nullable Runnable onDone) {
 		try {
 			final URLShortenerFactory factory = getShortenerFactory();
 			final String key = getKey(factory);
@@ -29,7 +32,8 @@ public class ShortenerApiUtil {
 					public void onDone(final ICommunicateResponse res) {
 						if (upload.getShortLink()!=null) {
 							final String url = upload.getShortLink();
-							GuiMain.setContentId(url);
+							if (url!=null)
+								GuiMain.setContentId(url);
 							if (onDone!=null)
 								onDone.run();
 						}
@@ -46,21 +50,21 @@ public class ShortenerApiUtil {
 		return false;
 	}
 
-	public static boolean shortening(final ShorteningRequest content) {
+	public static boolean shortening(final @Nonnull ShorteningRequest content) {
 		return shortening(content, null);
 	}
 
-	public static URLShortenerFactory getShortenerFactory() {
+	public static @Nullable URLShortenerFactory getShortenerFactory() {
 		return Apis.instance.urlShorteners.solve(Apis.instance.urlShorteners.getConfigOrRandom());
 	}
 
-	public static String getKey(final URLShortenerFactory factory) {
+	public static @Nullable String getKey(final @Nullable URLShortenerFactory factory) {
 		if (factory!=null)
 			return factory.keySettings().getConfigOrRandom();
 		return null;
 	}
 
-	public static void requestShoretning(final ContentId id) {
+	public static void requestShoretning(final @Nonnull ContentId id) {
 		if (!CurrentMode.instance.isShortening()) {
 			final String longurl = id.getURI();
 			CurrentMode.instance.setShortening(true);

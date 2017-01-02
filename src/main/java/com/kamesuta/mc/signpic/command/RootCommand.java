@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -17,26 +18,28 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 
 public class RootCommand extends CommandBase implements IModCommand {
-	public static final String ROOT_COMMAND_NAME = "signpic";
-	private final SortedSet<SubCommand> children = new TreeSet<SubCommand>(new Comparator<SubCommand>() {
+	public static final @Nonnull String ROOT_COMMAND_NAME = "signpic";
+	private final @Nonnull SortedSet<SubCommand> children = Sets.newTreeSet(new Comparator<SubCommand>() {
 		@Override
-		public int compare(final SubCommand o1, final SubCommand o2) {
-			return o1.compareTo(o2);
+		public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
+			if (o1!=null&&o2!=null)
+				return o1.compareTo(o2);
+			return 0;
 		}
 	});
 
-	public void addChildCommand(final SubCommand child) {
+	public void addChildCommand(final @Nonnull SubCommand child) {
 		child.setParent(this);
 		this.children.add(child);
 	}
 
 	@Override
-	public SortedSet<SubCommand> getChildren() {
+	public @Nonnull SortedSet<SubCommand> getChildren() {
 		return this.children;
 	}
 
 	@Override
-	public String getName() {
+	public @Nonnull String getName() {
 		return ROOT_COMMAND_NAME;
 	}
 
@@ -46,35 +49,38 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public List<String> getAliases() {
+	public @Nullable List<String> getAliases() {
 		final ArrayList<String> aliases = Lists.newArrayList();
 		aliases.add("signpicture");
 		return aliases;
 	}
 
 	@Override
-	public String getUsage(final ICommandSender sender) {
+	public @Nonnull String getUsage(final @Nullable ICommandSender sender) {
 		return "/"+getName()+" help";
 	}
 
 	@Override
-	public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
-		if (!CommandHelpers.processCommands(sender, this, args))
-			CommandHelpers.throwWrongUsage(sender, this);
+	public void execute(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
+		if (sender!=null&&args!=null)
+			if (!CommandHelpers.processCommands(sender, this, args))
+				CommandHelpers.throwWrongUsage(sender, this);
 	}
 
 	@Override
-	public List<String> getTabCompletions(final MinecraftServer server, final ICommandSender sender, final String[] args, @Nullable final BlockPos pos) {
-		return CommandHelpers.completeCommands(sender, this, args);
+	public @Nullable List<String> getTabCompletions(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
+		if (sender!=null&&args!=null)
+			return CommandHelpers.completeCommands(sender, this, args);
+		return null;
 	}
 
 	@Override
-	public String getFullCommandString() {
+	public @Nonnull String getFullCommandString() {
 		return getName();
 	}
 
 	@Override
-	public void printHelp(final ICommandSender sender) {
+	public void printHelp(final @Nonnull ICommandSender sender) {
 		CommandHelpers.printHelp(sender, this);
 	}
 }

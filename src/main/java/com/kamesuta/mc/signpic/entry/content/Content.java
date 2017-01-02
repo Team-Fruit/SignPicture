@@ -1,5 +1,8 @@
 package com.kamesuta.mc.signpic.entry.content;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IInitable;
@@ -12,21 +15,22 @@ import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.state.StateType;
 
 public class Content implements IInitable, ICollectable, ILoadCancelable {
-	public final ContentId id;
-	public final ContentMeta meta;
-	public final State state;
-	public Image image;
-	public String imagemeta;
+	public final @Nonnull ContentId id;
+	public final @Nonnull ContentMeta meta;
+	public final @Nonnull State state;
+	public @Nonnull Image image;
+	public @Nullable String imagemeta;
 	private boolean dirty;
 
-	public Content(final ContentId id) {
+	public Content(final @Nonnull ContentId id) {
 		this.id = id;
 		final String url = id.getURI();
 		final String hash = ContentLocation.hash(url);
 		this.meta = new ContentMeta(ContentLocation.metaLocation(hash));
 		this.meta.setURL(url);
 		this.meta.setMetaID(hash);
-		this.state = new State().setName(id.id());
+		this.state = new State();
+		this.state.setName(id.getID());
 		if (id.isResource())
 			this.image = new ResourceImage(this);
 		else
@@ -59,8 +63,11 @@ public class Content implements IInitable, ICollectable, ILoadCancelable {
 
 	public void markDirtyWithCache() {
 		this.meta.setTryCount(0);
-		final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(this.meta.getCacheID()));
-		cachemeta.setDirty(true);
+		final String id = this.meta.getCacheID();
+		if (id!=null) {
+			final ContentCache cachemeta = new ContentCache(ContentLocation.cachemetaLocation(id));
+			cachemeta.setDirty(true);
+		}
 		markDirty();
 	}
 }

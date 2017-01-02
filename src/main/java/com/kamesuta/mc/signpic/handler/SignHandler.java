@@ -3,10 +3,14 @@ package com.kamesuta.mc.signpic.handler;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WGui;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -16,17 +20,19 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiRepair;
@@ -47,9 +53,9 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static Field guiEditSignTileEntity;
-	private static Field guiRepairTextField;
-	private static Field guiRepairContainer;
+	private static @Nullable Field guiEditSignTileEntity;
+	private static @Nullable Field guiRepairTextField;
+	private static @Nullable Field guiRepairContainer;
 
 	public static void init() {
 		try {
@@ -79,12 +85,12 @@ public class SignHandler {
 		}
 	}
 
-	private GuiRepair repairGuiTask;
-	private String repairGuiTextFieldCache;
+	private @Nullable GuiRepair repairGuiTask;
+	private @Nullable String repairGuiTextFieldCache;
 	private boolean isPlaceMode;
 
 	@CoreEvent
-	public void onSign(final GuiOpenEvent event) {
+	public void onSign(final @Nonnull GuiOpenEvent event) {
 		this.repairGuiTask = null;
 		this.repairGuiTextFieldCache = null;
 		final EntryId handSign = CurrentMode.instance.getHandSign();
@@ -123,8 +129,11 @@ public class SignHandler {
 				else
 					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
 			} else if (event.getGui() instanceof GuiRepair) {
-				if (!entryId.isNameable())
-					ShortenerApiUtil.requestShoretning(entryId.entry().contentId);
+				if (!entryId.isNameable()) {
+					final ContentId id = entryId.entry().contentId;
+					if (id!=null)
+						ShortenerApiUtil.requestShoretning(id);
+				}
 				this.repairGuiTask = (GuiRepair) event.getGui();
 				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 					CurrentMode.instance.setMode();
@@ -143,10 +152,12 @@ public class SignHandler {
 				final EntryId entryId = CurrentMode.instance.getEntryId();
 				if (!entryId.isNameable())
 					break check;
-				if (guiRepairTextField!=null&&guiRepairContainer!=null)
+				final Field fTextField = guiRepairTextField;
+				final Field fContainer = guiRepairContainer;
+				if (fTextField!=null&&fContainer!=null)
 					try {
-						final GuiTextField textField = (GuiTextField) guiRepairTextField.get(this.repairGuiTask);
-						final ContainerRepair containerRepair = (ContainerRepair) guiRepairContainer.get(this.repairGuiTask);
+						final GuiTextField textField = (GuiTextField) fTextField.get(this.repairGuiTask);
+						final ContainerRepair containerRepair = (ContainerRepair) fContainer.get(this.repairGuiTask);
 						if (textField!=null&&containerRepair!=null) {
 							final String text = textField.getText();
 							if (!StringUtils.isEmpty(text)&&!StringUtils.equals(this.repairGuiTextFieldCache, text)) {
@@ -163,10 +174,10 @@ public class SignHandler {
 			}
 	}
 
-	protected VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
+	protected @Nonnull VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
 
 	@CoreEvent
-	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
+	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
 		if (event.getGui() instanceof GuiRepair)
 			if (this.repairGuiTask!=null&&this.isPlaceMode) {
 				final int xSize = 176;
@@ -174,7 +185,7 @@ public class SignHandler {
 				final int guiLeft = (event.getGui().width-xSize)/2;
 				final int guiTop = (event.getGui().height-ySize)/2;
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				RenderHelper.startTexture();
+				WRenderer.startTexture();
 				WGui.texture().bindTexture(MPanel.background);
 				final Area a = new Area(guiLeft-42, guiTop, guiLeft, guiTop+49);
 				MPanel.drawBack(a);
@@ -189,7 +200,7 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onClick(final MouseEvent event) {
+	public void onClick(final @Nonnull MouseEvent event) {
 		if (event.isButtonstate()&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.getButton()-100) {
 			ItemStack handItem = Client.mc.player.getHeldItemMainhand();
 			if (handItem==null||handItem.getItem()!=Items.SIGN)
@@ -223,7 +234,7 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onTooltip(final ItemTooltipEvent event) {
+	public void onTooltip(final @Nonnull ItemTooltipEvent event) {
 		if (event.getItemStack().getItem()==Items.SIGN) {
 			final ItemEntryId id = EntryId.fromItemStack(event.getItemStack());
 			final Entry entry = id.entry();
@@ -232,22 +243,24 @@ public class SignHandler {
 				final String raw = !tip.isEmpty() ? tip.get(0) : "";
 				if (id.hasName())
 					tip.set(0, id.getName());
-				else
+				else if (entry.contentId!=null)
 					tip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
 					tip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
-					final ImageMeta meta = entry.getMeta();
-					tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", meta.size.width, meta.size.height));
-					tip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", meta.offset.x, meta.offset.y, meta.offset.z));
-					tip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
-					if (id.hasName())
+					final CompoundAttr meta = entry.getMeta();
+					final SizeData size = meta.sizes.getMovie().get();
+					tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
+					final OffsetData offset = meta.offsets.getMovie().get();
+					tip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					if (id.hasName()&&entry.contentId!=null)
 						tip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-					tip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 					tip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 				}
-			} else if (Config.instance.signTooltip.get()||!Config.instance.guiExperienced.get()) {
+			} else if (Config.getConfig().signTooltip.get()||!Config.getConfig().guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());

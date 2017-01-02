@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 
@@ -33,10 +35,10 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Reference;
 
 public class Downloader {
-	public static Downloader downloader = new Downloader();
+	public static @Nonnull Downloader downloader = new Downloader();
 
-	public final PoolingHttpClientConnectionManager manager;
-	public HttpClient client;
+	public final @Nonnull PoolingHttpClientConnectionManager manager;
+	public @Nonnull HttpClient client;
 
 	public Downloader() {
 		Registry<ConnectionSocketFactory> registry = null;
@@ -49,7 +51,7 @@ public class Downloader {
 							null,
 							new TrustStrategy() {
 								@Override
-								public boolean isTrusted(final X509Certificate[] chain, final String authType)
+								public boolean isTrusted(final @Nullable X509Certificate[] chain, final @Nullable String authType)
 										throws CertificateException {
 									return true;
 								}
@@ -59,17 +61,19 @@ public class Downloader {
 					sslContext,
 					SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER) {
 				@Override
-				protected void prepareSocket(final SSLSocket socket) throws IOException {
-					final String[] enabledCipherSuites = socket.getEnabledCipherSuites();
+				protected void prepareSocket(final @Nullable SSLSocket socket) throws IOException {
+					if (socket!=null) {
+						final String[] enabledCipherSuites = socket.getEnabledCipherSuites();
 
-					final List<String> asList = new ArrayList<String>(Arrays.asList(enabledCipherSuites));
+						final List<String> asList = new ArrayList<String>(Arrays.asList(enabledCipherSuites));
 
-					asList.remove("TLS_DHE_RSA_WITH_AES_128_CBC_SHA");
-					asList.remove("SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA");
-					asList.remove("TLS_DHE_RSA_WITH_AES_256_CBC_SHA");
+						asList.remove("TLS_DHE_RSA_WITH_AES_128_CBC_SHA");
+						asList.remove("SSL_DHE_RSA_WITH_3DES_EDE_CBC_SHA");
+						asList.remove("TLS_DHE_RSA_WITH_AES_256_CBC_SHA");
 
-					final String[] array = asList.toArray(new String[0]);
-					socket.setEnabledCipherSuites(array);
+						final String[] array = asList.toArray(new String[0]);
+						socket.setEnabledCipherSuites(array);
+					}
 				};
 			};
 
@@ -88,9 +92,9 @@ public class Downloader {
 			this.manager = new PoolingHttpClientConnectionManager();
 
 		final Builder requestConfig = RequestConfig.custom();
-		if (Config.instance.communicateDLTimedout.get()>0) {
-			requestConfig.setConnectTimeout(Config.instance.communicateDLTimedout.get());
-			requestConfig.setSocketTimeout(Config.instance.communicateDLTimedout.get());
+		if (Config.getConfig().communicateDLTimedout.get()>0) {
+			requestConfig.setConnectTimeout(Config.getConfig().communicateDLTimedout.get());
+			requestConfig.setSocketTimeout(Config.getConfig().communicateDLTimedout.get());
 		}
 
 		final List<Header> headers = new ArrayList<Header>();

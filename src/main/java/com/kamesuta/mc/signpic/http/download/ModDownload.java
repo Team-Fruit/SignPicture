@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.CountingOutputStream;
@@ -22,6 +25,7 @@ import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
+import com.kamesuta.mc.signpic.information.Info.Version;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
@@ -36,26 +40,33 @@ import net.minecraft.util.text.TextFormatting;
 
 public class ModDownload extends Communicate implements Progressable {
 	protected boolean canceled;
-	protected State status = new State().setName("§6SignPicture Mod Update");
-	public ModDLResult result;
+	protected @Nonnull State status = new State().setName("§6SignPicture Mod Update");
+	public @Nullable ModDLResult result;
 
 	@Override
 	public void communicate() {
 		final Informations.InfoState state = Informations.instance.getState();
 		final Informations.InfoSource source = Informations.instance.getSource();
-		final Informations.InfoVersion online = source.onlineVersion();
 		File tmp = null;
 		InputStream input = null;
 		OutputStream output = null;
 		try {
 			setCurrent();
-			final String stringurl = online.version.remote;
-			final String stringlocal = online.version.local;
+			if (source==null)
+				throw new IllegalStateException("No update data available");
+			final Informations.InfoVersion online = source.onlineVersion();
+			final Version version = online.version;
+			if (version==null)
+				throw new IllegalStateException("Invalid version data");
+			final String stringremote = version.remote;
+			final String stringlocal = version.local;
 			final String local;
-			if (!StringUtils.isEmpty(stringlocal))
+			if (stringlocal!=null&&!StringUtils.isEmpty(stringlocal))
 				local = stringlocal;
+			else if (stringremote!=null&&!StringUtils.isEmpty(stringremote))
+				local = stringremote.substring(stringremote.lastIndexOf("/")+1, stringremote.length());
 			else
-				local = stringurl.substring(stringurl.lastIndexOf("/")+1, stringurl.length());
+				throw new IllegalStateException("No update url provided in repository");
 
 			ChatBuilder.create("signpic.versioning.startingDownload").setParams(local).useTranslation().useJson().chatClient();
 
@@ -63,15 +74,15 @@ public class ModDownload extends Communicate implements Progressable {
 
 			state.downloading = true;
 
-			final HttpUriRequest req = new HttpGet(new URI(online.version.remote));
+			final HttpUriRequest req = new HttpGet(new URI(version.remote));
 			final HttpResponse response = Downloader.downloader.client.execute(req);
 			final HttpEntity entity = response.getEntity();
 
 			this.status.getProgress().overall = entity.getContentLength();
 			input = entity.getContent();
 
-			tmp = Client.location.createCache("modupdate");
-			final File f1 = new File(Client.location.modDir, local);
+			tmp = Client.getLocation().createCache("modupdate");
+			final File f1 = new File(Client.getLocation().modDir, local);
 
 			output = new CountingOutputStream(new FileOutputStream(tmp)) {
 				@Override
@@ -91,13 +102,13 @@ public class ModDownload extends Communicate implements Progressable {
 				FileUtils.moveFile(tmp, f1);
 
 			ITextComponent chat;
-			if (Client.location.modFile.isFile())
-				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.location.modFile.getName()).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
+			if (Client.getLocation().modFile.isFile())
+				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.getLocation().modFile.getName()).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
 			else
 				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new Style().setColor(TextFormatting.GREEN)).build();
 			Log.notice(I18n.format("signpic.gui.notice.downloaded", local));
 
-			Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
+			Desktop.getDesktop().open(Client.getLocation().modDir.getCanonicalFile());
 			state.downloadedFile = f1;
 
 			this.result = new ModDLResult(chat);
@@ -119,7 +130,7 @@ public class ModDownload extends Communicate implements Progressable {
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.status;
 	}
 
@@ -130,9 +141,9 @@ public class ModDownload extends Communicate implements Progressable {
 	}
 
 	public static class ModDLResult {
-		public final ITextComponent response;
+		public final @Nonnull ITextComponent response;
 
-		public ModDLResult(final ITextComponent response) {
+		public ModDLResult(final @Nonnull ITextComponent response) {
 			this.response = response;
 		}
 	}

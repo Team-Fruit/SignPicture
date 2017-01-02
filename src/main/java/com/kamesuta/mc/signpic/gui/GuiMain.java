@@ -4,12 +4,16 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Transferable;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
@@ -27,16 +31,19 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
+import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -44,9 +51,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class GuiMain extends WFrame {
-	private final EntryIdBuilder signbuilder = new EntryIdBuilder().load(CurrentMode.instance.getEntryId());
+	private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(CurrentMode.instance.getEntryId());
 
-	public void setURL(final String url) {
+	public void setURL(final @Nonnull String url) {
 		this.signbuilder.setURI(url);
 		final MainTextField field = getTextField();
 		field.setText(url);
@@ -57,10 +64,30 @@ public class GuiMain extends WFrame {
 		CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
 	}
 
-	private MainTextField field;
-	private GuiSettings settings;
+	private @Nonnull MainTextField field;
+	private @Nonnull GuiSettings settings;
 
-	public GuiMain(final GuiScreen parent) {
+	{
+		final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
+
+		this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(80), Coord.height(15))) {
+			@Override
+			public boolean onCloseRequest() {
+				super.onCloseRequest();
+				d.stop().add(Easings.easeInBack.move(.25f, -15)).start();
+				return false;
+			}
+
+			@Override
+			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
+				return d.isFinished();
+			}
+		};
+
+		this.settings = new GuiSettings(new R());
+	}
+
+	public GuiMain(final @Nullable GuiScreen parent) {
 		super(parent);
 	}
 
@@ -87,8 +114,8 @@ public class GuiMain extends WFrame {
 					VMotion m = V.pm(0);
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-						RenderHelper.startShape();
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
 						draw(getGuiPosition(pgp));
 					}
@@ -96,7 +123,7 @@ public class GuiMain extends WFrame {
 					protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 
 					@Override
-					public void update(final WEvent ev, final Area pgp, final Point p) {
+					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 							if (!this.b) {
 								this.b = true;
@@ -116,7 +143,7 @@ public class GuiMain extends WFrame {
 					}
 
 					@Override
-					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+					public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 						return this.m.isFinished();
 					}
 				});
@@ -130,7 +157,8 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), GuiMain.this.signbuilder.getMeta().offset) {
+				final OffsetBuilder offset = GuiMain.this.signbuilder.getMeta().offset;
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), offset.x, offset.y, offset.z) {
 					@Override
 					protected void onUpdate() {
 						super.onUpdate();
@@ -156,7 +184,7 @@ public class GuiMain extends WFrame {
 							{
 								add(new SignPicLabel(new R(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
 									@Override
-									public EntryId getEntryId() {
+									public @Nonnull EntryId getEntryId() {
 										return CurrentMode.instance.getEntryId();
 									}
 								});
@@ -165,7 +193,7 @@ public class GuiMain extends WFrame {
 							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 
 							@Override
-							public void update(final WEvent ev, final Area pgp, final Point p) {
+							public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
 									if (!this.b) {
 										this.b = true;
@@ -179,7 +207,7 @@ public class GuiMain extends WFrame {
 							}
 
 							@Override
-							public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								final Area a = getGuiPosition(pgp);
 								if (a.pointInside(p))
 									if (Informations.instance.isUpdateRequired()) {
@@ -198,7 +226,7 @@ public class GuiMain extends WFrame {
 					}
 
 					@Override
-					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+					public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 						return m.isFinished();
 					}
 				});
@@ -211,7 +239,7 @@ public class GuiMain extends WFrame {
 
 						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.SEE, !CurrentMode.instance.isState(CurrentMode.State.SEE));
 								return true;
 							}
@@ -223,7 +251,7 @@ public class GuiMain extends WFrame {
 						}.setText(I18n.format("signpic.gui.editor.see")));
 						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								final boolean state = CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
 								CurrentMode.instance.setState(CurrentMode.State.PREVIEW, !state);
 								if (!state) {
@@ -244,7 +272,7 @@ public class GuiMain extends WFrame {
 						}.setText(I18n.format("signpic.gui.editor.preview")));
 						add(new FunnyButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								McUiUpload.instance.setVisible(!McUiUpload.instance.isVisible());
 								return true;
 							}
@@ -256,7 +284,7 @@ public class GuiMain extends WFrame {
 						}.setText(I18n.format("signpic.gui.editor.file")));
 						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								try {
 									final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 									FileUtilitiy.transfer(transferable);
@@ -271,7 +299,7 @@ public class GuiMain extends WFrame {
 
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								CurrentMode.instance.setState(CurrentMode.State.CONTINUE, !CurrentMode.instance.isState(CurrentMode.State.CONTINUE));
 								return true;
 							}
@@ -283,7 +311,7 @@ public class GuiMain extends WFrame {
 						}.setText(I18n.format("signpic.gui.editor.continue")));
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								CurrentMode.instance.setMode(CurrentMode.Mode.OPTION);
 								requestClose();
 								return true;
@@ -296,11 +324,12 @@ public class GuiMain extends WFrame {
 						}.setText(I18n.format("signpic.gui.editor.option")));
 						add(new FunnyButton(new R(Coord.right(5), Coord.bottom(bottom -= 20), Coord.left(5), Coord.height(15))) {
 							@Override
-							protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								if (entry.isValid()) {
-									if (!entry.id.isPlaceable())
-										ShortenerApiUtil.requestShoretning(entry.content().id);
+									Content content = null;
+									if (!entry.id.isPlaceable()&&(content = entry.getContent())!=null)
+										ShortenerApiUtil.requestShoretning(content.id);
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 									requestClose();
@@ -329,41 +358,25 @@ public class GuiMain extends WFrame {
 					}
 
 					@Override
-					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+					public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 						return p.isFinished();
 					}
 				});
 
-				final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-				GuiMain.this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(80), Coord.height(15))) {
-					@Override
-					public boolean onCloseRequest() {
-						super.onCloseRequest();
-						d.stop().add(Easings.easeInBack.move(.25f, -15)).start();
-						return false;
-					}
-
-					@Override
-					public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
-						return d.isFinished();
-					}
-				};
 				add(GuiMain.this.field);
-
-				GuiMain.this.settings = new GuiSettings(new R());
 
 				add(GuiMain.this.settings);
 
 				add(OverlayFrame.instance.pane);
 			}
 		});
-		if (Informations.instance.shouldCheck(Config.instance.informationJoinBeta.get() ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
+		if (Informations.instance.shouldCheck(Config.getConfig().informationJoinBeta.get() ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
 			Informations.instance.onlineCheck(null);
-		if (!Config.instance.guiExperienced.get())
-			Config.instance.guiExperienced.set(true);
+		if (!Config.getConfig().guiExperienced.get())
+			Config.getConfig().guiExperienced.set(true);
 	}
 
-	public MainTextField getTextField() {
+	public @Nonnull MainTextField getTextField() {
 		return this.field;
 	}
 
@@ -374,7 +387,7 @@ public class GuiMain extends WFrame {
 		OverlayFrame.instance.release();
 	}
 
-	public static boolean setContentId(final String id) {
+	public static boolean setContentId(final @Nonnull String id) {
 		if (Client.mc.currentScreen instanceof GuiMain) {
 			final GuiMain editor = (GuiMain) Client.mc.currentScreen;
 			editor.setURL(id);
@@ -389,7 +402,7 @@ public class GuiMain extends WFrame {
 	}
 
 	public class MainTextField extends MChatTextField {
-		public MainTextField(final R position) {
+		public MainTextField(final @Nonnull R position) {
 			super(position);
 		}
 
@@ -400,8 +413,9 @@ public class GuiMain extends WFrame {
 			setWatermark(I18n.format("signpic.gui.editor.textfield"));
 
 			final EntryId id = CurrentMode.instance.getEntryId();
-			if (id.hasContentId())
-				setText(id.getContentId().getID());
+			Content content = null;
+			if ((content = id.entry().getContent())!=null)
+				setText(content.id.getID());
 		}
 
 		@Override
@@ -411,10 +425,12 @@ public class GuiMain extends WFrame {
 
 		public void apply() {
 			final EntryId entryId = EntryId.from(getText());
-			if (entryId.hasMeta())
-				GuiMain.this.signbuilder.setMeta(entryId.getMeta());
-			if (entryId.hasContentId()) {
-				String url = entryId.getContentId().getURI();
+			final CompoundAttrBuilder atb = entryId.getMetaBuilder();
+			if (atb!=null)
+				GuiMain.this.signbuilder.setMeta(atb);
+			final ContentId cid = entryId.getContentId();
+			if (cid!=null) {
+				String url = cid.getURI();
 				setText(url = Apis.instance.replaceURL(url));
 				GuiMain.this.signbuilder.setURI(url);
 			} else
@@ -423,7 +439,7 @@ public class GuiMain extends WFrame {
 		}
 
 		@Override
-		public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+		public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 			final int cursor1 = getCursorPosition();
 			final boolean focused1 = isFocused();
 			final boolean b = super.mouseClicked(ev, pgp, p, button);
@@ -431,13 +447,16 @@ public class GuiMain extends WFrame {
 			final boolean focused2 = isFocused();
 			final Area a = getGuiPosition(pgp);
 			if (a.pointInside(p))
-				if (focused1&&focused2&&cursor1==cursor2)
-					setText(GuiScreen.getClipboardString());
+				if (focused1&&focused2&&cursor1==cursor2) {
+					final String clip = GuiScreen.getClipboardString();
+					if (clip!=null)
+						setText(clip);
+				}
 			return b;
 		}
 	}
 
-	private final CompoundMotion closeCooldown = new CompoundMotion().start();
+	private final @Nonnull CompoundMotion closeCooldown = new CompoundMotion().start();
 
 	@Override
 	public void requestClose() {

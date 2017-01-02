@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.util;
 
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
@@ -21,49 +24,45 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ChatBuilder {
 	public static final int DefaultId = 877;
 
-	private ITextComponent chat = null;
-	private Style style = null;
-	private String text = "";
-	private Object[] params = new Object[0];
+	private @Nullable ITextComponent chat = null;
+	private @Nullable Style style = null;
+	private @Nonnull String text = "";
+	private @Nonnull Object[] params = new Object[0];
 	private boolean useTranslation = false;
 	private boolean useJson = false;
 	private boolean useId = false;
-	private final Map<String, String> replace = Maps.newHashMap();
+	private final @Nonnull Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
-	public ChatBuilder() {
-	}
-
-	public ITextComponent build() {
+	public @Nonnull ITextComponent build() {
 		ITextComponent chat;
-		if (this.chat==null) {
-			if (this.useTranslation&&!this.useJson)
-				chat = new TextComponentTranslation(this.text, this.params);
-			else {
-				String s;
-				if (this.useTranslation) {
-					s = translateToLocal(this.text);
-				} else
-					s = this.text;
-
-				for (final Map.Entry<String, String> entry : this.replace.entrySet())
-					s = StringUtils.replace(s, entry.getKey(), entry.getValue());
-
-				if (this.params.length>0)
-					s = String.format(s, this.params);
-
-				if (this.useJson)
-					try {
-						chat = ITextComponent.Serializer.jsonToComponent(s);
-					} catch (final Exception e) {
-						chat = new TextComponentString("Invaild Json: "+this.text);
-					}
-				else
-					chat = new TextComponentString(this.text);
-			}
-		} else
+		if (this.chat!=null)
 			chat = this.chat;
-		if (chat!=null&&this.style!=null)
+		else if (this.useTranslation&&!this.useJson)
+			chat = new TextComponentTranslation(this.text, this.params);
+		else {
+			String s;
+			if (this.useTranslation)
+				s = translateToLocal(this.text);
+			else
+				s = this.text;
+
+			for (final Map.Entry<String, String> entry : this.replace.entrySet())
+				s = StringUtils.replace(s, entry.getKey(), entry.getValue());
+
+			if (this.params.length>0)
+				s = String.format(s, this.params);
+
+			if (this.useJson)
+				try {
+					chat = ITextComponent.Serializer.jsonToComponent(s);
+				} catch (final Exception e) {
+					chat = new TextComponentString("Invaild Json: "+this.text);
+				}
+			else
+				chat = new TextComponentString(this.text);
+		}
+		if (this.style!=null)
 			chat.setStyle(this.style);
 		return chat;
 	}
@@ -75,56 +74,61 @@ public class ChatBuilder {
 	}
 
 	public boolean isEmpty() {
-		return StringUtils.isEmpty(this.text)&&(this.chat==null||StringUtils.isEmpty(this.chat.getUnformattedText()));
+		if (StringUtils.isEmpty(this.text)) {
+			if (this.chat!=null)
+				return StringUtils.isEmpty(this.chat.getUnformattedText());
+			return true;
+		}
+		return false;
 	}
 
-	public ChatBuilder setId(final int id) {
+	public @Nonnull ChatBuilder setId(final int id) {
 		this.useId = true;
 		this.id = id;
 		return this;
 	}
 
-	public ChatBuilder setId() {
+	public @Nonnull ChatBuilder setId() {
 		setId(DefaultId);
 		return this;
 	}
 
-	public ChatBuilder setChat(final ITextComponent chat) {
+	public @Nonnull ChatBuilder setChat(final @Nullable ITextComponent chat) {
 		this.chat = chat;
 		return this;
 	}
 
-	public ChatBuilder setText(final String text) {
+	public @Nonnull ChatBuilder setText(final @Nonnull String text) {
 		this.text = text;
 		return this;
 	}
 
-	public ChatBuilder setParams(final Object... params) {
+	public @Nonnull ChatBuilder setParams(final @Nonnull Object... params) {
 		this.params = params;
 		return this;
 	}
 
-	public ChatBuilder setStyle(final Style style) {
+	public @Nonnull ChatBuilder setStyle(final @Nullable Style style) {
 		this.style = style;
 		return this;
 	}
 
-	public ChatBuilder useTranslation() {
+	public @Nonnull ChatBuilder useTranslation() {
 		this.useTranslation = true;
 		return this;
 	}
 
-	public ChatBuilder useJson() {
+	public @Nonnull ChatBuilder useJson() {
 		this.useJson = true;
 		return this;
 	}
 
-	public ChatBuilder replace(final String from, final String to) {
+	public @Nonnull ChatBuilder replace(final @Nonnull String from, final @Nonnull String to) {
 		this.replace.put(from, to);
 		return this;
 	}
 
-	public static ChatBuilder create(final String text) {
+	public static @Nonnull ChatBuilder create(final @Nonnull String text) {
 		return new ChatBuilder().setText(text);
 	}
 
@@ -134,13 +138,13 @@ public class ChatBuilder {
 			chatClient(this);
 	}
 
-	public void sendPlayer(final ICommandSender target) {
+	public void sendPlayer(final @Nonnull ICommandSender target) {
 		if (!isEmpty())
 			sendPlayer(target, this);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static void chatClient(final ChatBuilder chat) {
+	public static void chatClient(final @Nonnull ChatBuilder chat) {
 		final Minecraft mc = Client.mc;
 		if (mc.player!=null) {
 			final ITextComponent msg = chat.build();
@@ -151,12 +155,12 @@ public class ChatBuilder {
 		}
 	}
 
-	public static void sendPlayer(final ICommandSender target, final ChatBuilder chat) {
+	public static void sendPlayer(final @Nonnull ICommandSender target, final @Nonnull ChatBuilder chat) {
 		target.sendMessage(chat.build());
 	}
 
 	@SideOnly(Side.SERVER)
-	public static void sendServer(final ChatBuilder chat) {
+	public static void sendServer(final @Nonnull ChatBuilder chat) {
 		final PlayerList player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList();
 		player.sendMessage(chat.build());
 	}

@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.command;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.information.Informations;
@@ -12,8 +15,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 
 public class CommandVersion extends SubCommand {
-	private final SubCommand cmdcheck;
-	private final SubCommand cmdupdate;
+	private final @Nonnull SubCommand cmdcheck;
+	private final @Nonnull SubCommand cmdupdate;
 
 	public CommandVersion() {
 		super("version");
@@ -32,9 +35,10 @@ public class CommandVersion extends SubCommand {
 		}
 
 		@Override
-		public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
-			Config.instance.informationJoinBeta.set(false);
-			super.execute(server, sender, args);
+		public void execute(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
+			Config.getConfig().informationJoinBeta.set(false);
+			if (server!=null&&sender!=null&&args!=null)
+				super.execute(server, sender, args);
 		}
 	}
 
@@ -45,7 +49,7 @@ public class CommandVersion extends SubCommand {
 		}
 
 		@Override
-		public void processSubCommand(final ICommandSender sender, final String[] args) {
+		public void processSubCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
 			final long cooldown = TimeUnit.HOURS.toMillis(2l);
 			if (Informations.instance.shouldCheck(cooldown)) {
 				Log.notice(I18n.format("signpic.versioning.check.start"));
@@ -69,7 +73,7 @@ public class CommandVersion extends SubCommand {
 		}
 
 		@Override
-		public void processSubCommand(final ICommandSender sender, final String[] args) {
+		public void processSubCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
 			// ChatBuilder.sendPlayerChat(var1, ChatBuilder.create("signpic.versioning.disabled").setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			final long cooldown = TimeUnit.HOURS.toMillis(2l);
 			if (Informations.instance.shouldCheck(cooldown))

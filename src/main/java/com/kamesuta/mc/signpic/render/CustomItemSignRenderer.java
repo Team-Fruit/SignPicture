@@ -4,16 +4,21 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
-import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.entry.content.Content;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -33,21 +38,21 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 
 public class CustomItemSignRenderer implements IPerspectiveAwareModel {
-	public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
-	private final IBakedModel baseModel;
-	private ItemStack itemStack;
+	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
+	private final @Nonnull IBakedModel baseModel;
+	private @Nullable ItemStack itemStack;
 	private boolean isOverride;
 
-	public CustomItemSignRenderer(final IBakedModel model) {
+	public CustomItemSignRenderer(final @Nonnull IBakedModel model) {
 		this.baseModel = model;
 	}
 
 	@Override
-	public Pair<? extends IBakedModel, Matrix4f> handlePerspective(final TransformType cameraTransformType) {
+	public @Nullable Pair<? extends IBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
 		Pair<? extends IBakedModel, Matrix4f> pair = null;
 		if (this.baseModel instanceof IPerspectiveAwareModel)
 			pair = ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
-		if (this.itemStack!=null&&this.isOverride) {
+		if (this.itemStack!=null&&cameraTransformType!=null&&this.isOverride) {
 			OpenGL.glPushMatrix();
 			if (pair!=null&&pair.getRight()!=null)
 				ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
@@ -64,46 +69,50 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 		return Pair.of(this, null);
 	}
 
-	public void renderItem(final TransformType type, final ItemStack item) {
+	public void renderItem(final @Nonnull TransformType type, final @Nullable ItemStack item) {
 		OpenGL.glPushMatrix();
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
+		final CompoundAttr attr = entry.getMeta();
+		final Content content = entry.getContent();
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(entry.getMeta().size, entry.content().image.getSize());
+		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+		final SizeData size = attr.sizes.getMovie().get().aspectSize(size01);
 		OpenGL.glScalef(1f, -1f, 1f);
 		if (type==TransformType.GUI) {
 			final float slot = 1f;
-			final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size, slot, slot);
+			final SizeData size2 = SizeData.ImageSizes.INNER.defineSize(size, slot, slot);
 			//OpenGL.glScalef(.5f, .5f, 1f);
-			OpenGL.glTranslatef((slot-size2.width)/2f, (slot-size2.height)/2f, 0f);
+			OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
 			OpenGL.glTranslatef(-.5f, -.5f, 0f);
 			OpenGL.glScalef(slot, slot, 1f);
-			entry.gui.drawScreen(0, 0, 0f, 1f, size2.width/slot, size2.height/slot);
+			entry.gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot);
 		} else {
 			OpenGL.glScalef(2f, 2f, 1f);
 			if (type==TransformType.GROUND)
-				OpenGL.glTranslatef(-size.width/2f, .25f, 0f);
+				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
 			else if (type==TransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
-				OpenGL.glTranslatef(-size.width/2f, .5f, f);
+				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
 			} else if (type==TransformType.FIRST_PERSON_LEFT_HAND) {
 				OpenGL.glScalef(-1f, 1f, 1f);
 				OpenGL.glTranslatef(.25f, .25f, 0f);
-				OpenGL.glTranslatef(-size.width, 0f, 0f);
+				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
 			} else if (type==TransformType.FIRST_PERSON_RIGHT_HAND)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
 			else if (type==TransformType.THIRD_PERSON_LEFT_HAND) {
 				OpenGL.glTranslatef(.25f, .25f, 0f);
-				OpenGL.glTranslatef(-size.width, 0f, 0f);
+				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
 			} else if (type==TransformType.THIRD_PERSON_RIGHT_HAND)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
 			else if (type==TransformType.HEAD)
-				OpenGL.glTranslatef(-size.width/2f, .25f, 0f);
-			OpenGL.glTranslatef(0f, -size.height, 0f);
-			OpenGL.glTranslatef(entry.getMeta().offset.x, entry.getMeta().offset.y, entry.getMeta().offset.z);
-			entry.getMeta().rotation.rotate();
-			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
+				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
+			OpenGL.glTranslatef(0f, -size.getHeight(), 0f);
+			final OffsetData offset = attr.offsets.getMovie().get();
+			OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
+			RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
+			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
 		}
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
@@ -120,12 +129,12 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
+	public @Nullable TextureAtlasSprite getParticleTexture() {
 		return this.baseModel.getParticleTexture();
 	}
 
 	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
+	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
 		return ItemCameraTransforms.DEFAULT;
 	}
 
@@ -135,16 +144,16 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 	}
 
 	@Override
-	public List<BakedQuad> getQuads(final IBlockState state, final EnumFacing side, final long rand) {
+	public @Nullable List<BakedQuad> getQuads(final @Nullable IBlockState state, final @Nullable EnumFacing side, final long rand) {
 		if (this.isOverride)
 			return ImmutableList.<BakedQuad> of();
 		else
 			return this.baseModel.getQuads(state, side, rand);
 	}
 
-	private ItemOverrideList overrides = new ItemOverrideList(ImmutableList.<ItemOverride> of()) {
+	private @Nonnull ItemOverrideList overrides = new ItemOverrideList(ImmutableList.<ItemOverride> of()) {
 		@Override
-		public IBakedModel handleItemState(final IBakedModel originalModel, final ItemStack stack, final World world, final EntityLivingBase entity) {
+		public @Nullable IBakedModel handleItemState(final @Nullable IBakedModel originalModel, final @Nullable ItemStack stack, final @Nullable World world, final @Nullable EntityLivingBase entity) {
 			CustomItemSignRenderer.this.itemStack = stack;
 			CustomItemSignRenderer.this.isOverride = stack!=null&&stack.getItem()==Items.SIGN&&EntryId.fromItemStack(stack).entry().isValid();
 			return CustomItemSignRenderer.this.baseModel.getOverrides().handleItemState(originalModel, stack, world, entity);
@@ -152,7 +161,7 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 	};
 
 	@Override
-	public ItemOverrideList getOverrides() {
+	public @Nonnull ItemOverrideList getOverrides() {
 		return this.overrides;
 	}
 }

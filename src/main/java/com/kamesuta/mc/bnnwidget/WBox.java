@@ -2,24 +2,27 @@ package com.kamesuta.mc.bnnwidget;
 
 import java.util.Iterator;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 
 public class WBox extends WPanel {
-	protected WCommon addtask;
+	protected @Nullable WCommon addtask;
 
-	public WBox(final R position) {
+	public WBox(final @Nonnull R position) {
 		super(position);
 	}
 
 	@Override
-	public boolean add(final WCommon widget) {
+	public boolean add(final @Nonnull WCommon widget) {
 		set(widget);
 		return true;
 	}
 
-	public void set(final WCommon widget) {
+	public void set(final @Nullable WCommon widget) {
 		this.addtask = widget;
 		removeAll();
 	}
@@ -39,7 +42,7 @@ public class WBox extends WPanel {
 	}
 
 	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 		super.update(ev, pgp, p);
 		if (getContainer().size()<=0)
 			if (this.addtask!=null) {
