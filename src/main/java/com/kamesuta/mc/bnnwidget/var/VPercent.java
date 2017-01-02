@@ -1,11 +1,13 @@
 package com.kamesuta.mc.bnnwidget.var;
 
-public class VPercent implements VCommon {
-	private VCommon a;
-	private VCommon b;
-	private VCommon c;
+import javax.annotation.Nonnull;
 
-	public VPercent(final VCommon a, final VCommon b, final VCommon c) {
+public class VPercent implements VCommon {
+	private @Nonnull VCommon a;
+	private @Nonnull VCommon b;
+	private @Nonnull VCommon c;
+
+	public VPercent(final @Nonnull VCommon a, final @Nonnull VCommon b, final @Nonnull VCommon c) {
 		this.a = a;
 		this.b = b;
 		this.c = c;

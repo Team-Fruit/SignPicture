@@ -1,24 +1,26 @@
 package com.kamesuta.mc.signpic.entry;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.Config;
 
 public class EntrySlot<T> {
 	protected static long times = 0;
 
-	protected final T entry;
+	protected final @Nonnull T entry;
 	private long time = 0;
 
-	public EntrySlot(final T entry) {
+	public EntrySlot(final @Nonnull T entry) {
 		this.entry = entry;
 		used();
 	}
 
-	public T get() {
+	public @Nonnull T get() {
 		used();
 		return this.entry;
 	}
 
-	public EntrySlot<T> used() {
+	public @Nonnull EntrySlot<T> used() {
 		this.time = times;
 		return this;
 	}
@@ -32,6 +34,6 @@ public class EntrySlot<T> {
 	}
 
 	protected int getCollectTimes() {
-		return Config.instance.entryGCtick.get();
+		return Config.getConfig().entryGCtick.get();
 	}
 }

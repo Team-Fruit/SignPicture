@@ -49,6 +49,16 @@
 			"message_local": {
 				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
 			}
+		},
+		"1.11.2": {
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11.2-2.6.1/SignPicture-1.11.2-2.6.1-universal.jar",
+			"local": "SignPicture-1.11.2-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
+			"message_local": {
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
+			}
 		}
 	},
 	"apis": {

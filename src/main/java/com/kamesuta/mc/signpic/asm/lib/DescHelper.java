@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.asm.lib;
 
+import javax.annotation.Nonnull;
+
 import org.objectweb.asm.Type;
 
 public class DescHelper {
@@ -12,10 +14,11 @@ public class DescHelper {
 	 @throws IllegalArgumentException 引数に{@link String}型か、{@link Class}型以外が入ったら投げられる。
 	 @return Javaバイトコードで扱われる形の文字列に変換されたDescriptor。
 	 */
-	public static String toDesc(final Object returnType, final Object... rawDesc) {
+	public static @Nonnull String toDesc(final @Nonnull Object returnType, final @Nonnull Object... rawDesc) {
 		final StringBuilder sb = new StringBuilder("(");
 		for (final Object o : rawDesc)
-			sb.append(toDesc(o));
+			if (o!=null)
+				sb.append(toDesc(o));
 		sb.append(')');
 		sb.append(toDesc(returnType));
 		return sb.toString();
@@ -29,7 +32,7 @@ public class DescHelper {
 	 @throws IllegalArgumentException {@param raw}に{@link String}型か、{@link Class}型以外が入ったら投げられる。
 	 @return Javaバイトコードで扱われる形の文字列に変換されたクラス。
 	 */
-	public static String toDesc(final Object raw) {
+	public static @Nonnull String toDesc(final @Nonnull Object raw) {
 		if (raw instanceof Class) {
 			final Class<?> clazz = (Class<?>) raw;
 			return Type.getDescriptor(clazz);

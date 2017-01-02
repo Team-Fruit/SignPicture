@@ -2,45 +2,42 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
+import com.kamesuta.mc.bnnwidget.WRenderer;
+
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class RenderHelper {
-	public static final Tessellator t = Tessellator.getInstance();
-	public static final VertexBuffer v = t.getBuffer();
-
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
 		final long time = System.currentTimeMillis();
 		final float time1 = time%Math.abs(msPerRoundOuter)/(float) msPerRoundOuter;
-		v.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+		WRenderer.w.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 		addCircleVertex(time1, time1+0.2f, 1.07f);
 		addCircleVertex(time1+0.2f, time1, 1.09f);
-		t.draw();
+		WRenderer.t.draw();
 		final float time2 = time%Math.abs(msPerRoundInner)/(float) msPerRoundInner;
-		v.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+		WRenderer.w.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 		addCircleVertex(time2, time2+0.1f, 1.03f);
 		addCircleVertex(time2+0.1f, time2, 1.05f);
-		t.draw();
+		WRenderer.t.draw();
 	}
 
 	public static void drawDesignCircle() {
-		v.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+		WRenderer.w.begin(GL_LINE_LOOP, DefaultVertexFormats.POSITION);
 		addCircleVertex(0f, 1f, 1f);
-		t.draw();
+		WRenderer.t.draw();
 	}
 
 	public static void drawProgressCircle(final float progress) {
-		v.begin(GL_POLYGON, DefaultVertexFormats.POSITION);
-		v.pos(0f, 0f, 0f).endVertex();
+		WRenderer.w.begin(GL_POLYGON, DefaultVertexFormats.POSITION);
+		WRenderer.w.pos(0f, 0f, 0f).endVertex();
 		addCircleVertex(progress, 0f, 1f);
-		t.draw();
+		WRenderer.t.draw();
 	}
 
 	public static void drawProgressCircle(final int mode, final float r) {
-		v.begin(mode, DefaultVertexFormats.POSITION);
+		WRenderer.w.begin(mode, DefaultVertexFormats.POSITION);
 		addCircleVertex(0f, 1f, r);
-		t.draw();
+		WRenderer.t.draw();
 	}
 
 	public static void addCircleVertex(final float start, final float end, final float r, final float acc) {
@@ -51,14 +48,14 @@ public class RenderHelper {
 		final double ex = Math.cos(eangle);
 		final double ey = Math.sin(eangle);
 
-		v.pos(sx*r, sy*r, 0).endVertex();
+		WRenderer.w.pos(sx*r, sy*r, 0).endVertex();
 		for (int i = (int) (end<start ? Math.floor(start*acc) : Math.ceil(start*acc)); end<start ? i>end*acc : i<end*acc; i += end<start ? -1 : 1) {
 			final double angle = Math.PI*(2d*i/acc-.5);
 			final double ix = Math.cos(angle);
 			final double iy = Math.sin(angle);
-			v.pos(ix*r, iy*r, 0).endVertex();
+			WRenderer.w.pos(ix*r, iy*r, 0).endVertex();
 		}
-		v.pos(ex*r, ey*r, 0).endVertex();
+		WRenderer.w.pos(ex*r, ey*r, 0).endVertex();
 	}
 
 	public static void addCircleVertex(final float start, final float end, final float r) {
@@ -70,16 +67,16 @@ public class RenderHelper {
 	}
 
 	public static void drawRect(final int mode, final float x1, final float y1, final float x2, final float y2) {
-		v.begin(mode, DefaultVertexFormats.POSITION_TEX);
+		WRenderer.w.begin(mode, DefaultVertexFormats.POSITION_TEX);
 		addRectVertex(x1, y1, x2, y2);
-		t.draw();
+		WRenderer.t.draw();
 	}
 
 	public static void addRectVertex(final float x1, final float y1, final float x2, final float y2) {
-		v.pos(x1, y2, 0).tex(0, 0).endVertex();
-		v.pos(x2, y2, 0).tex(0, 1).endVertex();
-		v.pos(x2, y1, 0).tex(1, 1).endVertex();
-		v.pos(x1, y1, 0).tex(1, 0).endVertex();
+		WRenderer.w.pos(x1, y2, 0).tex(0, 0).endVertex();
+		WRenderer.w.pos(x2, y2, 0).tex(0, 1).endVertex();
+		WRenderer.w.pos(x2, y1, 0).tex(1, 1).endVertex();
+		WRenderer.w.pos(x1, y1, 0).tex(1, 0).endVertex();
 	}
 
 	public static void drawRectTexture(final int mode) {
@@ -87,29 +84,15 @@ public class RenderHelper {
 	}
 
 	public static void drawRectTexture(final int mode, final float x1, final float y1, final float x2, final float y2, final float u1, final float v1, final float u2, final float v2) {
-		v.begin(mode, DefaultVertexFormats.POSITION_TEX);
+		WRenderer.w.begin(mode, DefaultVertexFormats.POSITION_TEX);
 		addRectVertexTexture(x1, y1, x2, y2, u1, v1, u2, v2);
-		t.draw();
+		WRenderer.t.draw();
 	}
 
 	public static void addRectVertexTexture(final float x1, final float y1, final float x2, final float y2, final float u1, final float v1, final float u2, final float v2) {
-		v.pos(x1, y2, 0).tex(u1, v2).endVertex();
-		v.pos(x2, y2, 0).tex(u2, v2).endVertex();
-		v.pos(x2, y1, 0).tex(u2, v1).endVertex();
-		v.pos(x1, y1, 0).tex(u1, v1).endVertex();
-	}
-
-	public static void startTexture() {
-		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		OpenGL.glDisable(GL_LIGHTING);
-		OpenGL.glEnable(GL_BLEND);
-		OpenGL.glEnable(GL_TEXTURE_2D);
-	}
-
-	public static void startShape() {
-		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		OpenGL.glDisable(GL_LIGHTING);
-		OpenGL.glEnable(GL_BLEND);
-		OpenGL.glDisable(GL_TEXTURE_2D);
+		WRenderer.w.pos(x1, y2, 0).tex(u1, v2).endVertex();
+		WRenderer.w.pos(x2, y2, 0).tex(u2, v2).endVertex();
+		WRenderer.w.pos(x2, y1, 0).tex(u2, v1).endVertex();
+		WRenderer.w.pos(x1, y1, 0).tex(u1, v1).endVertex();
 	}
 }

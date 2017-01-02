@@ -1,5 +1,8 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -13,12 +16,12 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ChatAllowedCharacters;
 
 public class MChatTextField extends WBase {
-	protected final GuiTextField t;
+	protected final @Nonnull GuiTextField t;
 
-	protected String watermark;
-	protected String allowedCharacters;
+	protected @Nullable String watermark;
+	protected @Nullable String allowedCharacters;
 
-	public MChatTextField(final R position) {
+	public MChatTextField(final @Nonnull R position) {
 		super(position);
 		this.t = new MGuiTextField();
 	}
@@ -29,29 +32,29 @@ public class MChatTextField extends WBase {
 		else if (!ChatAllowedCharacters.isAllowedCharacter(c))
 			return true;
 		else
-			return getAllowedCharacters().indexOf(c)>=0;
+			return StringUtils.contains(getAllowedCharacters(), c);
 	}
 
-	public MChatTextField setWatermark(final String watermark) {
+	public @Nonnull MChatTextField setWatermark(final @Nullable String watermark) {
 		this.watermark = watermark;
 		return this;
 	}
 
-	public String getWatermark() {
+	public @Nullable String getWatermark() {
 		return this.watermark;
 	}
 
-	public MChatTextField setAllowedCharacters(final String s) {
+	public @Nonnull MChatTextField setAllowedCharacters(final @Nullable String s) {
 		this.allowedCharacters = s;
 		return this;
 	}
 
-	public String getAllowedCharacters() {
+	public @Nullable String getAllowedCharacters() {
 		return this.allowedCharacters;
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 		final Area a = getGuiPosition(pgp);
 		updateArea(a);
 		final int x = this.t.xPosition;
@@ -80,7 +83,7 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 		final Area a = getGuiPosition(pgp);
 		updateArea(a);
 		if (button==1&&a.pointInside(p))
@@ -90,12 +93,12 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 		this.t.updateCursorCounter();
 	}
 
 	@Override
-	public boolean keyTyped(final WEvent ev, final Area pgp, final Point p, final char c, final int keycode) {
+	public boolean keyTyped(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final char c, final int keycode) {
 		if (canAddChar(c))
 			this.t.textboxKeyTyped(c, keycode);
 		return isFocused();
@@ -107,7 +110,7 @@ public class MChatTextField extends WBase {
 		return true;
 	}
 
-	protected void updateArea(final Area a) {
+	protected void updateArea(final @Nonnull Area a) {
 		final Area b = a.child(1, 1, -1, -1);
 		this.t.xPosition = (int) b.x1();
 		this.t.yPosition = (int) b.y1();
@@ -115,27 +118,27 @@ public class MChatTextField extends WBase {
 		this.t.height = (int) b.h();
 	}
 
-	public void setText(final String p_146180_1_) {
+	public void setText(final @Nonnull String p_146180_1_) {
 		this.t.setText(p_146180_1_);
 	}
 
-	protected void onTextChanged(final String oldText) {
+	protected void onTextChanged(final @Nonnull String oldText) {
 	}
 
-	public String getText() {
+	public @Nonnull String getText() {
 		return this.t.getText();
 	}
 
-	public String getSelectedText() {
+	public @Nonnull String getSelectedText() {
 		return this.t.getSelectedText();
 	}
 
-	public void writeText(final String p_146191_1_) {
+	public void writeText(final @Nonnull String p_146191_1_) {
 		this.t.writeText(p_146191_1_);
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		return this.t.equals(obj);
 	}
 
@@ -176,7 +179,7 @@ public class MChatTextField extends WBase {
 	}
 
 	@Override
-	public String toString() {
+	public @Nullable String toString() {
 		return this.t.toString();
 	}
 
@@ -253,10 +256,12 @@ public class MChatTextField extends WBase {
 		}
 
 		@Override
-		public void setText(final String p_146180_1_) {
-			final String s = getText();
-			super.setText(p_146180_1_);
-			onTextChanged(s, getText());
+		public void setText(final @Nullable String p_146180_1_) {
+			if (p_146180_1_!=null) {
+				final @Nonnull String s = getText();
+				super.setText(p_146180_1_);
+				onTextChanged(s, getText());
+			}
 		}
 
 		@Override
@@ -267,10 +272,12 @@ public class MChatTextField extends WBase {
 		}
 
 		@Override
-		public void writeText(final String p_146191_1_) {
-			final String s = getText();
-			super.writeText(filerAllowedCharacters(p_146191_1_));
-			onTextChanged(s, getText());
+		public void writeText(final @Nullable String p_146191_1_) {
+			if (p_146191_1_!=null) {
+				final @Nonnull String s = getText();
+				super.writeText(filerAllowedCharacters(p_146191_1_));
+				onTextChanged(s, getText());
+			}
 		}
 
 		@Override
@@ -280,7 +287,7 @@ public class MChatTextField extends WBase {
 			onTextChanged(s, getText());
 		}
 
-		protected String filerAllowedCharacters(final String p_71565_0_) {
+		protected @Nonnull String filerAllowedCharacters(final @Nonnull String p_71565_0_) {
 			final StringBuilder stringbuilder = new StringBuilder();
 			final char[] achar = p_71565_0_.toCharArray();
 			final int i = achar.length;
@@ -295,7 +302,7 @@ public class MChatTextField extends WBase {
 			return stringbuilder.toString();
 		}
 
-		protected void onTextChanged(final String oldText, final String newText) {
+		protected void onTextChanged(final @Nonnull String oldText, final @Nonnull String newText) {
 			if (!StringUtils.equals(oldText, newText))
 				MChatTextField.this.onTextChanged(oldText);
 		}
@@ -323,7 +330,7 @@ public class MChatTextField extends WBase {
 		}
 
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return "TextField [text="+getText()+"]";
 		}
 	}
