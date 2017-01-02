@@ -138,6 +138,10 @@ public class EntryId {
 		return 0<=i&&i<2;
 	}
 
+	public boolean isValid() {
+		return hasContentId()&&hasMeta();
+	}
+
 	public @Nullable String getPrePrefix() {
 		if (StringUtils.indexOf(this.id, "#")==1)
 			return StringUtils.substring(this.id, 0, 0);

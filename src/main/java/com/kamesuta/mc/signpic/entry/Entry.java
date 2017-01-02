@@ -15,12 +15,14 @@ public class Entry {
 	public final @Nonnull EntryId id;
 	public final @Nullable ContentId contentId;
 	public final @Nonnull GuiImage gui;
+	private final boolean valid;
 
 	private transient @Nullable CompoundAttr meta;
 	private @Nullable String cmetacache;
 
 	protected Entry(final @Nonnull EntryId id) {
 		this.id = id;
+		this.valid = id.isValid();
 		this.contentId = id.getContentId();
 		this.gui = new GuiImage(this);
 	}
@@ -38,7 +40,7 @@ public class Entry {
 	}
 
 	public boolean isValid() {
-		return this.contentId!=null;
+		return this.valid;
 	}
 
 	public @Nonnull CompoundAttr getMeta() {
