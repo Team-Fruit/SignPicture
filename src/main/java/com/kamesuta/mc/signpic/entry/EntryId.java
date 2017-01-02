@@ -113,7 +113,15 @@ public class EntryId {
 		if (itemStack!=null) {
 			final NBTTagCompound nbt = itemStack.getTagCompound();
 			if (nbt!=null)
-				if (ItemEntryId.hasName(nbt)) {
+				if (nbt.hasKey("BlockEntityTag", 10)) {
+					final NBTTagCompound tag = (NBTTagCompound) nbt.getTag("BlockEntityTag");
+					final TileEntitySign tile = new TileEntitySign();
+					tile.readFromNBT(tag);
+					String name = null;
+					if (ItemEntryId.hasName(nbt))
+						name = itemStack.getDisplayName();
+					return new ItemEntryId(fromTile(tile), name);
+				} else if (ItemEntryId.hasName(nbt)) {
 					final String name = itemStack.getDisplayName();
 					final int index = StringUtils.lastIndexOf(name, "}");
 					String itemname = StringUtils.substringAfterLast(name, "}");
