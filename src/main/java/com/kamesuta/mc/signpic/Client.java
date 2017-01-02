@@ -33,7 +33,7 @@ import net.minecraftforge.common.MinecraftForge;
 public class Client {
 	public static final @Nonnull Minecraft mc = FMLClientHandler.instance().getClient();
 
-	public static final Gson gson = new Gson();
+	public static final @Nonnull Gson gson = new Gson();
 
 	public static @Nonnull CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer();
 	public static @Nonnull CoreHandler handler = new CoreHandler();

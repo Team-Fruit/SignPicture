@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -18,8 +20,8 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.EnumChatFormatting;
 
 public class WGui extends Gui {
-	public static final Minecraft mc;
-	public static final Tessellator t = Tessellator.instance;
+	public static final @Nonnull Minecraft mc;
+	public static final @Nonnull Tessellator t = Tessellator.instance;
 	// public static final StencilClip clip = StencilClip.instance;
 	static {
 		mc = FMLClientHandler.instance().getClient();
@@ -46,11 +48,11 @@ public class WGui extends Gui {
 		drawTextureAbs(vx, vy, vx+vw, vy+vh, 0, 0, 1, 1);
 	}
 
-	public static void drawTexture(final Area vertex, final Area textrue) {
+	public static void drawTexture(final @Nonnull Area vertex, final @Nonnull Area textrue) {
 		drawTextureAbs(vertex.x1(), vertex.y1(), vertex.x2(), vertex.y2(), textrue.x1(), textrue.y1(), textrue.x2(), textrue.y2());
 	}
 
-	public static void drawTexture(final Area vertex) {
+	public static void drawTexture(final @Nonnull Area vertex) {
 		drawTextureAbs(vertex.x1(), vertex.y1(), vertex.x2(), vertex.y2(), 0, 0, 1, 1);
 	}
 
@@ -71,11 +73,11 @@ public class WGui extends Gui {
 		drawTextureModalAbs(vx, vy, vx+vw, vy+vh, 0, 0, 1, 1);
 	}
 
-	public static void drawTextureModal(final Area vertex, final Area textrue) {
+	public static void drawTextureModal(final @Nonnull Area vertex, final @Nonnull Area textrue) {
 		drawTextureModalAbs(vertex.x1(), vertex.y1(), vertex.x2(), vertex.y2(), textrue.x1(), textrue.y1(), textrue.x2(), textrue.y2());
 	}
 
-	public static void drawTextureModal(final Area vertex) {
+	public static void drawTextureModal(final @Nonnull Area vertex) {
 		drawTextureModalAbs(vertex.x1(), vertex.y1(), vertex.x2(), vertex.y2(), 0, 0, 1, 1);
 	}
 
@@ -88,7 +90,7 @@ public class WGui extends Gui {
 		t.draw();
 	}
 
-	public static void draw(final Area p, final int mode) {
+	public static void draw(final @Nonnull Area p, final int mode) {
 		draw(p.x1(), p.y1(), p.x2(), p.y2(), mode);
 	}
 
@@ -96,7 +98,7 @@ public class WGui extends Gui {
 		draw(x1, y1, x2, y2, GL_QUADS);
 	}
 
-	public static void draw(final Area p) {
+	public static void draw(final @Nonnull Area p) {
 		draw(p, GL_QUADS);
 	}
 
@@ -114,7 +116,7 @@ public class WGui extends Gui {
 		fontColor((int) (r*255+0.5), (int) (g*255+0.5), (int) (b*255+0.5), (int) (a*255+0.5));
 	}
 
-	public static void fontColor(final Color color) {
+	public static void fontColor(final @Nonnull Color color) {
 		fontColor(color.getRGB());
 	}
 
@@ -122,15 +124,15 @@ public class WGui extends Gui {
 		WGui.fontcolor = 0xff000000;
 	}
 
-	public static TextureManager texture() {
+	public static @Nonnull TextureManager texture() {
 		return mc.renderEngine;
 	}
 
-	public static FontRenderer font() {
+	public static @Nonnull FontRenderer font() {
 		return mc.fontRenderer;
 	}
 
-	public static void drawString(final String text, final float x, final float y, final float w, final float h, final Align align, final VerticalAlign valign, final boolean shadow) {
+	public static void drawString(final @Nonnull String text, final float x, final float y, final float w, final float h, final @Nonnull Align align, final @Nonnull VerticalAlign valign, final boolean shadow) {
 		OpenGL.glPushMatrix();
 		align.translate(text, x, w);
 		valign.translate(text, y, h);
@@ -139,57 +141,57 @@ public class WGui extends Gui {
 		resetFontColor();
 	}
 
-	public static void drawString(final String text, final Area a, final Align align, final VerticalAlign valign, final boolean shadow) {
+	public static void drawString(final @Nonnull String text, final @Nonnull Area a, final @Nonnull Align align, final @Nonnull VerticalAlign valign, final boolean shadow) {
 		drawString(text, a.x1(), a.y1(), a.w(), a.h(), align, valign, shadow);
 	}
 
 	public static enum Align {
 		LEFT {
 			@Override
-			protected void translate(final String text, final float x, final float w) {
+			protected void translate(final @Nonnull String text, final float x, final float w) {
 				OpenGL.glTranslatef(x, 0, 0);
 			}
 		},
 		CENTER {
 			@Override
-			protected void translate(final String text, final float x, final float w) {
+			protected void translate(final @Nonnull String text, final float x, final float w) {
 				OpenGL.glTranslatef(x+(w-getStringWidth(text))/2, 0, 0);
 			}
 		},
 		RIGHT {
 			@Override
-			protected void translate(final String text, final float x, final float w) {
+			protected void translate(final @Nonnull String text, final float x, final float w) {
 				OpenGL.glTranslatef(x-getStringWidth(text), 0, 0);
 			}
 		},
 		;
-		protected abstract void translate(String text, float x, float w);
+		protected abstract void translate(@Nonnull String text, float x, float w);
 	}
 
 	public static enum VerticalAlign {
 		TOP {
 			@Override
-			protected void translate(final String text, final float y, final float h) {
+			protected void translate(final @Nonnull String text, final float y, final float h) {
 				OpenGL.glTranslatef(0, y, 0);
 			}
 		},
 		MIDDLE {
 			@Override
-			protected void translate(final String text, final float y, final float h) {
+			protected void translate(final @Nonnull String text, final float y, final float h) {
 				OpenGL.glTranslatef(0, y+(h-font().FONT_HEIGHT)/2, 0);
 			}
 		},
 		BOTTOM {
 			@Override
-			protected void translate(final String text, final float y, final float h) {
+			protected void translate(final @Nonnull String text, final float y, final float h) {
 				OpenGL.glTranslatef(0, y+h-font().FONT_HEIGHT, 0);
 			}
 		},
 		;
-		protected abstract void translate(String text, float y, float h);
+		protected abstract void translate(@Nonnull String text, float y, float h);
 	}
 
-	public static int getStringWidth(final String s) {
+	public static int getStringWidth(final @Nonnull String s) {
 		if (StringUtils.isEmpty(s))
 			return 0;
 		return font().getStringWidth(EnumChatFormatting.getTextWithoutFormattingCodes(s));

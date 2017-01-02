@@ -40,7 +40,7 @@ public class ClientProxy extends CommonProxy {
 		}
 	}
 
-	private File getDataDirectory() {
+	private @Nonnull File getDataDirectory() {
 		final File file = Client.mc.mcDataDir;
 		try {
 			return file.getCanonicalFile();
@@ -51,7 +51,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void init(final FMLInitializationEvent event) {
+	public void init(final @Nonnull FMLInitializationEvent event) {
 		super.init(event);
 
 		// Replace Sign Renderer
@@ -64,7 +64,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void postInit(final FMLPostInitializationEvent event) {
+	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
 		super.postInit(event);
 	}
 }

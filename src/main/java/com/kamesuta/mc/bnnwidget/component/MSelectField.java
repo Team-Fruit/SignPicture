@@ -37,7 +37,7 @@ public class MSelectField extends MSelect<String> {
 	}
 
 	@Override
-	public MSelectField setText(final @Nonnull String text) {
+	public @Nonnull MSelectField setText(final @Nonnull String text) {
 		this.field.setText(text);
 		return this;
 	}

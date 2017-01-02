@@ -18,10 +18,8 @@ public class FunnyButton extends MButton {
 
 	private boolean isHighlight = true;
 	private boolean highlighted;
-	@Nonnull
-	VMotion m = V.pm(0);
-	@Nonnull
-	VMotion s = V.pm(1);
+	protected @Nonnull VMotion m = V.pm(0);
+	protected @Nonnull VMotion s = V.pm(1);
 
 	public boolean isHighlight() {
 		return this.isHighlight;

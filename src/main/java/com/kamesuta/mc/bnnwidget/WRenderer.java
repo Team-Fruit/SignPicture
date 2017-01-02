@@ -2,6 +2,7 @@ package com.kamesuta.mc.bnnwidget;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
@@ -9,7 +10,7 @@ import com.google.common.collect.ImmutableMap.Builder;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
 public class WRenderer {
-	public static void startShape(@Nullable final BlendType src, @Nullable final BlendType dest) {
+	public static void startShape(final @Nullable BlendType src, final @Nullable BlendType dest) {
 		OpenGL.glBlendFunc(src!=null ? src.glEnum : GL_SRC_ALPHA, dest!=null ? dest.glEnum : GL_ONE_MINUS_SRC_ALPHA);
 		OpenGL.glDisable(GL_LIGHTING);
 		OpenGL.glEnable(GL_BLEND);
@@ -20,7 +21,7 @@ public class WRenderer {
 		startShape(null, null);
 	}
 
-	public static void startTexture(@Nullable final BlendType src, @Nullable final BlendType dest) {
+	public static void startTexture(final @Nullable BlendType src, final @Nullable BlendType dest) {
 		OpenGL.glBlendFunc(src!=null ? src.glEnum : GL_SRC_ALPHA, dest!=null ? dest.glEnum : GL_ONE_MINUS_SRC_ALPHA);
 		OpenGL.glDisable(GL_LIGHTING);
 		OpenGL.glEnable(GL_BLEND);
@@ -59,7 +60,7 @@ public class WRenderer {
 			this.glEnum = glEnum;
 		}
 
-		private static final ImmutableMap<Integer, BlendType> blendIds;
+		private static final @Nonnull ImmutableMap<Integer, BlendType> blendIds;
 
 		public static @Nullable BlendType fromId(final int id) {
 			return blendIds.get(id);

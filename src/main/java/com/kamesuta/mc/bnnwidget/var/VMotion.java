@@ -95,13 +95,13 @@ public class VMotion extends VBase implements ICompoundMotion {
 	}
 
 	@Override
-	public VMotion restart() {
+	public @Nonnull VMotion restart() {
 		this.compoundMotion.restart();
 		return this;
 	}
 
 	@Override
-	public VMotion reset() {
+	public @Nonnull VMotion reset() {
 		this.compoundMotion.reset();
 		return this;
 	}
