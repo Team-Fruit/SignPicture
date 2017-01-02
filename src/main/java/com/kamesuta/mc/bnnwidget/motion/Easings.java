@@ -1,31 +1,36 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
+import javax.annotation.Nonnull;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+
 /**
  * Easing functions.
  * @author Kamesuta
  */
 public enum Easings implements Easing {
-	easeLinear {
+	easeLinear(0) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return c*t/d+b;
 		}
 	},
-	easeInQuad {
+	easeInQuad(1) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
 			return c*t*t+b;
 		}
 	},
-	easeOutQuad {
+	easeOutQuad(2) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
 			return -c*t*(t-2)+b;
 		}
 	},
-	easeInOutQuad {
+	easeInOutQuad(3) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d/2;
@@ -35,14 +40,14 @@ public enum Easings implements Easing {
 			return -c/2*(t*(t-2)-1)+b;
 		}
 	},
-	easeInCubic {
+	easeInCubic(4) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
 			return c*t*t*t+b;
 		}
 	},
-	easeOutCubic {
+	easeOutCubic(5) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
@@ -50,7 +55,7 @@ public enum Easings implements Easing {
 			return c*(t*t*t+1)+b;
 		}
 	},
-	easeInOutCubic {
+	easeInOutCubic(6) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			if ((t /= d/2)<1)
@@ -58,13 +63,13 @@ public enum Easings implements Easing {
 			return c/2*((t -= 2)*t*t+2)+b;
 		}
 	},
-	easeInQuart {
+	easeInQuart(7) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			return c*(t /= d)*t*t*t+b;
 		}
 	},
-	easeOutQuart {
+	easeOutQuart(8) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
@@ -72,7 +77,7 @@ public enum Easings implements Easing {
 			return -c*(t*t*t*t-1)+b;
 		}
 	},
-	easeInOutQuart {
+	easeInOutQuart(9) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d/2;
@@ -82,14 +87,14 @@ public enum Easings implements Easing {
 			return -c/2*(t*t*t*t-2)+b;
 		}
 	},
-	easeInQuint {
+	easeInQuint(10) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
 			return c*t*t*t*t*t+b;
 		}
 	},
-	easeOutQuint {
+	easeOutQuint(11) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
@@ -97,7 +102,7 @@ public enum Easings implements Easing {
 			return c*(t*t*t*t*t+1)+b;
 		}
 	},
-	easeInOutQuint {
+	easeInOutQuint(12) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d/2;
@@ -107,37 +112,37 @@ public enum Easings implements Easing {
 			return c/2*(t*t*t*t*t+2)+b;
 		}
 	},
-	easeInSine {
+	easeInSine(13) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return -c*Math.cos(t/d*(Math.PI/2))+c+b;
 		}
 	},
-	easeOutSine {
+	easeOutSine(14) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return c*Math.sin(t/d*(Math.PI/2))+b;
 		}
 	},
-	easeInOutSine {
+	easeInOutSine(15) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return -c/2*(Math.cos(Math.PI*t/d)-1)+b;
 		}
 	},
-	easeInExpo {
+	easeInExpo(16) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return c*Math.pow(2, 10*(t/d-1))+b;
 		}
 	},
-	easeOutExpo {
+	easeOutExpo(17) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return c*(-Math.pow(2, -10*t/d)+1)+b;
 		}
 	},
-	easeInOutExpo {
+	easeInOutExpo(18) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d/2;
@@ -147,14 +152,14 @@ public enum Easings implements Easing {
 			return c/2*(-Math.pow(2, -10*t)+2)+b;
 		}
 	},
-	easeInCirc {
+	easeInCirc(19) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
 			return -c*(Math.sqrt(1-t*t)-1)+b;
 		}
 	},
-	easeOutCirc {
+	easeOutCirc(20) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d;
@@ -162,7 +167,7 @@ public enum Easings implements Easing {
 			return c*Math.sqrt(1-t*t)+b;
 		}
 	},
-	easeInOutCirc {
+	easeInOutCirc(21) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			t /= d/2;
@@ -172,7 +177,7 @@ public enum Easings implements Easing {
 			return c/2*(Math.sqrt(1-t*t)+1)+b;
 		}
 	},
-	easeInElastic {
+	easeInElastic(22) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			double s = 1.70158;
@@ -191,7 +196,7 @@ public enum Easings implements Easing {
 			return -(a*Math.pow(2, 10*(t -= 1))*Math.sin((t*d-s)*(2*Math.PI)/p))+b;
 		}
 	},
-	easeOutElastic {
+	easeOutElastic(23) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			double s = 1.70158;
@@ -210,7 +215,7 @@ public enum Easings implements Easing {
 			return a*Math.pow(2, -10*t)*Math.sin((t*d-s)*(2*Math.PI)/p)+c+b;
 		}
 	},
-	easeInOutElastic {
+	easeInOutElastic(24) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			double s = 1.70158;
@@ -231,21 +236,21 @@ public enum Easings implements Easing {
 			return a*Math.pow(2, -10*(t -= 1))*Math.sin((t*d-s)*(2*Math.PI)/p)*.5+c+b;
 		}
 	},
-	easeInBack {
+	easeInBack(25) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			final double s = 1.70158;
 			return c*(t /= d)*t*((s+1)*t-s)+b;
 		}
 	},
-	easeOutBack {
+	easeOutBack(26) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			final double s = 1.70158;
 			return c*((t = t/d-1)*t*((s+1)*t+s)+1)+b;
 		}
 	},
-	easeInOutBack {
+	easeInOutBack(27) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			double s = 1.70158;
@@ -254,13 +259,13 @@ public enum Easings implements Easing {
 			return c/2*((t -= 2)*t*(((s *= 1.525)+1)*t+s)+2)+b;
 		}
 	},
-	easeInBounce {
+	easeInBounce(28) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			return c-easeOutBounce.easing(d-t, 0, c, d)+b;
 		}
 	},
-	easeOutBounce {
+	easeOutBounce(29) {
 		@Override
 		public double easing(double t, final double b, final double c, final double d) {
 			if ((t /= d)<1/2.75)
@@ -273,7 +278,7 @@ public enum Easings implements Easing {
 				return c*(7.5625*(t -= 2.625/2.75)*t+.984375)+b;
 		}
 	},
-	easeInOutBounce {
+	easeInOutBounce(30) {
 		@Override
 		public double easing(final double t, final double b, final double c, final double d) {
 			if (t<d/2)
@@ -283,7 +288,29 @@ public enum Easings implements Easing {
 	},
 	;
 
-	public IMotion move(final float time, final float to) {
+	public final int id;
+
+	private Easings(final int id) {
+		this.id = id;
+	}
+
+	public @Nonnull IMotion move(final float time, final float to) {
 		return Motion.easing(time, this, to);
+	}
+
+	private static final @Nonnull ImmutableMap<Integer, Easings> easingIds;
+
+	public static @Nonnull Easings fromId(final int id) {
+		Easings easing = easingIds.get(id);
+		if (easing==null)
+			easing = easeLinear;
+		return easing;
+	}
+
+	static {
+		final Builder<Integer, Easings> builder = ImmutableMap.builder();
+		for (final Easings easing : Easings.values())
+			builder.put(easing.id, easing);
+		easingIds = builder.build();
 	}
 }

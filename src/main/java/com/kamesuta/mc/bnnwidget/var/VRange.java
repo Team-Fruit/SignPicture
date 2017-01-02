@@ -1,11 +1,14 @@
 package com.kamesuta.mc.bnnwidget.var;
 
-public class VRange implements VCommon {
-	private VCommon min;
-	private VCommon max;
-	private VCommon var;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-	public VRange(final VCommon min, final VCommon max, final VCommon var) {
+public class VRange implements VCommon {
+	private @Nullable VCommon min;
+	private @Nullable VCommon max;
+	private @Nonnull VCommon var;
+
+	public VRange(final @Nullable VCommon min, final @Nullable VCommon max, final @Nonnull VCommon var) {
 		this.min = min;
 		this.max = max;
 		this.var = var;

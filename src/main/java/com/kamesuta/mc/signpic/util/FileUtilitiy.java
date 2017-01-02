@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
@@ -22,11 +23,13 @@ import com.kamesuta.mc.signpic.state.State;
 import net.minecraft.client.resources.I18n;
 
 public class FileUtilitiy {
-	public static boolean transfer(final Transferable transferable) {
+	public static boolean transfer(final @Nonnull Transferable transferable) {
 		try {
-			if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor))
-				GuiMain.setContentId((String) transferable.getTransferData(DataFlavor.stringFlavor));
-			else if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+			if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+				final String id = (String) transferable.getTransferData(DataFlavor.stringFlavor);
+				if (id!=null)
+					GuiMain.setContentId(id);
+			} else if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
 				final List<?> droppedFiles = (List<?>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
 				for (final Object obj : droppedFiles)
 					if (obj instanceof File) {
@@ -36,7 +39,7 @@ public class FileUtilitiy {
 			} else if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
 				final BufferedImage bi = (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
 				try {
-					final File tmp = Client.location.createCache("paste");
+					final File tmp = Client.getLocation().createCache("paste");
 					ImageIO.write(bi, "png", tmp);
 					UploadApiUtil.upload(UploadRequest.fromFile(tmp, new State()), new Runnable() {
 						@Override

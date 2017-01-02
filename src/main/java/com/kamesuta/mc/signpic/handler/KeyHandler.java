@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.handler;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Lists;
@@ -16,20 +18,20 @@ public class KeyHandler {
 	public static enum Keys {
 		KEY_BINDING_GUI(new KeyBinding("signpic.key.gui", Keyboard.KEY_BACKSLASH, "signpic.key.category")) {
 			@Override
-			public void onKeyInput(final InputEvent event, final KeyBinding binding) {
+			public void onKeyInput(final @Nonnull InputEvent event, final @Nonnull KeyBinding binding) {
 				if (Client.mc.currentScreen==null&&binding.isPressed())
 					Client.openEditor();
 			}
 		},
 		;
 
-		public final KeyBinding binding;
+		public final @Nonnull KeyBinding binding;
 
-		private Keys(final KeyBinding binding) {
+		private Keys(final @Nonnull KeyBinding binding) {
 			this.binding = binding;
 		}
 
-		public abstract void onKeyInput(InputEvent event, KeyBinding binding);
+		public abstract void onKeyInput(@Nonnull InputEvent event, @Nonnull KeyBinding binding);
 	}
 
 	public static void init() {
@@ -38,12 +40,12 @@ public class KeyHandler {
 	}
 
 	@CoreEvent
-	public void onKeyInput(final InputEvent event) {
+	public void onKeyInput(final @Nonnull InputEvent event) {
 		for (final Keys key : Keys.values())
 			key.onKeyInput(event, key.binding);
 	}
 
-	public static List<KeyBinding> getKeyConflict(final KeyBinding binding) {
+	public static @Nonnull List<KeyBinding> getKeyConflict(final @Nonnull KeyBinding binding) {
 		final List<KeyBinding> conflict = Lists.newLinkedList();
 		if (binding.getKeyCode()!=0) {
 			final KeyBinding[] akeybinding = Client.mc.gameSettings.keyBindings;

@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
 public class Locations {
 	public File mcDir;
 	public File signpicDir;
@@ -16,7 +14,8 @@ public class Locations {
 	public File modDir;
 	public File modFile;
 
-	public Locations(final FMLPreInitializationEvent event, final File mcdir) {
+	public Locations(final File modFile, final File mcdir) {
+		this.mcDir = mcdir;
 		this.signpicDir = getSignPicDir(mcdir);
 		securementDirectory(this.signpicDir);
 		this.tempDir = new File(this.signpicDir, "temp");
@@ -27,7 +26,7 @@ public class Locations {
 		securementDirectory(this.metaDir);
 
 		this.modDir = new File(mcdir, "mods");
-		this.modFile = event.getSourceFile();
+		this.modFile = modFile;
 	}
 
 	public File createCache(final String pre) throws IOException {
@@ -35,8 +34,8 @@ public class Locations {
 	}
 
 	private File getSignPicDir(final File defaultdir) {
-		final File dir = new File(Config.instance.signpicDir.get());
-		if (!StringUtils.isEmpty(Config.instance.signpicDir.get())) {
+		final File dir = new File(Config.getConfig().signpicDir.get());
+		if (!StringUtils.isEmpty(Config.getConfig().signpicDir.get())) {
 			if (dir.exists()&&dir.isDirectory()&&!dir.equals(defaultdir))
 				return dir;
 			Log.dev.error("invalid signpic dir location! use default dir.");

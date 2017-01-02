@@ -1,9 +1,13 @@
 package com.kamesuta.mc.signpic.preview;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Client.MovePos;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySign;
@@ -14,21 +18,21 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class SignEntity {
-	private final PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.standing_sign);
+	private final @Nonnull PreviewTileEntitySign tileSign = new PreviewTileEntitySign(Blocks.standing_sign);
 	private boolean renderable = false;
 	private boolean visible = false;
 
-	private PreviewTileEntitySign onItemUse(final EntityPlayer playerIn, final World worldIn, BlockPos pos, final EnumFacing side) {
-		if (side==EnumFacing.DOWN) {
+	private @Nullable PreviewTileEntitySign onItemUse(final @Nonnull EntityPlayer playerIn, final @Nonnull World worldIn, @Nonnull BlockPos pos, final @Nonnull EnumFacing side) {
+		if (side==EnumFacing.DOWN)
 			return null;
-		} else if (!worldIn.getBlockState(pos).getBlock().getMaterial().isSolid()) {
+		else if (!worldIn.getBlockState(pos).getBlock().getMaterial().isSolid())
 			return null;
-		} else {
+		else {
 			pos = pos.offset(side);
 
-			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, pos)) {
+			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, pos))
 				return null;
-			} else {
+			else {
 				this.tileSign.setPos(pos);
 
 				if (side==EnumFacing.UP) {
@@ -47,24 +51,25 @@ public class SignEntity {
 		}
 	}
 
-	public TileEntitySign capturePlace() {
-		final Minecraft mc = Client.mc;
-		if (mc.thePlayer!=null) {
+	public @Nullable TileEntitySign capturePlace() {
+		final EntityPlayerSP player = Client.mc.thePlayer;
+		final WorldClient world = Client.mc.theWorld;
+		if (player!=null&&world!=null) {
 			final MovingObjectPosition m = MovePos.getMovingPos();
 			final MovePos p = MovePos.getBlockPos();
 			if (m!=null&&p!=null) {
 				setVisible(true);
-				return onItemUse(mc.thePlayer, mc.theWorld, p.pos, m.sideHit);
+				return onItemUse(player, world, p.pos, m.sideHit);
 			}
 		}
 		return null;
 	}
 
-	public TileEntitySign getTileEntity() {
+	public @Nonnull TileEntitySign getTileEntity() {
 		return this.tileSign;
 	}
 
-	public TileEntitySign getRenderTileEntity() throws IllegalStateException {
+	public @Nonnull TileEntitySign getRenderTileEntity() throws IllegalStateException {
 		if (!isRenderable())
 			throw new IllegalStateException("Not Renderable");
 		return this.tileSign;

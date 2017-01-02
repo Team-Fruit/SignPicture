@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic.gui.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Reference;
 
@@ -14,15 +17,15 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 
 public class ConfigGui extends GuiConfig {
 
-	public ConfigGui(final GuiScreen parent) {
-		super(parent, getConfigElements(), Reference.MODID, false, false, GuiConfig.getAbridgedConfigPath(Config.instance.getFilePath()));
+	public ConfigGui(final @Nullable GuiScreen parent) {
+		super(parent, getConfigElements(), Reference.MODID, false, false, GuiConfig.getAbridgedConfigPath(Config.getConfig().getFilePath()));
 	}
 
-	private static List<IConfigElement> getConfigElements() {
+	private static @Nonnull List<IConfigElement> getConfigElements() {
 		final List<IConfigElement> list = new ArrayList<IConfigElement>();
 
-		for (final String cat : Config.instance.getCategoryNames()) {
-			final ConfigCategory cc = Config.instance.getCategory(cat);
+		for (final String cat : Config.getConfig().getCategoryNames()) {
+			final ConfigCategory cc = Config.getConfig().getCategory(cat);
 
 			if (cc.isChild())
 				continue;

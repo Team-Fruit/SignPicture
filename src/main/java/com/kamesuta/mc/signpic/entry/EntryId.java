@@ -5,8 +5,9 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
-import com.kamesuta.mc.signpic.image.meta.ImageMeta;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,15 +16,15 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 public class EntryId {
-	public static final EntryId blank = new EntryId("");
+	public static final @Nonnull EntryId blank = new EntryId("");
 
-	private final String id;
+	private final @Nonnull String id;
 
-	protected EntryId(final String id) {
+	protected EntryId(final @Nonnull String id) {
 		this.id = id;
 	}
 
-	public String id() {
+	public @Nonnull String id() {
 		return this.id;
 	}
 
@@ -31,12 +32,12 @@ public class EntryId {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime*result+(this.id==null ? 0 : this.id.hashCode());
+		result = prime*result+this.id.hashCode();
 		return result;
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
+	public boolean equals(final @Nullable Object obj) {
 		if (this==obj)
 			return true;
 		if (obj==null)
@@ -44,36 +45,33 @@ public class EntryId {
 		if (!(obj instanceof EntryId))
 			return false;
 		final EntryId other = (EntryId) obj;
-		if (this.id==null) {
-			if (other.id!=null)
-				return false;
-		} else if (!this.id.equals(other.id))
+		if (!this.id.equals(other.id))
 			return false;
 		return true;
 	}
 
 	@Override
-	public String toString() {
+	public @Nonnull String toString() {
 		return String.format("EntryId [id=%s]", this.id);
 	}
 
-	public static EntryId from(final String string) {
-		if (StringUtils.isEmpty(string))
-			return blank;
-		return new EntryId(string);
+	public static @Nonnull EntryId from(final @Nullable String string) {
+		if (string!=null&&!StringUtils.isEmpty(string))
+			return new EntryId(string);
+		return blank;
 	}
 
-	public static EntryId fromStrings(final String[] strings) {
+	public static @Nonnull EntryId fromStrings(final @Nullable String[] strings) {
 		return from(StringUtils.join(strings));
 	}
 
-	public static EntryId fromTile(final TileEntitySign tile) {
+	public static @Nonnull EntryId fromTile(final @Nullable TileEntitySign tile) {
 		if (tile==null)
 			return blank;
 		return fromChats(tile.signText);
 	}
 
-	public static EntryId fromChats(final IChatComponent[] chats) {
+	public static @Nonnull EntryId fromChats(final @Nullable IChatComponent[] chats) {
 		if (chats==null)
 			return blank;
 		final StringBuilder stb = new StringBuilder();
@@ -84,11 +82,11 @@ public class EntryId {
 	}
 
 	public static class ItemEntryId extends EntryId {
-		public static final ItemEntryId blank = new ItemEntryId(EntryId.blank, null);
+		public static final @Nonnull ItemEntryId blank = new ItemEntryId(EntryId.blank, null);
 
 		private final @Nullable String name;
 
-		protected ItemEntryId(final EntryId id, @Nullable final String name) {
+		protected ItemEntryId(final @Nonnull EntryId id, final @Nullable String name) {
 			super(id.id());
 			this.name = name;
 		}
@@ -101,8 +99,8 @@ public class EntryId {
 			return this.name;
 		}
 
-		public static boolean hasName(@Nonnull final NBTTagCompound nbt) {
-			if (nbt.hasKey("display", 10)) {
+		public static boolean hasName(final @Nullable NBTTagCompound nbt) {
+			if (nbt!=null&&nbt.hasKey("display", 10)) {
 				final NBTTagCompound nbttagcompound = nbt.getCompoundTag("display");
 				if (nbttagcompound.hasKey("Name", 8))
 					return true;
@@ -111,19 +109,11 @@ public class EntryId {
 		}
 	}
 
-	public static ItemEntryId fromItemStack(final ItemStack itemStack) {
+	public static @Nonnull ItemEntryId fromItemStack(final @Nullable ItemStack itemStack) {
 		if (itemStack!=null) {
 			final NBTTagCompound nbt = itemStack.getTagCompound();
 			if (nbt!=null)
-				if (nbt.hasKey("BlockEntityTag", 10)) {
-					final NBTTagCompound tag = (NBTTagCompound) itemStack.getTagCompound().getTag("BlockEntityTag");
-					final TileEntitySign tile = new TileEntitySign();
-					tile.readFromNBT(tag);
-					String name = null;
-					if (ItemEntryId.hasName(nbt))
-						name = itemStack.getDisplayName();
-					return new ItemEntryId(fromTile(tile), name);
-				} else if (ItemEntryId.hasName(nbt)) {
+				if (ItemEntryId.hasName(nbt)) {
 					final String name = itemStack.getDisplayName();
 					final int index = StringUtils.lastIndexOf(name, "}");
 					String itemname = StringUtils.substringAfterLast(name, "}");
@@ -135,37 +125,28 @@ public class EntryId {
 		return ItemEntryId.blank;
 	}
 
-	public boolean hasContentId() {
+	private boolean hasContentId() {
 		return !(StringUtils.isEmpty(this.id)||StringUtils.containsOnly(this.id, "!")||StringUtils.containsOnly(this.id, "$"));
 	}
 
-	public boolean hasMeta() {
+	private boolean hasMeta() {
 		return StringUtils.endsWith(this.id, "]")&&StringUtils.contains(this.id, "[")||
 				hasPrefix()&&StringUtils.endsWith(this.id, "}")&&StringUtils.contains(this.id, "{");
 	}
 
-	public boolean hasPrefix() {
+	private boolean hasPrefix() {
 		final int i = StringUtils.indexOf(this.id, "#");
 		return 0<=i&&i<2;
 	}
 
-	public boolean hasPrePrefix() {
-		final int i = StringUtils.indexOf(this.id, "#");
-		return i==1;
-	}
-
-	public String getPrePrefix() {
-		if (hasPrePrefix())
+	public @Nullable String getPrePrefix() {
+		if (StringUtils.indexOf(this.id, "#")==1)
 			return StringUtils.substring(this.id, 0, 0);
 		else
-			return "";
+			return null;
 	}
 
-	public boolean isValid() {
-		return hasContentId()&&hasMeta();
-	}
-
-	public ContentId getContentId() {
+	public @Nullable ContentId getContentId() {
 		if (hasContentId()) {
 			String id;
 			if (StringUtils.contains(this.id, "["))
@@ -179,20 +160,26 @@ public class EntryId {
 		return null;
 	}
 
-	public String getMetaSource() {
+	public @Nullable String getMetaSource() {
 		if (hasMeta())
 			if (StringUtils.endsWith(this.id, "}"))
 				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1);
 			else
 				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1);
-		else
-			return null;
+		return null;
 	}
 
-	public ImageMeta getMeta() {
+	public @Nullable CompoundAttr getMeta() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new ImageMeta().init(metasource);
+			return new CompoundAttr(metasource);
+		return null;
+	}
+
+	public @Nullable CompoundAttrBuilder getMetaBuilder() {
+		final String metasource = getMetaSource();
+		if (metasource!=null)
+			return new CompoundAttrBuilder().parse(metasource);
 		return null;
 	}
 
@@ -204,10 +191,12 @@ public class EntryId {
 		return StringUtils.length(this.id)<=40;
 	}
 
-	public void toStrings(final String[] sign) {
-		final int length = StringUtils.length(this.id);
-		for (int i = 0; i<4; i++)
-			sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
+	public void toStrings(final @Nullable String[] sign) {
+		if (sign!=null) {
+			final int length = StringUtils.length(this.id);
+			for (int i = 0; i<4; i++)
+				sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
+		}
 	}
 
 	public void toChats(final IChatComponent[] sign) {
@@ -220,11 +209,12 @@ public class EntryId {
 		return StringUtils.length(this.id)/15;
 	}
 
-	public void toEntity(final TileEntitySign tile) {
-		toChats(tile.signText);
+	public void toEntity(final @Nullable TileEntitySign tile) {
+		if (tile!=null)
+			toChats(tile.signText);
 	}
 
-	public Entry entry() {
+	public @Nonnull Entry entry() {
 		return EntryManager.instance.get(this);
 	}
 }

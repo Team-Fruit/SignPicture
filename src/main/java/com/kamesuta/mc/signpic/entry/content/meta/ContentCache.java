@@ -2,33 +2,36 @@ package com.kamesuta.mc.signpic.entry.content.meta;
 
 import java.io.File;
 
-public class ContentCache {
-	private final MetaIO<CacheData> cacheio;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-	public ContentCache(final File location) {
+public class ContentCache {
+	private final @Nonnull MetaIO<CacheData> cacheio;
+
+	public ContentCache(final @Nonnull File location) {
 		this.cacheio = new MetaIO<CacheData>(location, CacheData.class) {
 			@Override
-			public CacheData createBlank() {
+			public @Nonnull CacheData createBlank() {
 				return new CacheData();
 			}
 		};
 	}
 
-	public String getURL() {
+	public @Nullable String getURL() {
 		return this.cacheio.get().url;
 	}
 
-	public ContentCache setURL(final String url) {
+	public @Nonnull ContentCache setURL(final @Nullable String url) {
 		this.cacheio.get().url = url;
 		this.cacheio.save();
 		return this;
 	}
 
-	public String getMime() {
+	public @Nullable String getMime() {
 		return this.cacheio.get().mime;
 	}
 
-	public ContentCache setMime(final String mime) {
+	public @Nonnull ContentCache setMime(final @Nullable String mime) {
 		this.cacheio.get().mime = mime;
 		this.cacheio.save();
 		return this;
@@ -38,7 +41,7 @@ public class ContentCache {
 		return this.cacheio.get().size;
 	}
 
-	public ContentCache setSize(final long size) {
+	public @Nonnull ContentCache setSize(final long size) {
 		this.cacheio.get().size = size;
 		this.cacheio.save();
 		return this;
@@ -48,7 +51,7 @@ public class ContentCache {
 		return this.cacheio.get().dirty;
 	}
 
-	public ContentCache setDirty(final boolean dirty) {
+	public @Nonnull ContentCache setDirty(final boolean dirty) {
 		this.cacheio.get().dirty = dirty;
 		this.cacheio.save();
 		return this;
@@ -58,7 +61,7 @@ public class ContentCache {
 		return this.cacheio.get().update;
 	}
 
-	public ContentCache setLastUpdated(final long update) {
+	public @Nonnull ContentCache setLastUpdated(final long update) {
 		this.cacheio.get().update = update;
 		this.cacheio.save();
 		return this;
@@ -68,7 +71,7 @@ public class ContentCache {
 		return this.cacheio.get().available;
 	}
 
-	public ContentCache setAvailable(final boolean available) {
+	public @Nonnull ContentCache setAvailable(final boolean available) {
 		this.cacheio.get().available = available;
 		this.cacheio.save();
 		return this;
@@ -86,11 +89,11 @@ public class ContentCache {
 		/**
 		 * content End URL
 		 */
-		public String url;
+		public @Nullable String url;
 		/**
 		 * content MIME type
 		 */
-		public String mime;
+		public @Nullable String mime;
 		/**
 		 * content length
 		 */

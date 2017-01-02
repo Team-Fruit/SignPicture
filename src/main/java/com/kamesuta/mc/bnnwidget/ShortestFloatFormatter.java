@@ -3,8 +3,10 @@ package com.kamesuta.mc.bnnwidget;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
+import javax.annotation.Nonnull;
+
 public class ShortestFloatFormatter {
-	private static final DecimalFormat signformat;
+	private static final @Nonnull DecimalFormat signformat;
 
 	static {
 		final DecimalFormat format = new DecimalFormat(".##");
@@ -14,7 +16,7 @@ public class ShortestFloatFormatter {
 		signformat = format;
 	}
 
-	public static String format(final float f) {
+	public static @Nonnull String format(final float f) {
 		if (f==0)
 			return "0";
 

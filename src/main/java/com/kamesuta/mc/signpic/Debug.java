@@ -1,9 +1,25 @@
 package com.kamesuta.mc.signpic;
 
+import java.io.File;
+import java.io.InputStream;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.vecmath.AxisAngle4f;
+import javax.vecmath.Quat4f;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+
+import com.google.common.collect.Maps;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
+import com.kamesuta.mc.signpic.util.Downloader;
 
 public class Debug {
 	public static void main(final String[] args) throws Exception {
@@ -52,8 +68,43 @@ public class Debug {
 		//		final float b = (color & 255) / 255.0F;
 		//		Reference.logger.info(String.format("R:%.04f G:%.04f B:%.04f A:%.04f", r, g, b, a));
 
-		final String src = "gyazo.com/114514e";
-		Log.log.info(replace(src));
+		//		final String src = "gyazo.com/114514e";
+		//		Reference.logger.info(replace(src));
+
+		// parsemeta("U2(o)(4~i)");
+
+		quat();
+	}
+
+	static void quat() {
+		final AxisAngle4f angle1 = new AxisAngle4f(0, 1, 0, RotationMath.toRadians(360+90));
+		Log.log.info(angle1+":"+RotationMath.toDegrees(angle1.angle));
+		final Quat4f quat1 = RotationMath.toQuat(angle1);
+		final AxisAngle4f angle2 = RotationMath.toAxis(quat1);
+		Log.log.info(angle2+":"+RotationMath.toDegrees(angle2.angle));
+		final Quat4f quat2 = new Quat4f(0, 0, 0, 1);
+		quat2.mul(quat1);
+		final AxisAngle4f angle3 = RotationMath.toAxis(quat2);
+		Log.log.info(angle3+":"+RotationMath.toDegrees(angle3.angle));
+	}
+
+	protected static final Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
+
+	static void parsemeta(final String src) {
+		final Map<String, String> timeline = Maps.newHashMap();
+		final Matcher mg = g.matcher(src);
+		while (mg.find()) {
+			final int gcount = mg.groupCount();
+			if (2<=gcount) {
+				final String time = mg.group(1);
+				final String meta = mg.group(2);
+				timeline.put(time, meta);
+			} else if (1<=gcount) {
+				final String meta = mg.group(1);
+				timeline.put("def", meta);
+			}
+		}
+		Log.log.info(timeline);
 	}
 
 	final static Pattern p = Pattern.compile("[^\\w]");
@@ -92,26 +143,26 @@ public class Debug {
 	}
 
 	// TODO: Fix and test this method.
-	//	static void PostData() throws Exception {
-	//		final String url = "https://upload.gyazo.com/api/upload";
-	//		final HttpClient httpclient = new Downloader().client;
-	//
-	//		// create the post request.
-	//		final HttpPost httppost = new HttpPost(url);
-	//		final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-	//
-	//		final File f = new File("./src/main/resources/assets/signpic/textures/logo.png");
-	//		builder.addBinaryBody("imagedata", f, ContentType.DEFAULT_BINARY, f.getName());
-	//		builder.addTextBody("access_token", "4d080e95be741beba0b74653a872668326a79526784d2daed9190dc584bffad7");
-	//		httppost.setEntity(builder.build());
-	//
-	//		// execute request
-	//		final HttpResponse response = httpclient.execute(httppost);
-	//		final HttpEntity resEntity = response.getEntity();
-	//		final InputStream stream = resEntity.getContent();
-	//
-	//		System.out.println(response.getStatusLine());
-	//		System.out.println(convertStreamToString(stream));
-	//
-	//	}
+	static void PostData() throws Exception {
+		final String url = "https://upload.gyazo.com/api/upload";
+		final HttpClient httpclient = new Downloader().client;
+
+		// create the post request.
+		final HttpPost httppost = new HttpPost(url);
+		final MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+		final File f = new File("./src/main/resources/assets/signpic/textures/logo.png");
+		builder.addBinaryBody("imagedata", f, ContentType.DEFAULT_BINARY, f.getName());
+		builder.addTextBody("access_token", "4d080e95be741beba0b74653a872668326a79526784d2daed9190dc584bffad7");
+		httppost.setEntity(builder.build());
+
+		// execute request
+		final HttpResponse response = httpclient.execute(httppost);
+		final HttpEntity resEntity = response.getEntity();
+		final InputStream stream = resEntity.getContent();
+
+		System.out.println(response.getStatusLine());
+		System.out.println(convertStreamToString(stream));
+
+	}
 }

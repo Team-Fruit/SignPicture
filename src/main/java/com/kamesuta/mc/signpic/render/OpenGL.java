@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import javax.annotation.Nullable;
+
 import org.lwjgl.opengl.ContextCapabilities;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -342,12 +344,13 @@ public class OpenGL {
 		GL11.glStencilOp(fail, zfail, zpass);
 	}
 
-	private static ContextCapabilities capabilities;
+	private static @Nullable ContextCapabilities capabilities;
 
 	public static boolean openGl30() {
 		if (capabilities==null)
 			capabilities = GLContext.getCapabilities();
-		return capabilities!=null&&capabilities.OpenGL30;
+		final ContextCapabilities cap = capabilities;
+		return cap!=null&&cap.OpenGL30;
 	}
 
 	public static void glGenerateMipmap(final int target) {

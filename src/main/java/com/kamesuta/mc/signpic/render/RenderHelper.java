@@ -2,13 +2,15 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public class RenderHelper {
-	public static final Tessellator t = Tessellator.getInstance();
-	public static final WorldRenderer w = t.getWorldRenderer();
+	public static final @Nonnull Tessellator t = Tessellator.getInstance();
+	public static final @Nonnull WorldRenderer w = t.getWorldRenderer();
 
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
 		final long time = System.currentTimeMillis();
@@ -97,19 +99,5 @@ public class RenderHelper {
 		w.pos(x2, y2, 0).tex(u2, v2).endVertex();
 		w.pos(x2, y1, 0).tex(u2, v1).endVertex();
 		w.pos(x1, y1, 0).tex(u1, v1).endVertex();
-	}
-
-	public static void startTexture() {
-		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		OpenGL.glDisable(GL_LIGHTING);
-		OpenGL.glEnable(GL_BLEND);
-		OpenGL.glEnable(GL_TEXTURE_2D);
-	}
-
-	public static void startShape() {
-		OpenGL.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		OpenGL.glDisable(GL_LIGHTING);
-		OpenGL.glEnable(GL_BLEND);
-		OpenGL.glDisable(GL_TEXTURE_2D);
 	}
 }

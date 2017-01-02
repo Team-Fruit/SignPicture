@@ -9,11 +9,14 @@ import java.net.URLClassLoader;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.Validate;
 
 import com.google.gson.Gson;
+import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -27,30 +30,47 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 
 public class Client {
-	public final static Minecraft mc = FMLClientHandler.instance().getClient();
+	public static final @Nonnull Minecraft mc = FMLClientHandler.instance().getClient();
 
 	public static final Gson gson = new Gson();
 
-	public static CustomTileEntitySignRenderer renderer;
-	public static CoreHandler handler;
-	public static Locations location;
+	public static @Nonnull CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer();
+	public static @Nonnull CoreHandler handler = new CoreHandler();
+	private static @Nullable Locations location;
 
-	public static String mcversion;
-	public static String forgeversion;
+	public static @Nonnull Locations getLocation() {
+		if (location!=null)
+			return location;
+		throw new IllegalStateException("signpic location not initialized");
+	}
 
-	public static String id;
-	public static String name;
+	public static void initLocation(final @Nonnull Locations locations) {
+		location = locations;
+	}
 
-	public static RootCommand rootCommand;
+	public static @Nonnull String mcversion = MinecraftForge.MC_VERSION;
+	public static @Nonnull String forgeversion = ForgeVersion.getVersion();
+
+	public static @Nullable String id;
+	public static @Nullable String name;
+
+	public static @Nullable RootCommand rootCommand;
+
+	static {
+		rootCommand = new RootCommand();
+		rootCommand.addChildCommand(new CommandVersion());
+	}
 
 	public static void openEditor() {
 		mc.displayGuiScreen(new GuiMain(mc.currentScreen));
 	}
 
-	public static void startSection(final String sec) {
+	public static void startSection(final @Nonnull String sec) {
 		mc.mcProfiler.startSection(sec);
 	}
 
@@ -58,7 +78,7 @@ public class Client {
 		mc.mcProfiler.endSection();
 	}
 
-	public static TileEntitySign getTileSignLooking() {
+	public static @Nullable TileEntitySign getTileSignLooking() {
 		if (MovePos.getBlock() instanceof BlockSign) {
 			final TileEntity tile = MovePos.getTile();
 			if (tile instanceof TileEntitySign)
@@ -68,18 +88,18 @@ public class Client {
 	}
 
 	public static class MovePos {
-		public BlockPos pos;
+		public @Nonnull BlockPos pos;
 
-		public MovePos(final BlockPos pos) {
+		public MovePos(final @Nonnull BlockPos pos) {
 			Validate.notNull(pos, "MovePos needs position");
 			this.pos = pos;
 		}
 
-		public static MovingObjectPosition getMovingPos() {
+		public static @Nullable MovingObjectPosition getMovingPos() {
 			return mc.objectMouseOver;
 		}
 
-		public static MovePos getBlockPos() {
+		public static @Nullable MovePos getBlockPos() {
 			final MovingObjectPosition movingPos = getMovingPos();
 			if (movingPos!=null) {
 				final BlockPos pos = movingPos.getBlockPos();
@@ -89,21 +109,21 @@ public class Client {
 			return null;
 		}
 
-		public static IBlockState getBlockState() {
+		public static @Nullable IBlockState getBlockState() {
 			final MovePos movePos = getBlockPos();
 			if (movePos!=null)
 				return mc.theWorld.getBlockState(movePos.pos);
 			return null;
 		}
 
-		public static TileEntity getTile() {
+		public static @Nullable TileEntity getTile() {
 			final MovePos movePos = getBlockPos();
 			if (movePos!=null)
 				return mc.theWorld.getTileEntity(movePos.pos);
 			return null;
 		}
 
-		public static Block getBlock() {
+		public static @Nullable Block getBlock() {
 			final IBlockState blockState = getBlockState();
 			if (blockState!=null)
 				return blockState.getBlock();
@@ -112,7 +132,7 @@ public class Client {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void deleteMod(final File mod) {
+	public static void deleteMod(final @Nonnull File mod) {
 		if (mod.delete())
 			return;
 
@@ -146,7 +166,7 @@ public class Client {
 		}
 	}
 
-	public static String urlNoFragString(final URL url) {
+	public static @Nonnull String urlNoFragString(final @Nonnull URL url) {
 		final StringBuilder strForm = new StringBuilder();
 
 		String protocol = url.getProtocol();
@@ -180,7 +200,8 @@ public class Client {
 	}
 
 	public static void deleteMod() {
-		if (Client.location.modFile.isFile())
-			deleteMod(Client.location.modFile);
+		final Locations loc = location;
+		if (loc!=null&&loc.modFile.isFile())
+			deleteMod(loc.modFile);
 	}
 }

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
@@ -36,7 +38,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class CoreHandler {
-	public final Config configHandler = Config.instance;
+	public final Config configHandler = Config.getConfig();
 	public final KeyHandler keyHandler = new KeyHandler();
 	public final SignHandler signHandler = new SignHandler();
 	public final EntryManager signEntryManager = EntryManager.instance;
@@ -178,7 +180,7 @@ public class CoreHandler {
 		}
 
 		@Override
-		public void setCallback(final ICommunicateCallback callback) {
+		public void setCallback(final @Nonnull ICommunicateCallback callback) {
 		}
 	}
 }
