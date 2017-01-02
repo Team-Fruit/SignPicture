@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.asm;
 
+import javax.annotation.Nullable;
+
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -10,7 +12,7 @@ import com.kamesuta.mc.signpic.asm.lib.MethodMatcher;
 
 public class TileEntityVisitor extends ClassVisitor {
 	private static class HookMethodVisitor extends MethodVisitor {
-		public HookMethodVisitor(final MethodVisitor mv) {
+		public HookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
 		}
 
@@ -43,8 +45,10 @@ public class TileEntityVisitor extends ClassVisitor {
 	}
 
 	@Override
-	public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
+	public @Nullable MethodVisitor visitMethod(final int access, final @Nullable String name, final @Nullable String desc, final @Nullable String signature, final @Nullable String[] exceptions) {
 		final MethodVisitor parent = super.visitMethod(access, name, desc, signature, exceptions);
+		if (name==null||desc==null)
+			return parent;
 		return this.matcher.match(name, desc) ? new HookMethodVisitor(parent) : parent;
 	}
 }

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.bnnwidget.component;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -15,11 +17,11 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
 public class MNumber extends WPanel {
-	public MButton neg;
-	public MChatTextField field;
-	public MButton pos;
+	public @Nonnull MButton neg;
+	public @Nonnull MChatTextField field;
+	public @Nonnull MButton pos;
 
-	public MNumber(final R position, final float buttonwidth) {
+	public MNumber(final @Nonnull R position, final float buttonwidth) {
 		super(position);
 		this.neg = new MButton(new R(Coord.left(0), Coord.width(buttonwidth), Coord.top(0), Coord.bottom(0))) {
 			@Override
@@ -68,29 +70,29 @@ public class MNumber extends WPanel {
 		return true;
 	}
 
-	public MNumber setNumber(final float f) {
+	public @Nonnull MNumber setNumber(final float f) {
 		this.field.setText(Float.isNaN(f) ? "" : ShortestFloatFormatter.format(f));
 		return this;
 	}
 
-	public MNumber setPosLabel(final String s) {
+	public @Nonnull MNumber setPosLabel(final @Nonnull String s) {
 		if (!StringUtils.isEmpty(s)&&!StringUtils.contains(s, "signpic."))
 			this.pos.setText(s);
 		return this;
 	}
 
-	public MNumber setNegLabel(final String s) {
+	public @Nonnull MNumber setNegLabel(final @Nonnull String s) {
 		if (!StringUtils.isEmpty(s)&&!StringUtils.contains(s, "signpic."))
 			this.neg.setText(s);
 		return this;
 	}
 
-	public MNumber setUnknownLabel(final String s) {
+	public @Nonnull MNumber setUnknownLabel(final @Nonnull String s) {
 		if (!StringUtils.isEmpty(s)&&!StringUtils.contains(s, "signpic."))
 			this.field.setWatermark(s);
 		return this;
 	}
 
-	protected void onNumberChanged(final String oldText, final String newText) {
+	protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
 	}
 }

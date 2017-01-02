@@ -1,11 +1,14 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
@@ -14,27 +17,27 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 public class OverlayFrame extends WFrame {
-	public static final OverlayFrame instance = new OverlayFrame();
+	public static final @Nonnull OverlayFrame instance = new OverlayFrame();
 
 	protected boolean initialized;
-	public GuiOverlay pane = new GuiOverlay(new R());
+	public @Nonnull GuiOverlay pane = new GuiOverlay(new R());
 	private boolean d;
 
 	private OverlayFrame() {
-		this.mc = Client.mc;
 	}
 
 	@Override
@@ -43,11 +46,14 @@ public class OverlayFrame extends WFrame {
 	}
 
 	@CoreEvent
-	public void onDraw(final GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (Config.instance.renderGuiOverlay.get())
+	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
+		final GuiScreen gui = event.getGui();
+		if (gui==null)
+			return;
+		if (Config.getConfig().renderGuiOverlay.get())
 			if (!isDelegated()) {
-				setWidth(event.getGui().width);
-				setHeight(event.getGui().height);
+				setWidth(gui.width);
+				setHeight(gui.height);
 				OpenGL.glPushMatrix();
 				OpenGL.glTranslatef(0f, 0f, 1000f);
 				drawScreen(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
@@ -56,7 +62,9 @@ public class OverlayFrame extends WFrame {
 	}
 
 	@CoreEvent
-	public void onDraw(final RenderGameOverlayEvent.Post event) {
+	public void onDraw(final @Nonnull RenderGameOverlayEvent.Post event) {
+		if (event.getResolution()==null)
+			return;
 		if (event.getType()==ElementType.CHAT&&Client.mc.currentScreen==null)
 			if (!isDelegated()) {
 				setWidth(event.getResolution().getScaledWidth());
@@ -75,7 +83,7 @@ public class OverlayFrame extends WFrame {
 	}
 
 	@CoreEvent
-	public void onTick(final ClientTickEvent event) {
+	public void onTick(final @Nonnull ClientTickEvent event) {
 		updateScreen();
 	}
 
@@ -92,9 +100,9 @@ public class OverlayFrame extends WFrame {
 	}
 
 	public static class GuiOverlay extends WPanel {
-		public final GuiTask task;
+		public final @Nonnull GuiTask task;
 
-		private GuiOverlay(final R position) {
+		private GuiOverlay(final @Nonnull R position) {
 			super(position);
 			this.task = new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20), Coord.bottom(20)));
 		}
@@ -108,8 +116,8 @@ public class OverlayFrame extends WFrame {
 				}
 
 				@Override
-				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-					if (Config.instance.renderOverlayPanel.get()||instance.isDelegated())
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+					if (Config.getConfig().renderOverlayPanel.get()||instance.isDelegated())
 						super.draw(ev, pgp, p, frame, popacity);
 				}
 			});
@@ -121,23 +129,23 @@ public class OverlayFrame extends WFrame {
 		}
 
 		@Override
-		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+		public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 			return true;
 		}
 
 		@Deprecated
-		public void addNotice1(final String string, final float showtime) {
+		public void addNotice1(final @Nonnull String string, final float showtime) {
 			invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					final VMotion o = V.pm(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
+					final @Nonnull VMotion o = V.pm(0f).add(Easings.easeOutQuart.move(.25f, 1f)).start();
 					add(new WPanel(new R(Coord.ptop(.5f), Coord.left(0), Coord.right(0), Coord.pheight(.1f)).child(Coord.ptop(-.5f))) {
-						protected Timer timer = new Timer();
+						protected @Nonnull Timer timer = new Timer();
 
 						private boolean removed;
 
 						@Override
-						public void update(final WEvent ev, final Area pgp, final Point p) {
+						public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 							if (this.timer.getTime()>0f)
 								if (!this.removed) {
 									GuiOverlay.this.remove(this);
@@ -150,14 +158,14 @@ public class OverlayFrame extends WFrame {
 							this.timer.set(-showtime);
 							add(new WBase(new R(Coord.top(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()), Coord.bottom(V.pm(.5f).add(Easings.easeOutElastic.move(1f, 0f)).start()))) {
 								@Override
-								protected void initOpacity() {
-									super.setOpacity(o);
+								protected @Nonnull VCommon initOpacity() {
+									return o;
 								}
 
 								@Override
-								public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 									final Area a = getGuiPosition(pgp);
-									RenderHelper.startShape();
+									WRenderer.startShape();
 									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
 									draw(a);
 								}
@@ -165,8 +173,8 @@ public class OverlayFrame extends WFrame {
 							add(new WPanel(new R()) {
 
 								@Override
-								protected void initOpacity() {
-									super.setOpacity(o);
+								protected @Nonnull VCommon initOpacity() {
+									return o;
 								}
 
 								@Override
@@ -182,7 +190,7 @@ public class OverlayFrame extends WFrame {
 								}
 
 								@Override
-								public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+								public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 									return o.isFinished();
 								}
 							});

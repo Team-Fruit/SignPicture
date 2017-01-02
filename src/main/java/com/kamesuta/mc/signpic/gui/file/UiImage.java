@@ -5,53 +5,60 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.JComponent;
 
 public class UiImage extends JComponent {
-	protected BufferedImage image;
+	protected @Nullable BufferedImage image;
 
 	public UiImage() {
 	}
 
-	public UiImage(final BufferedImage image) {
+	public UiImage(final @Nullable BufferedImage image) {
 		setImage(image);
 	}
 
-	public void setImage(final BufferedImage image) {
+	public void setImage(final @Nullable BufferedImage image) {
 		this.image = image;
 	}
 
-	public BufferedImage getImage() {
+	public @Nullable BufferedImage getImage() {
 		return this.image;
 	}
 
 	public int getImageWidth() {
-		if (getImage()!=null)
-			return getImage().getWidth();
+		final BufferedImage image = getImage();
+		if (image!=null)
+			return image.getWidth();
 		return 0;
 	}
 
 	public int getImageHeight() {
-		if (getImage()!=null)
-			return getImage().getHeight();
+		final BufferedImage image = getImage();
+		if (image!=null)
+			return image.getHeight();
 		return 0;
 	}
 
-	public Dimension getImageSize() {
+	public @Nonnull Dimension getImageSize() {
 		return new Dimension(getImageWidth(), getImageHeight());
 	}
 
 	@Override
-	public Dimension getPreferredSize() {
-		if (getImage()!=null)
-			return new Dimension(getImage().getWidth(), getImage().getHeight());
+	public @Nullable Dimension getPreferredSize() {
+		final BufferedImage image = getImage();
+		if (image!=null)
+			return new Dimension(image.getWidth(), image.getHeight());
 		return super.getPreferredSize();
 	}
 
 	@Override
-	public void paintComponent(final Graphics g) {
-		final Graphics2D g2 = (Graphics2D) g;
-		//g2.setTransform(AffineTransform.getScaleInstance(getWidth(), getHeight()));
-		g2.drawImage(getImage(), 0, 0, getWidth(), getHeight(), this);
+	public void paintComponent(final @Nullable Graphics g) {
+		if (g!=null) {
+			final Graphics2D g2 = (Graphics2D) g;
+			//g2.setTransform(AffineTransform.getScaleInstance(getWidth(), getHeight()));
+			g2.drawImage(getImage(), 0, 0, getWidth(), getHeight(), this);
+		}
 	}
 }

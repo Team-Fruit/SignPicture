@@ -1,10 +1,12 @@
 package com.kamesuta.mc.signpic.http;
 
+import javax.annotation.Nullable;
+
 public class CommunicateResponse implements ICommunicateResponse {
 	protected boolean isSuccess;
-	protected Throwable error;
+	protected @Nullable Throwable error;
 
-	public CommunicateResponse(final boolean isSuccess, final Throwable error) {
+	public CommunicateResponse(final boolean isSuccess, final @Nullable Throwable error) {
 		this.isSuccess = isSuccess;
 		this.error = error;
 	}
@@ -15,7 +17,7 @@ public class CommunicateResponse implements ICommunicateResponse {
 	}
 
 	@Override
-	public Throwable getError() {
+	public @Nullable Throwable getError() {
 		return this.error;
 	}
 }

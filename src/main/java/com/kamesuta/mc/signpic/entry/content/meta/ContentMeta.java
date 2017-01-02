@@ -2,63 +2,66 @@ package com.kamesuta.mc.signpic.entry.content.meta;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class ContentMeta {
 	private final MetaIO<MetaData> metaio;
 
-	public ContentMeta(final File location) {
+	public ContentMeta(final @Nonnull File location) {
 		this.metaio = new MetaIO<MetaData>(location, MetaData.class) {
 			@Override
-			public MetaData createBlank() {
+			public @Nonnull MetaData createBlank() {
 				return new MetaData();
 			}
 		};
 	}
 
-	public String getURL() {
+	public @Nullable String getURL() {
 		return this.metaio.get().url;
 	}
 
-	public ContentMeta setURL(final String url) {
+	public @Nonnull ContentMeta setURL(final String url) {
 		this.metaio.get().url = url;
 		this.metaio.save();
 		return this;
 	}
 
-	public URIStacks getURLStack() {
+	public @Nullable URIStacks getURLStack() {
 		return this.metaio.get().urlstack;
 	}
 
-	public ContentMeta setURLStack(final URIStacks urlstack) {
+	public @Nonnull ContentMeta setURLStack(final URIStacks urlstack) {
 		this.metaio.get().urlstack = urlstack;
 		this.metaio.save();
 		return this;
 	}
 
-	public String getImageMeta() {
+	public @Nullable String getImageMeta() {
 		return this.metaio.get().imagemeta;
 	}
 
-	public ContentMeta setImageMeta(final String imagemeta) {
+	public @Nonnull ContentMeta setImageMeta(final String imagemeta) {
 		this.metaio.get().imagemeta = imagemeta;
 		this.metaio.save();
 		return this;
 	}
 
-	public String getMetaID() {
+	public @Nullable String getMetaID() {
 		return this.metaio.get().metaid;
 	}
 
-	public ContentMeta setMetaID(final String metaid) {
+	public @Nonnull ContentMeta setMetaID(final String metaid) {
 		this.metaio.get().metaid = metaid;
 		this.metaio.save();
 		return this;
 	}
 
-	public String getCacheID() {
+	public @Nullable String getCacheID() {
 		return this.metaio.get().cacheid;
 	}
 
-	public ContentMeta setCacheID(final String cacheid) {
+	public @Nonnull ContentMeta setCacheID(final String cacheid) {
 		this.metaio.get().cacheid = cacheid;
 		this.metaio.save();
 		return this;
@@ -68,7 +71,7 @@ public class ContentMeta {
 		return this.metaio.get().trycount;
 	}
 
-	public ContentMeta setTryCount(final int trycount) {
+	public @Nonnull ContentMeta setTryCount(final int trycount) {
 		this.metaio.get().trycount = trycount;
 		this.metaio.save();
 		return this;
@@ -78,7 +81,7 @@ public class ContentMeta {
 		return this.metaio.get().blocked;
 	}
 
-	public ContentMeta setBlocked(final boolean blocked) {
+	public @Nonnull ContentMeta setBlocked(final boolean blocked) {
 		this.metaio.get().blocked = blocked;
 		ContentMeta.this.metaio.save();
 		return this;
@@ -96,23 +99,23 @@ public class ContentMeta {
 		/**
 		 * content Base URL
 		 */
-		public String url;
+		public @Nullable String url;
 		/**
 		 * content URL Stacks
 		 */
-		public URIStacks urlstack;
+		public @Nullable URIStacks urlstack;
 		/**
 		 * image meta data
 		 */
-		public String imagemeta;
+		public @Nullable String imagemeta;
 		/**
 		 * meta ID
 		 */
-		public String metaid;
+		public @Nullable String metaid;
 		/**
 		 * cache ID
 		 */
-		public String cacheid;
+		public @Nullable String cacheid;
 		/**
 		 * download try count
 		 */

@@ -4,8 +4,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
+import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -14,24 +18,23 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 
 public class MButton extends WBase {
-	public static final ResourceLocation button = new ResourceLocation("signpic", "textures/gui/buttons.png");
+	public static final @Nonnull ResourceLocation button = new ResourceLocation("signpic", "textures/gui/buttons.png");
 
-	public String text = "";
-	public String actionCommand;
+	public @Nullable String text = null;
+	public @Nullable String actionCommand;
 	private boolean isEnabled = true;
 
-	public MButton(final R position) {
+	public MButton(final @Nonnull R position) {
 		super(position);
 	}
 
-	public MButton setText(final String s) {
+	public MButton setText(final @Nullable String s) {
 		this.text = s;
 		return this;
 	}
@@ -40,13 +43,13 @@ public class MButton extends WBase {
 		return this.isEnabled;
 	}
 
-	public MButton setEnabled(final boolean b) {
+	public @Nonnull MButton setEnabled(final boolean b) {
 		this.isEnabled = b;
 		return this;
 	}
 
 	@Override
-	public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 		final Area abs = getGuiPosition(pgp);
 		if (abs.pointInside(p)) {
 			if (isEnabled())
@@ -64,17 +67,17 @@ public class MButton extends WBase {
 		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 
-	protected boolean onClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+	protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 		return true;
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 		final Area a = getGuiPosition(pgp);
 		final float opacity = getGuiOpacity(popacity);
 
-		if (Config.instance.informationTryNew.get()) {
-			RenderHelper.startShape();
+		if (Config.getConfig().informationTryNew.get()) {
+			WRenderer.startShape();
 			if (isEnabled()) {
 				OpenGL.glColor4f(.2f, .2f, .2f, opacity*.2f);
 				draw(a);
@@ -88,7 +91,7 @@ public class MButton extends WBase {
 				OpenGL.glColor4f(.5f, .5f, .5f, opacity);
 			draw(a, GL_LINE_LOOP);
 		} else {
-			RenderHelper.startTexture();
+			WRenderer.startTexture();
 			OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity);
 			texture().bindTexture(button);
 			final int state = !isEnabled() ? 0 : a.pointInside(p) ? 2 : 1;
@@ -98,15 +101,14 @@ public class MButton extends WBase {
 			drawTextureModalSize(a.x1(), a.y1()+a.h()/2, a.w()/2, a.h()/2, 0, state*80+80-a.h()/2, a.w()/2, a.h()/2);
 			drawTextureModalSize(a.x1()+a.w()/2, a.y1()+a.h()/2, a.w()/2, a.h()/2, 256-a.w()/2, state*80+80-a.h()/2, a.w()/2, a.h()/2);
 		}
-		if (this.text!=null)
-			drawText(ev, pgp, p, frame, opacity);
+		drawText(ev, pgp, p, frame, opacity);
 	}
 
 	protected VMotion o = V.pm(0).start();
 	protected boolean ob = false;;
 
 	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 		final Area a = getGuiPosition(pgp);
 		if (a.pointInside(p)) {
 			if (!this.ob)
@@ -119,20 +121,23 @@ public class MButton extends WBase {
 		}
 	}
 
-	public void drawText(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-		final Area a = getGuiPosition(pgp);
-		RenderHelper.startTexture();
-		final Color c = new Color(getTextColour(ev, pgp, p, frame));
-		fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) (c.getAlpha()*opacity));
-		drawString(this.text, a, Align.CENTER, VerticalAlign.MIDDLE, true);
+	public void drawText(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+		final String text = this.text;
+		if (text!=null) {
+			final Area a = getGuiPosition(pgp);
+			WRenderer.startTexture();
+			final Color c = new Color(getTextColour(ev, pgp, p, frame));
+			fontColor(c.getRed(), c.getGreen(), c.getBlue(), (int) (c.getAlpha()*opacity));
+			drawString(text, a, Align.CENTER, VerticalAlign.MIDDLE, true);
+		}
 	}
 
-	public int getTextColour(final WEvent ev, final Area pgp, final Point p, final float frame) {
+	public int getTextColour(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame) {
 		final Area abs = getGuiPosition(pgp);
 		return abs.pointInside(p) ? -96 : !isEnabled() ? -6250336 : -2039584;
 	}
 
-	public MButton setActionCommand(final String string) {
+	public MButton setActionCommand(final @Nullable String string) {
 		this.actionCommand = string;
 		return this;
 	}
