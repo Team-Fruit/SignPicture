@@ -18,7 +18,6 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -26,8 +25,6 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
-	protected final @Nonnull Tessellator t = Tessellator.instance;
-
 	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
 	public CustomTileEntitySignRenderer() {

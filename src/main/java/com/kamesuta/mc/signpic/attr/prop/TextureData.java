@@ -66,7 +66,7 @@ public interface TextureData {
 			}
 
 			@Override
-			public TextureFloat diff(final @Nullable TextureFloat base) {
+			public @Nonnull TextureFloat diff(final @Nullable TextureFloat base) {
 				if (base==null)
 					return new TextureFloat(this.type, this.data);
 				else

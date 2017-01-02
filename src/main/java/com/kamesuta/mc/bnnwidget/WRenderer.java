@@ -9,7 +9,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 import com.kamesuta.mc.signpic.render.OpenGL;
 
+import net.minecraft.client.renderer.Tessellator;
+
 public class WRenderer {
+	public static final @Nonnull Tessellator t = Tessellator.instance;
+
 	public static void startShape(final @Nullable BlendType src, final @Nullable BlendType dest) {
 		OpenGL.glBlendFunc(src!=null ? src.glEnum : GL_SRC_ALPHA, dest!=null ? dest.glEnum : GL_ONE_MINUS_SRC_ALPHA);
 		OpenGL.glDisable(GL_LIGHTING);

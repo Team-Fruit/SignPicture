@@ -33,7 +33,7 @@ public class BitlyShortener extends Communicate implements Progressable, IShorte
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.shortreq.getState("§dbit.ly: §r%s");
 	}
 

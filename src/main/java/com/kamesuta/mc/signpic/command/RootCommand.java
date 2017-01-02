@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 
 public class RootCommand extends CommandBase implements IModCommand {
 	public static final @Nonnull String ROOT_COMMAND_NAME = "signpic";
-	private final @Nonnull SortedSet<SubCommand> children = new TreeSet<SubCommand>(new Comparator<SubCommand>() {
+	private final @Nonnull SortedSet<SubCommand> children = Sets.newTreeSet(new Comparator<SubCommand>() {
 		@Override
 		public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
 			if (o1!=null&&o2!=null)

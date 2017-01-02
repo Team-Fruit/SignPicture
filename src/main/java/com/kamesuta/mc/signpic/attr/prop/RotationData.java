@@ -1,6 +1,5 @@
 package com.kamesuta.mc.signpic.attr.prop;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -14,6 +13,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropComposable;
@@ -230,7 +230,7 @@ public abstract class RotationData {
 			return q;
 		}
 
-		public static AxisAngle4f toAxis(final Quat4f quat) {
+		public static @Nonnull AxisAngle4f toAxis(final @Nonnull Quat4f quat) {
 			final @Nonnull AxisAngle4f q = new AxisAngle4f();
 			q.set(quat);
 			return q;
@@ -265,7 +265,7 @@ public abstract class RotationData {
 
 	public static class RotationBuilder implements IPropBuilder<DiffRotation, KeyRotation> {
 
-		public final List<ImageRotate> rotates = new LinkedList<ImageRotate>();
+		public final @Nonnull List<ImageRotate> rotates = Lists.newLinkedList();
 		public float x = 0;
 		public float y = 0;
 		public float z = 0;

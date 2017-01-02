@@ -31,7 +31,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 
 	public abstract @Nonnull String getLocal();
 
-	public SizeData getSize() {
+	public @Nonnull SizeData getSize() {
 		if (this.content.state.getType()==StateType.AVAILABLE)
 			return getTexture().getSize();
 		else
