@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -12,31 +14,31 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.util.NotifyCollections.IModCount;
 
 public abstract class WList<T, W extends WCommon> extends WTypedPanel<W> {
-	protected IModCount<T> check;
+	protected @Nonnull IModCount<T> check;
 
-	public WList(final R position, final IModCount<T> check) {
+	public WList(final @Nonnull R position, final @Nonnull IModCount<T> check) {
 		super(position);
 		this.check = check;
 	}
 
-	public void setList(final IModCount<T> check) {
+	public void setList(final @Nonnull IModCount<T> check) {
 		this.check = check;
 	}
 
 	@Override
-	public boolean add(final W widget) {
+	public boolean add(final @Nonnull W widget) {
 		return false;
 	}
 
 	@Override
-	public boolean remove(final W widget) {
+	public boolean remove(final @Nonnull W widget) {
 		return false;
 	}
 
 	int cachedModCount = -1;
 
 	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 		final int mod = this.check.getModCount();
 		if (mod!=this.cachedModCount) {
 			this.cachedModCount = mod;
@@ -45,10 +47,11 @@ public abstract class WList<T, W extends WCommon> extends WTypedPanel<W> {
 		super.update(ev, pgp, p);
 	}
 
-	private final Map<W, T> toT = Maps.newHashMap();
-	private final Map<T, W> toW = Maps.newHashMap();
-	private final Map<T, Integer> Tindex = Maps.newHashMap();
-	private final Set<W> cws = Sets.newHashSet();
+	private final @Nonnull Map<W, T> toT = Maps.newHashMap();
+	private final @Nonnull Map<T, W> toW = Maps.newHashMap();
+	private final @Nonnull Map<T, Integer> Tindex = Maps.newHashMap();
+	private final @Nonnull Set<W> cws = Sets.newHashSet();
+
 	public void update() {
 		final List<W> ws = getContainer();
 		this.cws.clear();
@@ -86,11 +89,14 @@ public abstract class WList<T, W extends WCommon> extends WTypedPanel<W> {
 		}
 	}
 
-	protected abstract W createWidget(T t, int i);
+	protected abstract @Nonnull W createWidget(@Nonnull T t, int i);
 
-	protected void onAdded(final T t, final W w) {}
+	protected void onAdded(final @Nonnull T t, final @Nonnull W w) {
+	}
 
-	protected void onRemove(final T t, final W w) {}
+	protected void onRemove(final @Nonnull T t, final @Nonnull W w) {
+	}
 
-	protected void onMoved(final T t, final W w, final int from, final int to) {}
+	protected void onMoved(final @Nonnull T t, final @Nonnull W w, final int from, final int to) {
+	}
 }

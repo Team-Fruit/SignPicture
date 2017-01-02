@@ -1,12 +1,15 @@
 package com.kamesuta.mc.bnnwidget.motion;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.lwjgl.util.Timer;
 
 public abstract class Motion implements IMotion {
 
-	protected final Timer timer;
+	protected final @Nonnull Timer timer;
 	protected final float duration;
-	protected Runnable after;
+	protected @Nullable Runnable after;
 
 	public Motion(final float duration) {
 		this.timer = new Timer();
@@ -16,31 +19,31 @@ public abstract class Motion implements IMotion {
 	}
 
 	@Override
-	public IMotion restart() {
+	public @Nonnull IMotion restart() {
 		setTime(0);
 		return this;
 	}
 
 	@Override
-	public IMotion finish() {
+	public @Nonnull IMotion finish() {
 		setTime(this.duration);
 		return this;
 	}
 
 	@Override
-	public IMotion pause() {
+	public @Nonnull IMotion pause() {
 		this.timer.pause();
 		return this;
 	}
 
 	@Override
-	public IMotion resume() {
+	public @Nonnull IMotion resume() {
 		this.timer.resume();
 		return this;
 	}
 
 	@Override
-	public IMotion setTime(final float time) {
+	public @Nonnull IMotion setTime(final float time) {
 		this.timer.set(time);
 		return this;
 	}
@@ -51,7 +54,7 @@ public abstract class Motion implements IMotion {
 	}
 
 	@Override
-	public IMotion setAfter(final Runnable r) {
+	public IMotion setAfter(final @Nullable Runnable r) {
 		this.after = r;
 		return this;
 	}
@@ -62,41 +65,42 @@ public abstract class Motion implements IMotion {
 	}
 
 	@Override
-	public Runnable getAfter() {
+	public @Nullable Runnable getAfter() {
 		return this.after;
 	}
 
 	@Override
 	public void onFinished() {
-		if (getAfter()!=null)
-			getAfter().run();
+		final Runnable r = getAfter();
+		if (r!=null)
+			r.run();
 	}
 
-	public static IMotion easing(final float duration, final Easing easing, final float end) {
+	public static @Nonnull IMotion easing(final float duration, final @Nonnull Easing easing, final float end) {
 		return new EasingMotion(duration, easing, end);
 	}
 
-	public static IMotion blank(final float duration) {
+	public static @Nonnull IMotion blank(final float duration) {
 		return new BlankMotion(duration);
 	}
 
-	public static IMotion move(final float end) {
+	public static @Nonnull IMotion move(final float end) {
 		return new MoveMotion(end);
 	}
 
-	public static CompoundMotion of(final IMotion... motions) {
+	public static @Nonnull CompoundMotion of(final @Nonnull IMotion... motions) {
 		return CompoundMotion.of(motions);
 	}
 
-	public static CompoundMotion of(final float coord, final IMotion... motions) {
+	public static @Nonnull CompoundMotion of(final float coord, final @Nonnull IMotion... motions) {
 		return CompoundMotion.of(coord, motions);
 	}
 
 	static class EasingMotion extends Motion {
-		protected final Easing easing;
+		protected final @Nonnull Easing easing;
 		protected final float end;
 
-		public EasingMotion(final float duration, final Easing easing, final float end) {
+		public EasingMotion(final float duration, final @Nonnull Easing easing, final float end) {
 			super(duration);
 			this.easing = easing;
 			this.end = end;
@@ -158,7 +162,7 @@ public abstract class Motion implements IMotion {
 		}
 
 		@Override
-		public String toString() {
+		public @Nonnull String toString() {
 			return String.format("Move[->%2$s(%1$ss)]", this.duration, this.end);
 		}
 	}

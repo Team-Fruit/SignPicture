@@ -6,6 +6,9 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
@@ -15,22 +18,22 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Log;
 
 public abstract class MetaIO<E extends IData> {
-	public final File location;
-	public final Class<E> clazz;
-	private transient E data;
+	public final @Nonnull File location;
+	public final @Nonnull Class<E> clazz;
+	private transient @Nullable E data;
 
-	public MetaIO(final File location, final Class<E> clazz) {
+	public MetaIO(final @Nonnull File location, final @Nonnull Class<E> clazz) {
 		this.location = location;
 		this.clazz = clazz;
 	}
 
-	public E get() {
-		if (this.data==null)
-			this.data = loadData();
-		return this.data;
+	public @Nonnull E get() {
+		if (this.data!=null)
+			return this.data;
+		return this.data = loadData();
 	}
 
-	private E loadData() {
+	private @Nonnull E loadData() {
 		JsonReader reader = null;
 		try {
 			if (this.location.exists()) {
@@ -48,13 +51,13 @@ public abstract class MetaIO<E extends IData> {
 		return createBlank();
 	}
 
-	public abstract E createBlank();
+	public abstract @Nonnull E createBlank();
 
 	public void save() {
 		saveData(this.data);
 	}
 
-	private void saveData(final E data) {
+	private void saveData(final @Nullable E data) {
 		JsonWriter writer = null;
 		try {
 			writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(this.location), Charsets.UTF_8));

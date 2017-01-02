@@ -2,13 +2,15 @@ package com.kamesuta.mc.bnnwidget.var;
 
 import java.util.Set;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Sets;
 
 public class VCompound implements VCommon {
-	protected VCommon coord;
-	protected Set<VCommon> coords;
+	protected @Nonnull VCommon coord;
+	protected final @Nonnull Set<VCommon> coords;
 
-	public VCompound(final VCommon a, final VCommon b) {
+	public VCompound(final @Nonnull VCommon a, final @Nonnull VCommon b) {
 		this.coord = a;
 		this.coords = Sets.newHashSet(b);
 	}

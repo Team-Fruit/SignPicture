@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.http.upload;
 
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Apis.ImageUploaderFactory;
 import com.kamesuta.mc.signpic.Log;
@@ -14,7 +17,7 @@ import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import net.minecraft.client.resources.I18n;
 
 public class UploadApiUtil {
-	public static boolean upload(final UploadRequest content, final Runnable onDone) {
+	public static boolean upload(final @Nonnull UploadRequest content, final @Nullable Runnable onDone) {
 		try {
 			final ImageUploaderFactory factory = getUploaderFactory();
 			final String key = getKey(factory);
@@ -24,10 +27,10 @@ public class UploadApiUtil {
 				final IUploader upload = factory.create(content, key);
 				upload.setCallback(new ICommunicateCallback() {
 					@Override
-					public void onDone(final ICommunicateResponse res) {
+					public void onDone(final @Nonnull ICommunicateResponse res) {
 						if (upload.getLink()!=null) {
 							final String url = upload.getLink();
-							if (!GuiMain.setContentId(url))
+							if (url!=null&&!GuiMain.setContentId(url))
 								Log.notice(I18n.format("signpic.gui.notice.uploaded", content.getName()));
 							if (onDone!=null)
 								onDone.run();
@@ -45,15 +48,15 @@ public class UploadApiUtil {
 		return false;
 	}
 
-	public static boolean upload(final UploadRequest content) {
+	public static boolean upload(final @Nonnull UploadRequest content) {
 		return upload(content, null);
 	}
 
-	public static ImageUploaderFactory getUploaderFactory() {
+	public static @Nullable ImageUploaderFactory getUploaderFactory() {
 		return Apis.instance.imageUploaders.solve(Apis.instance.imageUploaders.getConfigOrRandom());
 	}
 
-	public static String getKey(final ImageUploaderFactory factory) {
+	public static @Nullable String getKey(final @Nullable ImageUploaderFactory factory) {
 		if (factory!=null)
 			return factory.keySettings().getConfigOrRandom();
 		return null;

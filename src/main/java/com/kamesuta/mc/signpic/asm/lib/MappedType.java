@@ -8,30 +8,30 @@
  */
 package com.kamesuta.mc.signpic.asm.lib;
 
+import javax.annotation.Nonnull;
+
 import org.objectweb.asm.Type;
 
 public class MappedType {
+	private final @Nonnull String clsName;
 
-	private final String clsName;
-
-	public static MappedType of(final Class<?> cls) {
+	public static @Nonnull MappedType of(final @Nonnull Class<?> cls) {
 		return new MappedType(cls.getName());
 	}
 
-	public static MappedType of(final String clsName) {
+	public static @Nonnull MappedType of(final @Nonnull String clsName) {
 		return new MappedType(clsName);
 	}
 
-	private MappedType(final String clsName) {
+	private MappedType(final @Nonnull String clsName) {
 		this.clsName = VisitorHelper.getMappedName(clsName.replace('.', '/'));
 	}
 
-	public String name() {
+	public @Nonnull String name() {
 		return this.clsName;
 	}
 
-	public Type type() {
+	public @Nonnull Type type() {
 		return Type.getObjectType(this.clsName);
 	}
-
 }

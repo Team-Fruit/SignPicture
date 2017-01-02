@@ -1,22 +1,25 @@
 package com.kamesuta.mc.signpic.preview;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class PreviewTileEntitySign extends TileEntitySign {
 	protected int blockMetadata;
 
-	public PreviewTileEntitySign(final Block defaultBlockType) {
+	public PreviewTileEntitySign(final @Nonnull Block defaultBlockType) {
 		this.blockType = defaultBlockType;
 		this.blockMetadata = 0;
 	}
 
 	@Override
-	public Block getBlockType() {
+	public @Nullable Block getBlockType() {
 		return this.blockType;
 	}
 
-	public void setBlockType(final Block blockType) {
+	public void setBlockType(final @Nonnull Block blockType) {
 		this.blockType = blockType;
 	}
 

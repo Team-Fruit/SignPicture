@@ -21,6 +21,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -42,7 +44,7 @@ import com.kamesuta.mc.signpic.lib.ComponentResizer;
 
 public abstract class UiUpload {
 
-	protected JDialog frame;
+	protected @Nullable JDialog frame;
 
 	/**
 	 * Create the application.
@@ -65,13 +67,13 @@ public abstract class UiUpload {
 	 * @wbp.parser.entryPoint
 	 */
 	protected void initialize() {
-		this.frame = new JDialog();
-		this.frame.setTitle(getString("signpic.ui.title"));
-		this.frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-		this.frame.setUndecorated(true);
+		final JDialog frame = this.frame = new JDialog();
+		frame.setTitle(getString("signpic.ui.title"));
+		frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		frame.setUndecorated(true);
 
 		final JPanel base = new JPanel();
-		this.frame.getContentPane().add(base, BorderLayout.CENTER);
+		frame.getContentPane().add(base, BorderLayout.CENTER);
 		base.setLayout(new BorderLayout(0, 0));
 
 		final JPanel title = new JPanel();
@@ -84,7 +86,7 @@ public abstract class UiUpload {
 		final UiImage close = new UiImage();
 		close.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(final MouseEvent e) {
+			public void mouseClicked(final @Nullable MouseEvent e) {
 				requestClose();
 			}
 		});
@@ -141,14 +143,16 @@ public abstract class UiUpload {
 		drop.setBackground(new Color(255, 255, 255));
 		drop.setDropTarget(new DropTarget() {
 			@Override
-			public synchronized void drop(final DropTargetDropEvent evt) {
-				try {
-					evt.acceptDrop(DnDConstants.ACTION_COPY);
-					final Transferable transferable = evt.getTransferable();
-					transfer(transferable);
-				} catch (final Exception ex) {
-					ex.printStackTrace();
-				}
+			public synchronized void drop(final @Nullable DropTargetDropEvent evt) {
+				if (evt!=null)
+					try {
+						evt.acceptDrop(DnDConstants.ACTION_COPY);
+						final Transferable transferable = evt.getTransferable();
+						if (transferable!=null)
+							transfer(transferable);
+					} catch (final Exception ex) {
+						ex.printStackTrace();
+					}
 			}
 		});
 		base.add(drop, BorderLayout.CENTER);
@@ -185,8 +189,8 @@ public abstract class UiUpload {
 		final JButton btnselect = new JButton(getString("signpic.ui.select"));
 		btnselect.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(final ActionEvent ev) {
-				final FileDialog fileDialog = new FileDialog(UiUpload.this.frame, getString("signpic.ui.title.file"), FileDialog.LOAD);
+			public void actionPerformed(final @Nullable ActionEvent ev) {
+				final FileDialog fileDialog = new FileDialog(frame, getString("signpic.ui.title.file"), FileDialog.LOAD);
 				fileDialog.setVisible(true);
 				final String dir = fileDialog.getDirectory();
 				final String name = fileDialog.getFile();
@@ -203,12 +207,12 @@ public abstract class UiUpload {
 		btnselect.setFocusPainted(false);
 		btnselect.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseEntered(final MouseEvent evt) {
+			public void mouseEntered(final @Nullable MouseEvent evt) {
 				btnselect.setBackground(Color.CYAN);
 			}
 
 			@Override
-			public void mouseExited(final MouseEvent evt) {
+			public void mouseExited(final @Nullable MouseEvent evt) {
 				btnselect.setBackground(Color.WHITE);
 			}
 		});
@@ -222,27 +226,27 @@ public abstract class UiUpload {
 		droparea.add(glue2);
 		drop.setLayout(gl_drop);
 
-		this.frame.pack();
-		final Dimension minsize = new Dimension(this.frame.getSize());
-		this.frame.setMinimumSize(minsize);
+		frame.pack();
+		final Dimension minsize = new Dimension(frame.getSize());
+		frame.setMinimumSize(minsize);
 
 		final ComponentResizer cr = new ComponentResizer();
-		cr.registerComponent(this.frame);
+		cr.registerComponent(frame);
 		cr.setMinimumSize(minsize);
 		cr.setEdgeInsets(null);
 
-		final ComponentMover cm = new ComponentMover(this.frame);
+		final ComponentMover cm = new ComponentMover(frame);
 		cm.registerComponent(title);
 		cm.setChangeCursor(false);
 		cm.setEdgeInsets(null);
 
-		this.frame.setSize(400, 400);
-		this.frame.setLocationRelativeTo(null);
+		frame.setSize(400, 400);
+		frame.setLocationRelativeTo(null);
 	}
 
-	protected abstract BufferedImage getImage(final String path);
+	protected abstract @Nullable BufferedImage getImage(final @Nonnull String path);
 
-	protected abstract String getString(final String id);
+	protected abstract @Nonnull String getString(final @Nonnull String id);
 
 	protected void requestOpen() {
 		EventQueue.invokeLater(new Runnable() {
@@ -255,7 +259,8 @@ public abstract class UiUpload {
 
 	protected void open() {
 		init();
-		this.frame.setVisible(true);
+		if (this.frame!=null)
+			this.frame.setVisible(true);
 	}
 
 	protected void requestClose() {
@@ -268,27 +273,30 @@ public abstract class UiUpload {
 	}
 
 	protected void close() {
-		this.frame.setVisible(false);
+		if (this.frame!=null)
+			this.frame.setVisible(false);
 	}
 
 	public boolean isVisible() {
-		if (!this.initialized||this.frame==null)
-			return false;
-		return this.frame.isVisible();
+		if (this.frame!=null&&this.initialized)
+			return this.frame.isVisible();
+		return false;
 	}
 
-	protected abstract void transfer(final Transferable transferable);
+	protected abstract void transfer(final @Nonnull Transferable transferable);
 
-	protected abstract void apply(final File f);
+	protected abstract void apply(final @Nonnull File f);
 
 	static class DashedBorder extends AbstractBorder {
 		@Override
-		public void paintBorder(final Component comp, final Graphics g, final int x, final int y, final int w, final int h) {
-			final Graphics2D gg = (Graphics2D) g.create();
-			gg.setColor(Color.GRAY);
-			gg.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 6 }, 0));
-			gg.drawRect(x, y, w-1, h-1);
-			gg.dispose();
+		public void paintBorder(final @Nullable Component comp, final @Nullable Graphics g, final int x, final int y, final int w, final int h) {
+			if (g!=null) {
+				final Graphics2D gg = (Graphics2D) g.create();
+				gg.setColor(Color.GRAY);
+				gg.setStroke(new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 6 }, 0));
+				gg.drawRect(x, y, w-1, h-1);
+				gg.dispose();
+			}
 		}
 	}
 }
