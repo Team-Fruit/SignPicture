@@ -3,12 +3,12 @@ package com.kamesuta.mc.signpic.command;
 import java.util.Comparator;
 import java.util.List;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -36,7 +36,7 @@ public abstract class SubCommand implements IModCommand {
 	public SubCommand(final @Nonnull String name) {
 		this.permLevel = SubCommand.PermLevel.EVERYONE;
 
-		this.children = new TreeSet<SubCommand>(new Comparator<SubCommand>() {
+		this.children = Sets.newTreeSet(new Comparator<SubCommand>() {
 			@Override
 			public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
 				if (o1!=null&&o2!=null)

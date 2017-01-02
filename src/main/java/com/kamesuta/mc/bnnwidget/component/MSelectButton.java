@@ -21,7 +21,7 @@ public class MSelectButton extends MSelect<MButton> {
 	}
 
 	@Override
-	protected ButtonSelector getSelector() {
+	protected @Nonnull ButtonSelector getSelector() {
 		return this.selector;
 	}
 
@@ -45,30 +45,30 @@ public class MSelectButton extends MSelect<MButton> {
 	}
 
 	@Override
-	public MSelectButton setText(final @Nonnull MButton text) {
+	public @Nonnull MSelectButton setText(final @Nonnull MButton text) {
 		this.field.set(text);
 		return this;
 	}
 
-	public MSelectButton selectButton(final @Nullable MButton button) {
+	public @Nonnull MSelectButton selectButton(final @Nullable MButton button) {
 		this.field.set(button);
 		return this;
 	}
 
 	@Override
-	public MSelectButton setPosLabel(final @Nullable String s) {
+	public @Nonnull MSelectButton setPosLabel(final @Nullable String s) {
 		this.pos.setText(s);
 		return this;
 	}
 
 	@Override
-	public MSelectButton setNegLabel(final @Nullable String s) {
+	public @Nonnull MSelectButton setNegLabel(final @Nullable String s) {
 		this.neg.setText(s);
 		return this;
 	}
 
 	public static class ButtonSelector extends PosSelector<MButton> {
-		protected List<MButton> list = Lists.newArrayList();
+		protected @Nonnull List<MButton> list = Lists.newArrayList();
 
 		public void setList(final @Nonnull List<MButton> list) {
 			this.list = list;

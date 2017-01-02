@@ -130,7 +130,7 @@ public class ModDownload extends Communicate implements Progressable {
 	}
 
 	@Override
-	public State getState() {
+	public @Nonnull State getState() {
 		return this.status;
 	}
 

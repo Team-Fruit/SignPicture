@@ -16,10 +16,8 @@ import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.state.StateType;
 
-import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
 public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
@@ -43,7 +41,6 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			WRenderer.startTexture(b, d);
-			final WorldRenderer t = RenderHelper.w;
 			final ImageTexture image = getTexture();
 			image.bind();
 
@@ -66,12 +63,12 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
-			t.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			t.pos(0, 0, 0).tex(u, v).endVertex();
-			t.pos(0, 1, 0).tex(u, v+h/s).endVertex();
-			t.pos(1, 1, 0).tex(u+w/c, v+h/s).endVertex();
-			t.pos(1, 0, 0).tex(u+w/c, v).endVertex();
-			RenderHelper.t.draw();
+			WRenderer.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			WRenderer.w.pos(0, 0, 0).tex(u, v).endVertex();
+			WRenderer.w.pos(0, 1, 0).tex(u, v+h/s).endVertex();
+			WRenderer.w.pos(1, 1, 0).tex(u+w/c, v+h/s).endVertex();
+			WRenderer.w.pos(1, 0, 0).tex(u+w/c, v).endVertex();
+			WRenderer.t.draw();
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);
 			if (image.hasMipmap()) {

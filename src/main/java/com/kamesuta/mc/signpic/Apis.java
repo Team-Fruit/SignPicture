@@ -51,7 +51,7 @@ public class Apis {
 		return url;
 	}
 
-	private static final Random rnd = new Random();
+	private static final @Nonnull Random rnd = new Random();
 
 	public final @Nonnull MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
 		@Override

@@ -35,9 +35,6 @@ public class ChatBuilder {
 	private final @Nonnull Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
-	public ChatBuilder() {
-	}
-
 	public @Nonnull IChatComponent build() {
 		IChatComponent chat;
 		if (this.chat!=null)

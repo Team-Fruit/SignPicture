@@ -51,7 +51,7 @@ public class MSelectLabel extends MSelect<String> {
 	}
 
 	@Override
-	public MSelectLabel setText(final @Nonnull String text) {
+	public @Nonnull MSelectLabel setText(final @Nonnull String text) {
 		this.field.setText(text);
 		return this;
 	}

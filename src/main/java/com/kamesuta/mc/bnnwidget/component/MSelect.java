@@ -42,7 +42,7 @@ public abstract class MSelect<E> extends WPanel {
 		add(this.pos);
 	}
 
-	public abstract MSelect<E> setText(final @Nonnull E text);
+	public abstract @Nonnull MSelect<E> setText(final @Nonnull E text);
 
 	protected abstract @Nonnull Selector<E> getSelector();
 
@@ -103,11 +103,11 @@ public abstract class MSelect<E> extends WPanel {
 	public static class StringSelector extends PosSelector<String> {
 		protected @Nonnull List<?> list = Lists.newArrayList();
 
-		public void setList(final List<?> list) {
+		public void setList(final @Nonnull List<?> list) {
 			this.list = list;
 		}
 
-		protected List<?> getList() {
+		protected @Nonnull List<?> getList() {
 			return this.list;
 		}
 

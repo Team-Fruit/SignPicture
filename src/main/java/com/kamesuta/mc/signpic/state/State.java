@@ -24,9 +24,6 @@ public class State {
 	private @Nonnull String message = "";
 	private final @Nonnull Map<String, Object> map = Maps.newHashMap();
 
-	public State() {
-	}
-
 	public @Nonnull State setName(final @Nonnull String name) {
 		this.name = name;
 		return this;
