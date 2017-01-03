@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.signpic.image.ImageIOLoader;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -47,8 +48,19 @@ public final class Config extends Configuration {
 	public final @Nonnull ConfigProperty<String> signpicDir = propertyString(get("General", "SignpicDir", "").setRequiresMcRestart(true));
 	public final @Nonnull ConfigProperty<Boolean> signTooltip = propertyBoolean(get("General", "SignToolTip", false)).setComment("add tooltip line to sign");
 
-	public final @Nonnull ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512).setRequiresMcRestart(true));
-	public final @Nonnull ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512).setRequiresMcRestart(true));
+	public final @Nonnull ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512)).setListener(new ConfigListener<Integer>() {
+		@Override
+		public void onChanged(@Nonnull final Integer value) {
+			ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(value, Config.this.imageHeightLimit.get());
+		}
+	});
+	public final @Nonnull ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512)).setListener(new ConfigListener<Integer>() {
+		@Override
+		public void onChanged(@Nonnull final Integer value) {
+			ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(Config.this.imageWidthLimit.get(), value);
+		};
+	});
+	public final @Nonnull ConfigProperty<Boolean> imageResizeFast = propertyBoolean(get("Image", "FastResize", false));
 	public final @Nonnull ConfigProperty<Boolean> imageAnimationGif = propertyBoolean(get("Image", "AnimateGif", true).setRequiresMcRestart(true));
 
 	public final @Nonnull ConfigProperty<Integer> entryGCtick = propertyInteger(get("Entry", "GCDelayTick", 15*20));
@@ -143,15 +155,25 @@ public final class Config extends Configuration {
 		return registerReload(ConfigProperty.propertyInteger(this, property));
 	}
 
+	public static interface ConfigListener<E> {
+		void onChanged(@Nonnull E value);
+	}
+
 	public static abstract class ConfigProperty<E> implements IReloadableConfig {
 		protected final @Nonnull Configuration config;
 		protected final @Nonnull Property property;
 		private transient @Nonnull E prop;
+		private @Nullable ConfigListener<E> listener;
 
 		protected ConfigProperty(final @Nonnull Configuration config, final @Nonnull Property property, final @Nonnull E prop) {
 			this.config = config;
 			this.property = property;
 			this.prop = prop;
+		}
+
+		public @Nonnull ConfigProperty<E> setListener(@Nullable final ConfigListener<E> listener) {
+			this.listener = listener;
+			return this;
 		}
 
 		public @Nonnull ConfigProperty<E> setComment(final @Nonnull String comment) {
@@ -160,8 +182,11 @@ public final class Config extends Configuration {
 		}
 
 		protected void setProp(final @Nonnull E prop) {
-			if (!this.property.requiresMcRestart())
+			if (!this.property.requiresMcRestart()) {
 				this.prop = prop;
+				if (this.listener!=null)
+					this.listener.onChanged(prop);
+			}
 		}
 
 		public @Nonnull E get() {
