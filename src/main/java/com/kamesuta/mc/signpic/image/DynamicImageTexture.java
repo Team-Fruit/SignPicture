@@ -118,7 +118,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 			// resize
 			final BufferedImage s = new BufferedImage(width, height, image.getType());
 			final Graphics2D g = s.createGraphics();
-			g.drawImage(image.getScaledInstance(width, height, java.awt.Image.SCALE_FAST), 0, 0, null);
+			g.drawImage(image.getScaledInstance(width, height, Config.getConfig().imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
 			g.dispose();
 			return createFromSizedImage(s);
 		}
@@ -184,7 +184,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 			// resize
 			final BufferedImage s = new BufferedImage(nwidth, nheight, image.getType());
 			final Graphics2D g = s.createGraphics();
-			g.drawImage(image.getScaledInstance(nwidth, nheight, java.awt.Image.SCALE_FAST), 0, 0, null);
+			g.drawImage(image.getScaledInstance(nwidth, nheight, Config.getConfig().imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
 			g.dispose();
 			return createFromSizedImage(s, miplevel);
 		}
