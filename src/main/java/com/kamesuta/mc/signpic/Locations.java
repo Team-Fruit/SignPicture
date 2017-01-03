@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 public class Locations {
@@ -32,7 +33,11 @@ public class Locations {
 	}
 
 	public @Nonnull File createCache(final @Nonnull String pre) throws IOException {
-		return File.createTempFile(pre+"_", "", this.tempDir);
+		File f;
+		do
+			f = new File(this.tempDir, pre+RandomStringUtils.randomAlphanumeric(8));
+		while (!f.createNewFile());
+		return f;
 	}
 
 	private @Nonnull File getSignPicDir(final @Nonnull File defaultdir) {
