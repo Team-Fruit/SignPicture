@@ -114,7 +114,6 @@ public class ContentDownload extends Communicate implements Progressable {
 					progress.setDone(bcount);
 				}
 			};
-			FileUtils.deleteQuietly(tmp);
 			IOUtils.copyLarge(input, output);
 			IOUtils.closeQuietly(output);
 			FileUtils.deleteQuietly(cachefile);
