@@ -60,7 +60,7 @@ public final class Config extends Configuration {
 			ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(Config.this.imageWidthLimit.get(), value);
 		};
 	});
-
+	public final @Nonnull ConfigProperty<Boolean> imageResizeFast = propertyBoolean(get("Image", "FastResize", false));
 	public final @Nonnull ConfigProperty<Boolean> imageAnimationGif = propertyBoolean(get("Image", "AnimateGif", true).setRequiresMcRestart(true));
 
 	public final @Nonnull ConfigProperty<Integer> entryGCtick = propertyInteger(get("Entry", "GCDelayTick", 15*20));
