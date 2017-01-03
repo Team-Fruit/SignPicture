@@ -36,9 +36,14 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 public class ImageIOLoader implements ILoadCancelable {
-	public static final @Nonnull SizeData MAX_SIZE = SizeData.create(
-			Config.getConfig().imageWidthLimit.get()>0 ? Config.getConfig().imageWidthLimit.get() : SizeData.Unknown,
-			Config.getConfig().imageHeightLimit.get()>0 ? Config.getConfig().imageHeightLimit.get() : SizeData.Unknown);
+	public static @Nonnull SizeData MAX_SIZE = maxSize(Config.getConfig().imageWidthLimit.get(), Config.getConfig().imageHeightLimit.get());
+
+	public static @Nonnull SizeData maxSize(final int limitWidth, final int limitHeight) {
+		return SizeData.create(
+				limitWidth>0 ? limitWidth : SizeData.Unknown,
+				limitHeight>0 ? limitHeight : SizeData.Unknown);
+	}
+
 	public static float DefaultDelay = .05f;
 
 	protected @Nonnull Content content;
