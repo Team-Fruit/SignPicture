@@ -91,7 +91,7 @@ public class ContentDownload extends Communicate implements Progressable {
 
 			final long max = Config.getConfig().contentMaxByte.get();
 			final long size = entity.getContentLength();
-			if (max>0&&(size<0||size>max)) {
+			if (max>0&&size>max) {
 				req.abort();
 				throw new ContentCapacityOverException("size: "+size);
 			}
