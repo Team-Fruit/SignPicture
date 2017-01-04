@@ -16,5 +16,5 @@ public interface INameHandler {
 
 	void onTick();
 
-	void onDraw(GuiScreen gui);
+	void onDraw(@Nullable GuiScreen gui);
 }

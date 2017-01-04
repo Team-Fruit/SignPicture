@@ -99,7 +99,7 @@ public class AnvilHandler implements INameHandler {
 	protected @Nonnull VMotion o = V.pm(0f).add(Easings.easeOutSine.move(1f, 1f)).add(Easings.easeInSine.move(1f, 0f)).setLoop(true).start();
 
 	@Override
-	public void onDraw(final @Nonnull GuiScreen gui) {
+	public void onDraw(final @Nullable GuiScreen gui) {
 		if (gui instanceof GuiRepair&&this.repairGuiTask!=null) {
 			final int xSize = 176;
 			final int ySize = 166;
