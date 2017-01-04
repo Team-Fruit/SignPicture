@@ -56,7 +56,6 @@ public class SignHandler {
 			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
 		handlers.add(new AnvilHandler());
-		handlers.add(new ToolStationHandler());
 	}
 
 	private boolean isPlaceMode;

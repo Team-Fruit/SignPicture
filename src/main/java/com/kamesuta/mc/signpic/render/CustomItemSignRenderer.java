@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nullable;
 
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;

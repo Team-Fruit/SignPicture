@@ -59,6 +59,25 @@ minecraft {
     replace '${forgeversion}', project.version_forge
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir "../BnnWidget/src/main/java"
+        }
+        resources {
+            srcDir "../BnnWidget/src/main/resources"
+        }
+    }
+    api {
+		java {
+			srcDir "../BnnWidget/src/api/java"
+		}
+        resources {
+            srcDir "../BnnWidget/src/api/resources"
+        }
+    }
+}
+
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property 'version', project.version
@@ -196,6 +215,6 @@ if (project.hasProperty('api_key_curseforge') && project.hasProperty('extra_curs
         changelog = ''
 
         additionalArtifact devJar, sourceJar, apiJar
-        relatedProject 'lunatriuscore'
+        relatedProject 'bnnwidget'
     }
 }

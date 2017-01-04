@@ -4,6 +4,7 @@
 */
 
 # allow any
+!/BnnWidget
 !/src
 !/src/
 !/gradle
