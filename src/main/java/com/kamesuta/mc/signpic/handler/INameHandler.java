@@ -8,11 +8,9 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import net.minecraft.client.gui.GuiScreen;
 
 public interface INameHandler {
-	void init();
-
 	void reset();
 
-	void onOpen(@Nullable GuiScreen gui, @Nonnull EntryId currentId);
+	boolean onOpen(@Nullable GuiScreen gui, @Nonnull EntryId currentId);
 
 	void onTick();
 

@@ -27,7 +27,6 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import net.minecraft.client.gui.GuiRepair;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
@@ -45,10 +44,6 @@ public class SignHandler {
 	private static @Nullable Field guiEditSignTileEntity;
 	private static @Nonnull Set<INameHandler> handlers = Sets.newHashSet();
 
-	static {
-		handlers.add(new AnvilHandler());
-	}
-
 	public static void init() {
 		try {
 			final Field[] fields = GuiEditSign.class.getDeclaredFields();
@@ -60,9 +55,8 @@ public class SignHandler {
 		} catch (final SecurityException e) {
 			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
-		for (final INameHandler handler : handlers)
-			if (handler!=null)
-				handler.init();
+		handlers.add(new AnvilHandler());
+		handlers.add(new ToolStationHandler());
 	}
 
 	private boolean isPlaceMode;
@@ -106,20 +100,23 @@ public class SignHandler {
 					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
 				else
 					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
-			} else if (event.gui instanceof GuiRepair) {
-				if (!entryId.isNameable()) {
-					final ContentId id = entryId.entry().contentId;
-					if (id!=null)
-						ShortenerApiUtil.requestShoretning(id);
-				}
+			} else {
+				boolean b = false;
 				for (final INameHandler handler : handlers)
 					if (handler!=null)
-						handler.onOpen(event.gui, entryId);
-				if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-					CurrentMode.instance.setMode();
-					Sign.preview.setVisible(false);
-					CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
-					CurrentMode.instance.setState(CurrentMode.State.SEE, false);
+						b = handler.onOpen(event.gui, entryId)||b;
+				if (b) {
+					if (!entryId.isNameable()) {
+						final ContentId id = entryId.entry().contentId;
+						if (id!=null)
+							ShortenerApiUtil.requestShoretning(id);
+					}
+					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+						CurrentMode.instance.setMode();
+						Sign.preview.setVisible(false);
+						CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+						CurrentMode.instance.setState(CurrentMode.State.SEE, false);
+					}
 				}
 			}
 		}

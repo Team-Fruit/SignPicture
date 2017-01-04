@@ -35,11 +35,6 @@ public class AnvilHandler implements INameHandler {
 	private @Nullable String repairGuiTextFieldCache;
 
 	public AnvilHandler() {
-
-	}
-
-	@Override
-	public void init() {
 		try {
 			final Field[] fields = GuiRepair.class.getDeclaredFields();
 			for (final Field field : fields) {
@@ -64,13 +59,14 @@ public class AnvilHandler implements INameHandler {
 	}
 
 	@Override
-	public void onOpen(final @Nullable GuiScreen gui, final @Nonnull EntryId currentId) {
+	public boolean onOpen(final @Nullable GuiScreen gui, final @Nonnull EntryId currentId) {
 		this.repairGuiTask = gui;
+		return gui instanceof GuiRepair;
 	}
 
 	@Override
 	public void onTick() {
-		if (this.repairGuiTask==null)
+		if (this.repairGuiTask==null||!(this.repairGuiTask instanceof GuiRepair))
 			return;
 		final EntryId entryId = CurrentMode.instance.getEntryId();
 		if (!entryId.isNameable())
