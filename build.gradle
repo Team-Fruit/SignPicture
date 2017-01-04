@@ -62,18 +62,18 @@ minecraft {
 sourceSets {
     main {
         java {
-            srcDir "../BnnWidget/src/main/java"
+            srcDir "BnnWidget/src/main/java"
         }
         resources {
-            srcDir "../BnnWidget/src/main/resources"
+            srcDir "BnnWidget/src/main/resources"
         }
     }
     api {
 		java {
-			srcDir "../BnnWidget/src/api/java"
+			srcDir "BnnWidget/src/api/java"
 		}
         resources {
-            srcDir "../BnnWidget/src/api/resources"
+            srcDir "BnnWidget/src/api/resources"
         }
     }
 }
