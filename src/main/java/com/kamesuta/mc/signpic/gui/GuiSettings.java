@@ -28,6 +28,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
@@ -43,7 +44,6 @@ import com.kamesuta.mc.signpic.Config.ConfigProperty;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
-import com.kamesuta.mc.signpic.render.OpenGL;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
