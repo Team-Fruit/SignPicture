@@ -7,6 +7,7 @@
 ![Minecraft 1.9.4](https://img.shields.io/badge/Minecraft-1.9.4-green.svg?style=flat)
 ![Minecraft 1.10.2](https://img.shields.io/badge/Minecraft-1.10.2-green.svg?style=flat)
 ![Minecraft 1.11](https://img.shields.io/badge/Minecraft-1.11-green.svg?style=flat)
+![Minecraft 1.11.2](https://img.shields.io/badge/Minecraft-1.11.2-green.svg?style=flat)
 
 ## Table of Contents
 

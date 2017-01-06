@@ -6,9 +6,9 @@ import java.util.concurrent.Executors;
 import javax.annotation.Nonnull;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayDeque;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.state.Progressable;
-import com.kamesuta.mc.signpic.util.NotifyCollections.NotifyArrayDeque;
 
 public class Communicator {
 	public static @Nonnull Communicator instance = new Communicator();

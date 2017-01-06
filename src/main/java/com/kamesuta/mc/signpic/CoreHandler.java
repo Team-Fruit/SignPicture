@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
@@ -183,7 +184,7 @@ public class CoreHandler {
 		}
 
 		@Override
-		public void setCallback(final @Nonnull ICommunicateCallback callback) {
+		public void setCallback(final @Nullable ICommunicateCallback callback) {
 		}
 	}
 }

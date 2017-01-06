@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.bnnwidget.component.MButton;
+import com.kamesuta.mc.bnnwidget.component.MPanel;
 import com.kamesuta.mc.signpic.image.ImageIOLoader;
 
 import net.minecraftforge.common.config.Configuration;
@@ -104,6 +106,20 @@ public final class Config extends Configuration {
 	public final @Nonnull ConfigProperty<Boolean> debugLog = propertyBoolean(get("Debug", "DebugLog", false)).setComment("Output Debug Log");
 
 	public final @Nonnull ConfigProperty<Boolean> guiExperienced = propertyBoolean(get("Internal", "GuiExperienced", false)).setComment("Have you ever opened SignPicture GUI yet?");
+
+	{
+		this.informationTryNew.setListener(new ConfigListener<Boolean>() {
+			{
+				onChanged(Config.this.informationTryNew.get());
+			}
+
+			@Override
+			public void onChanged(final Boolean value) {
+				MButton.tryNew = value;
+				MPanel.tryNew = value;
+			}
+		});
+	}
 
 	private Config(final @Nonnull File configFile) {
 		super(configFile);

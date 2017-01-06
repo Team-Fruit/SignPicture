@@ -12,7 +12,7 @@ top of things.
 Sign Picture crashing, have a suggestion, found a bug?  Create an issue now!
 
 1. Make sure your issue has not already been answered or fixed and you are using the latest version. Also think about whether your issue is a valid one before submitting it.
-2. Go to [the issues page](https://github.com/Kamesuta/SignPicture/issues) and click [new issue](https://github.com/Kamesuta/SignPicture/issues/new)
+2. Go to [the issues page](https://github.com/Team-Fruit/SignPicture/issues) and click [new issue](https://github.com/Team-Fruit/SignPicture/issues/new)
 3. Enter your a title of your issue (something that summarizes your issue), and then create a detailed description of the issue.
     * The following details are required. Not including them can cause the issue to be closed.
         * Forge version
@@ -42,8 +42,8 @@ Providing as many details as possible does help us to find and resolve the issue
   * This is revison branch that is under active development.
   * Only target release branches if you are certain your fix must be on that
     branch.
-  * To quickly create a topic branch based on the development branch; `git 
-    checkout -b fix/master/my_contribution branch`. Please avoid working 
+  * To quickly create a topic branch based on the development branch; `git
+    checkout -b fix/master/my_contribution branch`. Please avoid working
     directly on the `active development` branch.
 * Make commits of logical units.
 * Check for unnecessary whitespace with `git diff --check` before committing.
