@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.annotation.Nonnull;
 
 import com.kamesuta.mc.bnnwidget.WRenderer;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;

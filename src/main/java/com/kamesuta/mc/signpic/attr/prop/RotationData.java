@@ -15,10 +15,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropComposable;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
-import com.kamesuta.mc.signpic.render.OpenGL;
 
 public abstract class RotationData {
 	public static final float defaultOffset = 4f;
