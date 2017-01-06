@@ -12,6 +12,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;

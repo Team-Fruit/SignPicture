@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -15,7 +16,6 @@ import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
