@@ -9,7 +9,6 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
@@ -18,6 +17,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
@@ -82,7 +82,7 @@ public class GuiImage extends WFrame {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
 							OpenGL.glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
-							draw(0, 0, 1, 1, GL_LINE_LOOP);
+							drawAbs(0, 0, 1, 1, GL_LINE_LOOP);
 						}
 						OpenGL.glPopMatrix();
 
