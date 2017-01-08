@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.bnnwidget.WRenderer;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 
