@@ -4,8 +4,8 @@ import javax.annotation.Nonnull;
 
 import org.lwjgl.util.Color;
 
-import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.state.Progress;
 

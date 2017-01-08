@@ -2,7 +2,7 @@ package com.kamesuta.mc.signpic.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import com.kamesuta.mc.bnnwidget.WRenderer;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 
 public class RenderHelper {
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
