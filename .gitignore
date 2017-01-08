@@ -24,3 +24,5 @@
 !/install.bat
 !/build.bat
 !/.gitignore
+!/.gitmodules
+!/.gitattributes

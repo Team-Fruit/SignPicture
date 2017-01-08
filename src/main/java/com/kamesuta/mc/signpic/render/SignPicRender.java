@@ -1,14 +1,14 @@
 package com.kamesuta.mc.signpic.render;
 
-import static com.kamesuta.mc.bnnwidget.WGui.*;
+import static com.kamesuta.mc.bnnwidget.render.WGui.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
 import javax.annotation.Nonnull;
 
-import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
