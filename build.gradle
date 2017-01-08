@@ -24,6 +24,7 @@ ext.modversion = "${project.version_major}.${project.version_minor}.${project.ve
 group = project.group
 version = "${project.version_minecraft}-${modversion}"
 compileJava.options.encoding = 'UTF-8'
+compileApiJava.options.encoding = 'UTF-8'
 
 idea {
     module {
