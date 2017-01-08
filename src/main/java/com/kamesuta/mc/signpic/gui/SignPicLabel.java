@@ -9,11 +9,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
-import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;

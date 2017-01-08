@@ -8,7 +8,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
-import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
+import com.kamesuta.mc.bnnwidget.render.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.attr.IPropBuilder;
 import com.kamesuta.mc.signpic.attr.IPropInterpolatable;
 
