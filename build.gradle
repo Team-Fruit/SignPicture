@@ -110,12 +110,15 @@ def commonManifest = {
 }
 
 jar {
+    from sourceSets.main.output
     from sourceSets.api.output
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
     manifest commonManifest
 }
 
 shadowJar {
+    from sourceSets.main.output
+    from sourceSets.api.output
 	relocate 'org.apache.http.entity.mime', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime'
 	relocate 'org.apache.http.entity.mime.content', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime.content'
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
