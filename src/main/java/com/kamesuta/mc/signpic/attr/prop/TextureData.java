@@ -43,7 +43,13 @@ public interface TextureData {
 		}
 
 		public static enum TextureFloatType {
-			U("u", defaultUV), V("v", defaultUV), W("w", defaultWH), H("h", defaultWH), C("c", defaultCS), S("s", defaultCS), O("o", defaultOpacity), B("b", defaultOpacity), D("d", defaultOpacity),
+			U(PropSyntax.TEXTURE_X.id, defaultUV),
+			V(PropSyntax.TEXTURE_Y.id, defaultUV),
+			W(PropSyntax.TEXTURE_W.id, defaultWH),
+			H(PropSyntax.TEXTURE_H.id, defaultWH),
+			C(PropSyntax.TEXTURE_SPLIT_W.id, defaultCS),
+			S(PropSyntax.TEXTURE_SPLIT_H.id, defaultCS),
+			O(PropSyntax.TEXTURE_OPACITY.id, defaultOpacity),
 			;
 
 			public final @Nonnull String identifier;
@@ -114,7 +120,8 @@ public interface TextureData {
 		}
 
 		public static enum TextureBooleanType {
-			R("r", defaultRepeat), M("m", defaultMipMap),
+			R(PropSyntax.TEXTURE_REPEAT.id, defaultRepeat),
+			M(PropSyntax.TEXTURE_MIPMAP.id, defaultMipMap),
 			;
 
 			public final @Nonnull String identifier;
@@ -180,7 +187,8 @@ public interface TextureData {
 		}
 
 		public static enum TextureBlendType {
-			B("b", defaultBlend), D("d", defaultBlend),
+			B(PropSyntax.TEXTURE_BLEND_SRC.id, defaultBlend),
+			D(PropSyntax.TEXTURE_BLEND_DST.id, defaultBlend),
 			;
 
 			public final @Nonnull String identifier;

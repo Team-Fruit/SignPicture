@@ -36,9 +36,9 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 	public @Nonnull String compose() {
 		final StringBuilder stb = new StringBuilder();
 		if (this.easing!=Easings.easeLinear)
-			stb.append("k").append(this.easing.id);
+			stb.append(PropSyntax.ANIMATION_EASING.id).append(this.easing.id);
 		if (this.redstone!=RSNeed.IGNORE)
-			stb.append("t").append(this.redstone.id);
+			stb.append(PropSyntax.ANIMATION_REDSTONE.id).append(this.redstone.id);
 		return stb.toString();
 	}
 
@@ -85,9 +85,9 @@ public class AnimationData implements IPropInterpolatable<AnimationData>, IPropC
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
-			if (StringUtils.equals(key, "k"))
+			if (StringUtils.equals(key, PropSyntax.ANIMATION_EASING.id))
 				this.easing = Easings.fromId(NumberUtils.toInt(value));
-			else if (StringUtils.equals(key, "t"))
+			else if (StringUtils.equals(key, PropSyntax.ANIMATION_REDSTONE.id))
 				this.redstone = RSNeed.fromId(NumberUtils.toInt(value));
 			else
 				return false;

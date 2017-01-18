@@ -42,9 +42,9 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 	}
 
 	public static class OffsetBuilder implements IPropBuilder<OffsetData, OffsetData> {
-		public final @Nonnull OffsetPropBuilder x = new OffsetPropBuilder("L", "R");
-		public final @Nonnull OffsetPropBuilder y = new OffsetPropBuilder("D", "U");
-		public final @Nonnull OffsetPropBuilder z = new OffsetPropBuilder("B", "F");
+		public final @Nonnull OffsetPropBuilder x = new OffsetPropBuilder(PropSyntax.OFFSET_LEFT.id, PropSyntax.OFFSET_RIGHT.id);
+		public final @Nonnull OffsetPropBuilder y = new OffsetPropBuilder(PropSyntax.OFFSET_DOWN.id, PropSyntax.OFFSET_UP.id);
+		public final @Nonnull OffsetPropBuilder z = new OffsetPropBuilder(PropSyntax.OFFSET_BACK.id, PropSyntax.OFFSET_FRONT.id);
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
@@ -131,15 +131,6 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 			return "OffsetPropBuilder [neg="+this.neg+", pos="+this.pos+", offset="+this.offset+"]";
 		}
 
-		/**
-		 * L=left
-		 * R=right
-		 * D=down
-		 * U=up
-		 * B=back
-		 * F=front
-		 * @param src
-		 */
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
 			if (StringUtils.equals(key, this.neg))
@@ -157,14 +148,6 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 			return true;
 		}
 
-		/**
-		 * L=left
-		 * R=right
-		 * D=down
-		 * U=up
-		 * B=back
-		 * F=front
-		 */
 		@Override
 		public @Nonnull String compose() {
 			final StringBuilder stb = new StringBuilder();

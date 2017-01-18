@@ -54,7 +54,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 
 	@Override
 	public @Nonnull String compose() {
-		return (vaildWidth() ? ShortestFloatFormatter.format(getWidth()) : "")+(vaildHeight() ? "x"+ShortestFloatFormatter.format(getHeight()) : "");
+		return (vaildWidth() ? PropSyntax.SIZE_W.id+ShortestFloatFormatter.format(getWidth()) : "")+(vaildHeight() ? PropSyntax.SIZE_H.id+ShortestFloatFormatter.format(getHeight()) : "");
 	}
 
 	public abstract @Nonnull SizeData aspectSize(final @Nullable SizeData availableaspect);
@@ -379,9 +379,9 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
-			if (StringUtils.equals(key, ""))
+			if (StringUtils.equals(key, PropSyntax.SIZE_W.id))
 				this.width = NumberUtils.toFloat(value, SizeData.Unknown);
-			else if (StringUtils.equals(key, "x"))
+			else if (StringUtils.equals(key, PropSyntax.SIZE_H.id))
 				this.height = NumberUtils.toFloat(value, SizeData.Unknown);
 			else
 				return false;
