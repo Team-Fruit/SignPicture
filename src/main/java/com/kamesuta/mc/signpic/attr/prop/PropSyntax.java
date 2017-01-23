@@ -75,20 +75,20 @@ public enum PropSyntax {
 	 */
 	ROTATION_ANGLE("A"),
 	/**
-	 * AxisAngle Rotation X [H]
+	 * AxisAngle Rotation X [I]
 	 * @see OffsetData
 	 */
 	ROTATION_AXIS_X("I"),
 	/**
-	 * AxisAngle Rotation Y [I]
+	 * AxisAngle Rotation Y [J]
 	 * @see OffsetData
 	 */
 	ROTATION_AXIS_Y("J"),
 	/**
-	 * AxisAngle Rotation Z [J]
+	 * AxisAngle Rotation Z [K]
 	 * @see OffsetData
 	 */
-	ROTATION_AXIS_Z("J"),
+	ROTATION_AXIS_Z("K"),
 	/**
 	 * Size Width []
 	 * @see SizeData
