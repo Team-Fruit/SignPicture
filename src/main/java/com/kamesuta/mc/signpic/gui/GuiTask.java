@@ -228,7 +228,7 @@ public class GuiTask extends WPanel {
 							WRenderer.startTexture();
 							final float opacity = getGuiOpacity(popacity);
 							OpenGL.glColor4f(4f, 4f, 4f, opacity);
-							fontColor(1f, 1f, 1f, Math.max(.05f, opacity*1f));
+							OpenGL.glColor4f(1f, 1f, 1f, Math.max(.05f, opacity*1f));
 							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
 							OpenGL.glPopMatrix();
 						}
@@ -257,7 +257,6 @@ public class GuiTask extends WPanel {
 									WRenderer.startTexture();
 									final float opacity = getGuiOpacity(popacity);
 									OpenGL.glColor4f(4f, 4f, 4f, opacity);
-									fontColor(1f, 1f, 1f, Math.max(.05f, opacity*1f));
 									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
 									OpenGL.glPopMatrix();
 

@@ -110,7 +110,7 @@ public class AnvilHandler implements INameHandler {
 			WGui.drawTextureSize(guiLeft-42, guiTop+3, 42, 42);
 			if (CurrentMode.instance.isShortening()) {
 				final Area b = new Area(guiLeft, guiTop-20, gui.width-guiLeft, guiTop);
-				WGui.fontColor(1f, 1f, 1f, this.o.get());
+				OpenGL.glColor4f(1f, 1f, 1f, this.o.get());
 				WGui.drawString(I18n.format("signpic.gui.notice.shortening"), b, WGui.Align.CENTER, WGui.VerticalAlign.MIDDLE, true);
 			}
 		}
