@@ -16,6 +16,7 @@ public class Entry {
 	public final @Nullable ContentId contentId;
 	public final @Nonnull GuiImage gui;
 	private final boolean valid;
+	private final boolean outdated;
 
 	private transient @Nullable CompoundAttr meta;
 	private @Nullable String cmetacache;
@@ -23,6 +24,7 @@ public class Entry {
 	protected Entry(final @Nonnull EntryId id) {
 		this.id = id;
 		this.valid = id.isValid();
+		this.outdated = id.isOutdated();
 		this.contentId = id.getContentId();
 		this.gui = new GuiImage(this);
 	}
@@ -37,6 +39,10 @@ public class Entry {
 	public boolean isNotSupported() {
 		final CompoundAttr meta = getMeta();
 		return meta.hasInvalidMeta()||this.id.getPrePrefix()!=null;
+	}
+
+	public boolean isOutdated() {
+		return this.outdated;
 	}
 
 	public boolean isValid() {

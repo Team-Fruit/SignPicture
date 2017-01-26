@@ -55,7 +55,7 @@ public class GuiImage extends WFrame {
 						float opacity = getGuiOpacity(popacity);
 
 						OpenGL.glPushMatrix();
-						if (GuiImage.this.entry.isNotSupported())
+						if (GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
@@ -107,31 +107,63 @@ public class GuiImage extends WFrame {
 						OpenGL.glPopMatrix();
 					}
 				});
-				add(new WPanel(new R()) {
-					@Override
-					protected void initWidget() {
-						final VCommon var = V.a(.8f);
-						add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
-						add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
-						if (Informations.instance.isUpdateRequired())
-							add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.bottom(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.needupdate")).setColor(0xff9900).setShadow(true));
-					}
-
-					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
-						if (GuiImage.this.entry.isNotSupported()) {
-							WRenderer.startShape();
-							OpenGL.glLineWidth(1f);
-							OpenGL.glColor4f(1f, 1f, 1f, 1f);
-							OpenGL.glPushMatrix();
-							OpenGL.glTranslatef(0f, 0f, .002f);
-							super.draw(ev, pgp, p, frame, popacity);
-							OpenGL.glPopMatrix();
-						}
-					}
-				});
+				if (GuiImage.this.entry.isOutdated())
+					add(new OutdatedPanel(new R()));
+				else if (GuiImage.this.entry.isNotSupported())
+					add(new NotSupportedPanel(new R()));
 			}
 		});
+	}
+
+	protected class NotSupportedPanel extends WPanel {
+		public NotSupportedPanel(final R position) {
+			super(position);
+		}
+
+		@Override
+		protected void initWidget() {
+			final VCommon var = V.a(.8f);
+			add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
+			add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
+			if (Informations.instance.isUpdateRequired())
+				add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.bottom(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.needupdate")).setColor(0xff9900).setShadow(true));
+		}
+
+		@Override
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+			WRenderer.startShape();
+			OpenGL.glLineWidth(1f);
+			OpenGL.glColor4f(1f, 1f, 1f, 1f);
+			OpenGL.glPushMatrix();
+			OpenGL.glTranslatef(0f, 0f, .002f);
+			super.draw(ev, pgp, p, frame, popacity);
+			OpenGL.glPopMatrix();
+		}
+	}
+
+	protected class OutdatedPanel extends WPanel {
+		public OutdatedPanel(final R position) {
+			super(position);
+		}
+
+		@Override
+		protected void initWidget() {
+			final VCommon var = V.a(.8f);
+			add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
+			add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.outdated")).setColor(0xff9900).setShadow(true));
+			add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.bottom(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.needreplace")).setColor(0xff9900).setShadow(true));
+		}
+
+		@Override
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+			WRenderer.startShape();
+			OpenGL.glLineWidth(1f);
+			OpenGL.glColor4f(1f, 1f, 1f, 1f);
+			OpenGL.glPushMatrix();
+			OpenGL.glTranslatef(0f, 0f, .002f);
+			super.draw(ev, pgp, p, frame, popacity);
+			OpenGL.glPopMatrix();
+		}
 	}
 
 	protected class UpdateLogo extends WBase {

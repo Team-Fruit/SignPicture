@@ -5,6 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.lwjgl.opengl.GL11;
+
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
@@ -84,6 +86,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 
 	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
 		final Entry entry = EntryId.fromTile(tile).entry();
+		if (entry.isOutdated()&&CurrentMode.instance.isState(CurrentMode.State.SEE))
+			OpenGL.glDisable(GL11.GL_DEPTH_TEST);
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				WRenderer.startTexture();
@@ -111,6 +115,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			}
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
+		OpenGL.glEnable(GL11.GL_DEPTH_TEST);
 	}
 
 	@Override

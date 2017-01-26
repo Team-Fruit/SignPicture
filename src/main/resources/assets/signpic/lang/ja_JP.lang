@@ -116,6 +116,8 @@ signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s
 signpic.advmsg.format.unsupported=未対応のSignPicture
 signpic.advmsg.format.needupdate=新しいバージョンをお試しください！
+signpic.advmsg.format.outdated=SignPictureが古すぎます!
+signpic.advmsg.format.needreplace=「詳細設定」より読み込み、再設置してください！
 
 # Version Checking
 signpic.versioning.check.start=更新データの確認開始

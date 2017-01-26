@@ -161,6 +161,8 @@ signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s
 signpic.advmsg.format.unsupported=Unsupported SignPicture
 signpic.advmsg.format.needupdate=Try a new Version!
+signpic.advmsg.format.outdated=Outdated SignPicture!
+signpic.advmsg.format.needreplace=Import with "Option" and Replace!
 
 # Command
 signpic.command.aliases=Aliases: %s

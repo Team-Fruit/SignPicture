@@ -133,6 +133,10 @@ public class EntryId {
 				hasPrefix()&&StringUtils.endsWith(this.id, "}")&&StringUtils.contains(this.id, "{");
 	}
 
+	public boolean isOutdated() {
+		return StringUtils.endsWith(this.id, "]")&&StringUtils.contains(this.id, "[");
+	}
+
 	private boolean hasPrefix() {
 		final int i = StringUtils.indexOf(this.id, "#");
 		return 0<=i&&i<2;
