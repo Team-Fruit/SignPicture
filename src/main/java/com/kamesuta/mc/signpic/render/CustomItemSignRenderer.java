@@ -5,6 +5,9 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WGui;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
@@ -13,10 +16,14 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
 
 public class CustomItemSignRenderer implements IItemRenderer {
@@ -35,6 +42,14 @@ public class CustomItemSignRenderer implements IItemRenderer {
 	@Override
 	public void renderItem(final @Nullable ItemRenderType type, final @Nullable ItemStack item, final @Nullable Object... data) {
 		OpenGL.glPushMatrix();
+		if (type==ItemRenderType.ENTITY&&CurrentMode.instance.isState(CurrentMode.State.SEE)) {
+			OpenGL.glPushMatrix();
+			WRenderer.startTexture();
+			OpenGL.glColor4f(1f, 1f, 1f, Config.getConfig().renderSeeOpacity.get().floatValue());
+			OpenGL.glTranslatef(-.5f, -.25f, 0f);
+			renderSign();
+			OpenGL.glPopMatrix();
+		}
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
@@ -77,5 +92,15 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		}
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
+	}
+
+	private void renderSign() {
+		final IIcon iicon = Items.sign.getIconFromDamage(0);
+		TextureUtil.func_152777_a(false, false, 1f);
+		final float f = iicon.getMinU();
+		final float f1 = iicon.getMaxU();
+		final float f2 = iicon.getMinV();
+		final float f3 = iicon.getMaxV();
+		ItemRenderer.renderItemIn2D(WGui.t, f1, f2, f, f3, iicon.getIconWidth(), iicon.getIconHeight(), 0.0625f);
 	}
 }
