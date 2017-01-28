@@ -136,9 +136,16 @@ public abstract class DynamicImageTexture implements ImageTexture {
 
 		@Override
 		public @Nonnull DynamicImageTexture loadDirect() {
-			if (this.mipdata!=null) {
-				TextureUtil.allocateTextureImpl(getId(), this.miplevel, this.width, this.height, Client.mc.gameSettings.anisotropicFiltering);
-				TextureUtil.uploadTextureMipmap(this.mipdata, this.width, this.height, 0, 0, false, false);
+			final int[][] mipdata = this.mipdata;
+			if (mipdata!=null) {
+				final int id = getId();
+				if (mipdata.length>=2) {
+					TextureUtil.allocateTextureImpl(id, this.miplevel, this.width, this.height, Client.mc.gameSettings.anisotropicFiltering);
+					TextureUtil.uploadTextureMipmap(this.mipdata, this.width, this.height, 0, 0, false, false);
+				} else if (mipdata.length>=1) {
+					TextureUtil.allocateTexture(id, this.width, this.height);
+					TextureUtil.uploadTexture(id, mipdata[0], this.width, this.height);
+				}
 				this.mipdata = null;
 			}
 			return this;
@@ -146,7 +153,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 
 		@Override
 		public boolean hasMipmap() {
-			return true;
+			return this.mipdata!=null&&this.mipdata.length>=2;
 		}
 
 		@Override
