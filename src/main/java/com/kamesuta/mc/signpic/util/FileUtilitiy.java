@@ -38,19 +38,13 @@ public class FileUtilitiy {
 					}
 			} else if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
 				final BufferedImage bi = (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
-				try {
-					final File tmp = Client.getLocation().createCache("paste");
-					ImageIO.write(bi, "png", tmp);
-					UploadApiUtil.upload(UploadRequest.fromFile(tmp, new State()), new Runnable() {
-						@Override
-						public void run() {
-							FileUtils.deleteQuietly(tmp);
-						}
-					});
-				} catch (final IOException e) {
-					Log.notice(I18n.format("signpic.gui.notice.paste.error", e));
-					return false;
-				}
+				if (bi!=null)
+					try {
+						uploadImage(bi);
+					} catch (final IOException e) {
+						Log.notice(I18n.format("signpic.gui.notice.paste.error", e));
+						return false;
+					}
 			} else {
 				Log.notice(I18n.format("signpic.gui.notice.paste.typeunsupported"));
 				return false;
@@ -62,5 +56,16 @@ public class FileUtilitiy {
 			Log.notice(I18n.format("signpic.gui.notice.paste.unsupported", e));
 		}
 		return true;
+	}
+
+	public static void uploadImage(@Nonnull final BufferedImage image) throws IOException {
+		final File tmp = Client.getLocation().createCache("paste");
+		ImageIO.write(image, "png", tmp);
+		UploadApiUtil.upload(UploadRequest.fromFile(tmp, new State()), new Runnable() {
+			@Override
+			public void run() {
+				FileUtils.deleteQuietly(tmp);
+			}
+		});
 	}
 }

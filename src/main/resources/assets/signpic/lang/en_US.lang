@@ -130,6 +130,10 @@ signpic.gui.notice.shortening=Please wait... The URL is being shortened
 signpic.gui.notice.shortened=URL shortening completed
 signpic.gui.notice.shorteningfailed=URL shortening failed
 signpic.gui.notice.shorteningother=Please wait... Other shortening URL tasks are not finished
+signpic.gui.notice.screenshot.ingame.error=An error has occured. %s
+signpic.gui.notice.screenshot.ingame.capture.error=Could not take a screenshot. %s
+signpic.gui.notice.screenshot.window.error=An error has occured. %s
+signpic.gui.notice.screenshot.window.capture.error=Could not take a window screenshot. %s
 
 # Upload UI
 signpic.ui.title=SignPicture!File

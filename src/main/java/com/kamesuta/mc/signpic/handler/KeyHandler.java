@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.gui.GuiHub;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -20,7 +21,7 @@ public class KeyHandler {
 			@Override
 			public void onKeyInput(final @Nonnull InputEvent event, final @Nonnull KeyBinding binding) {
 				if (Client.mc.currentScreen==null&&binding.isPressed())
-					Client.openEditor();
+					Client.mc.displayGuiScreen(new GuiHub(Client.mc.currentScreen));
 			}
 		},
 		;

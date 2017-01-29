@@ -1,0 +1,237 @@
+package com.kamesuta.mc.signpic.gui;
+
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Window;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.geom.Area;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.annotation.Nullable;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
+
+import com.kamesuta.mc.bnnwidget.WFrame;
+import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.util.FileUtilitiy;
+
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+
+public class GuiWindowScreenShot extends WFrame {
+	public static final Color windowcolor = new Color(0f, 0f, 0f, 0f);
+	public static final Color bgcolor = new Color(0f, 0f, 0f, .25f);
+	public static final Color textcolor = new Color(1f, 1f, 1f, .6f);
+	public static final Color textshadowcolor = new Color(0f, 0f, 0f, .6f);
+
+	public GuiWindowScreenShot(final @Nullable GuiScreen parent) {
+		super(parent);
+	}
+
+	public GuiWindowScreenShot() {
+	}
+
+	{
+		setGuiPauseGame(false);
+	}
+
+	@Override
+	public void onGuiClosed() {
+		destroy();
+		super.onGuiClosed();
+	}
+
+	private @Nullable Window window;
+	private @Nullable Point point1;
+	private @Nullable Point point2;
+	private boolean takescreenshot;
+
+	public void destroy() {
+		final Window frame = this.window;
+		if (frame!=null) {
+			this.window = null;
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					frame.dispose();
+				}
+			});
+		}
+		requestClose();
+	}
+
+	public @Nullable Rectangle getSelectedRect() {
+		final Point point1 = GuiWindowScreenShot.this.point1;
+		final Point point2 = GuiWindowScreenShot.this.point2;
+		if (point1!=null&&point2!=null) {
+			final int x1 = Math.min(point1.x, point2.x);
+			final int y1 = Math.min(point1.y, point2.y);
+			final int x2 = Math.max(point1.x, point2.x);
+			final int y2 = Math.max(point1.y, point2.y);
+			return new Rectangle(x1, y1, x2-x1, y2-y1);
+		}
+		return null;
+	}
+
+	@Override
+	public void drawScreen(final int mousex, final int mousey, final float f) {
+		if (this.window!=null)
+			this.window.repaint();
+		super.drawScreen(mousex, mousey, f);
+	}
+
+	@Override
+	protected void initWidget() {
+		if (this.window==null)
+			try {
+				final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+				final GraphicsDevice[] screens = ge.getScreenDevices();
+				Rectangle rect0 = null;
+				GraphicsDevice screen0 = null;
+				GraphicsConfiguration config0 = null;
+				for (final GraphicsDevice screen : screens) {
+					final GraphicsConfiguration config = screen.getDefaultConfiguration();
+					if (screen0==null)
+						screen0 = screen;
+					if (config0==null)
+						config0 = config;
+					if (rect0==null)
+						rect0 = config.getBounds();
+					else
+						rect0.add(config.getBounds());
+				}
+				final Rectangle rect = rect0;
+				if (screen0!=null&&rect!=null) {
+					final GraphicsDevice screen = screen0;
+					final JDialog window = new JDialog();
+					this.window = window;
+					window.setTitle("SignPicture");
+					window.setUndecorated(true);
+					window.setBackground(windowcolor);
+					window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+					window.setAlwaysOnTop(true);
+					window.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+					window.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(@Nullable final WindowEvent e) {
+							destroy();
+						}
+					});
+					window.addKeyListener(new KeyAdapter() {
+						@Override
+						public void keyPressed(@Nullable final KeyEvent e) {
+							if (e!=null&&e.getKeyCode()==KeyEvent.VK_ESCAPE)
+								destroy();
+						}
+					});
+					window.setBounds(rect0);
+
+					final JPanel panel = new JPanel() {
+						private boolean takingscreenshot;
+						private boolean closing;
+
+						@Override
+						protected void paintComponent(@Nullable final Graphics g) {
+							if (this.takingscreenshot) {
+								this.takingscreenshot = false;
+								final Rectangle rect = getSelectedRect();
+								if (rect!=null) {
+									final BufferedImage image = takeScreenshotRect(screen, rect);
+									if (image!=null)
+										try {
+											FileUtilitiy.uploadImage(image);
+										} catch (final IOException ex) {
+											Log.notice(I18n.format("signpic.gui.notice.screenshot.window.capture.error", ex));
+										}
+									if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+										this.closing = true;
+										destroy();
+									}
+								}
+							} else if (GuiWindowScreenShot.this.takescreenshot) {
+								GuiWindowScreenShot.this.takescreenshot = false;
+								this.takingscreenshot = true;
+							} else if (!this.closing&&g!=null&&g instanceof Graphics2D) {
+								final Graphics2D g2 = (Graphics2D) g;
+								final Area area = new Area(rect);
+								final Rectangle rect = getSelectedRect();
+								if (rect!=null) {
+									area.subtract(new Area(rect));
+									final int x = rect.x+rect.width;
+									final int y = rect.y+rect.height;
+									g2.setColor(textshadowcolor);
+									g2.drawString(String.valueOf(rect.width), x-30+2, y-20+2);
+									g2.drawString(String.valueOf(rect.height), x-30+2, y-10+2);
+									g2.setColor(textcolor);
+									g2.drawString(String.valueOf(rect.width), x-30, y-20);
+									g2.drawString(String.valueOf(rect.height), x-30, y-10);
+								}
+								g2.setColor(bgcolor);
+								g2.fill(area);
+							}
+						}
+					};
+					final MouseAdapter mouse = new MouseAdapter() {
+						@Override
+						public void mousePressed(@Nullable final MouseEvent e) {
+							if (e!=null)
+								GuiWindowScreenShot.this.point1 = e.getPoint();
+							super.mousePressed(e);
+						}
+
+						@Override
+						public void mouseReleased(@Nullable final MouseEvent e) {
+							if (e!=null) {
+								GuiWindowScreenShot.this.point2 = e.getPoint();
+								GuiWindowScreenShot.this.takescreenshot = true;
+							}
+							super.mouseReleased(e);
+						}
+
+						@Override
+						public void mouseDragged(@Nullable final MouseEvent e) {
+							if (e!=null)
+								GuiWindowScreenShot.this.point2 = e.getPoint();
+							super.mouseDragged(e);
+						}
+					};
+					panel.addMouseListener(mouse);
+					panel.addMouseMotionListener(mouse);
+
+					window.setContentPane(panel);
+					window.setVisible(true);
+				}
+			} catch (final Exception e) {
+				Log.notice(I18n.format("signpic.gui.notice.screenshot.window.error", e));
+				destroy();
+			}
+	}
+
+	public static @Nullable BufferedImage takeScreenshotRect(final GraphicsDevice device, final Rectangle rect) {
+		try {
+			final Robot robot = new Robot(device);
+			return robot.createScreenCapture(rect);
+		} catch (final Exception e) {
+			Log.notice(I18n.format("signpic.gui.notice.screenshot.window.error", e));
+		}
+		return null;
+	}
+
+}
