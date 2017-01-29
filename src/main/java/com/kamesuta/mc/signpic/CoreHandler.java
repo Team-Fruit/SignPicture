@@ -32,6 +32,7 @@ import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
@@ -105,6 +106,11 @@ public class CoreHandler {
 	@SubscribeEvent
 	public void onConfigChanged(final @Nonnull ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
 		this.configHandler.onConfigChanged(eventArgs);
+	}
+
+	@SubscribeEvent
+	public void onResourceReloaded(final @Nonnull TextureStitchEvent.Post event) {
+		this.contentManager.onResourceReloaded(event);
 	}
 
 	@SubscribeEvent

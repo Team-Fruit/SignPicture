@@ -20,6 +20,8 @@ import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
 import com.kamesuta.mc.signpic.util.ThreadUtils;
 
+import net.minecraftforge.client.event.TextureStitchEvent;
+
 public class ContentManager implements ITickEntry {
 	public static @Nonnull ContentManager instance = new ContentManager();
 
@@ -111,6 +113,11 @@ public class ContentManager implements ITickEntry {
 			final Entry<ContentId, ContentSlot> entry = itr.next();
 			entry.getValue().get().markDirtyWithCache();
 		}
+	}
+
+	@CoreEvent
+	public void onResourceReloaded(final @Nonnull TextureStitchEvent.Post event) {
+		reloadAll();
 	}
 
 	public static class ContentSlot extends EntrySlot<Content> implements IInitable, ICollectable {
