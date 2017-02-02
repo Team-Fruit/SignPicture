@@ -11,7 +11,6 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.GuiScreenShot;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -24,8 +23,9 @@ public class GuiHub extends WFrame {
 		}
 	};
 
+	public static final Key keyScreenShotFull = new Key.FixedKey(Keyboard.KEY_O);
 	public static final Key keyScreenShot = new Key.FixedKey(Keyboard.KEY_P);
-	public static final Key keySwingScreenShot = new Key.FixedKey(Keyboard.KEY_O);
+	public static final Key keySwingScreenShot = new Key.FixedKey(Keyboard.KEY_I);
 
 	public GuiHub(final @Nullable GuiScreen parent) {
 		super(parent);
@@ -61,8 +61,12 @@ public class GuiHub extends WFrame {
 					if (keycode==keyScreenShot.getCode()) {
 						this.close = true;
 						mc.displayGuiScreen(new GuiIngameScreenShot(mc.currentScreen));
-					}
-					if (keycode==keySwingScreenShot.getCode()) {
+					} else if (keycode==keyScreenShotFull.getCode()) {
+						this.close = true;
+						final GuiIngameScreenShot shot = new GuiIngameScreenShot(mc.currentScreen);
+						mc.displayGuiScreen(shot);
+						shot.takeFullScreenshot();
+					} else if (keycode==keySwingScreenShot.getCode()) {
 						this.close = true;
 						mc.displayGuiScreen(new GuiWindowScreenShot(mc.currentScreen));
 					}

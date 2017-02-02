@@ -23,10 +23,12 @@ import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSign;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -81,6 +83,10 @@ public class Client {
 				return (TileEntitySign) tile;
 		}
 		return null;
+	}
+
+	public static void playSound(final @Nonnull ResourceLocation location, final float volume) {
+		mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(location, volume));
 	}
 
 	public static class MovePos {

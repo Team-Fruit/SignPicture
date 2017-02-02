@@ -27,7 +27,6 @@ import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTask extends WPanel {
@@ -76,7 +75,7 @@ public class GuiTask extends WPanel {
 						if (b) {
 							if (!GuiTask.this.show) {
 								GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 1f)).start();
-								mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
+								Client.playSound(new ResourceLocation("signpic", "gui.show"), 1.0F);
 							}
 							GuiTask.this.show = true;
 						} else {

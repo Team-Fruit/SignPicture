@@ -21,6 +21,7 @@ import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -28,12 +29,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import com.kamesuta.mc.bnnwidget.WFrame;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
 public class GuiWindowScreenShot extends WFrame {
 	public static final Color windowcolor = new Color(0f, 0f, 0f, 0f);
@@ -145,43 +152,65 @@ public class GuiWindowScreenShot extends WFrame {
 
 					final JPanel panel = new JPanel() {
 						private boolean takingscreenshot;
-						private boolean closing;
+						private boolean disable;
+						private boolean flushing;
+						private @Nonnull VMotion opacity = V.pm(0).start();
 
 						@Override
 						protected void paintComponent(@Nullable final Graphics g) {
-							if (this.takingscreenshot) {
+							final boolean continuemode = CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
+							if (this.flushing) {
+								if (g!=null&&g instanceof Graphics2D) {
+									final Graphics2D g2 = (Graphics2D) g;
+									if (continuemode) {
+										g2.setColor(bgcolor);
+										g2.fill(rect);
+									}
+									g.setColor(new Color(1f, 1f, 1f, this.opacity.get()));
+									final Rectangle in = getSelectedRect();
+									g2.fill(in);
+								}
+								if (this.opacity.isFinished()) {
+									if (!continuemode)
+										destroy();
+									this.flushing = false;
+									GuiWindowScreenShot.this.point1 = null;
+									GuiWindowScreenShot.this.point2 = null;
+								}
+							} else if (this.takingscreenshot) {
 								this.takingscreenshot = false;
-								final Rectangle rect = getSelectedRect();
-								if (rect!=null) {
-									final BufferedImage image = takeScreenshotRect(screen, rect);
+								final Rectangle in = getSelectedRect();
+								if (in!=null) {
+									final BufferedImage image = takeScreenshotRect(screen, in);
 									if (image!=null)
 										try {
 											FileUtilitiy.uploadImage(image);
 										} catch (final IOException ex) {
 											Log.notice(I18n.format("signpic.gui.notice.screenshot.window.capture.error", ex));
 										}
-									if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
-										this.closing = true;
-										destroy();
-									}
+									Client.playSound(new ResourceLocation("signpic", "gui.screenshot"), 1.0F);
+									this.opacity.stop().add(Motion.move(.25f)).add(Easings.easeLinear.move(.5f, 0f));
+									this.flushing = true;
+									if (!continuemode)
+										this.disable = true;
 								}
 							} else if (GuiWindowScreenShot.this.takescreenshot) {
 								GuiWindowScreenShot.this.takescreenshot = false;
 								this.takingscreenshot = true;
-							} else if (!this.closing&&g!=null&&g instanceof Graphics2D) {
+							} else if (!this.disable&&g!=null&&g instanceof Graphics2D) {
 								final Graphics2D g2 = (Graphics2D) g;
 								final Area area = new Area(rect);
-								final Rectangle rect = getSelectedRect();
-								if (rect!=null) {
-									area.subtract(new Area(rect));
-									final int x = rect.x+rect.width;
-									final int y = rect.y+rect.height;
+								final Rectangle in = getSelectedRect();
+								if (in!=null) {
+									area.subtract(new Area(in));
+									final int x = in.x+in.width;
+									final int y = in.y+in.height;
 									g2.setColor(textshadowcolor);
-									g2.drawString(String.valueOf(rect.width), x-30+2, y-20+2);
-									g2.drawString(String.valueOf(rect.height), x-30+2, y-10+2);
+									g2.drawString(String.valueOf(in.width), x-30+2, y-20+2);
+									g2.drawString(String.valueOf(in.height), x-30+2, y-10+2);
 									g2.setColor(textcolor);
-									g2.drawString(String.valueOf(rect.width), x-30, y-20);
-									g2.drawString(String.valueOf(rect.height), x-30, y-10);
+									g2.drawString(String.valueOf(in.width), x-30, y-20);
+									g2.drawString(String.valueOf(in.height), x-30, y-10);
 								}
 								g2.setColor(bgcolor);
 								g2.fill(area);
@@ -225,6 +254,8 @@ public class GuiWindowScreenShot extends WFrame {
 	}
 
 	public static @Nullable BufferedImage takeScreenshotRect(final GraphicsDevice device, final Rectangle rect) {
+		if (rect.isEmpty())
+			return null;
 		try {
 			final Robot robot = new Robot(device);
 			return robot.createScreenCapture(rect);
