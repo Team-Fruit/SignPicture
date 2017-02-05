@@ -8,8 +8,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -25,8 +23,8 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
-import com.kamesuta.mc.bnnwidget.render.WRenderer.BlendType;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
@@ -54,28 +52,9 @@ public class GuiIngameScreenShot extends WFrame {
 		setGuiPauseGame(false);
 	}
 
-	private static final @Nullable org.lwjgl.input.Cursor cur;
-
-	static {
-		org.lwjgl.input.Cursor cursor = null;
-		try {
-			final IntBuffer buf = BufferUtils.createIntBuffer(1);
-			buf.put(0);
-			buf.flip();
-			cursor = new org.lwjgl.input.Cursor(1, 1, 0, 0, 1, buf, null);
-		} catch (final LWJGLException e) {
-			Log.dev.warn("failed to change cursor", e);
-		}
-		cur = cursor;
-	}
-
 	@Override
 	public void onGuiClosed() {
-		try {
-			Mouse.setNativeCursor(null);
-		} catch (final LWJGLException e) {
-			Log.dev.warn("failed to change cursor", e);
-		}
+		WGui.showCursor();
 		super.onGuiClosed();
 	}
 
@@ -84,12 +63,7 @@ public class GuiIngameScreenShot extends WFrame {
 
 	@Override
 	protected void initWidget() {
-		if (cur!=null)
-			try {
-				Mouse.setNativeCursor(cur);
-			} catch (final LWJGLException e) {
-				Log.dev.warn("failed to change cursor", e);
-			}
+		WGui.hideCursor();
 		add(new WPanel(new R()) {
 			private @Nullable Point point;
 			private boolean takingscreenshot;
@@ -99,8 +73,18 @@ public class GuiIngameScreenShot extends WFrame {
 
 			@Override
 			public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				this.point = p;
+				if (this.point!=null)
+					GuiIngameScreenShot.this.takescreenshot = true;
+				else
+					this.point = p;
 				return super.mouseClicked(ev, pgp, p, button);
+			}
+
+			@Override
+			public boolean mouseReleased(final WEvent ev, final Area pgp, final Point p, final int button) {
+				if (this.point!=null)
+					GuiIngameScreenShot.this.takescreenshot = true;
+				return super.mouseReleased(ev, pgp, p, button);
 			}
 
 			@Override
@@ -109,12 +93,7 @@ public class GuiIngameScreenShot extends WFrame {
 				final Area a = getGuiPosition(pgp);
 				WRenderer.startShape(BlendType.ONE_MINUS_DST_COLOR, BlendType.ZERO);
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				final float s = .5f;
-				drawAbs(point2.x()-s, point2.y()-s, point2.x()+s, point2.y()+s);
-				drawAbs(point2.x()-4.5f, point2.y()-s, point2.x(), point2.y()+s);
-				drawAbs(point2.x(), point2.y()-s, point2.x()+4.5f, point2.y()+s);
-				drawAbs(point2.x()-s, point2.y()-4.5f, point2.x()+s, point2.y());
-				drawAbs(point2.x()-s, point2.y(), point2.x()+s, point2.y()+4.5f);
+				drawCursor(point2);
 				if (this.flushing) {
 					final Point point = this.point;
 					final Area rect;
@@ -182,18 +161,20 @@ public class GuiIngameScreenShot extends WFrame {
 				super.draw(ev, pgp, point2, frame, popacity);
 			}
 
+			private void drawCursor(final Point point) {
+				final float s = .5f;
+				drawAbs(point.x()-s, point.y()-s, point.x()+s, point.y()+s);
+				drawAbs(point.x()-4.5f, point.y()-s, point.x(), point.y()+s);
+				drawAbs(point.x(), point.y()-s, point.x()+4.5f, point.y()+s);
+				drawAbs(point.x()-s, point.y()-4.5f, point.x()+s, point.y());
+				drawAbs(point.x()-s, point.y(), point.x()+s, point.y()+4.5f);
+			}
+
 			private void drawAround(final @Nonnull Area out, final @Nonnull Area in) {
 				drawAbs(out.minX(), out.minY(), out.maxX(), in.minY());
 				drawAbs(out.minX(), in.minY(), in.minX(), in.maxY());
 				drawAbs(in.maxX(), in.minY(), out.maxX(), in.maxY());
 				drawAbs(out.minX(), in.maxY(), out.maxX(), out.maxY());
-			}
-
-			@Override
-			public boolean mouseReleased(final WEvent ev, final Area pgp, final Point p, final int button) {
-				if (this.point!=null)
-					GuiIngameScreenShot.this.takescreenshot = true;
-				return super.mouseReleased(ev, pgp, p, button);
 			}
 		});
 	}

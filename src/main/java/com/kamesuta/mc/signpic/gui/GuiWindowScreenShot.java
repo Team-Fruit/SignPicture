@@ -221,7 +221,10 @@ public class GuiWindowScreenShot extends WFrame {
 						@Override
 						public void mousePressed(@Nullable final MouseEvent e) {
 							if (e!=null)
-								GuiWindowScreenShot.this.point1 = e.getPoint();
+								if (GuiWindowScreenShot.this.point1==null)
+									GuiWindowScreenShot.this.point1 = e.getPoint();
+								else
+									checkAndTake();
 							super.mousePressed(e);
 						}
 
@@ -229,16 +232,34 @@ public class GuiWindowScreenShot extends WFrame {
 						public void mouseReleased(@Nullable final MouseEvent e) {
 							if (e!=null) {
 								GuiWindowScreenShot.this.point2 = e.getPoint();
-								GuiWindowScreenShot.this.takescreenshot = true;
+								checkAndTake();
 							}
 							super.mouseReleased(e);
 						}
 
 						@Override
+						public void mouseMoved(@Nullable final MouseEvent e) {
+							if (e!=null)
+								mouseUpdate(e.getPoint());
+							super.mouseMoved(e);
+						}
+
+						@Override
 						public void mouseDragged(@Nullable final MouseEvent e) {
 							if (e!=null)
-								GuiWindowScreenShot.this.point2 = e.getPoint();
+								mouseUpdate(e.getPoint());
 							super.mouseDragged(e);
+						}
+
+						private void mouseUpdate(@Nullable final Point p) {
+							GuiWindowScreenShot.this.point2 = p;
+						}
+
+						private void checkAndTake() {
+							final Point p1 = GuiWindowScreenShot.this.point1;
+							final Point p2 = GuiWindowScreenShot.this.point2;
+							if (p1!=null&&p2!=null&&p1.x!=p2.x&&p1.y!=p2.y)
+								GuiWindowScreenShot.this.takescreenshot = true;
 						}
 					};
 					panel.addMouseListener(mouse);
