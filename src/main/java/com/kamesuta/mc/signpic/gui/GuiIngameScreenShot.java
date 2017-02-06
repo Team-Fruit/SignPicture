@@ -73,16 +73,14 @@ public class GuiIngameScreenShot extends WFrame {
 
 			@Override
 			public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
-				if (this.point!=null)
-					GuiIngameScreenShot.this.takescreenshot = true;
-				else
+				if (this.point==null)
 					this.point = p;
 				return super.mouseClicked(ev, pgp, p, button);
 			}
 
 			@Override
 			public boolean mouseReleased(final WEvent ev, final Area pgp, final Point p, final int button) {
-				if (this.point!=null)
+				if (this.point!=null&&!this.point.equals(p))
 					GuiIngameScreenShot.this.takescreenshot = true;
 				return super.mouseReleased(ev, pgp, p, button);
 			}

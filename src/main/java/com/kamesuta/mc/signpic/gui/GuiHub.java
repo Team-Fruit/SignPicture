@@ -26,8 +26,6 @@ public class GuiHub extends WFrame {
 	@Override
 	protected void initWidget() {
 		add(new WPanel(new R()) {
-			private boolean close;
-
 			@Override
 			public void update(final WEvent ev, final Area pgp, final Point p) {
 				if (!ev.isCurrent())
