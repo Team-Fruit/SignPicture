@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
-import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
@@ -46,7 +45,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			OpenGL.glPushMatrix();
 			WRenderer.startTexture();
 			OpenGL.glColor4f(1f, 1f, 1f, Config.getConfig().renderSeeOpacity.get().floatValue());
-			OpenGL.glTranslatef(-.5f, -.25f, 0f);
+			OpenGL.glTranslatef(-.5f, -.25f, 0.0625f/2f);
 			renderSign();
 			OpenGL.glPopMatrix();
 		}
@@ -101,6 +100,6 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		final float f1 = iicon.getMaxU();
 		final float f2 = iicon.getMinV();
 		final float f3 = iicon.getMaxV();
-		ItemRenderer.renderItemIn2D(WGui.t, f1, f2, f, f3, iicon.getIconWidth(), iicon.getIconHeight(), 0.0625f);
+		ItemRenderer.renderItemIn2D(WRenderer.t, f1, f2, f, f3, iicon.getIconWidth(), iicon.getIconHeight(), 0.0625f);
 	}
 }
