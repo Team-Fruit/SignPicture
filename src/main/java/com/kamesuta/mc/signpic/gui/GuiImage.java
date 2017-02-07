@@ -24,6 +24,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.render.RenderHelper;
@@ -55,7 +56,7 @@ public class GuiImage extends WFrame {
 						float opacity = getGuiOpacity(popacity);
 
 						OpenGL.glPushMatrix();
-						if (GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
+						if (GuiImage.this.entry.id instanceof PreviewEntryId||GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);

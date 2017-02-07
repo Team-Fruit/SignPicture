@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,7 +32,7 @@ public class EntryId {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime*result+this.id.hashCode();
+		result = prime*result+id().hashCode();
 		return result;
 	}
 
@@ -44,19 +45,22 @@ public class EntryId {
 		if (!(obj instanceof EntryId))
 			return false;
 		final EntryId other = (EntryId) obj;
-		if (!this.id.equals(other.id))
+		if (!id().equals(other.id()))
 			return false;
 		return true;
 	}
 
 	@Override
 	public @Nonnull String toString() {
-		return String.format("EntryId [id=%s]", this.id);
+		return String.format("EntryId [id=%s]", id());
 	}
 
 	public static @Nonnull EntryId from(final @Nullable String string) {
 		if (string!=null&&!StringUtils.isEmpty(string))
-			return new EntryId(string);
+			if (StringUtils.equals(string, PreviewEntryId.previewid))
+				return PreviewEntryId.instance;
+			else
+				return new EntryId(string);
 		return blank;
 	}
 
@@ -108,6 +112,28 @@ public class EntryId {
 		}
 	}
 
+	public static class PreviewEntryId extends EntryId {
+		public static final @Nonnull String previewid = "{#}";
+		public static final @Nonnull PreviewEntryId instance = new PreviewEntryId();
+
+		private PreviewEntryId() {
+			super(previewid);
+		}
+
+		@Override
+		public @Nonnull String id() {
+			final EntryId id = CurrentMode.instance.getEntryId();
+			if (!(id instanceof PreviewEntryId))
+				return id.id();
+			return "";
+		}
+
+		@Override
+		public String toString() {
+			return "PreviewEntryId";
+		}
+	}
+
 	public static @Nonnull ItemEntryId fromItemStack(final @Nullable ItemStack itemStack) {
 		if (itemStack!=null) {
 			final NBTTagCompound nbt = itemStack.getTagCompound();
@@ -125,20 +151,20 @@ public class EntryId {
 	}
 
 	private boolean hasContentId() {
-		return !(StringUtils.isEmpty(this.id)||StringUtils.containsOnly(this.id, "!")||StringUtils.containsOnly(this.id, "$"));
+		return !(StringUtils.isEmpty(id())||StringUtils.containsOnly(id(), "!")||StringUtils.containsOnly(id(), "$"));
 	}
 
 	private boolean hasMeta() {
-		return StringUtils.endsWith(this.id, "]")&&StringUtils.contains(this.id, "[")||
-				hasPrefix()&&StringUtils.endsWith(this.id, "}")&&StringUtils.contains(this.id, "{");
+		return StringUtils.endsWith(id(), "]")&&StringUtils.contains(id(), "[")||
+				hasPrefix()&&StringUtils.endsWith(id(), "}")&&StringUtils.contains(id(), "{");
 	}
 
 	public boolean isOutdated() {
-		return StringUtils.endsWith(this.id, "]")&&StringUtils.contains(this.id, "[");
+		return StringUtils.endsWith(id(), "]")&&StringUtils.contains(id(), "[");
 	}
 
 	private boolean hasPrefix() {
-		final int i = StringUtils.indexOf(this.id, "#");
+		final int i = StringUtils.indexOf(id(), "#");
 		return 0<=i&&i<2;
 	}
 
@@ -147,8 +173,8 @@ public class EntryId {
 	}
 
 	public @Nullable String getPrePrefix() {
-		if (StringUtils.indexOf(this.id, "#")==1)
-			return StringUtils.substring(this.id, 0, 0);
+		if (StringUtils.indexOf(id(), "#")==1)
+			return StringUtils.substring(id(), 0, 0);
 		else
 			return null;
 	}
@@ -156,12 +182,12 @@ public class EntryId {
 	public @Nullable ContentId getContentId() {
 		if (hasContentId()) {
 			String id;
-			if (StringUtils.contains(this.id, "["))
-				id = StringUtils.substring(this.id, 0, StringUtils.lastIndexOf(this.id, "["));
-			else if (hasPrefix()&&StringUtils.contains(this.id, "{"))
-				id = StringUtils.substring(this.id, StringUtils.indexOf(this.id, "#")+1, StringUtils.lastIndexOf(this.id, "{"));
+			if (StringUtils.contains(id(), "["))
+				id = StringUtils.substring(id(), 0, StringUtils.lastIndexOf(id(), "["));
+			else if (hasPrefix()&&StringUtils.contains(id(), "{"))
+				id = StringUtils.substring(id(), StringUtils.indexOf(id(), "#")+1, StringUtils.lastIndexOf(id(), "{"));
 			else
-				id = this.id;
+				id = id();
 			return new ContentId(id);
 		}
 		return null;
@@ -169,10 +195,10 @@ public class EntryId {
 
 	public @Nullable String getMetaSource() {
 		if (hasMeta())
-			if (StringUtils.endsWith(this.id, "}"))
-				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "{")+1, StringUtils.length(this.id)-1);
+			if (StringUtils.endsWith(id(), "}"))
+				return StringUtils.substring(id(), StringUtils.lastIndexOf(id(), "{")+1, StringUtils.length(id())-1);
 			else
-				return StringUtils.substring(this.id, StringUtils.lastIndexOf(this.id, "[")+1, StringUtils.length(this.id)-1);
+				return StringUtils.substring(id(), StringUtils.lastIndexOf(id(), "[")+1, StringUtils.length(id())-1);
 		return null;
 	}
 
@@ -191,23 +217,23 @@ public class EntryId {
 	}
 
 	public boolean isPlaceable() {
-		return StringUtils.length(this.id)<=15*4;
+		return StringUtils.length(id())<=15*4;
 	}
 
 	public boolean isNameable() {
-		return StringUtils.length(this.id)<=40;
+		return StringUtils.length(id())<=40;
 	}
 
 	public void toStrings(final @Nullable String[] sign) {
 		if (sign!=null) {
-			final int length = StringUtils.length(this.id);
+			final int length = StringUtils.length(id());
 			for (int i = 0; i<4; i++)
-				sign[i] = StringUtils.substring(this.id, 15*i, Math.min(15*(i+1), length));
+				sign[i] = StringUtils.substring(id(), 15*i, Math.min(15*(i+1), length));
 		}
 	}
 
 	public int getLastLine() {
-		return StringUtils.length(this.id)/15;
+		return StringUtils.length(id())/15;
 	}
 
 	public void toEntity(final @Nullable TileEntitySign tile) {
