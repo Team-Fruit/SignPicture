@@ -440,14 +440,10 @@ public class GuiMain extends WFrame {
 
 		@Override
 		public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-			final int cursor1 = getCursorPosition();
-			final boolean focused1 = isFocused();
 			final boolean b = super.mouseClicked(ev, pgp, p, button);
-			final int cursor2 = getCursorPosition();
-			final boolean focused2 = isFocused();
 			final Area a = getGuiPosition(pgp);
 			if (a.pointInside(p))
-				if (focused1&&focused2&&cursor1==cursor2) {
+				if (ev.isDoubleClick()) {
 					final String clip = GuiScreen.getClipboardString();
 					if (clip!=null)
 						setText(clip);
