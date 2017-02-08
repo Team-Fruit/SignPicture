@@ -5,9 +5,9 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.kamesuta.mc.bnnwidget.WRenderer;
-import com.kamesuta.mc.bnnwidget.WRenderer.BlendType;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.bnnwidget.render.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -63,11 +63,11 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
-			WRenderer.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-			WRenderer.w.pos(0, 0, 0).tex(u, v).endVertex();
-			WRenderer.w.pos(0, 1, 0).tex(u, v+h/s).endVertex();
-			WRenderer.w.pos(1, 1, 0).tex(u+w/c, v+h/s).endVertex();
-			WRenderer.w.pos(1, 0, 0).tex(u+w/c, v).endVertex();
+			WRenderer.w.func_181668_a(GL_QUADS, DefaultVertexFormats.field_181707_g);
+			WRenderer.w.func_181662_b(0, 0, 0).func_181673_a(u, v).func_181675_d();
+			WRenderer.w.func_181662_b(0, 1, 0).func_181673_a(u, v+h/s).func_181675_d();
+			WRenderer.w.func_181662_b(1, 1, 0).func_181673_a(u+w/c, v+h/s).func_181675_d();
+			WRenderer.w.func_181662_b(1, 0, 0).func_181673_a(u+w/c, v).func_181675_d();
 			WRenderer.t.draw();
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);

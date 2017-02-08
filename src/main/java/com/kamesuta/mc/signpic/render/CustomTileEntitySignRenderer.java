@@ -5,8 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.kamesuta.mc.bnnwidget.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
@@ -58,11 +58,11 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			WRenderer.startTexture();
 			bindTexture(DESTROY_STAGES[destroy]);
 			OpenGL.glTranslatef(0f, 0f, .01f);
-			WRenderer.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			WRenderer.w.func_181668_a(GL_QUADS, DefaultVertexFormats.field_181707_g);
 			RenderHelper.addRectVertex(0, 0, 1, 1);
 			WRenderer.t.draw();
 			OpenGL.glTranslatef(0f, 0f, -.02f);
-			WRenderer.w.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+			WRenderer.w.func_181668_a(GL_QUADS, DefaultVertexFormats.field_181707_g);
 			RenderHelper.addRectVertex(0, 0, 1, 1);
 			WRenderer.t.draw();
 			OpenGL.glPopMatrix();

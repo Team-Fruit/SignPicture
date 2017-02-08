@@ -132,8 +132,8 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	}
 
 	@Override
-	public @Nullable TextureAtlasSprite getParticleTexture() {
-		return this.baseModel.getParticleTexture();
+	public @Nullable TextureAtlasSprite getTexture() {
+		return this.baseModel.getTexture();
 	}
 
 	@Override
