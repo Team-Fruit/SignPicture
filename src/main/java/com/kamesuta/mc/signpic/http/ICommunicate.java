@@ -1,9 +1,11 @@
 package com.kamesuta.mc.signpic.http;
 
-public interface ICommunicate {
+import javax.annotation.Nonnull;
+
+import com.kamesuta.mc.signpic.ILoadCancelable;
+
+public interface ICommunicate extends ILoadCancelable {
 	void communicate();
 
-	void setCallback(ICommunicateCallback callback);
-
-	void cancel();
+	void setCallback(@Nonnull ICommunicateCallback callback);
 }

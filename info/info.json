@@ -1,59 +1,63 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.4.4",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.4.4/SignPicture-1.7.10-2.4.4-universal.jar",
-			"local": "SignPicture-1.7.10-2.4.4-universal.jar",
-			"changelog": "https://github.com/Team-Fruit/SignPicture/releases/tag/1.7.10-2.4.4",
-			"message": "Support Uploading and Pasting!",
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.6.1/SignPicture-1.7.10-2.6.1-universal.jar",
+			"local": "SignPicture-1.7.10-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
 			"message_local": {
-				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
-			}
-		},
-		"1.7.10-beta": {
-			"version": "2.5.0.beta",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.5.0/SignPicture-1.7.10-2.5.0.beta-universal.jar",
-			"local": "SignPicture-1.7.10-2.5.0.beta-universal.jar",
-			"image": "https://i.gyazo.com/234a908ea304a7e446d139a3bceac4e1.png",
-			"message": "Item SignPicture!",
-			"message_local": {
-				"ja_JP": "アイテムのSignPicture実装!"
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
 			}
 		},
 		"1.8.9": {
-			"version": "2.4.6",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.4.6/SignPicture-1.8.9-2.4.6-universal.jar",
-			"local": "SignPicture-1.8.9-2.4.6-universal.jar",
-			"message": "Support Uploading and Pasting!",
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.6.1/SignPicture-1.8.9-2.6.1-universal.jar",
+			"local": "SignPicture-1.8.9-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
 			"message_local": {
-				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
 			}
 		},
 		"1.9.4": {
-			"version": "2.4.6",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.4.6/SignPicture-1.9.4-2.4.6-universal.jar",
-			"local": "SignPicture-1.9.4-2.4.6-universal.jar",
-			"message": "Support Uploading and Pasting!",
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.6.1/SignPicture-1.9.4-2.6.1-universal.jar",
+			"local": "SignPicture-1.9.4-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
 			"message_local": {
-				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
 			}
 		},
 		"1.10.2": {
-			"version": "2.4.6",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.4.6/SignPicture-1.10.2-2.4.6-universal.jar",
-			"local": "SignPicture-1.10.2-2.4.6-universal.jar",
-			"message": "Support Uploading and Pasting!",
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.6.1/SignPicture-1.10.2-2.6.1-universal.jar",
+			"local": "SignPicture-1.10.2-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
 			"message_local": {
-				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
 			}
 		},
 		"1.11": {
-			"version": "2.4.6",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.4.6/SignPicture-1.11-2.4.6-universal.jar",
-			"local": "SignPicture-1.11-2.4.6-universal.jar",
-			"message": "Support Uploading and Pasting!",
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.6.1/SignPicture-1.11-2.6.1-universal.jar",
+			"local": "SignPicture-1.11-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
 			"message_local": {
-				"ja_JP": "画像アップロード対応、貼り付け機能実装!"
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
+			}
+		},
+		"1.11.2": {
+			"version": "2.6.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11.2-2.6.1/SignPicture-1.11.2-2.6.1-universal.jar",
+			"local": "SignPicture-1.11.2-2.6.1-universal.jar",
+			"image":"https://i.gyazo.com/b6b4841b2352f2b4a207d4cfd03ec88f.png",
+			"message": "It is released from the troublesome work of shortening the URL and placing it on the signboard",
+			"message_local": {
+				"ja_JP": "URLを短縮して看板に収めるという面倒くさい作業から解放されます"
 			}
 		}
 	},
@@ -70,6 +74,22 @@
 				"config": [
 					{
 						"clientid": "7896a166a54f0bc"
+					}
+				]
+			}
+		},
+		"shortener": {
+			"bitly": {
+				"config": [
+					{
+						"key": "9a2bae8d0385870dfad9e4ad0b874c468df04149"
+					}
+				]
+			},
+			"googl": {
+				"config": [
+					{
+						"key": "AIzaSyCbJC4zTqtSRMGrMj1C4_jOesDhrB-TOuM"
 					}
 				]
 			}

@@ -4,16 +4,23 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
-import com.kamesuta.mc.signpic.image.meta.ImageSize.ImageSizes;
+import com.kamesuta.mc.signpic.entry.content.Content;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -31,26 +38,30 @@ import net.minecraftforge.client.model.ISmartItemModel;
 
 @SuppressWarnings("deprecation")
 public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwareModel {
-	public static final ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
-	private final IBakedModel baseModel;
-	private ItemStack itemStack;
+	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
+	private final @Nonnull IBakedModel baseModel;
+	private @Nullable ItemStack itemStack;
 
-	public CustomItemSignRenderer(final IBakedModel model) {
+	@SuppressWarnings("deprecation")
+	public CustomItemSignRenderer(final @Nonnull IBakedModel model) {
 		this.baseModel = model;
 	}
 
 	@Override
-	public IBakedModel handleItemState(final ItemStack stack) {
+	@SuppressWarnings("deprecation")
+	public @Nonnull IBakedModel handleItemState(final @Nullable ItemStack stack) {
 		this.itemStack = stack;
-		if (stack.getItem()==Items.sign&&EntryId.fromItemStack(stack).entry().isValid())
+		if (stack!=null&&stack.getItem()==Items.sign&&EntryId.fromItemStack(stack).entry().isValid())
 			return this;
 		else
 			return this.baseModel;
 	}
 
 	@Override
-	public Pair<IBakedModel, Matrix4f> handlePerspective(final TransformType cameraTransformType) {
-		if (this.itemStack!=null) {
+	@SuppressWarnings("deprecation")
+	public @Nullable Pair<IBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
+		final ItemStack itemStack = this.itemStack;
+		if (itemStack!=null&&cameraTransformType!=null) {
 			OpenGL.glPushMatrix();
 			if (this.baseModel instanceof IPerspectiveAwareModel) {
 				final Pair<? extends IFlexibleBakedModel, Matrix4f> pair = (Pair<? extends IFlexibleBakedModel, Matrix4f>) ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
@@ -58,7 +69,7 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 					ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
 			}
 			OpenGL.glDisable(GL11.GL_CULL_FACE);
-			renderItem(cameraTransformType, this.itemStack);
+			renderItem(cameraTransformType, itemStack);
 			OpenGL.glEnable(GL11.GL_LIGHTING);
 			OpenGL.glEnable(GL11.GL_BLEND);
 			OpenGL.glEnable(GL11.GL_TEXTURE_2D);
@@ -68,40 +79,46 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		return Pair.of((IBakedModel) this, null);
 	}
 
-	public void renderItem(final TransformType type, final ItemStack item) {
+	@SuppressWarnings("deprecation")
+	public void renderItem(final @Nonnull TransformType type, final @Nullable ItemStack item) {
 		OpenGL.glPushMatrix();
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
+		final CompoundAttr attr = entry.getMeta();
+		final Content content = entry.getContent();
 		// Size
-		final ImageSize size = new ImageSize().setAspectSize(entry.meta.size, entry.content().image.getSize());
-		if (type==TransformType.GUI) {
+		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+		final SizeData size = attr.sizes.getMovie().get().aspectSize(size01);
+		if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GUI) {
 			OpenGL.glScalef(1f, -1f, 1f);
 			final float slot = 1f;
-			final ImageSize size2 = new ImageSize().setSize(ImageSizes.INNER, size, slot, slot);
+			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
 			OpenGL.glScalef(.5f, .5f, 1f);
-			OpenGL.glTranslatef((slot-size2.width)/2f, (slot-size2.height)/2f, 0f);
+			OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
 			OpenGL.glTranslatef(-.5f, -.5f, 0f);
 			OpenGL.glScalef(slot, slot, 1f);
-			entry.gui.drawScreen(0, 0, 0f, 1f, size2.width/slot, size2.height/slot);
+			entry.gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot);
 		} else {
 			OpenGL.glScalef(1f, -1f, 1f);
-			if (type==TransformType.NONE)
-				OpenGL.glTranslatef(-size.width/2f, .25f, 0f);
-			/*	else if (type==TransformType.FIXED) {
+			/*
+			if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND)
+				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
+			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
-				OpenGL.glTranslatef(-size.width/2f, .5f, f);
-			}*/ else if (type==TransformType.FIRST_PERSON)
+				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
+			} else */ if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
-			else if (type==TransformType.THIRD_PERSON) {
+			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.THIRD_PERSON) {
 				OpenGL.glTranslatef(.25f, .25f, 0f);
-				OpenGL.glTranslatef(-size.width, 0f, 0f);
-			} else if (type==TransformType.HEAD)
+				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
+			} else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.HEAD)
 				;// Minecraft 1.8.x doesn't support Item Head.
-			OpenGL.glTranslatef(0f, -size.height, 0f);
-			OpenGL.glTranslatef(entry.meta.offset.x, entry.meta.offset.y, entry.meta.offset.z);
-			entry.meta.rotation.rotate();
-			entry.gui.drawScreen(0, 0, 0f, 1f, size.width, size.height);
+			OpenGL.glTranslatef(0f, -size.getHeight(), 0f);
+			final OffsetData offset = attr.offsets.getMovie().get();
+			OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
+			RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
+			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
 		}
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
@@ -124,21 +141,24 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	}
 
 	@Override
-	public List<BakedQuad> getFaceQuads(final EnumFacing facing) {
+	@SuppressWarnings("deprecation")
+	public @Nullable List<BakedQuad> getFaceQuads(final @Nullable EnumFacing facing) {
 		return this.baseModel.getFaceQuads(facing);
 	}
 
 	@Override
-	public List<BakedQuad> getGeneralQuads() {
+	public @Nullable List<BakedQuad> getGeneralQuads() {
 		return ImmutableList.of();
 	}
 
 	@Override
-	public ItemCameraTransforms getItemCameraTransforms() {
+	@Deprecated
+	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
 		return ItemCameraTransforms.DEFAULT;
 	}
 
 	@Override
+	@SuppressWarnings("deprecation")
 	public boolean isAmbientOcclusion() {
 		return this.baseModel.isAmbientOcclusion();
 	}

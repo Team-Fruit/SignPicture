@@ -1,0 +1,66 @@
+package com.kamesuta.mc.signpic.util;
+
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.imageio.ImageIO;
+
+import org.apache.commons.io.FileUtils;
+
+import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.gui.GuiMain;
+import com.kamesuta.mc.signpic.http.upload.UploadApiUtil;
+import com.kamesuta.mc.signpic.http.upload.UploadRequest;
+import com.kamesuta.mc.signpic.state.State;
+
+import net.minecraft.client.resources.I18n;
+
+public class FileUtilitiy {
+	public static boolean transfer(final @Nonnull Transferable transferable) {
+		try {
+			if (transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+				final String id = (String) transferable.getTransferData(DataFlavor.stringFlavor);
+				if (id!=null)
+					GuiMain.setContentId(id);
+			} else if (transferable.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+				final List<?> droppedFiles = (List<?>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
+				for (final Object obj : droppedFiles)
+					if (obj instanceof File) {
+						final File file = (File) obj;
+						UploadApiUtil.upload(UploadRequest.fromFile(file, new State()));
+					}
+			} else if (transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+				final BufferedImage bi = (BufferedImage) transferable.getTransferData(DataFlavor.imageFlavor);
+				try {
+					final File tmp = Client.getLocation().createCache("paste");
+					ImageIO.write(bi, "png", tmp);
+					UploadApiUtil.upload(UploadRequest.fromFile(tmp, new State()), new Runnable() {
+						@Override
+						public void run() {
+							FileUtils.deleteQuietly(tmp);
+						}
+					});
+				} catch (final IOException e) {
+					Log.notice(I18n.format("signpic.gui.notice.paste.error", e));
+					return false;
+				}
+			} else {
+				Log.notice(I18n.format("signpic.gui.notice.paste.typeunsupported"));
+				return false;
+			}
+		} catch (final IOException e) {
+			Log.notice(I18n.format("signpic.gui.notice.paste.error", e));
+			return false;
+		} catch (final UnsupportedFlavorException e) {
+			Log.notice(I18n.format("signpic.gui.notice.paste.unsupported", e));
+		}
+		return true;
+	}
+}

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
@@ -12,25 +14,29 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.render.OpenGL;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class GuiPAAS extends WFrame {
-	private final SendPacketTask task;
+	private final @Nonnull SendPacketTask task;
 	private boolean preview;
 
-	public GuiPAAS(final SendPacketTask task) {
+	public GuiPAAS(final @Nonnull SendPacketTask task) {
 		this.task = task;
+		setGuiPauseGame(false);
 	}
 
 	@Override
@@ -50,8 +56,8 @@ public class GuiPAAS extends WFrame {
 					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
-						RenderHelper.startShape();
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.c.get());
 						draw(getGuiPosition(pgp));
 					}
@@ -60,17 +66,46 @@ public class GuiPAAS extends WFrame {
 				final float f1 = 93.75F;
 				add(new WBase(new R(Coord.right(15), Coord.top(15), Coord.width(f1), Coord.height(f1))) {
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 						final Area a = getGuiPosition(pgp);
 
-						RenderHelper.startTexture();
+						WRenderer.startTexture();
 						OpenGL.glColor4f(1f, 1f, 1f, 1f);
 						OpenGL.glPushMatrix();
-						OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1(), 50f);
+						OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1(), 0f);
+						drawSign(GuiPAAS.this.task.entity);
+						OpenGL.glPopMatrix();
+					}
+
+					private void drawSign(final @Nonnull TileEntitySign sign) {
+						OpenGL.glPushMatrix();
+						OpenGL.glTranslatef(0.0F, 0.0F, 50.0F);
+						final float f1 = 93.75F;
 						OpenGL.glScalef(-f1, -f1, -f1);
 						OpenGL.glRotatef(180f, 0f, 1f, 0f);
-						Client.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, -1f);
+						Client.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D);
 						Client.renderer.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
+						OpenGL.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+						final Block block = sign.getBlockType();
+
+						if (block==Blocks.standing_sign) {
+							final float f2 = sign.getBlockMetadata()*360/16.0F;
+							OpenGL.glRotatef(f2, 0.0F, 1.0F, 0.0F);
+							OpenGL.glTranslatef(0F, -.33590F, 0.0F);
+						} else {
+							final int k = sign.getBlockMetadata();
+							float f3 = 0.0F;
+							if (k==2)
+								f3 = 180.0F;
+							if (k==4)
+								f3 = 90.0F;
+							if (k==5)
+								f3 = -90.0F;
+							OpenGL.glRotatef(f3, 0.0F, 1.0F, 0.0F);
+							OpenGL.glTranslatef(0.0F, -.02348F, 0.0F);
+						}
+
+						TileEntityRendererDispatcher.instance.renderTileEntityAt(sign, -0.5D, -0.75D, -0.5D, 0.0F);
 						OpenGL.glPopMatrix();
 					}
 				});
@@ -79,21 +114,21 @@ public class GuiPAAS extends WFrame {
 
 				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f))) {
 					@Override
-					public void update(final WEvent ev, final Area pgp, final Point p) {
+					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
 				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f))) {
 					@Override
-					public void update(final WEvent ev, final Area pgp, final Point p) {
+					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));
 					}
 				});
 			}
 
 			@Override
-			public void update(final WEvent ev, final Area pgp, final Point p) {
+			public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 				if (this.close)
 					if (!GuiPAAS.this.task.tick()) {
 						this.c = (int) (GuiPAAS.this.task.timer.getTime()*1000/GuiPAAS.this.task.limit*this.max);
@@ -117,11 +152,6 @@ public class GuiPAAS extends WFrame {
 				super.update(ev, pgp, p);
 			}
 		});
-	}
-
-	@Override
-	public boolean doesGuiPauseGame() {
-		return false;
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.gui;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -14,14 +16,15 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 
 import net.minecraft.client.resources.I18n;
 
 public class GuiSize extends WPanel {
-	protected ImageSize size;
+	protected @Nonnull SizeBuilder size;
 
-	public GuiSize(final R position, final ImageSize size) {
+	public GuiSize(final @Nonnull R position, final @Nonnull SizeBuilder size) {
 		super(position);
 		this.size = size;
 	}
@@ -37,12 +40,19 @@ public class GuiSize extends WPanel {
 			}
 
 			@Override
-			public boolean onClosing(final WEvent ev, final Area pgp, final Point mouse) {
+			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
 				return label.isFinished();
 			}
 		}.setText(I18n.format("signpic.gui.editor.size.category")));
 		final VMotion w = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(w), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0, I18n.format("signpic.gui.editor.size.width"), I18n.format("signpic.gui.editor.size.width.neg"), I18n.format("signpic.gui.editor.size.width.pos")) {
+		add(new OffsetElement(new R(Coord.left(w), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0) {
+			{
+				this.label.setText(I18n.format("signpic.gui.editor.size.width"));
+				this.number.setNegLabel(I18n.format("signpic.gui.editor.size.width.neg"));
+				this.number.setPosLabel(I18n.format("signpic.gui.editor.size.width.pos"));
+				this.number.setUnknownLabel(I18n.format("signpic.gui.editor.size.width.unknown"));
+			}
+
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -61,12 +71,19 @@ public class GuiSize extends WPanel {
 			}
 
 			@Override
-			protected VMotion addDelay(final VMotion c) {
+			protected @Nonnull VMotion addDelay(final @Nonnull VMotion c) {
 				return c.add(Motion.blank(1*.025f));
 			}
 		});
 		final VMotion h = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(h), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1, I18n.format("signpic.gui.editor.size.height"), I18n.format("signpic.gui.editor.size.height.neg"), I18n.format("signpic.gui.editor.size.height.pos")) {
+		add(new OffsetElement(new R(Coord.left(h), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1) {
+			{
+				this.label.setText(I18n.format("signpic.gui.editor.size.height"));
+				this.number.setNegLabel(I18n.format("signpic.gui.editor.size.height.neg"));
+				this.number.setPosLabel(I18n.format("signpic.gui.editor.size.height.pos"));
+				this.number.setUnknownLabel(I18n.format("signpic.gui.editor.size.height.unknown"));
+			}
+
 			@Override
 			protected void initWidget() {
 				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
@@ -85,7 +102,7 @@ public class GuiSize extends WPanel {
 			}
 
 			@Override
-			protected VMotion addDelay(final VMotion c) {
+			protected @Nonnull VMotion addDelay(final @Nonnull VMotion c) {
 				return c.add(Motion.blank(2*.025f));
 			}
 		});
@@ -95,42 +112,53 @@ public class GuiSize extends WPanel {
 	}
 
 	protected abstract class OffsetElement extends WPanel {
-		protected String label;
-		protected String neg;
-		protected String pos;
-		protected VMotion left;
+		public @Nonnull MLabel label;
+		public @Nonnull MNumber number;
+		protected @Nonnull VMotion left;
 
-		public OffsetElement(final R position, final VMotion left, final int i, final String label, final String neg, final String pos) {
+		public OffsetElement(final @Nonnull R position, final @Nonnull VMotion left, final int i) {
 			super(position);
-			this.label = label;
-			this.neg = neg;
-			this.pos = pos;
+			this.label = new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)));
+			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
+				@Override
+				protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
+					if (NumberUtils.isNumber(newText))
+						set(NumberUtils.toFloat(newText));
+					else
+						set(SizeData.Unknown);
+					onUpdate();
+				}
+
+				@Override
+				protected boolean negClicked() {
+					final boolean b = super.negClicked();
+					if (NumberUtils.toFloat(this.field.getText())==0f)
+						this.field.setText("");
+					return b;
+				}
+
+				@Override
+				protected boolean posClicked() {
+					final boolean b = super.posClicked();
+					if (NumberUtils.toFloat(this.field.getText())==0f)
+						this.field.setText("");
+					return b;
+				}
+			};
 			this.left = left;
 		}
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f))).setText(this.label));
-			final MNumber n = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
-				@Override
-				protected void onNumberChanged(final String oldText, final String newText) {
-					if (NumberUtils.isNumber(newText))
-						set(NumberUtils.toFloat(newText));
-					else
-						set(ImageSize.unknownSize);
-					onUpdate();
-				}
-			}.setNumber(get());
-			n.neg.setText(this.neg);
-			n.pos.setText(this.pos);
-			add(n);
+			add(this.label);
+			add(this.number.setNumber(get()));
 		}
 
 		protected abstract float get();
 
 		protected abstract void set(float f);
 
-		protected VMotion addDelay(final VMotion c) {
+		protected @Nonnull VMotion addDelay(final @Nonnull VMotion c) {
 			return c;
 		}
 
@@ -141,7 +169,7 @@ public class GuiSize extends WPanel {
 		}
 
 		@Override
-		public boolean onClosing(final WEvent ev, final Area pgp, final Point p) {
+		public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 			return this.left.isFinished();
 		}
 	}

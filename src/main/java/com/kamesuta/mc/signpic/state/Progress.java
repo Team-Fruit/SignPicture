@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.state;
 
+import javax.annotation.Nonnull;
+
 public class Progress {
 	public long overall;
 	public long done;
@@ -14,12 +16,12 @@ public class Progress {
 		return 0;
 	}
 
-	public Progress setOverall(final long n) {
+	public @Nonnull Progress setOverall(final long n) {
 		this.overall = n;
 		return this;
 	}
 
-	public Progress setDone(final long n) {
+	public @Nonnull Progress setDone(final long n) {
 		this.done = n;
 		return this;
 	}

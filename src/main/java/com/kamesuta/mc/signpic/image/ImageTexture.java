@@ -1,12 +1,15 @@
 package com.kamesuta.mc.signpic.image;
 
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import javax.annotation.Nonnull;
+
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 
 public interface ImageTexture {
 
 	void bind();
 
-	ImageSize getSize();
+	@Nonnull
+	SizeData getSize();
 
 	boolean hasMipmap();
 

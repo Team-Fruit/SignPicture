@@ -1,19 +1,20 @@
 package com.kamesuta.mc.signpic.image;
 
+import javax.annotation.Nonnull;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.image.meta.ImageSize;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 
 public class ResourceImageTexture implements ImageTexture {
-	protected static final ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
-	protected static final ImageSize DefaultSize = new ImageSize().defaultSize();
-	protected ResourceLocation location;
+	protected static final @Nonnull ResourceLocation Null = Client.mc.renderEngine.getDynamicTextureLocation("null", TextureUtil.missingTexture);
+	protected @Nonnull ResourceLocation location;
 
-	public ResourceImageTexture(final ResourceLocation location) {
+	public ResourceImageTexture(final @Nonnull ResourceLocation location) {
 		this.location = location;
 	}
 
@@ -26,8 +27,8 @@ public class ResourceImageTexture implements ImageTexture {
 	}
 
 	@Override
-	public ImageSize getSize() {
-		return DefaultSize;
+	public @Nonnull SizeData getSize() {
+		return SizeData.DefaultSize;
 	}
 
 	@Override

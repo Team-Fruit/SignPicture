@@ -2,6 +2,9 @@ package com.kamesuta.mc.signpic.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
@@ -13,15 +16,16 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.content.Content;
-import com.kamesuta.mc.signpic.image.meta.ImageTextureMap;
 import com.kamesuta.mc.signpic.information.Informations;
-import com.kamesuta.mc.signpic.render.OpenGL;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
@@ -30,11 +34,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiImage extends WFrame {
-	protected Entry entry;
+	protected @Nonnull Entry entry;
 
-	public static final ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
+	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
-	public GuiImage(final Entry entry) {
+	public GuiImage(final @Nonnull Entry entry) {
 		this.entry = entry;
 		setWorldAndResolution(Client.mc, 0, 0);
 	}
@@ -46,10 +50,8 @@ public class GuiImage extends WFrame {
 			protected void initWidget() {
 				add(new WBase(new R()) {
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
-						final Content content = GuiImage.this.entry.content();
-
 						float opacity = getGuiOpacity(popacity);
 
 						OpenGL.glPushMatrix();
@@ -57,15 +59,30 @@ public class GuiImage extends WFrame {
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
-						if (content.state.getType()==StateType.AVAILABLE) {
-							final ImageTextureMap map = GuiImage.this.entry.meta.map;
-							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*(map.o*0.1f));
-							content.image.draw(map.u, map.v, map.w, map.h, map.c, map.s, map.r, map.m);
+
+						@Nullable
+						final Content content = GuiImage.this.entry.getContent();
+						@Nonnull
+						CompoundAttr meta;
+						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!(meta = GuiImage.this.entry.getMeta()).hasInvalidMeta()) {
+							final float o = meta.o.getMovie().get().data*0.1f;
+							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
+							content.image.draw(
+									meta.u.getMovie().get().data,
+									meta.v.getMovie().get().data,
+									meta.w.getMovie().get().data,
+									meta.h.getMovie().get().data,
+									meta.c.getMovie().get().data,
+									meta.s.getMovie().get().data,
+									meta.b.getMovie().get().data,
+									meta.d.getMovie().get().data,
+									meta.r.getMovie().get().data,
+									meta.m.getMovie().get().data);
 						} else {
-							RenderHelper.startShape();
+							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
 							OpenGL.glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
-							draw(0, 0, 1, 1, GL_LINE_LOOP);
+							drawAbs(0, 0, 1, 1, GL_LINE_LOOP);
 						}
 						OpenGL.glPopMatrix();
 
@@ -75,11 +92,11 @@ public class GuiImage extends WFrame {
 						}
 						OpenGL.glTranslatef(a.w()/2, a.h()/2, 0);
 						OpenGL.glScalef(.5f, .5f, 1f);
-						if (content.state.getType()!=StateType.AVAILABLE) {
+						if (content!=null&&content.state.getType()!=StateType.AVAILABLE) {
 							if (content.state.getType()==StateType.ERROR) {
 								OpenGL.glPushMatrix();
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
-								RenderHelper.startTexture();
+								WRenderer.startTexture();
 								texture().bindTexture(resError);
 								RenderHelper.drawRectTexture(GL_QUADS);
 								OpenGL.glPopMatrix();
@@ -93,7 +110,7 @@ public class GuiImage extends WFrame {
 				add(new WPanel(new R()) {
 					@Override
 					protected void initWidget() {
-						final VCommon var = V.range(V.a(.5f), V.a(.8f), V.p(.5f));
+						final VCommon var = V.a(.8f);
 						add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
 						add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
 						if (Informations.instance.isUpdateRequired())
@@ -101,9 +118,9 @@ public class GuiImage extends WFrame {
 					}
 
 					@Override
-					public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 						if (GuiImage.this.entry.isNotSupported()) {
-							RenderHelper.startShape();
+							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
 							OpenGL.glColor4f(1f, 1f, 1f, 1f);
 							OpenGL.glPushMatrix();
@@ -118,18 +135,18 @@ public class GuiImage extends WFrame {
 	}
 
 	protected class UpdateLogo extends WBase {
-		protected VMotion rot = V.pm(0).add(Motion.of(0, Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).setLoop(true).start();
+		protected @Nonnull VMotion rot = V.pm(0).add(Motion.of(0, Easings.easeInOutSine.move(2.87f, 1f), Motion.blank(0.58f)).setLoop(true)).setLoop(true).start();
 
-		public UpdateLogo(final R position) {
+		public UpdateLogo(final @Nonnull R position) {
 			super(position);
 		}
 
 		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
 			final Area a = getGuiPosition(pgp);
 			texture().bindTexture(GuiSettings.update);
 			OpenGL.glColor4f(144f/256f, 191f/256f, 48f/256f, 1f);
-			RenderHelper.startTexture();
+			WRenderer.startTexture();
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 			OpenGL.glRotatef(this.rot.get()*360, 0, 0, 1);

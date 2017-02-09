@@ -3,6 +3,10 @@ package com.kamesuta.mc.signpic.information;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -10,6 +14,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
@@ -17,6 +22,7 @@ import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ModDownload;
 import com.kamesuta.mc.signpic.http.download.ModDownload.ModDLResult;
+import com.kamesuta.mc.signpic.information.Info.PrivateMsg;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import net.minecraft.client.resources.I18n;
@@ -27,46 +33,44 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public final class Informations {
-	public static final Informations instance = new Informations();
+	public static final @Nonnull Informations instance = new Informations();
 
-	public static final Version VersionClient = new Version(Reference.VERSION);
+	public static final @Nonnull Version VersionClient = new Version(Reference.VERSION);
 
 	private Informations() {
 	}
 
 	public static class InfoSource {
-		public Info info;
-		public Info.PrivateMsg privateMsg;
+		public @Nonnull Info info;
+		public @Nullable Info.PrivateMsg privateMsg;
 
-		public InfoSource(final Info info) {
+		public InfoSource(final @Nonnull Info info) {
 			this.info = info;
 		}
 
-		public InfoVersion stableVersion() {
+		public @Nonnull InfoVersion stableVersion() {
 			if (this.info.versions!=null)
 				return new InfoVersion(this.info.versions.get(Client.mcversion));
 			return new InfoVersion();
 		}
 
-		public InfoVersion unstableVersion() {
+		public @Nonnull InfoVersion unstableVersion() {
 			if (this.info.versions!=null)
 				return new InfoVersion(this.info.versions.get(Client.mcversion+"-beta"));
 			return new InfoVersion();
 		}
 
-		public InfoVersion onlineVersion() {
+		public @Nonnull InfoVersion onlineVersion() {
 			final InfoVersion stable = stableVersion();
 			final InfoVersion unstable = unstableVersion();
-			return Config.instance.informationJoinBeta&&unstable.compare(stable) ? unstable : stable;
+			return Config.getConfig().informationJoinBeta.get()&&unstable.compare(stable) ? unstable : stable;
 		}
 
-		public static boolean equalsVersion(final InfoSource a, final InfoSource b) {
+		public static boolean equalsVersion(final @Nullable InfoSource a, final @Nullable InfoSource b) {
 			if (a==null||b==null)
 				return false;
 			final InfoVersion stable = a.stableVersion();
 			final InfoVersion unstable = b.stableVersion();
-			if (stable==null||unstable==null)
-				return false;
 			return stable.equals(b.stableVersion())&&unstable.equals(b.unstableVersion());
 		}
 	}
@@ -74,7 +78,7 @@ public final class Informations {
 	public static class InfoState {
 		public boolean triedToWarnPlayer = false;
 		public boolean downloading = false;
-		public File downloadedFile;
+		public @Nullable File downloadedFile;
 
 		public boolean isDownloaded() {
 			if (this.downloadedFile!=null)
@@ -83,25 +87,25 @@ public final class Informations {
 		}
 	}
 
-	private InfoSource source;
-	private InfoState state = new InfoState();
+	private @Nullable InfoSource source;
+	private @Nonnull InfoState state = new InfoState();
 
-	public void setSource(final InfoSource source) {
+	public void setSource(final @Nonnull InfoSource source) {
 		if (!InfoSource.equalsVersion(this.source, source))
 			this.state = new InfoState();
 		this.source = source;
 	}
 
-	public InfoSource getSource() {
+	public @Nullable InfoSource getSource() {
 		return this.source;
 	}
 
-	public InfoState getState() {
+	public @Nonnull InfoState getState() {
 		return this.state;
 	}
 
 	public void init() {
-		check(null);
+		onlineCheck(null);
 	}
 
 	private long lastCheck = -1l;
@@ -114,7 +118,13 @@ public final class Informations {
 		return this.lastCheck;
 	}
 
-	public void check(final Runnable after) {
+	public void check() {
+		getState().triedToWarnPlayer = false;
+		if (!isUpdateRequired())
+			Log.notice(I18n.format("signpic.versioning.noupdate"));
+	}
+
+	public void onlineCheck(final @Nullable Runnable after) {
 		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
 		checker.setCallback(new ICommunicateCallback() {
@@ -123,7 +133,7 @@ public final class Informations {
 				if (checker.result!=null)
 					setSource(checker.result);
 				if (res.getError()!=null)
-					Reference.logger.warn("Could not check version information", res.getError());
+					Log.log.warn("Could not check version information", res.getError());
 				if (after!=null)
 					after.run();
 			}
@@ -132,89 +142,99 @@ public final class Informations {
 	}
 
 	public boolean isUpdateRequired() {
-		if (getSource()!=null)
-			return !StringUtils.equals(Reference.VERSION, "${version}")&&getSource().onlineVersion().compare(VersionClient);
+		final InfoSource source = getSource();
+		if (source!=null)
+			return !StringUtils.equals(Reference.VERSION, "${version}")&&source.onlineVersion().compare(VersionClient);
 		return false;
 	}
 
-	public String getUpdateMessage() {
-		final InfoVersion online = this.source.onlineVersion();
-		if (online.version!=null) {
-			final String lang = Client.mc.gameSettings.language;
-			final Info.Version version = online.version;
-			if (version.message_local!=null&&version.message_local.containsKey(lang))
-				return version.message_local.get(lang);
-			else if (!StringUtils.isEmpty(version.message))
-				return version.message;
+	public @Nullable String getUpdateMessage() {
+		final InfoSource source = getSource();
+		if (source!=null) {
+			final InfoVersion online = source.onlineVersion();
+			if (online.version!=null) {
+				final String lang = Client.mc.gameSettings.language;
+				final Info.Version version = online.version;
+				if (version!=null) {
+					final Map<String, String> local = version.message_local;
+					if (local!=null&&local.containsKey(lang))
+						return local.get(lang);
+					else if (!StringUtils.isEmpty(version.message))
+						return version.message;
+				}
+			}
 		}
 		return null;
 	}
 
-	public String getUpdateImage() {
-		final InfoVersion online = this.source.onlineVersion();
-		if (online.version!=null) {
+	public @Nullable String getUpdateImage() {
+		final InfoSource src = this.source;
+		if (src!=null) {
+			final InfoVersion online = src.onlineVersion();
 			final Info.Version version = online.version;
-			if (!StringUtils.isEmpty(version.image))
-				return version.image;
+			if (version!=null) {
+				final String image = version.image;
+				if (image!=null&&!StringUtils.isEmpty(image))
+					return image;
+			}
 		}
 		return null;
 	}
 
 	public void runUpdate() {
 		final Informations.InfoState state = getState();
-		final Informations.InfoSource source = getSource();
-		final Informations.InfoVersion online = source.onlineVersion();
-		if (source!=null&&online!=null&&online.version!=null&&!StringUtils.isEmpty(online.version.remote))
-			if (state.isDownloaded()) {
-				ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"), 2f);
-				try {
-					Desktop.getDesktop().open(Client.location.modDir.getCanonicalFile());
-				} catch (final IOException e) {
-					Reference.logger.error(e.getMessage(), e);
-				}
-			} else if (state.downloading) {
-				ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
-				Client.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"), 2f);
-			} else {
-				final ModDownload downloader = new ModDownload();
-				downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
-				downloader.getState().getMeta().put(GuiTask.ShowPanel, 3f);
-				downloader.setCallback(new ICommunicateCallback() {
-					@Override
-					public void onDone(final ICommunicateResponse res) {
-						final ModDLResult result = downloader.result;
-						if (result!=null)
-							new ChatBuilder().setChat(result.response).chatClient();
+		final @Nullable Informations.InfoSource source = getSource();
+		if (source!=null) {
+			final Info.Version version = source.onlineVersion().version;
+			if (version!=null&&!StringUtils.isEmpty(version.remote))
+				if (state.isDownloaded()) {
+					ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
+					Log.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"));
+					try {
+						Desktop.getDesktop().open(Client.getLocation().modDir.getCanonicalFile());
+					} catch (final IOException e) {
+						Log.log.error(e.getMessage(), e);
 					}
-				});
-				Communicator.instance.communicate(downloader);
-			}
+				} else if (state.downloading) {
+					ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
+					Log.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"));
+				} else {
+					final ModDownload downloader = new ModDownload();
+					downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
+					downloader.getState().getMeta().put(GuiTask.ShowPanel, 3f);
+					downloader.setCallback(new ICommunicateCallback() {
+						@Override
+						public void onDone(final ICommunicateResponse res) {
+							final ModDLResult result = downloader.result;
+							if (result!=null)
+								new ChatBuilder().setChat(result.response).chatClient();
+						}
+					});
+					Communicator.instance.communicate(downloader);
+				}
+		}
 	}
 
 	@CoreEvent
-	public void onTick(final ClientTickEvent event) {
+	public void onTick(final @Nonnull ClientTickEvent event) {
 		if (event.phase==Phase.END)
 			onTick(getSource(), getState());
 	}
 
-	public void onTick(final InfoSource source, final InfoState state) {
-		final EntityPlayer player = Client.mc.thePlayer;
-		if (player!=null&&!state.triedToWarnPlayer&&source!=null) {
+	public void notice(final @Nullable InfoSource source, final @Nullable InfoState state, final @Nullable EntityPlayer player) {
+		if (player!=null&&source!=null&&state!=null) {
 			final String lang = Client.mc.gameSettings.language;
-			if (
-				source.info!=null&&
-						source.info.versions!=null&&
-						Config.instance.informationNotice&&
-						!StringUtils.equals(Reference.VERSION, "${version}")
-			) {
+			if (source.info.versions!=null&&
+					!StringUtils.equals(Reference.VERSION, "${version}")) {
 				final InfoVersion online = source.onlineVersion();
 
-				if (online.compare(VersionClient))
-					if (online.version!=null) {
-						final Info.Version version = online.version;
-						if (version.message_local!=null&&version.message_local.containsKey(lang))
-							ChatBuilder.create("signpic.versioning.changelog").useTranslation().setParams(version.message_local.get(lang)).chatClient();
+				if (online.compare(VersionClient)) {
+					final Info.Version version = online.version;
+					if (version!=null&&version.version!=null) {
+						final String ver = version.version;
+						final Map<String, String> local = version.message_local;
+						if (local!=null&&local.containsKey(lang))
+							ChatBuilder.create("signpic.versioning.changelog").useTranslation().setParams(local.get(lang)).chatClient();
 						else if (!StringUtils.isEmpty(version.message))
 							ChatBuilder.create("signpic.versioning.changelog").useTranslation().setParams(version.message).chatClient();
 
@@ -236,25 +256,37 @@ public final class Informations {
 
 						ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson()
 								.replace("$old$", Reference.VERSION)
-								.replace("$new$", version.version)
+								.replace("$new$", ver)
 								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic version update\"}")
 								.replace("$website$", "{\"action\":\"open_url\",\"value\":\""+website+"\"}")
 								.replace("$changelog$", "{\"action\":\"open_url\",\"value\":\""+changelog+"\"}")
 								.chatClient();
 					}
+				}
 			}
-			if (source.privateMsg!=null) {
+			final PrivateMsg msg = source.privateMsg;
+			if (msg!=null) {
 				final ChatBuilder ctb = new ChatBuilder();
-				if (source.privateMsg.message_local!=null&&source.privateMsg.message_local.containsKey(lang))
-					ctb.setText(source.privateMsg.message_local.get(lang));
-				else if (!StringUtils.isEmpty(source.privateMsg.message))
-					ctb.setText(source.privateMsg.message);
-				if (source.privateMsg.json)
-					ctb.useJson();
-				ctb.chatClient();
+				final Map<String, String> local = msg.message_local;
+				if (local!=null&&local.containsKey(lang))
+					ctb.setText(local.get(lang));
+				else {
+					final String m = msg.message;
+					if (m!=null&&!StringUtils.isEmpty(m))
+						ctb.setText(m);
+					if (msg.json)
+						ctb.useJson();
+					ctb.chatClient();
+				}
 			}
 			getState().triedToWarnPlayer = true;
 		}
+	}
+
+	public void onTick(final @Nullable InfoSource source, final @Nonnull InfoState state) {
+		final EntityPlayer player = Client.mc.thePlayer;
+		if (Config.getConfig().informationNotice.get()&&!state.triedToWarnPlayer)
+			notice(source, state, player);
 	}
 
 	public static class Version {
@@ -270,7 +302,7 @@ public final class Informations {
 			this.beta = beta;
 		}
 
-		public Version(final String string) {
+		public Version(final @Nullable String string) {
 			final String[] v = StringUtils.split(string, "\\.");
 			this.major = v!=null&&v.length>=1 ? NumberUtils.toInt(v[0], 0) : 0;
 			this.minor = v!=null&&v.length>=2 ? NumberUtils.toInt(v[1], 0) : 0;
@@ -282,7 +314,7 @@ public final class Informations {
 			this(0, 0, 0, false);
 		}
 
-		public boolean compare(final Version version) {
+		public boolean compare(final @Nonnull Version version) {
 			return this.major>version.major||
 					this.major==version.major&&this.minor>version.minor||
 					this.major==version.major&&this.minor==version.minor&&this.micro>version.micro||
@@ -301,7 +333,7 @@ public final class Informations {
 		}
 
 		@Override
-		public boolean equals(final Object obj) {
+		public boolean equals(final @Nullable Object obj) {
 			if (this==obj)
 				return true;
 			if (obj==null)
@@ -322,14 +354,14 @@ public final class Informations {
 	}
 
 	public static class InfoVersion extends Version {
-		public final Info.Version version;
+		public final @Nullable Info.Version version;
 
-		public InfoVersion(final int major, final int minor, final int micro, final boolean beta, final Info.Version version) {
+		public InfoVersion(final int major, final int minor, final int micro, final boolean beta, final @Nullable Info.Version version) {
 			super(major, minor, micro, beta);
 			this.version = version;
 		}
 
-		public InfoVersion(final Info.Version version) {
+		public InfoVersion(final @Nullable Info.Version version) {
 			super(version!=null ? version.version : "");
 			this.version = version;
 		}

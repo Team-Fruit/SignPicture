@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.util;
 
+import javax.annotation.Nonnull;
+
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.Client;
@@ -21,14 +23,14 @@ import net.minecraft.tileentity.TileEntitySign;
 public class Sign {
 	public static int maxText = 15*4;
 
-	public static final SignEntity preview = new SignEntity();
-	public static EntryIdBuilder builder = new EntryIdBuilder();
+	public static final @Nonnull SignEntity preview = new SignEntity();
+	public static @Nonnull EntryIdBuilder builder = new EntryIdBuilder();
 
-	public static void updatePreview(final EntryId entryId) {
+	public static void updatePreview(final @Nonnull EntryId entryId) {
 		entryId.toEntity(preview.getTileEntity());
 	}
 
-	public static void sendSign(final EntryId entryId, final TileEntitySign sourceentity) {
+	public static void sendSign(final @Nonnull EntryId entryId, final @Nonnull TileEntitySign sourceentity) {
 		entryId.toEntity(sourceentity);
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
@@ -37,18 +39,18 @@ public class Sign {
 		sourceentity.setEditable(true);
 	}
 
-	public static void placeSign(final EntryId entryId, final TileEntitySign sourceentity) {
-		if (Config.instance.multiplayPAAS&&!Client.mc.isSingleplayer())
+	public static void placeSign(final @Nonnull EntryId entryId, final @Nonnull TileEntitySign sourceentity) {
+		if (Config.getConfig().multiplayPAAS.get()&&!Client.mc.isSingleplayer())
 			Client.mc.displayGuiScreen(new GuiPAAS(new SendPacketTask(entryId, sourceentity)));
 		else
 			sendSign(entryId, sourceentity);
 	}
 
-	public static void sendRepairName(final String name) {
+	public static void sendRepairName(final @Nonnull String name) {
 		Client.mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", new PacketBuffer(Unpooled.buffer()).writeString(name)));
 	}
 
-	public static void setRepairName(final String name, final GuiTextField textField, final ContainerRepair containerRepair) {
+	public static void setRepairName(final @Nonnull String name, final @Nonnull GuiTextField textField, final @Nonnull ContainerRepair containerRepair) {
 		textField.setText(name);
 		containerRepair.updateItemName(name);
 		sendRepairName(name);
@@ -56,12 +58,12 @@ public class Sign {
 
 	public static class SendPacketTask {
 		public final long limit;
-		public final EntryId id;
-		public final String[] lines;
-		public final TileEntitySign entity;
-		public final Timer timer;
+		public final @Nonnull EntryId id;
+		public final @Nonnull String[] lines;
+		public final @Nonnull TileEntitySign entity;
+		public final @Nonnull Timer timer;
 
-		public SendPacketTask(final EntryId id, final TileEntitySign entity) {
+		public SendPacketTask(final @Nonnull EntryId id, final @Nonnull TileEntitySign entity) {
 			this.timer = new Timer();
 			this.lines = new String[4];
 			id.toStrings(this.lines);
@@ -82,8 +84,9 @@ public class Sign {
 			return false;
 		}
 
-		private static long getExpectedEditTime(final String[] lines, final boolean skipEmpty) {
-			long expected = Config.instance.multiplayPAASMinEditTime;
+		private static long getExpectedEditTime(final @Nonnull String[] lines, final boolean skipEmpty) {
+			long expected = Config.getConfig().multiplayPAASMinEditTime.get();
+			final int minchartime = Config.getConfig().multiplayPAASMinCharTime.get();
 			int n = 0;
 			for (String line : lines)
 				if (line!=null) {
@@ -91,13 +94,13 @@ public class Sign {
 					if (!line.isEmpty()) {
 						final int chars = line.length();
 						n += 1;
-						expected += Config.instance.multiplayPAASMinCharTime*chars;
+						expected += minchartime*chars;
 					}
 				}
 			if (skipEmpty&&n==0)
 				return 0;
 			if (n>1)
-				expected += Config.instance.multiplayPAASMinLineTime*n;
+				expected += Config.getConfig().multiplayPAASMinLineTime.get()*n;
 			return expected;
 		}
 	}

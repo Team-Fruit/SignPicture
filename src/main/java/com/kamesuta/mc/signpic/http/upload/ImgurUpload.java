@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -17,34 +20,32 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
-import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.LoadCanceledException;
+import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentLocation;
 import com.kamesuta.mc.signpic.http.Communicate;
-import com.kamesuta.mc.signpic.http.CommunicateCanceledException;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 public class ImgurUpload extends Communicate implements Progressable, IUploader {
-	public static final Gson gson = new Gson();
-
-	protected UploadContent upload;
-	protected String key;
+	protected @Nonnull UploadRequest upreq;
+	protected @Nonnull String key;
 	protected boolean canceled;
-	protected ImgurResult result;
+	protected @Nullable ImgurResult result;
 
-	public ImgurUpload(final UploadContent upload, final String key) {
-		this.upload = upload;
+	public ImgurUpload(final @Nonnull UploadRequest upload, final @Nonnull String key) {
+		this.upreq = upload;
 		this.key = key;
 	}
 
 	@Override
-	public State getState() {
-		return this.upload.getState("§3Imgur: §r%s");
+	public @Nonnull State getState() {
+		return this.upreq.getState("§3Imgur: §r%s");
 	}
 
 	@Override
@@ -54,9 +55,11 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 		File tmp = null;
 		InputStream resstream = null;
 		InputStream countupstream = null;
+		JsonReader jsonReader1 = null;
 		try {
-			tmp = Client.location.createCache("imgur");
-			FileUtils.copyInputStreamToFile(this.upload.getStream(), tmp);
+			setCurrent();
+			tmp = Client.getLocation().createCache("imgur");
+			FileUtils.copyInputStreamToFile(this.upreq.getStream(), tmp);
 
 			// create the post request.
 			final HttpPost httppost = new HttpPost(url);
@@ -69,7 +72,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				protected void beforeRead(final int n) throws IOException {
 					if (ImgurUpload.this.canceled) {
 						httppost.abort();
-						throw new CommunicateCanceledException();
+						throw new LoadCanceledException();
 					}
 				}
 
@@ -80,7 +83,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				}
 			};
 
-			builder.addBinaryBody("image", countupstream, ContentType.DEFAULT_BINARY, this.upload.getName());
+			builder.addBinaryBody("image", countupstream, ContentType.DEFAULT_BINARY, this.upreq.getName());
 			httppost.setEntity(builder.build());
 
 			// execute request
@@ -90,11 +93,15 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				final HttpEntity resEntity = response.getEntity();
 				if (resEntity!=null) {
 					resstream = resEntity.getContent();
-					this.result = gson.<ImgurResult> fromJson(new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
+					this.result = Client.gson.<ImgurResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
 					final String link = getLink();
-					if (link!=null)
-						FileUtils.moveFile(tmp, new ContentLocation(new ContentId(link)).cacheLocation());
-					onDone(new CommunicateResponse(this.result.success, null));
+					if (link!=null) {
+						final Content content = new ContentId(link).content();
+						final String id = content.meta.getCacheID();
+						if (id!=null)
+							FileUtils.moveFile(tmp, ContentLocation.cacheLocation(id));
+					}
+					onDone(new CommunicateResponse(this.result!=null&&this.result.success, null));
 					return;
 				}
 			} else {
@@ -105,8 +112,10 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 			onDone(new CommunicateResponse(false, e));
 			return;
 		} finally {
+			unsetCurrent();
 			IOUtils.closeQuietly(countupstream);
 			IOUtils.closeQuietly(resstream);
+			IOUtils.closeQuietly(jsonReader1);
 			FileUtils.deleteQuietly(tmp);
 		}
 		onDone(new CommunicateResponse(false, null));
@@ -116,45 +125,46 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 	@Override
 	public void cancel() {
 		this.canceled = true;
+		super.cancel();
 	}
 
 	public static class ImgurResult {
-		public Data data;
+		public @Nullable Data data;
 		public boolean success;
 		public int status;
 
 		public static class Data {
-			public String id;
-			public String title;
-			public String description;
+			public @Nullable String id;
+			public @Nullable String title;
+			public @Nullable String description;
 			public int datetime;
-			public String type;
+			public @Nullable String type;
 			public boolean animated;
 			public int width;
 			public int height;
 			public int size;
 			public int views;
 			public int bandwidth;
-			public String vote;
+			public @Nullable String vote;
 			public boolean favorite;
-			public String nsfw;
-			public String section;
-			public String account_url;
+			public @Nullable String nsfw;
+			public @Nullable String section;
+			public @Nullable String account_url;
 			public int account_id;
 			public boolean is_ad;
 			public boolean in_gallery;
-			public String deletehash;
-			public String name;
-			public String link;
-			public String gifv;
-			public String mp4;
+			public @Nullable String deletehash;
+			public @Nullable String name;
+			public @Nullable String link;
+			public @Nullable String gifv;
+			public @Nullable String mp4;
 			public int mp4_size;
 			public boolean looping;
 		}
 	}
 
 	@Override
-	public String getLink() {
+	public @Nullable String getLink() {
 		if (this.result!=null&&this.result.data!=null)
 			return this.result.data.link;
 		return null;

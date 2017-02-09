@@ -29,6 +29,7 @@ ext.modversion = "${project.version_major}.${project.version_minor}.${project.ve
 group = project.group
 version = "${project.version_minecraft}-${modversion}"
 compileJava.options.encoding = 'UTF-8'
+compileApiJava.options.encoding = 'UTF-8'
 
 idea {
     module {
@@ -54,6 +55,17 @@ minecraft {
     replace '${version}', modversion
     replace '${mcversion}', project.version_minecraft
     replace '${forgeversion}', project.version_forge
+}
+
+sourceSets {
+    api {
+        java {
+            srcDir "BnnWidget/src/api/java"
+        }
+        resources {
+            srcDir "BnnWidget/src/api/resources"
+        }
+    }
 }
 
 processResources {
@@ -84,18 +96,24 @@ dependencies {
 }
 
 def commonManifest = {
-    if (project.hasProperty('extra_fmlat')) {
+    if (project.hasProperty('extra_fmlcore'))
+        attributes 'FMLCorePlugin': project.extra_fmlcore
+    if (project.hasProperty('extra_fmlmod'))
+        attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlcore
+    if (project.hasProperty('extra_fmlat'))
         attributes 'FMLAT': project.extra_fmlat
     }
-}
 
 jar {
+    from sourceSets.main.output
     from sourceSets.api.output
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
     manifest commonManifest
 }
 
 shadowJar {
+    from sourceSets.main.output
+    from sourceSets.api.output
 	relocate 'org.apache.http.entity.mime', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime'
 	relocate 'org.apache.http.entity.mime.content', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime.content'
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
@@ -194,6 +212,6 @@ if (project.hasProperty('api_key_curseforge') && project.hasProperty('extra_curs
         changelog = ''
 
         additionalArtifact devJar, sourceJar, apiJar
-        relatedProject 'lunatriuscore'
+        relatedProject 'bnnwidget'
     }
 }
