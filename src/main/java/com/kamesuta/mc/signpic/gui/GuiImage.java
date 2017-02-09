@@ -27,6 +27,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
@@ -63,6 +64,12 @@ public class GuiImage extends WFrame {
 
 						@Nullable
 						final Content content = GuiImage.this.entry.getContent();
+						if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
+							OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
+							OpenGL.glLineWidth(1f);
+							WRenderer.startShape();
+							drawAbs(0, 0, 1, 1, GL_LINE_LOOP);
+						}
 						@Nonnull
 						CompoundAttr meta;
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!(meta = GuiImage.this.entry.getMeta()).hasInvalidMeta()) {

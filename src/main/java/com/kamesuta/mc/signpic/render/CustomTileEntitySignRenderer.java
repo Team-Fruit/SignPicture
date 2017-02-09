@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.bnnwidget.render.WRenderer.WVertex;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
@@ -46,6 +47,15 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glPushMatrix();
 
 		final OffsetData offset = attr.offsets.getMovie().get();
+		if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
+			OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
+			OpenGL.glLineWidth(1f);
+			WRenderer.startShape();
+			final WVertex v1 = WRenderer.begin(GL_LINES);
+			v1.pos(0f, 0f, 0f);
+			v1.pos(offset.x.offset, offset.y.offset, offset.z.offset);
+			v1.draw();
+		}
 		OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
 		RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
 
