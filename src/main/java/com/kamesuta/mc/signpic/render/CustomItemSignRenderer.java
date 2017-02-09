@@ -101,13 +101,12 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 			entry.gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot);
 		} else {
 			OpenGL.glScalef(1f, -1f, 1f);
-			/*
-			if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND)
+			/*if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND)
 				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
-			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIXED) {
+			else*/ if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.NONE) {
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
-			} else */ if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON)
+			} else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
 			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.THIRD_PERSON) {
 				OpenGL.glTranslatef(.25f, .25f, 0f);
@@ -141,7 +140,6 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public @Nullable List<BakedQuad> getFaceQuads(final @Nullable EnumFacing facing) {
 		return this.baseModel.getFaceQuads(facing);
 	}

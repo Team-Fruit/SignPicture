@@ -155,7 +155,7 @@ public class CoreHandler {
 	}
 
 	private static class DebugCommunicate implements ICommunicate, Progressable {
-		private @Nonnull State state = new State();
+		private @Nonnull final State state = new State();
 		{
 			this.state.setName("Debug Progress").getProgress().setOverall(10);
 		}
