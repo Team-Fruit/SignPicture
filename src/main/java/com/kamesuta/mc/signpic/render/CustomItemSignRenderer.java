@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
@@ -105,6 +106,7 @@ public class CustomItemSignRenderer extends IFlexibleBakedModel.Wrapper implemen
 			else*/ if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.NONE) {
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
+				Log.log.info("NONE");
 			} else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
 			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.THIRD_PERSON) {
@@ -123,53 +125,9 @@ public class CustomItemSignRenderer extends IFlexibleBakedModel.Wrapper implemen
 
 	}
 
-	//	@Override
-	//	public boolean isGui3d() {
-	//		return super.isGui3d();
-	//		//		return false;
-	//	}
-	//
-	//	@Override
-	//	public boolean isBuiltInRenderer() {
-	//		return super.isBuiltInRenderer();
-	//		//		return false;
-	//	}
-	//
-	//	@Override
-	//	public TextureAtlasSprite getTexture() {
-	//		return super.getTexture();
-	//		//		return this.baseModel.getTexture();
-	//	}
-	//
-	//	@Override
-	//	public @Nullable List<BakedQuad> getFaceQuads(final @Nullable EnumFacing facing) {
-	//		return super.getFaceQuads(facing);
-	//		//		return this.baseModel.getFaceQuads(facing);
-	//	}
-
 	@Override
 	public @Nullable List<BakedQuad> getGeneralQuads() {
 		//		return super.getGeneralQuads();
 		return ImmutableList.of();
 	}
-
-	//	@Override
-	//	@Deprecated
-	//	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
-	//		return super.getItemCameraTransforms();
-	//		//		return ItemCameraTransforms.DEFAULT;
-	//	}
-	//
-	//	@Override
-	//	@SuppressWarnings("deprecation")
-	//	public boolean isAmbientOcclusion() {
-	//		return super.isAmbientOcclusion();
-	//		//		return this.baseModel.isAmbientOcclusion();
-	//	}
-	//
-	//	@Override
-	//	public VertexFormat getFormat() {
-	//		return super.getFormat();
-	//		//		return Attributes.DEFAULT_BAKED_FORMAT;
-	//	}
 }
