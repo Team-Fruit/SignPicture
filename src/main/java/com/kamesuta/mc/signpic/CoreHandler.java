@@ -17,15 +17,12 @@ import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.information.Informations;
-import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -126,12 +123,15 @@ public class CoreHandler {
 		}
 	}
 
+	//TODO ItemSignPicureを何とかする
+	/*
 	@SubscribeEvent
 	public void onModelBakeEvent(final @Nonnull ModelBakeEvent event) {
 		final IBakedModel object = (IBakedModel) event.modelRegistry.getObject(CustomItemSignRenderer.modelResourceLocation);
 		final CustomItemSignRenderer atlas6 = new CustomItemSignRenderer(object);
 		event.modelRegistry.putObject(CustomItemSignRenderer.modelResourceLocation, atlas6);
 	}
+	*/
 
 	private boolean debugKey;
 

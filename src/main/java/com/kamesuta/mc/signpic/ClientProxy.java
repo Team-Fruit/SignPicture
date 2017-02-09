@@ -5,14 +5,9 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.mojang.util.UUIDTypeAdapter;
 
-import net.minecraft.init.Items;
-import net.minecraft.tileentity.TileEntitySign;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -39,7 +34,7 @@ public class ClientProxy extends CommonProxy {
 		} catch (final IllegalArgumentException e) {
 		}
 
-		ModelLoader.setCustomModelResourceLocation(Items.sign, 0, CustomItemSignRenderer.modelResourceLocation);
+		//		ModelLoader.setCustomModelResourceLocation(Items.sign, 0, CustomItemSignRenderer.modelResourceLocation);
 	}
 
 	private @Nonnull File getDataDirectory() {
@@ -57,7 +52,8 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.renderer);
+		//TODO ItemSignPictureを何とかする
+		//		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.renderer);
 
 		// Event Register
 		Client.handler.init();

@@ -56,7 +56,8 @@ public class SignHandler {
 		} catch (final SecurityException e) {
 			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
 		}
-		handlers.add(new AnvilHandler());
+		//TODO ItemSignPictureをなんとかする
+		//		handlers.add(new AnvilHandler());
 	}
 
 	private boolean isPlaceMode;
