@@ -23,8 +23,6 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.model.IBakedModel;
@@ -58,7 +56,8 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	}
 
 	@Override
-	public @Nullable Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
+	@SuppressWarnings("deprecation")
+	public @Nullable Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(final @Nullable net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType cameraTransformType) {
 		final ItemStack itemStack = this.itemStack;
 		if (itemStack!=null&&cameraTransformType!=null) {
 			OpenGL.glPushMatrix();
@@ -78,7 +77,8 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		return Pair.of(this, null);
 	}
 
-	public void renderItem(final @Nonnull TransformType type, final @Nullable ItemStack item) {
+	@SuppressWarnings("deprecation")
+	public void renderItem(final @Nonnull net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType type, final @Nullable ItemStack item) {
 		OpenGL.glPushMatrix();
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
@@ -88,7 +88,7 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		// Size
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 		final SizeData size = attr.sizes.getMovie().get().aspectSize(size01);
-		if (type==TransformType.GUI) {
+		if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GUI) {
 			OpenGL.glScalef(1f, -1f, 1f);
 			final float slot = 1f;
 			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
@@ -99,17 +99,17 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 			entry.gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot);
 		} else {
 			OpenGL.glScalef(1f, -1f, 1f);
-			if (type==TransformType.GROUND)
+			if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.GROUND)
 				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
-			else if (type==TransformType.FIXED) {
+			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
-			} else if (type==TransformType.FIRST_PERSON)
+			} else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.FIRST_PERSON)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
-			else if (type==TransformType.THIRD_PERSON) {
+			else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.THIRD_PERSON) {
 				OpenGL.glTranslatef(.25f, .25f, 0f);
 				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
-			} else if (type==TransformType.HEAD)
+			} else if (type==net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType.HEAD)
 				;// Minecraft 1.8.x doesn't support Item Head.
 			OpenGL.glTranslatef(0f, -size.getHeight(), 0f);
 			final OffsetData offset = attr.offsets.getMovie().get();
@@ -147,8 +147,9 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 	}
 
 	@Override
-	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
-		return ItemCameraTransforms.DEFAULT;
+	@Deprecated
+	public @Nullable net.minecraft.client.renderer.block.model.ItemCameraTransforms getItemCameraTransforms() {
+		return net.minecraft.client.renderer.block.model.ItemCameraTransforms.DEFAULT;
 	}
 
 	@Override

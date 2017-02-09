@@ -114,14 +114,14 @@ jar {
 shadowJar {
     from sourceSets.main.output
     from sourceSets.api.output
-	relocate 'org.apache.http.entity.mime', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime'
-	relocate 'org.apache.http.entity.mime.content', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime.content'
+    relocate 'org.apache.http.entity.mime', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime'
+    relocate 'org.apache.http.entity.mime.content', 'com.kamesuta.mc.signpic.lib.org.apache.http.entity.mime.content'
     classifier = project.hasProperty('extra_classifier') ? project.extra_classifier : 'universal'
     manifest commonManifest
 }
 
 reobf {
-	shadowJar { mappingType = "SEARGE" }
+    shadowJar { mappingType = "SEARGE" }
 }
 tasks.reobfShadowJar.mustRunAfter shadowJar
 
