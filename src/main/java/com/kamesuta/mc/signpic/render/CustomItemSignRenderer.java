@@ -23,26 +23,26 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.client.model.Attributes;
+import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 
 @SuppressWarnings("deprecation")
-public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwareModel {
+public class CustomItemSignRenderer extends IFlexibleBakedModel.Wrapper implements ISmartItemModel, IPerspectiveAwareModel {
 	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign", "inventory");
 	private final @Nonnull IBakedModel baseModel;
 	private @Nullable ItemStack itemStack;
 
 	@SuppressWarnings("deprecation")
 	public CustomItemSignRenderer(final @Nonnull IBakedModel model) {
+		super(model, Attributes.DEFAULT_BAKED_FORMAT);
 		this.baseModel = model;
 	}
 
@@ -123,45 +123,53 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 
 	}
 
-	@Override
-	public boolean isGui3d() {
-		return false;
-	}
-
-	@Override
-	public boolean isBuiltInRenderer() {
-		return false;
-	}
-
-	@Override
-	public TextureAtlasSprite getTexture() {
-		return this.baseModel.getTexture();
-	}
-
-	@Override
-	public @Nullable List<BakedQuad> getFaceQuads(final @Nullable EnumFacing facing) {
-		return this.baseModel.getFaceQuads(facing);
-	}
+	//	@Override
+	//	public boolean isGui3d() {
+	//		return super.isGui3d();
+	//		//		return false;
+	//	}
+	//
+	//	@Override
+	//	public boolean isBuiltInRenderer() {
+	//		return super.isBuiltInRenderer();
+	//		//		return false;
+	//	}
+	//
+	//	@Override
+	//	public TextureAtlasSprite getTexture() {
+	//		return super.getTexture();
+	//		//		return this.baseModel.getTexture();
+	//	}
+	//
+	//	@Override
+	//	public @Nullable List<BakedQuad> getFaceQuads(final @Nullable EnumFacing facing) {
+	//		return super.getFaceQuads(facing);
+	//		//		return this.baseModel.getFaceQuads(facing);
+	//	}
 
 	@Override
 	public @Nullable List<BakedQuad> getGeneralQuads() {
+		//		return super.getGeneralQuads();
 		return ImmutableList.of();
 	}
 
-	@Override
-	@Deprecated
-	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
-		return ItemCameraTransforms.DEFAULT;
-	}
-
-	@Override
-	@SuppressWarnings("deprecation")
-	public boolean isAmbientOcclusion() {
-		return this.baseModel.isAmbientOcclusion();
-	}
-
+	//	@Override
+	//	@Deprecated
+	//	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
+	//		return super.getItemCameraTransforms();
+	//		//		return ItemCameraTransforms.DEFAULT;
+	//	}
+	//
+	//	@Override
+	//	@SuppressWarnings("deprecation")
+	//	public boolean isAmbientOcclusion() {
+	//		return super.isAmbientOcclusion();
+	//		//		return this.baseModel.isAmbientOcclusion();
+	//	}
+	//
 	//	@Override
 	//	public VertexFormat getFormat() {
-	//		return Attributes.DEFAULT_BAKED_FORMAT;
+	//		return super.getFormat();
+	//		//		return Attributes.DEFAULT_BAKED_FORMAT;
 	//	}
 }
