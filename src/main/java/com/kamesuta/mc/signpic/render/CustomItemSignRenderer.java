@@ -32,13 +32,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ISmartItemModel;
 
 @SuppressWarnings("deprecation")
 public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwareModel {
-	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
+	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign", "inventory");
 	private final @Nonnull IBakedModel baseModel;
 	private @Nullable ItemStack itemStack;
 
@@ -64,7 +63,7 @@ public class CustomItemSignRenderer implements ISmartItemModel, IPerspectiveAwar
 		if (itemStack!=null&&cameraTransformType!=null) {
 			OpenGL.glPushMatrix();
 			if (this.baseModel instanceof IPerspectiveAwareModel) {
-				final Pair<? extends IFlexibleBakedModel, Matrix4f> pair = (Pair<? extends IFlexibleBakedModel, Matrix4f>) ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
+				final Pair<? extends IBakedModel, Matrix4f> pair = ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
 				if (pair.getRight()!=null)
 					ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
 			}
