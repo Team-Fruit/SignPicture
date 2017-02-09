@@ -4,12 +4,17 @@
 */
 
 # allow any
+!/BnnWidget
 !/src
 !/src/
 !/gradle
 !/gradle/
 !/lib
 !/lib/
+!/libs
+!/libs/
+!/annotations
+!/annotations/
 !/version
 !/version/
 !/info
@@ -18,8 +23,16 @@
 !/settings.gradle
 !/gradle.properties
 !/install.bat
+!/Release.bat
 !/gradlew
 !/gradlew.bat
-!/install.bat
 !/build.bat
+!/LICENSE
+!/LICENSE.md
+!/README
+!/README.md
+!/CONTRIBUTING
+!/CONTRIBUTING.md
 !/.gitignore
+!/.gitmodules
+!/.gitattributes
