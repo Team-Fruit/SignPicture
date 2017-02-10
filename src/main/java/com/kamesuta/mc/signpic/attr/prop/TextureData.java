@@ -20,6 +20,8 @@ public interface TextureData {
 		// Crossing Slitting
 		public static final float defaultCS = 1f;
 		public static final float defaultOpacity = 10f;
+		public static final float defaultLight = -1f;
+		public static final float failedLight = -2f;
 
 		public final @Nonnull TextureFloatType type;
 		public final float data;
@@ -50,14 +52,22 @@ public interface TextureData {
 			C(PropSyntax.TEXTURE_SPLIT_W.id, defaultCS),
 			S(PropSyntax.TEXTURE_SPLIT_H.id, defaultCS),
 			O(PropSyntax.TEXTURE_OPACITY.id, defaultOpacity),
+			E(PropSyntax.TEXTURE_LIGHT_X.id, defaultLight, failedLight),
+			F(PropSyntax.TEXTURE_LIGHT_Y.id, defaultLight, failedLight),
 			;
 
 			public final @Nonnull String identifier;
 			public final float defaultValue;
+			public final float failedValue;
 
-			TextureFloatType(final @Nonnull String identifier, final float defaultValue) {
+			TextureFloatType(final @Nonnull String identifier, final float defaultValue, final float failedValue) {
 				this.identifier = identifier;
 				this.defaultValue = defaultValue;
+				this.failedValue = failedValue;
+			}
+
+			TextureFloatType(final @Nonnull String identifier, final float defaultAndFailedValue) {
+				this(identifier, defaultAndFailedValue, defaultAndFailedValue);
 			}
 		}
 
@@ -82,7 +92,7 @@ public interface TextureData {
 			@Override
 			public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
 				if (StringUtils.equals(key, this.type.identifier)) {
-					this.data = NumberUtils.toFloat(value, this.type.defaultValue);
+					this.data = NumberUtils.toFloat(value, this.type.failedValue);
 					return true;
 				}
 				return false;
@@ -90,9 +100,11 @@ public interface TextureData {
 
 			@Override
 			public @Nonnull String compose() {
-				if (this.data!=this.type.defaultValue)
-					return this.type.identifier+ShortestFloatFormatter.format(this.data);
-				return "";
+				if (this.data==this.type.defaultValue)
+					return "";
+				else if (this.data==type.failedValue)
+					return type.identifier;
+				return this.type.identifier+ShortestFloatFormatter.format(this.data);
 			}
 		}
 	}
@@ -100,6 +112,7 @@ public interface TextureData {
 	public static class TextureBoolean implements IPropInterpolatable<TextureBoolean> {
 		public static final boolean defaultRepeat = true;
 		public static final boolean defaultMipMap = true;
+		public static final boolean defaultLighting = false;
 
 		public final @Nonnull TextureBooleanType type;
 		public final boolean data;
@@ -122,6 +135,7 @@ public interface TextureData {
 		public static enum TextureBooleanType {
 			R(PropSyntax.TEXTURE_REPEAT.id, defaultRepeat),
 			M(PropSyntax.TEXTURE_MIPMAP.id, defaultMipMap),
+			L(PropSyntax.TEXTURE_LIGHTING.id, defaultLighting),
 			;
 
 			public final @Nonnull String identifier;

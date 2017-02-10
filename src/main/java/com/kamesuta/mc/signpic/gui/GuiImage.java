@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic.gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -55,6 +54,8 @@ public class GuiImage extends WFrame {
 					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 						final Area a = getGuiPosition(pgp);
 						float opacity = getGuiOpacity(popacity);
+						final Content content = GuiImage.this.entry.getContent();
+						final CompoundAttr meta = GuiImage.this.entry.getMeta();
 
 						OpenGL.glPushMatrix();
 						if (GuiImage.this.entry.id instanceof PreviewEntryId||GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
@@ -62,17 +63,13 @@ public class GuiImage extends WFrame {
 						OpenGL.glPushMatrix();
 						OpenGL.glScalef(a.w(), a.h(), 1f);
 
-						@Nullable
-						final Content content = GuiImage.this.entry.getContent();
 						if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 							OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
 							OpenGL.glLineWidth(1f);
 							WRenderer.startShape();
 							drawAbs(0, 0, 1, 1, GL_LINE_LOOP);
 						}
-						@Nonnull
-						CompoundAttr meta;
-						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!(meta = GuiImage.this.entry.getMeta()).hasInvalidMeta()) {
+						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
 							content.image.draw(
@@ -85,7 +82,8 @@ public class GuiImage extends WFrame {
 									meta.b.getMovie().get().data,
 									meta.d.getMovie().get().data,
 									meta.r.getMovie().get().data,
-									meta.m.getMovie().get().data);
+									meta.m.getMovie().get().data,
+									meta.l.getMovie().get().data);
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -112,6 +110,7 @@ public class GuiImage extends WFrame {
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
 							StateRender.drawMessage(content, font());
 						}
+						OpenGL.glEnable(GL_LIGHTING);
 						OpenGL.glPopMatrix();
 					}
 				});

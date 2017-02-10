@@ -6,7 +6,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
-import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.Config;
@@ -37,9 +36,11 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			return SizeData.DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m) {
+	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m, final boolean l) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			WRenderer.startTexture(b, d);
+			if (l)
+				OpenGL.glEnable(GL_LIGHTING);
 			final ImageTexture image = getTexture();
 			image.bind();
 
@@ -62,7 +63,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
-			WGui.beginTextureQuads()
+			WRenderer.beginTextureQuads()
 					.pos(0, 0, 0).tex(u, v)
 					.pos(0, 1, 0).tex(u, v+h/s)
 					.pos(1, 1, 0).tex(u+w/c, v+h/s)

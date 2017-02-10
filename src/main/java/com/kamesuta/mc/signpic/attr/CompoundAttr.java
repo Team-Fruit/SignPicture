@@ -100,6 +100,8 @@ public class CompoundAttr {
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.C)));
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.S)));
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.O)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> e = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.E)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> f = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.F)));
 
 	private static class TexBooleanBuilder implements IPropBuilderBuilder<TextureBoolean, TextureBoolean> {
 		private @Nonnull TextureBooleanType type;
@@ -116,6 +118,7 @@ public class CompoundAttr {
 
 	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.R)));
 	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.M)));
+	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> l = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(new TexBooleanBuilder(TextureBooleanType.L)));
 
 	private static class TexBlendBuilder implements IPropBuilderBuilder<TextureBlend, TextureBlend> {
 		private @Nonnull TextureBlendType type;

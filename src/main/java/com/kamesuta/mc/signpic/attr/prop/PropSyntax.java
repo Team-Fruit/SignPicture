@@ -145,6 +145,11 @@ public enum PropSyntax {
 	 */
 	TEXTURE_MIPMAP("m"),
 	/**
+	 * Texture Lighting [l]
+	 * @see TextureData
+	 */
+	TEXTURE_LIGHTING("l"),
+	/**
 	 * Texture Blend Src [b]
 	 * @see TextureData
 	 */
@@ -154,7 +159,16 @@ public enum PropSyntax {
 	 * @see TextureData
 	 */
 	TEXTURE_BLEND_DST("d"),
-
+	/**
+	 * Texture Light X [e]
+	 * @see TextureData
+	 */
+	TEXTURE_LIGHT_X("e"),
+	/**
+	 * Texture Light Y [f]
+	 * @see TextureData
+	 */
+	TEXTURE_LIGHT_Y("f"),
 	;
 	public final @Nonnull String id;
 

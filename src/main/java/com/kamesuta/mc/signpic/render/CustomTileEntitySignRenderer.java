@@ -12,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.WVertex;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
@@ -104,6 +105,12 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.getConfig().renderSeeOpacity.get().floatValue());
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
+
+			final int i = Client.mc.theWorld.getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord, 0);
+			final int j = i%65536;
+			final int k = i/65536;
+			//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j/1.0F, k/1.0F);
+			Log.log.info("x:"+j+",y:"+k);
 
 			OpenGL.glPushMatrix();
 			translateBase(tile, x, y, z);

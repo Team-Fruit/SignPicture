@@ -35,6 +35,7 @@ public class CompoundAttrBuilder {
 	public final @Nonnull TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
 	public final @Nonnull TextureBooleanBuilder r = add(new TextureBooleanBuilder(TextureBooleanType.R));
 	public final @Nonnull TextureBooleanBuilder m = add(new TextureBooleanBuilder(TextureBooleanType.M));
+	public final @Nonnull TextureBooleanBuilder l = add(new TextureBooleanBuilder(TextureBooleanType.L));
 	public final @Nonnull TextureBlendBuilder b = add(new TextureBlendBuilder(TextureBlendType.B));
 	public final @Nonnull TextureBlendBuilder d = add(new TextureBlendBuilder(TextureBlendType.D));
 	public final @Nonnull AnimationBuilder animation = add(new AnimationBuilder());
