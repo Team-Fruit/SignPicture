@@ -33,6 +33,8 @@ public class CompoundAttrBuilder {
 	public final @Nonnull TextureFloatBuilder c = add(new TextureFloatBuilder(TextureFloatType.C));
 	public final @Nonnull TextureFloatBuilder s = add(new TextureFloatBuilder(TextureFloatType.S));
 	public final @Nonnull TextureFloatBuilder o = add(new TextureFloatBuilder(TextureFloatType.O));
+	public final @Nonnull TextureFloatBuilder f = add(new TextureFloatBuilder(TextureFloatType.F));
+	public final @Nonnull TextureFloatBuilder g = add(new TextureFloatBuilder(TextureFloatType.G));
 	public final @Nonnull TextureBooleanBuilder r = add(new TextureBooleanBuilder(TextureBooleanType.R));
 	public final @Nonnull TextureBooleanBuilder m = add(new TextureBooleanBuilder(TextureBooleanType.M));
 	public final @Nonnull TextureBooleanBuilder l = add(new TextureBooleanBuilder(TextureBooleanType.L));
@@ -52,10 +54,10 @@ public class CompoundAttrBuilder {
 	public @Nonnull CompoundAttrBuilder parse(final @Nonnull String src) {
 		Validate.notNull(src);
 
-		final Matcher mgb = CompoundAttr.g.matcher(src);
+		final Matcher mgb = CompoundAttr.pg.matcher(src);
 		final String meta = mgb.replaceAll("");
 
-		final Matcher mp = CompoundAttr.p.matcher(meta);
+		final Matcher mp = CompoundAttr.pp.matcher(meta);
 		while (mp.find()) {
 			final int gcount = mp.groupCount();
 			if (1<=gcount) {

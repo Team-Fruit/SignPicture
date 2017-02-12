@@ -12,7 +12,6 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.WVertex;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
@@ -23,10 +22,12 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
 public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
@@ -106,11 +107,31 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 				super.renderTileEntityAt(tile, x, y, z, partialTicks);
 			}
 
-			final int i = Client.mc.theWorld.getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord, 0);
-			final int j = i%65536;
-			final int k = i/65536;
-			//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j/1.0F, k/1.0F);
-			Log.log.info("x:"+j+",y:"+k);
+			final CompoundAttr attr = entry.getMeta();
+			int lightx = (int) attr.f.getMovie().get().data;
+			int lighty = (int) attr.g.getMovie().get().data;
+			if (lightx!=-1||lighty!=-1) {
+				if (lightx<0||lighty<0) {
+					final OffsetData offset = attr.offsets.getMovie().get();
+					final int lsign = Client.mc.theWorld.getLightBrightnessForSkyBlocks(tile.xCoord, tile.yCoord, tile.zCoord, 0);
+					final int lpicture = Client.mc.theWorld.getLightBrightnessForSkyBlocks(
+							MathHelper.floor_double(tile.xCoord+offset.x.offset),
+							MathHelper.floor_double(tile.yCoord+offset.y.offset),
+							MathHelper.floor_double(tile.zCoord+offset.z.offset),
+							0);
+					if (lightx<0)
+						if (lightx==-2)
+							lightx = lpicture%65536>>4;
+						else
+							lightx = lsign%65536>>4;
+					if (lighty<0)
+						if (lighty==-2)
+							lighty = lpicture/65536>>4;
+						else
+							lighty = lsign/65536>>4;
+				}
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightx<<4, lighty<<4);
+			}
 
 			OpenGL.glPushMatrix();
 			translateBase(tile, x, y, z);

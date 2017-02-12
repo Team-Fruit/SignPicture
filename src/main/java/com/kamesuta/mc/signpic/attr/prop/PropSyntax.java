@@ -160,15 +160,17 @@ public enum PropSyntax {
 	 */
 	TEXTURE_BLEND_DST("d"),
 	/**
-	 * Texture Light X [e]
+	 * Texture Light X [f]
 	 * @see TextureData
 	 */
-	TEXTURE_LIGHT_X("e"),
+	TEXTURE_LIGHT_X("f"),
 	/**
-	 * Texture Light Y [f]
+	 * Texture Light Y [g]
 	 * @see TextureData
 	 */
-	TEXTURE_LIGHT_Y("f"),
+	TEXTURE_LIGHT_Y("g"),
+	_reserved_e("e"),
+	_reserved_E("E");
 	;
 	public final @Nonnull String id;
 

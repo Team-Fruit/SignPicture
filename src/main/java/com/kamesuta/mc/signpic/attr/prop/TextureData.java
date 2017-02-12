@@ -45,29 +45,31 @@ public interface TextureData {
 		}
 
 		public static enum TextureFloatType {
-			U(PropSyntax.TEXTURE_X.id, defaultUV),
-			V(PropSyntax.TEXTURE_Y.id, defaultUV),
-			W(PropSyntax.TEXTURE_W.id, defaultWH),
-			H(PropSyntax.TEXTURE_H.id, defaultWH),
-			C(PropSyntax.TEXTURE_SPLIT_W.id, defaultCS),
-			S(PropSyntax.TEXTURE_SPLIT_H.id, defaultCS),
-			O(PropSyntax.TEXTURE_OPACITY.id, defaultOpacity),
-			E(PropSyntax.TEXTURE_LIGHT_X.id, defaultLight, failedLight),
-			F(PropSyntax.TEXTURE_LIGHT_Y.id, defaultLight, failedLight),
+			U(PropSyntax.TEXTURE_X.id, defaultUV, false),
+			V(PropSyntax.TEXTURE_Y.id, defaultUV, false),
+			W(PropSyntax.TEXTURE_W.id, defaultWH, false),
+			H(PropSyntax.TEXTURE_H.id, defaultWH, false),
+			C(PropSyntax.TEXTURE_SPLIT_W.id, defaultCS, false),
+			S(PropSyntax.TEXTURE_SPLIT_H.id, defaultCS, false),
+			O(PropSyntax.TEXTURE_OPACITY.id, defaultOpacity, false),
+			F(PropSyntax.TEXTURE_LIGHT_X.id, defaultLight, failedLight, true),
+			G(PropSyntax.TEXTURE_LIGHT_Y.id, defaultLight, failedLight, true),
 			;
 
 			public final @Nonnull String identifier;
 			public final float defaultValue;
 			public final float failedValue;
+			public final boolean overwrite;
 
-			TextureFloatType(final @Nonnull String identifier, final float defaultValue, final float failedValue) {
+			TextureFloatType(final @Nonnull String identifier, final float defaultValue, final float failedValue, final boolean overwrite) {
 				this.identifier = identifier;
 				this.defaultValue = defaultValue;
 				this.failedValue = failedValue;
+				this.overwrite = overwrite;
 			}
 
-			TextureFloatType(final @Nonnull String identifier, final float defaultAndFailedValue) {
-				this(identifier, defaultAndFailedValue, defaultAndFailedValue);
+			TextureFloatType(final @Nonnull String identifier, final float defaultAndFailedValue, final boolean overwrite) {
+				this(identifier, defaultAndFailedValue, defaultAndFailedValue, overwrite);
 			}
 		}
 
@@ -83,7 +85,7 @@ public interface TextureData {
 
 			@Override
 			public @Nonnull TextureFloat diff(final @Nullable TextureFloat base) {
-				if (base==null)
+				if (base==null||type.overwrite)
 					return new TextureFloat(this.type, this.data);
 				else
 					return new TextureFloat(this.type, base.data+this.data);

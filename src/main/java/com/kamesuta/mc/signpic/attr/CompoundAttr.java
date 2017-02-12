@@ -40,8 +40,8 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatTy
 public class CompoundAttr {
 	public static final @Nonnull CompoundAttr Blank = new CompoundAttr();
 
-	protected static final @Nonnull Pattern g = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
-	protected static final @Nonnull Pattern p = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
+	protected static final @Nonnull Pattern pg = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
+	protected static final @Nonnull Pattern pp = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
 
 	public static final float defaultInterval = 1f;
 
@@ -100,8 +100,8 @@ public class CompoundAttr {
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.C)));
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.S)));
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.O)));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> e = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.E)));
 	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> f = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.F)));
+	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> g = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(new TexFloatBuilder(TextureFloatType.G)));
 
 	private static class TexBooleanBuilder implements IPropBuilderBuilder<TextureBoolean, TextureBoolean> {
 		private @Nonnull TextureBooleanType type;
@@ -144,13 +144,13 @@ public class CompoundAttr {
 
 		final TreeMap<Float, String> timeline = Maps.newTreeMap();
 
-		final Matcher mgb = g.matcher(src);
+		final Matcher mgb = pg.matcher(src);
 		final String s = mgb.replaceAll("");
 		timeline.put(0f, s);
 
 		float current = 0;
 		float lastinterval = defaultInterval;
-		final Matcher mg = g.matcher(src);
+		final Matcher mg = pg.matcher(src);
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
@@ -171,7 +171,7 @@ public class CompoundAttr {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
-			final Matcher mp = p.matcher(meta);
+			final Matcher mp = pp.matcher(meta);
 			while (mp.find()) {
 				final int gcount = mp.groupCount();
 				if (1<=gcount) {
