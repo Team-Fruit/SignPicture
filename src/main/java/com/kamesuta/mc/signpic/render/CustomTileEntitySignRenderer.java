@@ -4,6 +4,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Point3f;
+import javax.vecmath.Quat4f;
+import javax.vecmath.Vector3f;
 
 import org.lwjgl.opengl.GL11;
 
@@ -49,17 +53,39 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glPushMatrix();
 
 		final OffsetData offset = attr.offsets.getMovie().get();
-		if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
+		final OffsetData centeroffset = attr.centeroffsets.getMovie().get();
+		final Quat4f rotate = attr.rotations.getMovie().get().getRotate();
+		final boolean see = CurrentMode.instance.isState(CurrentMode.State.SEE);
+		if (see) {
 			OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
 			OpenGL.glLineWidth(1f);
 			WRenderer.startShape();
-			final WVertex v1 = WRenderer.begin(GL_LINES);
-			v1.pos(0f, 0f, 0f);
-			v1.pos(offset.x.offset, offset.y.offset, offset.z.offset);
+			final WVertex v1 = WRenderer.begin(GL_LINE_STRIP);
+			final Matrix4f m = new Matrix4f();
+			final Point3f p2 = new Point3f();
+			final Vector3f ov = new Vector3f(offset.x.offset, offset.y.offset, offset.z.offset);
+			final Vector3f cv = new Vector3f(centeroffset.x.offset, centeroffset.y.offset, centeroffset.z.offset);
+			v1.pos(p2.x, p2.y, p2.z);
+			m.set(ov);
+			m.transform(p2);
+			m.set(cv);
+			m.transform(p2);
+			v1.pos(p2.x, p2.y, p2.z);
+			p2.set(0f, 0f, 0f);
+			cv.negate();
+			m.set(cv);
+			m.transform(p2);
+			m.set(rotate);
+			m.transform(p2);
+			cv.negate();
+			m.set(cv);
+			m.transform(p2);
+			v1.pos(p2.x, p2.y, p2.z);
 			v1.draw();
 		}
-		OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
-		RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
+		OpenGL.glTranslatef(offset.x.offset+centeroffset.x.offset, offset.y.offset+centeroffset.y.offset, offset.z.offset+centeroffset.z.offset);
+		RotationGL.glRotate(rotate);
+		OpenGL.glTranslatef(-centeroffset.x.offset, -centeroffset.y.offset, -centeroffset.z.offset);
 
 		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
 		OpenGL.glScalef(1f, -1f, 1f);
