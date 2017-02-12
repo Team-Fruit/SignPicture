@@ -55,6 +55,21 @@ public enum PropSyntax {
 	 */
 	OFFSET_FRONT("F"),
 	/**
+	 * Offset Center X [M]
+	 * @see OffsetData
+	 */
+	OFFSET_CENTER_X("M"),
+	/**
+	 * Offset Center Y [N]
+	 * @see OffsetData
+	 */
+	OFFSET_CENTER_Y("N"),
+	/**
+	 * Offset Center Z [O]
+	 * @see OffsetData
+	 */
+	OFFSET_CENTER_Z("O"),
+	/**
 	 * Rotation X [X]
 	 * @see OffsetData
 	 */
