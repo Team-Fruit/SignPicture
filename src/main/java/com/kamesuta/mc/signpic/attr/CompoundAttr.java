@@ -21,6 +21,9 @@ import com.kamesuta.mc.signpic.attr.prop.AnimationData;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetDoublePropBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetPropBuilder;
+import com.kamesuta.mc.signpic.attr.prop.PropSyntax;
 import com.kamesuta.mc.signpic.attr.prop.RotationData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.DiffRotation;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.KeyRotation;
@@ -70,7 +73,19 @@ public class CompoundAttr {
 	public final @Nonnull PropAnimator<OffsetData, OffsetData, OffsetData> offsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new IPropBuilderBuilder<OffsetData, OffsetData>() {
 		@Override
 		public @Nonnull OffsetBuilder builder() {
-			return new OffsetBuilder();
+			return new OffsetBuilder(
+					new OffsetDoublePropBuilder(PropSyntax.OFFSET_LEFT.id, PropSyntax.OFFSET_RIGHT.id),
+					new OffsetDoublePropBuilder(PropSyntax.OFFSET_DOWN.id, PropSyntax.OFFSET_UP.id),
+					new OffsetDoublePropBuilder(PropSyntax.OFFSET_BACK.id, PropSyntax.OFFSET_FRONT.id));
+		}
+	}));
+	public final @Nonnull PropAnimator<OffsetData, OffsetData, OffsetData> centeroffsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(new IPropBuilderBuilder<OffsetData, OffsetData>() {
+		@Override
+		public @Nonnull OffsetBuilder builder() {
+			return new OffsetBuilder(
+					new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_X.id),
+					new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_Y.id),
+					new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_Z.id));
 		}
 	}));
 	public final @Nonnull PropAnimator<KeyRotation, RotationData, DiffRotation> rotations = add(new PropAnimator<KeyRotation, RotationData, DiffRotation>(new IPropBuilderBuilder<DiffRotation, KeyRotation>() {

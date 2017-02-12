@@ -11,6 +11,9 @@ import org.apache.commons.lang3.Validate;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetDoublePropBuilder;
+import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetPropBuilder;
+import com.kamesuta.mc.signpic.attr.prop.PropSyntax;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBlend.TextureBlendBuilder;
@@ -24,7 +27,14 @@ public class CompoundAttrBuilder {
 	private @Nonnull Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
 
 	public final @Nonnull SizeBuilder size = new SizeBuilder();
-	public final @Nonnull OffsetBuilder offset = add(new OffsetBuilder());
+	public final @Nonnull OffsetBuilder offset = add(new OffsetBuilder(
+			new OffsetDoublePropBuilder(PropSyntax.OFFSET_LEFT.id, PropSyntax.OFFSET_RIGHT.id),
+			new OffsetDoublePropBuilder(PropSyntax.OFFSET_DOWN.id, PropSyntax.OFFSET_UP.id),
+			new OffsetDoublePropBuilder(PropSyntax.OFFSET_BACK.id, PropSyntax.OFFSET_FRONT.id)));
+	public final @Nonnull OffsetBuilder centeroffset = add(new OffsetBuilder(
+			new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_X.id),
+			new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_Y.id),
+			new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_Z.id)));
 	public final @Nonnull RotationBuilder rotation = add(new RotationBuilder());
 	public final @Nonnull TextureFloatBuilder u = add(new TextureFloatBuilder(TextureFloatType.U));
 	public final @Nonnull TextureFloatBuilder v = add(new TextureFloatBuilder(TextureFloatType.V));

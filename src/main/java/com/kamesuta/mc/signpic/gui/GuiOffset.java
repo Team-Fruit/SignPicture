@@ -118,7 +118,7 @@ public class GuiOffset extends WPanel {
 		protected @Nonnull VMotion left;
 		protected @Nonnull OffsetPropBuilder offset;
 
-		public OffsetElement(final @Nonnull R position, final @Nonnull VMotion left, final int i, final @Nonnull OffsetPropBuilder offset) {
+		public OffsetElement(final @Nonnull R position, final @Nonnull VMotion left, final int i, final @Nonnull OffsetPropBuilder z) {
 			super(position);
 			this.label = new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)));
 			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
@@ -148,7 +148,7 @@ public class GuiOffset extends WPanel {
 				}
 			};
 			this.left = left;
-			this.offset = offset;
+			this.offset = z;
 		}
 
 		@Override
