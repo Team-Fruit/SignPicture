@@ -65,7 +65,7 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 
 	public static @Nonnull SizeData create(final @Nullable SizeData base, final @Nonnull SizeData diff) {
 		if (base==null)
-			return create(diff.getWidth(), diff.getHeight());
+			return diff;
 		else
 			return new DiffSizeData(base, diff);
 	}

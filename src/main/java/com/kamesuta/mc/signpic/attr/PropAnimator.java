@@ -1,11 +1,12 @@
 package com.kamesuta.mc.signpic.attr;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 
 public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame, Diffed extends KeyFrame> {
-	private @Nonnull KeyFrame base;
+	private @Nullable KeyFrame base;
 	private final @Nonnull IPropBuilderBuilder<Diffed, KeyFrame> metabuilder;
 	private @Nonnull IPropBuilder<Diffed, KeyFrame> builder;
 	private final @Nonnull PropAnimation<KeyFrame, InterFrame> movie;
@@ -14,7 +15,7 @@ public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, Inte
 	public PropAnimator(final @Nonnull IPropBuilderBuilder<Diffed, KeyFrame> metabuilder) {
 		this.metabuilder = metabuilder;
 		this.builder = metabuilder.builder();
-		this.movie = new PropAnimation<KeyFrame, InterFrame>(this.base = this.builder.diff(this.base));
+		this.movie = new PropAnimation<KeyFrame, InterFrame>(this.builder.diff(this.base));
 	}
 
 	public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
