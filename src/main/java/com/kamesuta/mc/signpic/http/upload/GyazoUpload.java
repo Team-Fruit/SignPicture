@@ -80,7 +80,7 @@ public class GyazoUpload extends Communicate implements Progressable, IUploader 
 				}
 			};
 
-			builder.addTextBody("client_id", this.key);
+			builder.addTextBody("access_token", this.key);
 			builder.addBinaryBody("imagedata", countupstream, ContentType.DEFAULT_BINARY, this.upreq.getName());
 			httppost.setEntity(builder.build());
 
