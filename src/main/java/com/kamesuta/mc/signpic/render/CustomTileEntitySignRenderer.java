@@ -41,7 +41,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 	public CustomTileEntitySignRenderer() {
 	}
 
-	public void renderSignPicture(final @Nonnull Entry entry, final float opacity) {
+	public static void renderSignPicture(final @Nonnull Entry entry, final float opacity) {
 		// Load Image
 		final Content content = entry.getContent();
 
@@ -96,7 +96,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glTranslatef(-centeroffset.x.offset, -centeroffset.y.offset, -centeroffset.z.offset);
 
 		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
-		OpenGL.glScalef(1f, -1f, 1f);
+		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? 1f : -1f, 1f);
 
 		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
 

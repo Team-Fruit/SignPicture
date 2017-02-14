@@ -8,8 +8,6 @@ import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
-import com.kamesuta.mc.signpic.attr.prop.OffsetData;
-import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -83,11 +81,16 @@ public class CustomItemSignRenderer implements IItemRenderer {
 				OpenGL.glTranslatef(.5f, 1f, 0f);
 				OpenGL.glScalef(-1f, -1f, 1f);
 			}
+			OpenGL.glTranslatef(size.getWidth()/2f, .5f, 0f);
+			OpenGL.glScalef(1f, -1f, 1f);
+			CustomTileEntitySignRenderer.renderSignPicture(entry, 1f);
+			/*
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
 			final OffsetData offset = attr.offsets.getMovie().get();
 			OpenGL.glTranslatef(offset.x.offset, -offset.y.offset, offset.z.offset);
 			RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
 			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
+			*/
 		}
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
