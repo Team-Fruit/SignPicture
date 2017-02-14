@@ -21,7 +21,7 @@ public interface TextureData {
 		public static final float defaultCS = 1f;
 		public static final float defaultOpacity = 10f;
 		public static final float defaultLight = -1f;
-		public static final float failedLight = -2f;
+		public static final float failedLight = -3f;
 
 		public final @Nonnull TextureFloatType type;
 		public final float data;
