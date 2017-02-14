@@ -22,6 +22,7 @@ import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -61,7 +62,8 @@ public class GuiImage extends WFrame {
 						if (GuiImage.this.entry.id instanceof PreviewEntryId||GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
-						OpenGL.glScalef(a.w(), a.h(), 1f);
+						final SizeData size = meta.sizes.getMovie().get();
+						OpenGL.glScalef(size.getWidth()<0 ? -a.w() : a.w(), size.getHeight()<0 ? -a.h() : a.h(), 1f);
 
 						if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 							OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
