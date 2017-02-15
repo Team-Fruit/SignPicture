@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.plugin.packet;
 
+import javax.annotation.Nonnull;
+
 import com.kamesuta.mc.signpic.Client;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,8 +16,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 
 public class PacketHandler {
-	public static PacketHandler instance = new PacketHandler();
-	public static FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("signpic.list");
+	public static @Nonnull PacketHandler instance = new PacketHandler();
+	public static @Nonnull FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("signpic.list");
 
 	private PacketHandler() {
 	}
@@ -25,7 +27,7 @@ public class PacketHandler {
 	}
 
 	@SubscribeEvent
-	public void onClientPacket(final FMLNetworkEvent.ClientCustomPacketEvent event) {
+	public void onClientPacket(final @Nonnull FMLNetworkEvent.ClientCustomPacketEvent event) {
 		final Packet packet = event.packet.toC17Packet();
 		if (packet instanceof C17PacketCustomPayload) {
 			final C17PacketCustomPayload pluginmessage = (C17PacketCustomPayload) packet;
@@ -33,11 +35,11 @@ public class PacketHandler {
 		}
 	}
 
-	public void onPacket(final String data) {
+	public void onPacket(final @Nonnull String data) {
 		final SignPicturePacket packet = Client.gson.fromJson(data, SignPicturePacket.class);
 	}
 
-	public void sendPacket(final SignPicturePacket p) {
+	public void sendPacket(final @Nonnull SignPicturePacket p) {
 		final byte[] message = Client.gson.toJson(p).getBytes();
 		final ByteBuf data = Unpooled.wrappedBuffer(message);
 		final C17PacketCustomPayload packet = new C17PacketCustomPayload("signpic.list", new PacketBuffer(data));

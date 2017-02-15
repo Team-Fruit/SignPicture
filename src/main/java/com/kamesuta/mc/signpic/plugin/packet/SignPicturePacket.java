@@ -1,11 +1,13 @@
 package com.kamesuta.mc.signpic.plugin.packet;
 
-public class SignPicturePacket {
-	public String command;
-	public String token;
-	public String data;
+import javax.annotation.Nonnull;
 
-	public SignPicturePacket(final String command, final String token, final String data) {
+public class SignPicturePacket {
+	public @Nonnull String command;
+	public @Nonnull String token;
+	public @Nonnull String data;
+
+	public SignPicturePacket(final @Nonnull String command, final @Nonnull String token, final @Nonnull String data) {
 		this.command = command;
 		this.token = token;
 		this.data = data;
