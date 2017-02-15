@@ -208,7 +208,7 @@ public class GuiImage extends WFrame {
 				int lcenter = 0;
 				int lpicture = 0;
 
-				if (lightx!=-2||lighty!=-2||lightx!=-3||lighty!=-3)
+				if (lightx!=-2&&lightx!=-3||lighty!=-2&&lighty!=-3)
 					lsign = Client.mc.theWorld.getLightBrightnessForSkyBlocks(MathHelper.floor_float(x), MathHelper.floor_float(y), MathHelper.floor_float(z), 0);
 
 				if (lightx==-2||lighty==-2||lightx==-3||lighty==-3) {
