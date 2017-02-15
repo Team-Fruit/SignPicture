@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
@@ -16,6 +17,7 @@ import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.plugin.packet.PacketHandler;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
@@ -27,6 +29,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.MouseEvent;
@@ -52,8 +55,15 @@ public class CoreHandler {
 		MinecraftForge.EVENT_BUS.register(this);
 		KeyHandler.init();
 		SignHandler.init();
+		PacketHandler.init();
 		this.informationHandler.init();
 		this.apiHandler.init();
+	}
+
+	private @Nullable GuiScreen guiLater;
+
+	public void openLater(final GuiScreen s) {
+		this.guiLater = s;
 	}
 
 	@SubscribeEvent
@@ -116,6 +126,10 @@ public class CoreHandler {
 	@SubscribeEvent
 	public void onTick(final @Nonnull ClientTickEvent event) {
 		if (event.phase==Phase.END) {
+			if (this.guiLater!=null) {
+				Client.mc.displayGuiScreen(this.guiLater);
+				this.guiLater = null;
+			}
 			Client.startSection("signpic_load");
 			debugKey();
 			this.keyHandler.onTick();
@@ -151,7 +165,7 @@ public class CoreHandler {
 	}
 
 	private static class DebugCommunicate implements ICommunicate, Progressable {
-		private @Nonnull State state = new State();
+		private @Nonnull final State state = new State();
 		{
 			this.state.setName("Debug Progress").getProgress().setOverall(10);
 		}
