@@ -287,7 +287,7 @@ public class GuiMain extends WFrame {
 							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								try {
 									final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
-									FileUtilitiy.transfer(transferable);
+									FileUtilitiy.transfer(transferable, null);
 								} catch (final Exception e) {
 									Log.notice(I18n.format("signpic.gui.notice.paste.unsupported", e));
 								}

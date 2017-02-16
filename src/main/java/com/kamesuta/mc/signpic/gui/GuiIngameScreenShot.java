@@ -29,6 +29,7 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.http.upload.UploadCallback;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
@@ -123,7 +124,7 @@ public class GuiIngameScreenShot extends WFrame {
 						image = takeScreenshot(mc.getFramebuffer());
 					if (image!=null)
 						try {
-							FileUtilitiy.uploadImage(image);
+							FileUtilitiy.uploadImage(image, UploadCallback.copyOnDone);
 						} catch (final IOException e) {
 							Log.notice(I18n.format("signpic.gui.notice.screenshot.ingame.capture.error", e));
 						}
