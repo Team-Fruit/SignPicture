@@ -16,6 +16,7 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
@@ -90,8 +91,9 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			// Draw Canvas
 			OpenGL.glDisable(GL_CULL_FACE);
 
-			entry.gui.applyLight(tile.xCoord, tile.yCoord, tile.zCoord, getSignRotate(tile));
-			entry.gui.renderSignPicture(opacity);
+			final GuiImage gui = entry.getGui();
+			gui.applyLight(tile.xCoord, tile.yCoord, tile.zCoord, getSignRotate(tile));
+			gui.renderSignPicture(opacity);
 
 			OpenGL.glEnable(GL_CULL_FACE);
 

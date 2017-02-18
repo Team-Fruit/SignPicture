@@ -6,6 +6,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
 
 import net.minecraft.client.gui.FontRenderer;
 
@@ -29,8 +31,9 @@ public class CustomBookRenderer {
 
 		for (final Iterator<?> iterator = list.iterator(); iterator.hasNext(); p_78279_3_ += f.FONT_HEIGHT) {
 			final String s1 = (String) iterator.next();
-			f.drawString(s1, p_78279_2_, p_78279_3_, p_78279_4_);
+			final Entry entry = EntryId.from(s1).entry();
+			f.drawString(s1, p_78279_2_, p_78279_3_, p_78279_5_);
 		}
-		//f.drawSplitString(p_78279_1_, p_78279_2_, p_78279_3_, p_78279_4_, p_78279_5_);
+		// f.drawSplitString(p_78279_1_, p_78279_2_, p_78279_3_, p_78279_4_, p_78279_5_);
 	}
 }
