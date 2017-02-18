@@ -320,6 +320,7 @@ public class GuiMain extends WFrame {
 							@Override
 							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								CurrentMode.instance.setMode(CurrentMode.Mode.OPTION);
+								CurrentMode.instance.setState(CurrentMode.State.SEE, true);
 								requestClose();
 								return true;
 							}
