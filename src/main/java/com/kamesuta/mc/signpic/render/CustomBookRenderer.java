@@ -42,8 +42,11 @@ public class CustomBookRenderer {
 					final Entry entry = EntryId.from(s2).entry();
 					if (entry.isValid()) {
 						final GuiImage gui = entry.getGui();
+						OpenGL.glPushMatrix();
 						OpenGL.glTranslatef(p_78279_2_, p_78279_3_, 0f);
 						gui.drawScreen(0, 0, 0f, 1f, p_78279_4_, 50f);
+						OpenGL.glPopMatrix();
+						WRenderer.startTexture();
 						break b;
 					}
 				}
