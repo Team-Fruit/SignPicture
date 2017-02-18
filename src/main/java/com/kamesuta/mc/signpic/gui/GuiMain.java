@@ -285,6 +285,13 @@ public class GuiMain extends WFrame {
 						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+								Client.openURL(GuiMain.this.signbuilder.getURI());
+								return true;
+							}
+						}.setText(I18n.format("signpic.gui.editor.openurl")));
+						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
+							@Override
+							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								try {
 									final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 									FileUtilitiy.transfer(transferable, null);

@@ -99,7 +99,7 @@ public class GuiSignOption extends WFrame {
 						add(new WPanel(new R(Coord.pleft(-.5f), Coord.ptop(-.5f))) {
 							@Override
 							protected void initWidget() {
-								float top = -25f;
+								float top = -25f*1.5f;
 								final float d = 1f;
 								final float n = .1f;
 								final float od = .7f;
@@ -169,6 +169,22 @@ public class GuiSignOption extends WFrame {
 										CurrentMode.instance.setEntryId(idb.build());
 									}
 								});
+								final VCommon v02 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+								final VCommon o02 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+								add(new MButton(new R(Coord.right(v02), Coord.top(top += 25f), Coord.height(20f))) {
+									@Override
+									protected @Nonnull VCommon initOpacity() {
+										return o02;
+									}
+
+									@Override
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+										final Content c = GuiSignOption.this.entry.getContent();
+										if (c!=null)
+											Client.openURL(c.id.getURI());
+										return false;
+									}
+								}.setText(I18n.format("signpic.gui.settings.sign.openurl")));
 								final VCommon v2 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o2 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
 								add(new MButton(new R(Coord.right(v2), Coord.top(top += 25f), Coord.height(20f))) {
