@@ -71,14 +71,25 @@ public class GuiImage extends WFrame {
 						if (GuiImage.this.entry.id instanceof PreviewEntryId||GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
 							opacity *= .5f;
 						OpenGL.glPushMatrix();
-						OpenGL.glScalef(a.w(), a.h(), 1f);
-
 						if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 							OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
 							OpenGL.glLineWidth(1f);
 							WRenderer.startShape();
-							drawAbs(0, 0, 1, 1, GL_LINE_LOOP);
+							drawAbs(0, 0, a.w(), a.h(), GL_LINE_LOOP);
+							final float h = a.h()-.5f;
+							final WVertex v = begin(GL_LINES);
+							v.pos(a.w()/2f, h, 0f);
+							v.pos(0f, 0f, 0f);
+							v.pos(a.w()/2f, h, 0f);
+							v.pos(a.w(), 0f, 0f);
+							v.pos(a.w()/2f, h, 0f);
+							v.pos(a.w(), a.h(), 0f);
+							v.pos(a.w()/2f, h, 0f);
+							v.pos(0f, a.h(), 0f);
+							v.draw();
 						}
+						OpenGL.glScalef(a.w(), a.h(), 1f);
+
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
