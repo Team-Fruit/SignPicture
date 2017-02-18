@@ -106,6 +106,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
 		OpenGL.glEnable(GL11.GL_DEPTH_TEST);
+		WRenderer.startTexture();
 	}
 
 	@Override
