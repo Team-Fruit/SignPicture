@@ -33,32 +33,33 @@ public class CustomBookRenderer {
 	public static void hookDrawSplitString(@Nonnull final String s, final int x, final int y, final int width, final int color) {
 		final FontRenderer f = WRenderer.font();
 
-		final String str = StringUtils.chop(s);
+		final String str = StringUtils.removeEnd(s, "\n");
 
 		final String[] lines = str.split("\n");
 		final List<String> newlines = Lists.newLinkedList();
-		for (final String line : lines) {
+		for (String line : lines) {
 			final int index = StringUtils.lastIndexOf(line, "}");
-			b: {
-				final List<?> list = f.listFormattedStringToWidth(line, width);
-				if (index!=StringUtils.INDEX_NOT_FOUND) {
-					final String s2 = StringUtils.substring(line, 0, index+1);
-					final Entry entry = EntryId.from(s2).entry();
-					if (entry.isValid()) {
-						newlines.add(line);
-						final int num = list.size();
-						for (int i = 1; i<num; i++)
-							newlines.add("");
-						break b;
-					}
+			if (index!=StringUtils.INDEX_NOT_FOUND) {
+				final String s2 = StringUtils.substring(line, 0, index+1);
+				final Entry entry = EntryId.from(s2).entry();
+				if (entry.isValid()) {
+					newlines.add(s2);
+					line = StringUtils.substringAfterLast(line, "}");
+					/*
+					final List<?> list = f.listFormattedStringToWidth(s2, width);
+					final int num = list.size();
+					for (int i = 1; i<num; i++)
+						newlines.add("");
+					*/
 				}
-				for (final Object o : list)
-					newlines.add((String) o);
 			}
+			final List<?> list = f.listFormattedStringToWidth(line, width);
+			for (final Object o : list)
+				newlines.add((String) o);
 		}
 
 		int iy = y;
-		for (final Iterator<String> itr = newlines.iterator(); itr.hasNext(); iy += f.FONT_HEIGHT) {
+		for (final Iterator<String> itr = newlines.iterator(); itr.hasNext();) {
 			final String s1 = itr.next();
 			final int index = StringUtils.lastIndexOf(s1, "}");
 			c: {
@@ -79,13 +80,14 @@ public class CustomBookRenderer {
 						OpenGL.glTranslatef(size1.getWidth()/2, size1.getHeight()+(size1.getHeight()>=0 ? 0 : -size1.getHeight())-.5f, 0f);
 						OpenGL.glScalef(1f, -1f, 1f);
 						gui.renderSignPicture(1f);
-						;
+
 						OpenGL.glPopMatrix();
 						WRenderer.startTexture();
 						break c;
 					}
 				}
 				f.drawString(s1, x, iy, color);
+				iy += f.FONT_HEIGHT;
 			}
 		}
 		// f.drawSplitString(p_78279_1_, p_78279_2_, p_78279_3_, p_78279_4_, p_78279_5_);
