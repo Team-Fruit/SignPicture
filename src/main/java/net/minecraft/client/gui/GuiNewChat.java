@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -149,11 +150,14 @@ public class GuiNewChat extends Gui {
 									final Content content = entry.getContent();
 
 									final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-									final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(this.mc.fontRenderer.FONT_HEIGHT, this.mc.fontRenderer.FONT_HEIGHT));
+									final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(this.mc.fontRenderer.FONT_HEIGHT*4f, this.mc.fontRenderer.FONT_HEIGHT*4f));
 									OpenGL.glPushMatrix();
 									OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
-									entry.getGui().renderSignPicture(1f, 1f);
+									OpenGL.glTranslatef(.5f, -.5f, 0f);
+									;//OpenGL.glTranslatef(size2.getWidth()/2, +(size2.getHeight()+(size2.getHeight()>=0 ? 0 : -size2.getHeight())-.5f), 0f);
+									entry.getGui().renderSignPicture(f, 1f);
 									OpenGL.glPopMatrix();
+									WRenderer.startTexture();
 								} else {
 									final String s = chatline.func_151461_a().getFormattedText();
 									this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
