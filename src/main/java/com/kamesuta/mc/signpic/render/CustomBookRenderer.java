@@ -38,24 +38,25 @@ public class CustomBookRenderer {
 		final String[] lines = str.split("\n");
 		final List<String> newlines = Lists.newLinkedList();
 		for (String line : lines) {
+			int num = 0;
 			final int index = StringUtils.lastIndexOf(line, "}");
 			if (index!=StringUtils.INDEX_NOT_FOUND) {
 				final String s2 = StringUtils.substring(line, 0, index+1);
 				final Entry entry = EntryId.from(s2).entry();
 				if (entry.isValid()) {
 					newlines.add(s2);
+					final List<?> list = f.listFormattedStringToWidth(line, width);
 					line = StringUtils.substringAfterLast(line, "}");
-					/*
-					final List<?> list = f.listFormattedStringToWidth(s2, width);
-					final int num = list.size();
-					for (int i = 1; i<num; i++)
-						newlines.add("");
-					*/
+					num = list.size();
 				}
 			}
 			final List<?> list = f.listFormattedStringToWidth(line, width);
-			for (final Object o : list)
+			for (final Object o : list) {
 				newlines.add((String) o);
+				num--;
+			}
+			for (int i = 0; i<num; i++)
+				newlines.add("");
 		}
 
 		int iy = y;
