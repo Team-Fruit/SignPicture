@@ -3,10 +3,11 @@ package com.kamesuta.mc.signpic.render;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
@@ -29,18 +30,38 @@ public class CustomBookRenderer {
 
 	}
 
-	public static void hookDrawSplitString(@Nullable String str, final int x, int y, final int width, final int color) {
+	public static void hookDrawSplitString(@Nonnull final String s, final int x, final int y, final int width, final int color) {
 		final FontRenderer f = WRenderer.font();
 
-		while (str!=null&&str.endsWith("\n"))
-			str = str.substring(0, str.length()-1);
+		final String str = StringUtils.chop(s);
 
-		final List<?> list = f.listFormattedStringToWidth(str, width);
-
-		for (final Iterator<?> iterator = list.iterator(); iterator.hasNext(); y += f.FONT_HEIGHT) {
-			final String s1 = (String) iterator.next();
-			final int index = StringUtils.lastIndexOf(s1, "}");
+		final String[] lines = str.split("\n");
+		final List<String> newlines = Lists.newLinkedList();
+		for (final String line : lines) {
+			final int index = StringUtils.lastIndexOf(line, "}");
 			b: {
+				final List<?> list = f.listFormattedStringToWidth(line, width);
+				if (index!=StringUtils.INDEX_NOT_FOUND) {
+					final String s2 = StringUtils.substring(line, 0, index+1);
+					final Entry entry = EntryId.from(s2).entry();
+					if (entry.isValid()) {
+						newlines.add(line);
+						final int num = list.size();
+						for (int i = 1; i<num; i++)
+							newlines.add("");
+						break b;
+					}
+				}
+				for (final Object o : list)
+					newlines.add((String) o);
+			}
+		}
+
+		int iy = y;
+		for (final Iterator<String> itr = newlines.iterator(); itr.hasNext(); iy += f.FONT_HEIGHT) {
+			final String s1 = itr.next();
+			final int index = StringUtils.lastIndexOf(s1, "}");
+			c: {
 				if (index!=StringUtils.INDEX_NOT_FOUND) {
 					final String s2 = StringUtils.substring(s1, 0, index+1);
 					final Entry entry = EntryId.from(s2).entry();
@@ -53,7 +74,7 @@ public class CustomBookRenderer {
 						final SizeData size1 = size00.aspectSize(size01);
 						final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(f.FONT_HEIGHT, f.FONT_HEIGHT));
 						OpenGL.glPushMatrix();
-						OpenGL.glTranslatef(x, y, 0f);
+						OpenGL.glTranslatef(x, iy, 0f);
 						OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
 						OpenGL.glTranslatef(size1.getWidth()/2, size1.getHeight()+(size1.getHeight()>=0 ? 0 : -size1.getHeight())-.5f, 0f);
 						OpenGL.glScalef(1f, -1f, 1f);
@@ -61,10 +82,10 @@ public class CustomBookRenderer {
 						;
 						OpenGL.glPopMatrix();
 						WRenderer.startTexture();
-						break b;
+						break c;
 					}
 				}
-				f.drawString(s1, x, y, color);
+				f.drawString(s1, x, iy, color);
 			}
 		}
 		// f.drawSplitString(p_78279_1_, p_78279_2_, p_78279_3_, p_78279_4_, p_78279_5_);
