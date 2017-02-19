@@ -201,7 +201,7 @@ public class EntryId {
 				id = StringUtils.substring(id(), StringUtils.indexOf(id(), "#")+1, StringUtils.lastIndexOf(id(), "{"));
 			else
 				id = id();
-			return new ContentId(id);
+			return ContentId.from(id);
 		}
 		return null;
 	}

@@ -97,7 +97,7 @@ public class Client {
 		mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(location, volume));
 	}
 
-	private static final Set<String> schemes = ImmutableSet.of("http", "https");
+	public static final Set<String> schemes = ImmutableSet.of("http", "https");
 
 	public static boolean openURL(final @Nonnull String uri) {
 		try {

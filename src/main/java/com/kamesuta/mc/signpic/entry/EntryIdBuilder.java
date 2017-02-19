@@ -23,8 +23,9 @@ public class EntryIdBuilder {
 		return this;
 	}
 
-	public void setMeta(final @Nullable CompoundAttrBuilder meta) {
+	public @Nonnull EntryIdBuilder setMeta(final @Nullable CompoundAttrBuilder meta) {
 		this.meta = meta;
+		return this;
 	}
 
 	public @Nonnull CompoundAttrBuilder getMeta() {
@@ -34,8 +35,9 @@ public class EntryIdBuilder {
 			return this.meta = new CompoundAttrBuilder();
 	}
 
-	public void setURI(final @Nullable String uri) {
+	public @Nonnull EntryIdBuilder setURI(final @Nullable String uri) {
 		this.uri = uri;
+		return this;
 	}
 
 	public @Nonnull String getURI() {
@@ -46,6 +48,6 @@ public class EntryIdBuilder {
 	}
 
 	public @Nonnull EntryId build() {
-		return new EntryId("#"+new ContentId(getURI()).getID()+getMeta().compose());
+		return EntryId.from("#"+ContentId.from(getURI()).getID()+getMeta().compose());
 	}
 }
