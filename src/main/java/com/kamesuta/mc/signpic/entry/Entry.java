@@ -14,7 +14,7 @@ import com.kamesuta.mc.signpic.gui.GuiImage;
 public class Entry {
 	public final @Nonnull EntryId id;
 	public final @Nullable ContentId contentId;
-	public final @Nonnull GuiImage gui;
+	private @Nullable GuiImage gui;
 	private final boolean valid;
 	private final boolean outdated;
 
@@ -26,7 +26,12 @@ public class Entry {
 		this.valid = id.isValid();
 		this.outdated = id.isOutdated();
 		this.contentId = id.getContentId();
-		this.gui = new GuiImage(this);
+	}
+
+	public @Nonnull GuiImage getGui() {
+		if (this.gui!=null)
+			return this.gui;
+		return this.gui = new GuiImage(this);
 	}
 
 	public @Nullable Content getContent() {

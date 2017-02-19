@@ -143,7 +143,7 @@ public class GuiImage extends WFrame {
 		});
 	}
 
-	public void renderSignPicture(final float opacity) {
+	public void renderSignPicture(final float opacity, final float scale) {
 		// Load Image
 		final Content content = this.entry.getContent();
 
@@ -204,7 +204,8 @@ public class GuiImage extends WFrame {
 		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
 		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? 1f : -1f, 1f);
 
-		drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
+		OpenGL.glScalef(scale, scale, 1f);
+		drawScreen(0, 0, 0, opacity, size.getWidth()/scale, size.getHeight()/scale);
 
 		OpenGL.glPopMatrix();
 	}
