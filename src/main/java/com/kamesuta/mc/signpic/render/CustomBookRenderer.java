@@ -79,7 +79,7 @@ public class CustomBookRenderer {
 						OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
 						OpenGL.glTranslatef(size1.getWidth()/2, size1.getHeight()+(size1.getHeight()>=0 ? 0 : -size1.getHeight())-.5f, 0f);
 						OpenGL.glScalef(1f, -1f, 1f);
-						gui.renderSignPicture(1f);
+						gui.renderSignPicture(1f, 4f);
 
 						OpenGL.glPopMatrix();
 						WRenderer.startTexture();

@@ -85,7 +85,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			}
 			OpenGL.glTranslatef(size.getWidth()/2f, .5f, 0f);
 			OpenGL.glScalef(1f, -1f, 1f);
-			gui.renderSignPicture(1f);
+			gui.renderSignPicture(1f, 1f);
 			/*
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
 			final OffsetData offset = attr.offsets.getMovie().get();

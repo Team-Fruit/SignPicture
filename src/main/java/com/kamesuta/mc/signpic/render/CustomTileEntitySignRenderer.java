@@ -93,7 +93,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 
 			final GuiImage gui = entry.getGui();
 			gui.applyLight(tile.xCoord, tile.yCoord, tile.zCoord, getSignRotate(tile));
-			gui.renderSignPicture(opacity);
+			gui.renderSignPicture(opacity, 1f);
 
 			OpenGL.glEnable(GL_CULL_FACE);
 
