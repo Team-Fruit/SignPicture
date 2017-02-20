@@ -152,8 +152,10 @@ public class GuiNewChat extends Gui {
 									final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 									final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(this.mc.fontRenderer.FONT_HEIGHT*4f, this.mc.fontRenderer.FONT_HEIGHT*4f));
 									OpenGL.glPushMatrix();
+									OpenGL.glTranslatef(0f, j2+9, 0f);
 									OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
-									OpenGL.glTranslatef(.5f, -.5f, 0f);
+									OpenGL.glTranslatef(.5f, 0f, 0f);
+									OpenGL.glScalef(1f, -1f, 1f);
 									;//OpenGL.glTranslatef(size2.getWidth()/2, +(size2.getHeight()+(size2.getHeight()>=0 ? 0 : -size2.getHeight())-.5f), 0f);
 									entry.getGui().renderSignPicture(f, 1f);
 									OpenGL.glPopMatrix();
