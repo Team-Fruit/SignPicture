@@ -68,10 +68,12 @@ public class GuiNewChat extends Gui {
 
 	public static class PicChatLine extends ChatLine {
 		public final @Nonnull Entry entry;
+		public final int num;
 
-		public PicChatLine(final int updateCounterCreated, @Nonnull final IChatComponent lineString, final int chatLineID, @Nonnull final Entry entry) {
+		public PicChatLine(final int updateCounterCreated, @Nonnull final IChatComponent lineString, final int chatLineID, @Nonnull final Entry entry, final int num) {
 			super(updateCounterCreated, lineString, chatLineID);
 			this.entry = entry;
+			this.num = num;
 		}
 	}
 
@@ -94,11 +96,9 @@ public class GuiNewChat extends Gui {
 			for (final ClickEvent link : links) {
 				final Entry entry = new EntryIdBuilder().setURI(link.getValue()).build().entry();
 				final Content content = entry.getContent();
-				if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE) {
-					list.add(0, new PicChatLine(updateCounter, chattext, chatLineID, entry));
-					for (int i = 0; i<3; i++)
-						list.add(0, new ChatLine(updateCounter, chattext, chatLineID));
-				}
+				if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
+					for (int i = 0; i<4; i++)
+						list.add(0, new PicChatLine(updateCounter, chattext, chatLineID, entry, i));
 			}
 		}
 	}
@@ -178,14 +178,15 @@ public class GuiNewChat extends Gui {
 								drawRect(b0, j2-9, b0+i1+4, j2, i2/2<<24);
 								GL11.glEnable(GL11.GL_BLEND); // FORGE: BugFix MC-36812 Chat Opacity Broken in 1.7.x
 								if (chatline instanceof PicChatLine) {
-									final Entry entry = ((PicChatLine) chatline).entry;
+									final PicChatLine cline = (PicChatLine) chatline;
+									final Entry entry = cline.entry;
 									final Content content = entry.getContent();
 
 									final int w = MathHelper.floor_float(func_146228_f()/func_146244_h());
 									final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 									final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(w, this.mc.fontRenderer.FONT_HEIGHT*4f));
 									OpenGL.glPushMatrix();
-									OpenGL.glTranslatef(0f, j2-9, 0f);
+									OpenGL.glTranslatef(0f, j2-9*(1+cline.num), 0f);
 									entry.getGui().drawScreen(0, 0, 0f, 1f, size2.getWidth(), size2.getHeight());
 									OpenGL.glPopMatrix();
 									WRenderer.startTexture();
