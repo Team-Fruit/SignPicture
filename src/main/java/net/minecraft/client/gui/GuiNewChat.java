@@ -47,6 +47,8 @@ public class GuiNewChat extends Gui {
 		this.mc = p_i1022_1_;
 	}
 
+	private final List<ChatLine> chatList = Lists.newArrayList();
+
 	public List<ClickEvent> getLinksFromChat(final IChatComponent chat) {
 		final List<ClickEvent> list = Lists.newLinkedList();
 		getLinksFromChat0(list, chat);
@@ -74,7 +76,31 @@ public class GuiNewChat extends Gui {
 	}
 
 	public void addLine(@Nonnull final ChatLine line) {
-		this.field_146253_i.add(0, line);
+		this.chatList.add(line);
+		updateLines();
+	}
+
+	public void updateLines() {
+		final List<ChatLine> list = this.field_146253_i;
+		list.clear();
+		for (final Object o : this.chatList) {
+			final ChatLine line = (ChatLine) o;
+			final IChatComponent c = line.func_151461_a();
+			final List<ClickEvent> links = getLinksFromChat(c);
+			final int updateCounter = line.getUpdatedCounter();
+			final IChatComponent chattext = new ChatComponentText("");
+			final int chatLineID = line.getChatLineID();
+			list.add(0, line);
+			for (final ClickEvent link : links) {
+				final Entry entry = new EntryIdBuilder().setURI(link.getValue()).build().entry();
+				final Content content = entry.getContent();
+				if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE) {
+					list.add(0, new PicChatLine(updateCounter, chattext, chatLineID, entry));
+					for (int i = 0; i<3; i++)
+						list.add(0, new ChatLine(updateCounter, chattext, chatLineID));
+				}
+			}
+		}
 	}
 
 	public void drawChat(final int p_146230_1_) {
@@ -98,28 +124,30 @@ public class GuiNewChat extends Gui {
 				int k1;
 				int i2;
 
-				final List<ChatLine> list = Lists.<ChatLine> newArrayList();
-				for (final Object o : this.field_146253_i) {
-					final ChatLine line = (ChatLine) o;
-					final IChatComponent c = line.func_151461_a();
-					final List<ClickEvent> links = getLinksFromChat(c);
-					final int updateCounter = line.getUpdatedCounter();
-					final IChatComponent chattext = new ChatComponentText("");
-					final int chatLineID = line.getChatLineID();
-					for (final ClickEvent link : links) {
-						final Entry entry = new EntryIdBuilder().setURI(link.getValue()).build().entry();
-						final Content content = entry.getContent();
-						if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE) {
-							for (int i = 0; i<3; i++)
-								list.add(new ChatLine(updateCounter, chattext, chatLineID));
-							list.add(new PicChatLine(updateCounter, chattext, chatLineID, entry));
-						}
-					}
-					list.add(line);
-				}
+				//				final List<ChatLine> list = Lists.<ChatLine> newArrayList();
+				//				for (final Object o : this.field_146253_i) {
+				//					final ChatLine line = (ChatLine) o;
+				//					final IChatComponent c = line.func_151461_a();
+				//					final List<ClickEvent> links = getLinksFromChat(c);
+				//					final int updateCounter = line.getUpdatedCounter();
+				//					final IChatComponent chattext = new ChatComponentText("");
+				//					final int chatLineID = line.getChatLineID();
+				//					for (final ClickEvent link : links) {
+				//						final Entry entry = new EntryIdBuilder().setURI(link.getValue()).build().entry();
+				//						final Content content = entry.getContent();
+				//						if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE) {
+				//							for (int i = 0; i<3; i++)
+				//								list.add(new ChatLine(updateCounter, chattext, chatLineID));
+				//							list.add(new PicChatLine(updateCounter, chattext, chatLineID, entry));
+				//						}
+				//					}
+				//					list.add(line);
+				//				}
 
-				for (j1 = 0; j1+this.field_146250_j<list.size()&&j1<j; ++j1) {
-					final ChatLine chatline = list.get(j1+this.field_146250_j);
+				updateLines();
+
+				for (j1 = 0; j1+this.field_146250_j<this.field_146253_i.size()&&j1<j; ++j1) {
+					final ChatLine chatline = (ChatLine) this.field_146253_i.get(j1+this.field_146250_j);
 
 					if (chatline!=null) {
 						k1 = p_146230_1_-chatline.getUpdatedCounter();
@@ -153,15 +181,12 @@ public class GuiNewChat extends Gui {
 									final Entry entry = ((PicChatLine) chatline).entry;
 									final Content content = entry.getContent();
 
+									final int w = MathHelper.floor_float(func_146228_f()/func_146244_h());
 									final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-									final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(this.mc.fontRenderer.FONT_HEIGHT*4f, this.mc.fontRenderer.FONT_HEIGHT*4f));
+									final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(w, this.mc.fontRenderer.FONT_HEIGHT*4f));
 									OpenGL.glPushMatrix();
-									OpenGL.glTranslatef(0f, j2+9, 0f);
-									OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
-									OpenGL.glTranslatef(.5f, 0f, 0f);
-									OpenGL.glScalef(1f, -1f, 1f);
-									;//OpenGL.glTranslatef(size2.getWidth()/2, +(size2.getHeight()+(size2.getHeight()>=0 ? 0 : -size2.getHeight())-.5f), 0f);
-									entry.getGui().renderSignPicture(f, 1f);
+									OpenGL.glTranslatef(0f, j2-9, 0f);
+									entry.getGui().drawScreen(0, 0, 0f, 1f, size2.getWidth(), size2.getHeight());
 									OpenGL.glPopMatrix();
 									WRenderer.startTexture();
 								} else {
