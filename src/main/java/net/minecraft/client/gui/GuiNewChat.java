@@ -73,6 +73,10 @@ public class GuiNewChat extends Gui {
 		}
 	}
 
+	public void addLine(@Nonnull final ChatLine line) {
+		this.field_146253_i.add(0, line);
+	}
+
 	public void drawChat(final int p_146230_1_) {
 		if (this.mc.gameSettings.chatVisibility!=EntityPlayer.EnumChatVisibility.HIDDEN) {
 			final int j = func_146232_i();
@@ -274,7 +278,7 @@ public class GuiNewChat extends Gui {
 		final boolean flag2 = getChatOpen();
 		IChatComponent ichatcomponent2;
 
-		for (final Iterator iterator = arraylist.iterator(); iterator.hasNext(); this.field_146253_i.add(0, new ChatLine(p_146237_3_, ichatcomponent2, p_146237_2_))) {
+		for (final Iterator iterator = arraylist.iterator(); iterator.hasNext(); addLine(new ChatLine(p_146237_3_, ichatcomponent2, p_146237_2_))) {
 			ichatcomponent2 = (IChatComponent) iterator.next();
 
 			if (flag2&&this.field_146250_j>0) {

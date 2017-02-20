@@ -89,6 +89,7 @@ public class SignPicLabel extends WBase {
 
 		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
 		OpenGL.glTranslatef((a.w()-size2.getWidth())/2f, (a.h()-size2.getHeight())/2f, 0f);
+		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? -1f : 1f, 1f);
 		OpenGL.glScalef(100, 100, 1f);
 		entry.getGui().drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
 
