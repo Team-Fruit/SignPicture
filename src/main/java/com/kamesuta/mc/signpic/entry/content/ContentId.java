@@ -8,6 +8,9 @@ import org.apache.commons.lang3.StringUtils;
 import net.minecraft.util.ResourceLocation;
 
 public class ContentId {
+	public static final @Nonnull ResourceLocation hideTexture = new ResourceLocation("signpic", "textures/state/hide.png");
+	public static final @Nonnull ContentId hideContent = ContentId.fromResource(hideTexture);
+
 	private final @Nonnull String id;
 
 	protected ContentId(@Nonnull String uri) {

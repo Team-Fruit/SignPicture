@@ -94,6 +94,7 @@ signpic.gui.settings.api.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
 signpic.gui.settings.paas=Prevent Cheat
+signpic.gui.settings.hide=Disable
 ### Sign Option
 signpic.gui.settings.sign=Sign Option
 signpic.gui.settings.sign.load=Load URL and Meta

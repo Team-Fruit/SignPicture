@@ -14,6 +14,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MCheckBox;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
@@ -44,6 +45,7 @@ import com.kamesuta.mc.signpic.Config.ConfigProperty;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
@@ -148,7 +150,7 @@ public class GuiSettings extends WPanel {
 								tab.addTab(I18n.format("signpic.gui.settings.api.upimage"), new GuiApis<ImageUploaderFactory>(new R(), Apis.instance.imageUploaders, I18n.format("signpic.gui.settings.api.upimage.desc")));
 								tab.addTab(I18n.format("signpic.gui.settings.api.urlshortener"), new GuiApis<URLShortenerFactory>(new R(), Apis.instance.urlShorteners, I18n.format("signpic.gui.settings.api.urlshortener.desc")));
 								add(tab);
-								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
+								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+80), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected void initWidget() {
 										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
@@ -168,6 +170,18 @@ public class GuiSettings extends WPanel {
 										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
 									}
 								});
+								add(new FunnyButton(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+										CurrentMode.instance.toggleState(CurrentMode.State.HIDE);
+										return true;
+									}
+
+									@Override
+									public boolean isHighlight() {
+										return CurrentMode.instance.isState(CurrentMode.State.HIDE);
+									}
+								}.setText(I18n.format("signpic.gui.settings.hide")));
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+40), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {

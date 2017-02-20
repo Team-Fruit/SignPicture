@@ -10,6 +10,7 @@ import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiImage;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 public class Entry {
 	public final @Nonnull EntryId id;
@@ -35,7 +36,9 @@ public class Entry {
 	}
 
 	public @Nullable Content getContent() {
-		if (this.contentId!=null)
+		if (CurrentMode.instance.isState(CurrentMode.State.HIDE))
+			return ContentId.hideContent.content();
+		else if (this.contentId!=null)
 			return this.contentId.content();
 		else
 			return null;

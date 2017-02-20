@@ -51,6 +51,7 @@ signpic.gui.settings.api.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
 signpic.gui.settings.paas=チート回避
+signpic.gui.settings.hide=無効化
 ### Sign Option
 signpic.gui.settings.sign=看板オプション
 signpic.gui.settings.sign.load=URLとメタ情報をロード
