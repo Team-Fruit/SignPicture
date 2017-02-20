@@ -1,10 +1,11 @@
-package net.minecraft.client.gui;
+package com.kamesuta.mc.signpic.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,10 @@ import com.kamesuta.mc.signpic.state.StateType;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ChatLine;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
@@ -31,6 +36,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 
 @SideOnly(Side.CLIENT)
+@SuppressWarnings("all")
 public class GuiNewChat extends Gui {
 	private static final Logger logger = LogManager.getLogger();
 	private final Minecraft mc;
@@ -373,7 +379,7 @@ public class GuiNewChat extends Gui {
 		}
 	}
 
-	public IChatComponent func_146236_a(final int p_146236_1_, final int p_146236_2_) {
+	public @Nullable IChatComponent func_146236_a(final int p_146236_1_, final int p_146236_2_) {
 		if (!getChatOpen())
 			return null;
 		else {
