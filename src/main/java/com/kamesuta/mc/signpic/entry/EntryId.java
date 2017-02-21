@@ -168,8 +168,12 @@ public class EntryId {
 	}
 
 	private boolean hasMeta() {
-		return StringUtils.endsWith(id(), "]")&&StringUtils.contains(id(), "[")&&StringUtils.contains(StringUtils.substring(id(), 0, StringUtils.lastIndexOf(id(), "[")), ".")||
-				hasPrefix()&&StringUtils.endsWith(id(), "}")&&StringUtils.contains(id(), "{");
+		if (StringUtils.endsWith(id(), "]")&&StringUtils.contains(id(), "[")) {
+			final String idstr = StringUtils.substring(id(), 0, StringUtils.lastIndexOf(id(), "["));
+			return StringUtils.contains(idstr, ".")&&StringUtils.contains(idstr, "/");
+		} else if (hasPrefix()&&StringUtils.endsWith(id(), "}")&&StringUtils.contains(id(), "{"))
+			return true;
+		return false;
 	}
 
 	public boolean isOutdated() {
