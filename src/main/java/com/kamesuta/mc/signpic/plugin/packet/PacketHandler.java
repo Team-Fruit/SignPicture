@@ -2,7 +2,10 @@ package com.kamesuta.mc.signpic.plugin.packet;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.plugin.gui.GuiManager;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.FMLEventChannel;
@@ -37,6 +40,13 @@ public class PacketHandler {
 
 	public void onPacket(final @Nonnull String data) {
 		final SignPicturePacket packet = Client.gson.fromJson(data, SignPicturePacket.class);
+		if (packet!=null) {
+			if (StringUtils.equals(packet.command, "open"))
+				Client.handler.openLater(new GuiManager(packet.token, packet.data));
+			else if (StringUtils.equals(packet.command, "data"))
+				if (Client.mc.currentScreen instanceof GuiManager)
+					((GuiManager) Client.mc.currentScreen).data(packet.token, packet.data);
+		}
 	}
 
 	public void sendPacket(final @Nonnull SignPicturePacket p) {
