@@ -19,6 +19,7 @@ import com.kamesuta.mc.signpic.gui.GuiWindowScreenShot;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyHandler {
@@ -83,6 +84,11 @@ public class KeyHandler {
 			ClientRegistry.registerKeyBinding(key.binding);
 	}
 
+	public static final @Nonnull KeyHandler instance = new KeyHandler();
+
+	private KeyHandler() {
+	}
+
 	private boolean firstkeypressed;
 	private boolean keypressed;
 
@@ -115,6 +121,10 @@ public class KeyHandler {
 	public void onKeyInput(final @Nonnull InputEvent event) {
 		for (final Keys key : Keys.values())
 			key.onKeyInput(event, key.binding);
+	}
+
+	public boolean onGuiKeyInput(final @Nonnull GuiScreen screen) {
+		return false;
 	}
 
 	public static @Nonnull List<KeyBinding> getKeyConflict(final @Nonnull KeyBinding binding) {

@@ -38,7 +38,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class CoreHandler {
 	public final @Nonnull Config configHandler = Config.getConfig();
-	public final @Nonnull KeyHandler keyHandler = new KeyHandler();
+	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;
 	public final @Nonnull SignHandler signHandler = new SignHandler();
 	public final @Nonnull EntryManager signEntryManager = EntryManager.instance;
 	public final @Nonnull ContentManager contentManager = ContentManager.instance;
