@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
@@ -21,7 +22,7 @@ import com.kamesuta.mc.signpic.gui.GuiImage;
 import net.minecraft.client.gui.FontRenderer;
 
 public class CustomBookRenderer {
-
+	@CoreInvoke
 	public static void hookDrawSplitString(@Nonnull final String s, final int x, final int y, final int width, final int color) {
 		final FontRenderer f = WRenderer.font();
 

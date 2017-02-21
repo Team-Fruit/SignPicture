@@ -118,7 +118,7 @@ public class CoreHandler {
 		if (event.phase==Phase.END) {
 			Client.startSection("signpic_load");
 			debugKey();
-			this.keyHandler.onTick();
+			// this.keyHandler.onTick();
 			this.signEntryManager.onTick();
 			this.signHandler.onTick();
 			this.contentManager.onTick();

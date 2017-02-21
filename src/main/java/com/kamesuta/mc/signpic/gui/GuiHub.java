@@ -4,10 +4,10 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
-import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
-import com.kamesuta.mc.bnnwidget.position.R;
+import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.handler.KeyHandler;
 
 import net.minecraft.client.gui.GuiScreen;
 
@@ -24,14 +24,14 @@ public class GuiHub extends WFrame {
 	}
 
 	@Override
-	protected void initWidget() {
-		add(new WPanel(new R()) {
-			@Override
-			public void update(final WEvent ev, final Area pgp, final Point p) {
-				if (!ev.isCurrent())
-					requestClose();
-				super.update(ev, pgp, p);
-			}
-		});
+	public void update(final WEvent ev, final Area pgp, final Point p) {
+		KeyHandler.instance.keyHook(this);
+		if (KeyHandler.keySignPicture.isKeyPressed())
+			KeyHandler.instance.keyHook(this);
+		else
+			WRenderer.mc.displayGuiScreen(new GuiMain(this));
+		if (!ev.isCurrent())
+			requestClose();
+		super.update(ev, pgp, p);
 	}
 }
