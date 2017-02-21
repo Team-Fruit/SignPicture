@@ -11,6 +11,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.gui.GuiHub;
 import com.kamesuta.mc.signpic.gui.GuiIngameScreenShot;
 import com.kamesuta.mc.signpic.gui.GuiMain;
@@ -123,8 +124,9 @@ public class KeyHandler {
 			key.onKeyInput(event, key.binding);
 	}
 
+	@CoreInvoke
 	public boolean onGuiKeyInput(final @Nonnull GuiScreen screen) {
-		return false;
+		return keySignPicture.isKeyPressed();
 	}
 
 	public static @Nonnull List<KeyBinding> getKeyConflict(final @Nonnull KeyBinding binding) {
