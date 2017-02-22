@@ -32,8 +32,6 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
-import com.kamesuta.mc.signpic.ReflectionManager.ReflectClass;
-import com.kamesuta.mc.signpic.ReflectionManager.ReflectField;
 import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -46,6 +44,8 @@ import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.reflect.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.ReflectField;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 

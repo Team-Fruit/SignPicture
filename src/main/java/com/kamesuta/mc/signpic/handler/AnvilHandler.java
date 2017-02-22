@@ -14,11 +14,11 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Log;
-import com.kamesuta.mc.signpic.ReflectionManager.ReflectClass;
-import com.kamesuta.mc.signpic.ReflectionManager.ReflectField;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.reflect.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.ReflectField;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiRepair;

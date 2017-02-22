@@ -12,8 +12,6 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
-import com.kamesuta.mc.signpic.ReflectionManager.ReflectClass;
-import com.kamesuta.mc.signpic.ReflectionManager.ReflectField;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -25,6 +23,8 @@ import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
+import com.kamesuta.mc.signpic.reflect.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.ReflectField;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.inventory.GuiEditSign;
