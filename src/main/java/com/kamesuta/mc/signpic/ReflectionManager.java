@@ -12,52 +12,19 @@ import net.minecraft.launchwrapper.Launch;
 
 public class ReflectionManager {
 
-	private static final @Nonnull FieldManager field = new FieldManager();
+	public static class ReflectClass<T> {
+		public final @Nullable Class<T> refClazz;
 
-	public ReflectionManager() {
-		// TODO 自動生成されたコンストラクター・スタブ
-	}
-
-	public static class ReflectClass {
-		public final @Nullable Class<?> refClazz;
-
-		private ReflectClass(final @Nullable Class<?> refClazz) {
+		private ReflectClass(final @Nullable Class<T> refClazz) {
 			this.refClazz = refClazz;
 		}
 
-		public <T> ReflectField<T> getFieldFromType(final @Nonnull Class<T> type) {
-			Field refFielz = null;
-			if (this.refClazz!=null)
-				b: {
-					try {
-						final Field[] fields = this.refClazz.getDeclaredFields();
-						for (final Field field : fields)
-							if (type.equals(field.getType())) {
-								field.setAccessible(true);
-								refFielz = field;
-								break b;
-							}
-					} catch (final Throwable e) {
-					}
-				}
-			return new ReflectField<T>(refFielz);
+		public @Nonnull <F> ReflectField<T, F> getFieldFromType(final @Nonnull Class<F> type) {
+			return ReflectField.getFieldFromType(this, type);
 		}
 
-		public <T> ReflectField<T> getFieldFromName(final @Nonnull Class<T> type, final @Nonnull String mcpName, final @Nonnull String srgName) {
-			Field refFielz = null;
-			if (this.refClazz!=null)
-				b: {
-					try {
-						final Field field = this.refClazz.getField(useSrgNames() ? srgName : mcpName);
-						if (type.equals(field.getType())) {
-							field.setAccessible(true);
-							refFielz = field;
-							break b;
-						}
-					} catch (final Throwable e) {
-					}
-				}
-			return new ReflectField<T>(refFielz);
+		public @Nonnull <F> ReflectField<T, F> getFieldFromName(final @Nonnull Class<F> type, final @Nonnull String mcpName, final @Nonnull String srgName) {
+			return ReflectField.getFieldFromName(this, type, mcpName, srgName);
 		}
 
 		public static boolean useSrgNames() {
@@ -81,7 +48,7 @@ public class ReflectionManager {
 				return false;
 			if (!(obj instanceof ReflectClass))
 				return false;
-			final ReflectClass other = (ReflectClass) obj;
+			final ReflectClass<?> other = (ReflectClass<?>) obj;
 			if (this.refClazz!=null) {
 				if (!this.refClazz.equals(other.refClazz))
 					return false;
@@ -90,23 +57,19 @@ public class ReflectionManager {
 			return true;
 		}
 
-		public @Nonnull ReflectClass fromClass(final @Nullable Class<?> refClazz) {
-			return new ReflectClass(refClazz);
-		}
-
-		public @Nonnull ReflectClass fromObject(final @Nullable Object object) {
-			return fromClass(object!=null ? object.getClass() : null);
+		public static @Nonnull <F> ReflectClass<F> fromClass(final @Nullable Class<F> refClazz) {
+			return new ReflectClass<F>(refClazz);
 		}
 	}
 
-	public static class ReflectField<T> {
+	public static class ReflectField<T, S> {
 		public final @Nullable Field refField;
 
 		private ReflectField(final @Nullable Field refField) {
 			this.refField = refField;
 		}
 
-		public static <F> ReflectField<F> getFieldFromType(final @Nonnull ReflectClass refClass, final @Nonnull Class<F> type) {
+		public static @Nonnull <F, G> ReflectField<F, G> getFieldFromType(final @Nonnull ReflectClass<F> refClass, final @Nonnull Class<G> type) {
 			Field refFielz = null;
 			if (refClass.refClazz!=null)
 				b: {
@@ -121,10 +84,10 @@ public class ReflectionManager {
 					} catch (final Throwable e) {
 					}
 				}
-			return new ReflectField<F>(refFielz);
+			return new ReflectField<F, G>(refFielz);
 		}
 
-		public static <F> ReflectField<F> getFieldFromName(final @Nonnull ReflectClass refClass, final @Nonnull Class<F> type, final @Nonnull String mcpName, final @Nonnull String srgName) {
+		public static @Nonnull <F, G> ReflectField<F, G> getFieldFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull Class<G> type, final @Nonnull String mcpName, final @Nonnull String srgName) {
 			Field refFielz = null;
 			if (refClass.refClazz!=null)
 				b: {
@@ -138,21 +101,21 @@ public class ReflectionManager {
 					} catch (final Throwable e) {
 					}
 				}
-			return new ReflectField<F>(refFielz);
+			return new ReflectField<F, G>(refFielz);
 		}
 
-		public @Nullable T get(@Nullable final Object instance) {
+		public @Nullable S get(@Nullable final T instance) {
 			if (this.refField!=null)
 				try {
 					@SuppressWarnings("unchecked")
-					final T o = (T) this.refField.get(instance);
+					final S o = (S) this.refField.get(instance);
 					return o;
 				} catch (final Exception e) {
 				}
 			return null;
 		}
 
-		public boolean set(@Nullable final Object instance, @Nullable final T value) {
+		public boolean set(@Nullable final T instance, @Nullable final S value) {
 			if (this.refField!=null)
 				try {
 					this.refField.set(instance, value);

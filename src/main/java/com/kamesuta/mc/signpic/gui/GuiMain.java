@@ -32,6 +32,8 @@ import com.kamesuta.mc.signpic.Apis;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.ReflectionManager.ReflectClass;
+import com.kamesuta.mc.signpic.ReflectionManager.ReflectField;
 import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -47,7 +49,9 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
 public class GuiMain extends WFrame {
@@ -101,6 +105,8 @@ public class GuiMain extends WFrame {
 		OverlayFrame.instance.delegate();
 		setGuiPauseGame(false);
 	}
+
+	private @Nonnull ReflectField<GuiChat, GuiTextField> chatTextField = ReflectClass.fromClass(GuiChat.class).getFieldFromType(GuiTextField.class);
 
 	@Override
 	protected void initWidget() {
@@ -335,9 +341,21 @@ public class GuiMain extends WFrame {
 							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
 								final Entry entry = CurrentMode.instance.getEntryId().entry();
 								if (entry.isValid()) {
-									Content content = null;
-									if (!entry.id.isPlaceable()&&(content = entry.getContent())!=null)
-										ShortenerApiUtil.requestShoretning(content.id);
+									final GuiScreen screen = getParent();
+									if (screen instanceof GuiChat) {
+										final Content content = entry.getContent();
+										if (content!=null) {
+											final GuiChat chat = (GuiChat) screen;
+											final GuiTextField textField = GuiMain.this.chatTextField.get(chat);
+											if (textField!=null)
+												textField.setText(content.id.getURI());
+										}
+									}
+									if (!entry.id.isPlaceable()) {
+										final Content content = entry.getContent();
+										if (content!=null)
+											ShortenerApiUtil.requestShoretning(content.id);
+									}
 									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
 									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
 									requestClose();
