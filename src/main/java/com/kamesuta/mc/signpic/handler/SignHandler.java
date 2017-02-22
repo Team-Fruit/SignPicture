@@ -1,11 +1,9 @@
 package com.kamesuta.mc.signpic.handler;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
@@ -14,6 +12,8 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.ReflectionManager.ReflectClass;
+import com.kamesuta.mc.signpic.ReflectionManager.ReflectField;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -41,20 +41,10 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static @Nullable Field guiEditSignTileEntity;
+	private static @Nonnull ReflectField<GuiEditSign, TileEntitySign> guiEditSignTileEntity = ReflectClass.fromClass(GuiEditSign.class).getFieldFromType(TileEntitySign.class);
 	private static @Nonnull Set<INameHandler> handlers = Sets.newHashSet();
 
 	public static void init() {
-		try {
-			final Field[] fields = GuiEditSign.class.getDeclaredFields();
-			for (final Field field : fields)
-				if (TileEntitySign.class.equals(field.getType())) {
-					field.setAccessible(true);
-					guiEditSignTileEntity = field;
-				}
-		} catch (final SecurityException e) {
-			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
-		}
 		handlers.add(new AnvilHandler());
 	}
 
@@ -73,10 +63,10 @@ public class SignHandler {
 			if (event.gui instanceof GuiEditSign) {
 				event.setCanceled(true);
 				final EntryId placeSign = handSignValid ? handSign : entryId;
-				if (placeSign.isPlaceable()) {
-					if (guiEditSignTileEntity!=null)
-						try {
-							final TileEntitySign tileSign = (TileEntitySign) guiEditSignTileEntity.get(event.gui);
+				if (placeSign.isPlaceable())
+					try {
+						final TileEntitySign tileSign = guiEditSignTileEntity.get((GuiEditSign) event.gui);
+						if (tileSign!=null) {
 							Sign.placeSign(placeSign, tileSign);
 							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 								CurrentMode.instance.setMode();
@@ -90,12 +80,12 @@ public class SignHandler {
 									}
 								}
 							}
-						} catch (final Exception e) {
+						} else
 							Log.notice(I18n.format("signpic.chat.error.place"));
-						}
-					else
+					} catch (final Exception e) {
 						Log.notice(I18n.format("signpic.chat.error.place"));
-				} else if (CurrentMode.instance.isShortening())
+					}
+				else if (CurrentMode.instance.isShortening())
 					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
 				else
 					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
