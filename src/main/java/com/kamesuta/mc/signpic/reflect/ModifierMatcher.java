@@ -7,30 +7,30 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Sets;
 
 public class ModifierMatcher {
-	private @Nonnull Set<Integer> accept = Sets.newHashSet();
+	private @Nonnull Set<Integer> require = Sets.newHashSet();
 	private @Nonnull Set<Integer> deny = Sets.newHashSet();
 
-	public @Nonnull ModifierMatcher accept(final int modifier) {
-		this.accept.add(modifier);
+	public @Nonnull ModifierMatcher require(final int modifier) {
+		this.require.add(modifier);
 		this.deny.remove(modifier);
 		return this;
 	}
 
 	public @Nonnull ModifierMatcher deny(final int modifier) {
-		this.accept.remove(modifier);
+		this.require.remove(modifier);
 		this.deny.add(modifier);
 		return this;
 	}
 
 	public @Nonnull ModifierMatcher ignore(final int modifier) {
-		this.accept.remove(modifier);
+		this.require.remove(modifier);
 		this.deny.remove(modifier);
 		return this;
 	}
 
 	public boolean match(final int modifiers) {
-		for (final int acc : this.accept)
-			if (!isMatchModifier(modifiers, acc))
+		for (final int req : this.require)
+			if (!isMatchModifier(modifiers, req))
 				return false;
 		for (final int den : this.deny)
 			if (isMatchModifier(modifiers, den))

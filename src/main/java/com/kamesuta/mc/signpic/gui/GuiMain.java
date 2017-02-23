@@ -44,14 +44,11 @@ import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.reflect.ReflectClass;
-import com.kamesuta.mc.signpic.reflect.ReflectField;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
 public class GuiMain extends WFrame {
@@ -105,8 +102,6 @@ public class GuiMain extends WFrame {
 		OverlayFrame.instance.delegate();
 		setGuiPauseGame(false);
 	}
-
-	private @Nonnull ReflectField<GuiChat, GuiTextField> chatTextField = ReflectClass.fromClass(GuiChat.class).getFieldFromType(null, GuiTextField.class);
 
 	@Override
 	protected void initWidget() {
@@ -345,10 +340,9 @@ public class GuiMain extends WFrame {
 									if (screen instanceof GuiChat) {
 										final Content content = entry.getContent();
 										if (content!=null) {
-											final GuiChat chat = (GuiChat) screen;
-											final GuiTextField textField = GuiMain.this.chatTextField.get(chat);
-											if (textField!=null)
-												textField.setText(content.id.getURI());
+											final GuiChat chat = new GuiChat(content.id.getURI());
+											chat.setWorldAndResolution(mc, (int) width(), (int) height());
+											setParent(chat);
 										}
 									}
 									if (!entry.id.isPlaceable()) {
