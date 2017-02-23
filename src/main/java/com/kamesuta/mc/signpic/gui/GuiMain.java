@@ -106,7 +106,7 @@ public class GuiMain extends WFrame {
 		setGuiPauseGame(false);
 	}
 
-	private @Nonnull ReflectField<GuiChat, GuiTextField> chatTextField = ReflectClass.fromClass(GuiChat.class).getFieldFromType(GuiTextField.class);
+	private @Nonnull ReflectField<GuiChat, GuiTextField> chatTextField = ReflectClass.fromClass(GuiChat.class).getFieldFromType(null, GuiTextField.class);
 
 	@Override
 	protected void initWidget() {

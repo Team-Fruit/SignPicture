@@ -28,8 +28,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ContainerRepair;
 
 public class AnvilHandler implements INameHandler {
-	private static @Nonnull ReflectField<GuiRepair, GuiTextField> guiRepairTextField = ReflectClass.fromClass(GuiRepair.class).getFieldFromType(GuiTextField.class);
-	private static @Nonnull ReflectField<GuiRepair, ContainerRepair> guiRepairContainer = ReflectClass.fromClass(GuiRepair.class).getFieldFromType(ContainerRepair.class);
+	private static @Nonnull ReflectField<GuiRepair, GuiTextField> guiRepairTextField = ReflectClass.fromClass(GuiRepair.class).getFieldFromType(null, GuiTextField.class);
+	private static @Nonnull ReflectField<GuiRepair, ContainerRepair> guiRepairContainer = ReflectClass.fromClass(GuiRepair.class).getFieldFromType(null, ContainerRepair.class);
 
 	private @Nullable GuiRepair repairGuiTask;
 	private @Nullable String repairGuiTextFieldCache;

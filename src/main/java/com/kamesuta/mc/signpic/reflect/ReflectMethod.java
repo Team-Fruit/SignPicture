@@ -29,7 +29,7 @@ public class ReflectMethod<T, S> {
 		return null;
 	}
 
-	public static @Nonnull <F, G> ReflectMethod<F, G> getMethodFromType(final @Nonnull ReflectClass<F> refClass, final @Nonnull Class<G> returnType, final @Nonnull Class<?>... paramsType) {
+	public static @Nonnull <F, G> ReflectMethod<F, G> getMethodFromType(final @Nonnull ReflectClass<F> refClass, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> returnType, final @Nonnull Class<?>... paramsType) {
 		final Class<F> refClazz = refClass.getReflectClass();
 		Method refMethoz = null;
 		if (refClazz!=null)
@@ -37,7 +37,7 @@ public class ReflectMethod<T, S> {
 				try {
 					final Method[] methods = refClazz.getDeclaredMethods();
 					for (final Method method : methods)
-						if (returnType.equals(method.getReturnType())&&Arrays.equals(paramsType, method.getParameterTypes())) {
+						if (returnType.equals(method.getReturnType())&&Arrays.equals(paramsType, method.getParameterTypes())&&(matcher==null||matcher.match(method.getModifiers()))) {
 							method.setAccessible(true);
 							refMethoz = method;
 							break b;
@@ -48,14 +48,14 @@ public class ReflectMethod<T, S> {
 		return new ReflectMethod<F, G>(refMethoz);
 	}
 
-	public static @Nonnull <F, G> ReflectMethod<F, G> getMethodFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull String mcpName, final @Nonnull String srgName, final @Nonnull Class<G> returnType, final @Nonnull Class<?>... paramsType) {
+	public static @Nonnull <F, G> ReflectMethod<F, G> getMethodFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull String mcpName, final @Nonnull String srgName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> returnType, final @Nonnull Class<?>... paramsType) {
 		final Class<F> refClazz = refClass.getReflectClass();
 		Method refMethoz = null;
 		if (refClazz!=null)
 			b: {
 				try {
 					final Method method = refClazz.getMethod(ReflectClass.useSrgNames() ? srgName : mcpName, paramsType);
-					if (returnType.equals(method.getReturnType())) {
+					if (returnType.equals(method.getReturnType())&&(matcher==null||matcher.match(method.getModifiers()))) {
 						method.setAccessible(true);
 						refMethoz = method;
 						break b;

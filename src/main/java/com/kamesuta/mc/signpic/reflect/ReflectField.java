@@ -39,7 +39,7 @@ public class ReflectField<T, S> {
 		return false;
 	}
 
-	public static @Nonnull <F, G> ReflectField<F, G> getFieldFromType(final @Nonnull ReflectClass<F> refClass, final @Nonnull Class<G> type) {
+	public static @Nonnull <F, G> ReflectField<F, G> getFieldFromType(final @Nonnull ReflectClass<F> refClass, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> type) {
 		final Class<F> refClazz = refClass.getReflectClass();
 		Field refFielz = null;
 		if (refClazz!=null)
@@ -47,7 +47,7 @@ public class ReflectField<T, S> {
 				try {
 					final Field[] fields = refClazz.getDeclaredFields();
 					for (final Field field : fields)
-						if (type.equals(field.getType())) {
+						if (type.equals(field.getType())&&(matcher==null||matcher.match(field.getModifiers()))) {
 							field.setAccessible(true);
 							refFielz = field;
 							break b;
@@ -58,14 +58,14 @@ public class ReflectField<T, S> {
 		return new ReflectField<F, G>(refFielz);
 	}
 
-	public static @Nonnull <F, G> ReflectField<F, G> getFieldFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull String mcpName, final @Nonnull String srgName, final @Nonnull Class<G> type) {
+	public static @Nonnull <F, G> ReflectField<F, G> getFieldFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull String mcpName, final @Nonnull String srgName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> type) {
 		final Class<F> refClazz = refClass.getReflectClass();
 		Field refFielz = null;
 		if (refClazz!=null)
 			b: {
 				try {
 					final Field field = refClazz.getField(ReflectClass.useSrgNames() ? srgName : mcpName);
-					if (type.equals(field.getType())) {
+					if (type.equals(field.getType())&&(matcher==null||matcher.match(field.getModifiers()))) {
 						field.setAccessible(true);
 						refFielz = field;
 						break b;

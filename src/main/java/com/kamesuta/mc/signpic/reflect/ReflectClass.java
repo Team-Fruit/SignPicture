@@ -16,20 +16,20 @@ public class ReflectClass<T> {
 		this.refClazz = refClazz;
 	}
 
-	public @Nonnull <F> ReflectField<T, F> getFieldFromType(final @Nonnull Class<F> type) {
-		return ReflectField.getFieldFromType(this, type);
+	public @Nonnull <F> ReflectField<T, F> getFieldFromType(final @Nullable ModifierMatcher matcher, final @Nonnull Class<F> type) {
+		return ReflectField.getFieldFromType(this, matcher, type);
 	}
 
-	public @Nonnull <F> ReflectField<T, F> getFieldFromName(final @Nonnull String mcpName, final @Nonnull String srgName, final @Nonnull Class<F> type) {
-		return ReflectField.getFieldFromName(this, mcpName, srgName, type);
+	public @Nonnull <F> ReflectField<T, F> getFieldFromName(final @Nonnull String mcpName, final @Nonnull String srgName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<F> type) {
+		return ReflectField.getFieldFromName(this, mcpName, srgName, matcher, type);
 	}
 
-	public @Nonnull <F> ReflectMethod<T, F> getMethodFromType(final @Nonnull Class<F> returnType, final @Nonnull Class<?>... paramsType) {
-		return ReflectMethod.getMethodFromType(this, returnType, paramsType);
+	public @Nonnull <F> ReflectMethod<T, F> getMethodFromType(final @Nullable ModifierMatcher matcher, final @Nonnull Class<F> returnType, final @Nonnull Class<?>... paramsType) {
+		return ReflectMethod.getMethodFromType(this, matcher, returnType, paramsType);
 	}
 
-	public @Nonnull <F> ReflectMethod<T, F> getMethodFromName(final @Nonnull String mcpName, final @Nonnull String srgName, final @Nonnull Class<F> returnType, final @Nonnull Class<?>... paramsType) {
-		return ReflectMethod.getMethodFromName(this, mcpName, srgName, returnType, paramsType);
+	public @Nonnull <F> ReflectMethod<T, F> getMethodFromName(final @Nonnull String mcpName, final @Nonnull String srgName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<F> returnType, final @Nonnull Class<?>... paramsType) {
+		return ReflectMethod.getMethodFromName(this, mcpName, srgName, matcher, returnType, paramsType);
 	}
 
 	public static boolean useSrgNames() {
