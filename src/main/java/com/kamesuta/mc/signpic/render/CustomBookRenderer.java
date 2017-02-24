@@ -13,7 +13,6 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
-import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -69,11 +68,10 @@ public class CustomBookRenderer {
 							final SizeData size00 = attr.sizes.getMovie().get();
 							final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 							final SizeData size1 = size00.aspectSize(size01);
-							final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(f.FONT_HEIGHT, f.FONT_HEIGHT));
 							OpenGL.glPushMatrix();
-							OpenGL.glTranslatef(x, iy, 0f);
-							OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
-							OpenGL.glTranslatef(size1.getWidth()/2, size1.getHeight()+(size1.getHeight()>=0 ? 0 : -size1.getHeight())-.5f, 0f);
+							OpenGL.glTranslatef(x, iy-f.FONT_HEIGHT/2f, 0f);
+							OpenGL.glScalef(f.FONT_HEIGHT, f.FONT_HEIGHT, 1f);
+							OpenGL.glTranslatef((size1.getWidth()>=0 ? 1f : -1f)*size1.getWidth()/2f, (size1.getHeight()>=0 ? 1f : -1f)*size1.getHeight(), 0f);
 							OpenGL.glScalef(1f, -1f, 1f);
 							gui.renderSignPicture(1f, 4f);
 
