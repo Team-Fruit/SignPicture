@@ -64,7 +64,7 @@ public class ReflectField<T, S> {
 		if (refClazz!=null)
 			b: {
 				try {
-					final Field field = refClazz.getField(ReflectClass.useSrgNames() ? srgName : mcpName);
+					final Field field = refClazz.getDeclaredField(ReflectClass.useSrgNames() ? srgName : mcpName);
 					if (type.equals(field.getType())&&(matcher==null||matcher.match(field.getModifiers()))) {
 						field.setAccessible(true);
 						refFielz = field;

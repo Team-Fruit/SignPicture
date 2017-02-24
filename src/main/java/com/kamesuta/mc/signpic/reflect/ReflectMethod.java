@@ -54,7 +54,7 @@ public class ReflectMethod<T, S> {
 		if (refClazz!=null)
 			b: {
 				try {
-					final Method method = refClazz.getMethod(ReflectClass.useSrgNames() ? srgName : mcpName, paramsType);
+					final Method method = refClazz.getDeclaredMethod(ReflectClass.useSrgNames() ? srgName : mcpName, paramsType);
 					if (returnType.equals(method.getReturnType())&&(matcher==null||matcher.match(method.getModifiers()))) {
 						method.setAccessible(true);
 						refMethoz = method;
