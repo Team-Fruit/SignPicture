@@ -41,7 +41,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static @Nonnull ReflectField<GuiEditSign, TileEntitySign> guiEditSignTileEntity = ReflectClass.fromClass(GuiEditSign.class).getFieldFromType(null, TileEntitySign.class);
+	public static @Nonnull ReflectField<GuiEditSign, TileEntitySign> guiEditSignTileEntity = ReflectClass.fromClass(GuiEditSign.class).getFieldFromType(null, TileEntitySign.class);
 	private static @Nonnull Set<INameHandler> handlers = Sets.newHashSet();
 
 	public static void init() {

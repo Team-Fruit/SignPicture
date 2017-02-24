@@ -41,15 +41,21 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
+import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.reflect.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.ReflectMethod;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenBook;
+import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.tileentity.TileEntitySign;
 
 public class GuiMain extends WFrame {
 	private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(CurrentMode.instance.getEntryId());
@@ -87,6 +93,8 @@ public class GuiMain extends WFrame {
 
 		this.settings = new GuiSettings(new R());
 	}
+
+	private @Nonnull ReflectMethod<GuiScreenBook, Void> bookwriter = ReflectClass.fromClass(GuiScreenBook.class).getMethodFromName("func_146459_b", "func_146459_b", null, void.class, String.class);
 
 	public GuiMain(final @Nullable GuiScreen parent) {
 		super(parent);
@@ -344,6 +352,15 @@ public class GuiMain extends WFrame {
 											chat.setWorldAndResolution(mc, (int) width(), (int) height());
 											setParent(chat);
 										}
+									}
+									if (screen instanceof GuiEditSign) {
+										final GuiEditSign guiEditSign = (GuiEditSign) screen;
+										final TileEntitySign entitySign = SignHandler.guiEditSignTileEntity.get(guiEditSign);
+										entry.id.toEntity(entitySign);
+									}
+									if (screen instanceof GuiScreenBook) {
+										final GuiScreenBook book = (GuiScreenBook) screen;
+										GuiMain.this.bookwriter.invoke(book, entry.id.id());
 									}
 									if (!entry.id.isPlaceable()) {
 										final Content content = entry.getContent();
