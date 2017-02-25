@@ -12,8 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.bnnwidget.render.OpenGL;
-import com.kamesuta.mc.bnnwidget.render.WRenderer;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -101,18 +99,9 @@ public class GuiNewChat extends Gui {
 								final int j2 = -j1*9;
 								drawRect(b0, j2-9, b0+i1+4, j2, i2/2<<24);
 								GL11.glEnable(GL11.GL_BLEND); // FORGE: BugFix MC-36812 Chat Opacity Broken in 1.7.x
-								if (chatline instanceof PicChatLine) {
-									final PicChatLine cline = (PicChatLine) chatline;
-									OpenGL.glPushMatrix();
-									OpenGL.glTranslatef(0f, j2, 0f);
-									OpenGL.glColor4i(255, 255, 255, i2);
-									cline.draw(MathHelper.floor_float(func_146228_f()/func_146244_h()), this.mc.fontRenderer.FONT_HEIGHT);
-									OpenGL.glPopMatrix();
-									WRenderer.startTexture();
-								} else {
-									final String s = chatline.func_151461_a().getFormattedText();
-									this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
-								}
+								final String s = chatline.func_151461_a().getFormattedText();
+								// this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
+								PicChatLine.hookDrawStringWithShadow(this.mc.fontRenderer, s, b0, j2-8, 16777215+(i2<<24), this, chatline, j2, i2);
 								GL11.glDisable(GL11.GL_ALPHA_TEST);
 							}
 						}
