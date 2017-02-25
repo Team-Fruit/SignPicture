@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -69,13 +70,39 @@ public class GuiNewChat extends Gui {
 	}
 
 	public static class PicChatLine extends ChatLine {
-		public final @Nonnull List<Entry> entrylisr;
+		public final @Nonnull List<Entry> entrylist;
 		public final int num;
 
 		public PicChatLine(final int updateCounterCreated, @Nonnull final IChatComponent lineString, final int chatLineID, @Nonnull final List<Entry> entrylist, final int num) {
 			super(updateCounterCreated, lineString, chatLineID);
-			this.entrylisr = entrylist;
+			this.entrylist = entrylist;
 			this.num = num;
+		}
+
+		public void draw(final float width, final float height) {
+			float ix = 0;
+			for (final Entry entry : this.entrylist) {
+				final Content content = entry.getContent();
+
+				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
+				OpenGL.glPushMatrix();
+				OpenGL.glTranslatef(ix, -9, 0f);
+				ix += size2.getWidth();
+
+				OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
+
+				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
+					final CompoundAttr meta = entry.getMeta();
+					final float o = meta.o.getMovie().get().data*0.1f;
+					OpenGL.glColor4f(1f, 1f, 1f, 1f);
+					OpenGL.glScalef(1f, 1f/4f, 1f);
+					final float iy = 1f-this.num/4f;
+					content.image.draw(meta, 0f, iy, 1f, iy+1f/4f);
+				}
+
+				OpenGL.glPopMatrix();
+			}
 		}
 	}
 
@@ -196,21 +223,11 @@ public class GuiNewChat extends Gui {
 								GL11.glEnable(GL11.GL_BLEND); // FORGE: BugFix MC-36812 Chat Opacity Broken in 1.7.x
 								if (chatline instanceof PicChatLine) {
 									final PicChatLine cline = (PicChatLine) chatline;
-									final List<Entry> entrylist = cline.entrylisr;
-									float ix = 0;
-									for (final Entry entry : entrylist) {
-										final Content content = entry.getContent();
-
-										final int w = MathHelper.floor_float(func_146228_f()/func_146244_h());
-										final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-										final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(w, this.mc.fontRenderer.FONT_HEIGHT*4f));
-										OpenGL.glPushMatrix();
-										OpenGL.glTranslatef(ix, j2-9*(1+cline.num), 0f);
-										ix += size2.getWidth();
-										entry.getGui().drawScreen(0, 0, 0f, 1f, size2.getWidth(), size2.getHeight());
-										OpenGL.glPopMatrix();
-										WRenderer.startTexture();
-									}
+									OpenGL.glPushMatrix();
+									OpenGL.glTranslatef(0f, j2, 0f);
+									cline.draw(MathHelper.floor_float(func_146228_f()/func_146244_h()), this.mc.fontRenderer.FONT_HEIGHT);
+									OpenGL.glPopMatrix();
+									WRenderer.startTexture();
 								} else {
 									final String s = chatline.func_151461_a().getFormattedText();
 									this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
