@@ -103,14 +103,14 @@ public class KeyHandler {
 	@CoreInvoke
 	public boolean onGuiKeyInput(final @Nonnull GuiScreen screen) {
 		final float time = this.signpickeypressed.getTime();
-		if (!(screen instanceof GuiMain||screen instanceof GuiIngameScreenShot||screen instanceof GuiWindowScreenShot))
+		if (!(screen instanceof GuiIngameScreenShot||screen instanceof GuiWindowScreenShot))
 			if (keySignPicture.isKeyPressed()) {
 				if (!keyHook(screen)) {
 					this.signpickeypressed.resume();
 					return true;
 				}
 				clearInput();
-			} else if (time>.35f) {
+			} else if (!(screen instanceof GuiMain)&&time>.35f) {
 				WRenderer.mc.displayGuiScreen(new GuiMain(screen));
 				clearInput();
 			}
