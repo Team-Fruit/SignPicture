@@ -27,7 +27,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -94,7 +96,6 @@ public class GuiNewChat extends Gui {
 
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
 					final CompoundAttr meta = entry.getMeta();
-					final float o = meta.o.getMovie().get().data*0.1f;
 					OpenGL.glScalef(1f, 1f/4f, 1f);
 					final float iy = 1f-this.num/4f;
 					content.image.draw(meta, 0f, iy, 1f, iy+1f/4f);
@@ -102,6 +103,23 @@ public class GuiNewChat extends Gui {
 
 				OpenGL.glPopMatrix();
 			}
+		}
+
+		public @Nullable IChatComponent onClicked(final float width, final float height, final int x) {
+			float ix = 0;
+			for (final Entry entry : this.entrylist) {
+				final Content content = entry.getContent();
+
+				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
+
+				ix += size2.getWidth();
+
+				if (x<ix)
+					if (content!=null)
+						return new ChatComponentText("").setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(Action.RUN_COMMAND, "/signpic openimg "+content.id.getURI())));
+			}
+			return null;
 		}
 	}
 
@@ -433,6 +451,13 @@ public class GuiNewChat extends Gui {
 
 					if (k1>=0&&k1<this.field_146253_i.size()) {
 						final ChatLine chatline = (ChatLine) this.field_146253_i.get(k1);
+
+						if (chatline instanceof PicChatLine) {
+							final IChatComponent c = ((PicChatLine) chatline).onClicked(func_146228_f()/func_146244_h(), this.mc.fontRenderer.FONT_HEIGHT, l);
+							if (c!=null)
+								return c;
+						}
+
 						int l1 = 0;
 						final Iterator iterator = chatline.func_151461_a().iterator();
 
