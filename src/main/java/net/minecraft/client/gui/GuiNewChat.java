@@ -95,7 +95,6 @@ public class GuiNewChat extends Gui {
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
 					final CompoundAttr meta = entry.getMeta();
 					final float o = meta.o.getMovie().get().data*0.1f;
-					OpenGL.glColor4f(1f, 1f, 1f, 1f);
 					OpenGL.glScalef(1f, 1f/4f, 1f);
 					final float iy = 1f-this.num/4f;
 					content.image.draw(meta, 0f, iy, 1f, iy+1f/4f);
@@ -227,6 +226,7 @@ public class GuiNewChat extends Gui {
 									final PicChatLine cline = (PicChatLine) chatline;
 									OpenGL.glPushMatrix();
 									OpenGL.glTranslatef(0f, j2, 0f);
+									OpenGL.glColor4i(255, 255, 255, i2);
 									cline.draw(MathHelper.floor_float(func_146228_f()/func_146244_h()), this.mc.fontRenderer.FONT_HEIGHT);
 									OpenGL.glPopMatrix();
 									WRenderer.startTexture();
