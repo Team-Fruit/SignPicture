@@ -89,49 +89,50 @@ public class GuiNewChat extends Gui {
 		list.clear();
 
 		final List<List<ChatLine>> lineunits = Lists.newLinkedList();
-		List<ChatLine> _lineunits = Lists.newLinkedList();
-		int _lastlineunits = -1;
-		for (final ChatLine line : this.chatList) {
-			final int id = line.getUpdatedCounter();
+		{
+			List<ChatLine> _lineunits = Lists.newLinkedList();
+			int _lastlineunits = -1;
+			for (final ChatLine line : this.chatList) {
+				final int id = line.getUpdatedCounter();
 
-			if (id!=_lastlineunits) {
-				lineunits.add(_lineunits);
-				_lineunits = Lists.newLinkedList();
+				if (id!=_lastlineunits) {
+					lineunits.add(_lineunits);
+					_lineunits = Lists.newLinkedList();
+				}
+				_lineunits.add(line);
+				_lastlineunits = id;
 			}
-			_lineunits.add(line);
-			_lastlineunits = id;
+			if (_lineunits!=null)
+				lineunits.add(_lineunits);
 		}
-		if (_lineunits!=null)
-			lineunits.add(_lineunits);
 
 		for (final List<ChatLine> lines : lineunits) {
 			final List<Entry> entries = Lists.newLinkedList();
-			Entry _lastentries = null;
 			int updateCounterCreated = -1;
 			int chatLineID = -1;
-			for (final ChatLine line : lines) {
-				updateCounterCreated = line.getUpdatedCounter();
-				chatLineID = line.getChatLineID();
-				final IChatComponent cc = line.func_151461_a();
-				final List<ClickEvent> clinks = getLinksFromChat(cc);
-				for (final ClickEvent clink : clinks) {
-					final Entry entry = new EntryIdBuilder().setURI(clink.getValue()).build().entry();
-					if (!entry.equals(_lastentries))
-						entries.add(entry);
-					_lastentries = entry;
+			{
+				Entry _lastentries = null;
+				for (final ChatLine line : lines) {
+					updateCounterCreated = line.getUpdatedCounter();
+					chatLineID = line.getChatLineID();
+					final IChatComponent cc = line.func_151461_a();
+					final List<ClickEvent> clinks = getLinksFromChat(cc);
+					for (final ClickEvent clink : clinks) {
+						final Entry entry = new EntryIdBuilder().setURI(clink.getValue()).build().entry();
+						if (!entry.equals(_lastentries)) {
+							final Content content = entry.getContent();
+							if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
+								entries.add(entry);
+						}
+						_lastentries = entry;
+					}
 				}
 			}
 
 			for (final ChatLine line : lines)
 				list.add(0, line);
 
-			boolean e = false;
-			for (final Entry add : entries) {
-				final Content content = add.getContent();
-				if (add.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
-					e = true;
-			}
-			if (e) {
+			if (!entries.isEmpty()) {
 				final IChatComponent chattext = new ChatComponentText("");
 				for (int i = 0; i<4; i++)
 					list.add(0, new PicChatLine(updateCounterCreated, chattext, chatLineID, entries, i));
