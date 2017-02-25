@@ -52,22 +52,94 @@ public class GuiNewChat extends Gui {
 		this.mc = p_i1022_1_;
 	}
 
-	private final List<ChatLine> chatList = Lists.newArrayList();
+	public final @Nonnull PicChatHook hook = new PicChatHook(this.field_146253_i);
 
-	public List<ClickEvent> getLinksFromChat(final IChatComponent chat) {
-		final List<ClickEvent> list = Lists.newLinkedList();
-		getLinksFromChat0(list, chat);
-		return list;
-	}
+	public static class PicChatHook {
+		private final @Nonnull List<ChatLine> chatLinesHook;
+		private final @Nonnull List<ChatLine> chatList = Lists.newArrayList();
 
-	private void getLinksFromChat0(final List<ClickEvent> list, final IChatComponent pchat) {
-		final List<?> chats = pchat.getSiblings();
-		for (final Object o : chats) {
-			final IChatComponent chat = (IChatComponent) o;
-			final ClickEvent ev = chat.getChatStyle().getChatClickEvent();
-			if (ev!=null&&ev.getAction()==ClickEvent.Action.OPEN_URL)
-				list.add(ev);
+		public PicChatHook(final @Nonnull List<ChatLine> chatLinesHook) {
+			this.chatLinesHook = chatLinesHook;
+		}
+
+		public @Nonnull List<ClickEvent> getLinksFromChat(final @Nonnull IChatComponent chat) {
+			final List<ClickEvent> list = Lists.newLinkedList();
 			getLinksFromChat0(list, chat);
+			return list;
+		}
+
+		private void getLinksFromChat0(final @Nonnull List<ClickEvent> list, final @Nonnull IChatComponent pchat) {
+			final List<?> chats = pchat.getSiblings();
+			for (final Object o : chats) {
+				final IChatComponent chat = (IChatComponent) o;
+				final ClickEvent ev = chat.getChatStyle().getChatClickEvent();
+				if (ev!=null&&ev.getAction()==ClickEvent.Action.OPEN_URL)
+					list.add(ev);
+				getLinksFromChat0(list, chat);
+			}
+		}
+
+		public void addLine(final @Nonnull ChatLine line) {
+			this.chatList.add(line);
+			updateLines();
+		}
+
+		public void updateLines() {
+			final List<ChatLine> list = this.chatLinesHook;
+			list.clear();
+
+			final List<List<ChatLine>> lineunits = Lists.newLinkedList();
+			{
+				List<ChatLine> _lineunits = Lists.newLinkedList();
+				int _lastlineunits = -1;
+				for (final ChatLine line : this.chatList) {
+					final int id = line.getUpdatedCounter();
+
+					if (id!=_lastlineunits) {
+						lineunits.add(_lineunits);
+						_lineunits = Lists.newLinkedList();
+					}
+					_lineunits.add(line);
+					_lastlineunits = id;
+				}
+				if (_lineunits!=null)
+					lineunits.add(_lineunits);
+			}
+
+			for (final List<ChatLine> lines : lineunits) {
+				final List<Entry> entries = Lists.newLinkedList();
+				int updateCounterCreated = -1;
+				int chatLineID = -1;
+				{
+					Entry _lastentries = null;
+					for (final ChatLine line : lines) {
+						updateCounterCreated = line.getUpdatedCounter();
+						chatLineID = line.getChatLineID();
+						final IChatComponent cc = line.func_151461_a();
+						final List<ClickEvent> clinks = getLinksFromChat(cc);
+						boolean first = true;
+						for (final ClickEvent clink : clinks) {
+							final Entry entry = new EntryIdBuilder().setURI(clink.getValue()).build().entry();
+							if (!first||!entry.equals(_lastentries)) {
+								final Content content = entry.getContent();
+								if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
+									entries.add(entry);
+							}
+							first = false;
+							_lastentries = entry;
+						}
+					}
+				}
+
+				for (final ChatLine line : lines)
+					list.add(0, line);
+
+				if (!entries.isEmpty()) {
+					final IChatComponent chattext = new ChatComponentText("");
+					for (int i = 0; i<4; i++)
+						list.add(0, new PicChatLine(updateCounterCreated, chattext, chatLineID, entries, i));
+				}
+			}
 		}
 	}
 
@@ -123,69 +195,6 @@ public class GuiNewChat extends Gui {
 		}
 	}
 
-	public void addLine(@Nonnull final ChatLine line) {
-		this.chatList.add(line);
-		updateLines();
-	}
-
-	public void updateLines() {
-		final List<ChatLine> list = this.field_146253_i;
-		list.clear();
-
-		final List<List<ChatLine>> lineunits = Lists.newLinkedList();
-		{
-			List<ChatLine> _lineunits = Lists.newLinkedList();
-			int _lastlineunits = -1;
-			for (final ChatLine line : this.chatList) {
-				final int id = line.getUpdatedCounter();
-
-				if (id!=_lastlineunits) {
-					lineunits.add(_lineunits);
-					_lineunits = Lists.newLinkedList();
-				}
-				_lineunits.add(line);
-				_lastlineunits = id;
-			}
-			if (_lineunits!=null)
-				lineunits.add(_lineunits);
-		}
-
-		for (final List<ChatLine> lines : lineunits) {
-			final List<Entry> entries = Lists.newLinkedList();
-			int updateCounterCreated = -1;
-			int chatLineID = -1;
-			{
-				Entry _lastentries = null;
-				for (final ChatLine line : lines) {
-					updateCounterCreated = line.getUpdatedCounter();
-					chatLineID = line.getChatLineID();
-					final IChatComponent cc = line.func_151461_a();
-					final List<ClickEvent> clinks = getLinksFromChat(cc);
-					boolean first = true;
-					for (final ClickEvent clink : clinks) {
-						final Entry entry = new EntryIdBuilder().setURI(clink.getValue()).build().entry();
-						if (!first||!entry.equals(_lastentries)) {
-							final Content content = entry.getContent();
-							if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
-								entries.add(entry);
-						}
-						first = false;
-						_lastentries = entry;
-					}
-				}
-			}
-
-			for (final ChatLine line : lines)
-				list.add(0, line);
-
-			if (!entries.isEmpty()) {
-				final IChatComponent chattext = new ChatComponentText("");
-				for (int i = 0; i<4; i++)
-					list.add(0, new PicChatLine(updateCounterCreated, chattext, chatLineID, entries, i));
-			}
-		}
-	}
-
 	public void drawChat(final int p_146230_1_) {
 		if (this.mc.gameSettings.chatVisibility!=EntityPlayer.EnumChatVisibility.HIDDEN) {
 			final int j = func_146232_i();
@@ -207,7 +216,7 @@ public class GuiNewChat extends Gui {
 				int k1;
 				int i2;
 
-				updateLines();
+				this.hook.updateLines();
 
 				for (j1 = 0; j1+this.field_146250_j<this.field_146253_i.size()&&j1<j; ++j1) {
 					final ChatLine chatline = (ChatLine) this.field_146253_i.get(j1+this.field_146250_j);
@@ -362,7 +371,7 @@ public class GuiNewChat extends Gui {
 		final boolean flag2 = getChatOpen();
 		IChatComponent ichatcomponent2;
 
-		for (final Iterator iterator = arraylist.iterator(); iterator.hasNext(); addLine(new ChatLine(p_146237_3_, ichatcomponent2, p_146237_2_))) {
+		for (final Iterator iterator = arraylist.iterator(); iterator.hasNext(); this.hook.addLine(new ChatLine(p_146237_3_, ichatcomponent2, p_146237_2_))) {
 			ichatcomponent2 = (IChatComponent) iterator.next();
 
 			if (flag2&&this.field_146250_j>0) {
