@@ -189,7 +189,7 @@ public class GuiNewChat extends Gui {
 
 				if (x<ix)
 					if (content!=null)
-						return new ChatComponentText("").setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(Action.RUN_COMMAND, "/signpic openimg "+content.id.getURI())));
+						return new ChatComponentText("").setChatStyle(new ChatStyle().setChatClickEvent(new ClickEvent(Action.RUN_COMMAND, "/signpic image open "+content.id.getURI())));
 			}
 			return null;
 		}
