@@ -26,6 +26,15 @@ public class SignPictureTransformer implements IClassTransformer {
 				}
 			});
 
+		if (transformedName.equals("net.minecraft.client.gui.GuiNewChat"))
+			return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
+				@Override
+				public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
+					Log.log.info(String.format("Patching GuiNewChat (class: %s)", name));
+					return new GuiNewChatVisitor(name, cv);
+				}
+			});
+
 		if (transformedName.equals("net.minecraft.client.gui.GuiScreen"))
 			return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
 				@Override

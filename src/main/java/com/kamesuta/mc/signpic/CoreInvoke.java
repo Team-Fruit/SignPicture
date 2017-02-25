@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author Kamesuta
  */
 @Retention(SOURCE)
-@Target(METHOD)
+@Target({ TYPE, CONSTRUCTOR, METHOD, FIELD })
 public @interface CoreInvoke {
 
 }
