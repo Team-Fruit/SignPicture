@@ -93,18 +93,7 @@ public class GuiImage extends WFrame {
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
-							content.image.draw(
-									meta.u.getMovie().get().data,
-									meta.v.getMovie().get().data,
-									meta.w.getMovie().get().data,
-									meta.h.getMovie().get().data,
-									meta.c.getMovie().get().data,
-									meta.s.getMovie().get().data,
-									meta.b.getMovie().get().data,
-									meta.d.getMovie().get().data,
-									meta.r.getMovie().get().data,
-									meta.m.getMovie().get().data,
-									meta.l.getMovie().get().data);
+							content.image.draw(meta);
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
