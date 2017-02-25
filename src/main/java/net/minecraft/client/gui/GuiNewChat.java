@@ -144,13 +144,15 @@ public class GuiNewChat extends Gui {
 					chatLineID = line.getChatLineID();
 					final IChatComponent cc = line.func_151461_a();
 					final List<ClickEvent> clinks = getLinksFromChat(cc);
+					boolean first = true;
 					for (final ClickEvent clink : clinks) {
 						final Entry entry = new EntryIdBuilder().setURI(clink.getValue()).build().entry();
-						if (!entry.equals(_lastentries)) {
+						if (!first||!entry.equals(_lastentries)) {
 							final Content content = entry.getContent();
 							if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
 								entries.add(entry);
 						}
+						first = false;
 						_lastentries = entry;
 					}
 				}
