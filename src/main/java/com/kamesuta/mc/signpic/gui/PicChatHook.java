@@ -1,13 +1,8 @@
 package com.kamesuta.mc.signpic.gui;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.CoreInvoke;
@@ -21,6 +16,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
+@CoreInvoke
 public class PicChatHook {
 	private final @Nonnull List<ChatLine> chatLinesHook;
 	private final @Nonnull List<ChatLine> chatList = Lists.newArrayList();
@@ -115,139 +111,6 @@ public class PicChatHook {
 				for (int i = 0; i<4; i++)
 					list.add(0, new PicChatLine(updateCounterCreated, chattext, chatLineID, entries, i));
 			}
-		}
-	}
-
-	public static class PicChatList<T> implements List<T>, RandomAccess {
-		public final List<T> list;
-
-		public PicChatList(final @Nonnull List<T> list) {
-			this.list = list;
-		}
-
-		@Override
-		public int size() {
-			return this.list.size();
-		}
-
-		@Override
-		public boolean isEmpty() {
-			return this.list.isEmpty();
-		}
-
-		@Override
-		public boolean contains(@Nullable final Object o) {
-			return this.list.contains(o);
-		}
-
-		@Override
-		public @Nonnull Iterator<T> iterator() {
-			return this.list.iterator();
-		}
-
-		@Override
-		public @Nonnull Object[] toArray() {
-			return this.list.toArray();
-		}
-
-		@Override
-		public @Nonnull <E> E[] toArray(@Nullable final E[] a) {
-			return this.list.toArray(a);
-		}
-
-		@Override
-		public boolean add(@Nullable final T e) {
-			return this.list.add(e);
-		}
-
-		@Override
-		public boolean remove(@Nullable final Object o) {
-			return this.list.remove(o);
-		}
-
-		@Override
-		public boolean containsAll(@Nullable final Collection<?> c) {
-			return this.list.containsAll(c);
-		}
-
-		@Override
-		public boolean addAll(@Nullable final Collection<? extends T> c) {
-			return this.list.addAll(c);
-		}
-
-		@Override
-		public boolean addAll(final int index, @Nullable final Collection<? extends T> c) {
-			return this.list.addAll(index, c);
-		}
-
-		@Override
-		public boolean removeAll(@Nullable final Collection<?> c) {
-			return this.list.removeAll(c);
-		}
-
-		@Override
-		public boolean retainAll(@Nullable final Collection<?> c) {
-			return this.list.retainAll(c);
-		}
-
-		@Override
-		public void clear() {
-			this.list.clear();
-		}
-
-		@Override
-		public boolean equals(@Nullable final Object o) {
-			return this.list.equals(o);
-		}
-
-		@Override
-		public int hashCode() {
-			return this.list.hashCode();
-		}
-
-		@Override
-		public T get(final int index) {
-			return this.list.get(index);
-		}
-
-		@Override
-		public T set(final int index, @Nullable final T element) {
-			return this.list.set(index, element);
-		}
-
-		@Override
-		public void add(final int index, @Nullable final T element) {
-			this.list.add(index, element);
-		}
-
-		@Override
-		public @Nonnull T remove(final int index) {
-			return this.list.remove(index);
-		}
-
-		@Override
-		public int indexOf(@Nullable final Object o) {
-			return this.list.indexOf(o);
-		}
-
-		@Override
-		public int lastIndexOf(@Nullable final Object o) {
-			return this.list.lastIndexOf(o);
-		}
-
-		@Override
-		public @Nonnull ListIterator<T> listIterator() {
-			return this.list.listIterator();
-		}
-
-		@Override
-		public @Nonnull ListIterator<T> listIterator(final int index) {
-			return this.list.listIterator(index);
-		}
-
-		@Override
-		public @Nonnull List<T> subList(final int fromIndex, final int toIndex) {
-			return this.list.subList(fromIndex, toIndex);
 		}
 	}
 }

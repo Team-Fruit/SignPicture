@@ -27,7 +27,7 @@ import net.minecraft.util.MathHelper;
 
 @CoreInvoke
 public class PicChatLine extends ChatLine {
-	public final @Nonnull List<Entry> entrylist;
+	private final @Nonnull List<Entry> entrylist;
 	public final int num;
 
 	public PicChatLine(final int updateCounterCreated, @Nonnull final IChatComponent lineString, final int chatLineID, @Nonnull final List<Entry> entrylist, final int num) {
@@ -81,9 +81,9 @@ public class PicChatLine extends ChatLine {
 	}
 
 	@CoreInvoke
-	public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final @Nonnull FontRenderer font, final int x) {
+	public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final int x) {
 		final int width = getChatWidth(chat);
-		final int height = font.FONT_HEIGHT;
+		final int height = WRenderer.font().FONT_HEIGHT;
 		float ix = 0;
 		for (final Entry entry : this.entrylist) {
 			final Content content = entry.getContent();

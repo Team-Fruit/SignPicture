@@ -134,11 +134,8 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				visitVarInsn(Opcodes.ALOAD, 10);
 				visitTypeInsn(Opcodes.CHECKCAST, "com/kamesuta/mc/signpic/gui/PicChatLine");
 				visitVarInsn(Opcodes.ALOAD, 0);
-				visitVarInsn(Opcodes.ALOAD, 0);
-				visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/client/gui/GuiNewChat", ASMDeobfNames.GuiNewChatMc.name(), DescHelper.toDesc("net.minecraft.client.Minecraft"));
-				visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/client/Minecraft", ASMDeobfNames.MinecraftFontRenderer.name(), DescHelper.toDesc("net.minecraft.client.gui.FontRenderer"));
 				visitVarInsn(Opcodes.ILOAD, 6);
-				visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/gui/PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.IChatComponent", "net.minecraft.client.gui.GuiNewChat", "net.minecraft.client.gui.FontRenderer", int.class), false);
+				visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/gui/PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.IChatComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
 				visitVarInsn(Opcodes.ASTORE, 11);
 				visitVarInsn(Opcodes.ALOAD, 11);
 				visitJumpInsn(Opcodes.IFNULL, l);
