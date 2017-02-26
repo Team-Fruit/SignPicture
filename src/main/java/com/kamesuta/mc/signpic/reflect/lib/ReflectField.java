@@ -1,9 +1,11 @@
-package com.kamesuta.mc.signpic.reflect;
+package com.kamesuta.mc.signpic.reflect.lib;
 
 import java.lang.reflect.Field;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.kamesuta.mc.signpic.asm.lib.RefName;
 
 public class ReflectField<T, S> {
 	public final @Nullable Field refField;
@@ -58,13 +60,13 @@ public class ReflectField<T, S> {
 		return new ReflectField<F, G>(refFielz);
 	}
 
-	public static @Nonnull <F, G> ReflectField<F, G> getFieldFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull String mcpName, final @Nonnull String srgName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> type) {
+	public static @Nonnull <F, G> ReflectField<F, G> getFieldFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull RefName refName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> type) {
 		final Class<F> refClazz = refClass.getReflectClass();
 		Field refFielz = null;
 		if (refClazz!=null)
 			b: {
 				try {
-					final Field field = refClazz.getDeclaredField(ReflectClass.useSrgNames() ? srgName : mcpName);
+					final Field field = refClazz.getDeclaredField(refName.name());
 					if (type.equals(field.getType())&&(matcher==null||matcher.match(field.getModifiers()))) {
 						field.setAccessible(true);
 						refFielz = field;

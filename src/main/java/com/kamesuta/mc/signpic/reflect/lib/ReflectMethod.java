@@ -1,10 +1,12 @@
-package com.kamesuta.mc.signpic.reflect;
+package com.kamesuta.mc.signpic.reflect.lib;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.kamesuta.mc.signpic.asm.lib.RefName;
 
 public class ReflectMethod<T, S> {
 	public final @Nullable Method refMethod;
@@ -48,13 +50,13 @@ public class ReflectMethod<T, S> {
 		return new ReflectMethod<F, G>(refMethoz);
 	}
 
-	public static @Nonnull <F, G> ReflectMethod<F, G> getMethodFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull String mcpName, final @Nonnull String srgName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> returnType, final @Nonnull Class<?>... paramsType) {
+	public static @Nonnull <F, G> ReflectMethod<F, G> getMethodFromName(final @Nonnull ReflectClass<F> refClass, final @Nonnull RefName refName, final @Nullable ModifierMatcher matcher, final @Nonnull Class<G> returnType, final @Nonnull Class<?>... paramsType) {
 		final Class<F> refClazz = refClass.getReflectClass();
 		Method refMethoz = null;
 		if (refClazz!=null)
 			b: {
 				try {
-					final Method method = refClazz.getDeclaredMethod(ReflectClass.useSrgNames() ? srgName : mcpName, paramsType);
+					final Method method = refClazz.getDeclaredMethod(refName.name(), paramsType);
 					if (returnType.equals(method.getReturnType())&&(matcher==null||matcher.match(method.getModifiers()))) {
 						method.setAccessible(true);
 						refMethoz = method;

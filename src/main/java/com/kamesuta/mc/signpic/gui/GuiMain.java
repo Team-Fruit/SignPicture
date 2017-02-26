@@ -45,8 +45,9 @@ import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.reflect.ReflectClass;
-import com.kamesuta.mc.signpic.reflect.ReflectMethod;
+import com.kamesuta.mc.signpic.reflect.ReflectDeobfNames;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectMethod;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 import com.kamesuta.mc.signpic.util.Sign;
 
@@ -94,7 +95,7 @@ public class GuiMain extends WFrame {
 		this.settings = new GuiSettings(new R());
 	}
 
-	private @Nonnull ReflectMethod<GuiScreenBook, Void> bookwriter = ReflectClass.fromClass(GuiScreenBook.class).getMethodFromName("func_146459_b", "func_146459_b", null, void.class, String.class);
+	private @Nonnull ReflectMethod<GuiScreenBook, Void> bookwriter = ReflectClass.fromClass(GuiScreenBook.class).getMethodFromName(ReflectDeobfNames.GuiScreenBookPageInsertIntoCurrent, null, void.class, String.class);
 
 	public GuiMain(final @Nullable GuiScreen parent) {
 		super(parent);
