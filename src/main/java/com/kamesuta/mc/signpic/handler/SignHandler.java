@@ -23,8 +23,8 @@ import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
-import com.kamesuta.mc.signpic.reflect.ReflectClass;
-import com.kamesuta.mc.signpic.reflect.ReflectField;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectField;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.inventory.GuiEditSign;

@@ -41,7 +41,7 @@ public class GuiScreenVisitor extends ClassVisitor {
 
 	public GuiScreenVisitor(final @Nonnull String obfClassName, final @Nonnull ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
-		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), "handleInput", "func_73863_a");
+		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), ASMDeobfNames.GuiScreenHandleInput);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
+import com.kamesuta.mc.signpic.command.CommandImage;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
@@ -68,8 +69,9 @@ public class Client {
 	public static @Nullable RootCommand rootCommand;
 
 	static {
-		rootCommand = new RootCommand();
-		rootCommand.addChildCommand(new CommandVersion());
+		final RootCommand cmd = rootCommand = new RootCommand();
+		cmd.addChildCommand(new CommandVersion());
+		cmd.addChildCommand(new CommandImage());
 	}
 
 	public static void openEditor() {

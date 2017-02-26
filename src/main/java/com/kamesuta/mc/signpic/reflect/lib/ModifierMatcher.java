@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.reflect;
+package com.kamesuta.mc.signpic.reflect.lib;
 
 import java.util.Set;
 
