@@ -17,6 +17,7 @@ import com.kamesuta.mc.signpic.state.StateType;
 
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentText;
@@ -60,7 +61,7 @@ public class PicChatLine extends ChatLine {
 	}
 
 	@CoreInvoke
-	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull net.minecraft.client.gui.GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
+	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
 		if (chatline instanceof PicChatLine) {
 			final PicChatLine cline = (PicChatLine) chatline;
 			OpenGL.glPushMatrix();
@@ -80,12 +81,19 @@ public class PicChatLine extends ChatLine {
 		return 0;
 	}
 
-	private static int getChatWidth(final @Nonnull net.minecraft.client.gui.GuiNewChat chat) {
+	private static int getChatWidth(final @Nonnull GuiNewChat chat) {
 		return MathHelper.floor_float(chat.func_146228_f()/chat.func_146244_h());
 	}
 
 	@CoreInvoke
-	public @Nullable IChatComponent onClicked(final float width, final float height, final int x) {
+	public @Nullable IChatComponent onClicked(final @Nonnull com.kamesuta.mc.signpic.gui.GuiNewChat chat, final @Nonnull FontRenderer font, final int x) {
+		return null;
+	}
+
+	@CoreInvoke
+	public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final @Nonnull FontRenderer font, final int x) {
+		final int width = getChatWidth(chat);
+		final int height = font.FONT_HEIGHT;
 		float ix = 0;
 		for (final Entry entry : this.entrylist) {
 			final Content content = entry.getContent();

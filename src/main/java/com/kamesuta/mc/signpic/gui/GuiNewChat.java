@@ -303,7 +303,7 @@ public class GuiNewChat extends Gui {
 						final ChatLine chatline = (ChatLine) this.field_146253_i.get(k1);
 
 						if (chatline instanceof PicChatLine) {
-							final IChatComponent c = ((PicChatLine) chatline).onClicked(func_146228_f()/func_146244_h(), this.mc.fontRenderer.FONT_HEIGHT, l);
+							final IChatComponent c = ((PicChatLine) chatline).onClicked(this, this.mc.fontRenderer, l);
 							if (c!=null)
 								return c;
 						}
