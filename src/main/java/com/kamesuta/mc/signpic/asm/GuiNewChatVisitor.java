@@ -77,6 +77,34 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				 * 333  iload 11 [i2]
 				 * 335  invokestatic com.kamesuta.mc.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
 				 */
+				// visitVarInsn(Opcodes.ALOAD, 0);
+				visitVarInsn(Opcodes.ALOAD, 12);
+				visitVarInsn(Opcodes.ILOAD, 16);
+				visitVarInsn(Opcodes.ILOAD, 11);
+				visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/gui/PicChatLine", "hookDrawStringWithShadow", DescHelper.toDesc(int.class, "net.minecraft.client.gui.FontRenderer", "java.lang.String", int.class, int.class, int.class/*, "net.minecraft.client.gui.GuiNewChat"*/, "net.minecraft.client.gui.ChatLine", int.class, int.class), false);
+			} else
+				super.visitMethodInsn(opcode, owner, name, desc, itf);
+		}
+	}
+
+	private static class ApplyHookMethodVisitor extends MethodVisitor {
+		private final MethodMatcher matcher;
+
+		public ApplyHookMethodVisitor(final @Nullable MethodVisitor mv) {
+			super(Opcodes.ASM5, mv);
+			this.matcher = new MethodMatcher("java/util/List", DescHelper.toDesc(boolean.class, "java.lang.Object"), "add", "add");
+		}
+
+		@Override
+		public void visitMethodInsn(final int opcode, @Nullable final String owner, @Nullable final String name, @Nullable final String desc, final boolean itf) {
+			if (name!=null&&desc!=null&&"".equals(owner)&&this.matcher.match(name, desc)) {
+				/*
+				 * 328  aload_0 [this]
+				 * 329  aload 12 [chatline]
+				 * 331  iload 16 [j2]
+				 * 333  iload 11 [i2]
+				 * 335  invokestatic com.kamesuta.mc.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
+				 */
 				visitVarInsn(Opcodes.ALOAD, 0);
 				visitVarInsn(Opcodes.ALOAD, 12);
 				visitVarInsn(Opcodes.ILOAD, 16);
@@ -89,12 +117,14 @@ public class GuiNewChatVisitor extends ClassVisitor {
 
 	private final MethodMatcher initmatcher;
 	private final MethodMatcher drawchatmatcher;
+	private final MethodMatcher applymatcher;
 
 	public GuiNewChatVisitor(final @Nonnull String obfClassName, final @Nonnull ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
 		visitField(Opcodes.ACC_PUBLIC|Opcodes.ACC_FINAL, "hook", DescHelper.toDesc("com.kamesuta.mc.signpic.gui.PicChatHook"), null, null);
 		this.initmatcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), "<init>", "<init>");
 		this.drawchatmatcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, int.class), "drawChat", "drawChat");
+		this.applymatcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, "net.minecraft.util.IChatComponent", int.class, int.class, boolean.class), "func_146237_a", "func_146237_a");
 	}
 
 	@Override
@@ -111,6 +141,8 @@ public class GuiNewChatVisitor extends ClassVisitor {
 			return new InitHookMethodVisitor(parent);
 		if (this.drawchatmatcher.match(name, desc))
 			return new DrawChatHookMethodVisitor(parent);
+		//if (this.applymatcher.match(name, desc))
+		//	return new ApplyHookMethodVisitor(parent);
 
 		return parent;
 	}
