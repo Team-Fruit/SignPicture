@@ -15,24 +15,22 @@ import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 public class FieldMatcher {
 	private final @Nonnull String clsName;
 	private final @Nonnull String description;
-	private final @Nonnull String srgName;
-	private final @Nonnull String mcpName;
+	private final @Nonnull RefName refname;;
 
-	public FieldMatcher(final @Nonnull String clsName, final @Nonnull String description, final @Nonnull String mcpName, final @Nonnull String srgName) {
+	public FieldMatcher(final @Nonnull String clsName, final @Nonnull String description, final @Nonnull RefName refname) {
 		this.clsName = clsName;
 		this.description = description;
-		this.srgName = srgName;
-		this.mcpName = mcpName;
+		this.refname = refname;
 	}
 
 	public boolean match(final @Nonnull String fieldName, final @Nonnull String fieldDesc) {
 		if (!fieldDesc.equals(this.description))
 			return false;
-		if (fieldName.equals(this.mcpName))
+		if (fieldName.equals(this.refname.mcpName()))
 			return true;
 		if (!VisitorHelper.useSrgNames())
 			return false;
 		final String unmappedName = FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(this.clsName, fieldName, fieldDesc);
-		return unmappedName.equals(this.srgName);
+		return unmappedName.equals(this.refname.srgName());
 	}
 }

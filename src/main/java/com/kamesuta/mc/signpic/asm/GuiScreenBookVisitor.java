@@ -16,7 +16,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 
 		public HookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
-			this.matcher = new MethodMatcher("net.minecraft.client.gui.FontRenderer", DescHelper.toDesc(void.class, String.class, int.class, int.class, int.class, int.class), "drawSplitString", "func_78279_b");
+			this.matcher = new MethodMatcher("net.minecraft.client.gui.FontRenderer", DescHelper.toDesc(void.class, String.class, int.class, int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawSplitString);
 		}
 
 		@Override
@@ -32,7 +32,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 
 	public GuiScreenBookVisitor(final @Nonnull String obfClassName, final @Nonnull ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
-		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), "drawScreen", "func_73863_a");
+		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), ASMDeobfNames.GuiScreenBookDrawScreen);
 	}
 
 	@Override

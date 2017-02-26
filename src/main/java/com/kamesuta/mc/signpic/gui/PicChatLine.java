@@ -76,18 +76,8 @@ public class PicChatLine extends ChatLine {
 		return 0;
 	}
 
-	@CoreInvoke
-	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color/*, final @Nonnull GuiNewChat chat*/, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
-		return 0;
-	}
-
 	private static int getChatWidth(final @Nonnull GuiNewChat chat) {
 		return MathHelper.floor_float(chat.func_146228_f()/chat.func_146244_h());
-	}
-
-	@CoreInvoke
-	public @Nullable IChatComponent onClicked(final @Nonnull com.kamesuta.mc.signpic.gui.GuiNewChat chat, final @Nonnull FontRenderer font, final int x) {
-		return null;
 	}
 
 	@CoreInvoke

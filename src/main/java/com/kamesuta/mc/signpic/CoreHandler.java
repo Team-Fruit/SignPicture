@@ -5,14 +5,13 @@ import javax.annotation.Nonnull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
+import com.kamesuta.mc.signpic.asm.lib.DescHelper;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
-import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.gui.OverlayFrame;
 import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.handler.SignHandler;
-import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.information.Informations;
@@ -22,6 +21,7 @@ import com.kamesuta.mc.signpic.state.State;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -145,9 +145,11 @@ public class CoreHandler {
 		// Reference.logger.info("try to delete: "+Client.location.modFile.getName());
 		// Client.deleteMod();
 		// Client.notice("Debug Message!", 3f);
-		final DebugCommunicate debug = new DebugCommunicate();
-		debug.getState().getMeta().put(GuiTask.HighlightPanel, true);
-		Communicator.instance.communicate(debug);
+		// final DebugCommunicate debug = new DebugCommunicate();
+		// debug.getState().getMeta().put(GuiTask.HighlightPanel, true);
+		// Communicator.instance.communicate(debug);
+		// Log.log.info(FMLDeobfuscatingRemapper.INSTANCE.mapMethodName("net/minecraft/client/gui/GuiNewChat", "resetScroll", DescHelper.toDesc(void.class, new Object[0])));
+		Log.log.info(FMLDeobfuscatingRemapper.INSTANCE.mapMethodName("net/minecraft/client/gui/GuiNewChat", "resetScroll", DescHelper.toDesc(void.class, new Object[0])));
 	}
 
 	private static class DebugCommunicate implements ICommunicate, Progressable {
