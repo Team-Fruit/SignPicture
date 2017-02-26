@@ -147,8 +147,8 @@ public class GuiNewChatVisitor extends ClassVisitor {
 			return new InitHookMethodVisitor(parent);
 		if (this.drawchatmatcher.match(name, desc))
 			return new DrawChatHookMethodVisitor(parent);
-		//if (this.applymatcher.match(name, desc))
-		//	return new ApplyHookMethodVisitor(parent);
+		if (this.applymatcher.match(name, desc))
+			return new ApplyHookMethodVisitor(parent);
 
 		return parent;
 	}
