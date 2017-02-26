@@ -77,11 +77,17 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				 * 333  iload 11 [i2]
 				 * 335  invokestatic com.kamesuta.mc.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
 				 */
-				// visitVarInsn(Opcodes.ALOAD, 0);
+				visitVarInsn(Opcodes.ALOAD, 0);
 				visitVarInsn(Opcodes.ALOAD, 12);
 				visitVarInsn(Opcodes.ILOAD, 16);
 				visitVarInsn(Opcodes.ILOAD, 11);
-				visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/gui/PicChatLine", "hookDrawStringWithShadow", DescHelper.toDesc(int.class, "net.minecraft.client.gui.FontRenderer", "java.lang.String", int.class, int.class, int.class/*, "net.minecraft.client.gui.GuiNewChat"*/, "net.minecraft.client.gui.ChatLine", int.class, int.class), false);
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/gui/PicChatLine", "hookDrawStringWithShadow",
+						DescHelper.toDesc(int.class,
+								"net.minecraft.client.gui.FontRenderer",
+								"java.lang.String", int.class, int.class, int.class,
+								"net.minecraft.client.gui.GuiNewChat",
+								"net.minecraft.client.gui.ChatLine", int.class, int.class),
+						false);
 			} else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 		}
@@ -109,7 +115,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				visitVarInsn(Opcodes.ALOAD, 12);
 				visitVarInsn(Opcodes.ILOAD, 16);
 				visitVarInsn(Opcodes.ILOAD, 11);
-				visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/gui/PicChatLine", "hookDrawStringWithShadow", DescHelper.toDesc(int.class, "net.minecraft.client.gui.FontRenderer", "java.lang.String", int.class, int.class, int.class, "net.minecraft.client.gui.GuiNewChat", "net.minecraft.client.gui.ChatLine", int.class, int.class), false);
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/gui/PicChatLine", "hookDrawStringWithShadow", DescHelper.toDesc(int.class, "net.minecraft.client.gui.FontRenderer", "java.lang.String", int.class, int.class, int.class, "net.minecraft.client.gui.GuiNewChat", "net.minecraft.client.gui.ChatLine", int.class, int.class), false);
 			} else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 		}

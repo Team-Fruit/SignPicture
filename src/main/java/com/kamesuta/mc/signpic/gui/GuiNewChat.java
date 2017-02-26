@@ -101,7 +101,7 @@ public class GuiNewChat extends Gui {
 								GL11.glEnable(GL11.GL_BLEND); // FORGE: BugFix MC-36812 Chat Opacity Broken in 1.7.x
 								final String s = chatline.func_151461_a().getFormattedText();
 								// this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
-								PicChatLine.hookDrawStringWithShadow(this.mc.fontRenderer, s, b0, j2-8, 16777215+(i2<<24), this, chatline, j2, i2);
+								//PicChatLine.hookDrawStringWithShadow(this.mc.fontRenderer, s, b0, j2-8, 16777215+(i2<<24), this, chatline, j2, i2);
 								GL11.glDisable(GL11.GL_ALPHA_TEST);
 							}
 						}

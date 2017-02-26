@@ -61,7 +61,7 @@ public class PicChatHook {
 		final List<ChatLine> list = this.chatLinesHook;
 		for (final ChatLine line : list)
 			if (!(line instanceof PicChatLine))
-				clist.add(line);
+				clist.add(0, line);
 		list.clear();
 
 		final List<List<ChatLine>> lineunits = Lists.newLinkedList();

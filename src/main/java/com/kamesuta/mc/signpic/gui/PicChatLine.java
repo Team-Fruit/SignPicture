@@ -60,7 +60,7 @@ public class PicChatLine extends ChatLine {
 	}
 
 	@CoreInvoke
-	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
+	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull net.minecraft.client.gui.GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
 		if (chatline instanceof PicChatLine) {
 			final PicChatLine cline = (PicChatLine) chatline;
 			OpenGL.glPushMatrix();
@@ -80,7 +80,7 @@ public class PicChatLine extends ChatLine {
 		return 0;
 	}
 
-	private static int getChatWidth(final @Nonnull GuiNewChat chat) {
+	private static int getChatWidth(final @Nonnull net.minecraft.client.gui.GuiNewChat chat) {
 		return MathHelper.floor_float(chat.func_146228_f()/chat.func_146244_h());
 	}
 
