@@ -20,6 +20,7 @@ import com.kamesuta.mc.signpic.gui.GuiImage;
 
 import net.minecraft.client.gui.FontRenderer;
 
+@CoreInvoke
 public class CustomBookRenderer {
 	@CoreInvoke
 	public static void hookDrawSplitString(@Nonnull final String s, final int x, final int y, final int width, final int color) {
