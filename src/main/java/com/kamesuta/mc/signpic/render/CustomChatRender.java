@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
@@ -33,6 +34,7 @@ public class CustomChatRender {
 	public static class PicChatLine extends ChatLine {
 		private final @Nonnull List<Entry> entrylist;
 		public final int num;
+		private float xpos;
 
 		public PicChatLine(final int updateCounterCreated, @Nonnull final IChatComponent lineString, final int chatLineID, @Nonnull final List<Entry> entrylist, final int num) {
 			super(updateCounterCreated, lineString, chatLineID);
@@ -43,21 +45,35 @@ public class CustomChatRender {
 		public void draw(final float width, final float height) {
 			float ix = 0;
 			for (final Entry entry : this.entrylist) {
+				if (ix>width)
+					break;
 				final Content content = entry.getContent();
 
 				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
 				OpenGL.glPushMatrix();
 				OpenGL.glTranslatef(ix, -9, 0f);
-				ix += size2.getWidth();
+				float w = size2.getWidth();
+				final float ix0 = ix+w;
+				float wmap = 1f;
+				WRenderer.startShape();
+				OpenGL.glColor4f(1f, 1f, 1f, 1f);
+				WGui.drawSize(0f, 0f, width, height);
+				WRenderer.startTexture();
+				if (ix0>width) {
+					final float cut = ix0-width;
+					wmap = ix0/width;
+				}
 
-				OpenGL.glScalef(size2.getWidth(), size2.getHeight(), 1f);
+				w *= wmap;
+				OpenGL.glScalef(w, size2.getHeight(), 1f);
+				ix += w;
 
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
 					final CompoundAttr meta = entry.getMeta();
 					OpenGL.glScalef(1f, 1f/4f, 1f);
 					final float iy = 1f-this.num/4f;
-					content.image.draw(meta, 0f, iy, 1f, iy+1f/4f);
+					content.image.draw(meta, 0f, iy, wmap, iy+1f/4f);
 				}
 
 				OpenGL.glPopMatrix();
@@ -66,9 +82,10 @@ public class CustomChatRender {
 
 		@CoreInvoke
 		public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final int x) {
-			final int width = getChatWidth(chat);
-			final int height = WRenderer.font().FONT_HEIGHT;
+			this.xpos = x;
+			final int width = getChatWidth(chat)/2;
 			float ix = 0;
+			final int height = WRenderer.font().FONT_HEIGHT;
 			for (final Entry entry : this.entrylist) {
 				final Content content = entry.getContent();
 
