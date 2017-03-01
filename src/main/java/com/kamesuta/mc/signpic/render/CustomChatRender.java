@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
@@ -58,7 +59,7 @@ public class CustomChatRender {
 				float wmap = 1f;
 				WRenderer.startShape();
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				WGui.drawSize(0f, 0f, width, height);
+				WGui.draw(Area.size(0f, 0f, width, height));
 				WRenderer.startTexture();
 				if (ix0>width) {
 					final float cut = ix0-width;

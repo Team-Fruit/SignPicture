@@ -75,7 +75,7 @@ public class GuiImage extends WFrame {
 							OpenGL.glColor4f(.5f, .5f, .5f, opacity*.5f);
 							OpenGL.glLineWidth(1f);
 							WRenderer.startShape();
-							drawAbs(0, 0, a.w(), a.h(), GL_LINE_LOOP);
+							draw(Area.abs(0, 0, a.w(), a.h()), GL_LINE_LOOP);
 							final float h = a.h()-.5f;
 							final WVertex v = begin(GL_LINES);
 							v.pos(a.w()/2f, h, 0f);
@@ -98,7 +98,7 @@ public class GuiImage extends WFrame {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
 							OpenGL.glColor4f(1.0F, 0.0F, 0.0F, opacity*1.0F);
-							drawAbs(0, 0, 1, 1, GL_LINE_LOOP);
+							draw(Area.abs(0, 0, 1, 1), GL_LINE_LOOP);
 						}
 						OpenGL.glPopMatrix();
 
@@ -341,9 +341,9 @@ public class GuiImage extends WFrame {
 			OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 			OpenGL.glRotatef(this.rot.get()*360, 0, 0, 1);
 			OpenGL.glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, -.001f);
-			drawTexture(a);
+			drawTexture(a, null, null);
 			OpenGL.glTranslatef(0f, 0f, -.002f);
-			drawTexture(a);
+			drawTexture(a, null, null);
 			OpenGL.glPopMatrix();
 		}
 	};

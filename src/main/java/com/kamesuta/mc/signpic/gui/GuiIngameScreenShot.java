@@ -97,7 +97,7 @@ public class GuiIngameScreenShot extends WFrame {
 					final Point point = this.point;
 					final Area rect;
 					if (point!=null)
-						rect = new Area(point2.x(), point2.y(), point.x(), point.y());
+						rect = Area.abs(point2.x(), point2.y(), point.x(), point.y());
 					else
 						rect = a;
 					WRenderer.startShape();
@@ -118,8 +118,8 @@ public class GuiIngameScreenShot extends WFrame {
 					final Point point1 = this.point;
 					final BufferedImage image;
 					if (point1!=null) {
-						final Area rect = new Area(point2.x()*scaleX(), point2.y()*scaleY(), point1.x()*scaleX(), point1.y()*scaleY());
-						image = takeScreenshotRect((int) rect.minX(), (int) rect.minY(), (int) rect.w()-1, (int) rect.h()-1, mc.getFramebuffer());
+						final Area rect = Area.abs(point2.x()*scaleX(), point2.y()*scaleY(), point1.x()*scaleX(), point1.y()*scaleY());
+						image = takeScreenshotRect((int) rect.x1(), (int) rect.y1(), (int) rect.w()-1, (int) rect.h()-1, mc.getFramebuffer());
 					} else
 						image = takeScreenshot(mc.getFramebuffer());
 					if (image!=null)
@@ -139,17 +139,17 @@ public class GuiIngameScreenShot extends WFrame {
 				} else if (!this.disable&&!GuiIngameScreenShot.this.closeRequest) {
 					final Point point = this.point;
 					if (point!=null) {
-						final Area rect = new Area(point2.x(), point2.y(), point.x(), point.y());
+						final Area rect = Area.abs(point2.x(), point2.y(), point.x(), point.y());
 						WRenderer.startShape();
 						OpenGL.glColor(GuiWindowScreenShot.bgcolor);
 						drawAround(a, rect);
 						WRenderer.startTexture();
 						OpenGL.glColor(GuiWindowScreenShot.textshadowcolor);
-						font.drawString(String.valueOf((int) rect.w()), rect.maxX()-5+.5f, rect.maxY()-12+.5f, 10, 3, guiScaleX(), Align.RIGHT);
-						font.drawString(String.valueOf((int) rect.h()), rect.maxX()-5+.5f, rect.maxY()-8+.5f, 10, 3, guiScaleY(), Align.RIGHT);
+						font.drawString(String.valueOf((int) rect.w()), rect.x2()-5+.5f, rect.y2()-12+.5f, 10, 3, guiScaleX(), Align.RIGHT);
+						font.drawString(String.valueOf((int) rect.h()), rect.x2()-5+.5f, rect.y2()-8+.5f, 10, 3, guiScaleY(), Align.RIGHT);
 						OpenGL.glColor(GuiWindowScreenShot.textcolor);
-						font.drawString(String.valueOf((int) rect.w()), rect.maxX()-5, rect.maxY()-12, 10, 3, guiScaleX(), Align.RIGHT);
-						font.drawString(String.valueOf((int) rect.h()), rect.maxX()-5, rect.maxY()-8, 10, 3, guiScaleY(), Align.RIGHT);
+						font.drawString(String.valueOf((int) rect.w()), rect.x2()-5, rect.y2()-12, 10, 3, guiScaleX(), Align.RIGHT);
+						font.drawString(String.valueOf((int) rect.h()), rect.x2()-5, rect.y2()-8, 10, 3, guiScaleY(), Align.RIGHT);
 					} else {
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, .25f);
@@ -162,18 +162,18 @@ public class GuiIngameScreenShot extends WFrame {
 
 			private void drawCursor(final Point point) {
 				final float s = .5f;
-				drawAbs(point.x()-s, point.y()-s, point.x()+s, point.y()+s);
-				drawAbs(point.x()-4.5f, point.y()-s, point.x(), point.y()+s);
-				drawAbs(point.x(), point.y()-s, point.x()+4.5f, point.y()+s);
-				drawAbs(point.x()-s, point.y()-4.5f, point.x()+s, point.y());
-				drawAbs(point.x()-s, point.y(), point.x()+s, point.y()+4.5f);
+				draw(Area.abs(point.x()-s, point.y()-s, point.x()+s, point.y()+s));
+				draw(Area.abs(point.x()-4.5f, point.y()-s, point.x(), point.y()+s));
+				draw(Area.abs(point.x(), point.y()-s, point.x()+4.5f, point.y()+s));
+				draw(Area.abs(point.x()-s, point.y()-4.5f, point.x()+s, point.y()));
+				draw(Area.abs(point.x()-s, point.y(), point.x()+s, point.y()+4.5f));
 			}
 
 			private void drawAround(final @Nonnull Area out, final @Nonnull Area in) {
-				drawAbs(out.minX(), out.minY(), out.maxX(), in.minY());
-				drawAbs(out.minX(), in.minY(), in.minX(), in.maxY());
-				drawAbs(in.maxX(), in.minY(), out.maxX(), in.maxY());
-				drawAbs(out.minX(), in.maxY(), out.maxX(), out.maxY());
+				draw(Area.abs(out.x1(), out.y1(), out.x2(), in.y1()));
+				draw(Area.abs(out.x1(), in.y1(), in.x1(), in.y2()));
+				draw(Area.abs(in.x2(), in.y1(), out.x2(), in.y2()));
+				draw(Area.abs(out.x1(), in.y2(), out.x2(), out.y2()));
 			}
 		});
 	}

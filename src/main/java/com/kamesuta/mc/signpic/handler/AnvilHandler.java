@@ -89,12 +89,12 @@ public class AnvilHandler implements INameHandler {
 			OpenGL.glColor4f(1f, 1f, 1f, 1f);
 			WRenderer.startTexture();
 			WRenderer.texture().bindTexture(MPanel.background);
-			final Area a = new Area(guiLeft-42, guiTop, guiLeft, guiTop+49);
+			final Area a = Area.abs(guiLeft-42, guiTop, guiLeft, guiTop+49);
 			MPanel.drawBack(a);
 			WRenderer.texture().bindTexture(SignPicLabel.defaultTexture);
-			WGui.drawTextureSize(guiLeft-42, guiTop+3, 42, 42);
+			WGui.drawTexture(Area.size(guiLeft-42, guiTop+3, 42, 42), null, null);
 			if (CurrentMode.instance.isShortening()) {
-				final Area b = new Area(guiLeft, guiTop-20, gui.width-guiLeft, guiTop);
+				final Area b = Area.abs(guiLeft, guiTop-20, gui.width-guiLeft, guiTop);
 				OpenGL.glColor4f(1f, 1f, 1f, this.o.get());
 				WGui.drawString(I18n.format("signpic.gui.notice.shortening"), b, WGui.Align.CENTER, WGui.VerticalAlign.MIDDLE, true);
 			}

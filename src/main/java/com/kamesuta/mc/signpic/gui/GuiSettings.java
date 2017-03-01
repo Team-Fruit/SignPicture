@@ -143,7 +143,7 @@ public class GuiSettings extends WPanel {
 										texture().bindTexture(settings);
 										OpenGL.glColor4f(1, 1, 1, 1);
 										WRenderer.startTexture();
-										drawTexture(a);
+										drawTexture(a, null, null);
 									}
 								});
 								final MTab tab = new MTab(new R(Coord.left(5), Coord.width(250), Coord.top(33), Coord.height(82)), Coord.CoordSide.Left, 15f, 15f);
@@ -277,7 +277,7 @@ public class GuiSettings extends WPanel {
 															OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 															OpenGL.glRotatef((orot+rot.get())*360, 0, 0, 1);
 															OpenGL.glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
-															drawTexture(a);
+															drawTexture(a, null, null);
 															OpenGL.glPopMatrix();
 														}
 													});

@@ -110,7 +110,7 @@ public class GuiTask extends WPanel {
 								texture().bindTexture(panel);
 								OpenGL.glColor4f(1, 1, 1, 1);
 								WRenderer.startTexture();
-								drawTexture(a);
+								drawTexture(a, null, null);
 							}
 						});
 
@@ -185,7 +185,7 @@ public class GuiTask extends WPanel {
 		@Override
 		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 			final Area a = getGuiPosition(pgp);
-			final Area b = new Area(pgp.x1(), a.y1(), pgp.x2(), a.y2());
+			final Area b = Area.abs(pgp.x1(), a.y1(), pgp.x2(), a.y2());
 			if (pgp.areaInside(b))
 				super.draw(ev, pgp, p, frame, popacity);
 		}
