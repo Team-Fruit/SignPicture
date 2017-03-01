@@ -5,7 +5,9 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.Config;
@@ -37,7 +39,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 			return SizeData.DefaultSize;
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m, final boolean l) {
+	public void draw(@Nullable final Area vertex, @Nullable final Area trim, @Nullable final Area texture, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m, final boolean l) {
 		if (this.content.state.getType()==StateType.AVAILABLE) {
 			WRenderer.startTexture(b, d);
 			if (l)
@@ -64,12 +66,8 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
-			WRenderer.beginTextureQuads()
-					.pos(0, 0, 0).tex(u, v)
-					.pos(0, 1, 0).tex(u, v+h/s)
-					.pos(1, 1, 0).tex(u+w/c, v+h/s)
-					.pos(1, 0, 0).tex(u+w/c, v)
-					.draw();
+			WGui.drawTexture(vertex, trim, texture);
+
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);
 			if (image.hasMipmap()) {
@@ -80,27 +78,22 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 		}
 	}
 
-	public void draw(final float u, final float v, final float w, final float h, final float c, final float s, final @Nullable BlendType b, final @Nullable BlendType d, final boolean r, final boolean m, final boolean l, final float x1, final float y1, final float x2, final float y2) {
-		draw(u-x1, v-y1, w-x1-(1f-x2), h-y1-(1f-y2), c, s, b, d, r, m, l);
-	}
-
-	public void draw(@Nonnull final CompoundAttr meta, final float x1, final float y1, final float x2, final float y2) {
+	public void draw(@Nonnull final CompoundAttr meta, @Nullable final Area vertex, @Nullable final Area trim) {
 		draw(
-				meta.u.getMovie().get().data,
-				meta.v.getMovie().get().data,
-				meta.w.getMovie().get().data,
-				meta.h.getMovie().get().data,
-				meta.c.getMovie().get().data,
-				meta.s.getMovie().get().data,
+				vertex, trim,
+				Area.size(
+						meta.u.getMovie().get().data,
+						meta.v.getMovie().get().data,
+						meta.w.getMovie().get().data/meta.c.getMovie().get().data,
+						meta.h.getMovie().get().data/meta.s.getMovie().get().data),
 				meta.b.getMovie().get().data,
 				meta.d.getMovie().get().data,
 				meta.r.getMovie().get().data,
 				meta.m.getMovie().get().data,
-				meta.l.getMovie().get().data,
-				x1, y1, x2, y2);
+				meta.l.getMovie().get().data);
 	}
 
 	public void draw(@Nonnull final CompoundAttr meta) {
-		draw(meta, 0f, 0f, 1f, 1f);
+		draw(meta, null, null);
 	}
 }

@@ -1,11 +1,15 @@
 package com.kamesuta.mc.signpic.render;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.lwjgl.opengl.GL11;
+
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WGui;
@@ -15,6 +19,7 @@ import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
+import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.state.StateType;
@@ -33,48 +38,51 @@ import net.minecraft.util.MathHelper;
 public class CustomChatRender {
 	@CoreInvoke
 	public static class PicChatLine extends ChatLine {
-		private final @Nonnull List<Entry> entrylist;
+		public static final @Nonnull IChatComponent dummytext = new ChatComponentText("");
+		private final @Nonnull PicChatNode node;
 		public final int num;
 		private float xpos;
 
-		public PicChatLine(final int updateCounterCreated, @Nonnull final IChatComponent lineString, final int chatLineID, @Nonnull final List<Entry> entrylist, final int num) {
-			super(updateCounterCreated, lineString, chatLineID);
-			this.entrylist = entrylist;
+		public PicChatLine(final @Nonnull PicChatNode node, final int num) {
+			super(node.updateCounterCreated, dummytext, node.chatLineID);
+			this.node = node;
 			this.num = num;
 		}
 
 		public void draw(final float width, final float height) {
-			float ix = 0;
-			for (final Entry entry : this.entrylist) {
+			float totalwidth = 0;
+			final List<Entry> entries = this.node.getEntries();
+			for (final Entry entry : entries) {
+				final Content content = entry.getContent();
+				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
+				totalwidth += size2.getWidth();
+			}
+			float ix = -totalwidth*(this.xpos/width);
+			final Area trim = Area.size(0f, 0f, width, height);
+			final Area vert = WGui.defaultTextureArea.translate(0f, -height*this.num);
+			for (final Entry entry : entries) {
 				if (ix>width)
 					break;
 				final Content content = entry.getContent();
-
 				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
 				OpenGL.glPushMatrix();
-				OpenGL.glTranslatef(ix, -9, 0f);
-				float w = size2.getWidth();
-				final float ix0 = ix+w;
-				float wmap = 1f;
+				OpenGL.glTranslatef(0f, -9, 0f);
 				WRenderer.startShape();
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				WGui.draw(Area.size(0f, 0f, width, height));
+				WGui.draw(trim, GL11.GL_LINE_LOOP);
 				WRenderer.startTexture();
-				if (ix0>width) {
-					final float cut = ix0-width;
-					wmap = ix0/width;
-				}
 
-				w *= wmap;
-				OpenGL.glScalef(w, size2.getHeight(), 1f);
+				final float w = size2.getWidth();
+				final float h = size2.getHeight();
+				//OpenGL.glScalef(w, h, 1f);
+				final Area svert = vert.scaleSize(w, h).translate(ix, 0);
 				ix += w;
 
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
 					final CompoundAttr meta = entry.getMeta();
-					OpenGL.glScalef(1f, 1f/4f, 1f);
-					final float iy = 1f-this.num/4f;
-					content.image.draw(meta, 0f, iy, wmap, iy+1f/4f);
+					content.image.draw(meta, svert, trim);
 				}
 
 				OpenGL.glPopMatrix();
@@ -87,7 +95,7 @@ public class CustomChatRender {
 			final int width = getChatWidth(chat)/2;
 			float ix = 0;
 			final int height = WRenderer.font().FONT_HEIGHT;
-			for (final Entry entry : this.entrylist) {
+			for (final Entry entry : this.node.getEntries()) {
 				final Content content = entry.getContent();
 
 				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
@@ -123,17 +131,98 @@ public class CustomChatRender {
 		return 0;
 	}
 
-	@CoreInvoke
-	public static class PicChatHook {
-		private final @Nonnull List<ChatLine> chatLinesHook;
-		private final @Nonnull List<ChatLine> chatList = Lists.newArrayList();
+	public static class PicChatID {
+		public final int id;
+		public final @Nonnull List<ChatLine> lines;
 
-		@CoreInvoke
-		public PicChatHook(final @Nonnull List<ChatLine> chatLinesHook) {
-			this.chatLinesHook = chatLinesHook;
+		public PicChatID(final int id, final @Nonnull List<ChatLine> lines) {
+			this.id = id;
+			this.lines = lines;
 		}
 
-		@CoreInvoke
+		public @Nonnull PicChatNode getNode(final @Nonnull Map<PicChatID, PicChatNode> id2node) {
+			PicChatNode node = id2node.get(this);
+			if (node==null)
+				id2node.put(this, node = new PicChatNode(this.lines));
+			return node;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime*result+this.id;
+			return result;
+		}
+
+		@Override
+		public boolean equals(final @Nullable Object obj) {
+			if (this==obj)
+				return true;
+			if (obj==null)
+				return false;
+			if (!(obj instanceof PicChatID))
+				return false;
+			final PicChatID other = (PicChatID) obj;
+			if (this.id!=other.id)
+				return false;
+			return true;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("PicChatID [id=%s]", this.id);
+		}
+	}
+
+	public static class PicChatNode {
+		private final @Nonnull List<EntryId> pendentryids;
+		private final @Nonnull List<Entry> entries;
+		public final int updateCounterCreated;
+		public final int chatLineID;;
+
+		public PicChatNode(final @Nonnull List<ChatLine> lines) {
+			this.pendentryids = Lists.newLinkedList();
+			this.entries = Lists.newLinkedList();
+			int updateCounterCreated = -1;
+			int chatLineID = -1;
+			{
+				EntryId _lastentryid = null;
+				for (final ChatLine line : lines) {
+					updateCounterCreated = line.getUpdatedCounter();
+					chatLineID = line.getChatLineID();
+					final IChatComponent cc = line.func_151461_a();
+					final List<ClickEvent> clinks = getLinksFromChat(cc);
+					boolean first = true;
+					for (final ClickEvent clink : clinks) {
+						final EntryId entryid = new EntryIdBuilder().setURI(clink.getValue()).build();
+						if (!first||!entryid.equals(_lastentryid))
+							this.pendentryids.add(entryid);
+						first = false;
+						_lastentryid = entryid;
+					}
+				}
+			}
+			this.updateCounterCreated = updateCounterCreated;
+			this.chatLineID = chatLineID;
+		}
+
+		public @Nonnull List<Entry> getEntries() {
+			this.entries.clear();
+			for (final EntryId pendentryid : this.pendentryids) {
+				final Entry pendentry = pendentryid.entry();
+				final Content content = pendentry.getContent();
+				if (pendentry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
+					this.entries.add(pendentry);
+			}
+			return this.entries;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("PicChatNode [pendentryids=%s, updateCounterCreated=%s, chatLineID=%s]", this.pendentryids, this.updateCounterCreated, this.chatLineID);
+		}
+
 		public static @Nonnull List<ClickEvent> getLinksFromChat(final @Nonnull IChatComponent chat) {
 			final List<ClickEvent> list = Lists.newLinkedList();
 			getLinksFromChat0(list, chat);
@@ -150,6 +239,18 @@ public class CustomChatRender {
 				getLinksFromChat0(list, chat);
 			}
 		}
+	}
+
+	@CoreInvoke
+	public static class PicChatHook {
+		private final @Nonnull List<ChatLine> chatLinesHook;
+		private final @Nonnull List<ChatLine> chatList = Lists.newArrayList();
+		private final @Nonnull Map<PicChatID, PicChatNode> id2node = Maps.newHashMap();
+
+		@CoreInvoke
+		public PicChatHook(final @Nonnull List<ChatLine> chatLinesHook) {
+			this.chatLinesHook = chatLinesHook;
+		}
 
 		@CoreInvoke
 		public void updateLines() {
@@ -161,7 +262,7 @@ public class CustomChatRender {
 					clist.add(0, line);
 			list.clear();
 
-			final List<List<ChatLine>> lineunits = Lists.newLinkedList();
+			final List<PicChatID> lineunits = Lists.newLinkedList();
 			{
 				List<ChatLine> _lineunits = Lists.newLinkedList();
 				int _lastlineunits = -1;
@@ -169,49 +270,25 @@ public class CustomChatRender {
 					final int id = line.getUpdatedCounter();
 
 					if (id!=_lastlineunits) {
-						lineunits.add(_lineunits);
+						lineunits.add(new PicChatID(_lastlineunits, _lineunits));
 						_lineunits = Lists.newLinkedList();
 					}
 					_lineunits.add(line);
 					_lastlineunits = id;
 				}
 				if (_lineunits!=null)
-					lineunits.add(_lineunits);
+					lineunits.add(new PicChatID(_lastlineunits, _lineunits));
 			}
 
-			for (final List<ChatLine> lines : lineunits) {
-				final List<Entry> entries = Lists.newLinkedList();
-				int updateCounterCreated = -1;
-				int chatLineID = -1;
-				{
-					Entry _lastentries = null;
-					for (final ChatLine line : lines) {
-						updateCounterCreated = line.getUpdatedCounter();
-						chatLineID = line.getChatLineID();
-						final IChatComponent cc = line.func_151461_a();
-						final List<ClickEvent> clinks = getLinksFromChat(cc);
-						boolean first = true;
-						for (final ClickEvent clink : clinks) {
-							final Entry entry = new EntryIdBuilder().setURI(clink.getValue()).build().entry();
-							if (!first||!entry.equals(_lastentries)) {
-								final Content content = entry.getContent();
-								if (entry.isValid()&&content!=null&&content.state.getType()==StateType.AVAILABLE)
-									entries.add(entry);
-							}
-							first = false;
-							_lastentries = entry;
-						}
-					}
-				}
+			for (final PicChatID id : lineunits) {
+				final PicChatNode node = id.getNode(this.id2node);
 
-				for (final ChatLine line : lines)
+				for (final ChatLine line : id.lines)
 					list.add(0, line);
 
-				if (!entries.isEmpty()) {
-					final IChatComponent chattext = new ChatComponentText("");
+				if (!node.getEntries().isEmpty())
 					for (int i = 0; i<4; i++)
-						list.add(0, new PicChatLine(updateCounterCreated, chattext, chatLineID, entries, i));
-				}
+						list.add(0, new PicChatLine(node, i));
 			}
 		}
 	}
