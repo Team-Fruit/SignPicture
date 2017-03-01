@@ -40,6 +40,7 @@ public class CustomChatRender {
 		private final @Nonnull PicChatNode node;
 		public final int num;
 		private final float space = 1f;
+		private static final float offset = 4f;
 
 		public PicChatLine(final @Nonnull PicChatNode node, final int num) {
 			super(node.updateCounterCreated, dummytext, node.chatLineID);
@@ -47,44 +48,49 @@ public class CustomChatRender {
 			this.num = num;
 		}
 
+		private @Nonnull SizeData getContentWidth(final @Nullable Content content, final float widthlimit) {
+			final int fheight = WRenderer.font().FONT_HEIGHT;
+			final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
+			final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(widthlimit, fheight*this.node.getLineSplit()));
+			return size2;
+		}
+
 		public void draw(final float width, final float height) {
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0f, -9, 0f);
 			final int linesplit = this.node.getLineSplit();
-			float totalwidth = 4;
+			float totalwidth = offset;
 			final List<Entry> entries = this.node.getEntries();
 			for (final Entry entry : entries) {
 				final Content content = entry.getContent();
-				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*linesplit));
-				totalwidth += size2.getWidth()+this.space;
+				totalwidth += getContentWidth(content, width).getWidth()+this.space;
 			}
-			float ix = 4;
+			float ix = offset;
 			if (totalwidth>width)
 				ix -= (totalwidth-width)*(this.node.xpos/width);
-			//Log.log.info(ix);
 			final Area trim = Area.size(0f, 0f, width, height);
 			final Area vert = WGui.defaultTextureArea.translate(0f, -height*this.num);
 
-			final Area lvert = vert.scaleSize(1, height*linesplit).translate(ix-2, 0);
-			WRenderer.startShape();
-			OpenGL.glColor4f(.5f, .5f, .5f, .5f);
-			WGui.draw(lvert.trimArea(trim));
+			{
+				// draw first line
+				final Area lvert = vert.scaleSize(1, height*linesplit).translate(ix-2, 0);
+				WRenderer.startShape();
+				OpenGL.glColor4f(.5f, .5f, .5f, .5f);
+				WGui.draw(lvert.trimArea(trim));
+			}
 
 			for (final Entry entry : entries) {
 				if (ix>width)
 					break;
-				final Content content = entry.getContent();
-				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*linesplit));
 				WRenderer.startShape();
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
 				//WGui.draw(trim, GL11.GL_LINE_LOOP);
 				WRenderer.startTexture();
 
+				final Content content = entry.getContent();
+				final SizeData size2 = getContentWidth(content, width);
 				final float w = size2.getWidth();
 				final float h = size2.getHeight();
-				//OpenGL.glScalef(w, h, 1f);
 				final Area svert = vert.scaleSize(w, h).translate(ix, 0);
 				ix += w+this.space;
 
@@ -92,7 +98,6 @@ public class CustomChatRender {
 					final CompoundAttr meta = entry.getMeta();
 					content.image.draw(meta, svert, trim);
 				}
-
 			}
 			OpenGL.glPopMatrix();
 		}
@@ -100,16 +105,21 @@ public class CustomChatRender {
 		@CoreInvoke
 		public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final int x) {
 			this.node.xpos = x;
-			final int width = getChatWidth(chat)/2;
-			float ix = 0;
-			final int height = WRenderer.font().FONT_HEIGHT;
+			final int width = getChatWidth(chat);
+
+			float totalwidth = offset;
+			final List<Entry> entries = this.node.getEntries();
+			for (final Entry entry : entries) {
+				final Content content = entry.getContent();
+				totalwidth += getContentWidth(content, width).getWidth()+this.space;
+			}
+			float ix = offset;
+			if (totalwidth>width)
+				ix -= (totalwidth-width)*(this.node.xpos/width);
+
 			for (final Entry entry : this.node.getEntries()) {
 				final Content content = entry.getContent();
-
-				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
-
-				ix += size2.getWidth();
+				ix += getContentWidth(content, width).getWidth();
 
 				if (x<ix)
 					if (content!=null)
