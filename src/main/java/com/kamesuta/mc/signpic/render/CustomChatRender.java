@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -41,7 +39,6 @@ public class CustomChatRender {
 		public static final @Nonnull IChatComponent dummytext = new ChatComponentText("");
 		private final @Nonnull PicChatNode node;
 		public final int num;
-		private float xpos;
 
 		public PicChatLine(final @Nonnull PicChatNode node, final int num) {
 			super(node.updateCounterCreated, dummytext, node.chatLineID);
@@ -50,15 +47,18 @@ public class CustomChatRender {
 		}
 
 		public void draw(final float width, final float height) {
-			float totalwidth = 0;
+			float totalwidth = 4;
 			final List<Entry> entries = this.node.getEntries();
 			for (final Entry entry : entries) {
 				final Content content = entry.getContent();
 				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
-				totalwidth += size2.getWidth();
+				totalwidth += size2.getWidth()+1;
 			}
-			float ix = -totalwidth*(this.xpos/width);
+			float ix = 4;
+			if (totalwidth>width)
+				ix -= (totalwidth-width)*(this.node.xpos/width);
+			//Log.log.info(ix);
 			final Area trim = Area.size(0f, 0f, width, height);
 			final Area vert = WGui.defaultTextureArea.translate(0f, -height*this.num);
 			for (final Entry entry : entries) {
@@ -71,14 +71,14 @@ public class CustomChatRender {
 				OpenGL.glTranslatef(0f, -9, 0f);
 				WRenderer.startShape();
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
-				WGui.draw(trim, GL11.GL_LINE_LOOP);
+				//WGui.draw(trim, GL11.GL_LINE_LOOP);
 				WRenderer.startTexture();
 
 				final float w = size2.getWidth();
 				final float h = size2.getHeight();
 				//OpenGL.glScalef(w, h, 1f);
 				final Area svert = vert.scaleSize(w, h).translate(ix, 0);
-				ix += w;
+				ix += w+1;
 
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
 					final CompoundAttr meta = entry.getMeta();
@@ -91,7 +91,7 @@ public class CustomChatRender {
 
 		@CoreInvoke
 		public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final int x) {
-			this.xpos = x;
+			this.node.xpos = x;
 			final int width = getChatWidth(chat)/2;
 			float ix = 0;
 			final int height = WRenderer.font().FONT_HEIGHT;
@@ -180,6 +180,7 @@ public class CustomChatRender {
 		private final @Nonnull List<Entry> entries;
 		public final int updateCounterCreated;
 		public final int chatLineID;;
+		public float xpos;
 
 		public PicChatNode(final @Nonnull List<ChatLine> lines) {
 			this.pendentryids = Lists.newLinkedList();
