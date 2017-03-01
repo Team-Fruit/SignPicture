@@ -90,6 +90,8 @@ public final class Config extends Configuration {
 	/** Minimum time needed to type a character. */
 	public final @Nonnull ConfigProperty<Integer> multiplayPAASMinCharTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", 50));
 
+	public final @Nonnull ConfigProperty<Boolean> renderChatPicture = propertyBoolean(get("Render", "ChatPicture", true)).setComment("Enable chat picture extension");
+	public final @Nonnull ConfigProperty<Integer> renderChatPictureLine = propertyInteger(get("Render", "ChatPictureLines", 4)).setComment("chat picture lines count");
 	public final @Nonnull ConfigProperty<Boolean> renderOverlayPanel = propertyBoolean(get("Render", "OverlayPanel", true)).setComment("Overlay signpic!online");
 	public final @Nonnull ConfigProperty<Boolean> renderGuiOverlay = propertyBoolean(get("Render", "GuiOverlay", true)).setComment("Overlay on GUI");
 	public final @Nonnull ConfigProperty<Boolean> renderUseMipmap = propertyBoolean(get("Render", "Mipmap", true)).setComment("Require OpenGL 3.0 or later");

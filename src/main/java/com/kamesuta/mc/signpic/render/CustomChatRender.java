@@ -12,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.CompoundAttr;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -272,8 +273,14 @@ public class CustomChatRender {
 		private final @Nonnull List<ChatLine> chatList = Lists.newArrayList();
 		private final @Nonnull Map<PicChatID, PicChatNode> id2node = Maps.newHashMap();
 
+		public boolean isEnable() {
+			if (!Config.getConfig().renderChatPicture.get())
+				return false;
+			return Config.getConfig().renderChatPictureLine.get()>0;
+		}
+
 		public int getLineSplit() {
-			return 6;
+			return Config.getConfig().renderChatPictureLine.get();
 		}
 
 		@CoreInvoke
@@ -283,6 +290,9 @@ public class CustomChatRender {
 
 		@CoreInvoke
 		public void updateLines() {
+			if (!isEnable())
+				return;
+
 			final List<ChatLine> clist = this.chatList;
 			clist.clear();
 			final List<ChatLine> list = this.chatLinesHook;
