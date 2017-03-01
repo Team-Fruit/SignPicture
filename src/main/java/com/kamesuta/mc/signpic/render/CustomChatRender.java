@@ -39,6 +39,7 @@ public class CustomChatRender {
 		public static final @Nonnull IChatComponent dummytext = new ChatComponentText("");
 		private final @Nonnull PicChatNode node;
 		public final int num;
+		private final float space = 1f;
 
 		public PicChatLine(final @Nonnull PicChatNode node, final int num) {
 			super(node.updateCounterCreated, dummytext, node.chatLineID);
@@ -47,13 +48,16 @@ public class CustomChatRender {
 		}
 
 		public void draw(final float width, final float height) {
+			OpenGL.glPushMatrix();
+			OpenGL.glTranslatef(0f, -9, 0f);
+			final int linesplit = this.node.getLineSplit();
 			float totalwidth = 4;
 			final List<Entry> entries = this.node.getEntries();
 			for (final Entry entry : entries) {
 				final Content content = entry.getContent();
 				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
-				totalwidth += size2.getWidth()+1;
+				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*linesplit));
+				totalwidth += size2.getWidth()+this.space;
 			}
 			float ix = 4;
 			if (totalwidth>width)
@@ -61,14 +65,18 @@ public class CustomChatRender {
 			//Log.log.info(ix);
 			final Area trim = Area.size(0f, 0f, width, height);
 			final Area vert = WGui.defaultTextureArea.translate(0f, -height*this.num);
+
+			final Area lvert = vert.scaleSize(1, height*linesplit).translate(ix-2, 0);
+			WRenderer.startShape();
+			OpenGL.glColor4f(.5f, .5f, .5f, .5f);
+			WGui.draw(lvert.trimArea(trim));
+
 			for (final Entry entry : entries) {
 				if (ix>width)
 					break;
 				final Content content = entry.getContent();
 				final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*4f));
-				OpenGL.glPushMatrix();
-				OpenGL.glTranslatef(0f, -9, 0f);
+				final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(width, height*linesplit));
 				WRenderer.startShape();
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
 				//WGui.draw(trim, GL11.GL_LINE_LOOP);
@@ -78,15 +86,15 @@ public class CustomChatRender {
 				final float h = size2.getHeight();
 				//OpenGL.glScalef(w, h, 1f);
 				final Area svert = vert.scaleSize(w, h).translate(ix, 0);
-				ix += w+1;
+				ix += w+this.space;
 
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
 					final CompoundAttr meta = entry.getMeta();
 					content.image.draw(meta, svert, trim);
 				}
 
-				OpenGL.glPopMatrix();
 			}
+			OpenGL.glPopMatrix();
 		}
 
 		@CoreInvoke
@@ -140,10 +148,10 @@ public class CustomChatRender {
 			this.lines = lines;
 		}
 
-		public @Nonnull PicChatNode getNode(final @Nonnull Map<PicChatID, PicChatNode> id2node) {
+		public @Nonnull PicChatNode getNode(final @Nonnull Map<PicChatID, PicChatNode> id2node, final int linesplit) {
 			PicChatNode node = id2node.get(this);
 			if (node==null)
-				id2node.put(this, node = new PicChatNode(this.lines));
+				id2node.put(this, node = new PicChatNode(this.lines, linesplit));
 			return node;
 		}
 
@@ -181,10 +189,12 @@ public class CustomChatRender {
 		public final int updateCounterCreated;
 		public final int chatLineID;;
 		public float xpos;
+		private final int linesplit;
 
-		public PicChatNode(final @Nonnull List<ChatLine> lines) {
+		public PicChatNode(final @Nonnull List<ChatLine> lines, final int linesplit) {
 			this.pendentryids = Lists.newLinkedList();
 			this.entries = Lists.newLinkedList();
+			this.linesplit = linesplit;
 			int updateCounterCreated = -1;
 			int chatLineID = -1;
 			{
@@ -240,6 +250,10 @@ public class CustomChatRender {
 				getLinksFromChat0(list, chat);
 			}
 		}
+
+		public int getLineSplit() {
+			return this.linesplit;
+		}
 	}
 
 	@CoreInvoke
@@ -247,6 +261,10 @@ public class CustomChatRender {
 		private final @Nonnull List<ChatLine> chatLinesHook;
 		private final @Nonnull List<ChatLine> chatList = Lists.newArrayList();
 		private final @Nonnull Map<PicChatID, PicChatNode> id2node = Maps.newHashMap();
+
+		public int getLineSplit() {
+			return 6;
+		}
 
 		@CoreInvoke
 		public PicChatHook(final @Nonnull List<ChatLine> chatLinesHook) {
@@ -282,13 +300,13 @@ public class CustomChatRender {
 			}
 
 			for (final PicChatID id : lineunits) {
-				final PicChatNode node = id.getNode(this.id2node);
+				final PicChatNode node = id.getNode(this.id2node, getLineSplit());
 
 				for (final ChatLine line : id.lines)
 					list.add(0, line);
 
 				if (!node.getEntries().isEmpty())
-					for (int i = 0; i<4; i++)
+					for (int i = 0; i<node.getLineSplit(); i++)
 						list.add(0, new PicChatLine(node, i));
 			}
 		}
