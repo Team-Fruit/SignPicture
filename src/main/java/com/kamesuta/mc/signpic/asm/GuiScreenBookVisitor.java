@@ -9,6 +9,7 @@ import org.objectweb.asm.Opcodes;
 
 import com.kamesuta.mc.signpic.asm.lib.DescHelper;
 import com.kamesuta.mc.signpic.asm.lib.MethodMatcher;
+import com.kamesuta.mc.signpic.asm.lib.VisitorHelper;
 
 public class GuiScreenBookVisitor extends ClassVisitor {
 	private static class HookMethodVisitor extends MethodVisitor {
@@ -16,7 +17,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 
 		public HookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
-			this.matcher = new MethodMatcher("net.minecraft.client.gui.FontRenderer", DescHelper.toDesc(void.class, String.class, int.class, int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawSplitString);
+			this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(void.class, "java.lang.String", int.class, int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawSplitString);
 		}
 
 		@Override
@@ -32,7 +33,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 
 	public GuiScreenBookVisitor(final @Nonnull String obfClassName, final @Nonnull ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
-		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), ASMDeobfNames.GuiScreenBookDrawScreen);
+		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, int.class, int.class, float.class), ASMDeobfNames.GuiScreenBookDrawScreen);
 	}
 
 	@Override

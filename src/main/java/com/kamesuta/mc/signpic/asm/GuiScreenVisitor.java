@@ -26,13 +26,13 @@ public class GuiScreenVisitor extends ClassVisitor {
 			 7  ifeq 11
 			10  return
 			*/
-			visitFieldInsn(Opcodes.GETSTATIC, "com/kamesuta/mc/signpic/handler/KeyHandler", "instance", DescHelper.toDesc("com.kamesuta.mc.signpic.handler.KeyHandler"));
-			visitVarInsn(Opcodes.ALOAD, 0);
-			visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/handler/KeyHandler", "onGuiKeyInput", DescHelper.toDesc(boolean.class, "net.minecraft.client.gui.GuiScreen"), false);
+			super.visitFieldInsn(Opcodes.GETSTATIC, "com/kamesuta/mc/signpic/handler/KeyHandler", "instance", DescHelper.toDesc("com.kamesuta.mc.signpic.handler.KeyHandler"));
+			super.visitVarInsn(Opcodes.ALOAD, 0);
+			super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/handler/KeyHandler", "onGuiKeyInput", DescHelper.toDesc(boolean.class, "net.minecraft.client.gui.GuiScreen"), false);
 			final Label label = new Label();
-			visitJumpInsn(Opcodes.IFEQ, label);
-			visitInsn(Opcodes.RETURN);
-			visitLabel(label);
+			super.visitJumpInsn(Opcodes.IFEQ, label);
+			super.visitInsn(Opcodes.RETURN);
+			super.visitLabel(label);
 			super.visitCode();
 		}
 	}
