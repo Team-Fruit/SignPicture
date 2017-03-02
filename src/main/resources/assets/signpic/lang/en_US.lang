@@ -1,9 +1,13 @@
 # Overlay
 ## Overlay
+signpic.over.hub.usage.takerange=[%s]: Take screenshot of a specified range
+signpic.over.hub.usage.takeall=[%s]: Take screenshot
+signpic.over.hub.usage.takerangewindow=[%s]: Take window screenshot of a specified range
+signpic.over.hub.usage.release=[Release]: Open SignPicture GUI
+### Mode
 signpic.over.mode.place=Place Sign and Apply Image
 signpic.over.mode.option=Click Sign Picture and Open Sign Option GUI.
 signpic.over.mode.setpreview=Click Block and Set Preview Location
-
 ## F3
 signpic.over.sign=[§6Sign§r] §7[§r%s§7]
 signpic.over.id=[§6Sign-URL§r] %s

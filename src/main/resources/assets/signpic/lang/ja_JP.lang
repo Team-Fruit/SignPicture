@@ -1,9 +1,13 @@
 # Overlay
 ## Overlay
+signpic.over.hub.usage.takerange=[%s]: 範囲を指定してスクリーンショット
+signpic.over.hub.usage.takeall=[%s]: スクリーンショット
+signpic.over.hub.usage.takerangewindow=[%s]: 範囲を指定してウィンドウスクリーンショット
+signpic.over.hub.usage.release=[離す]: SignPictureのGUIを開く
+### Mode
 signpic.over.mode.place=看板を置いて画像を適用
 signpic.over.mode.option=画像看板をクリックして詳細設定を表示
 signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位置を設定
-
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 

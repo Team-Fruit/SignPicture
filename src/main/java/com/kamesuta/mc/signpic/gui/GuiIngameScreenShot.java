@@ -144,12 +144,9 @@ public class GuiIngameScreenShot extends WFrame {
 						OpenGL.glColor(GuiWindowScreenShot.bgcolor);
 						drawAround(a, rect);
 						WRenderer.startTexture();
-						OpenGL.glColor(GuiWindowScreenShot.textshadowcolor);
-						font.drawString(String.valueOf((int) rect.w()), rect.x2()-5+.5f, rect.y2()-12+.5f, 10, 3, guiScaleX(), Align.RIGHT);
-						font.drawString(String.valueOf((int) rect.h()), rect.x2()-5+.5f, rect.y2()-8+.5f, 10, 3, guiScaleY(), Align.RIGHT);
 						OpenGL.glColor(GuiWindowScreenShot.textcolor);
-						font.drawString(String.valueOf((int) rect.w()), rect.x2()-5, rect.y2()-12, 10, 3, guiScaleX(), Align.RIGHT);
-						font.drawString(String.valueOf((int) rect.h()), rect.x2()-5, rect.y2()-8, 10, 3, guiScaleY(), Align.RIGHT);
+						font.drawString(String.valueOf((int) rect.w()), rect.x2()-5, rect.y2()-12, 10, 3, guiScaleX(), Align.RIGHT, true);
+						font.drawString(String.valueOf((int) rect.h()), rect.x2()-5, rect.y2()-8, 10, 3, guiScaleY(), Align.RIGHT, true);
 					} else {
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, .25f);

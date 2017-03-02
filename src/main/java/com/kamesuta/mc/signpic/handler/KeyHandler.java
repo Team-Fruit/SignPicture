@@ -40,10 +40,18 @@ public class KeyHandler {
 
 		boolean isKeyPressed();
 
+		@Nonnull
+		String getName();
+
 		public static abstract class AbstractKey implements Key {
 			@Override
 			public boolean isKeyPressed() {
 				return Keyboard.isKeyDown(getCode());
+			}
+
+			@Override
+			public @Nonnull String getName() {
+				return Keyboard.getKeyName(getCode());
 			}
 		}
 
