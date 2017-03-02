@@ -61,7 +61,12 @@ public class GuiSettings extends WPanel {
 	protected boolean closing;
 
 	public void show() {
-		this.bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+		this.bottom.stop().add(Motion.blank(.25f).setAfter(new Runnable() {
+			@Override
+			public void run() {
+				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
+			}
+		})).add(Easings.easeOutQuad.move(.7f, 1f)).start();
 	}
 
 	public void hide() {
@@ -88,10 +93,8 @@ public class GuiSettings extends WPanel {
 						final boolean b = a.pointInside(p);
 						if (!GuiSettings.this.closing)
 							if (b) {
-								if (!GuiSettings.this.show) {
+								if (!GuiSettings.this.show)
 									show();
-									mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F));
-								}
 								GuiSettings.this.show = true;
 							} else {
 								if (GuiSettings.this.show)
