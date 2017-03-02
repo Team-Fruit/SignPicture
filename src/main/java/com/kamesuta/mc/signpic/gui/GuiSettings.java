@@ -14,14 +14,15 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
 import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MCheckBox;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelectField;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
 import com.kamesuta.mc.bnnwidget.component.MTab;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -167,7 +168,7 @@ public class GuiSettings extends WPanel {
 												getConfig().set(isCheck());
 											}
 										});
-										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
+										add(new FontLabel(new R(Coord.left(15), Coord.right(0)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.paas")));
 									}
 								});
 								add(new FunnyButton(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
@@ -371,7 +372,7 @@ public class GuiSettings extends WPanel {
 		@Override
 		protected void initWidget() {
 			float top = 1;
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(this.title));
+			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), WFont.fontRenderer).setText(this.title));
 			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 				@Override
 				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
@@ -385,7 +386,7 @@ public class GuiSettings extends WPanel {
 
 				@Override
 				protected void initWidget() {
-					add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.type")));
+					add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.api.type")));
 					add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 						@Override
 						protected void initWidget() {
@@ -439,7 +440,7 @@ public class GuiSettings extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.key")));
+			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.api.key")));
 			add(new MSelectField(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {
