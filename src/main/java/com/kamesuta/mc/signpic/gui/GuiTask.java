@@ -9,6 +9,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -211,9 +212,6 @@ public class GuiTask extends WPanel {
 						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 							final Area a = getGuiPosition(pgp);
 							OpenGL.glPushMatrix();
-							OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
-							OpenGL.glScalef(.5f, .5f, .5f);
-							OpenGL.glTranslatef(-a.x1(), -a.y1(), 0f);
 							final String cont = "...";
 							final int contwidth = font().getStringWidth(cont);
 							final String name = TaskElement.this.state.getName();
@@ -228,7 +226,7 @@ public class GuiTask extends WPanel {
 							final float opacity = getGuiOpacity(popacity);
 							OpenGL.glColor4f(4f, 4f, 4f, opacity);
 							OpenGL.glColor4f(1f, 1f, 1f, Math.max(.05f, opacity*1f));
-							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
+							WFont.fontRenderer.drawString(res, a.scaleSize(.5f).translate(-1f, -1f), ev.owner.guiScale(), Align.LEFT, false);
 							OpenGL.glPopMatrix();
 						}
 					});
@@ -251,12 +249,10 @@ public class GuiTask extends WPanel {
 									final int progwidth = font().getStringWidth(prog);
 									final float maxx = pgp.x2()*2-progwidth;
 									OpenGL.glColor4f(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
-									OpenGL.glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
-									OpenGL.glScalef(.5f, .5f, .5f);
 									WRenderer.startTexture();
 									final float opacity = getGuiOpacity(popacity);
-									OpenGL.glColor4f(4f, 4f, 4f, opacity);
-									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
+									OpenGL.glColor4f(1f, 1f, 1f, opacity);
+									WFont.fontRenderer.drawString(prog, Area.size(Math.min(a.x2()+1, maxx/2-1)-4f, a.y1()-.5f, 100f, 3f), ev.owner.guiScale(), Align.LEFT, true);
 									OpenGL.glPopMatrix();
 
 									super.draw(ev, pgp, p, frame, popacity);
