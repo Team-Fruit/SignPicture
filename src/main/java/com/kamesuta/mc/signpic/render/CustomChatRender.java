@@ -2,12 +2,14 @@ package com.kamesuta.mc.signpic.render;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WGui;
@@ -168,7 +170,8 @@ public class CustomChatRender {
 		public @Nonnull PicChatNode getNode(final @Nonnull Map<PicChatID, PicChatNode> id2node, final int linesplit) {
 			PicChatNode node = id2node.get(this);
 			if (node==null)
-				id2node.put(this, node = new PicChatNode(this.lines, linesplit));
+				id2node.put(this, node = new PicChatNode(linesplit));
+			node.applyChatLines(this.lines);
 			return node;
 		}
 
@@ -201,38 +204,45 @@ public class CustomChatRender {
 	}
 
 	public static class PicChatNode {
+		private @Nullable List<ChatLine> linescache;
 		private final @Nonnull List<EntryId> pendentryids;
 		private final @Nonnull List<Entry> entries;
-		public final int updateCounterCreated;
-		public final int chatLineID;;
-		public float xpos;
-		private final int linesplit;
 
-		public PicChatNode(final @Nonnull List<ChatLine> lines, final int linesplit) {
+		private final int linesplit;
+		public int updateCounterCreated;
+		public int chatLineID;;
+		public float xpos;
+
+		public PicChatNode(final int linesplit) {
 			this.pendentryids = Lists.newLinkedList();
 			this.entries = Lists.newLinkedList();
 			this.linesplit = linesplit;
-			int updateCounterCreated = -1;
-			int chatLineID = -1;
-			{
-				EntryId _lastentryid = null;
-				for (final ChatLine line : lines) {
-					updateCounterCreated = line.getUpdatedCounter();
-					chatLineID = line.getChatLineID();
-					final IChatComponent cc = line.func_151461_a();
-					final List<ClickEvent> clinks = getLinksFromChat(cc);
-					boolean first = true;
-					for (final ClickEvent clink : clinks) {
-						final EntryId entryid = new EntryIdBuilder().setURI(clink.getValue()).build();
-						if (!first||!entryid.equals(_lastentryid))
-							this.pendentryids.add(entryid);
-						first = false;
-						_lastentryid = entryid;
+		}
+
+		public void applyChatLines(final @Nonnull List<ChatLine> lines) {
+			if (!lines.equals(this.linescache)) {
+				this.pendentryids.clear();
+				int updateCounterCreated = -1;
+				int chatLineID = -1;
+				{
+					final Set<EntryId> addedentries = Sets.newHashSet();
+					for (final ChatLine line : lines) {
+						updateCounterCreated = line.getUpdatedCounter();
+						chatLineID = line.getChatLineID();
+						final IChatComponent cc = line.func_151461_a();
+						final List<ClickEvent> clinks = getLinksFromChat(cc);
+						for (final ClickEvent clink : clinks) {
+							final EntryId entryid = new EntryIdBuilder().setURI(clink.getValue()).build();
+							if (!addedentries.contains(entryid))
+								this.pendentryids.add(entryid);
+							addedentries.add(entryid);
+						}
 					}
 				}
+				this.updateCounterCreated = updateCounterCreated;
+				this.chatLineID = chatLineID;
 			}
-			this.updateCounterCreated = updateCounterCreated;
-			this.chatLineID = chatLineID;
+			this.linescache = lines;
 		}
 
 		public @Nonnull List<Entry> getEntries() {
@@ -280,13 +290,13 @@ public class CustomChatRender {
 		private final @Nonnull Map<PicChatID, PicChatNode> id2node = Maps.newHashMap();
 
 		public boolean isEnable() {
-			if (!Config.getConfig().renderChatPicture.get())
+			if (!Config.getConfig().chatpicEnable.get())
 				return false;
-			return Config.getConfig().renderChatPictureLine.get()>0;
+			return Config.getConfig().chatpicLine.get()>0;
 		}
 
 		public int getLineSplit() {
-			return Config.getConfig().renderChatPictureLine.get();
+			return Config.getConfig().chatpicLine.get();
 		}
 
 		@CoreInvoke
@@ -314,7 +324,9 @@ public class CustomChatRender {
 				for (final ChatLine line : clist) {
 					final int id = line.getUpdatedCounter();
 
-					if (id!=_lastlineunits) {
+					final int stacktick = Config.getConfig().chatpicStackTick.get();
+					final int diff = id-_lastlineunits;
+					if (diff<-stacktick||stacktick<diff) {
 						lineunits.add(new PicChatID(_lastlineunits, _lineunits));
 						_lineunits = Lists.newLinkedList();
 					}
