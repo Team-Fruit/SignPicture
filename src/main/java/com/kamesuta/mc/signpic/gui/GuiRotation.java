@@ -10,9 +10,10 @@ import org.apache.commons.lang3.math.NumberUtils;
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -52,7 +53,7 @@ public class GuiRotation extends WPanel {
 	@Override
 	protected void initWidget() {
 		final VMotion label = V.pm(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
+		add(new FontLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), WFont.fontRenderer) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));

@@ -8,9 +8,10 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
 import com.kamesuta.mc.bnnwidget.component.MButton;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelectButton;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -106,7 +107,7 @@ public class GuiSignOption extends WFrame {
 								float i = 0f;
 								final VCommon v0 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o0 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MLabel(new R(Coord.left(v0), Coord.top(top += 25f), Coord.height(20f))) {
+								add(new FontLabel(new R(Coord.left(v0), Coord.top(top += 25f), Coord.height(20f)), WFont.fontRenderer) {
 									@Override
 									protected @Nonnull VCommon initOpacity() {
 										return o0;
