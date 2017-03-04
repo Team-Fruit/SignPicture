@@ -207,7 +207,7 @@ public class GuiTask extends WPanel {
 			add(new WPanel(new R(Coord.top(1f), Coord.left(1f), Coord.bottom(0f), Coord.right(0f))) {
 				@Override
 				protected void initWidget() {
-					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
+					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT/2), Coord.right(2))) {
 						@Override
 						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
 							final Area a = getGuiPosition(pgp);
@@ -222,11 +222,14 @@ public class GuiTask extends WPanel {
 								res = name;
 							else
 								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
+							// WRenderer.startShape();
+							// OpenGL.glColor4f(1f, 1f, 1f, 1f);
+							// draw(a, GL11.GL_LINE_LOOP);
 							WRenderer.startTexture();
 							final float opacity = getGuiOpacity(popacity);
 							OpenGL.glColor4f(4f, 4f, 4f, opacity);
 							OpenGL.glColor4f(1f, 1f, 1f, Math.max(.05f, opacity*1f));
-							WFont.fontRenderer.drawString(res, a.scaleSize(.5f).translate(-1f, -1f), ev.owner.guiScale(), Align.LEFT, false);
+							WFont.fontRenderer.drawString(res, a.scaleSize(1f).translate(-1f, -1f), ev.owner.guiScale(), Align.LEFT, false);
 							OpenGL.glPopMatrix();
 						}
 					});
