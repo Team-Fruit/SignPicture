@@ -178,7 +178,7 @@ public class OverlayFrame extends WFrame {
 
 								@Override
 								protected void initWidget() {
-									final MLabel label = new FontScaledLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f)), WFont.fontRenderer).setText(string);
+									final MLabel label = new FontScaledLabel(new R(Coord.top(5f), Coord.bottom(4f), Coord.pleft(.1f), Coord.pright(.1f)), WFont.fontRenderer).setText(string).setVerticalAlign(VerticalAlign.MIDDLE);
 									add(label);
 								}
 
