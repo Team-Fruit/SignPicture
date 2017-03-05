@@ -35,6 +35,8 @@ import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.asm.ASMDeobfNames;
 import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
+import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -158,31 +160,39 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2)), GuiMain.this.signbuilder.getMeta().size) {
+				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2))) {
 					@Override
 					protected void onUpdate() {
-						super.onUpdate();
 						export();
-						;
+					}
+
+					@Override
+					protected @Nonnull SizeBuilder size() {
+						return GuiMain.this.signbuilder.getMeta().size;
 					}
 				});
 
-				final OffsetBuilder offset = GuiMain.this.signbuilder.getMeta().offset;
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3)), offset.x, offset.y, offset.z) {
+				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3))) {
 					@Override
 					protected void onUpdate() {
-						super.onUpdate();
 						export();
-						;
+					}
+
+					@Override
+					protected @Nonnull OffsetBuilder offset() {
+						return GuiMain.this.signbuilder.getMeta().offset;
 					}
 				});
 
-				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), GuiMain.this.signbuilder.getMeta().rotation) {
+				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4))) {
 					@Override
 					protected void onUpdate() {
-						super.onUpdate();
 						export();
-						;
+					}
+
+					@Override
+					protected @Nonnull RotationBuilder rotation() {
+						return GuiMain.this.signbuilder.getMeta().rotation;
 					}
 				});
 
@@ -474,6 +484,8 @@ public class GuiMain extends WFrame {
 			} else
 				GuiMain.this.signbuilder.setURI("");
 			export();
+			if (atb!=null)
+				GuiMain.this.event.bus.post(new PropertyChangeEvent());
 		}
 
 		@Override

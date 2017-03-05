@@ -4,6 +4,7 @@ import java.util.ListIterator;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -26,13 +27,14 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.RotateType;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder.ImageRotate;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.resources.I18n;
 
-public class GuiRotation extends WPanel {
+public abstract class GuiRotation extends WPanel {
 	protected @Nonnull RotationEditor editor;
-	protected @Nonnull RotationPanel panel;
+	protected @Nullable RotationPanel panel;
 
-	public GuiRotation(final @Nonnull R position, final @Nonnull RotationBuilder rotation) {
+	public GuiRotation(final @Nonnull R position) {
 		super(position);
 		final VMotion left = V.pm(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		this.editor = new RotationEditor(new R(Coord.left(left), Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
@@ -47,8 +49,11 @@ public class GuiRotation extends WPanel {
 				return left.isFinished();
 			}
 		};
-		this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation);
 	}
+
+	protected abstract @Nonnull RotationBuilder rotation();
+
+	protected abstract void onUpdate();
 
 	@Override
 	protected void initWidget() {
@@ -66,20 +71,36 @@ public class GuiRotation extends WPanel {
 			}
 		}.setText(I18n.format("signpic.gui.editor.rotation.category")));
 		add(this.editor);
-		add(this.panel);
+		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation()));
+	}
+
+	@SubscribeEvent
+	public void onChanged(final @Nullable PropertyChangeEvent ev) {
+		if (this.panel!=null)
+			remove(this.panel);
+		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation()));
+	}
+
+	@Override
+	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final Point p) {
+		ev.bus.register(this);
+		super.update(ev, pgp, p);
 	}
 
 	protected void add(final @Nonnull ImageRotate rotate) {
-		this.panel.add(rotate);
-		this.panel.update();
+		final RotationPanel panel = this.panel;
+		if (panel!=null) {
+			panel.add(rotate);
+			panel.update();
+		}
 	}
 
 	protected void remove() {
-		this.panel.remove();
-		this.panel.update();
-	}
-
-	protected void onUpdate() {
+		final RotationPanel panel = this.panel;
+		if (panel!=null) {
+			panel.remove();
+			panel.update();
+		}
 	}
 
 	protected class RotationEditor extends WPanel {

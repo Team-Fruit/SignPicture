@@ -186,7 +186,8 @@ public class GuiImage extends WFrame {
 			v1.pos(p.x, p.y, p.z);
 			v1.draw();
 		}
-		OpenGL.glTranslatef(offset.x.offset+centeroffset.x.offset, offset.y.offset+centeroffset.y.offset, offset.z.offset+centeroffset.z.offset);
+		OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
+		OpenGL.glTranslatef(centeroffset.x.offset, centeroffset.y.offset, centeroffset.z.offset);
 		RotationGL.glRotate(rotate);
 		OpenGL.glTranslatef(-centeroffset.x.offset, -centeroffset.y.offset, -centeroffset.z.offset);
 
