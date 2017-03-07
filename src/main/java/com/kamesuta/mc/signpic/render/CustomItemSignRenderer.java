@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -51,7 +51,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
-		final CompoundAttr attr = entry.getMeta();
+		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
 		// Size
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;

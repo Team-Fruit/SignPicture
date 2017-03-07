@@ -23,7 +23,7 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureBoolean.TextureBoole
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBuilder;
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
-public class CompoundAttrBuilder {
+public class AttrWriters {
 	private @Nonnull Set<IPropBuilder<?, ?>> metas = Sets.newHashSet();
 
 	public final @Nonnull SizeBuilder size = new SizeBuilder();
@@ -57,17 +57,22 @@ public class CompoundAttrBuilder {
 		return e;
 	}
 
-	public CompoundAttrBuilder() {
+	public abstract class PropBuilderWrapper<E> {
+		protected abstract E createBuilder();
 
 	}
 
-	public @Nonnull CompoundAttrBuilder parse(final @Nonnull String src) {
+	public AttrWriters() {
+
+	}
+
+	public @Nonnull AttrWriters parse(final @Nonnull String src) {
 		Validate.notNull(src);
 
-		final Matcher mgb = CompoundAttr.pg.matcher(src);
+		final Matcher mgb = AttrReaders.pg.matcher(src);
 		final String meta = mgb.replaceAll("");
 
-		final Matcher mp = CompoundAttr.pp.matcher(meta);
+		final Matcher mp = AttrReaders.pp.matcher(meta);
 		while (mp.find()) {
 			final int gcount = mp.groupCount();
 			if (1<=gcount) {

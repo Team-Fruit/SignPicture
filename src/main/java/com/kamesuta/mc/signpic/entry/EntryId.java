@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
-import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
+import com.kamesuta.mc.signpic.attr.AttrWriters;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
@@ -219,17 +219,17 @@ public class EntryId {
 		return null;
 	}
 
-	public @Nullable CompoundAttr getMeta() {
+	public @Nullable AttrReaders getMeta() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new CompoundAttr(metasource);
+			return new AttrReaders(metasource);
 		return null;
 	}
 
-	public @Nullable CompoundAttrBuilder getMetaBuilder() {
+	public @Nullable AttrWriters getMetaBuilder() {
 		final String metasource = getMetaSource();
 		if (metasource!=null)
-			return new CompoundAttrBuilder().parse(metasource);
+			return new AttrWriters().parse(metasource);
 		return null;
 	}
 

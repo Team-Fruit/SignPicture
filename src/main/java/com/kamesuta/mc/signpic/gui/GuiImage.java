@@ -26,7 +26,7 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -65,7 +65,7 @@ public class GuiImage extends WFrame {
 						final Area a = getGuiPosition(pgp);
 						float opacity = getGuiOpacity(popacity);
 						final Content content = GuiImage.this.entry.getContent();
-						final CompoundAttr meta = GuiImage.this.entry.getMeta();
+						final AttrReaders meta = GuiImage.this.entry.getMeta();
 
 						OpenGL.glPushMatrix();
 						if (GuiImage.this.entry.id instanceof PreviewEntryId||GuiImage.this.entry.isNotSupported()||GuiImage.this.entry.isOutdated())
@@ -136,7 +136,7 @@ public class GuiImage extends WFrame {
 		// Load Image
 		final Content content = this.entry.getContent();
 
-		final CompoundAttr attr = this.entry.getMeta();
+		final AttrReaders attr = this.entry.getMeta();
 
 		// Size
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
@@ -201,7 +201,7 @@ public class GuiImage extends WFrame {
 	}
 
 	public void applyLight(final float x, final float y, final float z, final @Nonnull Quat4f signrotate) {
-		final CompoundAttr attr = this.entry.getMeta();
+		final AttrReaders attr = this.entry.getMeta();
 		int lightx = (int) attr.f.getMovie().get().data;
 		int lighty = (int) attr.g.getMovie().get().data;
 		if (lightx!=-1||lighty!=-1) {

@@ -12,7 +12,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -174,7 +174,7 @@ public class SignHandler {
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
 					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
-					final CompoundAttr meta = entry.getMeta();
+					final AttrReaders meta = entry.getMeta();
 					final SizeData size = meta.sizes.getMovie().get();
 					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
 					final OffsetData offset = meta.offsets.getMovie().get();

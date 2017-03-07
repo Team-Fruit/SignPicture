@@ -4,15 +4,16 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.signpic.attr.Attrs.IAttrReader;
 
 public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame, Diffed extends KeyFrame> {
 	private @Nullable KeyFrame base;
-	private final @Nonnull IPropBuilderBuilder<Diffed, KeyFrame> metabuilder;
+	private final @Nonnull IAttrReader<Diffed, KeyFrame> metabuilder;
 	private @Nonnull IPropBuilder<Diffed, KeyFrame> builder;
 	private final @Nonnull PropAnimation<KeyFrame, InterFrame> movie;
 	private boolean parsed;
 
-	public PropAnimator(final @Nonnull IPropBuilderBuilder<Diffed, KeyFrame> metabuilder) {
+	public PropAnimator(final @Nonnull IAttrReader<Diffed, KeyFrame> metabuilder) {
 		this.metabuilder = metabuilder;
 		this.builder = metabuilder.builder();
 		this.movie = new PropAnimation<KeyFrame, InterFrame>(this.builder.diff(this.base));
@@ -39,10 +40,5 @@ public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, Inte
 
 	public @Nonnull PropAnimation<KeyFrame, InterFrame> getMovie() {
 		return this.movie;
-	}
-
-	public static interface IPropBuilderBuilder<Diffed, KeyFrame> {
-		@Nonnull
-		IPropBuilder<Diffed, KeyFrame> builder();
 	}
 }

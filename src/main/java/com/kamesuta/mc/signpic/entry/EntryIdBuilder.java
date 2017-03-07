@@ -3,11 +3,11 @@ package com.kamesuta.mc.signpic.entry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
+import com.kamesuta.mc.signpic.attr.AttrWriters;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 
 public class EntryIdBuilder {
-	private @Nullable CompoundAttrBuilder meta;
+	private @Nullable AttrWriters meta;
 	private @Nullable String uri;
 
 	public EntryIdBuilder() {
@@ -23,16 +23,16 @@ public class EntryIdBuilder {
 		return this;
 	}
 
-	public @Nonnull EntryIdBuilder setMeta(final @Nullable CompoundAttrBuilder meta) {
+	public @Nonnull EntryIdBuilder setMeta(final @Nullable AttrWriters meta) {
 		this.meta = meta;
 		return this;
 	}
 
-	public @Nonnull CompoundAttrBuilder getMeta() {
+	public @Nonnull AttrWriters getMeta() {
 		if (this.meta!=null)
 			return this.meta;
 		else
-			return this.meta = new CompoundAttrBuilder();
+			return this.meta = new AttrWriters();
 	}
 
 	public @Nonnull EntryIdBuilder setURI(final @Nullable String uri) {

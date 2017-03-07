@@ -33,7 +33,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.asm.ASMDeobfNames;
-import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
+import com.kamesuta.mc.signpic.attr.AttrWriters;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
@@ -473,7 +473,7 @@ public class GuiMain extends WFrame {
 
 		public void apply() {
 			final EntryId entryId = EntryId.from(getText());
-			final CompoundAttrBuilder atb = entryId.getMetaBuilder();
+			final AttrWriters atb = entryId.getMetaBuilder();
 			if (atb!=null)
 				GuiMain.this.signbuilder.setMeta(atb);
 			final ContentId cid = entryId.getContentId();

@@ -14,7 +14,7 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -79,7 +79,7 @@ public class SignPicLabel extends WBase {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
-		final CompoundAttr attr = entry.getMeta();
+		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
 		final SizeData size00 = attr.sizes.getMovie().get();
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;

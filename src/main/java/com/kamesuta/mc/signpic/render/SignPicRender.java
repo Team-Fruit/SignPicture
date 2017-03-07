@@ -10,7 +10,7 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -84,7 +84,7 @@ public class SignPicRender {
 			if (tilesign!=null) {
 				final Entry entry = EntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
-					final CompoundAttr meta = entry.getMeta();
+					final AttrReaders meta = entry.getMeta();
 					final SizeData signsize = meta.sizes.getMovie().get();
 
 					event.left.add("");

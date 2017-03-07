@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
-import com.kamesuta.mc.signpic.attr.CompoundAttrBuilder;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
+import com.kamesuta.mc.signpic.attr.AttrWriters;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiImage;
@@ -19,7 +19,7 @@ public class Entry {
 	private final boolean valid;
 	private final boolean outdated;
 
-	private transient @Nullable CompoundAttr meta;
+	private transient @Nullable AttrReaders meta;
 	private @Nullable String cmetacache;
 
 	protected Entry(final @Nonnull EntryId id) {
@@ -45,7 +45,7 @@ public class Entry {
 	}
 
 	public boolean isNotSupported() {
-		final CompoundAttr meta = getMeta();
+		final AttrReaders meta = getMeta();
 		return meta.hasInvalidMeta()||this.id.getPrePrefix()!=null;
 	}
 
@@ -57,28 +57,28 @@ public class Entry {
 		return this.valid;
 	}
 
-	public @Nonnull CompoundAttr getMeta() {
+	public @Nonnull AttrReaders getMeta() {
 		final Content cntnt = getContent();
 		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)
 			if (!StringUtils.equals(this.cmetacache, newmeta)) {
 				final String meta1 = this.id.getMetaSource();
 				if (meta1!=null)
-					this.meta = new CompoundAttr(meta1+newmeta);
+					this.meta = new AttrReaders(meta1+newmeta);
 				this.cmetacache = newmeta;
 			}
 		if (this.meta==null)
 			this.meta = this.id.getMeta();
 		if (this.meta!=null)
 			return this.meta;
-		return this.meta = CompoundAttr.Blank;
+		return this.meta = AttrReaders.Blank;
 	}
 
-	public @Nullable CompoundAttrBuilder getMetaBuilder() {
+	public @Nullable AttrWriters getMetaBuilder() {
 		final Content cntnt = getContent();
 		final String newmeta = cntnt!=null ? cntnt.imagemeta : null;
 		if (this.contentId!=null&&newmeta!=null)
-			return new CompoundAttrBuilder().parse(this.id.getMetaSource()+newmeta);
+			return new AttrWriters().parse(this.id.getMetaSource()+newmeta);
 		return this.id.getMetaBuilder();
 	}
 }

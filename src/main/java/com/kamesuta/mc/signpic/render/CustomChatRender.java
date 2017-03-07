@@ -16,7 +16,7 @@ import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreInvoke;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -99,7 +99,7 @@ public class CustomChatRender {
 				ix += w+this.space;
 
 				if (content!=null&&content.state.getType()==StateType.AVAILABLE) {
-					final CompoundAttr meta = entry.getMeta();
+					final AttrReaders meta = entry.getMeta();
 					content.image.draw(meta, svert, trim);
 				}
 			}

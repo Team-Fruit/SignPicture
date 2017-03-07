@@ -12,7 +12,7 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.BlendType;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.ILoadCancelable;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
@@ -78,7 +78,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 		}
 	}
 
-	public void draw(@Nonnull final CompoundAttr meta, @Nullable final Area vertex, @Nullable final Area trim) {
+	public void draw(@Nonnull final AttrReaders meta, @Nullable final Area vertex, @Nullable final Area trim) {
 		draw(
 				vertex, trim,
 				Area.size(
@@ -93,7 +93,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 				meta.l.getMovie().get().data);
 	}
 
-	public void draw(@Nonnull final CompoundAttr meta) {
+	public void draw(@Nonnull final AttrReaders meta) {
 		draw(meta, null, null);
 	}
 }

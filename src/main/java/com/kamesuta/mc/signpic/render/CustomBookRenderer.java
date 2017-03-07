@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.CoreInvoke;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -64,7 +64,7 @@ public class CustomBookRenderer {
 						final Entry entry = EntryId.from(s2).entry();
 						if (entry.isValid()) {
 							final GuiImage gui = entry.getGui();
-							final CompoundAttr attr = entry.getMeta();
+							final AttrReaders attr = entry.getMeta();
 							final Content content = entry.getContent();
 							final SizeData size00 = attr.sizes.getMovie().get();
 							final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
