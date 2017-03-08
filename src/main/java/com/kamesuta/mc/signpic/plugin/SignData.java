@@ -5,10 +5,10 @@ import javax.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kamesuta.mc.signpic.Client;
 
-public class SignData extends LocationData {
-	public static Gson dateGson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
+public class SignData extends DomainData {
+
+	public static @Nonnull Gson dateGson = new GsonBuilder().setDateFormat("yyyy/MM/dd HH:mm:ss").create();
 
 	private @Nullable String sign;
 
@@ -16,16 +16,13 @@ public class SignData extends LocationData {
 
 	private @Nullable String playerUUID;
 
-	@Override
-	public @Nonnull String toString() {
-		return Client.gson.toJson(this);
-	}
+	private @Nullable String worldName;
 
-	public @Nonnull String getSign() {
-		if (this.sign!=null)
-			return this.sign;
-		return this.sign = "";
-	}
+	private int x;
+
+	private int y;
+
+	private int z;
 
 	public @Nonnull String getPlayerName() {
 		if (this.playerName!=null)
@@ -39,8 +36,28 @@ public class SignData extends LocationData {
 		return this.playerUUID = "";
 	}
 
-	public void setSign(final @Nonnull String sign) {
-		this.sign = sign;
+	public @Nonnull String getSign() {
+		if (this.sign!=null)
+			return this.sign;
+		return this.sign = "";
+	}
+
+	public @Nonnull String getWorldName() {
+		if (this.worldName!=null)
+			return this.worldName;
+		return this.worldName = "";
+	}
+
+	public int getX() {
+		return this.x;
+	}
+
+	public int getY() {
+		return this.y;
+	}
+
+	public int getZ() {
+		return this.z;
 	}
 
 	public void setPlayerName(final @Nonnull String playerName) {
@@ -51,4 +68,28 @@ public class SignData extends LocationData {
 		this.playerUUID = playerUUID;
 	}
 
+	public void setSign(final @Nonnull String sign) {
+		this.sign = sign;
+	}
+
+	public void setWorldName(final @Nonnull String worldName) {
+		this.worldName = worldName;
+	}
+
+	public void setX(final @Nonnull Integer x) {
+		this.x = x;
+	}
+
+	public void setY(final @Nonnull Integer y) {
+		this.y = y;
+	}
+
+	public void setZ(final @Nonnull Integer z) {
+		this.z = z;
+	}
+
+	@Override
+	public @Nonnull String toString() {
+		return dateGson.toJson(this);
+	}
 }
