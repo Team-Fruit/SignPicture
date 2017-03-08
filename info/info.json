@@ -10,6 +10,26 @@
 				"ja_JP": "いくつかのバグを修正しました"
 			}
 		},
+		"1.8": {
+			"version": "2.7.1.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8-2.7.1/SignPicture-1.8-2.7.1.beta-universal.jar",
+			"local": "SignPicture-1.8-2.7.1.beta-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes. There is a known bug. Please check Github for details.",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました。 既知のバグがあります。 詳しくはGithubをご確認ください。"
+			}
+		},
+		"1.8.8": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.8-2.7.1/SignPicture-1.8.8-2.7.1-universal.jar",
+			"local": "SignPicture-1.8.8-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
 		"1.8.9": {
 			"version": "2.7.1",
 			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.7.1/SignPicture-1.8.9-2.7.1-universal.jar",
