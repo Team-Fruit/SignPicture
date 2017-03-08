@@ -71,14 +71,24 @@ public abstract class GuiRotation extends WPanel {
 			}
 		}.setText(I18n.format("signpic.gui.editor.rotation.category")));
 		add(this.editor);
-		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation()));
+		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0))) {
+			@Override
+			protected @Nonnull RotationBuilder rotation() {
+				return GuiRotation.this.rotation();
+			}
+		});
 	}
 
 	@SubscribeEvent
 	public void onChanged(final @Nullable PropertyChangeEvent ev) {
 		if (this.panel!=null)
 			remove(this.panel);
-		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0)), rotation()));
+		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0))) {
+			@Override
+			protected @Nonnull RotationBuilder rotation() {
+				return GuiRotation.this.rotation();
+			}
+		});
 	}
 
 	@Override
@@ -127,14 +137,13 @@ public abstract class GuiRotation extends WPanel {
 		}
 	}
 
-	protected class RotationPanel extends WPanel {
+	protected abstract class RotationPanel extends WPanel {
 		private final @Nonnull Map<ImageRotate, RotationElement> map = Maps.newHashMap();
-		protected final @Nonnull RotationBuilder rotation;
 
-		public RotationPanel(final @Nonnull R position, final @Nonnull RotationBuilder rotation) {
+		public RotationPanel(final @Nonnull R position) {
 			super(position);
-			this.rotation = rotation;
-			for (final ListIterator<ImageRotate> itr = rotation.rotates.listIterator(); itr.hasNext();) {
+			final RotationBuilder rb = RotationPanel.this.rotation();
+			for (final ListIterator<ImageRotate> itr = rb.rotates.listIterator(); itr.hasNext();) {
 				final int n = itr.nextIndex();
 				final ImageRotate rotate = itr.next();
 				addWidget(rotate, n);
@@ -146,37 +155,43 @@ public abstract class GuiRotation extends WPanel {
 			update();
 		}
 
+		protected abstract @Nonnull RotationBuilder rotation();
+
 		public void add(final @Nonnull ImageRotate rotate) {
-			final int n = this.rotation.rotates.size();
+			final RotationBuilder rb = RotationPanel.this.rotation();
+			final int n = rb.rotates.size();
 			if (n<3) {
-				this.rotation.rotates.add(rotate);
+				rb.rotates.add(rotate);
 				addWidget(rotate, n);
 			}
 		}
 
 		public void remove() {
-			if (!this.rotation.rotates.isEmpty()) {
-				final ImageRotate rotate = this.rotation.rotates.remove(this.rotation.rotates.size()-1);
+			final RotationBuilder rb = RotationPanel.this.rotation();
+			if (!rb.rotates.isEmpty()) {
+				final ImageRotate rotate = rb.rotates.remove(rb.rotates.size()-1);
 				remove(this.map.get(rotate));
 			}
 		}
 
 		public void up(final @Nonnull ImageRotate rotate) {
-			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
+			final RotationBuilder rb = RotationPanel.this.rotation();
+			final int i = rb.rotates.indexOf(rotate);
 			if (i!=-1&&i>0) {
-				final ImageRotate prev = RotationPanel.this.rotation.rotates.get(i-1);
-				this.rotation.rotates.set(i, prev);
-				this.rotation.rotates.set(i-1, rotate);
+				final ImageRotate prev = rb.rotates.get(i-1);
+				rb.rotates.set(i, prev);
+				rb.rotates.set(i-1, rotate);
 				this.update();
 			}
 		}
 
 		public void down(final @Nonnull ImageRotate rotate) {
-			final int i = RotationPanel.this.rotation.rotates.indexOf(rotate);
-			if (i!=-1&&i<RotationPanel.this.rotation.rotates.size()-1) {
-				final ImageRotate next = RotationPanel.this.rotation.rotates.get(i+1);
-				this.rotation.rotates.set(i, next);
-				this.rotation.rotates.set(i+1, rotate);
+			final RotationBuilder rb = RotationPanel.this.rotation();
+			final int i = rb.rotates.indexOf(rotate);
+			if (i!=-1&&i<rb.rotates.size()-1) {
+				final ImageRotate next = rb.rotates.get(i+1);
+				rb.rotates.set(i, next);
+				rb.rotates.set(i+1, rotate);
 				this.update();
 			}
 		}
@@ -191,8 +206,9 @@ public abstract class GuiRotation extends WPanel {
 		}
 
 		public void update() {
+			final RotationBuilder rb = RotationPanel.this.rotation();
 			int i = 0;
-			for (final ImageRotate rotate : this.rotation.rotates) {
+			for (final ImageRotate rotate : rb.rotates) {
 				final RotationElement element = this.map.get(rotate);
 				element.top.stop().add(Easings.easeInCirc.move(.25f, i++*15)).start();
 			}

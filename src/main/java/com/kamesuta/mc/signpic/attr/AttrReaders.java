@@ -36,32 +36,32 @@ public class AttrReaders {
 
 	private boolean hasInvalidMeta;
 
-	private @Nonnull Set<PropAnimator<?, ?, ?>> metas = Sets.newHashSet();
+	private @Nonnull Set<PropReader<?, ?, ?>> metas = Sets.newHashSet();
 
-	private @Nonnull <E extends PropAnimator<?, ?, ?>> E add(final @Nonnull E e) {
+	private @Nonnull <E extends PropReader<?, ?, ?>> E add(final @Nonnull E e) {
 		this.metas.add(e);
 		return e;
 	}
 
-	public final @Nonnull PropAnimator<AnimationData, AnimationData, AnimationData> animations = add(new PropAnimator<AnimationData, AnimationData, AnimationData>(Attrs.ANIMATION.getReader()));
-	public final @Nonnull PropAnimator<SizeData, SizeData, SizeData> sizes = add(new PropAnimator<SizeData, SizeData, SizeData>(Attrs.SIZE.getReader()));
-	public final @Nonnull PropAnimator<OffsetData, OffsetData, OffsetData> offsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(Attrs.OFFSET.getReader()));
-	public final @Nonnull PropAnimator<OffsetData, OffsetData, OffsetData> centeroffsets = add(new PropAnimator<OffsetData, OffsetData, OffsetData>(Attrs.OFFSET_CENTER.getReader()));
-	public final @Nonnull PropAnimator<KeyRotation, RotationData, DiffRotation> rotations = add(new PropAnimator<KeyRotation, RotationData, DiffRotation>(Attrs.ROTATION.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> u = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_X.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> v = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_Y.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> w = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_W.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> h = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_H.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> c = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_SPLIT_W.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> s = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_SPLIT_H.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> o = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_OPACITY.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> f = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_LIGHT_X.getReader()));
-	public final @Nonnull PropAnimator<TextureFloat, TextureFloat, TextureFloat> g = add(new PropAnimator<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_LIGHT_Y.getReader()));
-	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(Attrs.TEXTURE_REPEAT.getReader()));
-	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(Attrs.TEXTURE_MIPMAP.getReader()));
-	public final @Nonnull PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean> l = add(new PropAnimator<TextureBoolean, TextureBoolean, TextureBoolean>(Attrs.TEXTURE_LIGHTING.getReader()));
-	public final @Nonnull PropAnimator<TextureBlend, TextureBlend, TextureBlend> b = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(Attrs.TEXTURE_BLEND_SRC.getReader()));
-	public final @Nonnull PropAnimator<TextureBlend, TextureBlend, TextureBlend> d = add(new PropAnimator<TextureBlend, TextureBlend, TextureBlend>(Attrs.TEXTURE_BLEND_DST.getReader()));
+	public final @Nonnull PropReader<AnimationData, AnimationData, AnimationData> animations = add(new PropReader<AnimationData, AnimationData, AnimationData>(Attrs.ANIMATION.getReader()));
+	public final @Nonnull PropReader<SizeData, SizeData, SizeData> sizes = add(new PropReader<SizeData, SizeData, SizeData>(Attrs.SIZE.getReader()));
+	public final @Nonnull PropReader<OffsetData, OffsetData, OffsetData> offsets = add(new PropReader<OffsetData, OffsetData, OffsetData>(Attrs.OFFSET.getReader()));
+	public final @Nonnull PropReader<OffsetData, OffsetData, OffsetData> centeroffsets = add(new PropReader<OffsetData, OffsetData, OffsetData>(Attrs.OFFSET_CENTER.getReader()));
+	public final @Nonnull PropReader<KeyRotation, RotationData, DiffRotation> rotations = add(new PropReader<KeyRotation, RotationData, DiffRotation>(Attrs.ROTATION.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> u = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_X.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> v = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_Y.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> w = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_W.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> h = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_H.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> c = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_SPLIT_W.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> s = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_SPLIT_H.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> o = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_OPACITY.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> f = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_LIGHT_X.getReader()));
+	public final @Nonnull PropReader<TextureFloat, TextureFloat, TextureFloat> g = add(new PropReader<TextureFloat, TextureFloat, TextureFloat>(Attrs.TEXTURE_LIGHT_Y.getReader()));
+	public final @Nonnull PropReader<TextureBoolean, TextureBoolean, TextureBoolean> r = add(new PropReader<TextureBoolean, TextureBoolean, TextureBoolean>(Attrs.TEXTURE_REPEAT.getReader()));
+	public final @Nonnull PropReader<TextureBoolean, TextureBoolean, TextureBoolean> m = add(new PropReader<TextureBoolean, TextureBoolean, TextureBoolean>(Attrs.TEXTURE_MIPMAP.getReader()));
+	public final @Nonnull PropReader<TextureBoolean, TextureBoolean, TextureBoolean> l = add(new PropReader<TextureBoolean, TextureBoolean, TextureBoolean>(Attrs.TEXTURE_LIGHTING.getReader()));
+	public final @Nonnull PropReader<TextureBlend, TextureBlend, TextureBlend> b = add(new PropReader<TextureBlend, TextureBlend, TextureBlend>(Attrs.TEXTURE_BLEND_SRC.getReader()));
+	public final @Nonnull PropReader<TextureBlend, TextureBlend, TextureBlend> d = add(new PropReader<TextureBlend, TextureBlend, TextureBlend>(Attrs.TEXTURE_BLEND_DST.getReader()));
 
 	private AttrReaders() {
 	}
@@ -106,7 +106,7 @@ public class AttrReaders {
 					final String value = 2<=gcount ? mp.group(2) : "";
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
 						boolean b = false;
-						for (final PropAnimator<?, ?, ?> m : this.metas)
+						for (final PropReader<?, ?, ?> m : this.metas)
 							b = m.parse(src, key, value)||b;
 						bb = b&&bb;
 					}
@@ -119,7 +119,7 @@ public class AttrReaders {
 				easing = anim.easing;
 			}
 
-			for (final PropAnimator<?, ?, ?> m : this.metas)
+			for (final PropReader<?, ?, ?> m : this.metas)
 				m.next(time, easing);
 		}
 

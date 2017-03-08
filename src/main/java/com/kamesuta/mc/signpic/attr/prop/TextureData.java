@@ -44,6 +44,11 @@ public interface TextureData {
 				return new TextureFloat(this.type, this.data*per+before.data*(1f-per));
 		}
 
+		@Override
+		public String toString() {
+			return String.format("TextureFloat [type=%s, data=%s]", type, data);
+		}
+
 		public static enum TextureFloatType {
 			U(PropSyntax.TEXTURE_X.id, defaultUV, false),
 			V(PropSyntax.TEXTURE_Y.id, defaultUV, false),
@@ -108,6 +113,11 @@ public interface TextureData {
 					return type.identifier;
 				return this.type.identifier+ShortestFloatFormatter.format(this.data);
 			}
+
+			@Override
+			public String toString() {
+				return String.format("TextureFloatBuilder [type=%s, data=%s]", type, data);
+			}
 		}
 	}
 
@@ -132,6 +142,11 @@ public interface TextureData {
 		@Override
 		public @Nonnull TextureBoolean per(final float per, final @Nullable TextureBoolean before) {
 			return this;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("TextureBoolean [type=%s, data=%s]", type, data);
 		}
 
 		public static enum TextureBooleanType {
@@ -178,6 +193,11 @@ public interface TextureData {
 					return this.type.identifier;
 				return "";
 			}
+
+			@Override
+			public String toString() {
+				return String.format("TextureBooleanBuilder [type=%s, data=%s]", type, data);
+			}
 		}
 	}
 
@@ -200,6 +220,11 @@ public interface TextureData {
 		@Override
 		public @Nonnull TextureBlend per(final float per, final @Nullable TextureBlend before) {
 			return this;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("TextureBlend [type=%s, data=%s]", type, data);
 		}
 
 		public static enum TextureBlendType {
@@ -246,6 +271,11 @@ public interface TextureData {
 				if (data!=null&&data!=this.type.defaultValue)
 					return this.type.identifier+data.id;
 				return "";
+			}
+
+			@Override
+			public String toString() {
+				return String.format("TextureBlendBuilder [type=%s, data=%s]", type, data);
 			}
 		}
 	}

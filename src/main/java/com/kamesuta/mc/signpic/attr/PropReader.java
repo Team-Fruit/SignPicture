@@ -6,17 +6,17 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.signpic.attr.Attrs.IAttrReader;
 
-public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame, Diffed extends KeyFrame> {
+public class PropReader<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame, Diffed extends KeyFrame> {
 	private @Nullable KeyFrame base;
-	private final @Nonnull IAttrReader<Diffed, KeyFrame> metabuilder;
+	private final @Nonnull IAttrReader<Diffed, KeyFrame, ?> metabuilder;
 	private @Nonnull IPropBuilder<Diffed, KeyFrame> builder;
-	private final @Nonnull PropAnimation<KeyFrame, InterFrame> movie;
+	private final @Nonnull PropReaderAnimation<KeyFrame, InterFrame> movie;
 	private boolean parsed;
 
-	public PropAnimator(final @Nonnull IAttrReader<Diffed, KeyFrame> metabuilder) {
+	public PropReader(final @Nonnull IAttrReader<Diffed, KeyFrame, ?> metabuilder) {
 		this.metabuilder = metabuilder;
 		this.builder = metabuilder.builder();
-		this.movie = new PropAnimation<KeyFrame, InterFrame>(this.builder.diff(this.base));
+		this.movie = new PropReaderAnimation<KeyFrame, InterFrame>(this.builder.diff(this.base));
 	}
 
 	public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
@@ -38,7 +38,7 @@ public class PropAnimator<KeyFrame extends IPropInterpolatable<InterFrame>, Inte
 		this.builder = this.metabuilder.builder();
 	}
 
-	public @Nonnull PropAnimation<KeyFrame, InterFrame> getMovie() {
+	public @Nonnull PropReaderAnimation<KeyFrame, InterFrame> getMovie() {
 		return this.movie;
 	}
 }

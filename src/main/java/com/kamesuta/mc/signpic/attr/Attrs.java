@@ -25,36 +25,40 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBu
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class Attrs {
-	public static class Attr<ReaderDiffed, ReaderKeyFrame> {
-		private final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame> reader;
+	public static class Attr<ReaderDiffed, ReaderKeyFrame, ReaderReader extends IPropBuilder<ReaderDiffed, ReaderKeyFrame>> {
+		private final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame, ReaderReader> reader;
 
-		private Attr(final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame> reader) {
+		private Attr(final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame, ReaderReader> reader) {
 			this.reader = reader;
 		}
 
-		public @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame> getReader() {
+		public @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame, ReaderReader> getReader() {
 			return this.reader;
 		}
 
-		private static @Nonnull <ReaderDiffed, ReaderKeyFrame> Attr<ReaderDiffed, ReaderKeyFrame> create(final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame> reader) {
-			return new Attr<ReaderDiffed, ReaderKeyFrame>(reader);
+		public @Nonnull ReaderReader getWriter() {
+			return getReader().builder();
+		}
+
+		private static @Nonnull <ReaderDiffed, ReaderKeyFrame, ReaderReader extends IPropBuilder<ReaderDiffed, ReaderKeyFrame>> Attr<ReaderDiffed, ReaderKeyFrame, ReaderReader> create(final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame, ReaderReader> reader) {
+			return new Attr<ReaderDiffed, ReaderKeyFrame, ReaderReader>(reader);
 		}
 	}
 
-	public static final @Nonnull Attr<AnimationData, AnimationData> ANIMATION = Attr.create(new IAttrReader<AnimationData, AnimationData>() {
+	public static final @Nonnull Attr<AnimationData, AnimationData, AnimationBuilder> ANIMATION = Attr.create(new IAttrReader<AnimationData, AnimationData, AnimationBuilder>() {
 		@Override
-		public @Nonnull IPropBuilder<AnimationData, AnimationData> builder() {
+		public @Nonnull AnimationBuilder builder() {
 			return new AnimationBuilder();
 		}
 	});
-	public static final @Nonnull Attr<SizeData, SizeData> SIZE = Attr.create(new IAttrReader<SizeData, SizeData>() {
+	public static final @Nonnull Attr<SizeData, SizeData, SizeBuilder> SIZE = Attr.create(new IAttrReader<SizeData, SizeData, SizeBuilder>() {
 		@Override
 		public @Nonnull SizeBuilder builder() {
 			return new SizeBuilder();
 		}
 	});
 
-	public static final @Nonnull Attr<OffsetData, OffsetData> OFFSET = Attr.create(new IAttrReader<OffsetData, OffsetData>() {
+	public static final @Nonnull Attr<OffsetData, OffsetData, OffsetBuilder> OFFSET = Attr.create(new IAttrReader<OffsetData, OffsetData, OffsetBuilder>() {
 		@Override
 		public @Nonnull OffsetBuilder builder() {
 			return new OffsetBuilder(
@@ -63,7 +67,7 @@ public class Attrs {
 					new OffsetDoublePropBuilder(PropSyntax.OFFSET_BACK.id, PropSyntax.OFFSET_FRONT.id));
 		}
 	});
-	public static final @Nonnull Attr<OffsetData, OffsetData> OFFSET_CENTER = Attr.create(new IAttrReader<OffsetData, OffsetData>() {
+	public static final @Nonnull Attr<OffsetData, OffsetData, OffsetBuilder> OFFSET_CENTER = Attr.create(new IAttrReader<OffsetData, OffsetData, OffsetBuilder>() {
 		@Override
 		public @Nonnull OffsetBuilder builder() {
 			return new OffsetBuilder(
@@ -72,14 +76,14 @@ public class Attrs {
 					new OffsetPropBuilder(PropSyntax.OFFSET_CENTER_Z.id));
 		}
 	});
-	public static final @Nonnull Attr<DiffRotation, KeyRotation> ROTATION = Attr.create(new IAttrReader<DiffRotation, KeyRotation>() {
+	public static final @Nonnull Attr<DiffRotation, KeyRotation, RotationBuilder> ROTATION = Attr.create(new IAttrReader<DiffRotation, KeyRotation, RotationBuilder>() {
 		@Override
 		public @Nonnull RotationBuilder builder() {
 			return new RotationBuilder();
 		}
 	});
 
-	private static class TexFloatBuilder implements IAttrReader<TextureFloat, TextureFloat> {
+	private static class TexFloatBuilder implements IAttrReader<TextureFloat, TextureFloat, TextureFloatBuilder> {
 		private @Nonnull TextureFloatType type;
 
 		public TexFloatBuilder(final @Nonnull TextureFloatType type) {
@@ -87,22 +91,22 @@ public class Attrs {
 		}
 
 		@Override
-		public @Nonnull IPropBuilder<TextureFloat, TextureFloat> builder() {
+		public @Nonnull TextureFloatBuilder builder() {
 			return new TextureFloatBuilder(this.type);
 		}
 	}
 
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_X = Attr.create(new TexFloatBuilder(TextureFloatType.U));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_Y = Attr.create(new TexFloatBuilder(TextureFloatType.V));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_W = Attr.create(new TexFloatBuilder(TextureFloatType.W));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_H = Attr.create(new TexFloatBuilder(TextureFloatType.H));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_SPLIT_W = Attr.create(new TexFloatBuilder(TextureFloatType.C));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_SPLIT_H = Attr.create(new TexFloatBuilder(TextureFloatType.S));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_OPACITY = Attr.create(new TexFloatBuilder(TextureFloatType.O));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_LIGHT_X = Attr.create(new TexFloatBuilder(TextureFloatType.F));
-	public static final @Nonnull Attr<TextureFloat, TextureFloat> TEXTURE_LIGHT_Y = Attr.create(new TexFloatBuilder(TextureFloatType.G));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_X = Attr.create(new TexFloatBuilder(TextureFloatType.U));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_Y = Attr.create(new TexFloatBuilder(TextureFloatType.V));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_W = Attr.create(new TexFloatBuilder(TextureFloatType.W));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_H = Attr.create(new TexFloatBuilder(TextureFloatType.H));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_SPLIT_W = Attr.create(new TexFloatBuilder(TextureFloatType.C));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_SPLIT_H = Attr.create(new TexFloatBuilder(TextureFloatType.S));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_OPACITY = Attr.create(new TexFloatBuilder(TextureFloatType.O));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_LIGHT_X = Attr.create(new TexFloatBuilder(TextureFloatType.F));
+	public static final @Nonnull Attr<TextureFloat, TextureFloat, TextureFloatBuilder> TEXTURE_LIGHT_Y = Attr.create(new TexFloatBuilder(TextureFloatType.G));
 
-	private static class TexBooleanBuilder implements IAttrReader<TextureBoolean, TextureBoolean> {
+	private static class TexBooleanBuilder implements IAttrReader<TextureBoolean, TextureBoolean, TextureBooleanBuilder> {
 		private @Nonnull TextureBooleanType type;
 
 		public TexBooleanBuilder(final @Nonnull TextureBooleanType type) {
@@ -115,11 +119,11 @@ public class Attrs {
 		}
 	}
 
-	public static final @Nonnull Attr<TextureBoolean, TextureBoolean> TEXTURE_REPEAT = Attr.create(new TexBooleanBuilder(TextureBooleanType.R));
-	public static final @Nonnull Attr<TextureBoolean, TextureBoolean> TEXTURE_MIPMAP = Attr.create(new TexBooleanBuilder(TextureBooleanType.M));
-	public static final @Nonnull Attr<TextureBoolean, TextureBoolean> TEXTURE_LIGHTING = Attr.create(new TexBooleanBuilder(TextureBooleanType.L));
+	public static final @Nonnull Attr<TextureBoolean, TextureBoolean, TextureBooleanBuilder> TEXTURE_REPEAT = Attr.create(new TexBooleanBuilder(TextureBooleanType.R));
+	public static final @Nonnull Attr<TextureBoolean, TextureBoolean, TextureBooleanBuilder> TEXTURE_MIPMAP = Attr.create(new TexBooleanBuilder(TextureBooleanType.M));
+	public static final @Nonnull Attr<TextureBoolean, TextureBoolean, TextureBooleanBuilder> TEXTURE_LIGHTING = Attr.create(new TexBooleanBuilder(TextureBooleanType.L));
 
-	private static class TexBlendBuilder implements IAttrReader<TextureBlend, TextureBlend> {
+	private static class TexBlendBuilder implements IAttrReader<TextureBlend, TextureBlend, TextureBlendBuilder> {
 		private @Nonnull TextureBlendType type;
 
 		public TexBlendBuilder(final @Nonnull TextureBlendType type) {
@@ -132,11 +136,17 @@ public class Attrs {
 		}
 	}
 
-	public static final @Nonnull Attr<TextureBlend, TextureBlend> TEXTURE_BLEND_SRC = Attr.create(new TexBlendBuilder(TextureBlendType.B));
-	public static final @Nonnull Attr<TextureBlend, TextureBlend> TEXTURE_BLEND_DST = Attr.create(new TexBlendBuilder(TextureBlendType.D));
+	public static final @Nonnull Attr<TextureBlend, TextureBlend, TextureBlendBuilder> TEXTURE_BLEND_SRC = Attr.create(new TexBlendBuilder(TextureBlendType.B));
+	public static final @Nonnull Attr<TextureBlend, TextureBlend, TextureBlendBuilder> TEXTURE_BLEND_DST = Attr.create(new TexBlendBuilder(TextureBlendType.D));
 
-	public static interface IAttrReader<Diffed, KeyFrame> {
+	public static interface IAttrReader0<Diffed, KeyFrame> {
 		@Nonnull
 		IPropBuilder<Diffed, KeyFrame> builder();
+	}
+
+	public static interface IAttrReader<Diffed, KeyFrame, Reader extends IPropBuilder<Diffed, KeyFrame>> extends IAttrReader0<Diffed, KeyFrame> {
+		@Override
+		@Nonnull
+		Reader builder();
 	}
 }

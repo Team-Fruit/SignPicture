@@ -34,6 +34,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.asm.ASMDeobfNames;
 import com.kamesuta.mc.signpic.attr.AttrWriters;
+import com.kamesuta.mc.signpic.attr.AttrWriters.AttrWriter;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
@@ -168,7 +169,8 @@ public class GuiMain extends WFrame {
 
 					@Override
 					protected @Nonnull SizeBuilder size() {
-						return GuiMain.this.signbuilder.getMeta().size;
+						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
+						return attr.add(attr.size).size;
 					}
 				});
 
@@ -180,7 +182,8 @@ public class GuiMain extends WFrame {
 
 					@Override
 					protected @Nonnull OffsetBuilder offset() {
-						return GuiMain.this.signbuilder.getMeta().offset;
+						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
+						return attr.add(attr.offset).offset;
 					}
 				});
 
@@ -192,7 +195,8 @@ public class GuiMain extends WFrame {
 
 					@Override
 					protected @Nonnull RotationBuilder rotation() {
-						return GuiMain.this.signbuilder.getMeta().rotation;
+						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
+						return attr.add(attr.rotation).rotation;
 					}
 				});
 

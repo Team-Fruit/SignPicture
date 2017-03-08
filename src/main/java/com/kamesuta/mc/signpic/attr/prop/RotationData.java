@@ -325,8 +325,8 @@ public abstract class RotationData {
 		}
 
 		@Override
-		public @Nonnull String toString() {
-			return compose();
+		public String toString() {
+			return String.format("RotationBuilder [rotates=%s, x=%s, y=%s, z=%s, angle=%s, base=%s]", this.rotates, this.x, this.y, this.z, this.angle, this.base);
 		}
 
 		public static class ImageRotate {

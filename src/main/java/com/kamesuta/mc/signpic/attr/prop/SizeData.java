@@ -118,8 +118,8 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public @Nonnull String toString() {
-			return "AbsSizeData [width="+getWidth()+", height="+getHeight()+"]";
+		public String toString() {
+			return String.format("AbsSizeData [width=%s, height=%s]", getWidth(), getHeight());
 		}
 	}
 
@@ -394,8 +394,8 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 		}
 
 		@Override
-		public @Nonnull String toString() {
-			return compose();
+		public String toString() {
+			return String.format("SizeBuilder [width=%s, height=%s]", this.width, this.height);
 		}
 
 		@Override
@@ -405,31 +405,6 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 			} catch (final Exception e) {
 				return new SizeBuilder().setSize(this);
 			}
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime*result+Float.floatToIntBits(this.height);
-			result = prime*result+Float.floatToIntBits(this.width);
-			return result;
-		}
-
-		@Override
-		public boolean equals(final @Nullable Object obj) {
-			if (this==obj)
-				return true;
-			if (obj==null)
-				return false;
-			if (!(obj instanceof SizeBuilder))
-				return false;
-			final SizeBuilder other = (SizeBuilder) obj;
-			if (Float.floatToIntBits(this.height)!=Float.floatToIntBits(other.height))
-				return false;
-			if (Float.floatToIntBits(this.width)!=Float.floatToIntBits(other.width))
-				return false;
-			return true;
 		}
 	}
 }
