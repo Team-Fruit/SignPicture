@@ -20,7 +20,7 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 
 public class PacketHandler {
 	public static @Nonnull PacketHandler instance = new PacketHandler();
-	public static @Nonnull FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("signpic.list");
+	public static @Nonnull FMLEventChannel channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("signpic.manager");
 
 	private PacketHandler() {
 	}
@@ -52,7 +52,7 @@ public class PacketHandler {
 	public void sendPacket(final @Nonnull SignPicturePacket p) {
 		final byte[] message = Client.gson.toJson(p).getBytes();
 		final ByteBuf data = Unpooled.wrappedBuffer(message);
-		final C17PacketCustomPayload packet = new C17PacketCustomPayload("signpic.list", new PacketBuffer(data));
+		final C17PacketCustomPayload packet = new C17PacketCustomPayload("signpic.manager", new PacketBuffer(data));
 		final FMLProxyPacket pkt = new FMLProxyPacket(packet);
 		channel.sendToServer(pkt);
 	}
