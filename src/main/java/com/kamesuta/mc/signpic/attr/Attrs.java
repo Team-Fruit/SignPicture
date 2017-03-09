@@ -4,6 +4,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import com.kamesuta.mc.signpic.attr.PropReader.IPropReader;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
@@ -145,12 +146,7 @@ public class Attrs {
 	public static final @Nonnull Attr<TextureBlend, TextureBlend, TextureBlendBuilder> TEXTURE_BLEND_SRC = Attr.create(new TexBlendBuilder(TextureBlendType.B));
 	public static final @Nonnull Attr<TextureBlend, TextureBlend, TextureBlendBuilder> TEXTURE_BLEND_DST = Attr.create(new TexBlendBuilder(TextureBlendType.D));
 
-	public static interface IAttrReader0<Diffed, KeyFrame> {
-		@Nonnull
-		IPropBuilder<Diffed, KeyFrame> builder();
-	}
-
-	public static interface IAttrReader<Diffed, KeyFrame, Reader extends IPropBuilder<Diffed, KeyFrame>> extends IAttrReader0<Diffed, KeyFrame> {
+	public static interface IAttrReader<Diffed, KeyFrame, Reader extends IPropBuilder<Diffed, KeyFrame>> extends IPropReader<Diffed, KeyFrame> {
 		@Override
 		@Nonnull
 		Reader builder();
