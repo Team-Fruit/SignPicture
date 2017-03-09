@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.attr;
 
+import java.util.regex.Pattern;
+
 import javax.annotation.Nonnull;
 
 import com.kamesuta.mc.signpic.attr.prop.AnimationData;
@@ -25,6 +27,10 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatBu
 import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat.TextureFloatType;
 
 public class Attrs {
+	protected static final @Nonnull Pattern pg = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
+	protected static final @Nonnull Pattern pp = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
+	public static final float defaultInterval = 0f;
+
 	public static class Attr<ReaderDiffed, ReaderKeyFrame, ReaderReader extends IPropBuilder<ReaderDiffed, ReaderKeyFrame>> {
 		private final @Nonnull IAttrReader<ReaderDiffed, ReaderKeyFrame, ReaderReader> reader;
 

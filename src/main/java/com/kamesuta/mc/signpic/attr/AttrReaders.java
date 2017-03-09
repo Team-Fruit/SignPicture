@@ -4,7 +4,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -28,11 +27,6 @@ import com.kamesuta.mc.signpic.attr.prop.TextureData.TextureFloat;
 
 public class AttrReaders {
 	public static final @Nonnull AttrReaders Blank = new AttrReaders();
-
-	protected static final @Nonnull Pattern pg = Pattern.compile("\\((?:([^\\)]*?)~)?(.*?)\\)");
-	protected static final @Nonnull Pattern pp = Pattern.compile("(?:([^\\d-\\+Ee\\.]?)([\\d-\\+Ee\\.]*)?)+?");
-
-	public static final float defaultInterval = 1f;
 
 	private boolean hasInvalidMeta;
 
@@ -71,18 +65,16 @@ public class AttrReaders {
 
 		final TreeMap<Float, String> timeline = Maps.newTreeMap();
 
-		final Matcher mgb = pg.matcher(src);
+		final Matcher mgb = Attrs.pg.matcher(src);
 		final String s = mgb.replaceAll("");
 		timeline.put(0f, s);
 
 		float current = 0;
-		float lastinterval = defaultInterval;
-		final Matcher mg = pg.matcher(src);
+		final Matcher mg = Attrs.pg.matcher(src);
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
-				final float time = NumberUtils.toFloat(mg.group(1), lastinterval);
-				lastinterval = time;
+				final float time = NumberUtils.toFloat(mg.group(1), Attrs.defaultInterval);
 				current += time;
 				final String before = timeline.get(current);
 				String meta = mg.group(2);
@@ -98,7 +90,7 @@ public class AttrReaders {
 			final float time = entry.getKey();
 			final String meta = entry.getValue();
 
-			final Matcher mp = pp.matcher(meta);
+			final Matcher mp = Attrs.pp.matcher(meta);
 			while (mp.find()) {
 				final int gcount = mp.groupCount();
 				if (1<=gcount) {
@@ -130,5 +122,10 @@ public class AttrReaders {
 
 	public boolean hasInvalidMeta() {
 		return this.hasInvalidMeta;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("AttrReaders [hasInvalidMeta=%s, metas=%s, animations=%s, sizes=%s, offsets=%s, centeroffsets=%s, rotations=%s, u=%s, v=%s, w=%s, h=%s, c=%s, s=%s, o=%s, f=%s, g=%s, r=%s, m=%s, l=%s, b=%s, d=%s]", this.hasInvalidMeta, this.metas, this.animations, this.sizes, this.offsets, this.centeroffsets, this.rotations, this.u, this.v, this.w, this.h, this.c, this.s, this.o, this.f, this.g, this.r, this.m, this.l, this.b, this.d);
 	}
 }

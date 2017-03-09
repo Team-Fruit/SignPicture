@@ -168,7 +168,7 @@ public abstract class RotationData {
 		}
 
 		public @Nonnull String compose() {
-			final float rotate = (this.rotate%8+8)%8;
+			final float rotate = this.rotate;
 			if (rotate==0)
 				return "";
 			else if (rotate==defaultOffset)

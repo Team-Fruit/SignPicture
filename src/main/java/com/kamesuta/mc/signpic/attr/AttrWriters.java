@@ -71,13 +71,18 @@ public class AttrWriters {
 			return this.metawriter.isEmpty();
 		}
 
+		@Override
+		public String toString() {
+			return compose();
+		}
+
 		public @Nonnull AttrWriter parse(final @Nonnull String src) {
 			Validate.notNull(src);
 
-			final Matcher mgb = AttrReaders.pg.matcher(src);
+			final Matcher mgb = Attrs.pg.matcher(src);
 			final String meta = mgb.replaceAll("");
 
-			final Matcher mp = AttrReaders.pp.matcher(meta);
+			final Matcher mp = Attrs.pp.matcher(meta);
 			while (mp.find()) {
 				final int gcount = mp.groupCount();
 				if (1<=gcount) {
@@ -86,7 +91,8 @@ public class AttrWriters {
 					if (!StringUtils.isEmpty(key)||!StringUtils.isEmpty(value)) {
 						this.size.parse(src, key, value);
 						for (final IPropBuilder<?, ?> m : this.metareader)
-							m.parse(src, key, value);
+							if (m.parse(src, key, value))
+								add(m);
 					}
 				}
 			}
@@ -118,18 +124,16 @@ public class AttrWriters {
 
 		final TreeMap<Float, String> timeline = Maps.newTreeMap();
 
-		final Matcher mgb = AttrReaders.pg.matcher(src);
+		final Matcher mgb = Attrs.pg.matcher(src);
 		final String s = mgb.replaceAll("");
 		getFrame(0f).parse(s);
 
 		float current = 0;
-		float lastinterval = AttrReaders.defaultInterval;
-		final Matcher mg = AttrReaders.pg.matcher(src);
+		final Matcher mg = Attrs.pg.matcher(src);
 		while (mg.find()) {
 			final int gcount = mg.groupCount();
 			if (2<=gcount) {
-				final float time = NumberUtils.toFloat(mg.group(1), lastinterval);
-				lastinterval = time;
+				final float time = NumberUtils.toFloat(mg.group(1), Attrs.defaultInterval);
 				current += time;
 				final String before = timeline.get(current);
 				String meta = mg.group(2);
@@ -155,7 +159,6 @@ public class AttrWriters {
 		if (!first.isEmpty())
 			stb.append(first.compose());
 
-		float lastinterval = AttrReaders.defaultInterval;
 		float lasttime = 0f;
 		for (final Entry<Float, AttrWriter> entry : this.frames.entrySet()) {
 			final float time = entry.getKey();
@@ -165,9 +168,8 @@ public class AttrWriters {
 			if (!attr.isEmpty()) {
 				final float interval = time-lasttime;
 				stb.append("(");
-				if (lastinterval!=interval)
+				if (interval!=Attrs.defaultInterval)
 					stb.append(interval).append("~");
-				lastinterval = interval;
 				stb.append(attr.compose()).append(")");
 				lasttime = time;
 			}
