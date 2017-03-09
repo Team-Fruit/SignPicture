@@ -65,6 +65,7 @@ public class Client {
 
 	public static @Nullable String id;
 	public static @Nullable String name;
+	public static @Nullable String token;
 
 	public static @Nullable RootCommand rootCommand;
 

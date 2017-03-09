@@ -14,6 +14,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.Session;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -34,7 +35,9 @@ public class ClientProxy extends CommonProxy {
 			final Object o = UUIDTypeAdapter.fromString(id);
 			if (o!=null) {
 				Client.id = id;
-				Client.name = Client.mc.getSession().getUsername();
+				final Session s = Client.mc.getSession();
+				Client.name = s.getUsername();
+				Client.token = s.getToken();
 			}
 		} catch (final IllegalArgumentException e) {
 		}
