@@ -13,6 +13,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
@@ -169,7 +170,7 @@ public class AttrWriters {
 				final float interval = time-lasttime;
 				stb.append("(");
 				if (interval!=Attrs.defaultInterval)
-					stb.append(interval).append("~");
+					stb.append(ShortestFloatFormatter.format(interval)).append("~");
 				stb.append(attr.compose()).append(")");
 				lasttime = time;
 			}

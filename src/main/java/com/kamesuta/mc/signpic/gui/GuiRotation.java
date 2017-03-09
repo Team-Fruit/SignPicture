@@ -31,11 +31,13 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.resources.I18n;
 
 public abstract class GuiRotation extends WPanel {
+	protected @Nonnull RefRotation rotation;
 	protected @Nonnull RotationEditor editor;
 	protected @Nullable RotationPanel panel;
 
-	public GuiRotation(final @Nonnull R position) {
+	public GuiRotation(final @Nonnull R position, final @Nonnull RefRotation rotation) {
 		super(position);
+		this.rotation = rotation;
 		final VMotion left = V.pm(-1).add(Easings.easeOutBack.move(.25f, 0f)).start();
 		this.editor = new RotationEditor(new R(Coord.left(left), Coord.top(0), Coord.pwidth(1f), Coord.height(15))) {
 			@Override
@@ -51,7 +53,12 @@ public abstract class GuiRotation extends WPanel {
 		};
 	}
 
-	protected abstract @Nonnull RotationBuilder rotation();
+	public static interface RefRotation {
+		@Nonnull
+		RotationBuilder rotation();
+
+		boolean isFirst();
+	}
 
 	protected abstract void onUpdate();
 
@@ -71,24 +78,14 @@ public abstract class GuiRotation extends WPanel {
 			}
 		}.setText(I18n.format("signpic.gui.editor.rotation.category")));
 		add(this.editor);
-		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0))) {
-			@Override
-			protected @Nonnull RotationBuilder rotation() {
-				return GuiRotation.this.rotation();
-			}
-		});
+		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0))));
 	}
 
 	@SubscribeEvent
 	public void onChanged(final @Nullable PropertyChangeEvent ev) {
 		if (this.panel!=null)
 			remove(this.panel);
-		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0))) {
-			@Override
-			protected @Nonnull RotationBuilder rotation() {
-				return GuiRotation.this.rotation();
-			}
-		});
+		add(this.panel = new RotationPanel(new R(Coord.left(0), Coord.top(15), Coord.right(0), Coord.bottom(0))));
 	}
 
 	@Override
@@ -137,12 +134,12 @@ public abstract class GuiRotation extends WPanel {
 		}
 	}
 
-	protected abstract class RotationPanel extends WPanel {
+	protected class RotationPanel extends WPanel {
 		private final @Nonnull Map<ImageRotate, RotationElement> map = Maps.newHashMap();
 
 		public RotationPanel(final @Nonnull R position) {
 			super(position);
-			final RotationBuilder rb = RotationPanel.this.rotation();
+			final RotationBuilder rb = GuiRotation.this.rotation.rotation();
 			for (final ListIterator<ImageRotate> itr = rb.rotates.listIterator(); itr.hasNext();) {
 				final int n = itr.nextIndex();
 				final ImageRotate rotate = itr.next();
@@ -155,10 +152,8 @@ public abstract class GuiRotation extends WPanel {
 			update();
 		}
 
-		protected abstract @Nonnull RotationBuilder rotation();
-
 		public void add(final @Nonnull ImageRotate rotate) {
-			final RotationBuilder rb = RotationPanel.this.rotation();
+			final RotationBuilder rb = GuiRotation.this.rotation.rotation();
 			final int n = rb.rotates.size();
 			if (n<3) {
 				rb.rotates.add(rotate);
@@ -167,7 +162,7 @@ public abstract class GuiRotation extends WPanel {
 		}
 
 		public void remove() {
-			final RotationBuilder rb = RotationPanel.this.rotation();
+			final RotationBuilder rb = GuiRotation.this.rotation.rotation();
 			if (!rb.rotates.isEmpty()) {
 				final ImageRotate rotate = rb.rotates.remove(rb.rotates.size()-1);
 				remove(this.map.get(rotate));
@@ -175,7 +170,7 @@ public abstract class GuiRotation extends WPanel {
 		}
 
 		public void up(final @Nonnull ImageRotate rotate) {
-			final RotationBuilder rb = RotationPanel.this.rotation();
+			final RotationBuilder rb = GuiRotation.this.rotation.rotation();
 			final int i = rb.rotates.indexOf(rotate);
 			if (i!=-1&&i>0) {
 				final ImageRotate prev = rb.rotates.get(i-1);
@@ -186,7 +181,7 @@ public abstract class GuiRotation extends WPanel {
 		}
 
 		public void down(final @Nonnull ImageRotate rotate) {
-			final RotationBuilder rb = RotationPanel.this.rotation();
+			final RotationBuilder rb = GuiRotation.this.rotation.rotation();
 			final int i = rb.rotates.indexOf(rotate);
 			if (i!=-1&&i<rb.rotates.size()-1) {
 				final ImageRotate next = rb.rotates.get(i+1);
@@ -206,7 +201,7 @@ public abstract class GuiRotation extends WPanel {
 		}
 
 		public void update() {
-			final RotationBuilder rb = RotationPanel.this.rotation();
+			final RotationBuilder rb = GuiRotation.this.rotation.rotation();
 			int i = 0;
 			for (final ImageRotate rotate : rb.rotates) {
 				final RotationElement element = this.map.get(rotate);
@@ -238,9 +233,10 @@ public abstract class GuiRotation extends WPanel {
 
 					@Override
 					protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
-						if (NumberUtils.isNumber(newText))
-							RotationElement.this.rotate.rotate = NumberUtils.toFloat(newText);
-						else
+						if (NumberUtils.isNumber(newText)) {
+							final float f = NumberUtils.toFloat(newText);
+							RotationElement.this.rotate.rotate = GuiRotation.this.rotation.isFirst() ? (f%8+8)%8 : f;
+						} else
 							RotationElement.this.rotate.rotate = 0;
 						onUpdate();
 					}

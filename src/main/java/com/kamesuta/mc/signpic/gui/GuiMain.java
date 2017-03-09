@@ -44,6 +44,7 @@ import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.GuiRotation.RefRotation;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.handler.SignHandler;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -187,16 +188,21 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4))) {
+				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), new RefRotation() {
 					@Override
-					protected void onUpdate() {
-						export();
+					public @Nonnull RotationBuilder rotation() {
+						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
+						return attr.add(attr.rotation).rotation;
 					}
 
 					@Override
-					protected @Nonnull RotationBuilder rotation() {
-						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
-						return attr.add(attr.rotation).rotation;
+					public boolean isFirst() {
+						return true;
+					}
+				}) {
+					@Override
+					protected void onUpdate() {
+						export();
 					}
 				});
 
