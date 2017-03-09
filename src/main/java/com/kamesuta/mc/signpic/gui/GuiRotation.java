@@ -149,7 +149,7 @@ public abstract class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			update();
+			onUpdate();
 		}
 
 		public void add(final @Nonnull ImageRotate rotate) {

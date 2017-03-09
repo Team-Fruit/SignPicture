@@ -113,171 +113,190 @@ public class GuiSignOption extends WFrame {
 										return o0;
 									}
 								}.setText(I18n.format("signpic.gui.settings.sign")));
-								final VCommon v1 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
-								final VCommon o1 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MSelectButton(new R(Coord.left(v1), Coord.top(top += 25f), Coord.height(20f)), 15) {
-									@Override
-									protected @Nonnull VCommon initOpacity() {
-										return o1;
-									}
+								if (!GuiSignOption.this.entry.isValid()) {
+									final VCommon v1 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o1 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MButton(new R(Coord.right(v1), Coord.top(top += 25f), Coord.height(20f))) {
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o1;
+										}
 
-									@Override
-									protected void initWidget() {
-										setSelector(new ButtonSelector() {
-											{
-												setList(Lists.<MButton> newArrayList(
-														new MButton(new R()) {
-															@Override
-															protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-																loadAndOpen(true, true);
-																return true;
-															}
-														}.setText(I18n.format("signpic.gui.settings.sign.load")),
-														new MButton(new R()) {
-															@Override
-															protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-																loadAndOpen(true, false);
-																return true;
-															}
-														}.setText(I18n.format("signpic.gui.settings.sign.load.content")),
-														new MButton(new R()) {
-															@Override
-															protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-																loadAndOpen(false, true);
-																return true;
-															}
-														}.setText(I18n.format("signpic.gui.settings.sign.load.meta"))));
+										@Override
+										protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+											CurrentMode.instance.setEntryId(GuiSignOption.this.entry.id);
+											requestClose();
+											Client.openEditor();
+											return true;
+										}
+									}.setText(I18n.format("signpic.gui.settings.sign.load.text")));
+								} else {
+									final VCommon v1 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o1 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MSelectButton(new R(Coord.left(v1), Coord.top(top += 25f), Coord.height(20f)), 15) {
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o1;
+										}
+
+										@Override
+										protected void initWidget() {
+											setSelector(new ButtonSelector() {
+												{
+													setList(Lists.<MButton> newArrayList(
+															new MButton(new R()) {
+																@Override
+																protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+																	loadAndOpen(true, true);
+																	return true;
+																}
+															}.setText(I18n.format("signpic.gui.settings.sign.load")),
+															new MButton(new R()) {
+																@Override
+																protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+																	loadAndOpen(true, false);
+																	return true;
+																}
+															}.setText(I18n.format("signpic.gui.settings.sign.load.content")),
+															new MButton(new R()) {
+																@Override
+																protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+																	loadAndOpen(false, true);
+																	return true;
+																}
+															}.setText(I18n.format("signpic.gui.settings.sign.load.meta"))));
+												}
+											});
+											super.initWidget();
+										}
+
+										protected void loadAndOpen(final boolean content, final boolean meta) {
+											load(content, meta);
+											requestClose();
+											Client.openEditor();
+										}
+
+										protected void load(final boolean content, final boolean meta) {
+											final Entry oldentry = CurrentMode.instance.getEntryId().entry();
+											final Entry newentry = GuiSignOption.this.entry;
+											final EntryIdBuilder idb = new EntryIdBuilder();
+											if (newentry.contentId!=null&&content)
+												idb.setURI(newentry.contentId.getID());
+											else if (oldentry.contentId!=null)
+												idb.setURI(oldentry.contentId.getID());
+											idb.setMeta(meta ? GuiSignOption.this.entry.getMetaBuilder() : oldentry.getMetaBuilder());
+											CurrentMode.instance.setEntryId(idb.build());
+										}
+									});
+									final VCommon v02 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o02 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MButton(new R(Coord.right(v02), Coord.top(top += 25f), Coord.height(20f))) {
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o02;
+										}
+
+										@Override
+										protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+											final Content c = GuiSignOption.this.entry.getContent();
+											if (c!=null)
+												Client.openURL(c.id.getURI());
+											return false;
+										}
+									}.setText(I18n.format("signpic.gui.settings.sign.openurl")));
+									final VCommon v2 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o2 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MButton(new R(Coord.right(v2), Coord.top(top += 25f), Coord.height(20f))) {
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o2;
+										}
+
+										@Override
+										protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+											final Content c = GuiSignOption.this.entry.getContent();
+											if (c!=null) {
+												c.markDirty();
+												return true;
 											}
-										});
-										super.initWidget();
-									}
-
-									protected void loadAndOpen(final boolean content, final boolean meta) {
-										load(content, meta);
-										// requestClose();
-										Client.openEditor();
-									}
-
-									protected void load(final boolean content, final boolean meta) {
-										final Entry oldentry = CurrentMode.instance.getEntryId().entry();
-										final Entry newentry = GuiSignOption.this.entry;
-										final EntryIdBuilder idb = new EntryIdBuilder();
-										if (newentry.contentId!=null&&content)
-											idb.setURI(newentry.contentId.getID());
-										else if (oldentry.contentId!=null)
-											idb.setURI(oldentry.contentId.getID());
-										idb.setMeta(meta ? GuiSignOption.this.entry.getMetaBuilder() : oldentry.getMetaBuilder());
-										CurrentMode.instance.setEntryId(idb.build());
-									}
-								});
-								final VCommon v02 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
-								final VCommon o02 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.right(v02), Coord.top(top += 25f), Coord.height(20f))) {
-									@Override
-									protected @Nonnull VCommon initOpacity() {
-										return o02;
-									}
-
-									@Override
-									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-										final Content c = GuiSignOption.this.entry.getContent();
-										if (c!=null)
-											Client.openURL(c.id.getURI());
-										return false;
-									}
-								}.setText(I18n.format("signpic.gui.settings.sign.openurl")));
-								final VCommon v2 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
-								final VCommon o2 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.right(v2), Coord.top(top += 25f), Coord.height(20f))) {
-									@Override
-									protected @Nonnull VCommon initOpacity() {
-										return o2;
-									}
-
-									@Override
-									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-										final Content c = GuiSignOption.this.entry.getContent();
-										if (c!=null) {
-											c.markDirty();
-											return true;
+											return false;
 										}
-										return false;
-									}
-								}.setText(I18n.format("signpic.gui.settings.sign.reload")));
-								final VCommon v3 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
-								final VCommon o3 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.left(v3), Coord.top(top += 25f), Coord.height(20f))) {
-									@Override
-									protected @Nonnull VCommon initOpacity() {
-										return o3;
-									}
-
-									@Override
-									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-										final Content c = GuiSignOption.this.entry.getContent();
-										if (c!=null) {
-											c.markDirtyWithCache();
-											return true;
+									}.setText(I18n.format("signpic.gui.settings.sign.reload")));
+									final VCommon v3 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o3 = V.pm(0).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MButton(new R(Coord.left(v3), Coord.top(top += 25f), Coord.height(20f))) {
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o3;
 										}
-										return false;
-									}
-								}.setText(I18n.format("signpic.gui.settings.sign.redownload")));
-								final VCommon v4 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
-								final VCommon o4 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.right(v4), Coord.top(top += 25f), Coord.height(20f))) {
-									@Override
-									protected @Nonnull VCommon initOpacity() {
-										return o4;
-									}
 
-									@Override
-									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-										final Content c = GuiSignOption.this.entry.getContent();
-										if (c!=null) {
-											c.cancel();
-											return true;
+										@Override
+										protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+											final Content c = GuiSignOption.this.entry.getContent();
+											if (c!=null) {
+												c.markDirtyWithCache();
+												return true;
+											}
+											return false;
 										}
-										return false;
-									}
-								}.setText(I18n.format("signpic.gui.settings.sign.loadcancel")));
-								final VCommon v5 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
-								final VCommon o5 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new MButton(new R(Coord.left(v5), Coord.top(top += 25f), Coord.height(20f))) {
-									{
-										setBlock();
-									}
+									}.setText(I18n.format("signpic.gui.settings.sign.redownload")));
+									final VCommon v4 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o4 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MButton(new R(Coord.right(v4), Coord.top(top += 25f), Coord.height(20f))) {
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o4;
+										}
 
-									protected void setBlock() {
-										final Content c = GuiSignOption.this.entry.getContent();
-										if (c!=null)
-											setBlock(!c.meta.isBlocked());
-									}
-
-									protected void setBlock(final boolean b) {
-										if (b)
-											setText(I18n.format("signpic.gui.settings.sign.block"));
-										else
-											setText(I18n.format("signpic.gui.settings.sign.unblock"));
-									}
-
-									@Override
-									protected @Nonnull VCommon initOpacity() {
-										return o5;
-									}
-
-									@Override
-									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-										final Content c = GuiSignOption.this.entry.getContent();
-										if (c!=null) {
-											final boolean blocked = c.meta.isBlocked();
-											c.meta.setBlocked(!blocked);
+										@Override
+										protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+											final Content c = GuiSignOption.this.entry.getContent();
+											if (c!=null) {
+												c.cancel();
+												return true;
+											}
+											return false;
+										}
+									}.setText(I18n.format("signpic.gui.settings.sign.loadcancel")));
+									final VCommon v5 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
+									final VCommon o5 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
+									add(new MButton(new R(Coord.left(v5), Coord.top(top += 25f), Coord.height(20f))) {
+										{
 											setBlock();
-											c.markDirty();
-											return true;
 										}
-										return false;
-									}
-								});
+
+										protected void setBlock() {
+											final Content c = GuiSignOption.this.entry.getContent();
+											if (c!=null)
+												setBlock(!c.meta.isBlocked());
+										}
+
+										protected void setBlock(final boolean b) {
+											if (b)
+												setText(I18n.format("signpic.gui.settings.sign.block"));
+											else
+												setText(I18n.format("signpic.gui.settings.sign.unblock"));
+										}
+
+										@Override
+										protected @Nonnull VCommon initOpacity() {
+											return o5;
+										}
+
+										@Override
+										protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+											final Content c = GuiSignOption.this.entry.getContent();
+											if (c!=null) {
+												final boolean blocked = c.meta.isBlocked();
+												c.meta.setBlocked(!blocked);
+												setBlock();
+												c.markDirty();
+												return true;
+											}
+											return false;
+										}
+									});
+								}
 							}
 						});
 					}

@@ -94,6 +94,11 @@ public class EntryId {
 			return false;
 		}
 
+		@Override
+		public String toString() {
+			return String.format("ItemEntryId [name=%s]", this.name);
+		}
+
 		public static @Nonnull ItemEntryId fromItemStack(final @Nullable ItemStack itemStack) {
 			if (itemStack!=null) {
 				final NBTTagCompound nbt = itemStack.getTagCompound();
@@ -149,6 +154,17 @@ public class EntryId {
 				i++;
 			}
 			return chats;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("SignEntryId [strings=%s, chats=%s]", Arrays.toString(this.strings), Arrays.toString(this.chats));
+		}
+
+		@Override
+		public void toEntity(final @Nullable TileEntitySign tile) {
+			if (tile!=null)
+				System.arraycopy(this.strings, 0, tile.signText, 0, 4);
 		}
 
 		public static @Nonnull SignEntryId fromStrings(@Nullable final String[] strings) {

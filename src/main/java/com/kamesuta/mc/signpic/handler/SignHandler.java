@@ -150,7 +150,7 @@ public class SignHandler {
 					entry = SignEntryId.fromTile(tilesign).entry();
 				else if (handEntry!=null)
 					entry = handEntry.entry();
-				if (entry!=null&&entry.isValid()) {
+				if (entry!=null) {
 					event.setCanceled(true);
 					Client.mc.displayGuiScreen(new GuiSignOption(entry));
 					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))

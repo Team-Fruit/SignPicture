@@ -63,14 +63,19 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class GuiMain extends WFrame {
-	private @Nonnull EntryId signid = EntryId.blank;
-	private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(CurrentMode.instance.getEntryId());
+	private @Nonnull EntryId signid = CurrentMode.instance.getEntryId();
+	private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(this.signid);
 
 	public void setURL(final @Nonnull String url) {
 		this.signbuilder.setURI(url);
 		final MainTextField field = getTextField();
 		field.setText(url);
 		field.apply();
+	}
+
+	public void setId(final @Nonnull EntryId id) {
+		this.signid = id;
+		exportId();
 	}
 
 	public void exportId() {
@@ -461,6 +466,17 @@ public class GuiMain extends WFrame {
 			final EntryIdBuilder signbuilder = new EntryIdBuilder().load(entryId);
 			signbuilder.setURI(id);
 			CurrentMode.instance.setEntryId(signbuilder.build());
+			return false;
+		}
+	}
+
+	public static boolean setContentId(final @Nonnull EntryId id) {
+		if (Client.mc.currentScreen instanceof GuiMain) {
+			final GuiMain editor = (GuiMain) Client.mc.currentScreen;
+			editor.setId(id);
+			return true;
+		} else {
+			CurrentMode.instance.setEntryId(id);
 			return false;
 		}
 	}
