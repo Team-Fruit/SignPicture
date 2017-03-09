@@ -18,6 +18,7 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
@@ -133,7 +134,7 @@ public class SignHandler {
 			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
 			EntryId handEntry = null;
 			if (handItem!=null&&handItem.getItem()==Items.sign) {
-				handEntry = EntryId.fromItemStack(handItem);
+				handEntry = ItemEntryId.fromItemStack(handItem);
 				CurrentMode.instance.setHandSign(handEntry);
 			} else
 				CurrentMode.instance.setHandSign(EntryId.blank);
@@ -146,7 +147,7 @@ public class SignHandler {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				Entry entry = null;
 				if (tilesign!=null)
-					entry = EntryId.fromTile(tilesign).entry();
+					entry = SignEntryId.fromTile(tilesign).entry();
 				else if (handEntry!=null)
 					entry = handEntry.entry();
 				if (entry!=null&&entry.isValid()) {
@@ -162,7 +163,7 @@ public class SignHandler {
 	@CoreEvent
 	public void onTooltip(final @Nonnull ItemTooltipEvent event) {
 		if (event.itemStack.getItem()==Items.sign) {
-			final ItemEntryId id = EntryId.fromItemStack(event.itemStack);
+			final ItemEntryId id = ItemEntryId.fromItemStack(event.itemStack);
 			final Entry entry = id.entry();
 			if (entry.isValid()) {
 				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";

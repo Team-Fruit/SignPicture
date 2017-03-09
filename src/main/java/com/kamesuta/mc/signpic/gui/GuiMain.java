@@ -63,6 +63,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class GuiMain extends WFrame {
+	private @Nonnull EntryId signid = EntryId.blank;
 	private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(CurrentMode.instance.getEntryId());
 
 	public void setURL(final @Nonnull String url) {
@@ -72,8 +73,13 @@ public class GuiMain extends WFrame {
 		field.apply();
 	}
 
+	public void exportId() {
+		CurrentMode.instance.setEntryId(this.signid);
+	}
+
 	public void export() {
-		CurrentMode.instance.setEntryId(GuiMain.this.signbuilder.build());
+		this.signid = this.signbuilder.build();
+		exportId();
 	}
 
 	private @Nonnull MainTextField field;

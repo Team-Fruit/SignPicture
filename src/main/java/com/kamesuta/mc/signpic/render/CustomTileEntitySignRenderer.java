@@ -15,7 +15,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
 import com.kamesuta.mc.signpic.entry.Entry;
-import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
@@ -75,7 +75,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 	}
 
 	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
-		final Entry entry = EntryId.fromTile(tile).entry();
+		final Entry entry = SignEntryId.fromTile(tile).entry();
 		if (entry.isOutdated()&&CurrentMode.instance.isState(CurrentMode.State.SEE))
 			OpenGL.glDisable(GL11.GL_DEPTH_TEST);
 		if (entry.isValid()) {

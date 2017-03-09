@@ -1,6 +1,6 @@
 package com.kamesuta.mc.signpic.render;
 
-import static com.kamesuta.mc.bnnwidget.render.WGui.*;
+import static com.kamesuta.mc.bnnwidget.render.WRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
@@ -13,7 +13,7 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
-import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
@@ -82,7 +82,7 @@ public class SignPicRender {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
 			if (tilesign!=null) {
-				final Entry entry = EntryId.fromTile(tilesign).entry();
+				final Entry entry = SignEntryId.fromTile(tilesign).entry();
 				if (entry.isValid()) {
 					final AttrReaders meta = entry.getMeta();
 					final SizeData signsize = meta.sizes.getMovie().get();

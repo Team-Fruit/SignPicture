@@ -11,7 +11,7 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
-import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -29,7 +29,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 	public boolean handleRenderType(final @Nullable ItemStack item, final @Nullable ItemRenderType type) {
 		if (item!=null&&item.getItem()!=Items.sign)
 			return false;
-		return EntryId.fromItemStack(item).entry().isValid();
+		return ItemEntryId.fromItemStack(item).entry().isValid();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 		}
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
-		final Entry entry = EntryId.fromItemStack(item).entry();
+		final Entry entry = ItemEntryId.fromItemStack(item).entry();
 		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
 		// Size

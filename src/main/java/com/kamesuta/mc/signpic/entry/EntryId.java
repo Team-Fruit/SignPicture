@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.entry;
 
+import java.util.Arrays;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -13,6 +15,7 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
 public class EntryId {
@@ -64,26 +67,6 @@ public class EntryId {
 		return blank;
 	}
 
-	public static @Nonnull EntryId fromStrings(final @Nullable String[] strings) {
-		return from(StringUtils.join(strings));
-	}
-
-	public static @Nonnull EntryId fromTile(final @Nullable TileEntitySign tile) {
-		if (tile==null)
-			return blank;
-		return fromStrings(tile.signText);
-	}
-
-	public static @Nonnull EntryId fromChats(final @Nullable IChatComponent[] chats) {
-		if (chats==null)
-			return blank;
-		final StringBuilder stb = new StringBuilder();
-		for (final IChatComponent chat : chats)
-			if (chat!=null)
-				stb.append(chat.getUnformattedText());
-		return from(stb.toString());
-	}
-
 	public static class ItemEntryId extends EntryId {
 		public static final @Nonnull ItemEntryId blank = new ItemEntryId(EntryId.blank, null);
 
@@ -109,6 +92,107 @@ public class EntryId {
 					return true;
 			}
 			return false;
+		}
+
+		public static @Nonnull ItemEntryId fromItemStack(final @Nullable ItemStack itemStack) {
+			if (itemStack!=null) {
+				final NBTTagCompound nbt = itemStack.getTagCompound();
+				if (nbt!=null)
+					if (ItemEntryId.hasName(nbt)) {
+						final String name = itemStack.getDisplayName();
+						final int index = StringUtils.lastIndexOf(name, "}");
+						String itemname = StringUtils.substringAfterLast(name, "}");
+						if (StringUtils.isEmpty(itemname))
+							itemname = null;
+						return new ItemEntryId(from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0)), itemname);
+					}
+			}
+			return ItemEntryId.blank;
+		}
+	}
+
+	public static class SignEntryId extends EntryId {
+		public static final @Nonnull IChatComponent blankChat = new ChatComponentText("");
+		public static final @Nonnull SignEntryId blank = new SignEntryId("",
+				new String[] { "", "", "", "" }, new IChatComponent[] { blankChat, blankChat, blankChat, blankChat });
+
+		public final @Nonnull String[] strings;
+		private @Nullable IChatComponent[] chats;
+
+		protected SignEntryId(final @Nonnull String id, final @Nonnull String[] strings) {
+			super(id);
+			this.strings = strings;
+		}
+
+		protected SignEntryId(final @Nonnull String id, final @Nonnull String[] strings, final @Nonnull IChatComponent[] chats) {
+			this(id, strings);
+			this.chats = chats;
+		}
+
+		protected static @Nonnull SignEntryId fromSignStrings(final @Nonnull String[] strings) {
+			return new SignEntryId(StringUtils.join(strings), strings);
+		}
+
+		protected static @Nonnull SignEntryId fromSignChats(final @Nonnull String[] strings, final @Nonnull IChatComponent[] chats) {
+			return new SignEntryId(StringUtils.join(strings), strings, chats);
+		}
+
+		public @Nonnull IChatComponent[] chats() {
+			if (this.chats!=null)
+				return this.chats;
+			final IChatComponent[] chats = this.chats = new IChatComponent[4];
+			int i = 0;
+			for (final String str : this.strings) {
+				if (i>=4)
+					break;
+				chats[i] = new ChatComponentText(str);
+				i++;
+			}
+			return chats;
+		}
+
+		public static @Nonnull SignEntryId fromStrings(@Nullable final String[] strings) {
+			if (strings==null)
+				return blank;
+			String[] strs = strings;
+			if (strs.length<4)
+				strs = Arrays.copyOf(strs, 4);
+			int i = 0;
+			for (final String str : strs) {
+				if (i>=4)
+					break;
+				if (str==null)
+					strs[i] = "";
+				i++;
+			}
+			return fromSignStrings(strs);
+		}
+
+		public static @Nonnull SignEntryId fromChats(final @Nullable IChatComponent[] chats) {
+			if (chats==null)
+				return blank;
+			IChatComponent[] chs = chats;
+			if (chs.length<4)
+				chs = Arrays.copyOf(chs, 4);
+			final String[] strs = new String[4];
+			int i = 0;
+			for (final IChatComponent ch : chs) {
+				if (i>=4)
+					break;
+				if (ch==null) {
+					chs[i] = blankChat;
+					strs[i] = "";
+				} else
+					strs[i] = ch.getUnformattedText();
+				i++;
+			}
+			return fromSignChats(strs, chs);
+		}
+
+		public static @Nonnull SignEntryId fromTile(final @Nullable TileEntitySign tile) {
+			if (tile==null)
+				return blank;
+			return fromSignStrings(tile.signText);
 		}
 	}
 
@@ -145,22 +229,6 @@ public class EntryId {
 		public boolean equals(@Nullable final Object obj) {
 			return this==obj;
 		}
-	}
-
-	public static @Nonnull ItemEntryId fromItemStack(final @Nullable ItemStack itemStack) {
-		if (itemStack!=null) {
-			final NBTTagCompound nbt = itemStack.getTagCompound();
-			if (nbt!=null)
-				if (ItemEntryId.hasName(nbt)) {
-					final String name = itemStack.getDisplayName();
-					final int index = StringUtils.lastIndexOf(name, "}");
-					String itemname = StringUtils.substringAfterLast(name, "}");
-					if (StringUtils.isEmpty(itemname))
-						itemname = null;
-					return new ItemEntryId(from(StringUtils.substring(itemStack.getDisplayName(), 0, index!=StringUtils.INDEX_NOT_FOUND ? index+1 : 0)), itemname);
-				}
-		}
-		return ItemEntryId.blank;
 	}
 
 	private boolean hasContentId() {
