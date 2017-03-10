@@ -82,9 +82,13 @@ public class GuiMain extends WFrame {
 		CurrentMode.instance.setEntryId(this.signid);
 	}
 
+	private boolean inited = false;
+
 	public void export() {
-		this.signid = this.signbuilder.build();
-		exportId();
+		if (this.inited) {
+			this.signid = this.signbuilder.build();
+			exportId();
+		}
 	}
 
 	private @Nonnull MainTextField field;
@@ -394,17 +398,16 @@ public class GuiMain extends WFrame {
 										final GuiScreenBook book = (GuiScreenBook) screen;
 										GuiMain.this.bookwriter.invoke(book, entry.id.id());
 									}
-									if (!entry.id.isPlaceable()) {
-										final Content content = entry.getContent();
-										if (content!=null)
-											ShortenerApiUtil.requestShoretning(content.id);
-									}
-									CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
-									CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
-									requestClose();
-									return true;
 								}
-								return false;
+								if (!entry.id.isPlaceable()) {
+									final Content content = entry.getContent();
+									if (content!=null)
+										ShortenerApiUtil.requestShoretning(content.id);
+								}
+								CurrentMode.instance.setMode(CurrentMode.Mode.PLACE);
+								CurrentMode.instance.setState(CurrentMode.State.PREVIEW, true);
+								requestClose();
+								return true;
 							}
 
 							@Override
@@ -414,8 +417,7 @@ public class GuiMain extends WFrame {
 
 							@Override
 							public boolean isEnabled() {
-								final Entry entry = CurrentMode.instance.getEntryId().entry();
-								return entry.isValid()&&!CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
+								return !CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 							}
 						}.setText(I18n.format("signpic.gui.editor.place")));
 					}
@@ -443,6 +445,7 @@ public class GuiMain extends WFrame {
 			Informations.instance.onlineCheck(null);
 		if (!Config.getConfig().guiExperienced.get())
 			Config.getConfig().guiExperienced.set(true);
+		this.inited = true;
 	}
 
 	public @Nonnull MainTextField getTextField() {
