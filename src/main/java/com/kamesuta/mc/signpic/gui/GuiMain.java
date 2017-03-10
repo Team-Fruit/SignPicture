@@ -44,6 +44,7 @@ import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
+import com.kamesuta.mc.signpic.gui.GuiMain.SignEditor.MainTextField;
 import com.kamesuta.mc.signpic.gui.GuiRotation.RefRotation;
 import com.kamesuta.mc.signpic.gui.file.McUiUpload;
 import com.kamesuta.mc.signpic.handler.SignHandler;
@@ -64,13 +65,15 @@ import net.minecraft.tileentity.TileEntitySign;
 
 public class GuiMain extends WFrame {
 	private @Nonnull EntryId signid = CurrentMode.instance.getEntryId();
-	private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(this.signid);
+	private @Nullable SignEditor editor;
 
 	public void setURL(final @Nonnull String url) {
-		this.signbuilder.setURI(url);
-		final MainTextField field = getTextField();
-		field.setText(url);
-		field.apply();
+		final SignEditor editor = this.editor;
+		if (editor!=null) {
+			editor.signbuilder.setURI(url);
+			editor.field.setText(url);
+			editor.field.apply();
+		}
 	}
 
 	public void setId(final @Nonnull EntryId id) {
@@ -85,32 +88,16 @@ public class GuiMain extends WFrame {
 	private boolean inited = false;
 
 	public void export() {
-		if (this.inited) {
-			this.signid = this.signbuilder.build();
+		final SignEditor editor = this.editor;
+		if (editor!=null&&this.inited) {
+			this.signid = editor.signbuilder.build();
 			exportId();
 		}
 	}
 
-	private @Nonnull MainTextField field;
 	private @Nonnull GuiSettings settings;
 
 	{
-		final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
-
-		this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(80), Coord.height(15))) {
-			@Override
-			public boolean onCloseRequest() {
-				super.onCloseRequest();
-				d.stop().add(Easings.easeInBack.move(.25f, -15)).start();
-				return false;
-			}
-
-			@Override
-			public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
-				return d.isFinished();
-			}
-		};
-
 		this.settings = new GuiSettings(new R());
 	}
 
@@ -177,104 +164,7 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2))) {
-					@Override
-					protected void onUpdate() {
-						export();
-					}
-
-					@Override
-					protected @Nonnull SizeBuilder size() {
-						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
-						return attr.add(attr.size).size;
-					}
-				});
-
-				add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3))) {
-					@Override
-					protected void onUpdate() {
-						export();
-					}
-
-					@Override
-					protected @Nonnull OffsetBuilder offset() {
-						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
-						return attr.add(attr.offset).offset;
-					}
-				});
-
-				add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), new RefRotation() {
-					@Override
-					public @Nonnull RotationBuilder rotation() {
-						final AttrWriter attr = GuiMain.this.signbuilder.getMeta().getFrame(0);
-						return attr.add(attr.rotation).rotation;
-					}
-
-					@Override
-					public boolean isFirst() {
-						return true;
-					}
-				}) {
-					@Override
-					protected void onUpdate() {
-						export();
-					}
-				});
-
-				final VMotion m = V.pm(-1f);
-				add(new WPanel(new R(Coord.top(m), Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
-					@Override
-					protected void initWidget() {
-						add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(80), Coord.bottom(25))) {
-							{
-								add(new SignPicLabel(new R(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
-									@Override
-									public @Nonnull EntryId getEntryId() {
-										return CurrentMode.instance.getEntryId();
-									}
-								});
-							}
-
-							protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
-
-							@Override
-							public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
-								if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
-									if (!this.b) {
-										this.b = true;
-										m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
-									}
-								} else if (this.b) {
-									this.b = false;
-									m.stop().add(Easings.easeOutBack.move(.25f, 0f)).start();
-								}
-								super.update(ev, pgp, p);
-							}
-
-							@Override
-							public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-								final Area a = getGuiPosition(pgp);
-								if (a.pointInside(p))
-									if (Informations.instance.isUpdateRequired()) {
-										GuiMain.this.settings.show();
-										return true;
-									}
-								return false;
-							}
-						});
-					}
-
-					@Override
-					public boolean onCloseRequest() {
-						m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
-						return false;
-					}
-
-					@Override
-					public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
-						return m.isFinished();
-					}
-				});
+				add(new SignEditor(new R()));
 
 				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
 				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(80), Coord.bottom(0))) {
@@ -330,7 +220,9 @@ public class GuiMain extends WFrame {
 						add(new MButton(new R(Coord.right(5), Coord.top(top += 20), Coord.left(5), Coord.height(15))) {
 							@Override
 							protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-								Client.openURL(GuiMain.this.signbuilder.getURI());
+								final SignEditor editor = GuiMain.this.editor;
+								if (editor!=null)
+									Client.openURL(editor.signbuilder.getURI());
 								return true;
 							}
 						}.setText(I18n.format("signpic.gui.editor.openurl")));
@@ -434,8 +326,6 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(GuiMain.this.field);
-
 				add(GuiMain.this.settings);
 
 				add(OverlayFrame.instance.pane);
@@ -448,8 +338,10 @@ public class GuiMain extends WFrame {
 		this.inited = true;
 	}
 
-	public @Nonnull MainTextField getTextField() {
-		return this.field;
+	public @Nullable MainTextField getTextField() {
+		if (this.editor!=null)
+			return this.editor.field;
+		return null;
 	}
 
 	@Override
@@ -484,56 +376,188 @@ public class GuiMain extends WFrame {
 		}
 	}
 
-	public class MainTextField extends MChatTextField {
-		public MainTextField(final @Nonnull R position) {
+	public class SignEditor extends WPanel {
+		private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder();
+
+		private @Nonnull MainTextField field;
+
+		{
+			final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
+
+			this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(80), Coord.height(15))) {
+				@Override
+				public boolean onCloseRequest() {
+					super.onCloseRequest();
+					d.stop().add(Easings.easeInBack.move(.25f, -15)).start();
+					return false;
+				}
+
+				@Override
+				public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
+					return d.isFinished();
+				}
+			};
+		}
+
+		public SignEditor(final R position) {
 			super(position);
 		}
 
 		@Override
-		public void onAdded() {
-			super.onAdded();
-			setMaxStringLength(Integer.MAX_VALUE);
-			setWatermark(I18n.format("signpic.gui.editor.textfield"));
-
-			final EntryId id = CurrentMode.instance.getEntryId();
-			Content content = null;
-			if ((content = id.entry().getContent())!=null)
-				setText(content.id.getID());
-		}
-
-		@Override
-		public void onFocusChanged() {
-			apply();
-		}
-
-		public void apply() {
-			final EntryId entryId = EntryId.from(getText());
-			final AttrWriters atb = entryId.getMetaBuilder();
-			if (atb!=null)
-				GuiMain.this.signbuilder.setMeta(atb);
-			final ContentId cid = entryId.getContentId();
-			if (cid!=null) {
-				String url = cid.getURI();
-				setText(url = Apis.instance.replaceURL(url));
-				GuiMain.this.signbuilder.setURI(url);
-			} else
-				GuiMain.this.signbuilder.setURI("");
-			export();
-			if (atb!=null)
-				GuiMain.this.event.bus.post(new PropertyChangeEvent());
-		}
-
-		@Override
-		public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
-			final boolean b = super.mouseClicked(ev, pgp, p, button);
-			final Area a = getGuiPosition(pgp);
-			if (a.pointInside(p))
-				if (ev.isDoubleClick()) {
-					final String clip = GuiScreen.getClipboardString();
-					if (clip!=null)
-						setText(clip);
+		protected void initWidget() {
+			add(new GuiSize(new R(Coord.top(5), Coord.left(5), Coord.width(15*8), Coord.height(15*2))) {
+				@Override
+				protected void onUpdate() {
+					export();
 				}
-			return b;
+
+				@Override
+				protected @Nonnull SizeBuilder size() {
+					final AttrWriter attr = SignEditor.this.signbuilder.getMeta().getFrame(0);
+					return attr.add(attr.size).size;
+				}
+			});
+
+			add(new GuiOffset(new R(Coord.top(15*3+10), Coord.left(5), Coord.width(15*8), Coord.height(15*3))) {
+				@Override
+				protected void onUpdate() {
+					export();
+				}
+
+				@Override
+				protected @Nonnull OffsetBuilder offset() {
+					final AttrWriter attr = SignEditor.this.signbuilder.getMeta().getFrame(0);
+					return attr.add(attr.offset).offset;
+				}
+			});
+
+			add(new GuiRotation(new R(Coord.top(15*8), Coord.left(5), Coord.width(15*8), Coord.height(15*4)), new RefRotation() {
+				@Override
+				public @Nonnull RotationBuilder rotation() {
+					final AttrWriter attr = SignEditor.this.signbuilder.getMeta().getFrame(0);
+					return attr.add(attr.rotation).rotation;
+				}
+
+				@Override
+				public boolean isFirst() {
+					return true;
+				}
+			}) {
+				@Override
+				protected void onUpdate() {
+					export();
+				}
+			});
+
+			add(this.field);
+
+			final VMotion m = V.pm(-1f);
+			add(new WPanel(new R(Coord.top(m), Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
+				@Override
+				protected void initWidget() {
+					add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(80), Coord.bottom(25))) {
+						{
+							add(new SignPicLabel(new R(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
+								@Override
+								public @Nonnull EntryId getEntryId() {
+									return CurrentMode.instance.getEntryId();
+								}
+							});
+						}
+
+						protected boolean b = !CurrentMode.instance.isState(CurrentMode.State.PREVIEW);
+
+						@Override
+						public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
+							if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW)) {
+								if (!this.b) {
+									this.b = true;
+									m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
+								}
+							} else if (this.b) {
+								this.b = false;
+								m.stop().add(Easings.easeOutBack.move(.25f, 0f)).start();
+							}
+							super.update(ev, pgp, p);
+						}
+
+						@Override
+						public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+							final Area a = getGuiPosition(pgp);
+							if (a.pointInside(p))
+								if (Informations.instance.isUpdateRequired()) {
+									GuiMain.this.settings.show();
+									return true;
+								}
+							return false;
+						}
+					});
+				}
+
+				@Override
+				public boolean onCloseRequest() {
+					m.stop().add(Easings.easeInBack.move(.25f, -1f)).start();
+					return false;
+				}
+
+				@Override
+				public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
+					return m.isFinished();
+				}
+			});
+		}
+
+		public class MainTextField extends MChatTextField {
+			public MainTextField(final @Nonnull R position) {
+				super(position);
+			}
+
+			@Override
+			public void onAdded() {
+				super.onAdded();
+				setMaxStringLength(Integer.MAX_VALUE);
+				setWatermark(I18n.format("signpic.gui.editor.textfield"));
+
+				final EntryId id = CurrentMode.instance.getEntryId();
+				Content content = null;
+				if ((content = id.entry().getContent())!=null)
+					setText(content.id.getID());
+			}
+
+			@Override
+			public void onFocusChanged() {
+				apply();
+			}
+
+			public void apply() {
+				final EntryId entryId = EntryId.from(getText());
+				final AttrWriters atb = entryId.getMetaBuilder();
+				if (atb!=null)
+					SignEditor.this.signbuilder.setMeta(atb);
+				final ContentId cid = entryId.getContentId();
+				if (cid!=null) {
+					String url = cid.getURI();
+					setText(url = Apis.instance.replaceURL(url));
+					SignEditor.this.signbuilder.setURI(url);
+				} else
+					SignEditor.this.signbuilder.setURI("");
+				export();
+				if (atb!=null)
+					GuiMain.this.event.bus.post(new PropertyChangeEvent());
+			}
+
+			@Override
+			public boolean mouseClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+				final boolean b = super.mouseClicked(ev, pgp, p, button);
+				final Area a = getGuiPosition(pgp);
+				if (a.pointInside(p))
+					if (ev.isDoubleClick()) {
+						final String clip = GuiScreen.getClipboardString();
+						if (clip!=null)
+							setText(clip);
+					}
+				return b;
+			}
 		}
 	}
 
