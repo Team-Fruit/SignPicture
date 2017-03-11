@@ -140,7 +140,8 @@ public abstract class GuiOffset extends WPanel {
 						set(NumberUtils.toFloat(newText));
 					else
 						set(0);
-					onUpdate();
+					if (this.initialized)
+						onUpdate();
 				}
 
 				@Override

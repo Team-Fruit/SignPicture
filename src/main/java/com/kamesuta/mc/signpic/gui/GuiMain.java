@@ -85,11 +85,9 @@ public class GuiMain extends WFrame {
 		CurrentMode.instance.setEntryId(this.signid);
 	}
 
-	private boolean inited = false;
-
 	public void export() {
 		final SignEditor editor = this.editor;
-		if (editor!=null&&this.inited) {
+		if (editor!=null) {
 			this.signid = editor.signbuilder.build();
 			exportId();
 		}
@@ -335,7 +333,6 @@ public class GuiMain extends WFrame {
 			Informations.instance.onlineCheck(null);
 		if (!Config.getConfig().guiExperienced.get())
 			Config.getConfig().guiExperienced.set(true);
-		this.inited = true;
 	}
 
 	public @Nullable MainTextField getTextField() {

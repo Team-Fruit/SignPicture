@@ -127,7 +127,8 @@ public abstract class GuiSize extends WPanel {
 						set(NumberUtils.toFloat(newText));
 					else
 						set(SizeData.Unknown);
-					onUpdate();
+					if (this.initialized)
+						onUpdate();
 				}
 
 				@Override

@@ -149,7 +149,7 @@ public abstract class GuiRotation extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			onUpdate();
+			// onUpdate();
 		}
 
 		public void add(final @Nonnull ImageRotate rotate) {
@@ -238,7 +238,8 @@ public abstract class GuiRotation extends WPanel {
 							RotationElement.this.rotate.rotate = GuiRotation.this.rotation.isFirst() ? (f%8+8)%8 : f;
 						} else
 							RotationElement.this.rotate.rotate = 0;
-						onUpdate();
+						if (this.initialized)
+							onUpdate();
 					}
 
 					@Override
