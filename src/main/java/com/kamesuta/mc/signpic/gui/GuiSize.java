@@ -35,8 +35,14 @@ public abstract class GuiSize extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final VMotion label = V.pm(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
+		final VMotion label = V.pm(-1f).start();
 		add(new FontLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), WFont.fontRenderer) {
+			@Override
+			public void onAdded() {
+				super.onAdded();
+				label.stop().add(Easings.easeOutBack.move(.25f, 0f));
+			}
+
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -48,7 +54,7 @@ public abstract class GuiSize extends WPanel {
 				return label.isFinished();
 			}
 		}.setText(I18n.format("signpic.gui.editor.size.category")));
-		final VMotion w = V.pm(-1f);
+		final VMotion w = V.pm(-1f).start();
 		add(new SizeElement(new R(Coord.left(w), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0) {
 			{
 				this.label.setText(I18n.format("signpic.gui.editor.size.width"));
@@ -58,9 +64,9 @@ public abstract class GuiSize extends WPanel {
 			}
 
 			@Override
-			protected void initWidget() {
-				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
-				super.initWidget();
+			public void onAdded() {
+				super.onAdded();
+				addDelay(this.left.stop()).add(Easings.easeOutBack.move(.25f, 0f));
 			}
 
 			@Override
@@ -79,7 +85,7 @@ public abstract class GuiSize extends WPanel {
 				return c.add(Motion.blank(1*.025f));
 			}
 		});
-		final VMotion h = V.pm(-1f);
+		final VMotion h = V.pm(-1f).start();
 		add(new SizeElement(new R(Coord.left(h), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1) {
 			{
 				this.label.setText(I18n.format("signpic.gui.editor.size.height"));
@@ -90,8 +96,13 @@ public abstract class GuiSize extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
 				super.initWidget();
+			}
+
+			@Override
+			public void onAdded() {
+				super.onAdded();
+				addDelay(this.left.stop()).add(Easings.easeOutBack.move(.25f, 0f));
 			}
 
 			@Override

@@ -10,18 +10,22 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WBase;
+import com.kamesuta.mc.bnnwidget.WCommon;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.WidgetBuilder;
 import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.bnnwidget.component.MTab;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
+import com.kamesuta.mc.bnnwidget.position.Coord.CoordSide;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
@@ -83,14 +87,6 @@ public class GuiMain extends WFrame {
 
 	public void exportId() {
 		CurrentMode.instance.setEntryId(this.signid);
-	}
-
-	public void export() {
-		final SignEditor editor = this.editor;
-		if (editor!=null) {
-			this.signid = editor.signbuilder.build();
-			exportId();
-		}
 	}
 
 	private @Nonnull GuiSettings settings;
@@ -162,7 +158,16 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				add(new SignEditor(new R()));
+				final MTab tab = new MTab(new R(Coord.left(0f), Coord.right(75f)), CoordSide.Top, 15, 15);
+				tab.addTab("Sign", new WidgetBuilder<WCommon>() {
+					@Override
+					public WCommon build() {
+						return GuiMain.this.editor = new SignEditor(new R());
+					}
+				});
+				tab.addTab("E", new WPanel(new R()));
+				add(tab);
+				// add(new SignEditor(new R(Coord.left(0f), Coord.right(75f))));
 
 				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
 				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(80), Coord.bottom(0))) {
@@ -378,26 +383,37 @@ public class GuiMain extends WFrame {
 
 		private @Nonnull MainTextField field;
 
-		{
-			final VMotion d = V.am(-15).add(Easings.easeOutBack.move(.5f, 5)).start();
+		private final VMotion mfield = V.am(-15).start();
 
-			this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(d), Coord.right(80), Coord.height(15))) {
+		{
+			this.field = new MainTextField(new R(Coord.left(5), Coord.bottom(this.mfield), Coord.right(5), Coord.height(15))) {
 				@Override
 				public boolean onCloseRequest() {
 					super.onCloseRequest();
-					d.stop().add(Easings.easeInBack.move(.25f, -15)).start();
+					SignEditor.this.mfield.stop().add(Easings.easeInBack.move(.25f, -15)).start();
 					return false;
 				}
 
 				@Override
 				public boolean onClosing(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point mouse) {
-					return d.isFinished();
+					return SignEditor.this.mfield.isFinished();
 				}
 			};
 		}
 
 		public SignEditor(final R position) {
 			super(position);
+		}
+
+		public void export() {
+			setId(this.signbuilder.build());
+			exportId();
+		}
+
+		@Override
+		public void onAdded() {
+			super.onAdded();
+			this.mfield.stop().add(Easings.easeOutBack.move(.5f, 5)).start();
 		}
 
 		@Override
@@ -452,7 +468,7 @@ public class GuiMain extends WFrame {
 			add(new WPanel(new R(Coord.top(m), Coord.left(15*8+5), Coord.right(0), Coord.pheight(1f))) {
 				@Override
 				protected void initWidget() {
-					add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(80), Coord.bottom(25))) {
+					add(new MPanel(new R(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(25))) {
 						{
 							add(new SignPicLabel(new R(Coord.top(5), Coord.left(5), Coord.right(5), Coord.bottom(5)), ContentManager.instance) {
 								@Override
