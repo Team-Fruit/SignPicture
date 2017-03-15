@@ -518,6 +518,13 @@ public class GuiMain extends WFrame {
 					return m.isFinished();
 				}
 			});
+
+			add(new GuiVariable(new R(Coord.top(5), Coord.left(15*8+5), Coord.right(5), Coord.bottom(5)), this.signbuilder.getMeta()) {
+				@Override
+				protected void onUpdate() {
+					export();
+				}
+			});
 		}
 
 		public class MainTextField extends MChatTextField {

@@ -291,11 +291,11 @@ public abstract class RotationData {
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
-			if (StringUtils.equals(key, RotateType.X.name()))
+			if (StringUtils.equals(key, PropSyntax.ROTATION_X.id))
 				this.rotates.add(new ImageRotate(RotateType.X, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, RotateType.Y.name()))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_Y.id))
 				this.rotates.add(new ImageRotate(RotateType.Y, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, RotateType.Z.name()))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_Z.id))
 				this.rotates.add(new ImageRotate(RotateType.Z, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 			else if (StringUtils.equals(key, PropSyntax.ROTATION_ANGLE.id))
 				this.angle += RotationMath.toRadians(NumberUtils.toFloat(value, RotationData.defaultAngle)*360f/8f);

@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.attr;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
@@ -11,9 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.ShortestFloatFormatter;
+import com.kamesuta.mc.signpic.attr.Attrs.Attr;
 import com.kamesuta.mc.signpic.attr.prop.AnimationData.AnimationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData.OffsetBuilder;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
@@ -27,31 +32,50 @@ public class AttrWriters {
 
 	public static class AttrWriter {
 		private @Nonnull Set<IPropBuilder<?, ?>> metareader = Sets.newHashSet();
-		private @Nonnull Set<IPropBuilder<?, ?>> metawriter = Sets.newHashSet();
+		private @Nonnull List<IPropBuilder<?, ?>> metawriter = Lists.newArrayList();
+		private @Nonnull Map<String, IPropBuilder<?, ?>> str2attr = Maps.newHashMap();
+		private @Nonnull Map<IPropBuilder<?, ?>, ImmutableSet<String>> attr2str = Maps.newHashMap();
 
-		public final @Nonnull AnimationBuilder animation = addReader(Attrs.ANIMATION.getWriter());
-		public final @Nonnull SizeBuilder size = addReader(Attrs.SIZE.getWriter());
-		public final @Nonnull OffsetBuilder offset = addReader(Attrs.OFFSET.getWriter());
-		public final @Nonnull OffsetBuilder centeroffset = addReader(Attrs.OFFSET_CENTER.getWriter());
-		public final @Nonnull RotationBuilder rotation = addReader(Attrs.ROTATION.getWriter());
-		public final @Nonnull TextureFloatBuilder u = addReader(Attrs.TEXTURE_X.getWriter());
-		public final @Nonnull TextureFloatBuilder v = addReader(Attrs.TEXTURE_Y.getWriter());
-		public final @Nonnull TextureFloatBuilder w = addReader(Attrs.TEXTURE_W.getWriter());
-		public final @Nonnull TextureFloatBuilder h = addReader(Attrs.TEXTURE_H.getWriter());
-		public final @Nonnull TextureFloatBuilder c = addReader(Attrs.TEXTURE_SPLIT_W.getWriter());
-		public final @Nonnull TextureFloatBuilder s = addReader(Attrs.TEXTURE_SPLIT_H.getWriter());
-		public final @Nonnull TextureFloatBuilder o = addReader(Attrs.TEXTURE_OPACITY.getWriter());
-		public final @Nonnull TextureFloatBuilder f = addReader(Attrs.TEXTURE_LIGHT_X.getWriter());
-		public final @Nonnull TextureFloatBuilder g = addReader(Attrs.TEXTURE_LIGHT_Y.getWriter());
-		public final @Nonnull TextureBooleanBuilder r = addReader(Attrs.TEXTURE_REPEAT.getWriter());
-		public final @Nonnull TextureBooleanBuilder m = addReader(Attrs.TEXTURE_MIPMAP.getWriter());
-		public final @Nonnull TextureBooleanBuilder l = addReader(Attrs.TEXTURE_LIGHTING.getWriter());
-		public final @Nonnull TextureBlendBuilder b = addReader(Attrs.TEXTURE_BLEND_SRC.getWriter());
-		public final @Nonnull TextureBlendBuilder d = addReader(Attrs.TEXTURE_BLEND_DST.getWriter());
+		public final @Nonnull AnimationBuilder animation = init(Attrs.ANIMATION);
+		public final @Nonnull SizeBuilder size = init(Attrs.SIZE);
+		public final @Nonnull OffsetBuilder offset = init(Attrs.OFFSET);
+		public final @Nonnull OffsetBuilder centeroffset = init(Attrs.OFFSET_CENTER);
+		public final @Nonnull RotationBuilder rotation = init(Attrs.ROTATION);
+		public final @Nonnull TextureFloatBuilder u = init(Attrs.TEXTURE_X);
+		public final @Nonnull TextureFloatBuilder v = init(Attrs.TEXTURE_Y);
+		public final @Nonnull TextureFloatBuilder w = init(Attrs.TEXTURE_W);
+		public final @Nonnull TextureFloatBuilder h = init(Attrs.TEXTURE_H);
+		public final @Nonnull TextureFloatBuilder c = init(Attrs.TEXTURE_SPLIT_W);
+		public final @Nonnull TextureFloatBuilder s = init(Attrs.TEXTURE_SPLIT_H);
+		public final @Nonnull TextureFloatBuilder o = init(Attrs.TEXTURE_OPACITY);
+		public final @Nonnull TextureFloatBuilder f = init(Attrs.TEXTURE_LIGHT_X);
+		public final @Nonnull TextureFloatBuilder g = init(Attrs.TEXTURE_LIGHT_Y);
+		public final @Nonnull TextureBooleanBuilder r = init(Attrs.TEXTURE_REPEAT);
+		public final @Nonnull TextureBooleanBuilder m = init(Attrs.TEXTURE_MIPMAP);
+		public final @Nonnull TextureBooleanBuilder l = init(Attrs.TEXTURE_LIGHTING);
+		public final @Nonnull TextureBlendBuilder b = init(Attrs.TEXTURE_BLEND_SRC);
+		public final @Nonnull TextureBlendBuilder d = init(Attrs.TEXTURE_BLEND_DST);
 
-		private @Nonnull <E extends IPropBuilder<?, ?>> E addReader(final @Nonnull E e) {
-			this.metareader.add(e);
-			return e;
+		private @Nonnull <T extends IPropBuilder<?, ?>, E extends Attr<?, ?, T>> T init(final @Nonnull E e) {
+			final T writer = e.getWriter();
+			final ImmutableSet<String> ids = e.getId();
+			for (final String id : ids)
+				this.str2attr.put(id, writer);
+			this.attr2str.put(writer, ids);
+			this.metareader.add(writer);
+			return writer;
+		}
+
+		public @Nonnull IPropBuilder<?, ?> getAttr(final @Nonnull String id) {
+			return this.str2attr.get(id);
+		}
+
+		public @Nonnull ImmutableSet<String> getIds(final @Nonnull IPropBuilder<?, ?> prop) {
+			return this.attr2str.get(prop);
+		}
+
+		public @Nonnull List<IPropBuilder<?, ?>> getWriters() {
+			return this.metawriter;
 		}
 
 		public @Nonnull AttrWriter add(final @Nonnull IPropBuilder<?, ?> e) {
