@@ -213,3 +213,4 @@ signpic.versioning.disabled=Sorry. This feature is currently disabled, it should
 signpic.manager.accept=
 signpic.manager.error.signindexoutofbounds=
 signpic.manager.error.unknown=
+signpic.manager.search.advanced=Advanced Search

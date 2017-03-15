@@ -14,5 +14,13 @@
 				"name": "gui/screenshot"
 			}
 		]
+	},
+	"gui.confirm":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "gui/confirm"
+			}
+		]
 	}
 }

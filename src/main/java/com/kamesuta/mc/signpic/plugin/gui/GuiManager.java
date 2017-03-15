@@ -1,5 +1,6 @@
 package com.kamesuta.mc.signpic.plugin.gui;
 
+import java.awt.Font;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -11,7 +12,10 @@ import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
-import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.font.FontSet;
+import com.kamesuta.mc.bnnwidget.font.FontStyle;
+import com.kamesuta.mc.bnnwidget.font.TrueTypeFont;
+import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -22,14 +26,21 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiManager extends WFrame {
-	public static ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
+	public static @Nonnull ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
+	public static @Nonnull WFontRenderer fontRenderer;
 
+	static {
+		final FontSet fontSet = new FontSet.Builder().addName("tahoma").setStyle(Font.PLAIN).build();
+		final FontStyle style = new FontStyle.Builder().setFont(fontSet).build();
+		fontRenderer = new WFontRenderer(new TrueTypeFont(style));
+	}
 	public @Nonnull String key;
 	public int size;
 	protected final @Nonnull Map<Integer, SignData> data = Maps.newHashMap();
@@ -40,7 +51,8 @@ public class GuiManager extends WFrame {
 		super(parent);
 		this.key = data;
 		this.size = NumberUtils.toInt(size);
-		this.sarchBox = new GuiManagerSarchBox(new R(Coord.left(125)));
+
+		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)));
 	}
 
 	public GuiManager(final @Nonnull String data, final @Nonnull String size) {
@@ -51,6 +63,12 @@ public class GuiManager extends WFrame {
 		final int id = NumberUtils.toInt(token);
 		final SignData d = Client.gson.fromJson(s, SignData.class);
 		this.data.put(id, d);
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		setGuiPauseGame(false);
 	}
 
 	@Override
@@ -81,24 +99,29 @@ public class GuiManager extends WFrame {
 				return this.m.isFinished();
 			}
 		});
-		add(new WPanel(new R(Coord.left(5), Coord.top(5), Coord.height(30))) {
-			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-				final Area a = getGuiPosition(pgp);
-				final float opacity = getGuiOpacity(popacity);
-
-				WRenderer.startShape();
-				OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity);
-				WRenderer.startTexture();
-				texture().bindTexture(logo);
-				drawTexture(Area.size(a.x1(), a.y1(), a.x1()+(439f/(125f/30)), a.y2()), null, null);
-
-				super.draw(ev, pgp, p, frame, popacity);
+		add(this.sarchBox);
+		add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20))) {
+			{
+				this.showtime.pause();
+				this.showtime.set(-1);
 			}
 
 			@Override
 			protected void initWidget() {
-				add(GuiManager.this.sarchBox);
+				this.show = true;
+				this.right.stop().add(Easings.easeOutQuart.move(.7f, 1f)).start();
+				super.initWidget();
+			}
+		});
+		add(new WBase(new R(Coord.left(5), Coord.width(87.7f), Coord.bottom(5), Coord.height(25))) {
+			@Override
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+				super.draw(ev, pgp, p, frame, popacity);
+
+				OpenGL.glColor4f(1f, 1f, 1f, getGuiOpacity(popacity));
+				texture().bindTexture(logo);
+				WRenderer.startTexture();
+				drawTexture(getGuiPosition(pgp), null, null);
 			}
 		});
 	}
