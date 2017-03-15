@@ -14,6 +14,6 @@ public class DebugCommand extends SubCommand {
 
 	@Override
 	public void processSubCommand(final ICommandSender sender, final String[] args) {
-		Client.openLater(new GuiManager(Client.mc.currentScreen, sender.getCommandSenderName(), "0"));
+		Client.openLater(new GuiManager(sender.getCommandSenderName(), "0"));
 	}
 }

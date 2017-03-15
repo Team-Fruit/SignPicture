@@ -199,3 +199,8 @@ signpic.versioning.downloadedAlready=You already downloaded the latest version. 
 signpic.versioning.downloadingAlready=The update is already downloading, give it some time, will you?
 signpic.versioning.error=Woah! It seems like something went wrong while trying to download the Sign Picture update.
 signpic.versioning.disabled=Sorry. This feature is currently disabled, it should be back soon.
+
+#Manager
+signpic.manager.accept=
+signpic.manager.error.signindexoutofbounds=
+signpic.manager.error.unknown=
