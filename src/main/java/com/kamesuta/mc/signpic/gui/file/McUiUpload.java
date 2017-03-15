@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.http.upload.UploadApiUtil;
+import com.kamesuta.mc.signpic.http.upload.UploadCallback;
 import com.kamesuta.mc.signpic.http.upload.UploadRequest;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.state.State;
@@ -45,14 +46,14 @@ public class McUiUpload extends UiUpload {
 
 	@Override
 	protected void transfer(final @Nonnull Transferable transferable) {
-		if (FileUtilitiy.transfer(transferable))
+		if (FileUtilitiy.transfer(transferable, UploadCallback.copyOnDone))
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
 	}
 
 	@Override
 	protected void apply(final @Nonnull File f) {
-		if (UploadApiUtil.upload(UploadRequest.fromFile(f, new State())))
+		if (UploadApiUtil.upload(UploadRequest.fromFile(f, new State()), UploadCallback.copyOnDone))
 			if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
 				close();
 	}

@@ -168,7 +168,7 @@ public abstract class RotationData {
 		}
 
 		public @Nonnull String compose() {
-			final float rotate = (this.rotate%8+8)%8;
+			final float rotate = this.rotate;
 			if (rotate==0)
 				return "";
 			else if (rotate==defaultOffset)
@@ -291,11 +291,11 @@ public abstract class RotationData {
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
-			if (StringUtils.equals(key, RotateType.X.name()))
+			if (StringUtils.equals(key, PropSyntax.ROTATION_X.id))
 				this.rotates.add(new ImageRotate(RotateType.X, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, RotateType.Y.name()))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_Y.id))
 				this.rotates.add(new ImageRotate(RotateType.Y, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, RotateType.Z.name()))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_Z.id))
 				this.rotates.add(new ImageRotate(RotateType.Z, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 			else if (StringUtils.equals(key, PropSyntax.ROTATION_ANGLE.id))
 				this.angle += RotationMath.toRadians(NumberUtils.toFloat(value, RotationData.defaultAngle)*360f/8f);
@@ -325,8 +325,8 @@ public abstract class RotationData {
 		}
 
 		@Override
-		public @Nonnull String toString() {
-			return compose();
+		public String toString() {
+			return String.format("RotationBuilder [rotates=%s, x=%s, y=%s, z=%s, angle=%s, base=%s]", this.rotates, this.x, this.y, this.z, this.angle, this.base);
 		}
 
 		public static class ImageRotate {

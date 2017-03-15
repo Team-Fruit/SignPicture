@@ -41,7 +41,7 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class CoreHandler {
 	public final @Nonnull Config configHandler = Config.getConfig();
-	public final @Nonnull KeyHandler keyHandler = new KeyHandler();
+	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;
 	public final @Nonnull SignHandler signHandler = new SignHandler();
 	public final @Nonnull EntryManager signEntryManager = EntryManager.instance;
 	public final @Nonnull ContentManager contentManager = ContentManager.instance;
@@ -132,7 +132,7 @@ public class CoreHandler {
 			}
 			Client.startSection("signpic_load");
 			debugKey();
-			this.keyHandler.onTick();
+			// this.keyHandler.onTick();
 			this.signEntryManager.onTick();
 			this.signHandler.onTick();
 			this.contentManager.onTick();
@@ -162,9 +162,11 @@ public class CoreHandler {
 		final DebugCommunicate debug = new DebugCommunicate();
 		debug.getState().getMeta().put(GuiTask.HighlightPanel, true);
 		Communicator.instance.communicate(debug);
+		// Log.log.info(FMLDeobfuscatingRemapper.INSTANCE.mapMethodName("net/minecraft/client/gui/GuiNewChat", "resetScroll", DescHelper.toDesc(void.class, new Object[0])));
+		// Log.log.info(FMLDeobfuscatingRemapper.INSTANCE.mapMethodName("net/minecraft/client/gui/GuiNewChat", "resetScroll", DescHelper.toDesc(void.class, new Object[0])));
 	}
 
-	private static class DebugCommunicate implements ICommunicate, Progressable {
+	static class DebugCommunicate implements ICommunicate, Progressable {
 		private @Nonnull final State state = new State();
 		{
 			this.state.setName("Debug Progress").getProgress().setOverall(10);
