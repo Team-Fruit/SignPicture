@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
 import com.kamesuta.mc.signpic.gui.GuiMain;
+import com.kamesuta.mc.signpic.plugin.DebugCommand;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -63,6 +64,8 @@ public class Client {
 	static {
 		rootCommand = new RootCommand();
 		rootCommand.addChildCommand(new CommandVersion());
+		if (rootCommand!=null)
+			rootCommand.addChildCommand(new DebugCommand());//TODO 出荷前にコメントアウト
 	}
 
 	public static void openEditor() {
