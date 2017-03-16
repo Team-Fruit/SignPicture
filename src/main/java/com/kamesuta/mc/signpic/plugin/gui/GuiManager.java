@@ -15,7 +15,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.font.FontSet;
 import com.kamesuta.mc.bnnwidget.font.FontStyle;
 import com.kamesuta.mc.bnnwidget.font.TrueTypeFont;
-import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -34,12 +34,12 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiManager extends WFrame {
 	public static @Nonnull ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
-	public static @Nonnull WFontRenderer fontRenderer;
+	public static @Nonnull WFont font;
 
 	static {
-		final FontSet fontSet = new FontSet.Builder().addName("tahoma").setStyle(Font.PLAIN).build();
+		final FontSet fontSet = new FontSet.Builder().addName("tahoma").addName("aller").setStyle(Font.PLAIN).build();
 		final FontStyle style = new FontStyle.Builder().setFont(fontSet).build();
-		fontRenderer = new WFontRenderer(new TrueTypeFont(style));
+		font = new TrueTypeFont(style);
 	}
 	public @Nonnull String key;
 	public int size;
@@ -100,7 +100,7 @@ public class GuiManager extends WFrame {
 			}
 		});
 		add(this.sarchBox);
-		add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(20))) {
+		add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(25))) {
 			{
 				this.showtime.pause();
 				this.showtime.set(-1);
