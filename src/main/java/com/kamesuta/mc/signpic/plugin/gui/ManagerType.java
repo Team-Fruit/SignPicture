@@ -1,7 +1,7 @@
 package com.kamesuta.mc.signpic.plugin.gui;
 
 public enum ManagerType {
-	DIRECT,
+	LIST,
 	GALLARY,
 	SEARCH,
 	STATS;

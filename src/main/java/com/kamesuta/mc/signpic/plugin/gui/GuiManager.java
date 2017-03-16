@@ -29,7 +29,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.direct.GuiDirect;
+import com.kamesuta.mc.signpic.plugin.gui.list.GuiList;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +38,7 @@ public class GuiManager extends WFrame {
 	public static @Nonnull ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
 	public static @Nonnull ResourceLocation background = new ResourceLocation("signpic", "textures/plugin/background.png");
 	public static @Nonnull WFont font;
-	public static @Nonnull ManagerType type = ManagerType.DIRECT;
+	public static @Nonnull ManagerType type = ManagerType.LIST;
 
 	static {
 		final FontSet fontSet = new FontSet.Builder().addName("tahoma").addName("aller").setStyle(Font.PLAIN).build();
@@ -137,8 +137,8 @@ public class GuiManager extends WFrame {
 		});
 
 		switch (type) {
-			case DIRECT:
-				this.box.add(new GuiDirect(new R()));
+			case LIST:
+				this.box.add(new GuiList(new R()));
 				break;
 		}
 	}

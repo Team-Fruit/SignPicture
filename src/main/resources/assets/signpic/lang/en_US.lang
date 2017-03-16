@@ -214,5 +214,6 @@ signpic.manager.accept=
 signpic.manager.error.signindexoutofbounds=
 signpic.manager.error.unknown=
 signpic.manager.search.advanced=Advanced Search
+signpic.manager.list=List
 signpic.manager.gallary=Gallary
 signpic.manager.stats=Stats
