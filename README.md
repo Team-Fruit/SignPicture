@@ -43,7 +43,7 @@ The sign tells us how beautiful it is!
   - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-yellow.svg?style=flat)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
   - (c) 2007-2017 ppy Pty Ltd
     - [GitHub](https://github.com/ppy/osu-resources)
-    - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-yellow.svg?style=flat)](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
+    - [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-yellow.svg?style=flat)](https://github.com/ppy/osu-resources/blob/master/LICENCE.md)
 * Text and Translations
   - [![License](https://img.shields.io/badge/License-No%20Restriction-green.svg?style=flat)](https://creativecommons.org/publicdomain/zero/1.0/)
 
