@@ -34,6 +34,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiManager extends WFrame {
 	public static @Nonnull ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
+	public static @Nonnull ResourceLocation background = new ResourceLocation("signpic", "textures/plugin/background.png");
 	public static @Nonnull WFont font;
 
 	static {
@@ -74,10 +75,14 @@ public class GuiManager extends WFrame {
 	@Override
 	protected void initWidget() {
 		add(new WBase(new R()) {
-			VMotion m = V.pm(0);
+			VMotion m = V.pm(1);
 
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+				OpenGL.glColor4f(1f, 1f, 1f, 1f);
+				texture().bindTexture(background);
+				WRenderer.startTexture();
+				drawTexture(getGuiPosition(pgp), null, null);
 				WRenderer.startShape();
 				OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
 				draw(getGuiPosition(pgp));
@@ -85,12 +90,12 @@ public class GuiManager extends WFrame {
 
 			@Override
 			public void onAdded() {
-				this.m.stop().add(Easings.easeLinear.move(.2f, .5f)).start();
+				this.m.stop().add(Easings.easeLinear.move(.2f, .2f)).start();
 			}
 
 			@Override
 			public boolean onCloseRequest() {
-				this.m.stop().add(Easings.easeLinear.move(.15f, 0f)).start();
+				this.m.stop().add(Easings.easeLinear.move(.15f, .5f)).start();
 				return false;
 			}
 
