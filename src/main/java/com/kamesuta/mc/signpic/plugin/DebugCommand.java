@@ -23,7 +23,7 @@ public class DebugCommand extends SubCommand {
 		this.sample.setPlayerName("Player");
 		this.sample.setPlayerUUID(UUID.randomUUID().toString());
 		this.sample.setWorldName("world");
-		this.sample.setSign("[]");
+		this.sample.setSign("#$https://i.gyazo.com/b16b63c40f3c7b2e0f344a54493f2b6b.png{x4}");
 		this.sample.setX(0);
 		this.sample.setY(64);
 		this.sample.setZ(0);

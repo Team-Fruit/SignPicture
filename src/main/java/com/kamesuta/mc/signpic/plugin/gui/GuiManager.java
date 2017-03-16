@@ -10,6 +10,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.bnnwidget.WBase;
+import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.font.FontSet;
@@ -42,18 +43,20 @@ public class GuiManager extends WFrame {
 		final FontStyle style = new FontStyle.Builder().setFont(fontSet).build();
 		font = new TrueTypeFont(style);
 	}
+
 	public @Nonnull String key;
 	public int size;
 	protected final @Nonnull Map<Integer, SignData> data = Maps.newHashMap();
 
-	protected final GuiManagerSarchBox sarchBox;
+	public final @Nonnull GuiManagerSarchBox sarchBox;
+	public final @Nonnull WBox box;
 
 	public GuiManager(final @Nullable GuiScreen parent, final @Nonnull String data, final @Nonnull String size) {
 		super(parent);
 		this.key = data;
 		this.size = NumberUtils.toInt(size);
-
 		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)));
+		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(50), Coord.bottom(30)));
 	}
 
 	public GuiManager(final @Nonnull String data, final @Nonnull String size) {
@@ -105,6 +108,7 @@ public class GuiManager extends WFrame {
 			}
 		});
 		add(this.sarchBox);
+		add(this.box);
 		add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(25))) {
 			{
 				this.showtime.pause();
@@ -118,7 +122,7 @@ public class GuiManager extends WFrame {
 				super.initWidget();
 			}
 		});
-		add(new WBase(new R(Coord.left(5), Coord.width(87.7f), Coord.bottom(5), Coord.height(25))) {
+		add(new WBase(new R(Coord.left(5), Coord.width(70.24f), Coord.bottom(5), Coord.height(20))) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 				super.draw(ev, pgp, p, frame, popacity);
