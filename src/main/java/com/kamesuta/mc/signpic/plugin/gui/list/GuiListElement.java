@@ -15,11 +15,11 @@ import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public class ListElement extends WPanel {
+public class GuiListElement extends WPanel {
 
 	protected final @Nonnull SignData data;
 
-	public ListElement(final R position, final SignData t) {
+	public GuiListElement(final R position, final SignData t) {
 		super(position);
 		this.data = t;
 	}
@@ -37,7 +37,7 @@ public class ListElement extends WPanel {
 						draw(getGuiPosition(pgp));
 						super.draw(ev, pgp, p, frame, popacity);
 					};
-				}.setEntryId(EntryId.from(ListElement.this.data.getSign())));
+				}.setEntryId(EntryId.from(GuiListElement.this.data.getSign())));
 			}
 
 			@Override

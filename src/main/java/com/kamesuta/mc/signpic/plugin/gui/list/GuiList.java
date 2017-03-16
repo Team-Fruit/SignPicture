@@ -20,10 +20,10 @@ public class GuiList extends WPanel {
 		this.scrollPane = new WPanel(new R(Coord.left(0), Coord.right(15))) {
 			@Override
 			protected void initWidget() {
-				add(new WList<SignData, ListElement>(new R(), GuiList.this.manager.data) {
+				add(new WList<SignData, GuiListElement>(new R(), GuiList.this.manager.data) {
 					@Override
-					protected ListElement createWidget(final SignData t, final int i) {
-						return new ListElement(new R(Coord.top(i*30), Coord.height(30)), t);
+					protected GuiListElement createWidget(final SignData t, final int i) {
+						return new GuiListElement(new R(Coord.top(i*30), Coord.height(30)), t);
 					}
 				});
 			}
