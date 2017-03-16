@@ -32,16 +32,11 @@ public class GuiManagerSarchBox extends WPanel {
 		super(position);
 		this.textField = new GuiManagerTextField(new R(Coord.left(5), Coord.height(15), Coord.right(310), Coord.top(5))) {
 			@Override
-			public R getGuiPosition() {
-				return this.position;
+			public void onTextChanged(final String oldText) {
+
 			}
 		};
 		this.advancedSearch = new Button(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
-			@Override
-			public R getGuiPosition() {
-				return this.position;
-			};
-
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 				final Area a = getGuiPosition(pgp);
@@ -65,11 +60,6 @@ public class GuiManagerSarchBox extends WPanel {
 		}.setText(I18n.format("signpic.manager.search.advanced"));
 		this.gallary = new Button(new R(Coord.right(160), Coord.height(15), Coord.width(55), Coord.top(5))) {
 			@Override
-			public R getGuiPosition() {
-				return this.position;
-			};
-
-			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 				final Area a = getGuiPosition(pgp);
 
@@ -91,11 +81,6 @@ public class GuiManagerSarchBox extends WPanel {
 			};
 		}.setText(I18n.format("signpic.manager.gallary"));
 		this.stats = new Button(new R(Coord.right(100), Coord.height(15), Coord.width(55), Coord.top(5))) {
-			@Override
-			public R getGuiPosition() {
-				return this.position;
-			};
-
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 				final Area a = getGuiPosition(pgp);

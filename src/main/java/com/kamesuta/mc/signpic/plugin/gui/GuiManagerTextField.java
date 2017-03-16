@@ -20,12 +20,20 @@ public class GuiManagerTextField extends WPanel {
 
 	public GuiManagerTextField(final @Nonnull R position) {
 		super(position);
-		this.textField = new MChatTextField(new R(Coord.left(2), Coord.top(2)));
+		this.textField = new MChatTextField(new R(Coord.left(2), Coord.top(2))) {
+			@Override
+			protected void onTextChanged(final String oldText) {
+				onTextChanged(oldText);
+			}
+		};
 		this.textField.setEnableBackgroundDrawing(false);
 	}
 
 	public @Nonnull MChatTextField getTextField() {
 		return this.textField;
+	}
+
+	public void onTextChanged(final String oldText) {
 	}
 
 	@Override
