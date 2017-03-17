@@ -13,27 +13,27 @@ import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.GuiManager;
 
 public class GuiList extends WPanel {
 
-	protected final @Nonnull GuiManager manager;
+	protected final @Nonnull IModCount<SignData> data;
 	protected final @Nonnull WPanel scrollPane;
 	protected final @Nonnull VMotion top;
 
-	public GuiList(final R position, final GuiManager manager) {
+	public GuiList(final R position, final IModCount<SignData> data) {
 		super(position);
-		this.manager = manager;
+		this.data = data;
 		this.scrollPane = new WPanel(new R(Coord.left(0), Coord.right(15), Coord.top(this.top = V.am(0)))) {
 			@Override
 			protected void initWidget() {
-				add(new WList<SignData, ListElement>(new R(), GuiList.this.manager.data) {
+				add(new WList<SignData, ListElement>(new R(), data) {
 					@Override
 					protected ListElement createWidget(final SignData t, final int i) {
 						return new ListElement(new R(Coord.top(i*30), Coord.height(30)), t);
@@ -62,22 +62,32 @@ public class GuiList extends WPanel {
 
 	@Override
 	public boolean mouseScrolled(final WEvent ev, final Area pgp, final Point p, final int scroll) {
-		scroll(scroll);
+		scroll(scroll, getGuiPosition(pgp));
 		return super.mouseScrolled(ev, pgp, p, scroll);
 	}
 
-	public void scroll(final int scroll) {
-		final float to = this.top.get()+(scroll/1.5f);
-		scrollTo(to<0 ? to : to/4f);
+	public void scroll(final int scroll, final Area position) {
+		final float now = this.top.get();
+		float to = now+scroll/2f;
+		if (to>0||-to>(getElemetsHeight()-position.h()))
+			to = now+scroll/4f;
+		scrollTo(to, position);
 	}
 
-	public void scrollTo(final float to) {
-		if (this.top.get()<=0) {
+	public void scrollTo(final float to, final Area position) {
+		final float buttom = getElemetsHeight()-position.h();
+		if (this.top.get()<=0&&-this.top.get()<=buttom) {
 			final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
 			if (to>0)
 				motion.add(Easings.easeInOutCubic.move(.5f, 0));
+			else if (-to>buttom)
+				motion.add(Easings.easeInOutCubic.move(.5f, -buttom));
 			motion.start();
 		}
+	}
+
+	public float getElemetsHeight() {
+		return this.data.size()*30;
 	}
 
 	public class ListElement extends WPanel {

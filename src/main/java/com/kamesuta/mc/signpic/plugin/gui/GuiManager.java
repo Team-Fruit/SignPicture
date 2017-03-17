@@ -75,12 +75,13 @@ public class GuiManager extends WFrame {
 		this.data.add(d);
 	}
 
-	public void get(final int from, final int to) {
+	public boolean get(final int from, final int to) {
 		for (int i = from; i<to; i++) {
 			if (i>this.size)
-				return;
+				return false;
 			PacketHandler.instance.sendPacket(new SignPicturePacket("data", this.key, String.valueOf(i)));
 		}
+		return true;
 	}
 
 	@Override
@@ -150,7 +151,7 @@ public class GuiManager extends WFrame {
 
 		switch (type) {
 			case LIST:
-				this.box.add(new GuiList(new R(), this));
+				this.box.add(new GuiList(new R(), this.data));
 				break;
 		}
 	}
