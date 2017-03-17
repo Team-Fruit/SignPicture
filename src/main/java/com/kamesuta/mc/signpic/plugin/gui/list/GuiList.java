@@ -43,9 +43,21 @@ public class GuiList extends WPanel {
 		};
 	}
 
+	@Nullable
+	Area box;
+	@Nullable
+	Area list;
+
 	@Override
 	protected void initWidget() {
 		add(this.scrollPane);
+	}
+
+	@Override
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+		this.box = pgp;
+		this.list = getGuiPosition(pgp);
+		super.draw(ev, pgp, p, frame, popacity);
 	}
 
 	@Override
@@ -55,8 +67,17 @@ public class GuiList extends WPanel {
 	}
 
 	public void scroll(final int scroll) {
-		final float moveto = this.top.get()+(scroll/1.5f);
-		this.top.stop().add(Easings.easeLinear.move(.25f, moveto)).start();
+		final float to = this.top.get()+(scroll/1.5f);
+		scrollTo(to<0 ? to : to/4f);
+	}
+
+	public void scrollTo(final float to) {
+		if (this.top.get()<=0) {
+			final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
+			if (to>0)
+				motion.add(Easings.easeInOutCubic.move(.5f, 0));
+			motion.start();
+		}
 	}
 
 	public class ListElement extends WPanel {
@@ -67,11 +88,6 @@ public class GuiList extends WPanel {
 			super(position);
 			this.data = t;
 		}
-
-		@Nullable
-		Area list;
-		@Nullable
-		Area element;
 
 		@Override
 		protected void initWidget() {
@@ -100,11 +116,19 @@ public class GuiList extends WPanel {
 		}
 
 		@Override
+		public void update(final WEvent ev, final Area pgp, final Point p) {
+			final Area box = GuiList.this.box;
+			if (box!=null)
+				if (box.areaOverlap(getGuiPosition(pgp)))
+					super.update(ev, pgp, p);
+		}
+
+		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-			this.list = pgp;
-			this.element = getGuiPosition(pgp);
-			if (pgp.areaOverlap(this.element))
-				super.draw(ev, pgp, p, frame, popacity);
+			final Area box = GuiList.this.box;
+			if (box!=null)
+				if (box.areaOverlap(getGuiPosition(pgp)))
+					super.draw(ev, pgp, p, frame, popacity);
 		}
 	}
 }
