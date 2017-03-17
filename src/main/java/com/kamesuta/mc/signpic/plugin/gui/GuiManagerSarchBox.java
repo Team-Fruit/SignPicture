@@ -73,7 +73,7 @@ public class GuiManagerSarchBox extends WPanel {
 			protected boolean onClicked(final WEvent ev, final Area pgp, final Point mouse, final int button) {
 				return true;
 			};
-		}.setText(I18n.format(GuiManager.type!=ManagerType.LIST ? "signpic.manager.gallary" : "signpic.manager.list"));
+		}.setText(I18n.format(GuiManager.type!=ManagerType.LIST ? "signpic.manager.list" : "signpic.manager.gallary"));
 		this.stats = new GuiManagerButton(new R(Coord.right(100), Coord.height(15), Coord.width(55), Coord.top(5))) {
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
