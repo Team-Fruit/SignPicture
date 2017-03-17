@@ -20,6 +20,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
+import com.kamesuta.mc.signpic.plugin.gui.GuiManager;
 
 public class GuiList extends WPanel {
 
@@ -62,19 +63,19 @@ public class GuiList extends WPanel {
 
 	@Override
 	public boolean mouseScrolled(final WEvent ev, final Area pgp, final Point p, final int scroll) {
-		scroll(scroll, getGuiPosition(pgp));
+		scroll(scroll, (GuiManager) ev.owner, getGuiPosition(pgp));
 		return super.mouseScrolled(ev, pgp, p, scroll);
 	}
 
-	public void scroll(final int scroll, final Area position) {
+	public void scroll(final int scroll, final GuiManager manager, final Area position) {
 		final float now = this.top.get();
 		float to = now+scroll/2f;
 		if (to>0||-to>(getElemetsHeight()-position.h()))
 			to = now+scroll/4f;
-		scrollTo(to, position);
+		scrollTo(to, manager, position);
 	}
 
-	public void scrollTo(final float to, final Area position) {
+	public void scrollTo(final float to, final GuiManager manager, final Area position) {
 		final float buttom = getElemetsHeight()-position.h();
 		if (this.top.get()<=0&&-this.top.get()<=buttom) {
 			final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
@@ -83,6 +84,10 @@ public class GuiList extends WPanel {
 			else if (-to>buttom)
 				motion.add(Easings.easeInOutCubic.move(.5f, -buttom));
 			motion.start();
+		}
+		if (-to>buttom) {
+			final int size = this.data.size();
+			manager.get(size, size+100);
 		}
 	}
 

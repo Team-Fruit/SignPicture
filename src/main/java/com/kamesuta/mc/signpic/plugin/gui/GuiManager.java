@@ -75,12 +75,18 @@ public class GuiManager extends WFrame {
 		this.data.add(d);
 	}
 
+	int order;
+
 	public boolean get(final int from, final int to) {
-		for (int i = from; i<to; i++) {
-			if (i>this.size)
-				return false;
-			PacketHandler.instance.sendPacket(new SignPicturePacket("data", this.key, String.valueOf(i)));
-		}
+		this.order = to;
+		if (this.order<from)
+			for (int i = from; i<to; i++) {
+				if (i>this.size)
+					return false;
+				PacketHandler.instance.sendPacket(new SignPicturePacket("data", this.key, String.valueOf(i)));
+			}
+		else
+			return false;
 		return true;
 	}
 
