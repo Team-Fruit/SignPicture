@@ -62,7 +62,7 @@ public class GuiManager extends WFrame {
 		this.size = NumberUtils.toInt(size);
 		this.data = new NotifyCollections.NotifyArrayList<SignData>(new ArrayList(this.size));
 		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)));
-		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(40), Coord.bottom(30)));
+		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(40), Coord.bottom(20)));
 		get(0, 100);
 	}
 

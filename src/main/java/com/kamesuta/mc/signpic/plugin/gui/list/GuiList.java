@@ -128,7 +128,9 @@ public class GuiList extends WPanel implements Scrollable {
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
 					WRenderer.startShape();
 					OpenGL.glColor4f(.3f, .3f, .3f, .5f);
-					draw(getGuiPosition(pgp));
+					final Area list = GuiList.this.list;
+					if (list!=null)
+						draw(list.trimArea(getGuiPosition(pgp)));
 					super.draw(ev, pgp, p, frame, popacity);
 				}
 			});
