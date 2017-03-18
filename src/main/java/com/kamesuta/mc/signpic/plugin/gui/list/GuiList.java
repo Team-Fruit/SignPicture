@@ -64,7 +64,10 @@ public class GuiList extends WPanel implements Scrollable {
 
 	@Override
 	public boolean mouseScrolled(final WEvent ev, final Area pgp, final Point p, final int scroll) {
-		scroll(scroll, (GuiManager) ev.owner, getGuiPosition(pgp));
+		final Area box = GuiList.this.box;
+		if (box!=null)
+			if (box.pointInside(p))
+				scroll(scroll, (GuiManager) ev.owner, getGuiPosition(pgp));
 		return super.mouseScrolled(ev, pgp, p, scroll);
 	}
 
@@ -142,17 +145,17 @@ public class GuiList extends WPanel implements Scrollable {
 
 		@Override
 		public void update(final WEvent ev, final Area pgp, final Point p) {
-			final Area box = GuiList.this.box;
-			if (box!=null)
-				if (box.areaOverlap(getGuiPosition(pgp)))
+			final Area list = GuiList.this.list;
+			if (list!=null)
+				if (list.areaOverlap(getGuiPosition(pgp)))
 					super.update(ev, pgp, p);
 		}
 
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-			final Area box = GuiList.this.box;
-			if (box!=null)
-				if (box.areaOverlap(getGuiPosition(pgp)))
+			final Area list = GuiList.this.list;
+			if (list!=null)
+				if (list.areaOverlap(getGuiPosition(pgp)))
 					super.draw(ev, pgp, p, frame, popacity);
 		}
 	}
