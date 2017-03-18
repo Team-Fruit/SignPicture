@@ -116,9 +116,13 @@ public class GuiList extends WPanel implements Scrollable {
 					add(new SignPicLabel(new R(Coord.left(0), Coord.width(38.6f)), ContentManager.instance) {
 						@Override
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-							WRenderer.startShape();
-							OpenGL.glColor4f(0f, 0f, 0f, .5f);
-							draw(getGuiPosition(pgp));
+							final Area list = GuiList.this.list;
+							if (list!=null) {
+								final Area t = list.trimArea(getGuiPosition(pgp));
+								WRenderer.startShape();
+								OpenGL.glColor4f(0f, 0f, 0f, .5f);
+								draw(t);
+							}
 							super.draw(ev, pgp, p, frame, popacity);
 						};
 					}.setEntryId(EntryId.from(ListElement.this.data.getSign())));

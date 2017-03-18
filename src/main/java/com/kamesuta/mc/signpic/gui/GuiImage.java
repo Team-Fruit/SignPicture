@@ -351,11 +351,6 @@ public class GuiImage extends WFrame {
 	};
 
 	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height) {
-		drawScreen(mousex, mousey, f, opacity, width, height, null);
-	}
-
-	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height, final @Nullable Area trim) {
-		this.trim = trim;
 		setWidth(width).setHeight(height);
 		super.drawScreen(mousex, mousey, f, opacity);
 	}
