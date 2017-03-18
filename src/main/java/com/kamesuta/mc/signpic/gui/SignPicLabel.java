@@ -31,6 +31,7 @@ public class SignPicLabel extends WBase {
 	protected @Nullable EntryId entryId;
 	protected @Nonnull ContentManager manager;
 	protected @Nullable EntryId update;
+	protected @Nullable Area trim;
 
 	public SignPicLabel(final @Nonnull R position, final @Nonnull ContentManager manager) {
 		super(position);
@@ -69,13 +70,13 @@ public class SignPicLabel extends WBase {
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
 					final SizeData size1 = ImageSizes.INNER.defineSize(SizeData.create(1, 1), SizeData.create(a));
-					drawTexture(Area.abs(a.x1()+a.w()/2-size1.getWidth()/2, a.y1()+a.h()/2-size1.getHeight()/2, a.x1()+a.w()/2+size1.getWidth()/2, a.y1()+a.h()/2+size1.getHeight()/2), null, null);
+					drawTexture(Area.abs(a.x1()+a.w()/2-size1.getWidth()/2, a.y1()+a.h()/2-size1.getHeight()/2, a.x1()+a.w()/2+size1.getWidth()/2, a.y1()+a.h()/2+size1.getHeight()/2), this.trim, null);
 				}
 			}
 		}
 	}
 
-	public static void drawEntry(final @Nonnull Area a, final float opacity, final @Nonnull Entry entry) {
+	public void drawEntry(final @Nonnull Area a, final float opacity, final @Nonnull Entry entry) {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
@@ -91,7 +92,7 @@ public class SignPicLabel extends WBase {
 		OpenGL.glTranslatef((a.w()-size2.getWidth())/2f, (a.h()-size2.getHeight())/2f, 0f);
 		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? -1f : 1f, 1f);
 		OpenGL.glScalef(100, 100, 1f);
-		entry.getGui().drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
+		entry.getGui().drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight(), this.trim);
 
 		OpenGL.glPopMatrix();
 		OpenGL.glEnable(GL_CULL_FACE);
@@ -103,6 +104,15 @@ public class SignPicLabel extends WBase {
 
 	public @Nonnull SignPicLabel setEntryId(final @Nullable EntryId entryId) {
 		this.entryId = entryId;
+		return this;
+	}
+
+	public @Nullable Area getTrim() {
+		return this.trim;
+	}
+
+	public @Nonnull SignPicLabel setTrim(final @Nullable Area trim) {
+		this.trim = trim;
 		return this;
 	}
 }

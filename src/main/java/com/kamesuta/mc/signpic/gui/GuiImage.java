@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
@@ -35,7 +36,6 @@ import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
 
@@ -46,6 +46,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiImage extends WFrame {
 	protected @Nonnull Entry entry;
+	protected @Nullable Area trim;
 
 	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
@@ -93,7 +94,7 @@ public class GuiImage extends WFrame {
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
-							content.image.draw(meta);
+							content.image.draw(meta, null, GuiImage.this.trim);
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -114,7 +115,7 @@ public class GuiImage extends WFrame {
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
 								WRenderer.startTexture();
 								texture().bindTexture(resError);
-								RenderHelper.drawRectTexture(GL_QUADS);
+								drawTexture(null, GuiImage.this.trim, null);
 								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
@@ -350,7 +351,13 @@ public class GuiImage extends WFrame {
 	};
 
 	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height) {
+		drawScreen(mousex, mousey, f, opacity, width, height, null);
+	}
+
+	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height, final @Nullable Area trim) {
+		this.trim = trim;
 		setWidth(width).setHeight(height);
 		super.drawScreen(mousex, mousey, f, opacity);
 	}
+
 }
