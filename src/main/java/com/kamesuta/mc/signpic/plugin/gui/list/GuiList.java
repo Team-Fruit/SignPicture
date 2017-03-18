@@ -21,8 +21,9 @@ import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.gui.GuiManager;
+import com.kamesuta.mc.signpic.plugin.gui.Scrollable;
 
-public class GuiList extends WPanel {
+public class GuiList extends WPanel implements Scrollable {
 
 	protected final @Nonnull IModCount<SignData> data;
 	protected final @Nonnull WPanel scrollPane;
@@ -67,16 +68,18 @@ public class GuiList extends WPanel {
 		return super.mouseScrolled(ev, pgp, p, scroll);
 	}
 
+	@Override
 	public void scroll(final int scroll, final GuiManager manager, final Area position) {
 		final float now = this.top.get();
 		float to = now+scroll/2f;
-		if (to>0||-to>(getElemetsHeight()-position.h()))
+		if (to>0||-to>(getAllHeight()-position.h()))
 			to = now+scroll/4f;
 		scrollTo(to, manager, position);
 	}
 
+	@Override
 	public void scrollTo(final float to, final GuiManager manager, final Area position) {
-		final float buttom = getElemetsHeight()-position.h();
+		final float buttom = getAllHeight()-position.h();
 		if (this.top.get()<=0&&-this.top.get()<=buttom) {
 			final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
 			if (to>0)
@@ -91,7 +94,8 @@ public class GuiList extends WPanel {
 		}
 	}
 
-	public float getElemetsHeight() {
+	@Override
+	public float getAllHeight() {
 		return this.data.size()*30;
 	}
 
