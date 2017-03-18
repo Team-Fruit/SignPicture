@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic.gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
@@ -46,7 +45,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiImage extends WFrame {
 	protected @Nonnull Entry entry;
-	protected @Nullable Area trim;
 
 	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
@@ -94,7 +92,7 @@ public class GuiImage extends WFrame {
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
-							content.image.draw(meta, null, GuiImage.this.trim);
+							content.image.draw(meta, null, null);
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -115,7 +113,7 @@ public class GuiImage extends WFrame {
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
 								WRenderer.startTexture();
 								texture().bindTexture(resError);
-								drawTexture(null, GuiImage.this.trim, null);
+								drawTexture(null, null, null);
 								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
