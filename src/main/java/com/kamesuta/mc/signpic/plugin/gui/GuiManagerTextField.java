@@ -23,7 +23,7 @@ public class GuiManagerTextField extends WPanel {
 		this.textField = new MChatTextField(new R(Coord.left(2), Coord.top(2))) {
 			@Override
 			protected void onTextChanged(final String oldText) {
-				onTextChanged(oldText);
+				GuiManagerTextField.this.onTextChanged(oldText);
 			}
 		};
 		this.textField.setEnableBackgroundDrawing(false);
