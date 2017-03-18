@@ -66,7 +66,7 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				}
-			WGui.drawTexture(vertex, trim, texture);
+			WGui.drawTexture(vertex, Area.abs(5.0f, 40.5f, 43.6f, 69.5f), texture);
 
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wraps);
 			OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapt);
