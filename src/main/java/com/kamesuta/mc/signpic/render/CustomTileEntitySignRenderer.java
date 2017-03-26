@@ -9,6 +9,7 @@ import javax.vecmath.Quat4f;
 import org.lwjgl.opengl.GL11;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
@@ -93,7 +94,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 
 			final GuiImage gui = entry.getGui();
 			gui.applyLight(tile.xCoord, tile.yCoord, tile.zCoord, getSignRotate(tile));
-			gui.renderSignPicture(opacity, 1f);
+			gui.renderSignPicture(opacity, 1f, new RenderOption());
 
 			OpenGL.glEnable(GL_CULL_FACE);
 

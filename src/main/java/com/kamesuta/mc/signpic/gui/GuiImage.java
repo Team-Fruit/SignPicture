@@ -20,6 +20,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.WVertex;
 import com.kamesuta.mc.bnnwidget.var.V;
@@ -60,7 +61,7 @@ public class GuiImage extends WFrame {
 			protected void initWidget() {
 				add(new WBase(new R()) {
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 						final Area a = getGuiPosition(pgp);
 						float opacity = getGuiOpacity(popacity);
 						final Content content = GuiImage.this.entry.getContent();
@@ -92,7 +93,7 @@ public class GuiImage extends WFrame {
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
-							content.image.draw(meta, null, null);
+							content.image.draw(meta, null, opt.get("trim", Area.class));
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -113,7 +114,7 @@ public class GuiImage extends WFrame {
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
 								WRenderer.startTexture();
 								texture().bindTexture(resError);
-								drawTexture(null, null, null);
+								drawTexture(null, opt.get("trim", Area.class), null);
 								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
@@ -131,7 +132,7 @@ public class GuiImage extends WFrame {
 		});
 	}
 
-	public void renderSignPicture(final float opacity, final float scale) {
+	public void renderSignPicture(final float opacity, final float scale, @Nonnull final RenderOption opt) {
 		// Load Image
 		final Content content = this.entry.getContent();
 
@@ -194,7 +195,7 @@ public class GuiImage extends WFrame {
 		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? 1f : -1f, 1f);
 
 		OpenGL.glScalef(scale, scale, 1f);
-		drawScreen(0, 0, 0, opacity, size.getWidth()/scale, size.getHeight()/scale);
+		drawScreen(0, 0, 0, opacity, size.getWidth()/scale, size.getHeight()/scale, opt);
 
 		OpenGL.glPopMatrix();
 	}
@@ -348,9 +349,9 @@ public class GuiImage extends WFrame {
 		}
 	};
 
-	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height) {
+	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height, @Nonnull final RenderOption opt) {
 		setWidth(width).setHeight(height);
-		super.drawScreen(mousex, mousey, f, opacity);
+		super.drawScreen(mousex, mousey, f, opacity, opt);
 	}
 
 }

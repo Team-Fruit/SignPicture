@@ -12,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
@@ -118,7 +119,7 @@ public class GuiList extends WPanel implements Scrollable {
 				protected void initWidget() {
 					add(new SignPicLabel(new R(Coord.left(0), Coord.width(38.6f)), ContentManager.instance) {
 						@Override
-						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nullable RenderOption opt) {
 							final Area list = GuiList.this.list;
 							if (list!=null) {
 								final Area t = list.trimArea(getGuiPosition(pgp));

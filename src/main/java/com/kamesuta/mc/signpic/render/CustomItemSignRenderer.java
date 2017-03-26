@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
@@ -62,7 +63,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
 			OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
 			OpenGL.glScalef(slot, slot, 1f);
-			gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot);
+			gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot, new RenderOption());
 		} else {
 			if (type==ItemRenderType.ENTITY) {
 				if (RenderItem.renderInFrame) {
@@ -85,7 +86,7 @@ public class CustomItemSignRenderer implements IItemRenderer {
 			}
 			OpenGL.glTranslatef(size.getWidth()/2f, .5f, 0f);
 			OpenGL.glScalef(1f, -1f, 1f);
-			gui.renderSignPicture(1f, 1f);
+			gui.renderSignPicture(1f, 1f, new RenderOption());
 			/*
 			OpenGL.glTranslatef(0f, 1f-size.getHeight(), 0f);
 			final OffsetData offset = attr.offsets.getMovie().get();

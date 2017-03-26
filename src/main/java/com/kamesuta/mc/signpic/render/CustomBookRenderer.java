@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
@@ -74,7 +75,7 @@ public class CustomBookRenderer {
 							OpenGL.glScalef(f.FONT_HEIGHT, f.FONT_HEIGHT, 1f);
 							OpenGL.glTranslatef((size1.getWidth()>=0 ? 1f : -1f)*size1.getWidth()/2f, (size1.getHeight()>=0 ? 1f : -1f)*size1.getHeight(), 0f);
 							OpenGL.glScalef(1f, -1f, 1f);
-							gui.renderSignPicture(1f, 4f);
+							gui.renderSignPicture(1f, 4f, new RenderOption());
 
 							OpenGL.glPopMatrix();
 							WRenderer.startTexture();
