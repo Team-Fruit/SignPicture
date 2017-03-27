@@ -22,6 +22,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
@@ -102,7 +103,7 @@ public class GuiManager extends WFrame {
 			VMotion m = V.pm(1);
 
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
 				texture().bindTexture(background);
 				WRenderer.startTexture();
@@ -145,8 +146,8 @@ public class GuiManager extends WFrame {
 		});
 		add(new WBase(new R(Coord.left(5), Coord.width(70.24f), Coord.bottom(5), Coord.height(20))) {
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-				super.draw(ev, pgp, p, frame, popacity);
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
+				super.draw(ev, pgp, p, frame, popacity, opt);
 
 				OpenGL.glColor4f(1f, 1f, 1f, getGuiOpacity(popacity));
 				texture().bindTexture(logo);

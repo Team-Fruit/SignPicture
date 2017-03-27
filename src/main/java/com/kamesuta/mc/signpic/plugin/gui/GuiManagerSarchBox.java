@@ -11,6 +11,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 
 import net.minecraft.client.resources.I18n;
@@ -32,7 +33,7 @@ public class GuiManagerSarchBox extends WPanel {
 		};
 		this.advancedSearch = new GuiManagerButton(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 				final Area a = getGuiPosition(pgp);
 
 				OpenGL.glPushMatrix();
@@ -44,7 +45,7 @@ public class GuiManagerSarchBox extends WPanel {
 				draw(a, GL_LINE_LOOP);
 				OpenGL.glPopMatrix();
 
-				super.draw(ev, pgp, p, frame, popacity);
+				super.draw(ev, pgp, p, frame, popacity, opt);
 			}
 
 			@Override
@@ -54,7 +55,7 @@ public class GuiManagerSarchBox extends WPanel {
 		}.setText(I18n.format("signpic.manager.search.advanced"));
 		this.gallary = new GuiManagerButton(new R(Coord.right(160), Coord.height(15), Coord.width(55), Coord.top(5))) {
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 				final Area a = getGuiPosition(pgp);
 
 				OpenGL.glPushMatrix();
@@ -66,7 +67,7 @@ public class GuiManagerSarchBox extends WPanel {
 				draw(a, GL_LINE_LOOP);
 				OpenGL.glPopMatrix();
 
-				super.draw(ev, pgp, p, frame, popacity);
+				super.draw(ev, pgp, p, frame, popacity, opt);
 			}
 
 			@Override
@@ -76,7 +77,7 @@ public class GuiManagerSarchBox extends WPanel {
 		}.setText(I18n.format(GuiManager.type!=ManagerType.LIST ? "signpic.manager.list" : "signpic.manager.gallary"));
 		this.stats = new GuiManagerButton(new R(Coord.right(100), Coord.height(15), Coord.width(55), Coord.top(5))) {
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 				final Area a = getGuiPosition(pgp);
 
 				OpenGL.glPushMatrix();
@@ -88,7 +89,7 @@ public class GuiManagerSarchBox extends WPanel {
 				draw(a, GL_LINE_LOOP);
 				OpenGL.glPopMatrix();
 
-				super.draw(ev, pgp, p, frame, popacity);
+				super.draw(ev, pgp, p, frame, popacity, opt);
 			}
 
 			@Override
@@ -107,8 +108,8 @@ public class GuiManagerSarchBox extends WPanel {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
-		super.draw(ev, pgp, p, frame, popacity);
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
+		super.draw(ev, pgp, p, frame, popacity, opt);
 	}
 
 }

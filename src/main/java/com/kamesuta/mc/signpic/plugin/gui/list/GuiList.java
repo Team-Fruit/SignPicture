@@ -119,7 +119,7 @@ public class GuiList extends WPanel implements Scrollable {
 				protected void initWidget() {
 					add(new SignPicLabel(new R(Coord.left(0), Coord.width(38.6f)), ContentManager.instance) {
 						@Override
-						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nullable RenderOption opt) {
+						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 							final Area list = GuiList.this.list;
 							if (list!=null) {
 								final Area t = list.trimArea(getGuiPosition(pgp));
@@ -127,19 +127,19 @@ public class GuiList extends WPanel implements Scrollable {
 								OpenGL.glColor4f(0f, 0f, 0f, .5f);
 								draw(t);
 							}
-							super.draw(ev, pgp, p, frame, popacity);
+							super.draw(ev, pgp, p, frame, popacity, opt);
 						};
 					}.setEntryId(EntryId.from(ListElement.this.data.getSign())));
 				}
 
 				@Override
-				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 					WRenderer.startShape();
 					OpenGL.glColor4f(.3f, .3f, .3f, .5f);
 					final Area list = GuiList.this.list;
 					if (list!=null)
 						draw(list.trimArea(getGuiPosition(pgp)));
-					super.draw(ev, pgp, p, frame, popacity);
+					super.draw(ev, pgp, p, frame, popacity, opt);
 				}
 			});
 		}
@@ -153,11 +153,11 @@ public class GuiList extends WPanel implements Scrollable {
 		}
 
 		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 			final Area list = GuiList.this.list;
 			if (list!=null)
 				if (list.areaOverlap(getGuiPosition(pgp)))
-					super.draw(ev, pgp, p, frame, popacity);
+					super.draw(ev, pgp, p, frame, popacity, opt);
 		}
 	}
 }
