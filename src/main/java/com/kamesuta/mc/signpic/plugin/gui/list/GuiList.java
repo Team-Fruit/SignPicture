@@ -46,10 +46,8 @@ public class GuiList extends WPanel implements Scrollable {
 		};
 	}
 
-	@Nullable
-	Area box;
-	@Nullable
-	Area list;
+	protected @Nullable Area box;
+	protected @Nullable Area list;
 
 	@Override
 	protected void initWidget() {
@@ -57,10 +55,10 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 		this.box = pgp;
 		this.list = getGuiPosition(pgp);
-		super.draw(ev, pgp, p, frame, popacity);
+		super.draw(ev, pgp, p, frame, popacity, opt);
 	}
 
 	@Override
@@ -120,44 +118,41 @@ public class GuiList extends WPanel implements Scrollable {
 					add(new SignPicLabel(new R(Coord.left(0), Coord.width(38.6f)), ContentManager.instance) {
 						@Override
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
+							final Area a = getGuiPosition(pgp);
 							final Area list = GuiList.this.list;
 							if (list!=null) {
-								final Area t = list.trimArea(getGuiPosition(pgp));
+								final Area t = list.trimArea(a);
 								WRenderer.startShape();
 								OpenGL.glColor4f(0f, 0f, 0f, .5f);
 								draw(t);
+								if (t!=null)
+									opt.put("trim", Area.abs(0f, 1f/a.h()*(t.y1()-a.y1()), 1f, 1f/a.h()*(a.h()-(a.y2()-t.y2()))));
+								super.draw(ev, pgp, p, frame, popacity, opt);
 							}
-							super.draw(ev, pgp, p, frame, popacity, opt);
 						};
 					}.setEntryId(EntryId.from(ListElement.this.data.getSign())));
 				}
 
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
-					WRenderer.startShape();
-					OpenGL.glColor4f(.3f, .3f, .3f, .5f);
 					final Area list = GuiList.this.list;
 					if (list!=null)
-						draw(list.trimArea(getGuiPosition(pgp)));
-					super.draw(ev, pgp, p, frame, popacity, opt);
+						if (list.areaOverlap(getGuiPosition(pgp))) {
+							WRenderer.startShape();
+							OpenGL.glColor4f(.3f, .3f, .3f, .5f);
+							draw(list.trimArea(getGuiPosition(pgp)));
+							super.draw(ev, pgp, p, frame, popacity, opt);
+						}
+				}
+
+				@Override
+				public void update(final WEvent ev, final Area pgp, final Point p) {
+					final Area list = GuiList.this.list;
+					if (list!=null)
+						if (list.areaOverlap(getGuiPosition(pgp)))
+							super.update(ev, pgp, p);
 				}
 			});
-		}
-
-		@Override
-		public void update(final WEvent ev, final Area pgp, final Point p) {
-			final Area list = GuiList.this.list;
-			if (list!=null)
-				if (list.areaOverlap(getGuiPosition(pgp)))
-					super.update(ev, pgp, p);
-		}
-
-		@Override
-		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
-			final Area list = GuiList.this.list;
-			if (list!=null)
-				if (list.areaOverlap(getGuiPosition(pgp)))
-					super.draw(ev, pgp, p, frame, popacity, opt);
 		}
 	}
 }

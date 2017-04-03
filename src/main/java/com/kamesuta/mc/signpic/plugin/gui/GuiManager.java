@@ -104,13 +104,14 @@ public class GuiManager extends WFrame {
 
 			@Override
 			public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
+				final Area a = getGuiPosition(pgp);
 				OpenGL.glColor4f(1f, 1f, 1f, 1f);
 				texture().bindTexture(background);
 				WRenderer.startTexture();
-				drawTexture(getGuiPosition(pgp), null, null);
+				drawTexture(a, null, null);
 				WRenderer.startShape();
 				OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
-				draw(getGuiPosition(pgp));
+				draw(a);
 			}
 
 			@Override

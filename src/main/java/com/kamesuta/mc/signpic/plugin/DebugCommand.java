@@ -19,6 +19,7 @@ public class DebugCommand extends SubCommand {
 	static {
 		signs.add("#$i.gyazo.com/b16b63c40f3c7b2e0f344a54493f2b6b.png{4}");
 		signs.add("#i.imgur.com/zLuPWc6.png{4}");
+		signs.add("#$i.gyazo.com/8ace9f9398c097997479924aca3b4d35.png{4}");
 	}
 
 	public SignData sample;

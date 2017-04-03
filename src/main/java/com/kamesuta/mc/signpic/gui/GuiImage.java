@@ -93,7 +93,7 @@ public class GuiImage extends WFrame {
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
-							content.image.draw(meta, null, opt.get("trim", Area.class));
+							content.image.draw(meta, opt.get("vertex", Area.class), opt.get("trim", Area.class));
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -114,7 +114,7 @@ public class GuiImage extends WFrame {
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
 								WRenderer.startTexture();
 								texture().bindTexture(resError);
-								drawTexture(null, opt.get("trim", Area.class), null);
+								drawTexture(opt.get("vertex", Area.class), opt.get("trim", Area.class), null);
 								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
