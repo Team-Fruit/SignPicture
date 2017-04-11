@@ -137,20 +137,6 @@ public class GuiList extends WPanel implements Scrollable {
 								super.draw(ev, pgp, p, frame, popacity, opt);
 							}
 						};
-
-						boolean playsound;
-
-						@Override
-						public void update(final WEvent ev, final Area pgp, final Point p) {
-							final boolean mouseover = this.playsound = getGuiPosition(pgp).pointInside(p);
-							if (!mouseover)
-								this.playsound = false;
-							if (mouseover&&!this.playsound) {
-								Client.playSound(mouseoverSound, 1f);
-								this.playsound = true;
-							}
-							super.update(ev, pgp, p);
-						};
 					}.setEntryId(EntryId.from(ListElement.this.data.getSign())));
 				}
 
@@ -166,12 +152,22 @@ public class GuiList extends WPanel implements Scrollable {
 						}
 				}
 
+				boolean playsound = false;
+
 				@Override
 				public void update(final WEvent ev, final Area pgp, final Point p) {
 					final Area list = GuiList.this.list;
 					if (list!=null)
-						if (list.areaOverlap(getGuiPosition(pgp)))
+						if (list.areaOverlap(getGuiPosition(pgp))) {
+							final boolean mouseover = getGuiPosition(pgp).pointInside(p);
+							if (!mouseover)
+								this.playsound = false;
+							if (!this.playsound&&mouseover) {
+								Client.playSound(mouseoverSound, 1f);
+								this.playsound = true;
+							}
 							super.update(ev, pgp, p);
+						}
 				}
 			});
 		}
