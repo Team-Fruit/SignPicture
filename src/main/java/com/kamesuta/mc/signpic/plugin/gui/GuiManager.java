@@ -31,7 +31,6 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.list.GuiList;
 import com.kamesuta.mc.signpic.plugin.packet.PacketHandler;
 import com.kamesuta.mc.signpic.plugin.packet.SignPicturePacket;
 

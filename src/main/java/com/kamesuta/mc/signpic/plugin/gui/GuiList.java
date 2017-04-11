@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.plugin.gui.list;
+package com.kamesuta.mc.signpic.plugin.gui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,8 +21,6 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.GuiManager;
-import com.kamesuta.mc.signpic.plugin.gui.Scrollable;
 
 public class GuiList extends WPanel implements Scrollable {
 
