@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiManagerButton extends WBase {
 	protected static @Nonnull WFontRenderer fontRenderer = new WFontRenderer(GuiManager.font);
+	protected static @Nonnull ResourceLocation hitSound = new ResourceLocation("signpic", "gui.confirm");
 
 	public @Nullable String text;
 
@@ -67,7 +68,7 @@ public class GuiManagerButton extends WBase {
 		if (abs.pointInside(p))
 			if (button<2)
 				if (onClicked(ev, pgp, p, button)) {
-					Client.playSound(new ResourceLocation("signpic", "gui.confirm"), 1f);
+					Client.playSound(hitSound, 1f);
 					return true;
 				}
 		return false;

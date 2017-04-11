@@ -17,12 +17,16 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
+import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
+import net.minecraft.util.ResourceLocation;
+
 public class GuiList extends WPanel implements Scrollable {
+	protected static @Nonnull ResourceLocation mouseoverSound = new ResourceLocation("signpic", "gui.mouseover");
 
 	protected final @Nonnull IModCount<SignData> data;
 	protected final @Nonnull WPanel scrollPane;
@@ -132,6 +136,20 @@ public class GuiList extends WPanel implements Scrollable {
 									opt.put("trim", Area.abs(0f, 1f/a.h()*(t.y1()-a.y1()), 1f, 1f/a.h()*(a.h()-(a.y2()-t.y2()))));
 								super.draw(ev, pgp, p, frame, popacity, opt);
 							}
+						};
+
+						boolean playsound;
+
+						@Override
+						public void update(final WEvent ev, final Area pgp, final Point p) {
+							final boolean mouseover = this.playsound = getGuiPosition(pgp).pointInside(p);
+							if (!mouseover)
+								this.playsound = false;
+							if (mouseover&&!this.playsound) {
+								Client.playSound(mouseoverSound, 1f);
+								this.playsound = true;
+							}
+							super.update(ev, pgp, p);
 						};
 					}.setEntryId(EntryId.from(ListElement.this.data.getSign())));
 				}

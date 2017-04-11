@@ -22,5 +22,13 @@
 				"name": "gui/confirm"
 			}
 		]
+	},
+		"gui.mouseover":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "gui/mouseover"
+			}
+		]
 	}
 }
