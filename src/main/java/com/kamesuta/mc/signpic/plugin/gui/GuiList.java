@@ -95,6 +95,11 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	@Override
+	public float getNowHeight() {
+		return this.top.get();
+	};
+
+	@Override
 	public float getAllHeight() {
 		return this.data.size()*30;
 	}

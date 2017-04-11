@@ -8,5 +8,7 @@ public interface Scrollable {
 
 	void scrollTo(final float to, final GuiManager manager, final Area position);
 
+	float getNowHeight();
+
 	float getAllHeight();
 }
