@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -39,7 +40,8 @@ public class GuiScrollBar extends WPanel {
 	}
 
 	public void move(final float f) {
-		// TODO
+		this.top.stop().add(Easings.easeLinear.move(.25f, this.top.get()+f));
+		this.buttom.stop().add(Easings.easeLinear.move(.25f, this.buttom.get()+f));
 	}
 
 	public class ScrollBar extends WBase {
