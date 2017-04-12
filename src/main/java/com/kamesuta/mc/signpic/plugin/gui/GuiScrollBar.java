@@ -30,7 +30,7 @@ public class GuiScrollBar extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		add(new ScrollBar(new R(Coord.top(this.top), Coord.bottom(this.buttom))));
+		add(new Knob(new R(Coord.top(this.top), Coord.bottom(this.buttom))));
 	}
 
 	@Override
@@ -44,9 +44,9 @@ public class GuiScrollBar extends WPanel {
 		this.buttom.stop().add(Easings.easeLinear.move(.25f, this.buttom.get()+f));
 	}
 
-	public class ScrollBar extends WBase {
+	public class Knob extends WBase {
 
-		public ScrollBar(final @Nonnull R position) {
+		public Knob(final @Nonnull R position) {
 			super(position);
 		}
 
