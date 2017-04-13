@@ -6,9 +6,9 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 
 public interface Scrollable {
 
-	void scroll(final float scroll, final GuiManager manager, final @Nullable Area position);
+	void scroll(final float scroll, final @Nullable GuiManager manager, final @Nullable Area position);
 
-	void scrollTo(final float to, final GuiManager manager, final @Nullable Area position);
+	void scrollTo(final float to, final @Nullable GuiManager manager, final @Nullable Area position);
 
 	float getNowHeight();
 

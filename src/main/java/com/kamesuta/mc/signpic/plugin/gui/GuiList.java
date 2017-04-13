@@ -7,6 +7,7 @@ import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -74,7 +75,7 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	@Override
-	public void scroll(final float scroll, final GuiManager manager, final @Nullable Area position) {
+	public void scroll(final float scroll, final @Nullable GuiManager manager, final @Nullable Area position) {
 		final float now = this.top.get();
 		float to = now+scroll/2f;
 		if (position!=null)
@@ -84,8 +85,8 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	@Override
-	public void scrollTo(final float to, final GuiManager manager, final @Nullable Area position) {
-		if (position!=null) {
+	public void scrollTo(final float to, final @Nullable GuiManager manager, final @Nullable Area position) {
+		if (manager!=null&&position!=null) {
 			final float buttom = getAllHeight()-position.h();
 			if (this.top.get()<=0&&-this.top.get()<=buttom) {
 				final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
@@ -100,7 +101,7 @@ public class GuiList extends WPanel implements Scrollable {
 				manager.get(size, size+100);
 			}
 		} else
-			this.top.stop().add(Easings.easeLinear.move(.2f, to)).start();
+			this.top.stop().add(Motion.move(to)).start();
 	}
 
 	@Override
