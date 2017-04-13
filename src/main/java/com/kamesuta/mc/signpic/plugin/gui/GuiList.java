@@ -54,6 +54,7 @@ public class GuiList extends WPanel implements Scrollable {
 	@Override
 	protected void initWidget() {
 		add(this.scrollPane);
+		add(new GuiScrollBar(new R(Coord.right(3), Coord.width(8)), this));
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class GuiList extends WPanel implements Scrollable {
 
 	@Override
 	public float getNowHeight() {
-		return this.top.get();
+		return -this.top.get();
 	};
 
 	@Override
