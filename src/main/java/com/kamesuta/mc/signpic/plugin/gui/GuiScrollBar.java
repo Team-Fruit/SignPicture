@@ -15,7 +15,6 @@ import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
-import com.kamesuta.mc.signpic.Log;
 
 public class GuiScrollBar extends WPanel {
 
@@ -30,9 +29,13 @@ public class GuiScrollBar extends WPanel {
 		this.knob = new Knob(new R(Coord.top(this.top), Coord.height(this.height)));
 	}
 
+	public Knob getKnob() {
+		return this.knob;
+	}
+
 	@Override
 	protected void initWidget() {
-		add(this.knob);
+		add(getKnob());
 	}
 
 	protected float ratio;
@@ -78,15 +81,25 @@ public class GuiScrollBar extends WPanel {
 			draw(a);
 		}
 
+		protected float draggOffset;
+
+		@Override
+		public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+			if (button<2) {
+				final Area a = getGuiPosition(pgp);
+				if (a.pointInside(p))
+					this.draggOffset = p.y()-getGuiPosition(pgp).y1();
+			}
+			return super.mouseClicked(ev, pgp, p, button);
+		}
+
 		@Override
 		public boolean mouseDragged(final WEvent ev, final Area pgp, final Point p, final int button, final long time) {
 			if (button<2)
-				if (p.y()>=pgp.y1()&&p.y()<pgp.y2()) {
-					final float per = p.y()-pgp.y1();
-					Log.log.info(per/GuiScrollBar.this.ratio);
-					GuiScrollBar.this.pane.scrollTo(-(per/GuiScrollBar.this.ratio), (GuiManager) ev.owner, null);
-				}
+				if (p.y()>=pgp.y1()&&p.y()<pgp.y2())
+					GuiScrollBar.this.pane.scrollTo(-((p.y()-pgp.y1()-this.draggOffset)/GuiScrollBar.this.ratio), (GuiManager) ev.owner, null);
 			return super.mouseDragged(ev, pgp, p, button, time);
 		}
+
 	}
 }
