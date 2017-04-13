@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -45,14 +44,18 @@ public class GuiScrollBar extends WPanel {
 		if (knob<15f)
 			knob = 15f;
 		final float scroll = this.pane.getNowHeight()*ratio;
-		this.top.stop().add(Motion.move(scroll>=0f ? scroll : 0f)).start();
-		this.height.stop().add(Motion.move(arrow>scroll+knob ? scroll>=0f ? knob : knob+scroll : arrow-scroll)).start();
+		final float top = scroll>=0f ? scroll : 0f;
+		if (this.top.get()!=top)
+			this.top.stop().add(Motion.move(top)).start();
+		final float height = arrow>scroll+knob ? scroll>=0f ? knob : knob+scroll : arrow-scroll;
+		if (this.height.get()!=height)
+			this.height.stop().add(Motion.move(height)).start();
 		if (pgp.pointInside(p))
 			super.draw(ev, pgp, p, frame, popacity, opt);
 	}
 
 	public void move(final float f) {
-		this.top.stop().add(Easings.easeLinear.move(.25f, this.top.get()+f)).start();
+		this.top.stop().add(Motion.move(this.top.get()+f)).start();
 	}
 
 	public class Knob extends WBase {
