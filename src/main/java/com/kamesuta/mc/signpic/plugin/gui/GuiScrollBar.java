@@ -33,17 +33,21 @@ public class GuiScrollBar extends WPanel {
 		add(new Knob(new R(Coord.top(this.top), Coord.height(this.height))));
 	}
 
+	protected float ratio;
+
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
 		final float arrow = getGuiPosition(pgp).h();
 		final float gui = this.pane.getAllHeight();
-		if (arrow>=gui)
+		if (arrow>=gui) {
+			this.ratio = -1f;
 			return;
-		final float ratio = arrow/gui;
-		float knob = arrow*ratio;
+		}
+		this.ratio = arrow/gui;
+		float knob = arrow*this.ratio;
 		if (knob<15f)
 			knob = 15f;
-		final float scroll = this.pane.getNowHeight()*ratio;
+		final float scroll = this.pane.getNowHeight()*this.ratio;
 		final float top = scroll>=0f ? scroll : 0f;
 		if (this.top.get()!=top)
 			this.top.stop().add(Motion.move(top)).start();
