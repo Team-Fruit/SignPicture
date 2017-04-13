@@ -74,29 +74,33 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	@Override
-	public void scroll(final int scroll, final GuiManager manager, final Area position) {
+	public void scroll(final float scroll, final GuiManager manager, final @Nullable Area position) {
 		final float now = this.top.get();
 		float to = now+scroll/2f;
-		if (to>0||-to>(getAllHeight()-position.h()))
-			to = now+scroll/4f;
+		if (position!=null)
+			if (to>0||-to>(getAllHeight()-position.h()))
+				to = now+scroll/4f;
 		scrollTo(to, manager, position);
 	}
 
 	@Override
-	public void scrollTo(final float to, final GuiManager manager, final Area position) {
-		final float buttom = getAllHeight()-position.h();
-		if (this.top.get()<=0&&-this.top.get()<=buttom) {
-			final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
-			if (to>0)
-				motion.add(Easings.easeInOutCubic.move(.5f, 0));
-			else if (-to>buttom)
-				motion.add(Easings.easeInOutCubic.move(.5f, -buttom));
-			motion.start();
-		}
-		if (-to>buttom) {
-			final int size = this.data.size();
-			manager.get(size, size+100);
-		}
+	public void scrollTo(final float to, final GuiManager manager, final @Nullable Area position) {
+		if (position!=null) {
+			final float buttom = getAllHeight()-position.h();
+			if (this.top.get()<=0&&-this.top.get()<=buttom) {
+				final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
+				if (to>0)
+					motion.add(Easings.easeInOutCubic.move(.5f, 0));
+				else if (-to>buttom)
+					motion.add(Easings.easeInOutCubic.move(.5f, -buttom));
+				motion.start();
+			}
+			if (-to>buttom) {
+				final int size = this.data.size();
+				manager.get(size, size+100);
+			}
+		} else
+			this.top.stop().add(Easings.easeLinear.move(.2f, to)).start();
 	}
 
 	@Override

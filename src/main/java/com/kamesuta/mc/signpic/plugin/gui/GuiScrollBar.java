@@ -1,7 +1,6 @@
 package com.kamesuta.mc.signpic.plugin.gui;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -16,21 +15,24 @@ import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
+import com.kamesuta.mc.signpic.Log;
 
 public class GuiScrollBar extends WPanel {
 
 	protected final @Nonnull Scrollable pane;
 	protected final @Nonnull VMotion top = V.am(0f);
 	protected final @Nonnull VMotion height = V.am(0f);
+	protected final @Nonnull Knob knob;
 
 	public GuiScrollBar(final @Nonnull R position, final @Nonnull Scrollable pane) {
 		super(position);
 		this.pane = pane;
+		this.knob = new Knob(new R(Coord.top(this.top), Coord.height(this.height)));
 	}
 
 	@Override
 	protected void initWidget() {
-		add(new Knob(new R(Coord.top(this.top), Coord.height(this.height))));
+		add(this.knob);
 	}
 
 	protected float ratio;
@@ -58,10 +60,6 @@ public class GuiScrollBar extends WPanel {
 			super.draw(ev, pgp, p, frame, popacity, opt);
 	}
 
-	public void move(final float f) {
-		this.top.stop().add(Motion.move(this.top.get()+f)).start();
-	}
-
 	public class Knob extends WBase {
 
 		public Knob(final @Nonnull R position) {
@@ -80,26 +78,15 @@ public class GuiScrollBar extends WPanel {
 			draw(a);
 		}
 
-		private @Nullable Point lastClick;
-		private int lastButton = -1;
-
 		@Override
-		public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
+		public boolean mouseDragged(final WEvent ev, final Area pgp, final Point p, final int button, final long time) {
 			if (button<2)
-				if (getGuiPosition(pgp).pointInside(p)) {
-					this.lastClick = p;
-					this.lastButton = button;
+				if (p.y()>=pgp.y1()&&p.y()<pgp.y2()) {
+					final float per = p.y()-pgp.y1();
+					Log.log.info(per/GuiScrollBar.this.ratio);
+					GuiScrollBar.this.pane.scrollTo(-(per/GuiScrollBar.this.ratio), (GuiManager) ev.owner, null);
 				}
-			return super.mouseClicked(ev, pgp, p, button);
-		}
-
-		@Override
-		public boolean mouseReleased(final WEvent ev, final Area pgp, final Point p, final int button) {
-			if (button<2)
-				if (getGuiPosition(pgp).pointInside(p))
-					if (this.lastClick!=null&&this.lastButton==button)
-						move(this.lastClick.y()-p.y());
-			return super.mouseReleased(ev, pgp, p, button);
+			return super.mouseDragged(ev, pgp, p, button, time);
 		}
 	}
 }
