@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.plugin.gui;
 
 import javax.annotation.Nonnull;
 
+import org.lwjgl.util.Timer;
+
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
@@ -39,6 +41,7 @@ public class GuiScrollBar extends WPanel {
 	}
 
 	protected float ratio;
+	protected Timer timer = new Timer();
 
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
@@ -59,7 +62,9 @@ public class GuiScrollBar extends WPanel {
 		final float height = arrow>scroll+knob ? scroll>=0f ? knob : knob+scroll : arrow-scroll;
 		if (this.height.get()!=height)
 			this.height.stop().add(Motion.move(height)).start();
-		if (pgp.pointInside(p))
+		if (getKnob().dragging)
+			this.timer.set(-.1f);
+		if (pgp.pointInside(p)||this.timer.getTime()<0f)
 			super.draw(ev, pgp, p, frame, popacity, opt);
 	}
 
