@@ -43,7 +43,7 @@ public class GuiScrollBar extends WPanel {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
 		final float arrow = getGuiPosition(pgp).h();
-		final float gui = this.pane.getScrollableHeight();
+		final float gui = this.pane.getAllHeight();
 		if (arrow>=gui) {
 			this.ratio = -1f;
 			return;
