@@ -79,7 +79,7 @@ public class GuiList extends WPanel implements Scrollable {
 		final float now = this.top.get();
 		float to = now+scroll/2f;
 		if (position!=null)
-			if (to>0||-to>(getAllHeight()-position.h()))
+			if (to>0||-to>(getScrollableHeight()-position.h()))
 				to = now+scroll/4f;
 		scrollTo(to, manager, position);
 	}
@@ -87,7 +87,7 @@ public class GuiList extends WPanel implements Scrollable {
 	@Override
 	public void scrollTo(final float to, final @Nullable GuiManager manager, final @Nullable Area position) {
 		if (manager!=null&&position!=null) {
-			final float buttom = getAllHeight()-position.h();
+			final float buttom = getScrollableHeight()-position.h();
 			if (this.top.get()<=0&&-this.top.get()<=buttom) {
 				final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
 				if (to>0)
@@ -110,8 +110,11 @@ public class GuiList extends WPanel implements Scrollable {
 	};
 
 	@Override
-	public float getAllHeight() {
-		return this.data.size()*30;
+	public float getScrollableHeight() {
+		float height = this.data.size()*30;
+		if (this.list!=null)
+			height -= this.list.h();
+		return height;
 	}
 
 	public class ListElement extends WPanel {

@@ -12,5 +12,5 @@ public interface Scrollable {
 
 	float getNowHeight();
 
-	float getAllHeight();
+	float getScrollableHeight();
 }
