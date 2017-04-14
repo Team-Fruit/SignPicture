@@ -96,8 +96,17 @@ public class GuiScrollBar extends WPanel {
 		@Override
 		public boolean mouseDragged(final WEvent ev, final Area pgp, final Point p, final int button, final long time) {
 			if (button<2)
-				if (p.y()>=pgp.y1()&&p.y()<pgp.y2())
-					GuiScrollBar.this.pane.scrollTo(-((p.y()-pgp.y1()-this.draggOffset)/GuiScrollBar.this.ratio), (GuiManager) ev.owner, null);
+				if (p.y()>=pgp.y1()&&p.y()<pgp.y2()) {
+					float to = (p.y()-pgp.y1()-this.draggOffset)/GuiScrollBar.this.ratio;
+					if (to>=0)
+						to = 0;
+					else {
+						final float scrollable = GuiScrollBar.this.pane.getScrollableHeight();
+						if (to<=scrollable)
+							to = scrollable;
+					}
+					GuiScrollBar.this.pane.scrollTo(-to, (GuiManager) ev.owner, null);
+				}
 			return super.mouseDragged(ev, pgp, p, button, time);
 		}
 

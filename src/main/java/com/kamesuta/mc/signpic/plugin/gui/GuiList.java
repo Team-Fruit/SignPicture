@@ -70,8 +70,8 @@ public class GuiList extends WPanel implements Scrollable {
 	@Override
 	public void update(final WEvent ev, final Area pgp, final Point p) {
 		final Area a = getGuiPosition(pgp);
-		if (this.heightCache!=a.h()&&getAllHeight()-a.h()<getNowHeight())
-			this.top.stop().add(Easings.easeLinear.move(.2f, -(getAllHeight()-a.h()))).start();
+		if (this.heightCache!=a.h()&&getScrollableHeight()<getNowHeight())
+			this.top.stop().add(Easings.easeLinear.move(.2f, -(getScrollableHeight()))).start();
 		this.heightCache = a.h();
 		super.update(ev, pgp, p);
 	}
@@ -90,7 +90,7 @@ public class GuiList extends WPanel implements Scrollable {
 		final float now = this.top.get();
 		float to = now+scroll/2f;
 		if (position!=null)
-			if (to>0||-to>(getAllHeight()-position.h()))
+			if (to>0||-to>(getScrollableHeight()))
 				to = now+scroll/4f;
 		scrollTo(to, manager, position);
 	}
@@ -98,7 +98,7 @@ public class GuiList extends WPanel implements Scrollable {
 	@Override
 	public void scrollTo(final float to, final @Nullable GuiManager manager, final @Nullable Area position) {
 		if (manager!=null&&position!=null) {
-			final float buttom = getAllHeight()-position.h();
+			final float buttom = getScrollableHeight();
 			if (this.top.get()<=0&&-this.top.get()<=buttom) {
 				final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
 				if (to>0)
@@ -119,6 +119,14 @@ public class GuiList extends WPanel implements Scrollable {
 	public float getNowHeight() {
 		return -this.top.get();
 	};
+
+	@Override
+	public float getScrollableHeight() {
+		float height = getAllHeight();
+		if (this.list!=null)
+			height -= this.list.h();
+		return height;
+	}
 
 	@Override
 	public float getAllHeight() {
