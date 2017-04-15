@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.plugin.gui;
 
+import java.text.SimpleDateFormat;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -21,7 +23,9 @@ import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
+import com.kamesuta.mc.signpic.attr.prop.RotationData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -32,6 +36,10 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiList extends WPanel implements Scrollable {
 	protected static @Nonnull ResourceLocation mouseoverSound = new ResourceLocation("signpic", "gui.mouseover");
+	protected static @Nonnull ResourceLocation offset = new ResourceLocation("signpic", "textures/plugin/offset.png");
+	protected static @Nonnull ResourceLocation rotation = new ResourceLocation("signpic", "textures/plugin/rotation.png");
+	protected static @Nonnull ResourceLocation animation = new ResourceLocation("signpic", "textures/plugin/animation.png");
+	protected static @Nonnull SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	protected final @Nonnull IModCount<SignData> data;
 	protected final @Nonnull WPanel scrollPane;
@@ -176,7 +184,15 @@ public class GuiList extends WPanel implements Scrollable {
 						final SizeData size = meta.sizes.getMovie().get();
 						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(8)), GuiManager.BOLD_FONT)
 								.setAlign(Align.LEFT)
-								.setText(String.valueOf(size.getHeight())+" × "+size.getWidth()));
+								.setText(size.getHeight()+" × "+size.getWidth()+" - "+ListElement.this.data.getPlayerName()));
+						add(new ListLabel(new R(Coord.left(0), Coord.right(2), Coord.height(8)), GuiManager.BOLD_FONT)
+								.setAlign(Align.RIGHT)
+								.setText(ListElement.this.data.getX()+", "+ListElement.this.data.getY()+", "+ListElement.this.data.getZ()+" - "+ListElement.this.data.getWorldName()));
+						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(6), Coord.top(18)), GuiManager.PLAIN_FONT)
+								.setAlign(Align.LEFT)
+								.setText("Last Updated: "+dateFormat.format(ListElement.this.data.getUpdateDate())));
+						final RotationData rotation = meta.rotations.getMovie().get();
+						Log.log.info(rotation);
 					}
 				}
 
