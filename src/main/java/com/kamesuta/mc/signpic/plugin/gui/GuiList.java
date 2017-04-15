@@ -6,6 +6,8 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontScaledLabel;
+import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -19,6 +21,9 @@ import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
+import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
@@ -136,10 +141,14 @@ public class GuiList extends WPanel implements Scrollable {
 	public class ListElement extends WPanel {
 
 		protected final @Nonnull SignData data;
+		protected final @Nonnull EntryId id;
+		protected final @Nullable AttrReaders meta;
 
 		public ListElement(final R position, final SignData t) {
 			super(position);
 			this.data = t;
+			this.id = EntryId.from(this.data.getSign());
+			this.meta = this.id.getMeta();
 		}
 
 		@Override
@@ -162,7 +171,15 @@ public class GuiList extends WPanel implements Scrollable {
 								super.draw(ev, pgp, p, frame, popacity, opt);
 							}
 						};
-					}.setEntryId(EntryId.from(ListElement.this.data.getSign())));
+					}.setEntryId(ListElement.this.id));
+					final AttrReaders meta = ListElement.this.meta;
+					if (meta!=null) {
+						final SizeData size = meta.sizes.getMovie().get();
+						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(8)), GuiManager.BOLD_FONT)
+								.setAlign(Align.LEFT)
+								.setText(String.valueOf(size.getHeight())+" × "+size.getWidth()));
+						Log.log.info(size.vaildHeight()&&size.vaildWidth());
+					}
 				}
 
 				@Override
@@ -195,6 +212,21 @@ public class GuiList extends WPanel implements Scrollable {
 						}
 				}
 			});
+		}
+	}
+
+	public class ListLabel extends FontScaledLabel {
+
+		public ListLabel(final R position, final WFontRenderer wf) {
+			super(position, wf);
+		}
+
+		@Override
+		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
+			final Area list = GuiList.this.list;
+			if (list!=null)
+				if (list.areaInside(getGuiPosition(pgp)))
+					super.draw(ev, pgp, p, frame, popacity, opt);
 		}
 	}
 }

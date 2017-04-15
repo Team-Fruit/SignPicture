@@ -13,6 +13,7 @@ import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.font.FontSet;
+import com.kamesuta.mc.bnnwidget.font.FontSet.Builder;
 import com.kamesuta.mc.bnnwidget.font.FontStyle;
 import com.kamesuta.mc.bnnwidget.font.TrueTypeFont;
 import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
@@ -38,15 +39,18 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiManager extends WFrame {
+	public static final @Nonnull WFontRenderer PLAIN_FONT;
+	public static final @Nonnull WFontRenderer BOLD_FONT;
+
 	public static @Nonnull ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
 	public static @Nonnull ResourceLocation background = new ResourceLocation("signpic", "textures/plugin/background.png");
-	public static @Nonnull WFontRenderer font;
 	public static @Nonnull ManagerType type = ManagerType.LIST;
 
 	static {
-		final FontSet fontSet = new FontSet.Builder().addName("tahoma").addName("aller").setStyle(Font.PLAIN).build();
-		final FontStyle style = new FontStyle.Builder().setFont(fontSet).build();
-		font = new WFontRenderer(new TrueTypeFont(style));
+		final Builder builder = new FontSet.Builder().addName("tahoma").addName("aller");
+		PLAIN_FONT = new WFontRenderer(new TrueTypeFont(new FontStyle.Builder().setFont(builder.setStyle(Font.PLAIN).build()).build()));
+		BOLD_FONT = new WFontRenderer(new TrueTypeFont(new FontStyle.Builder().setFont(builder.setStyle(Font.BOLD).build()).build()));
+
 	}
 
 	public @Nonnull String key;

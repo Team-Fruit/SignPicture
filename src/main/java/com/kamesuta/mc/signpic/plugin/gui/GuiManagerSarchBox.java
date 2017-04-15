@@ -113,7 +113,7 @@ public class GuiManagerSarchBox extends WPanel {
 		add(this.advancedSearch);
 		add(this.gallary);
 		add(this.stats);
-		add(new FontLabel(new R(Coord.left(5), Coord.top(20), Coord.height(10), Coord.width(80)), GuiManager.font) {
+		add(new FontLabel(new R(Coord.left(5), Coord.top(20), Coord.height(10), Coord.width(80)), GuiManager.PLAIN_FONT) {
 			int sizeCache = -1;
 
 			@Override

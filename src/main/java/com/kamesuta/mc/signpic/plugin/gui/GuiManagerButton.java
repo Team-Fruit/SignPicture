@@ -45,14 +45,14 @@ public class GuiManagerButton extends WBase {
 			final Area a = getGuiPosition(pgp);
 			OpenGL.glColor4f(1f, 1f, 1f, 1f);
 			WRenderer.startTexture();
-			final FontPosition fp = GuiManager.font.getSetting()
+			final FontPosition fp = GuiManager.PLAIN_FONT.getSetting()
 					.setScale(.5f)
 					.setPosition(a.x1()+a.w()/2, a.y1())
 					.setFontSize(Math.round(a.h()/ev.owner.scale())*2)
 					.setAlign(Align.CENTER)
 					.setShadow(true)
 					.setText(text);
-			GuiManager.font.drawString(fp);
+			GuiManager.PLAIN_FONT.drawString(fp);
 		}
 	}
 
