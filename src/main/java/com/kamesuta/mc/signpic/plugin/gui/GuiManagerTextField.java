@@ -12,6 +12,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 
 public class GuiManagerTextField extends WPanel {
@@ -42,7 +43,7 @@ public class GuiManagerTextField extends WPanel {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity, @Nonnull final RenderOption opt) {
 		final Area a = getGuiPosition(pgp);
 
 		OpenGL.glPushMatrix();
@@ -55,6 +56,6 @@ public class GuiManagerTextField extends WPanel {
 		OpenGL.glPopMatrix();
 
 		WRenderer.startTexture();
-		super.draw(ev, pgp, p, frame, opacity);
+		super.draw(ev, pgp, p, frame, opacity, opt);
 	}
 }

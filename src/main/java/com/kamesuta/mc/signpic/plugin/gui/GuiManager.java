@@ -15,7 +15,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.font.FontSet;
 import com.kamesuta.mc.bnnwidget.font.FontStyle;
 import com.kamesuta.mc.bnnwidget.font.TrueTypeFont;
-import com.kamesuta.mc.bnnwidget.font.WFont;
+import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -40,13 +40,13 @@ import net.minecraft.util.ResourceLocation;
 public class GuiManager extends WFrame {
 	public static @Nonnull ResourceLocation logo = new ResourceLocation("signpic", "textures/plugin/logo.png");
 	public static @Nonnull ResourceLocation background = new ResourceLocation("signpic", "textures/plugin/background.png");
-	public static @Nonnull WFont font;
+	public static @Nonnull WFontRenderer font;
 	public static @Nonnull ManagerType type = ManagerType.LIST;
 
 	static {
 		final FontSet fontSet = new FontSet.Builder().addName("tahoma").addName("aller").setStyle(Font.PLAIN).build();
 		final FontStyle style = new FontStyle.Builder().setFont(fontSet).build();
-		font = new TrueTypeFont(style);
+		font = new WFontRenderer(new TrueTypeFont(style));
 	}
 
 	public @Nonnull String key;
@@ -61,7 +61,7 @@ public class GuiManager extends WFrame {
 		this.key = data;
 		this.size = NumberUtils.toInt(size);
 		this.data = new NotifyCollections.NotifyArrayList<SignData>(new ArrayList(this.size));
-		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)));
+		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)), this.size, this.data);
 		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(40), Coord.bottom(20)));
 		get(0, 100);
 	}

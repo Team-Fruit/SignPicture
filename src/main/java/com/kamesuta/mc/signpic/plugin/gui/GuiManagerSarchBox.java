@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -13,6 +14,8 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
+import com.kamesuta.mc.signpic.plugin.SignData;
 
 import net.minecraft.client.resources.I18n;
 
@@ -23,7 +26,10 @@ public class GuiManagerSarchBox extends WPanel {
 	public final @Nonnull GuiManagerButton gallary;
 	public final @Nonnull GuiManagerButton stats;
 
-	public GuiManagerSarchBox(final R position) {
+	protected final int size;
+	protected final @Nonnull IModCount<SignData> data;
+
+	public GuiManagerSarchBox(final @Nonnull R position, final int size, final @Nonnull IModCount<SignData> data) {
 		super(position);
 		this.textField = new GuiManagerTextField(new R(Coord.left(5), Coord.height(15), Coord.right(310), Coord.top(5))) {
 			@Override
@@ -97,6 +103,8 @@ public class GuiManagerSarchBox extends WPanel {
 				return true;
 			}
 		}.setText(I18n.format("signpic.manager.stats"));
+		this.size = size;
+		this.data = data;
 	}
 
 	@Override
@@ -105,6 +113,25 @@ public class GuiManagerSarchBox extends WPanel {
 		add(this.advancedSearch);
 		add(this.gallary);
 		add(this.stats);
+		add(new FontLabel(new R(Coord.left(5), Coord.top(20), Coord.height(10), Coord.width(80)), GuiManager.font) {
+			int sizeCache = -1;
+
+			@Override
+			public String getText() {
+				final int size = GuiManagerSarchBox.this.data.size();
+				if (this.sizeCache==size)
+					return this.text;
+				final StringBuilder sb = new StringBuilder();
+				sb.append(size);
+				if (GuiManagerSarchBox.this.size>size)
+					sb.append('+');
+				sb.append(' ');
+				sb.append(I18n.format("signpic.manager.matches"));
+				this.sizeCache = GuiManagerSarchBox.this.data.size();
+				this.text = sb.toString();
+				return this.text;
+			};
+		}.setColor(0x9acd32));
 	}
 
 	@Override

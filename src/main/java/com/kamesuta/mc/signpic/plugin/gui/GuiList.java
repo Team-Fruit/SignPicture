@@ -71,7 +71,7 @@ public class GuiList extends WPanel implements Scrollable {
 	public void update(final WEvent ev, final Area pgp, final Point p) {
 		final Area a = getGuiPosition(pgp);
 		if (this.heightCache!=a.h()&&getScrollableHeight()<getNowHeight())
-			this.top.stop().add(Easings.easeLinear.move(.2f, -(getScrollableHeight()))).start();
+			this.top.stop().add(Easings.easeLinear.move(.2f, -getScrollableHeight())).start();
 		this.heightCache = a.h();
 		super.update(ev, pgp, p);
 	}

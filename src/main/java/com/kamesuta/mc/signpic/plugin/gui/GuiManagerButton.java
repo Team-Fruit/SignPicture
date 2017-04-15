@@ -6,7 +6,6 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.font.FontPosition;
-import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
@@ -18,7 +17,6 @@ import com.kamesuta.mc.signpic.Client;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiManagerButton extends WBase {
-	protected static @Nonnull WFontRenderer fontRenderer = new WFontRenderer(GuiManager.font);
 	protected static @Nonnull ResourceLocation hitSound = new ResourceLocation("signpic", "gui.confirm");
 
 	public @Nullable String text;
@@ -47,14 +45,14 @@ public class GuiManagerButton extends WBase {
 			final Area a = getGuiPosition(pgp);
 			OpenGL.glColor4f(1f, 1f, 1f, 1f);
 			WRenderer.startTexture();
-			final FontPosition fp = fontRenderer.getSetting()
+			final FontPosition fp = GuiManager.font.getSetting()
 					.setScale(.5f)
 					.setPosition(a.x1()+a.w()/2, a.y1())
 					.setFontSize(Math.round(a.h()/ev.owner.scale())*2)
 					.setAlign(Align.CENTER)
 					.setShadow(true)
 					.setText(text);
-			fontRenderer.drawString(fp);
+			GuiManager.font.drawString(fp);
 		}
 	}
 
