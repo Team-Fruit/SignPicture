@@ -21,7 +21,6 @@ import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -178,7 +177,6 @@ public class GuiList extends WPanel implements Scrollable {
 						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(8)), GuiManager.BOLD_FONT)
 								.setAlign(Align.LEFT)
 								.setText(String.valueOf(size.getHeight())+" × "+size.getWidth()));
-						Log.log.info(size.vaildHeight()&&size.vaildWidth());
 					}
 				}
 
