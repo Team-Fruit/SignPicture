@@ -26,7 +26,6 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
-import com.kamesuta.mc.signpic.attr.prop.RotationData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -211,7 +210,6 @@ public class GuiList extends WPanel implements Scrollable {
 								};
 							}
 						});
-						final RotationData rotation = meta.rotations.getMovie().get();
 					}
 				}
 
