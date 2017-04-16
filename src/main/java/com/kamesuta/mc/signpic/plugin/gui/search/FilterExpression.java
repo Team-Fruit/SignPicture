@@ -7,19 +7,25 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayDeque;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayList;
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.gui.search.DateFilterElement.DateFilterProperty;
 import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilterProperty;
 
 public class FilterExpression {
 
-	private final @Nonnull NotifyArrayDeque<IFilterElement> elements = new NotifyArrayDeque<IFilterElement>();
+	private final @Nonnull NotifyArrayList<IFilterElement> elements;
 
 	protected final @Nonnull List<SignData> datas;
 
 	public FilterExpression(final @Nonnull List<SignData> datas) {
 		this.datas = datas;
+		this.elements = new NotifyArrayList<IFilterElement>();
+	}
+
+	public FilterExpression(final @Nonnull List<SignData> datas, final NotifyArrayList<IFilterElement> elements) {
+		this.datas = datas;
+		this.elements = elements;
 	}
 
 	protected final void add(final IFilterElement date) {
