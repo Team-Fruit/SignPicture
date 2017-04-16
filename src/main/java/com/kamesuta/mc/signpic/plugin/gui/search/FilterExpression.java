@@ -2,26 +2,27 @@ package com.kamesuta.mc.signpic.plugin.gui.search;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Queues;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayDeque;
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.gui.search.DateFilterElement.DateFilterProperty;
 import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilterProperty;
 
 public class FilterExpression {
 
+	private final @Nonnull NotifyArrayDeque<IFilterElement> elements = new NotifyArrayDeque<IFilterElement>();
+
 	protected final @Nonnull List<SignData> datas;
-	protected final @Nonnull Queue<IFilterElement> elements = Queues.newArrayDeque();
 
 	public FilterExpression(final @Nonnull List<SignData> datas) {
 		this.datas = datas;
 	}
 
-	protected void add(final IFilterElement date) {
+	protected final void add(final IFilterElement date) {
 		this.elements.add(date);
 	}
 
@@ -166,7 +167,16 @@ public class FilterExpression {
 		return this;
 	}
 
+	protected int modCache;
+	protected @Nullable List<SignData> findCache;
+
+	/**
+	 * 検索
+	 * @return 条件に一致したデータリスト
+	 */
 	public List<SignData> findList() {
+		if (this.modCache==this.elements.getModCount()&&this.findCache!=null)
+			return this.findCache;
 		final List list = Lists.newArrayList();
 		for (final SignData data : this.datas) {
 			for (final IFilterElement element : this.elements) {
@@ -176,6 +186,20 @@ public class FilterExpression {
 				}
 			}
 		}
+		this.modCache = this.elements.getModCount();
+		this.findCache = list;
 		return list;
+	}
+
+	/**
+	 * 検索
+	 * @return 条件に一致したデータ
+	 * @throws IllegalStateException 検索条件に一致する項目が複数存在する場合
+	 */
+	public SignData findUnique() {
+		final List<SignData> list = findList();
+		if (list.size()>1)
+			throw new IllegalStateException();
+		return list.get(0);
 	}
 }
