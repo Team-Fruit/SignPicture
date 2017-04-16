@@ -14,8 +14,6 @@ public abstract class PosFilterElement implements IFilterElement {
 		this.z = z;
 	}
 
-	public abstract boolean filter(SignData data, int x, int y, int z);
-
 	public static class EqualPosFilterElement extends PosFilterElement {
 
 		public EqualPosFilterElement(final int x, final int y, final int z) {
@@ -23,8 +21,8 @@ public abstract class PosFilterElement implements IFilterElement {
 		}
 
 		@Override
-		public boolean filter(final SignData data, final int x, final int y, final int z) {
-			return this.x==x&&this.y==y&&this.z==z;
+		public boolean filter(final SignData data) {
+			return this.x==data.getX()&&this.y==data.getY()&&this.z==data.getZ();
 		}
 
 	}
@@ -49,8 +47,8 @@ public abstract class PosFilterElement implements IFilterElement {
 			}
 
 			@Override
-			public boolean filter(final SignData data, final int x, final int y, final int z) {
-				return x>=this.x&&x<this.x2&&y>=this.y&&y<this.y2&&z>=this.z&&z<this.z2;
+			public boolean filter(final SignData data) {
+				return data.getX()>=this.x&&data.getX()<this.x2&&data.getY()>=this.y&&data.getZ()<this.y2&&data.getZ()>=this.z&&data.getZ()<this.z2;
 			}
 		}
 
@@ -61,8 +59,8 @@ public abstract class PosFilterElement implements IFilterElement {
 			}
 
 			@Override
-			public boolean filter(final SignData data, final int x, final int y, final int z) {
-				return x<=this.x&&x>this.x2&&y<=this.y&&y>this.y2&&z<=this.z&&z>this.z2;
+			public boolean filter(final SignData data) {
+				return data.getX()<=this.x&&data.getX()>this.x2&&data.getY()<=this.y&&data.getY()>this.y2&&data.getZ()<=this.z&&data.getZ()>this.z2;
 			}
 		}
 	}

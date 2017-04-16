@@ -7,17 +7,16 @@ import org.apache.commons.lang3.StringUtils;
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilterProperty;
 
-public abstract class StringFilterElement extends EnumFilterElement<StringFilterProperty> {
+public abstract class StringFilterElement extends EnumFilterElement<String, StringFilterProperty> {
 
-	public final @Nullable String src;
+	public final @Nullable String str;
 
 	public StringFilterElement(final StringFilterProperty property, final @Nullable String src) {
 		super(property);
-		this.src = src;
+		this.str = src;
 	}
 
-	public abstract boolean filter(SignData data, String str);
-
+	@Override
 	protected @Nullable String get(final SignData data) {
 		switch (this.property) {
 			case ID:
@@ -42,8 +41,8 @@ public abstract class StringFilterElement extends EnumFilterElement<StringFilter
 		}
 
 		@Override
-		public boolean filter(final SignData data, final String str) {
-			return StringUtils.equals(get(data), str);
+		public boolean filter(final SignData data) {
+			return StringUtils.equals(get(data), this.str);
 		}
 
 	}
@@ -55,8 +54,8 @@ public abstract class StringFilterElement extends EnumFilterElement<StringFilter
 		}
 
 		@Override
-		public boolean filter(final SignData data, final String str) {
-			return StringUtils.equalsIgnoreCase(get(data), str);
+		public boolean filter(final SignData data) {
+			return StringUtils.equalsIgnoreCase(get(data), this.str);
 		}
 
 	}

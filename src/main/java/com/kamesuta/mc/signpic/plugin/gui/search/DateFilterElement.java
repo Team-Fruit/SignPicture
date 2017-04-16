@@ -1,24 +1,26 @@
 package com.kamesuta.mc.signpic.plugin.gui.search;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.gui.search.DateFilterElement.DateFilterProperty;
 
-public abstract class DateFilterElement extends EnumFilterElement<DateFilterProperty> {
+public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilterProperty> {
 
-	public final @Nonnull Date src;
+	public final @Nonnull Date date;
 
 	public DateFilterElement(final DateFilterProperty property, final Date src) {
 		super(property);
-		this.src = src;
+		this.date = src;
 	}
 
-	public abstract boolean filter(SignData data, Date date);
-
+	@Override
 	protected @Nullable Date get(final SignData data) {
 		switch (this.property) {
 			case CREATE:
@@ -31,6 +33,86 @@ public abstract class DateFilterElement extends EnumFilterElement<DateFilterProp
 
 	}
 
+	public static class EqualsDateFilterElement extends DateFilterElement {
+
+		public EqualsDateFilterElement(final DateFilterProperty property, final Date src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			final Date src = get(data);
+			if (src==null)
+				return false;
+			return src.equals(this.date);
+		}
+
+	}
+
+	public static class HourEqualsDateFilterElement extends DateFilterElement {
+
+		public HourEqualsDateFilterElement(final DateFilterProperty property, final Date src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			final Date src = get(data);
+			if (src==null)
+				return false;
+			return DateUtils.truncate(src, Calendar.HOUR_OF_DAY).equals(DateUtils.truncate(this.date, Calendar.HOUR_OF_DAY));
+		}
+
+	}
+
+	public static class DayEqualsDateFilterElement extends DateFilterElement {
+
+		public DayEqualsDateFilterElement(final DateFilterProperty property, final Date src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			final Date src = get(data);
+			if (src==null)
+				return false;
+			return DateUtils.truncate(src, Calendar.DAY_OF_MONTH).equals(DateUtils.truncate(this.date, Calendar.DAY_OF_MONTH));
+		}
+
+	}
+
+	public static class MonthEqualsDateFilterElement extends DateFilterElement {
+
+		public MonthEqualsDateFilterElement(final DateFilterProperty property, final Date src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			final Date src = get(data);
+			if (src==null)
+				return false;
+			return DateUtils.truncate(src, Calendar.MONTH).equals(DateUtils.truncate(this.date, Calendar.MONTH));
+		}
+
+	}
+
+	public static class YearEqualsDateFilterElement extends DateFilterElement {
+
+		public YearEqualsDateFilterElement(final DateFilterProperty property, final Date src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			final Date src = get(data);
+			if (src==null)
+				return false;
+			return DateUtils.truncate(src, Calendar.YEAR).equals(DateUtils.truncate(this.date, Calendar.YEAR));
+		}
+
+	}
+
 	public static class AfterDateFilterElement extends DateFilterElement {
 
 		public AfterDateFilterElement(final DateFilterProperty property, final Date src) {
@@ -38,11 +120,11 @@ public abstract class DateFilterElement extends EnumFilterElement<DateFilterProp
 		}
 
 		@Override
-		public boolean filter(final SignData data, final Date date) {
+		public boolean filter(final SignData data) {
 			final Date src = get(data);
 			if (src==null)
 				return false;
-			return src.compareTo(date)>=0;
+			return src.compareTo(this.date)>=0;
 		}
 
 	}
@@ -54,11 +136,11 @@ public abstract class DateFilterElement extends EnumFilterElement<DateFilterProp
 		}
 
 		@Override
-		public boolean filter(final SignData data, final Date date) {
+		public boolean filter(final SignData data) {
 			final Date src = get(data);
 			if (src==null)
 				return false;
-			return src.compareTo(date)<=0;
+			return src.compareTo(this.date)<=0;
 		}
 
 	}
