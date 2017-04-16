@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Lists;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayList;
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.gui.search.DateFilterElement.DateFilterProperty;
@@ -14,7 +14,7 @@ import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilte
 
 public class FilterExpression {
 
-	private final @Nonnull NotifyArrayList<IFilterElement> elements;
+	private final @Nonnull IModCount<IFilterElement> elements;
 
 	protected final @Nonnull List<SignData> datas;
 
@@ -23,12 +23,12 @@ public class FilterExpression {
 		this.elements = new NotifyArrayList<IFilterElement>();
 	}
 
-	public FilterExpression(final @Nonnull List<SignData> datas, final NotifyArrayList<IFilterElement> elements) {
+	public FilterExpression(final @Nonnull List<SignData> datas, final IModCount<IFilterElement> elements) {
 		this.datas = datas;
 		this.elements = elements;
 	}
 
-	protected final void add(final IFilterElement date) {
+	protected void add(final IFilterElement date) {
 		this.elements.add(date);
 	}
 
@@ -173,17 +173,23 @@ public class FilterExpression {
 		return this;
 	}
 
+	public boolean isFiltered() {
+		return !this.elements.isEmpty();
+	}
+
 	protected int modCache;
-	protected @Nullable List<SignData> findCache;
+	protected @Nullable IModCount<SignData> findCache;
 
 	/**
 	 * 検索
 	 * @return 条件に一致したデータリスト
 	 */
-	public List<SignData> findList() {
+	public IModCount<SignData> findList() {
+		if (!isFiltered())
+			return new NotifyArrayList(this.datas);
 		if (this.modCache==this.elements.getModCount()&&this.findCache!=null)
 			return this.findCache;
-		final List list = Lists.newArrayList();
+		final IModCount<SignData> list = new NotifyArrayList();
 		for (final SignData data : this.datas) {
 			for (final IFilterElement element : this.elements) {
 				if (element.filter(data)) {
@@ -202,10 +208,12 @@ public class FilterExpression {
 	 * @return 条件に一致したデータ
 	 * @throws IllegalStateException 検索条件に一致する項目が複数存在する場合
 	 */
-	public SignData findUnique() {
-		final List<SignData> list = findList();
+	public @Nullable SignData findUnique() {
+		final IModCount<SignData> list = findList();
+		if (list.isEmpty())
+			return null;
 		if (list.size()>1)
 			throw new IllegalStateException();
-		return list.get(0);
+		return list.iterator().next();
 	}
 }
