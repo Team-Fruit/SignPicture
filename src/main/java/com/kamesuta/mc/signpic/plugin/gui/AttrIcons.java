@@ -42,11 +42,11 @@ public enum AttrIcons {
 	};
 	private final @Nonnull ResourceLocation icon;
 
-	private AttrIcons(final ResourceLocation icon) {
+	private AttrIcons(final @Nonnull ResourceLocation icon) {
 		this.icon = icon;
 	}
 
-	public ResourceLocation getIcon() {
+	public @Nonnull ResourceLocation getIcon() {
 		return this.icon;
 	}
 
