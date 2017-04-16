@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
@@ -19,11 +20,11 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.bnnwidget.util.NotifyCollections;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.RotationData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -36,9 +37,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class GuiList extends WPanel implements Scrollable {
 	protected static @Nonnull ResourceLocation mouseoverSound = new ResourceLocation("signpic", "gui.mouseover");
-	protected static @Nonnull ResourceLocation offset = new ResourceLocation("signpic", "textures/plugin/offset.png");
-	protected static @Nonnull ResourceLocation rotation = new ResourceLocation("signpic", "textures/plugin/rotation.png");
-	protected static @Nonnull ResourceLocation animation = new ResourceLocation("signpic", "textures/plugin/animation.png");
 	protected static @Nonnull SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	protected final @Nonnull IModCount<SignData> data;
@@ -145,7 +143,7 @@ public class GuiList extends WPanel implements Scrollable {
 		return this.data.size()*30;
 	}
 
-	public class ListElement extends WPanel {
+	protected class ListElement extends WPanel {
 
 		protected final @Nonnull SignData data;
 		protected final @Nonnull EntryId id;
@@ -191,8 +189,29 @@ public class GuiList extends WPanel implements Scrollable {
 						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(6), Coord.top(18)), GuiManager.PLAIN_FONT)
 								.setAlign(Align.LEFT)
 								.setText("Last Updated: "+dateFormat.format(ListElement.this.data.getUpdateDate())));
+						final IModCount<ResourceLocation> list = new NotifyCollections.NotifyArrayList();
+						add(new WList<ResourceLocation, WBase>(new R(Coord.bottom(0), Coord.right(0), Coord.height(15)), list) {
+							@Override
+							protected void initWidget() {
+								for (final AttrIcons attr : AttrIcons.values())
+									if (attr.isInclude(meta))
+										list.add(attr.getIcon());
+							}
+
+							@Override
+							protected WBase createWidget(final ResourceLocation resource, final int i) {
+								return new WBase(new R(Coord.right(i*15), Coord.width(15))) {
+									@Override
+									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
+										WRenderer.startTexture();
+										texture().bindTexture(resource);
+										drawTexture(getGuiPosition(pgp), null, null);
+										super.draw(ev, pgp, p, frame, popacity, opt);
+									}
+								};
+							}
+						});
 						final RotationData rotation = meta.rotations.getMovie().get();
-						Log.log.info(rotation);
 					}
 				}
 
@@ -229,7 +248,7 @@ public class GuiList extends WPanel implements Scrollable {
 		}
 	}
 
-	public class ListLabel extends FontScaledLabel {
+	protected class ListLabel extends FontScaledLabel {
 
 		public ListLabel(final R position, final WFontRenderer wf) {
 			super(position, wf);
@@ -243,4 +262,5 @@ public class GuiList extends WPanel implements Scrollable {
 					super.draw(ev, pgp, p, frame, popacity, opt);
 		}
 	}
+
 }
