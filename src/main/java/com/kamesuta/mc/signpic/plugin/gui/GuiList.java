@@ -128,8 +128,22 @@ public class GuiList extends ScrollPanel {
 						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(6), Coord.top(18)), GuiManager.PLAIN_FONT)
 								.setAlign(Align.LEFT)
 								.setText("Last Updated: "+dateFormat.format(ListElement.this.data.getUpdateDate())));
+						add(new WBase(new R(Coord.bottom(1), Coord.right(1), Coord.height(15), Coord.width(15))) {
+							@Override
+							public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
+								super.draw(ev, pgp, p, frame, popacity, opt);
+								final Area list = GuiList.this.area;
+								if (list!=null)
+									if (list.areaInside(getGuiPosition(pgp))) {
+										WRenderer.startTexture();
+										texture().bindTexture(SignPicLabel.defaultTexture);
+										drawTexture(getGuiPosition(pgp), null, null);
+										super.draw(ev, pgp, p, frame, popacity, opt);
+									}
+							}
+						});
 						final IModCount<ResourceLocation> list = new NotifyCollections.NotifyArrayList<ResourceLocation>();
-						add(new WList<ResourceLocation, WBase>(new R(Coord.bottom(0), Coord.right(0), Coord.height(15)), list) {
+						add(new WList<ResourceLocation, WBase>(new R(Coord.bottom(1), Coord.right(40), Coord.height(15)), list) {
 							@Override
 							protected void initWidget() {
 								for (final AttrIcons attr : AttrIcons.values())
@@ -139,7 +153,7 @@ public class GuiList extends ScrollPanel {
 
 							@Override
 							protected WBase createWidget(final ResourceLocation resource, final int i) {
-								return new WBase(new R(Coord.right(i*15), Coord.width(15))) {
+								return new WBase(new R(Coord.right(i*20), Coord.width(15))) {
 									@Override
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
 										final Area list = GuiList.this.area;
