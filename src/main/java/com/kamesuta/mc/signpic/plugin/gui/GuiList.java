@@ -21,6 +21,7 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -53,8 +54,6 @@ public class GuiList extends ScrollPanel {
 		};
 	}
 
-	protected @Nullable Area box;
-
 	@Override
 	protected void initWidget() {
 		add(this.scrollPane);
@@ -62,18 +61,11 @@ public class GuiList extends ScrollPanel {
 	}
 
 	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
-		this.box = pgp;
-		super.draw(ev, pgp, p, frame, popacity, opt);
-	}
-
-	@Override
 	public boolean mouseScrolled(final WEvent ev, final Area pgp, final Point p, final int scroll) {
-		final Area box = GuiList.this.box;
-		if (box!=null)
-			if (box.pointInside(p))
-				scroll(scroll, (GuiManager) ev.owner, getGuiPosition(pgp));
-		return super.mouseScrolled(ev, pgp, p, scroll);
+		Log.log.info(pgp.pointInside(p));
+		if (pgp.pointInside(p))
+			scroll(scroll, (GuiManager) ev.owner, getGuiPosition(pgp));
+		return false;
 	}
 
 	@Override
