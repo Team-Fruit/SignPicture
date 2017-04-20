@@ -11,8 +11,6 @@ import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.FontScaledLabel;
 import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
-import com.kamesuta.mc.bnnwidget.motion.Easings;
-import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -22,8 +20,6 @@ import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
-import com.kamesuta.mc.bnnwidget.var.V;
-import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -34,18 +30,17 @@ import com.kamesuta.mc.signpic.plugin.SignData;
 
 import net.minecraft.util.ResourceLocation;
 
-public class GuiList extends WPanel implements Scrollable {
+public class GuiList extends ScrollPanel {
 	protected static @Nonnull ResourceLocation mouseoverSound = new ResourceLocation("signpic", "gui.mouseover");
 	protected static @Nonnull SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
 	protected final @Nonnull IModCount<SignData> data;
 	protected final @Nonnull WPanel scrollPane;
-	protected final @Nonnull VMotion top;
 
 	public GuiList(final R position, final IModCount<SignData> data) {
 		super(position);
 		this.data = data;
-		this.scrollPane = new WPanel(new R(Coord.left(0), Coord.right(15), Coord.top(this.top = V.am(0)))) {
+		this.scrollPane = new WPanel(new R(Coord.left(0), Coord.right(15), Coord.top(this.top))) {
 			@Override
 			protected void initWidget() {
 				add(new WList<SignData, ListElement>(new R(), data) {
@@ -59,7 +54,6 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	protected @Nullable Area box;
-	protected @Nullable Area list;
 
 	@Override
 	protected void initWidget() {
@@ -70,19 +64,7 @@ public class GuiList extends WPanel implements Scrollable {
 	@Override
 	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 		this.box = pgp;
-		this.list = getGuiPosition(pgp);
 		super.draw(ev, pgp, p, frame, popacity, opt);
-	}
-
-	private float heightCache;
-
-	@Override
-	public void update(final WEvent ev, final Area pgp, final Point p) {
-		final Area a = getGuiPosition(pgp);
-		if (this.heightCache!=a.h()&&getScrollableHeight()<getNowHeight())
-			this.top.stop().add(Easings.easeLinear.move(.2f, -getScrollableHeight())).start();
-		this.heightCache = a.h();
-		super.update(ev, pgp, p);
 	}
 
 	@Override
@@ -95,46 +77,12 @@ public class GuiList extends WPanel implements Scrollable {
 	}
 
 	@Override
-	public void scroll(final float scroll, final @Nullable GuiManager manager, final @Nullable Area position) {
-		final float now = this.top.get();
-		float to = now+scroll/2f;
-		if (position!=null)
-			if (to>0||-to>(getScrollableHeight()))
-				to = now+scroll/4f;
-		scrollTo(to, manager, position);
-	}
-
-	@Override
 	public void scrollTo(final float to, final @Nullable GuiManager manager, final @Nullable Area position) {
-		if (manager!=null&&position!=null) {
-			final float buttom = getScrollableHeight();
-			if (this.top.get()<=0&&-this.top.get()<=buttom) {
-				final VMotion motion = this.top.stop().add(Easings.easeLinear.move(.2f, to));
-				if (to>0)
-					motion.add(Easings.easeInOutCubic.move(.5f, 0));
-				else if (-to>buttom)
-					motion.add(Easings.easeInOutCubic.move(.5f, -buttom));
-				motion.start();
-			}
-			if (-to>buttom) {
-				final int size = this.data.size();
-				manager.get(size, size+100);
-			}
-		} else
-			this.top.stop().add(Motion.move(to)).start();
-	}
-
-	@Override
-	public float getNowHeight() {
-		return -this.top.get();
-	};
-
-	@Override
-	public float getScrollableHeight() {
-		float height = getAllHeight();
-		if (this.list!=null)
-			height -= this.list.h();
-		return height;
+		super.scrollTo(to, manager, position);
+		if (-to>getScrollableHeight()) {
+			final int size = this.data.size();
+			manager.get(size, size+100);
+		}
 	}
 
 	@Override
@@ -164,7 +112,7 @@ public class GuiList extends WPanel implements Scrollable {
 						@Override
 						public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 							final Area a = getGuiPosition(pgp);
-							final Area list = GuiList.this.list;
+							final Area list = GuiList.this.area;
 							if (list!=null) {
 								final Area t = list.trimArea(a);
 								WRenderer.startShape();
@@ -215,7 +163,7 @@ public class GuiList extends WPanel implements Scrollable {
 
 				@Override
 				public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
-					final Area list = GuiList.this.list;
+					final Area list = GuiList.this.area;
 					if (list!=null)
 						if (list.areaOverlap(getGuiPosition(pgp))) {
 							WRenderer.startShape();
@@ -229,7 +177,7 @@ public class GuiList extends WPanel implements Scrollable {
 
 				@Override
 				public void update(final WEvent ev, final Area pgp, final Point p) {
-					final Area list = GuiList.this.list;
+					final Area list = GuiList.this.area;
 					if (list!=null)
 						if (list.areaOverlap(getGuiPosition(pgp))) {
 							final boolean mouseover = getGuiPosition(pgp).pointInside(p);
@@ -254,7 +202,7 @@ public class GuiList extends WPanel implements Scrollable {
 
 		@Override
 		public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
-			final Area list = GuiList.this.list;
+			final Area list = GuiList.this.area;
 			if (list!=null)
 				if (list.areaInside(getGuiPosition(pgp)))
 					super.draw(ev, pgp, p, frame, popacity, opt);
