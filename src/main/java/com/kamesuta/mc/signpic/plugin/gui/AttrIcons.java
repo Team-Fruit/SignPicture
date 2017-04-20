@@ -30,7 +30,7 @@ public enum AttrIcons {
 		@Override
 		public boolean isInclude(final AttrReaders meta) {
 			final Quat4f data = meta.rotations.getMovie().get().getRotate();
-			return data.x!=0||data.y!=0||data.z!=0||data.w!=0;
+			return data.x!=0||data.y!=0||data.z!=0||data.w!=1.0f;
 		}
 	},
 	ANIMATION(new ResourceLocation("signpic", "textures/plugin/animation.png")) {
