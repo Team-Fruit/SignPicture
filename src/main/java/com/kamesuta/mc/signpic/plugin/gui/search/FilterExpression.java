@@ -186,10 +186,10 @@ public class FilterExpression {
 	 */
 	public IModCount<SignData> findList() {
 		if (!isFiltered())
-			return new NotifyArrayList(this.datas);
+			return new NotifyArrayList<SignData>(this.datas);
 		if (this.modCache==this.elements.getModCount()&&this.findCache!=null)
 			return this.findCache;
-		final IModCount<SignData> list = new NotifyArrayList();
+		final IModCount<SignData> list = new NotifyArrayList<SignData>();
 		for (final SignData data : this.datas) {
 			for (final IFilterElement element : this.elements) {
 				if (element.filter(data)) {

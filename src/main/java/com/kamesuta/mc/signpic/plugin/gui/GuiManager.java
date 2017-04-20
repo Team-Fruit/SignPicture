@@ -64,7 +64,7 @@ public class GuiManager extends WFrame {
 		super(parent);
 		this.key = data;
 		this.size = NumberUtils.toInt(size);
-		this.data = new NotifyCollections.NotifyArrayList<SignData>(new ArrayList(this.size));
+		this.data = new NotifyCollections.NotifyArrayList<SignData>(new ArrayList<SignData>(this.size));
 		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)), this.size, this.data);
 		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(45), Coord.bottom(15)));
 		get(0, 100);
@@ -162,6 +162,7 @@ public class GuiManager extends WFrame {
 
 		switch (type) {
 			case LIST:
+			default:
 				this.box.add(new GuiList(new R(), this.data));
 				break;
 		}

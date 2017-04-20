@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public abstract class EnumFilterElement<E, T extends Enum> implements IFilterElement {
+public abstract class EnumFilterElement<E, T extends Enum<?>> implements IFilterElement {
 
 	public final T property;
 

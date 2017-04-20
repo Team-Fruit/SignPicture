@@ -188,7 +188,7 @@ public class GuiList extends WPanel implements Scrollable {
 						add(new ListLabel(new R(Coord.left(40), Coord.right(0), Coord.height(6), Coord.top(18)), GuiManager.PLAIN_FONT)
 								.setAlign(Align.LEFT)
 								.setText("Last Updated: "+dateFormat.format(ListElement.this.data.getUpdateDate())));
-						final IModCount<ResourceLocation> list = new NotifyCollections.NotifyArrayList();
+						final IModCount<ResourceLocation> list = new NotifyCollections.NotifyArrayList<ResourceLocation>();
 						add(new WList<ResourceLocation, WBase>(new R(Coord.bottom(0), Coord.right(0), Coord.height(15)), list) {
 							@Override
 							protected void initWidget() {
