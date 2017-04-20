@@ -150,10 +150,14 @@ public class GuiList extends ScrollPanel {
 								return new WBase(new R(Coord.right(i*15), Coord.width(15))) {
 									@Override
 									public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
-										WRenderer.startTexture();
-										texture().bindTexture(resource);
-										drawTexture(getGuiPosition(pgp), null, null);
-										super.draw(ev, pgp, p, frame, popacity, opt);
+										final Area list = GuiList.this.area;
+										if (list!=null)
+											if (list.areaInside(getGuiPosition(pgp))) {
+												WRenderer.startTexture();
+												texture().bindTexture(resource);
+												drawTexture(getGuiPosition(pgp), null, null);
+												super.draw(ev, pgp, p, frame, popacity, opt);
+											}
 									}
 								};
 							}

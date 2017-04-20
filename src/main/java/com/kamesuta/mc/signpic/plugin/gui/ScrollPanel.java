@@ -17,14 +17,14 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 public abstract class ScrollPanel extends WPanel implements Scrollable {
 	protected final @Nonnull VMotion top = V.am(0);
 
-	public ScrollPanel(R position) {
+	public ScrollPanel(final R position) {
 		super(position);
 	}
 
 	protected @Nullable Area area;
 
 	@Override
-	public void draw(WEvent ev, Area pgp, Point p, float frame, float popacity, RenderOption opt) {
+	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, final RenderOption opt) {
 		this.area = getGuiPosition(pgp);
 		super.draw(ev, pgp, p, frame, popacity, opt);
 	}
@@ -45,6 +45,7 @@ public abstract class ScrollPanel extends WPanel implements Scrollable {
 		scroll(scroll, (GuiManager) ev.owner, getGuiPosition(pgp));
 		return super.mouseScrolled(ev, pgp, p, scroll);
 	}
+
 	@Override
 	public void scroll(final float scroll, final @Nullable GuiManager manager, final @Nullable Area position) {
 		final float now = this.top.get();
