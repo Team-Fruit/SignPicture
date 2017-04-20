@@ -79,7 +79,7 @@ public class GuiList extends ScrollPanel {
 	@Override
 	public void scrollTo(final float to, final @Nullable GuiManager manager, final @Nullable Area position) {
 		super.scrollTo(to, manager, position);
-		if (-to>getScrollableHeight()) {
+		if (-to>getScrollableHeight()&&manager!=null) {
 			final int size = this.data.size();
 			manager.get(size, size+100);
 		}
