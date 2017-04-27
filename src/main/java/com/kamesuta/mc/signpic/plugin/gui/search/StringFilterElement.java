@@ -16,24 +16,6 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 		this.str = src;
 	}
 
-	@Override
-	protected @Nullable String get(final SignData data) {
-		switch (this.property) {
-			case ID:
-				return String.valueOf(data.getId());
-			case SIGN:
-				return data.getSign();
-			case PLAYERNAME:
-				return data.getPlayerName();
-			case PLAYERUUID:
-				return data.getPlayerUUID();
-			case WORLDNAME:
-				return data.getWorldName();
-			default:
-				return null;
-		}
-	}
-
 	public static class EqualsStringFilterElement extends StringFilterElement {
 
 		public EqualsStringFilterElement(final StringFilterProperty property, final String src) {
@@ -42,7 +24,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 		@Override
 		public boolean filter(final SignData data) {
-			return StringUtils.equals(get(data), this.str);
+			return StringUtils.equals(this.property.get(data), this.str);
 		}
 
 	}
@@ -55,12 +37,12 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 		@Override
 		public boolean filter(final SignData data) {
-			return StringUtils.equalsIgnoreCase(get(data), this.str);
+			return StringUtils.equalsIgnoreCase(this.property.get(data), this.str);
 		}
 
 	}
 
-	public static enum StringFilterProperty implements FilterProperty<String> {
+	public static enum StringFilterProperty implements IFilterProperty<String> {
 		ID {
 			@Override
 			public String get(SignData data) {

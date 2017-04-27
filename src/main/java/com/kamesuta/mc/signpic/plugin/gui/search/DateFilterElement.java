@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -20,19 +19,6 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 		this.date = src;
 	}
 
-	@Override
-	protected @Nullable Date get(final SignData data) {
-		switch (this.property) {
-			case CREATE:
-				return data.getCreateDate();
-			case UPDATE:
-				return data.getUpdateDate();
-			default:
-				return null;
-		}
-
-	}
-
 	public static class EqualsDateFilterElement extends DateFilterElement {
 
 		public EqualsDateFilterElement(final DateFilterProperty property, final Date src) {
@@ -41,7 +27,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return src.equals(this.date);
@@ -57,7 +43,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return DateUtils.truncate(src, Calendar.HOUR_OF_DAY).equals(DateUtils.truncate(this.date, Calendar.HOUR_OF_DAY));
@@ -73,7 +59,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return DateUtils.truncate(src, Calendar.DAY_OF_MONTH).equals(DateUtils.truncate(this.date, Calendar.DAY_OF_MONTH));
@@ -89,7 +75,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return DateUtils.truncate(src, Calendar.MONTH).equals(DateUtils.truncate(this.date, Calendar.MONTH));
@@ -105,7 +91,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return DateUtils.truncate(src, Calendar.YEAR).equals(DateUtils.truncate(this.date, Calendar.YEAR));
@@ -121,7 +107,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return src.compareTo(this.date)>=0;
@@ -137,7 +123,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 		@Override
 		public boolean filter(final SignData data) {
-			final Date src = get(data);
+			final Date src = this.property.get(data);
 			if (src==null)
 				return false;
 			return src.compareTo(this.date)<=0;
@@ -145,7 +131,7 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 	}
 
-	public static enum DateFilterProperty implements FilterProperty<Date> {
+	public static enum DateFilterProperty implements IFilterProperty<Date> {
 		CREATE {
 			@Override
 			public Date get(SignData data) {
