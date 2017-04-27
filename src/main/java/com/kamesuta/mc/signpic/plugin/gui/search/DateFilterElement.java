@@ -8,7 +8,6 @@ import javax.annotation.Nonnull;
 import org.apache.commons.lang3.time.DateUtils;
 
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.search.DateFilterElement.DateFilterProperty;
 
 public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilterProperty> {
 
@@ -131,18 +130,4 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 	}
 
-	public static enum DateFilterProperty implements IFilterProperty<Date> {
-		CREATE {
-			@Override
-			public Date get(SignData data) {
-				return data.getCreateDate();
-			}
-		},
-		UPDATE {
-			@Override
-			public Date get(SignData data) {
-				return data.getUpdateDate();
-			}
-		};
-	}
 }

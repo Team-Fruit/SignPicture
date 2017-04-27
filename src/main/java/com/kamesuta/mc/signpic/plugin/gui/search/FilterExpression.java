@@ -9,8 +9,6 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayList;
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.search.DateFilterElement.DateFilterProperty;
-import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilterProperty;
 
 public class FilterExpression {
 

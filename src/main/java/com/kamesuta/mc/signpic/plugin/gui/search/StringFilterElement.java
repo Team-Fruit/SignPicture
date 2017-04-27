@@ -5,7 +5,6 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilterProperty;
 
 public abstract class StringFilterElement extends EnumFilterElement<String, StringFilterProperty> {
 
@@ -40,39 +39,6 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 			return StringUtils.equalsIgnoreCase(this.property.get(data), this.str);
 		}
 
-	}
-
-	public static enum StringFilterProperty implements IFilterProperty<String> {
-		ID {
-			@Override
-			public String get(SignData data) {
-				return String.valueOf(data.getId());
-			}
-		},
-		SIGN {
-			@Override
-			public String get(SignData data) {
-				return data.getSign();
-			}
-		},
-		PLAYERNAME {
-			@Override
-			public String get(SignData data) {
-				return data.getPlayerName();
-			}
-		},
-		PLAYERUUID {
-			@Override
-			public String get(SignData data) {
-				return data.getPlayerUUID();
-			}
-		},
-		WORLDNAME {
-			@Override
-			public String get(SignData data) {
-				return data.getWorldName();
-			}
-		};
 	}
 
 }

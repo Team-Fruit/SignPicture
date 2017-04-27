@@ -3,7 +3,6 @@ package com.kamesuta.mc.signpic.plugin.gui.search;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.plugin.SignData;
-import com.kamesuta.mc.signpic.plugin.gui.search.StringFilterElement.StringFilterProperty;
 
 public class UniversalFilterElement implements IFilterElement {
 	public final @Nullable String str;
