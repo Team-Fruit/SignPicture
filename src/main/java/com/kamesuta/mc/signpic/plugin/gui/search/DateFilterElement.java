@@ -145,8 +145,18 @@ public abstract class DateFilterElement extends EnumFilterElement<Date, DateFilt
 
 	}
 
-	public static enum DateFilterProperty {
-		CREATE,
-		UPDATE;
+	public static enum DateFilterProperty implements FilterProperty<Date> {
+		CREATE {
+			@Override
+			public Date get(SignData data) {
+				return data.getCreateDate();
+			}
+		},
+		UPDATE {
+			@Override
+			public Date get(SignData data) {
+				return data.getUpdateDate();
+			}
+		};
 	}
 }

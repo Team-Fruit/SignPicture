@@ -60,12 +60,37 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 	}
 
-	public static enum StringFilterProperty {
-		ID,
-		SIGN,
-		PLAYERNAME,
-		PLAYERUUID,
-		WORLDNAME;
+	public static enum StringFilterProperty implements FilterProperty<String> {
+		ID {
+			@Override
+			public String get(SignData data) {
+				return String.valueOf(data.getId());
+			}
+		},
+		SIGN {
+			@Override
+			public String get(SignData data) {
+				return data.getSign();
+			}
+		},
+		PLAYERNAME {
+			@Override
+			public String get(SignData data) {
+				return data.getPlayerName();
+			}
+		},
+		PLAYERUUID {
+			@Override
+			public String get(SignData data) {
+				return data.getPlayerUUID();
+			}
+		},
+		WORLDNAME {
+			@Override
+			public String get(SignData data) {
+				return data.getWorldName();
+			}
+		};
 	}
 
 }
