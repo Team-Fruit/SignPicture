@@ -30,7 +30,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 	public static class EqualsIgnoreCaseStringFilterElement extends StringFilterElement {
 
-		public EqualsIgnoreCaseStringFilterElement(final StringFilterProperty property, final String src) {
+		public EqualsIgnoreCaseStringFilterElement(final StringFilterProperty property, final @Nullable String src) {
 			super(property, src);
 		}
 
