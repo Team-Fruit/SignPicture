@@ -11,6 +11,16 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		this.str = src;
 	}
 
+	@Override
+	public boolean filter(final SignData data) {
+		for (final StringFilterProperty line : StringFilterProperty.values())
+			if (propFilter(data, line))
+				return true;
+		return false;
+	}
+
+	protected abstract boolean propFilter(SignData data, StringFilterProperty prop);
+
 	public static class EqualsUniversalFilterElement extends UniversalFilterElement {
 
 		public EqualsUniversalFilterElement(final String src) {
@@ -18,11 +28,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			for (final StringFilterProperty line : StringFilterProperty.values())
-				if (new StringFilterElement.EqualsStringFilterElement(line, this.str).filter(data))
-					return true;
-			return false;
+		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
+			return new StringFilterElement.EqualsStringFilterElement(prop, this.str).filter(data);
 		}
 
 	}
@@ -34,11 +41,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			for (final StringFilterProperty line : StringFilterProperty.values())
-				if (new StringFilterElement.EqualsIgnoreCaseStringFilterElement(line, this.str).filter(data))
-					return true;
-			return false;
+		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
+			return new StringFilterElement.EqualsIgnoreCaseStringFilterElement(prop, this.str).filter(data);
 		}
 	}
 
@@ -49,11 +53,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			for (final StringFilterProperty line : StringFilterProperty.values())
-				if (new StringFilterElement.ContainsStringFilterElement(line, this.str).filter(data))
-					return true;
-			return false;
+		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
+			return new StringFilterElement.ContainsStringFilterElement(prop, this.str).filter(data);
 		}
 
 	}
@@ -65,11 +66,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			for (final StringFilterProperty line : StringFilterProperty.values())
-				if (new StringFilterElement.ContainsIgnoreCaseStringFilterElement(line, this.str).filter(data))
-					return true;
-			return false;
+		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
+			return new StringFilterElement.ContainsIgnoreCaseStringFilterElement(prop, this.str).filter(data);
 		}
 
 	}
