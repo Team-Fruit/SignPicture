@@ -17,7 +17,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 	public static class EqualsStringFilterElement extends StringFilterElement {
 
-		public EqualsStringFilterElement(final StringFilterProperty property, final String src) {
+		public EqualsStringFilterElement(final StringFilterProperty property, final @Nullable String src) {
 			super(property, src);
 		}
 
@@ -37,6 +37,32 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 		@Override
 		public boolean filter(final SignData data) {
 			return StringUtils.equalsIgnoreCase(this.property.get(data), this.str);
+		}
+
+	}
+
+	public static class ContainsStringFilterElement extends StringFilterElement {
+
+		public ContainsStringFilterElement(final StringFilterProperty property, final @Nullable String src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			return StringUtils.contains(this.property.get(data), this.str);
+		}
+
+	}
+
+	public static class ContainsIgnoreCaseStringFilterElement extends StringFilterElement {
+
+		public ContainsIgnoreCaseStringFilterElement(final StringFilterProperty property, final @Nullable String src) {
+			super(property, src);
+		}
+
+		@Override
+		public boolean filter(final SignData data) {
+			return StringUtils.containsIgnoreCase(this.property.get(data), this.str);
 		}
 
 	}
