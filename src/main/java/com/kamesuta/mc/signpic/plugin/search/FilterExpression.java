@@ -1,34 +1,13 @@
 package com.kamesuta.mc.signpic.plugin.search;
 
 import java.util.Date;
-import java.util.List;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
-import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayList;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public class FilterExpression {
-
-	private final @Nonnull IModCount<IFilterElement> elements;
-
-	protected final @Nonnull List<SignData> datas;
-
-	public FilterExpression(final @Nonnull List<SignData> datas) {
-		this.datas = datas;
-		this.elements = new NotifyArrayList<IFilterElement>();
-	}
-
-	public FilterExpression(final @Nonnull List<SignData> datas, final IModCount<IFilterElement> elements) {
-		this.datas = datas;
-		this.elements = elements;
-	}
-
-	protected void add(final IFilterElement date) {
-		this.elements.add(date);
-	}
+public interface FilterExpression {
 
 	/**
 	 * Date equals
@@ -36,10 +15,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return this
 	 */
-	public FilterExpression deq(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.EqualsDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression deq(DateFilterProperty property, Date date);
 
 	/**
 	 * Date Hour equals
@@ -47,10 +23,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return
 	 */
-	public FilterExpression dheq(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.HourEqualsDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression dheq(DateFilterProperty property, Date date);
 
 	/**
 	 * Date Day equals
@@ -58,10 +31,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return
 	 */
-	public FilterExpression ddeq(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.DayEqualsDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression ddeq(DateFilterProperty property, Date date);
 
 	/**
 	 * Date Month equals
@@ -69,10 +39,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return
 	 */
-	public FilterExpression dmeq(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.MonthEqualsDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression dmeq(DateFilterProperty property, Date date);
 
 	/**
 	 * Date year equals
@@ -80,10 +47,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return
 	 */
-	public FilterExpression dyeq(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.YearEqualsDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression dyeq(DateFilterProperty property, Date date);
 
 	/**
 	 * Date after
@@ -91,10 +55,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return
 	 */
-	public FilterExpression da(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.AfterDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression da(DateFilterProperty property, Date date);
 
 	/**
 	 * Date before
@@ -102,10 +63,7 @@ public class FilterExpression {
 	 * @param date
 	 * @return
 	 */
-	public FilterExpression db(final DateFilterProperty property, final Date date) {
-		add(new DateFilterElement.BeforeDateFilterElement(property, date));
-		return this;
-	}
+	FilterExpression db(DateFilterProperty property, Date date);
 
 	/**
 	 * String equals
@@ -113,10 +71,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression eq(final StringFilterProperty property, final String str) {
-		add(new StringFilterElement.EqualsStringFilterElement(property, str));
-		return this;
-	}
+	FilterExpression eq(StringFilterProperty property, String str);
 
 	/**
 	 * String equalsIgnoreCase
@@ -124,10 +79,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression ieq(final StringFilterProperty property, final String str) {
-		add(new StringFilterElement.EqualsIgnoreCaseStringFilterElement(property, str));
-		return this;
-	}
+	FilterExpression ieq(StringFilterProperty property, String str);
 
 	/**
 	 * String contains
@@ -135,10 +87,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression con(final StringFilterProperty property, final String str) {
-		add(new StringFilterElement.ContainsStringFilterElement(property, str));
-		return this;
-	}
+	FilterExpression con(StringFilterProperty property, String str);
 
 	/**
 	 * String containsIgnoreCase
@@ -146,10 +95,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression icon(final StringFilterProperty property, final String str) {
-		add(new StringFilterElement.ContainsIgnoreCaseStringFilterElement(property, str));
-		return this;
-	}
+	FilterExpression icon(StringFilterProperty property, String str);
 
 	/**
 	 * Block pos equals
@@ -158,10 +104,7 @@ public class FilterExpression {
 	 * @param z
 	 * @return this
 	 */
-	public FilterExpression peq(final int x, final int y, final int z) {
-		add(new PosFilterElement.EqualPosFilterElement(x, y, z));
-		return this;
-	}
+	FilterExpression peq(int x, int y, int z);
 
 	/**
 	 * Block pos within range
@@ -173,10 +116,7 @@ public class FilterExpression {
 	 * @param z2
 	 * @return this
 	 */
-	public FilterExpression wp(final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
-		add(new PosFilterElement.RangePosFilterElement.WithinRangePosFilterElement(x1, y1, z1, x2, y2, z2));
-		return this;
-	}
+	FilterExpression wp(int x1, int y1, int z1, int x2, int y2, int z2);
 
 	/**
 	 * Block pos out range
@@ -188,10 +128,7 @@ public class FilterExpression {
 	 * @param z2
 	 * @return
 	 */
-	public FilterExpression op(final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
-		add(new PosFilterElement.RangePosFilterElement.OutRangePosFilterElement(x1, y1, z1, x2, y2, z2));
-		return this;
-	}
+	FilterExpression op(int x1, int y1, int z1, int x2, int y2, int z2);
 
 	/**
 	 * Universal equals
@@ -199,10 +136,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression ueq(final String str) {
-		add(new UniversalFilterElement.EqualsUniversalFilterElement(str));
-		return this;
-	}
+	FilterExpression ueq(String str);
 
 	/**
 	 * Universal equalsIgnoreCase
@@ -210,10 +144,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression uieq(final String str) {
-		add(new UniversalFilterElement.EqualsIgnoreCaseUniversalFilterElement(str));
-		return this;
-	}
+	FilterExpression uieq(String str);
 
 	/**
 	 * Universal contains
@@ -221,10 +152,7 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression ucon(final String str) {
-		add(new UniversalFilterElement.ContainsUniversalFilterElement(str));
-		return this;
-	}
+	FilterExpression ucon(String str);
 
 	/**
 	 * Universal containsIgnoreCase
@@ -232,52 +160,22 @@ public class FilterExpression {
 	 * @param str
 	 * @return this
 	 */
-	public FilterExpression uicon(final String str) {
-		add(new UniversalFilterElement.ContainsIgnoreCaseUniversalFilterElement(str));
-		return this;
-	}
+	FilterExpression uicon(String str);
 
-	public boolean isFiltered() {
-		return !this.elements.isEmpty();
-	}
-
-	protected int modCache;
-	protected @Nullable IModCount<SignData> findCache;
+	boolean isFiltered();
 
 	/**
 	 * 検索
 	 * @return 条件に一致したデータリスト
 	 */
-	public IModCount<SignData> findList() {
-		if (!isFiltered())
-			return new NotifyArrayList<SignData>(this.datas);
-		if (this.modCache==this.elements.getModCount()&&this.findCache!=null)
-			return this.findCache;
-		final IModCount<SignData> list = new NotifyArrayList<SignData>();
-		for (final SignData data : this.datas) {
-			for (final IFilterElement element : this.elements) {
-				if (element.filter(data)) {
-					list.add(data);
-					break;
-				}
-			}
-		}
-		this.modCache = this.elements.getModCount();
-		this.findCache = list;
-		return list;
-	}
+	IModCount<SignData> findList();
 
 	/**
 	 * 検索
 	 * @return 条件に一致したデータ
 	 * @throws IllegalStateException 検索条件に一致する項目が複数存在する場合
 	 */
-	public @Nullable SignData findUnique() {
-		final IModCount<SignData> list = findList();
-		if (list.isEmpty())
-			return null;
-		if (list.size()>1)
-			throw new IllegalStateException();
-		return list.iterator().next();
-	}
+	@Nullable
+	SignData findUnique();
+
 }
