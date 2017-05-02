@@ -130,6 +130,28 @@ public class FilterExpression {
 	}
 
 	/**
+	 * String contains
+	 * @param property
+	 * @param str
+	 * @return this
+	 */
+	public FilterExpression con(final StringFilterProperty property, final String str) {
+		add(new StringFilterElement.ContainsStringFilterElement(property, str));
+		return this;
+	}
+
+	/**
+	 * String containsIgnoreCase
+	 * @param property
+	 * @param str
+	 * @return this
+	 */
+	public FilterExpression icon(final StringFilterProperty property, final String str) {
+		add(new StringFilterElement.ContainsIgnoreCaseStringFilterElement(property, str));
+		return this;
+	}
+
+	/**
 	 * Block pos equals
 	 * @param x
 	 * @param y
@@ -168,6 +190,50 @@ public class FilterExpression {
 	 */
 	public FilterExpression op(final int x1, final int y1, final int z1, final int x2, final int y2, final int z2) {
 		add(new PosFilterElement.RangePosFilterElement.OutRangePosFilterElement(x1, y1, z1, x2, y2, z2));
+		return this;
+	}
+
+	/**
+	 * Universal equals
+	 * @param property
+	 * @param str
+	 * @return this
+	 */
+	public FilterExpression ueq(final String str) {
+		add(new UniversalFilterElement.EqualsUniversalFilterElement(str));
+		return this;
+	}
+
+	/**
+	 * Universal equalsIgnoreCase
+	 * @param property
+	 * @param str
+	 * @return this
+	 */
+	public FilterExpression uieq(final String str) {
+		add(new UniversalFilterElement.EqualsIgnoreCaseUniversalFilterElement(str));
+		return this;
+	}
+
+	/**
+	 * Universal contains
+	 * @param property
+	 * @param str
+	 * @return this
+	 */
+	public FilterExpression ucon(final String str) {
+		add(new UniversalFilterElement.ContainsUniversalFilterElement(str));
+		return this;
+	}
+
+	/**
+	 * Universal containsIgnoreCase
+	 * @param property
+	 * @param str
+	 * @return this
+	 */
+	public FilterExpression uicon(final String str) {
+		add(new UniversalFilterElement.ContainsIgnoreCaseUniversalFilterElement(str));
 		return this;
 	}
 
