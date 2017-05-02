@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.plugin.gui.search;
+package com.kamesuta.mc.signpic.plugin.search;
 
 public abstract class EnumFilterElement<E, T extends IFilterProperty<?>> implements IFilterElement {
 

@@ -1,4 +1,4 @@
-package com.kamesuta.mc.signpic.plugin.gui.search;
+package com.kamesuta.mc.signpic.plugin.search;
 
 import java.util.Calendar;
 import java.util.Date;
