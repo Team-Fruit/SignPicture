@@ -15,19 +15,19 @@ public enum StringFilterProperty implements IFilterProperty<String> {
 			return data.getSign();
 		}
 	},
-	PLAYERNAME {
+	PLAYER {
 		@Override
 		public String get(SignData data) {
 			return data.getPlayerName();
 		}
 	},
-	PLAYERUUID {
+	UUID {
 		@Override
 		public String get(SignData data) {
 			return data.getPlayerUUID();
 		}
 	},
-	WORLDNAME {
+	WORLD {
 		@Override
 		public String get(SignData data) {
 			return data.getWorldName();
