@@ -59,7 +59,7 @@ public class GuiManager extends WFrame {
 	public final int size;
 	public final @Nonnull IModCount<SignData> data;
 
-	public final @Nonnull GuiManagerSarchBox sarchBox;
+	public final @Nonnull GuiManagerSearchBox sarchBox;
 	public final @Nonnull WBox box;
 
 	public GuiManager(final @Nullable GuiScreen parent, final @Nonnull String data, final @Nonnull String size) {
@@ -67,7 +67,7 @@ public class GuiManager extends WFrame {
 		this.key = data;
 		this.size = NumberUtils.toInt(size);
 		this.data = new NotifyCollections.NotifyArrayList<SignData>(new ArrayList<SignData>(this.size));
-		this.sarchBox = new GuiManagerSarchBox(new R(Coord.height(25)), this.size, this.data);
+		this.sarchBox = new GuiManagerSearchBox(new R(Coord.height(25)), this.size, this.data);
 		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(45), Coord.bottom(15)));
 		get(0, 100);
 	}

@@ -25,7 +25,7 @@ import com.kamesuta.mc.signpic.plugin.search.Searchable;
 
 import net.minecraft.client.resources.I18n;
 
-public class GuiManagerSarchBox extends WPanel {
+public class GuiManagerSearchBox extends WPanel {
 
 	public final @Nonnull GuiManagerTextField textField;
 	public final @Nonnull GuiManagerButton advancedSearch;
@@ -37,14 +37,14 @@ public class GuiManagerSarchBox extends WPanel {
 
 	protected @Nullable Searchable searchTarget;
 
-	public GuiManagerSarchBox(final @Nonnull R position, final int size, final @Nonnull IModCount<SignData> data) {
+	public GuiManagerSearchBox(final @Nonnull R position, final int size, final @Nonnull IModCount<SignData> data) {
 		super(position);
 		this.textField = new GuiManagerTextField(new R(Coord.left(5), Coord.height(15), Coord.right(310), Coord.top(5))) {
 			private Timer timer = new Timer();
 
 			@Override
 			public void onTextChanged(final String oldText) {
-				if (GuiManagerSarchBox.this.searchTarget!=null) {
+				if (GuiManagerSearchBox.this.searchTarget!=null) {
 					this.timer.set(-.5f);
 				}
 			}
@@ -53,7 +53,7 @@ public class GuiManagerSarchBox extends WPanel {
 			public void update(WEvent ev, Area pgp, Point p) {
 				super.update(ev, pgp, p);
 				if (this.timer.getTime()<0f)
-					GuiManagerSarchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSarchBox.this.data, FilterParser.parse(this.textField.getText())));
+					GuiManagerSearchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSearchBox.this.data, FilterParser.parse(this.textField.getText())));
 			}
 		};
 		this.advancedSearch = new GuiManagerButton(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
@@ -141,16 +141,16 @@ public class GuiManagerSarchBox extends WPanel {
 
 			@Override
 			public String getText() {
-				final int size = GuiManagerSarchBox.this.data.size();
+				final int size = GuiManagerSearchBox.this.data.size();
 				if (this.sizeCache==size)
 					return this.text;
 				final StringBuilder sb = new StringBuilder();
 				sb.append(size);
-				if (GuiManagerSarchBox.this.size>size)
+				if (GuiManagerSearchBox.this.size>size)
 					sb.append('+');
 				sb.append(' ');
 				sb.append(I18n.format("signpic.manager.matches"));
-				this.sizeCache = GuiManagerSarchBox.this.data.size();
+				this.sizeCache = GuiManagerSearchBox.this.data.size();
 				this.text = sb.toString();
 				return this.text;
 			};
