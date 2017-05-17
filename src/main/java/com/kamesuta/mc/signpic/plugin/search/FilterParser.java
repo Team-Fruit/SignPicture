@@ -16,15 +16,17 @@ public class FilterParser {
 
 	public static @Nonnull SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	public static @Nonnull IModCount<IFilterElement> parse(String str) {
-		IModCount<IFilterElement> list = new NotifyCollections.NotifyArrayList<IFilterElement>();
-		String[] array = StringUtils.replaceChars(str, '\u3000', ' ').split(" ");
+	public static @Nonnull IModCount<IFilterElement> parse(final String str) {
+		final IModCount<IFilterElement> list = new NotifyCollections.NotifyArrayList<IFilterElement>();
+		final String[] array = StringUtils.replaceChars(str, '\u3000', ' ').split(" ");
 		IFilterElement before = null;
 		for (int i = 0; i<array.length; i++) {
-			String line = array[i];
-			if (line.equals("OR")&&before!=null&&i+1<array.length)
-				before = new OrFilterElement(before, parseElement(array[++i]));
-			else
+			final String line = array[i];
+			if (line.equals("OR")&&before!=null&&i+1<array.length) {
+				final IFilterElement element = parseElement(array[++i]);
+				if (element!=null)
+					before = new OrFilterElement(before, element);
+			} else
 				before = parseElement(line);
 			if (before!=null)
 				list.add(before);
@@ -36,26 +38,28 @@ public class FilterParser {
 		if (str.contains(":")) {
 			String[] pair = str.split(":");
 			if (pair.length>2) {
-				StringBuilder sb = new StringBuilder();
+				final StringBuilder sb = new StringBuilder();
 				for (int p = 1; p<pair.length; p++)
 					sb.append(pair[p]);
 				pair = new String[] { pair[0], sb.toString() };
 			}
-			String key = pair[0];
-			String value = pair[1];
+			final String key = pair[0];
+			final String value = pair[1];
 			if (key.equalsIgnoreCase("since")||key.equalsIgnoreCase("until")) {
 				try {
-					Date date = dateFormat.parse(value);
+					final Date date = dateFormat.parse(value);
 					if (key.equalsIgnoreCase("since"))
 						return new DateFilterElement.AfterDateFilterElement(DateFilterProperty.CREATE, date);
 					else
 						return new DateFilterElement.BeforeDateFilterElement(DateFilterProperty.CREATE, date);
-				} catch (ParseException e) { //NO-OP
+				} catch (final ParseException e) { //NO-OP
 				}
 			} else {
-				StringFilterProperty property = StringFilterProperty.valueOf(key.toUpperCase());
-				if (property!=null)
+				try {
+					final StringFilterProperty property = StringFilterProperty.valueOf(key.toUpperCase());
 					return new StringFilterElement.EqualsIgnoreCaseStringFilterElement(property, value);
+				} catch (final IllegalArgumentException e) { //NO-OP
+				}
 			}
 		} else if (str.startsWith("\"")&&str.endsWith("\"")) {
 			str = StringUtils.removeStart(StringUtils.removeEnd(str, "\""), "\"");

@@ -40,7 +40,7 @@ public class GuiManagerSearchBox extends WPanel {
 	public GuiManagerSearchBox(final @Nonnull R position, final int size, final @Nonnull IModCount<SignData> data) {
 		super(position);
 		this.textField = new GuiManagerTextField(new R(Coord.left(5), Coord.height(15), Coord.right(310), Coord.top(5))) {
-			private Timer timer = new Timer();
+			private final Timer timer = new Timer();
 
 			@Override
 			public void onTextChanged(final String oldText) {
@@ -50,10 +50,13 @@ public class GuiManagerSearchBox extends WPanel {
 			}
 
 			@Override
-			public void update(WEvent ev, Area pgp, Point p) {
+			public void update(final WEvent ev, final Area pgp, final Point p) {
 				super.update(ev, pgp, p);
-				if (this.timer.getTime()<0f)
-					GuiManagerSearchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSearchBox.this.data, FilterParser.parse(this.textField.getText())));
+				if (this.timer.getTime()<0f) {
+					final Searchable target = GuiManagerSearchBox.this.searchTarget;
+					if (target!=null)
+						target.filter(new ImplFilterExpression(GuiManagerSearchBox.this.data, FilterParser.parse(this.textField.getText())));
+				}
 			}
 		};
 		this.advancedSearch = new GuiManagerButton(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
