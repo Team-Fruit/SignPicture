@@ -24,7 +24,6 @@ public enum AttrIcons {
 			}
 			return b;
 		}
-
 	},
 	ROTATION(new ResourceLocation("signpic", "textures/plugin/rotation.png")) {
 		@Override
@@ -40,6 +39,7 @@ public enum AttrIcons {
 			return data.easing!=Easings.easeLinear||data.redstone!=RSNeed.IGNORE;
 		}
 	};
+
 	private final @Nonnull ResourceLocation icon;
 
 	private AttrIcons(final @Nonnull ResourceLocation icon) {

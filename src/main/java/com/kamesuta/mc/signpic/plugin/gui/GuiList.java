@@ -181,7 +181,7 @@ public class GuiList extends ScrollPanel {
 						}
 				}
 
-				boolean playsound = false;
+				protected boolean playsound = false;
 
 				@Override
 				public void update(final WEvent ev, final Area pgp, final Point p) {
