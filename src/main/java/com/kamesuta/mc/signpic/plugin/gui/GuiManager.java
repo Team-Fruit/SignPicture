@@ -59,7 +59,7 @@ public class GuiManager extends WFrame {
 	public final int size;
 	public final @Nonnull IModCount<SignData> data;
 
-	public final @Nonnull GuiManagerSearchBox sarchBox;
+	public final @Nonnull GuiManagerSearchBox searchBox;
 	public final @Nonnull WBox box;
 
 	public GuiManager(final @Nullable GuiScreen parent, final @Nonnull String data, final @Nonnull String size) {
@@ -67,7 +67,7 @@ public class GuiManager extends WFrame {
 		this.key = data;
 		this.size = NumberUtils.toInt(size);
 		this.data = new NotifyCollections.NotifyArrayList<SignData>(new ArrayList<SignData>(this.size));
-		this.sarchBox = new GuiManagerSearchBox(new R(Coord.height(25)), this.size, this.data);
+		this.searchBox = new GuiManagerSearchBox(new R(Coord.height(25)), this.size, this.data);
 		this.box = new WBox(new R(Coord.left(5), Coord.right(100), Coord.top(45), Coord.bottom(15)));
 		get(0, 100);
 	}
@@ -135,7 +135,7 @@ public class GuiManager extends WFrame {
 				return this.m.isFinished();
 			}
 		});
-		add(this.sarchBox);
+		add(this.searchBox);
 		add(this.box);
 		add(new GuiTask(new R(Coord.width(100), Coord.right(0), Coord.top(25))) {
 			{
@@ -165,7 +165,7 @@ public class GuiManager extends WFrame {
 		WCommon gui = getGui();
 		this.box.add(gui);
 		if (gui instanceof Searchable)
-			this.sarchBox.setSearchTarget((Searchable) gui);
+			this.searchBox.setSearchTarget((Searchable) gui);
 	}
 
 	private WCommon getGui() {
