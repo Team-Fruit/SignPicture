@@ -17,7 +17,7 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 
 public class GuiManagerTextField extends WPanel {
 
-	private final @Nonnull MChatTextField textField;
+	protected final @Nonnull MChatTextField textField;
 
 	public GuiManagerTextField(final @Nonnull R position) {
 		super(position);

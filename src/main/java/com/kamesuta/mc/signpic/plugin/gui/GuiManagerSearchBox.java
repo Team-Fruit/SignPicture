@@ -3,6 +3,9 @@ package com.kamesuta.mc.signpic.plugin.gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
@@ -16,6 +19,9 @@ import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.signpic.plugin.SignData;
+import com.kamesuta.mc.signpic.plugin.search.FilterParser;
+import com.kamesuta.mc.signpic.plugin.search.ImplFilterExpression;
+import com.kamesuta.mc.signpic.plugin.search.Searchable;
 
 import net.minecraft.client.resources.I18n;
 
@@ -29,12 +35,25 @@ public class GuiManagerSarchBox extends WPanel {
 	protected final int size;
 	protected final @Nonnull IModCount<SignData> data;
 
+	protected @Nullable Searchable searchTarget;
+
 	public GuiManagerSarchBox(final @Nonnull R position, final int size, final @Nonnull IModCount<SignData> data) {
 		super(position);
 		this.textField = new GuiManagerTextField(new R(Coord.left(5), Coord.height(15), Coord.right(310), Coord.top(5))) {
+			private Timer timer = new Timer();
+
 			@Override
 			public void onTextChanged(final String oldText) {
+				if (GuiManagerSarchBox.this.searchTarget!=null) {
+					this.timer.set(-.5f);
+				}
+			}
 
+			@Override
+			public void update(WEvent ev, Area pgp, Point p) {
+				super.update(ev, pgp, p);
+				if (this.timer.getTime()<0f)
+					GuiManagerSarchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSarchBox.this.data, FilterParser.parse(this.textField.getText())));
 			}
 		};
 		this.advancedSearch = new GuiManagerButton(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
@@ -107,6 +126,10 @@ public class GuiManagerSarchBox extends WPanel {
 		this.data = data;
 	}
 
+	public void setSearchTarget(final @Nullable Searchable searchTarget) {
+		this.searchTarget = searchTarget;
+	}
+
 	@Override
 	protected void initWidget() {
 		add(this.textField);
@@ -132,11 +155,6 @@ public class GuiManagerSarchBox extends WPanel {
 				return this.text;
 			};
 		}.setColor(0x9acd32));
-	}
-
-	@Override
-	public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
-		super.draw(ev, pgp, p, frame, popacity, opt);
 	}
 
 }

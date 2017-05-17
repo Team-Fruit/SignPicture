@@ -27,10 +27,12 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.plugin.SignData;
+import com.kamesuta.mc.signpic.plugin.search.FilterExpression;
+import com.kamesuta.mc.signpic.plugin.search.Searchable;
 
 import net.minecraft.util.ResourceLocation;
 
-public class GuiList extends ScrollPanel {
+public class GuiList extends ScrollPanel implements Searchable {
 	protected static @Nonnull ResourceLocation mouseoverSound = new ResourceLocation("signpic", "gui.mouseover");
 	protected static @Nonnull SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -78,6 +80,12 @@ public class GuiList extends ScrollPanel {
 	@Override
 	public float getAllHeight() {
 		return this.data.size()*30;
+	}
+
+	@Override
+	public void filter(FilterExpression expression) {
+		// TODO 自動生成されたメソッド・スタブ
+
 	}
 
 	protected class ListElement extends WPanel {
@@ -216,5 +224,4 @@ public class GuiList extends ScrollPanel {
 					super.draw(ev, pgp, p, frame, popacity, opt);
 		}
 	}
-
 }

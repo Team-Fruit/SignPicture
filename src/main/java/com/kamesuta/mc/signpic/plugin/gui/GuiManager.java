@@ -10,6 +10,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WBox;
+import com.kamesuta.mc.bnnwidget.WCommon;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.font.FontSet;
@@ -34,6 +35,7 @@ import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.packet.PacketHandler;
 import com.kamesuta.mc.signpic.plugin.packet.SignPicturePacket;
+import com.kamesuta.mc.signpic.plugin.search.Searchable;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
@@ -160,11 +162,17 @@ public class GuiManager extends WFrame {
 			}
 		});
 
+		WCommon gui = getGui();
+		this.box.add(gui);
+		if (gui instanceof Searchable)
+			this.sarchBox.setSearchTarget((Searchable) gui);
+	}
+
+	private WCommon getGui() {
 		switch (type) {
 			case LIST:
 			default:
-				this.box.add(new GuiList(new R(), this.data));
-				break;
+				return new GuiList(new R(), this.data);
 		}
 	}
 }

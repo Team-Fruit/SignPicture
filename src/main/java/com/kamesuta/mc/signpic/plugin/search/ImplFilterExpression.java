@@ -1,7 +1,6 @@
 package com.kamesuta.mc.signpic.plugin.search;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,14 +13,14 @@ public class ImplFilterExpression implements FilterExpression {
 
 	private final @Nonnull IModCount<IFilterElement> elements;
 
-	protected final @Nonnull List<SignData> datas;
+	protected final @Nonnull IModCount<SignData> datas;
 
-	public ImplFilterExpression(final @Nonnull List<SignData> datas) {
+	public ImplFilterExpression(final @Nonnull IModCount<SignData> datas) {
 		this.datas = datas;
 		this.elements = new NotifyArrayList<IFilterElement>();
 	}
 
-	public ImplFilterExpression(final @Nonnull List<SignData> datas, final IModCount<IFilterElement> elements) {
+	public ImplFilterExpression(final @Nonnull IModCount<SignData> datas, final IModCount<IFilterElement> elements) {
 		this.datas = datas;
 		this.elements = elements;
 	}
