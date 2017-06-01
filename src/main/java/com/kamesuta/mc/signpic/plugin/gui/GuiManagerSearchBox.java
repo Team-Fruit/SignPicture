@@ -17,8 +17,6 @@ import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
-import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
-import com.kamesuta.mc.signpic.plugin.SignData;
 import com.kamesuta.mc.signpic.plugin.search.FilterParser;
 import com.kamesuta.mc.signpic.plugin.search.ImplFilterExpression;
 import com.kamesuta.mc.signpic.plugin.search.Searchable;
@@ -32,13 +30,13 @@ public class GuiManagerSearchBox extends WPanel {
 	public final @Nonnull GuiManagerButton gallary;
 	public final @Nonnull GuiManagerButton stats;
 
-	protected final int size;
-	protected final @Nonnull IModCount<SignData> data;
+	protected final GuiManager manager;
 
 	protected @Nullable Searchable searchTarget;
 
-	public GuiManagerSearchBox(final @Nonnull R position, final int size, final @Nonnull IModCount<SignData> data) {
+	public GuiManagerSearchBox(final @Nonnull R position, final @Nonnull GuiManager manager) {
 		super(position);
+		this.manager = manager;
 		this.textField = new GuiManagerTextField(new R(Coord.left(5), Coord.height(15), Coord.right(310), Coord.top(5))) {
 			private Timer timer = new Timer();
 
@@ -53,7 +51,7 @@ public class GuiManagerSearchBox extends WPanel {
 			public void update(WEvent ev, Area pgp, Point p) {
 				super.update(ev, pgp, p);
 				if (this.timer.getTime()<0f)
-					GuiManagerSearchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSearchBox.this.data, FilterParser.parse(this.textField.getText())));
+					GuiManagerSearchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSearchBox.this.manager.data, FilterParser.parse(this.textField.getText())));
 			}
 		};
 		this.advancedSearch = new GuiManagerButton(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
@@ -122,8 +120,6 @@ public class GuiManagerSearchBox extends WPanel {
 				return true;
 			}
 		}.setText(I18n.format("signpic.manager.stats"));
-		this.size = size;
-		this.data = data;
 	}
 
 	public void setSearchTarget(final @Nullable Searchable searchTarget) {
@@ -141,16 +137,16 @@ public class GuiManagerSearchBox extends WPanel {
 
 			@Override
 			public String getText() {
-				final int size = GuiManagerSearchBox.this.data.size();
+				final int size = GuiManagerSearchBox.this.manager.data.size();
 				if (this.sizeCache==size)
 					return this.text;
 				final StringBuilder sb = new StringBuilder();
 				sb.append(size);
-				if (GuiManagerSearchBox.this.size>size)
+				if (GuiManagerSearchBox.this.manager.size>size)
 					sb.append('+');
 				sb.append(' ');
 				sb.append(I18n.format("signpic.manager.matches"));
-				this.sizeCache = GuiManagerSearchBox.this.data.size();
+				this.sizeCache = GuiManagerSearchBox.this.manager.data.size();
 				this.text = sb.toString();
 				return this.text;
 			};
