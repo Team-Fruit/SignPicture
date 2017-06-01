@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
@@ -55,7 +56,10 @@ public class GuiManagerSearchBox extends WPanel {
 				if (this.timer.getTime()<0f) {
 					final Searchable target = GuiManagerSearchBox.this.searchTarget;
 					if (target!=null)
-						target.filter(new ImplFilterExpression(GuiManagerSearchBox.this.manager.data, FilterParser.parse(this.textField.getText())));
+						if (StringUtils.isNotEmpty(this.textField.getText()))
+							target.filter(new ImplFilterExpression(GuiManagerSearchBox.this.manager.data, FilterParser.parse(this.textField.getText())));
+						else
+							target.filter(null);
 				}
 			}
 		};

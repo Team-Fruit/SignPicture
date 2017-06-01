@@ -38,19 +38,21 @@ public class GuiList extends ScrollPanel implements Searchable {
 
 	protected final @Nonnull IModCount<SignData> data;
 	protected final @Nonnull WPanel scrollPane;
+	protected final @Nonnull WList<SignData, ListElement> list;
 
 	public GuiList(final R position, final IModCount<SignData> data) {
 		super(position);
 		this.data = data;
+		this.list = new WList<SignData, ListElement>(new R(), data) {
+			@Override
+			protected ListElement createWidget(final SignData t, final int i) {
+				return new ListElement(new R(Coord.top(i*30), Coord.height(30)), t);
+			}
+		};
 		this.scrollPane = new WPanel(new R(Coord.left(0), Coord.right(15), Coord.top(this.top))) {
 			@Override
 			protected void initWidget() {
-				add(new WList<SignData, ListElement>(new R(), data) {
-					@Override
-					protected ListElement createWidget(final SignData t, final int i) {
-						return new ListElement(new R(Coord.top(i*30), Coord.height(30)), t);
-					}
-				});
+				add(GuiList.this.list);
 			}
 		};
 	}
@@ -83,9 +85,11 @@ public class GuiList extends ScrollPanel implements Searchable {
 	}
 
 	@Override
-	public void filter(FilterExpression expression) {
-		// TODO 自動生成されたメソッド・スタブ
-
+	public void filter(@Nullable FilterExpression expression) {
+		if (expression!=null)
+			this.list.setList(expression.findList());
+		else
+			this.list.setList(this.data);
 	}
 
 	protected class ListElement extends WPanel {
