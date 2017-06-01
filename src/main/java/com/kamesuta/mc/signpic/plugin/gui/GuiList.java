@@ -92,6 +92,7 @@ public class GuiList extends ScrollPanel implements Searchable {
 			this.list.setList(this.data);
 	}
 
+	@Override
 	public IModCount<SignData> getNow() {
 		return this.data;
 	}
