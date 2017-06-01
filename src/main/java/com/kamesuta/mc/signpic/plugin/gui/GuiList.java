@@ -92,6 +92,10 @@ public class GuiList extends ScrollPanel implements Searchable {
 			this.list.setList(this.data);
 	}
 
+	public IModCount<SignData> getNow() {
+		return this.data;
+	}
+
 	protected class ListElement extends WPanel {
 
 		protected final @Nonnull SignData data;

@@ -146,7 +146,7 @@ public class GuiManagerSearchBox extends WPanel {
 
 			@Override
 			public String getText() {
-				final int size = GuiManagerSearchBox.this.manager.data.size();
+				final int size = searchTarget!=null ? searchTarget.getNow().size() : GuiManagerSearchBox.this.manager.data.size();
 				if (this.sizeCache==size)
 					return this.text;
 				final StringBuilder sb = new StringBuilder();
