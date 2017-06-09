@@ -43,16 +43,13 @@ public class GuiManagerSearchBox extends WPanel {
 
 			@Override
 			public void onTextChanged(final String oldText) {
-				if (GuiManagerSearchBox.this.searchTarget!=null) {
+				if (GuiManagerSearchBox.this.searchTarget!=null)
 					this.timer.set(-.5f);
-				}
 			}
 
 			@Override
 			public void update(final WEvent ev, final Area pgp, final Point p) {
 				super.update(ev, pgp, p);
-				if (this.timer.getTime()<0f)
-					GuiManagerSearchBox.this.searchTarget.filter(new ImplFilterExpression(GuiManagerSearchBox.this.manager.data, FilterParser.parse(this.textField.getText())));
 				if (this.timer.getTime()<0f) {
 					final Searchable target = GuiManagerSearchBox.this.searchTarget;
 					if (target!=null)
@@ -146,7 +143,8 @@ public class GuiManagerSearchBox extends WPanel {
 
 			@Override
 			public String getText() {
-				final int size = searchTarget!=null ? searchTarget.getNow().size() : GuiManagerSearchBox.this.manager.data.size();
+				final Searchable target = GuiManagerSearchBox.this.searchTarget;
+				final int size = target!=null ? target.getNow().size() : GuiManagerSearchBox.this.manager.data.size();
 				if (this.sizeCache==size)
 					return this.text;
 				final StringBuilder sb = new StringBuilder();

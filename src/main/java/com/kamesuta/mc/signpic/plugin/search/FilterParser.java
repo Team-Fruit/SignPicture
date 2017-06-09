@@ -35,8 +35,8 @@ public class FilterParser {
 	}
 
 	private static @Nullable IFilterElement parseElement(String str) {
-		if (str.contains(":")) {
-			String[] pair = str.split(":");
+		String[] pair = str.split(":");
+		if (str.contains(":")&&pair.length>=2) {
 			if (pair.length>2) {
 				final StringBuilder sb = new StringBuilder();
 				for (int p = 1; p<pair.length; p++)
