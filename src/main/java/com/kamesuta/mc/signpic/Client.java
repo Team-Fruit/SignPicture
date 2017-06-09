@@ -196,7 +196,7 @@ public class Client {
 			final String msg = Reference.NAME+" was unable to delete file "+mod.getPath()+" the game will now try to delete it on exit. If this dialog appears again, delete it manually.";
 			Log.log.error(msg);
 			if (!GraphicsEnvironment.isHeadless())
-				JOptionPane.showMessageDialog(null, msg, "An update error has occured", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, msg, "An update error has occurred", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
