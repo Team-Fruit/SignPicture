@@ -98,12 +98,24 @@ public class GuiList extends ScrollPanel implements Searchable {
 
 	@Override
 	public void filter(@Nullable final FilterExpression expression) {
-		if (expression!=null)
-			this.now = expression.findList();
-		else
+		if (expression==null) {
 			this.now = this.data;
-		scrollTo(0, null, null);
-		this.list.setList(this.now);
+			scrollTo(0, null, null);
+			this.list.setList(this.now);
+		} else
+			new Thread() {
+				@Override
+				public void run() {
+					GuiList.this.now = expression.findList();
+					invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							scrollTo(0, null, null);
+							GuiList.this.list.setList(GuiList.this.now);
+						}
+					});
+				}
+			}.start();
 	}
 
 	@Override
