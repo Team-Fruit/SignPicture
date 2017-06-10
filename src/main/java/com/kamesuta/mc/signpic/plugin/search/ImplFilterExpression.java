@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayList;
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 public class ImplFilterExpression implements FilterExpression {
@@ -213,12 +215,15 @@ public class ImplFilterExpression implements FilterExpression {
 			return this.findCache;
 		final IModCount<SignData> list = new NotifyArrayList<SignData>();
 		for (final SignData data : this.datas) {
-			for (final IFilterElement element : this.elements) {
-				if (element.filter(data)) {
-					list.add(data);
-					break;
+			final EntryId entry = EntryId.from(data.getSign());
+			final ContentId content = entry.getContentId();
+			if (content!=null)
+				for (final IFilterElement element : this.elements) {
+					if (element.filter(data, entry, content)) {
+						list.add(data);
+						break;
+					}
 				}
-			}
 		}
 		this.modCache = this.elements.getModCount();
 		this.findCache = list;

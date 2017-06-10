@@ -1,5 +1,7 @@
 package com.kamesuta.mc.signpic.plugin.search;
 
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 public abstract class PosFilterElement implements IFilterElement {
@@ -21,7 +23,7 @@ public abstract class PosFilterElement implements IFilterElement {
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
+		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
 			return this.x==data.getX()&&this.y==data.getY()&&this.z==data.getZ();
 		}
 
@@ -47,7 +49,7 @@ public abstract class PosFilterElement implements IFilterElement {
 			}
 
 			@Override
-			public boolean filter(final SignData data) {
+			public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
 				return data.getX()>=this.x&&data.getX()<this.x2&&data.getY()>=this.y&&data.getZ()<this.y2&&data.getZ()>=this.z&&data.getZ()<this.z2;
 			}
 		}
@@ -59,7 +61,7 @@ public abstract class PosFilterElement implements IFilterElement {
 			}
 
 			@Override
-			public boolean filter(final SignData data) {
+			public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
 				return data.getX()<=this.x&&data.getX()>this.x2&&data.getY()<=this.y&&data.getY()>this.y2&&data.getZ()<=this.z&&data.getZ()>this.z2;
 			}
 		}

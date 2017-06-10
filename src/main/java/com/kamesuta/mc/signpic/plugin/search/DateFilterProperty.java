@@ -4,18 +4,20 @@ import java.util.Date;
 
 import javax.annotation.Nullable;
 
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 public enum DateFilterProperty implements IFilterProperty<Date> {
 	CREATE {
 		@Override
-		public @Nullable Date get(final SignData data) {
+		public @Nullable Date get(final SignData data, final EntryId entry, final ContentId id) {
 			return data.getCreateDate();
 		}
 	},
 	UPDATE {
 		@Override
-		public @Nullable Date get(final SignData data) {
+		public @Nullable Date get(final SignData data, final EntryId entry, final ContentId id) {
 			return data.getUpdateDate();
 		}
 	};

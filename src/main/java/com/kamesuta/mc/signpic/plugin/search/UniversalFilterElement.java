@@ -2,6 +2,8 @@ package com.kamesuta.mc.signpic.plugin.search;
 
 import javax.annotation.Nullable;
 
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 public abstract class UniversalFilterElement implements IFilterElement {
@@ -12,14 +14,14 @@ public abstract class UniversalFilterElement implements IFilterElement {
 	}
 
 	@Override
-	public boolean filter(final SignData data) {
+	public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
 		for (final StringFilterProperty line : StringFilterProperty.values())
-			if (propFilter(data, line))
+			if (propFilter(data, entry, content, line))
 				return true;
 		return false;
 	}
 
-	protected abstract boolean propFilter(SignData data, StringFilterProperty prop);
+	protected abstract boolean propFilter(SignData data, final EntryId entry, final ContentId content, StringFilterProperty prop);
 
 	public static class EqualsUniversalFilterElement extends UniversalFilterElement {
 
@@ -28,8 +30,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
-			return new StringFilterElement.EqualsStringFilterElement(prop, this.str).filter(data);
+		protected boolean propFilter(final SignData data, final EntryId entry, final ContentId content, final StringFilterProperty prop) {
+			return new StringFilterElement.EqualsStringFilterElement(prop, this.str).filter(data, entry, content);
 		}
 
 	}
@@ -41,8 +43,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
-			return new StringFilterElement.EqualsIgnoreCaseStringFilterElement(prop, this.str).filter(data);
+		protected boolean propFilter(final SignData data, final EntryId entry, final ContentId content, final StringFilterProperty prop) {
+			return new StringFilterElement.EqualsIgnoreCaseStringFilterElement(prop, this.str).filter(data, entry, content);
 		}
 	}
 
@@ -53,8 +55,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
-			return new StringFilterElement.ContainsStringFilterElement(prop, this.str).filter(data);
+		protected boolean propFilter(final SignData data, final EntryId entry, final ContentId content, final StringFilterProperty prop) {
+			return new StringFilterElement.ContainsStringFilterElement(prop, this.str).filter(data, entry, content);
 		}
 
 	}
@@ -66,8 +68,8 @@ public abstract class UniversalFilterElement implements IFilterElement {
 		}
 
 		@Override
-		protected boolean propFilter(final SignData data, final StringFilterProperty prop) {
-			return new StringFilterElement.ContainsIgnoreCaseStringFilterElement(prop, this.str).filter(data);
+		protected boolean propFilter(final SignData data, final EntryId entry, final ContentId content, final StringFilterProperty prop) {
+			return new StringFilterElement.ContainsIgnoreCaseStringFilterElement(prop, this.str).filter(data, entry, content);
 		}
 
 	}

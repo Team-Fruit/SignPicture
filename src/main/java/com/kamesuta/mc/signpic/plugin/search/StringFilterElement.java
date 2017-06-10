@@ -4,6 +4,8 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 public abstract class StringFilterElement extends EnumFilterElement<String, StringFilterProperty> {
@@ -22,8 +24,8 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			return StringUtils.equals(this.property.get(data), this.str);
+		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
+			return StringUtils.equals(this.property.get(data, entry, content), this.str);
 		}
 
 	}
@@ -35,8 +37,8 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			return StringUtils.equalsIgnoreCase(this.property.get(data), this.str);
+		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
+			return StringUtils.equalsIgnoreCase(this.property.get(data, entry, content), this.str);
 		}
 
 	}
@@ -48,8 +50,8 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			return StringUtils.contains(this.property.get(data), this.str);
+		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
+			return StringUtils.contains(this.property.get(data, entry, content), this.str);
 		}
 
 	}
@@ -61,8 +63,8 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 		}
 
 		@Override
-		public boolean filter(final SignData data) {
-			return StringUtils.containsIgnoreCase(this.property.get(data), this.str);
+		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
+			return StringUtils.containsIgnoreCase(this.property.get(data, entry, content), this.str);
 		}
 
 	}
