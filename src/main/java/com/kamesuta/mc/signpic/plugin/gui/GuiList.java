@@ -102,6 +102,7 @@ public class GuiList extends ScrollPanel implements Searchable {
 			this.now = expression.findList();
 		else
 			this.now = this.data;
+		scrollTo(0, null, null);
 		this.list.setList(this.now);
 	}
 
