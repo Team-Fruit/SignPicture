@@ -6,10 +6,10 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public abstract class UniversalFilterElement implements DataFilterElement {
+public abstract class UniversalStringFilterElement implements DataFilterElement {
 	public final @Nullable String str;
 
-	public UniversalFilterElement(final String src) {
+	public UniversalStringFilterElement(final String src) {
 		this.str = src;
 	}
 
@@ -23,7 +23,7 @@ public abstract class UniversalFilterElement implements DataFilterElement {
 
 	protected abstract boolean propFilter(SignData data, final EntryId entry, final ContentId content, StringFilterProperty prop);
 
-	public static class EqualsUniversalFilterElement extends UniversalFilterElement {
+	public static class EqualsUniversalFilterElement extends UniversalStringFilterElement {
 
 		public EqualsUniversalFilterElement(final String src) {
 			super(src);
@@ -36,7 +36,7 @@ public abstract class UniversalFilterElement implements DataFilterElement {
 
 	}
 
-	public static class EqualsIgnoreCaseUniversalFilterElement extends UniversalFilterElement {
+	public static class EqualsIgnoreCaseUniversalFilterElement extends UniversalStringFilterElement {
 
 		public EqualsIgnoreCaseUniversalFilterElement(final String src) {
 			super(src);
@@ -48,7 +48,7 @@ public abstract class UniversalFilterElement implements DataFilterElement {
 		}
 	}
 
-	public static class ContainsUniversalFilterElement extends UniversalFilterElement {
+	public static class ContainsUniversalFilterElement extends UniversalStringFilterElement {
 
 		public ContainsUniversalFilterElement(final String src) {
 			super(src);
@@ -61,7 +61,7 @@ public abstract class UniversalFilterElement implements DataFilterElement {
 
 	}
 
-	public static class ContainsIgnoreCaseUniversalFilterElement extends UniversalFilterElement {
+	public static class ContainsIgnoreCaseUniversalFilterElement extends UniversalStringFilterElement {
 
 		public ContainsIgnoreCaseUniversalFilterElement(final String src) {
 			super(src);

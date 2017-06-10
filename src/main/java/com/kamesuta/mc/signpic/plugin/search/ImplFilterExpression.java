@@ -163,7 +163,7 @@ public class ImplFilterExpression implements FilterExpression {
 	 */
 	@Override
 	public FilterExpression ueq(final String str) {
-		add(new UniversalFilterElement.EqualsUniversalFilterElement(str));
+		add(new UniversalStringFilterElement.EqualsUniversalFilterElement(str));
 		return this;
 	}
 
@@ -172,7 +172,7 @@ public class ImplFilterExpression implements FilterExpression {
 	 */
 	@Override
 	public FilterExpression uieq(final String str) {
-		add(new UniversalFilterElement.EqualsIgnoreCaseUniversalFilterElement(str));
+		add(new UniversalStringFilterElement.EqualsIgnoreCaseUniversalFilterElement(str));
 		return this;
 	}
 
@@ -181,7 +181,7 @@ public class ImplFilterExpression implements FilterExpression {
 	 */
 	@Override
 	public FilterExpression ucon(final String str) {
-		add(new UniversalFilterElement.ContainsUniversalFilterElement(str));
+		add(new UniversalStringFilterElement.ContainsUniversalFilterElement(str));
 		return this;
 	}
 
@@ -190,7 +190,7 @@ public class ImplFilterExpression implements FilterExpression {
 	 */
 	@Override
 	public FilterExpression uicon(final String str) {
-		add(new UniversalFilterElement.ContainsIgnoreCaseUniversalFilterElement(str));
+		add(new UniversalStringFilterElement.ContainsIgnoreCaseUniversalFilterElement(str));
 		return this;
 	}
 

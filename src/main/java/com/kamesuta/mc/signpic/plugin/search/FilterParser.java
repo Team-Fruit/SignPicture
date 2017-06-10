@@ -71,16 +71,16 @@ public class FilterParser {
 						return new AnimationDataFilterElement.RSNeedAnimationDataFilterElement(AnimationDataAttrFilterProperty.ANIMATION, RSNeed.valueOf(value));
 					return new AnimationDataFilterElement.BooleanAnimationDataFilterElement(AnimationDataAttrFilterProperty.ANIMATION, BooleanUtils.toBoolean(value));
 				} else if (StringUtils.containsIgnoreCase(key, "rotation"))
-					return new RotationDataAttrFilterElement(RotationDataAttrFilterProperty.ROTATION, BooleanUtils.toBoolean(value));
+					return new BooleanRotationDataAttrFilterElement(RotationDataAttrFilterProperty.ROTATION, BooleanUtils.toBoolean(value));
 				else
 					return new StringFilterElement.EqualsIgnoreCaseStringFilterElement(StringFilterProperty.valueOf(key), value);
 			} catch (final Exception e) { //NO-OP
 			}
 		} else if (str.startsWith("\"")&&str.endsWith("\"")) {
 			str = StringUtils.removeStart(StringUtils.removeEnd(str, "\""), "\"");
-			return new UniversalFilterElement.EqualsIgnoreCaseUniversalFilterElement(str);
+			return new UniversalStringFilterElement.EqualsIgnoreCaseUniversalFilterElement(str);
 		} else
-			return new UniversalFilterElement.ContainsIgnoreCaseUniversalFilterElement(str);
+			return new UniversalStringFilterElement.ContainsIgnoreCaseUniversalFilterElement(str);
 		return null;
 	}
 
