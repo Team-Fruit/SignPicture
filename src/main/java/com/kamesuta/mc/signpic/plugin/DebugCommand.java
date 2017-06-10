@@ -41,7 +41,7 @@ public class DebugCommand extends SubCommand {
 
 	@Override
 	public void processSubCommand(final ICommandSender sender, final String[] args) {
-		final GuiManager gui = new GuiManager(sender.getCommandSenderName(), "100");
+		final GuiManager gui = new GuiManager(sender.getCommandSenderName(), "150");
 		Client.openLater(gui);
 		final Random random = new Random();
 		for (int i = 0; i<100; i++) {

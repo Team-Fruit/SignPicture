@@ -34,6 +34,7 @@ public class GuiManagerSearchBox extends WPanel {
 	protected final GuiManager manager;
 
 	protected @Nullable Searchable searchTarget;
+	protected boolean searching;
 
 	public GuiManagerSearchBox(final @Nonnull R position, final @Nonnull GuiManager manager) {
 		super(position);
@@ -52,11 +53,13 @@ public class GuiManagerSearchBox extends WPanel {
 				super.update(ev, pgp, p);
 				if (this.timer.getTime()<0f) {
 					final Searchable target = GuiManagerSearchBox.this.searchTarget;
-					if (target!=null)
-						if (StringUtils.isNotEmpty(this.textField.getText()))
+					if (target!=null) {
+						GuiManagerSearchBox.this.searching = StringUtils.isNotEmpty(this.textField.getText());
+						if (GuiManagerSearchBox.this.searching)
 							target.filter(new ImplFilterExpression(GuiManagerSearchBox.this.manager.data, FilterParser.parse(this.textField.getText())));
 						else
 							target.filter(null);
+					}
 				}
 			}
 		};
@@ -139,22 +142,19 @@ public class GuiManagerSearchBox extends WPanel {
 		add(this.gallary);
 		add(this.stats);
 		add(new FontLabel(new R(Coord.left(5), Coord.top(20), Coord.height(10), Coord.width(80)), GuiManager.PLAIN_FONT) {
-			int sizeCache = -1;
-
 			@Override
 			public String getText() {
 				final Searchable target = GuiManagerSearchBox.this.searchTarget;
-				final int size = target!=null ? target.getNow().size() : GuiManagerSearchBox.this.manager.data.size();
-				if (this.sizeCache==size)
-					return this.text;
-				final StringBuilder sb = new StringBuilder();
-				sb.append(size);
-				if (GuiManagerSearchBox.this.manager.size>size)
-					sb.append('+');
-				sb.append(' ');
-				sb.append(I18n.format("signpic.manager.matches"));
-				this.sizeCache = GuiManagerSearchBox.this.manager.data.size();
-				this.text = sb.toString();
+				if (target!=null) {
+					final int size = target.getNow().size();
+					final StringBuilder sb = new StringBuilder();
+					sb.append(size);
+					if (GuiManagerSearchBox.this.manager.size>size&&!GuiManagerSearchBox.this.searching)
+						sb.append('+');
+					sb.append(' ');
+					sb.append(I18n.format("signpic.manager.matches"));
+					this.text = sb.toString();
+				}
 				return this.text;
 			};
 		}.setColor(0x9acd32));

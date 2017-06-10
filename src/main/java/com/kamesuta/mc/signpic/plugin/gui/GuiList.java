@@ -11,6 +11,7 @@ import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.FontScaledLabel;
 import com.kamesuta.mc.bnnwidget.font.WFontRenderer;
+import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
@@ -20,6 +21,8 @@ import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
+import com.kamesuta.mc.bnnwidget.var.V;
+import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -40,13 +43,22 @@ public class GuiList extends ScrollPanel implements Searchable {
 	protected final @Nonnull WPanel scrollPane;
 	protected final @Nonnull WList<SignData, ListElement> list;
 
+	protected @Nonnull IModCount<SignData> now;
+
 	public GuiList(final R position, final IModCount<SignData> data) {
 		super(position);
 		this.data = data;
+		this.now = data;
 		this.list = new WList<SignData, ListElement>(new R(), data) {
 			@Override
 			protected ListElement createWidget(final SignData t, final int i) {
-				return new ListElement(new R(Coord.top(i*30), Coord.height(30)), t);
+				final VMotion top = V.am(i*30);
+				return new ListElement(new R(Coord.top(top), Coord.height(30)), top, t);
+			}
+
+			@Override
+			protected void onMoved(final SignData t, final ListElement w, final int from, final int to) {
+				w.top.stop().add(Motion.move(to*30)).start();
 			}
 		};
 		this.scrollPane = new WPanel(new R(Coord.left(0), Coord.right(15), Coord.top(this.top))) {
@@ -81,30 +93,33 @@ public class GuiList extends ScrollPanel implements Searchable {
 
 	@Override
 	public float getAllHeight() {
-		return this.data.size()*30;
+		return this.now.size()*30;
 	}
 
 	@Override
-	public void filter(@Nullable FilterExpression expression) {
+	public void filter(@Nullable final FilterExpression expression) {
 		if (expression!=null)
-			this.list.setList(expression.findList());
+			this.now = expression.findList();
 		else
-			this.list.setList(this.data);
+			this.now = this.data;
+		this.list.setList(this.now);
 	}
 
 	@Override
 	public IModCount<SignData> getNow() {
-		return this.data;
+		return this.now;
 	}
 
 	protected class ListElement extends WPanel {
+		public final @Nonnull VMotion top;
 
 		protected final @Nonnull SignData data;
 		protected final @Nonnull EntryId id;
 		protected final @Nullable AttrReaders meta;
 
-		public ListElement(final R position, final SignData t) {
+		public ListElement(final R position, final VMotion top, final SignData t) {
 			super(position);
+			this.top = top;
 			this.data = t;
 			this.id = EntryId.from(this.data.getSign());
 			this.meta = this.id.getMeta();
