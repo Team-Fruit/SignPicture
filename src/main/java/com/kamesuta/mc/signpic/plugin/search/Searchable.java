@@ -10,4 +10,6 @@ public interface Searchable {
 	void filter(@Nullable FilterExpression expression);
 
 	IModCount<SignData> getNow();
+
+	boolean isSearching();
 }

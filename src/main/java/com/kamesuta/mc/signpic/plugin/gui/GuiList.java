@@ -96,6 +96,8 @@ public class GuiList extends ScrollPanel implements Searchable {
 		return this.now.size()*30;
 	}
 
+	private boolean searching;
+
 	@Override
 	public void filter(@Nullable final FilterExpression expression) {
 		if (expression==null) {
@@ -106,12 +108,14 @@ public class GuiList extends ScrollPanel implements Searchable {
 			new Thread() {
 				@Override
 				public void run() {
+					GuiList.this.searching = true;
 					GuiList.this.now = expression.findList();
 					invokeLater(new Runnable() {
 						@Override
 						public void run() {
 							scrollTo(0, null, null);
 							GuiList.this.list.setList(GuiList.this.now);
+							GuiList.this.searching = false;
 						}
 					});
 				}
@@ -121,6 +125,11 @@ public class GuiList extends ScrollPanel implements Searchable {
 	@Override
 	public IModCount<SignData> getNow() {
 		return this.now;
+	}
+
+	@Override
+	public boolean isSearching() {
+		return this.searching;
 	}
 
 	protected class ListElement extends WPanel {

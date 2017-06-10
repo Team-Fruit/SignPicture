@@ -146,14 +146,18 @@ public class GuiManagerSearchBox extends WPanel {
 			public String getText() {
 				final Searchable target = GuiManagerSearchBox.this.searchTarget;
 				if (target!=null) {
-					final int size = target.getNow().size();
-					final StringBuilder sb = new StringBuilder();
-					sb.append(size);
-					if (GuiManagerSearchBox.this.manager.size>size&&!GuiManagerSearchBox.this.searching)
-						sb.append('+');
-					sb.append(' ');
-					sb.append(I18n.format("signpic.manager.matches"));
-					this.text = sb.toString();
+					if (target.isSearching())
+						this.text = I18n.format("signpic.manager.searching");
+					else {
+						final int size = target.getNow().size();
+						final StringBuilder sb = new StringBuilder();
+						sb.append(size);
+						if (GuiManagerSearchBox.this.manager.size>size&&!GuiManagerSearchBox.this.searching)
+							sb.append('+');
+						sb.append(' ');
+						sb.append(I18n.format("signpic.manager.matches"));
+						this.text = sb.toString();
+					}
 				}
 				return this.text;
 			};
