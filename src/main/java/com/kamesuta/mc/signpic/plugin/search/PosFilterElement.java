@@ -4,7 +4,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public abstract class PosFilterElement implements IFilterElement {
+public abstract class PosFilterElement implements DataFilterElement {
 
 	public final int x;
 	public final int y;

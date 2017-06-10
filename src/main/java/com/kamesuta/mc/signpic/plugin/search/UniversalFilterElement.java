@@ -6,7 +6,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public abstract class UniversalFilterElement implements IFilterElement {
+public abstract class UniversalFilterElement implements DataFilterElement {
 	public final @Nullable String str;
 
 	public UniversalFilterElement(final String src) {

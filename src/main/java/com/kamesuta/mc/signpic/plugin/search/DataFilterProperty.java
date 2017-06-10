@@ -6,7 +6,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public interface IFilterProperty<E> {
+public interface DataFilterProperty<E> {
 
 	@Nullable
 	E get(SignData data, EntryId entry, ContentId content);

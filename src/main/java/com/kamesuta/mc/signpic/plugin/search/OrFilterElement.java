@@ -2,23 +2,32 @@ package com.kamesuta.mc.signpic.plugin.search;
 
 import javax.annotation.Nonnull;
 
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public class OrFilterElement implements IFilterElement {
+public class OrFilterElement implements AndOrFilterElement {
 
-	public final @Nonnull IFilterElement filter1;
-	public final @Nonnull IFilterElement filter2;
+	public final @Nonnull FilterElement filter1;
+	public final @Nonnull FilterElement filter2;
 
-	public OrFilterElement(final IFilterElement filter1, final IFilterElement filter2) {
+	public OrFilterElement(final FilterElement filter1, final FilterElement filter2) {
 		this.filter1 = filter1;
 		this.filter2 = filter2;
 	}
 
 	@Override
-	public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
-		return this.filter1.filter(data, entry, content)||this.filter2.filter(data, entry, content);
+	public boolean filter(final SignData data, final EntryId entry, final ContentId content, final AttrReaders attr) {
+		return get(this.filter1, data, entry, content, attr)||get(this.filter2, data, entry, content, attr);
+	}
+
+	protected boolean get(final FilterElement element, final SignData data, final EntryId entry, final ContentId content, final AttrReaders attr) {
+		if (element instanceof DataFilterElement)
+			return ((DataFilterElement) element).filter(data, entry, content);
+		else if (element instanceof AttrFilterElement)
+			return ((AttrFilterElement) element).filter(attr);
+		return false;
 	}
 
 }

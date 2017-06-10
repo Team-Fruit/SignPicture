@@ -8,13 +8,10 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public abstract class StringFilterElement extends EnumFilterElement<String, StringFilterProperty> {
-
-	public final @Nullable String str;
+public abstract class StringFilterElement extends AbstractFilterElement<String, StringFilterProperty> {
 
 	public StringFilterElement(final StringFilterProperty property, final @Nullable String src) {
-		super(property);
-		this.str = src;
+		super(property, src);
 	}
 
 	public static class EqualsStringFilterElement extends StringFilterElement {
@@ -25,7 +22,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 		@Override
 		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
-			return StringUtils.equals(this.property.get(data, entry, content), this.str);
+			return StringUtils.equals(this.property.get(data, entry, content), this.data);
 		}
 
 	}
@@ -38,7 +35,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 		@Override
 		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
-			return StringUtils.equalsIgnoreCase(this.property.get(data, entry, content), this.str);
+			return StringUtils.equalsIgnoreCase(this.property.get(data, entry, content), this.data);
 		}
 
 	}
@@ -51,7 +48,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 		@Override
 		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
-			return StringUtils.contains(this.property.get(data, entry, content), this.str);
+			return StringUtils.contains(this.property.get(data, entry, content), this.data);
 		}
 
 	}
@@ -64,7 +61,7 @@ public abstract class StringFilterElement extends EnumFilterElement<String, Stri
 
 		@Override
 		public boolean filter(final SignData data, final EntryId entry, final ContentId content) {
-			return StringUtils.containsIgnoreCase(this.property.get(data, entry, content), this.str);
+			return StringUtils.containsIgnoreCase(this.property.get(data, entry, content), this.data);
 		}
 
 	}

@@ -7,27 +7,28 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayList;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
 public class ImplFilterExpression implements FilterExpression {
 
-	private final @Nonnull IModCount<IFilterElement> elements;
+	private final @Nonnull IModCount<FilterElement> elements;
 
 	protected final @Nonnull IModCount<SignData> datas;
 
 	public ImplFilterExpression(final @Nonnull IModCount<SignData> datas) {
 		this.datas = datas;
-		this.elements = new NotifyArrayList<IFilterElement>();
+		this.elements = new NotifyArrayList<FilterElement>();
 	}
 
-	public ImplFilterExpression(final @Nonnull IModCount<SignData> datas, final IModCount<IFilterElement> elements) {
+	public ImplFilterExpression(final @Nonnull IModCount<SignData> datas, final IModCount<FilterElement> elements) {
 		this.datas = datas;
 		this.elements = elements;
 	}
 
-	protected void add(final IFilterElement date) {
+	protected void add(final DataFilterElement date) {
 		this.elements.add(date);
 	}
 
@@ -217,11 +218,24 @@ public class ImplFilterExpression implements FilterExpression {
 		for (final SignData data : this.datas) {
 			final EntryId entry = EntryId.from(data.getSign());
 			final ContentId content = entry.getContentId();
+			final AttrReaders attr = entry.getMeta();
 			if (content!=null)
-				for (final IFilterElement element : this.elements) {
-					if (element.filter(data, entry, content)) {
-						list.add(data);
-						break;
+				for (final FilterElement element : this.elements) {
+					if (element instanceof DataFilterElement) {
+						if (((DataFilterElement) element).filter(data, entry, content)) {
+							list.add(data);
+							break;
+						}
+					} else if (element instanceof AttrFilterElement) {
+						if (attr!=null&&((AttrFilterElement) element).filter(attr)) {
+							list.add(data);
+							break;
+						}
+					} else if (element instanceof AndOrFilterElement) {
+						if (attr!=null&&((AndOrFilterElement) element).filter(data, entry, content, attr)) {
+							list.add(data);
+							break;
+						}
 					}
 				}
 		}

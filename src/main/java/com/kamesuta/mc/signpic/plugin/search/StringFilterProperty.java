@@ -4,7 +4,7 @@ import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.plugin.SignData;
 
-public enum StringFilterProperty implements IFilterProperty<String> {
+public enum StringFilterProperty implements DataFilterProperty<String> {
 	ID {
 		@Override
 		public String get(final SignData data, final EntryId entry, final ContentId id) {
