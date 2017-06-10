@@ -34,5 +34,17 @@ public enum StringFilterProperty implements IFilterProperty<String> {
 		public String get(final SignData data, final EntryId entry, final ContentId id) {
 			return data.getWorldName();
 		}
+	},
+	URL {
+		@Override
+		public String get(final SignData data, final EntryId entry, final ContentId content) {
+			return content.getURI();
+		}
+	},
+	URI {
+		@Override
+		public String get(final SignData data, final EntryId entry, final ContentId content) {
+			return content.getURI();
+		}
 	};
 }
