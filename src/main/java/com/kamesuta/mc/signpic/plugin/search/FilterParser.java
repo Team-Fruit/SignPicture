@@ -24,12 +24,10 @@ public class FilterParser {
 			final String line = array[i];
 			if (line.equals("OR")&&before!=null&&i+1<array.length) {
 				final IFilterElement element = parseElement(array[++i]);
-				if (element!=null)
-					before = new OrFilterElement(before, element);
+				before = new OrFilterElement(before, element!=null ? element : FalseFilterElement.INSTANCE);
 			} else
 				before = parseElement(line);
-			if (before!=null)
-				list.add(before);
+			list.add(before!=null ? before : FalseFilterElement.INSTANCE);
 		}
 		return list;
 	}
