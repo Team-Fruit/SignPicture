@@ -28,11 +28,20 @@ public abstract class SizeData implements IPropInterpolatable<SizeData>, IPropCo
 	public abstract boolean vaildHeight();
 
 	public float max() {
-		return Math.max(getWidth(), getHeight());
+		if (Float.isNaN(getWidth())&&Float.isNaN(getHeight()))
+			return Math.max(getWidth(), getHeight());
+		if (!Float.isNaN(getWidth()))
+			return getWidth();
+		return getHeight();
 	}
 
 	public float min() {
-		return Math.min(getWidth(), getHeight());
+		if (Float.isNaN(getWidth())&&Float.isNaN(getHeight()))
+			return Math.min(getWidth(), getHeight());
+		if (!Float.isNaN(getWidth()))
+			return getWidth();
+		return getHeight();
+
 	}
 
 	public @Nonnull SizeData scale(final float scale) {

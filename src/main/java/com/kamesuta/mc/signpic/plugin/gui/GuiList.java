@@ -24,6 +24,7 @@ import com.kamesuta.mc.bnnwidget.util.NotifyCollections.IModCount;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -246,6 +247,7 @@ public class GuiList extends ScrollPanel implements Searchable {
 							if (!mouseover)
 								this.playsound = false;
 							if (!this.playsound&&mouseover) {
+								Log.log.info("sounds");
 								Client.playSound(mouseoverSound, 1f);
 								this.playsound = true;
 							}

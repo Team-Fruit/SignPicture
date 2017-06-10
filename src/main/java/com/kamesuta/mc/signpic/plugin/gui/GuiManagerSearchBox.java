@@ -141,7 +141,7 @@ public class GuiManagerSearchBox extends WPanel {
 		add(this.advancedSearch);
 		add(this.gallary);
 		add(this.stats);
-		add(new FontLabel(new R(Coord.left(5), Coord.top(20), Coord.height(10), Coord.width(80)), GuiManager.PLAIN_FONT) {
+		add(new FontLabel(new R(Coord.left(5), Coord.top(20), Coord.height(8), Coord.width(80)), GuiManager.PLAIN_FONT) {
 			@Override
 			public String getText() {
 				final Searchable target = GuiManagerSearchBox.this.searchTarget;
@@ -161,7 +161,7 @@ public class GuiManagerSearchBox extends WPanel {
 				}
 				return this.text;
 			};
-		}.setColor(0x9acd32));
+		}.setColor(0x9acd32).setAlign(Align.LEFT));
 	}
 
 }

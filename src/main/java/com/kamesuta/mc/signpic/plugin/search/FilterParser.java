@@ -54,10 +54,10 @@ public class FilterParser {
 						return new DateFilterElement.BeforeDateFilterElement(DateFilterProperty.CREATE, date);
 				} else if (StringUtils.containsIgnoreCase(key, "size")) {
 					if (StringUtils.containsIgnoreCase(key, "less"))
-						return new SizeDataAttrFilterElement.LessSizeDataAttrFilterElement(SizeDataAttrFilterProperty.SIZE, Integer.valueOf(value));
+						return new SizeDataAttrFilterElement.LessSizeDataAttrFilterElement(SizeDataAttrFilterProperty.SIZE, Float.valueOf(value));
 					if (StringUtils.containsIgnoreCase(key, "greater"))
-						return new SizeDataAttrFilterElement.GreaterSizeDataAttrFilterElement(SizeDataAttrFilterProperty.SIZE, Integer.valueOf(value));
-					return new SizeDataAttrFilterElement.EqualSizeDataAttrFilterElement(SizeDataAttrFilterProperty.SIZE, Integer.valueOf(value));
+						return new SizeDataAttrFilterElement.GreaterSizeDataAttrFilterElement(SizeDataAttrFilterProperty.SIZE, Float.valueOf(value));
+					return new SizeDataAttrFilterElement.EqualSizeDataAttrFilterElement(SizeDataAttrFilterProperty.SIZE, Float.valueOf(value));
 				} else if (StringUtils.containsIgnoreCase(key, "offset")) {
 					if (StringUtils.containsIgnoreCase(key, "less"))
 						return new OffsetDataAttrFilterElement.LessOffsetDataAttrFilterElement(OffsetDataAttrFilterProperty.OFFSET, Float.valueOf(value));
