@@ -9,6 +9,7 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WList;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -16,6 +17,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
@@ -59,12 +61,12 @@ public class GuiTask extends WPanel {
 				add(new WPanel(new R(Coord.right(V.per(V.combine(V.p(-1), GuiTask.this.oright), V.p(0f), GuiTask.this.right)))) {
 
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 						final Area a = getGuiPosition(pgp);
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, .6f);
 						draw(a);
-						super.draw(ev, pgp, p, frame, opacity);
+						super.draw(ev, pgp, p, frame, opacity, opt);
 					}
 
 					@Override
@@ -77,6 +79,7 @@ public class GuiTask extends WPanel {
 							if (!GuiTask.this.show) {
 								GuiTask.this.right.stop().add(Easings.easeOutQuart.move(.7f, 1f)).start();
 								mc.getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("signpic", "gui.show"), 1.0F));
+								Client.playSound(new ResourceLocation("signpic", "gui.show"), 1.0F);
 							}
 							GuiTask.this.show = true;
 						} else {
@@ -106,12 +109,12 @@ public class GuiTask extends WPanel {
 					protected void initWidget() {
 						add(new WBase(new R(Coord.top(1), Coord.left(1), Coord.width(80), Coord.height(16))) {
 							@Override
-							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 								final Area a = getGuiPosition(pgp);
 								texture().bindTexture(panel);
 								OpenGL.glColor4f(1, 1, 1, 1);
 								WRenderer.startTexture();
-								drawTexture(a);
+								drawTexture(a, null, null);
 							}
 						});
 
@@ -153,8 +156,8 @@ public class GuiTask extends WPanel {
 			return this.opacity = V.pm(1f);
 		}
 
-		private @Nonnull State state;
-		private @Nonnull Progress progress;
+		private final @Nonnull State state;
+		private final @Nonnull Progress progress;
 		private @Nullable ILoadCancelable cancelable;
 
 		public TaskElement(final @Nonnull R position, final @Nonnull VMotion top, final @Nonnull Progressable progressable) {
@@ -184,11 +187,11 @@ public class GuiTask extends WPanel {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 			final Area a = getGuiPosition(pgp);
-			final Area b = new Area(pgp.x1(), a.y1(), pgp.x2(), a.y2());
+			final Area b = Area.abs(pgp.x1(), a.y1(), pgp.x2(), a.y2());
 			if (pgp.areaInside(b))
-				super.draw(ev, pgp, p, frame, popacity);
+				super.draw(ev, pgp, p, frame, popacity, opt);
 		}
 
 		@Override
@@ -207,14 +210,11 @@ public class GuiTask extends WPanel {
 			add(new WPanel(new R(Coord.top(1f), Coord.left(1f), Coord.bottom(0f), Coord.right(0f))) {
 				@Override
 				protected void initWidget() {
-					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT), Coord.right(2))) {
+					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT/2), Coord.right(2))) {
 						@Override
-						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 							final Area a = getGuiPosition(pgp);
 							OpenGL.glPushMatrix();
-							OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
-							OpenGL.glScalef(.5f, .5f, .5f);
-							OpenGL.glTranslatef(-a.x1(), -a.y1(), 0f);
 							final String cont = "...";
 							final int contwidth = font().getStringWidth(cont);
 							final String name = TaskElement.this.state.getName();
@@ -225,11 +225,14 @@ public class GuiTask extends WPanel {
 								res = name;
 							else
 								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
+							// WRenderer.startShape();
+							// OpenGL.glColor4f(1f, 1f, 1f, 1f);
+							// draw(a, GL11.GL_LINE_LOOP);
 							WRenderer.startTexture();
 							final float opacity = getGuiOpacity(popacity);
 							OpenGL.glColor4f(4f, 4f, 4f, opacity);
-							fontColor(1f, 1f, 1f, Math.max(.05f, opacity*1f));
-							drawString(res, a, Align.LEFT, VerticalAlign.MIDDLE, false);
+							OpenGL.glColor4f(1f, 1f, 1f, Math.max(.05f, opacity*1f));
+							WFont.fontRenderer.drawString(res, a.scaleSize(1f).translate(-1f, -1f), ev.owner.guiScale(), Align.LEFT, false);
 							OpenGL.glPopMatrix();
 						}
 					});
@@ -241,7 +244,7 @@ public class GuiTask extends WPanel {
 						protected void initWidget() {
 							add(new WBase(new R(Coord.pleft(0f), Coord.left(this.progresscoord))) {
 								@Override
-								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 									final Area a = getGuiPosition(pgp);
 									OpenGL.glColor4f(0f, 78f/256f, 192f/256f, getGuiOpacity(popacity)*1f);
 									WRenderer.startShape();
@@ -252,16 +255,13 @@ public class GuiTask extends WPanel {
 									final int progwidth = font().getStringWidth(prog);
 									final float maxx = pgp.x2()*2-progwidth;
 									OpenGL.glColor4f(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
-									OpenGL.glTranslatef(Math.min(a.x2()+1, maxx/2-1), a.y1(), 0f);
-									OpenGL.glScalef(.5f, .5f, .5f);
 									WRenderer.startTexture();
 									final float opacity = getGuiOpacity(popacity);
-									OpenGL.glColor4f(4f, 4f, 4f, opacity);
-									fontColor(1f, 1f, 1f, Math.max(.05f, opacity*1f));
-									drawString(prog, 0f, 0f, 0f, 0f, Align.LEFT, VerticalAlign.TOP, true);
+									OpenGL.glColor4f(1f, 1f, 1f, opacity);
+									WFont.fontRenderer.drawString(prog, Area.size(Math.min(a.x2()+1, maxx/2-1)-4f, a.y1()-.5f, 100f, 3f), ev.owner.guiScale(), Align.LEFT, true);
 									OpenGL.glPopMatrix();
 
-									super.draw(ev, pgp, p, frame, popacity);
+									super.draw(ev, pgp, p, frame, popacity, opt);
 								}
 							});
 						}
@@ -272,18 +272,18 @@ public class GuiTask extends WPanel {
 						}
 
 						@Override
-						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 							final Area a = getGuiPosition(pgp);
 							WRenderer.startShape();
 							OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(opacity)*0.8f);
 							draw(a);
-							super.draw(ev, pgp, p, frame, opacity);
+							super.draw(ev, pgp, p, frame, opacity, opt);
 						}
 					});
 				}
 
 				@Override
-				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 					final Area a = getGuiPosition(pgp);
 					WRenderer.startShape();
 					if (a.pointInside(p))
@@ -291,7 +291,7 @@ public class GuiTask extends WPanel {
 					else
 						OpenGL.glColor4f(.5f, .5f, .5f, getGuiOpacity(opacity)*.125f);
 					draw(a);
-					super.draw(ev, pgp, p, frame, opacity);
+					super.draw(ev, pgp, p, frame, opacity, opt);
 				}
 			});
 		}

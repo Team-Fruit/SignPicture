@@ -5,13 +5,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
@@ -20,12 +18,14 @@ import com.kamesuta.mc.signpic.entry.ICollectable;
 import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
+import com.kamesuta.mc.signpic.util.ThreadUtils;
+
+import net.minecraftforge.client.event.TextureStitchEvent;
 
 public class ContentManager implements ITickEntry {
 	public static @Nonnull ContentManager instance = new ContentManager();
 
-	public final @Nonnull ExecutorService threadpool = Executors.newFixedThreadPool(Config.getConfig().contentLoadThreads.get(),
-			new ThreadFactoryBuilder().setNameFormat("signpic-content-%d").build());
+	public final @Nonnull ExecutorService threadpool = ThreadUtils.newFixedCachedThreadPool(Config.getConfig().contentLoadThreads.get(), "signpic-content-%d");
 	private final @Nonnull Map<ContentId, ContentSlot> registry = Maps.newConcurrentMap();
 	private final @Nonnull Queue<ContentSlot> loadqueue = Queues.newConcurrentLinkedQueue();
 	private final @Nonnull Queue<IDivisionProcessable> divisionqueue = Queues.newConcurrentLinkedQueue();
@@ -113,6 +113,11 @@ public class ContentManager implements ITickEntry {
 			final Entry<ContentId, ContentSlot> entry = itr.next();
 			entry.getValue().get().markDirtyWithCache();
 		}
+	}
+
+	@CoreEvent
+	public void onResourceReloaded(final @Nonnull TextureStitchEvent.Post event) {
+		reloadAll();
 	}
 
 	public static class ContentSlot extends EntrySlot<Content> implements IInitable, ICollectable {

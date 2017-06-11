@@ -8,14 +8,16 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MLabel;
-import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
@@ -114,9 +116,9 @@ public class OverlayFrame extends WFrame {
 				}
 
 				@Override
-				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 					if (Config.getConfig().renderOverlayPanel.get()||instance.isDelegated())
-						super.draw(ev, pgp, p, frame, popacity);
+						super.draw(ev, pgp, p, frame, popacity, opt);
 				}
 			});
 		}
@@ -161,7 +163,7 @@ public class OverlayFrame extends WFrame {
 								}
 
 								@Override
-								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 									final Area a = getGuiPosition(pgp);
 									WRenderer.startShape();
 									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);
@@ -177,7 +179,7 @@ public class OverlayFrame extends WFrame {
 
 								@Override
 								protected void initWidget() {
-									final MLabel label = new MScaledLabel(new R(Coord.ptop(.2f), Coord.pbottom(.2f), Coord.pleft(.2f), Coord.pright(.2f))).setText(string);
+									final MLabel label = new FontScaledLabel(new R(Coord.top(5f), Coord.bottom(4f), Coord.pleft(.1f), Coord.pright(.1f)), WFont.fontRenderer).setText(string).setVerticalAlign(VerticalAlign.MIDDLE);
 									add(label);
 								}
 

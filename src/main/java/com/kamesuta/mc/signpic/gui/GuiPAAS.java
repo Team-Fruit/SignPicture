@@ -8,13 +8,15 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
@@ -56,7 +58,7 @@ public class GuiPAAS extends WFrame {
 					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.c.get());
 						draw(getGuiPosition(pgp));
@@ -66,7 +68,7 @@ public class GuiPAAS extends WFrame {
 				final float f1 = 93.75F;
 				add(new WBase(new R(Coord.right(15), Coord.top(15), Coord.width(f1), Coord.height(f1))) {
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 						final Area a = getGuiPosition(pgp);
 
 						WRenderer.startTexture();
@@ -112,14 +114,14 @@ public class GuiPAAS extends WFrame {
 
 				final int f = font().FONT_HEIGHT/2;
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f))) {
+				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), WFont.fontRenderer) {
 					@Override
 					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f))) {
+				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), WFont.fontRenderer) {
 					@Override
 					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));

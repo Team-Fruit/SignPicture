@@ -8,14 +8,11 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class CommonProxy {
 	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
-		Log.log = event.getModLog();
-		Config.init(event.getSuggestedConfigurationFile());
 	}
 
 	public void init(final @Nonnull FMLInitializationEvent event) {
 	}
 
 	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
-		Config.getConfig().save();
 	}
 }
