@@ -32,7 +32,7 @@ public abstract class RotationData {
 	public abstract @Nonnull Quat4f getRotate(float scale);
 
 	public static class PerRotation extends RotationData {
-		private @Nonnull Quat4f rotate;
+		private @Nonnull final Quat4f rotate;
 
 		public PerRotation(final @Nonnull Quat4f rotate) {
 			this.rotate = rotate;
@@ -126,19 +126,19 @@ public abstract class RotationData {
 				stb.append("A").append(ShortestFloatFormatter.format(RotationMath.toDegrees(this.diffangleaxis.angle)*8f/360f));
 			if (this.diffangleaxis.x!=0)
 				if (this.diffangleaxis.x==defaultAxis)
-					stb.append("P");
+					stb.append("I");
 				else
-					stb.append("P").append(ShortestFloatFormatter.format(this.diffangleaxis.x));
+					stb.append("I").append(ShortestFloatFormatter.format(this.diffangleaxis.x));
 			if (this.diffangleaxis.y!=0)
 				if (this.diffangleaxis.y==defaultAxis)
-					stb.append("Q");
+					stb.append("J");
 				else
-					stb.append("Q").append(ShortestFloatFormatter.format(this.diffangleaxis.y));
+					stb.append("J").append(ShortestFloatFormatter.format(this.diffangleaxis.y));
 			if (this.diffangleaxis.z!=0)
 				if (this.diffangleaxis.z==defaultAxis)
-					stb.append("R");
+					stb.append("K");
 				else
-					stb.append("R").append(ShortestFloatFormatter.format(this.diffangleaxis.z));
+					stb.append("K").append(ShortestFloatFormatter.format(this.diffangleaxis.z));
 			for (final Rotate rotate : this.diffglobalaxis)
 				stb.append(rotate.compose());
 			return stb.toString();
