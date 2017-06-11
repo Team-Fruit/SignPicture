@@ -53,13 +53,14 @@ public class ChatBuilder {
 			if (this.params.length>0)
 				s = String.format(s, this.params);
 
-			if (this.useJson)
+			if (this.useJson) {
 				try {
-					chat = ITextComponent.Serializer.jsonToComponent(s);
+					final ITextComponent t = ITextComponent.Serializer.jsonToComponent(s);
+					chat = t!=null ? t : new TextComponentString("Invaild Json: "+this.text);
 				} catch (final Exception e) {
 					chat = new TextComponentString("Invaild Json: "+this.text);
 				}
-			else
+			} else
 				chat = new TextComponentString(this.text);
 		}
 		if (this.style!=null)
