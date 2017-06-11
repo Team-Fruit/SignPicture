@@ -79,6 +79,16 @@
 			"message_local": {
 				"ja_JP": "いくつかのバグを修正しました"
 			}
+		},
+		"1.12": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.12-2.7.1/SignPicture-1.12-2.7.1-universal.jar",
+			"local": "SignPicture-1.12-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
 		}
 	},
 	"apis": {
