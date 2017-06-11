@@ -32,7 +32,7 @@ public abstract class RotationData {
 	public abstract @Nonnull Quat4f getRotate(float scale);
 
 	public static class PerRotation extends RotationData {
-		private @Nonnull Quat4f rotate;
+		private @Nonnull final Quat4f rotate;
 
 		public PerRotation(final @Nonnull Quat4f rotate) {
 			this.rotate = rotate;
@@ -293,17 +293,17 @@ public abstract class RotationData {
 				this.rotates.add(new ImageRotate(RotateType.Z, NumberUtils.toFloat(value, RotationData.defaultOffset)));
 			else if (StringUtils.equals(key, "A"))
 				this.angle += RotationMath.toRadians(NumberUtils.toFloat(value, RotationData.defaultAngle)*360f/8f);
-			else if (StringUtils.equals(key, "P"))
+			else if (StringUtils.equals(key, "I"))
 				if (StringUtils.isEmpty(value))
 					this.x += RotationData.defaultAxis;
 				else
 					this.x += NumberUtils.toFloat(value, RotationData.defaultAxis);
-			else if (StringUtils.equals(key, "Q"))
+			else if (StringUtils.equals(key, "J"))
 				if (StringUtils.isEmpty(value))
 					this.y += RotationData.defaultAxis;
 				else
 					this.y += NumberUtils.toFloat(value, RotationData.defaultAxis);
-			else if (StringUtils.equals(key, "R"))
+			else if (StringUtils.equals(key, "K"))
 				if (StringUtils.isEmpty(value))
 					this.z += RotationData.defaultAxis;
 				else
