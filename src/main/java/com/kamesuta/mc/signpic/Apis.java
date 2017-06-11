@@ -214,7 +214,7 @@ public class Apis {
 								if (configs!=null)
 									for (final Info.Api.Image.Gyazo.Config config : configs)
 										if (config!=null)
-											keys.add(config.clientid);
+											keys.add(config.key);
 							}
 						}
 					}

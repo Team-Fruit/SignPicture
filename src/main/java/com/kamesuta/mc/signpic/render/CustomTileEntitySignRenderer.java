@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.vecmath.Quat4f;
 
 import org.lwjgl.opengl.GL11;
 
@@ -11,13 +12,11 @@ import com.kamesuta.mc.bnnwidget.render.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
-import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
-import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
 import com.kamesuta.mc.signpic.entry.Entry;
-import com.kamesuta.mc.signpic.entry.EntryId;
-import com.kamesuta.mc.signpic.entry.content.Content;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
+import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
@@ -33,59 +32,50 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 	public CustomTileEntitySignRenderer() {
 	}
 
-	public void renderSignPicture(final @Nonnull Entry entry, final float opacity) {
-		// Load Image
-		final Content content = entry.getContent();
-
-		final CompoundAttr attr = entry.getMeta();
-
-		// Size
-		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
-		final SizeData size = attr.sizes.getMovie().get().aspectSize(size01);
-
-		OpenGL.glPushMatrix();
-
-		final OffsetData offset = attr.offsets.getMovie().get();
-		OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
-		RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
-
-		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
-		OpenGL.glScalef(1f, -1f, 1f);
-
-		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
-
-		OpenGL.glPopMatrix();
-	}
-
 	public void translateBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z) {
 		// Vanilla Translate
 		final Block block = tile.getBlockType();
 		final float f1 = 0.6666667F;
-		float f3;
 
 		if (block==Blocks.standing_sign) {
-			OpenGL.glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
-			final float f2 = tile.getBlockMetadata()*360/16.0F;
-			OpenGL.glRotatef(-f2, 0.0F, 1.0F, 0.0F);
+			OpenGL.glTranslatef((float) x+.5f, (float) y+.75f*f1, (float) z+.5f);
+			RotationGL.glRotate(getSignRotate(tile));
+		} else {
+			OpenGL.glTranslatef((float) x+.5f, (float) y+.75f*f1, (float) z+.5f);
+			RotationGL.glRotate(getSignRotate(tile));
+			OpenGL.glTranslatef(0f, 0f, -.4375f);
+		}
+	}
+
+	public @Nonnull Quat4f getSignRotate(final @Nonnull TileEntitySign tile) {
+		// Vanilla Translate
+		final Block block = tile.getBlockType();
+		if (block==Blocks.standing_sign) {
+			final float f2 = tile.getBlockMetadata()*360f/16f;
+			return RotationMath.quatDeg(-f2, 0f, 1f, 0f);
 		} else {
 			final int j = tile.getBlockMetadata();
-			f3 = 0.0F;
-
-			if (j==2)
-				f3 = 180.0F;
-			if (j==4)
-				f3 = 90.0F;
-			if (j==5)
-				f3 = -90.0F;
-
-			OpenGL.glTranslatef((float) x+0.5F, (float) y+0.75F*f1, (float) z+0.5F);
-			OpenGL.glRotatef(-f3, 0.0F, 1.0F, 0.0F);
-			OpenGL.glTranslatef(0.0F, 0.0F, -0.4375F);
+			float f3;
+			switch (j) {
+				case 2:
+					f3 = 180f;
+					break;
+				case 4:
+					f3 = 90f;
+					break;
+				case 5:
+					f3 = -90f;
+					break;
+				default:
+					f3 = 0f;
+					break;
+			}
+			return RotationMath.quatDeg(-f3, 0f, 1f, 0f);
 		}
 	}
 
 	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
-		final Entry entry = EntryId.fromTile(tile).entry();
+		final Entry entry = SignEntryId.fromTile(tile).entry();
 		if (entry.isOutdated()&&CurrentMode.instance.isState(CurrentMode.State.SEE))
 			OpenGL.glDisable(GL11.GL_DEPTH_TEST);
 		if (entry.isValid()) {
@@ -100,11 +90,11 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 
 			// Draw Canvas
 			OpenGL.glDisable(GL_CULL_FACE);
-			OpenGL.glDisable(GL_LIGHTING);
 
-			renderSignPicture(entry, opacity);
+			final GuiImage gui = entry.getGui();
+			gui.applyLight(tile.xCoord, tile.yCoord, tile.zCoord, getSignRotate(tile));
+			gui.renderSignPicture(opacity, 1f);
 
-			OpenGL.glEnable(GL_LIGHTING);
 			OpenGL.glEnable(GL_CULL_FACE);
 
 			OpenGL.glPopMatrix();
@@ -116,6 +106,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
 		OpenGL.glEnable(GL11.GL_DEPTH_TEST);
+		WRenderer.startTexture();
 	}
 
 	@Override

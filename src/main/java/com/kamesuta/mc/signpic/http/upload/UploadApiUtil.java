@@ -17,7 +17,7 @@ import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import net.minecraft.client.resources.I18n;
 
 public class UploadApiUtil {
-	public static boolean upload(final @Nonnull UploadRequest content, final @Nullable Runnable onDone) {
+	public static boolean upload(final @Nonnull UploadRequest content, final @Nullable UploadCallback onDone) {
 		try {
 			final ImageUploaderFactory factory = getUploaderFactory();
 			final String key = getKey(factory);
@@ -28,12 +28,12 @@ public class UploadApiUtil {
 				upload.setCallback(new ICommunicateCallback() {
 					@Override
 					public void onDone(final @Nonnull ICommunicateResponse res) {
-						if (upload.getLink()!=null) {
-							final String url = upload.getLink();
-							if (url!=null&&!GuiMain.setContentId(url))
+						final String url = upload.getLink();
+						if (url!=null) {
+							if (!GuiMain.setContentId(url))
 								Log.notice(I18n.format("signpic.gui.notice.uploaded", content.getName()));
 							if (onDone!=null)
-								onDone.run();
+								onDone.onDone(url);
 						}
 						if (!res.isSuccess())
 							Log.notice(I18n.format("signpic.gui.notice.uploadfailed", res.getError()));
@@ -46,10 +46,6 @@ public class UploadApiUtil {
 			Log.notice(I18n.format("signpic.gui.notice.uploadfailed", e));
 		}
 		return false;
-	}
-
-	public static boolean upload(final @Nonnull UploadRequest content) {
-		return upload(content, null);
 	}
 
 	public static @Nullable ImageUploaderFactory getUploaderFactory() {

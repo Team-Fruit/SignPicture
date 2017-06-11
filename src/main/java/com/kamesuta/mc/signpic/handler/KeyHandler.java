@@ -5,12 +5,14 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.Timer;
 
 import com.google.common.collect.Lists;
-import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.gui.GuiHub;
 import com.kamesuta.mc.signpic.gui.GuiIngameScreenShot;
 import com.kamesuta.mc.signpic.gui.GuiMain;
@@ -18,30 +20,38 @@ import com.kamesuta.mc.signpic.gui.GuiWindowScreenShot;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.gameevent.InputEvent;
-import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyHandler {
-	public static final Key keySignPicture = new Key.AbstractKey() {
+	public static final @Nonnull Key keySignPicture = new Key.AbstractKey() {
 		@Override
 		public int getCode() {
 			return KeyHandler.Keys.KEY_BINDING_GUI.binding.getKeyCode();
 		}
 	};
 
-	public static final Key keyScreenShotFull = new Key.FixedKey(Keyboard.KEY_O);
-	public static final Key keyScreenShot = new Key.FixedKey(Keyboard.KEY_P);
-	public static final Key keySwingScreenShot = new Key.FixedKey(Keyboard.KEY_I);
+	public static final @Nonnull Key keyScreenShotFull = new Key.FixedKey(Keyboard.KEY_O);
+	public static final @Nonnull Key keyScreenShot = new Key.FixedKey(Keyboard.KEY_P);
+	public static final @Nonnull Key keySwingScreenShot = new Key.FixedKey(Keyboard.KEY_I);
 
 	public static interface Key {
 		int getCode();
 
 		boolean isKeyPressed();
 
+		@Nonnull
+		String getName();
+
 		public static abstract class AbstractKey implements Key {
 			@Override
 			public boolean isKeyPressed() {
 				return Keyboard.isKeyDown(getCode());
+			}
+
+			@Override
+			public @Nonnull String getName() {
+				return Keyboard.getKeyName(getCode());
 			}
 		}
 
@@ -83,38 +93,62 @@ public class KeyHandler {
 			ClientRegistry.registerKeyBinding(key.binding);
 	}
 
-	private boolean firstkeypressed;
-	private boolean keypressed;
+	public static final @Nonnull KeyHandler instance = new KeyHandler();
 
-	@CoreEvent
-	public void onTick() {
-		if (Keyboard.isKeyDown(Keys.KEY_BINDING_GUI.binding.getKeyCode())) {
-			this.firstkeypressed = true;
-			if (!this.keypressed) {
-				this.keypressed = true;
-				if (Keyboard.isKeyDown(keyScreenShot.getCode()))
-					WRenderer.mc.displayGuiScreen(new GuiIngameScreenShot(WFrame.getCurrent()));
-				else if (Keyboard.isKeyDown(keyScreenShotFull.getCode())) {
-					final GuiIngameScreenShot shot = new GuiIngameScreenShot(WFrame.getCurrent());
-					WRenderer.mc.displayGuiScreen(shot);
-					shot.takeFullScreenshot();
-				} else if (Keyboard.isKeyDown(keySwingScreenShot.getCode()))
-					WRenderer.mc.displayGuiScreen(new GuiWindowScreenShot(WFrame.getCurrent()));
-				else
-					this.keypressed = false;
-			}
-		} else if (this.firstkeypressed) {
-			this.firstkeypressed = false;
-			if (!this.keypressed&&(WRenderer.mc.currentScreen instanceof GuiHub||WRenderer.mc.currentScreen instanceof GuiMainMenu))
-				WRenderer.mc.displayGuiScreen(new GuiMain(WFrame.getParentOrThis()));
-			this.keypressed = false;
-		}
+	private @Nonnull Timer signpickeypressed;
+
+	private KeyHandler() {
+		this.signpickeypressed = new Timer();
+		this.signpickeypressed.pause();
 	}
 
 	@CoreEvent
 	public void onKeyInput(final @Nonnull InputEvent event) {
 		for (final Keys key : Keys.values())
 			key.onKeyInput(event, key.binding);
+	}
+
+	@CoreInvoke
+	public boolean onGuiKeyInput(final @Nonnull GuiScreen screen) {
+		final float time = this.signpickeypressed.getTime();
+		if (!(screen instanceof GuiIngameScreenShot||screen instanceof GuiWindowScreenShot))
+			if (keySignPicture.isKeyPressed()) {
+				if (!keyHook(screen)) {
+					this.signpickeypressed.resume();
+					return true;
+				}
+				clearInput();
+			} else if (!(screen instanceof GuiMain)&&time>.35f) {
+				WRenderer.mc.displayGuiScreen(new GuiMain(screen));
+				clearInput();
+			}
+		this.signpickeypressed.reset();
+		this.signpickeypressed.pause();
+		return false;
+	}
+
+	public boolean keyHook(final @Nonnull GuiScreen screen) {
+		if (keyScreenShot.isKeyPressed())
+			WRenderer.mc.displayGuiScreen(new GuiIngameScreenShot(screen));
+		else if (keyScreenShotFull.isKeyPressed()) {
+			final GuiIngameScreenShot shot = new GuiIngameScreenShot(screen);
+			WRenderer.mc.displayGuiScreen(shot);
+			shot.takeFullScreenshot();
+		} else if (keySwingScreenShot.isKeyPressed())
+			WRenderer.mc.displayGuiScreen(new GuiWindowScreenShot(screen));
+		else
+			return false;
+		return true;
+	}
+
+	public void clearInput() {
+		if (Mouse.isCreated())
+			while (Mouse.next()) {
+			}
+
+		if (Keyboard.isCreated())
+			while (Keyboard.next()) {
+			}
 	}
 
 	public static @Nonnull List<KeyBinding> getKeyConflict(final @Nonnull KeyBinding binding) {

@@ -10,12 +10,12 @@ import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.ICompoundMotion;
 
-public class PropAnimation<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame> {
+public class PropReaderAnimation<KeyFrame extends IPropInterpolatable<InterFrame>, InterFrame> {
 	private final @Nonnull ICompoundMotion motion = new CompoundMotion().setLoop(true).start();
 	private final @Nonnull TreeMap<Float, KeyFrame> frames = Maps.newTreeMap();
 	private float lasttime;
 
-	public PropAnimation(final @Nonnull KeyFrame defaultframe) {
+	public PropReaderAnimation(final @Nonnull KeyFrame defaultframe) {
 		this.frames.put(0f, defaultframe);
 	}
 
@@ -35,7 +35,7 @@ public class PropAnimation<KeyFrame extends IPropInterpolatable<InterFrame>, Int
 			return before.getValue().per();
 	}
 
-	public @Nonnull PropAnimation<KeyFrame, InterFrame> add(final float time, final @Nonnull KeyFrame frame, final @Nonnull Easings easing) {
+	public @Nonnull PropReaderAnimation<KeyFrame, InterFrame> add(final float time, final @Nonnull KeyFrame frame, final @Nonnull Easings easing) {
 		final float difftime = time-this.lasttime;
 		this.motion.add(easing.move(difftime, time));
 		this.lasttime = time;

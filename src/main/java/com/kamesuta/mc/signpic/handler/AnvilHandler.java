@@ -1,7 +1,5 @@
 package com.kamesuta.mc.signpic.handler;
 
-import java.lang.reflect.Field;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -19,6 +17,8 @@ import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.gui.SignPicLabel;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectField;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiRepair;
@@ -28,28 +28,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.ContainerRepair;
 
 public class AnvilHandler implements INameHandler {
-	private static @Nullable Field guiRepairTextField;
-	private static @Nullable Field guiRepairContainer;
+	private static @Nonnull ReflectField<GuiRepair, GuiTextField> guiRepairTextField = ReflectClass.fromClass(GuiRepair.class).getFieldFromType(null, GuiTextField.class);
+	private static @Nonnull ReflectField<GuiRepair, ContainerRepair> guiRepairContainer = ReflectClass.fromClass(GuiRepair.class).getFieldFromType(null, ContainerRepair.class);
 
-	private @Nullable GuiScreen repairGuiTask;
+	private @Nullable GuiRepair repairGuiTask;
 	private @Nullable String repairGuiTextFieldCache;
 
 	public AnvilHandler() {
-		try {
-			final Field[] fields = GuiRepair.class.getDeclaredFields();
-			for (final Field field : fields) {
-				final Class<?> type = field.getType();
-				if (GuiTextField.class.equals(type)) {
-					field.setAccessible(true);
-					guiRepairTextField = field;
-				} else if (ContainerRepair.class.equals(type)) {
-					field.setAccessible(true);
-					guiRepairContainer = field;
-				}
-			}
-		} catch (final SecurityException e) {
-			Log.log.error("Could not hook GuiTextField or ContainerRepair field included in GuiRepair", e);
-		}
 	}
 
 	@Override
@@ -60,8 +45,11 @@ public class AnvilHandler implements INameHandler {
 
 	@Override
 	public boolean onOpen(final @Nullable GuiScreen gui, final @Nonnull EntryId currentId) {
-		this.repairGuiTask = gui;
-		return gui instanceof GuiRepair;
+		if (gui instanceof GuiRepair) {
+			this.repairGuiTask = (GuiRepair) gui;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -71,24 +59,21 @@ public class AnvilHandler implements INameHandler {
 		final EntryId entryId = CurrentMode.instance.getEntryId();
 		if (!entryId.isNameable())
 			return;
-		final Field fTextField = guiRepairTextField;
-		final Field fContainer = guiRepairContainer;
-		if (fTextField!=null&&fContainer!=null)
-			try {
-				final GuiTextField textField = (GuiTextField) fTextField.get(this.repairGuiTask);
-				final ContainerRepair containerRepair = (ContainerRepair) fContainer.get(this.repairGuiTask);
-				if (textField!=null&&containerRepair!=null) {
-					final String text = textField.getText();
-					if (!StringUtils.isEmpty(text)&&!StringUtils.equals(this.repairGuiTextFieldCache, text)) {
-						final String name = entryId.id();
-						Sign.setRepairName(name, textField, containerRepair);
-						this.repairGuiTextFieldCache = name;
-					}
+		try {
+			final GuiTextField textField = guiRepairTextField.get(this.repairGuiTask);
+			final ContainerRepair containerRepair = guiRepairContainer.get(this.repairGuiTask);
+			if (textField!=null&&containerRepair!=null) {
+				final String text = textField.getText();
+				if (!StringUtils.isEmpty(text)&&!StringUtils.equals(this.repairGuiTextFieldCache, text)) {
+					final String name = entryId.id();
+					Sign.setRepairName(name, textField, containerRepair);
+					this.repairGuiTextFieldCache = name;
 				}
-				return;
-			} catch (final Exception e) {
-				Log.notice(I18n.format("signpic.chat.error.place"));
 			}
+			return;
+		} catch (final Exception e) {
+			Log.notice(I18n.format("signpic.chat.error.place"));
+		}
 		Log.notice(I18n.format("signpic.chat.error.place"));
 	}
 
@@ -103,13 +88,13 @@ public class AnvilHandler implements INameHandler {
 			final int guiTop = (gui.height-ySize)/2;
 			OpenGL.glColor4f(1f, 1f, 1f, 1f);
 			WRenderer.startTexture();
-			WGui.texture().bindTexture(MPanel.background);
-			final Area a = new Area(guiLeft-42, guiTop, guiLeft, guiTop+49);
+			WRenderer.texture().bindTexture(MPanel.background);
+			final Area a = Area.abs(guiLeft-42, guiTop, guiLeft, guiTop+49);
 			MPanel.drawBack(a);
-			WGui.texture().bindTexture(SignPicLabel.defaultTexture);
-			WGui.drawTextureSize(guiLeft-42, guiTop+3, 42, 42);
+			WRenderer.texture().bindTexture(SignPicLabel.defaultTexture);
+			WGui.drawTexture(Area.size(guiLeft-42, guiTop+3, 42, 42), null, null);
 			if (CurrentMode.instance.isShortening()) {
-				final Area b = new Area(guiLeft, guiTop-20, gui.width-guiLeft, guiTop);
+				final Area b = Area.abs(guiLeft, guiTop-20, gui.width-guiLeft, guiTop);
 				OpenGL.glColor4f(1f, 1f, 1f, this.o.get());
 				WGui.drawString(I18n.format("signpic.gui.notice.shortening"), b, WGui.Align.CENTER, WGui.VerticalAlign.MIDDLE, true);
 			}

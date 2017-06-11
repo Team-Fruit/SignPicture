@@ -8,7 +8,8 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
@@ -109,14 +110,14 @@ public class GuiPAAS extends WFrame {
 
 				final int f = font().FONT_HEIGHT/2;
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f))) {
+				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), WFont.fontRenderer) {
 					@Override
 					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
-				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f))) {
+				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), WFont.fontRenderer) {
 					@Override
 					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));

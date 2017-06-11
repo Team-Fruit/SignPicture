@@ -55,6 +55,21 @@ public enum PropSyntax {
 	 */
 	OFFSET_FRONT("F"),
 	/**
+	 * Offset Center X [M]
+	 * @see OffsetData
+	 */
+	OFFSET_CENTER_X("M"),
+	/**
+	 * Offset Center Y [N]
+	 * @see OffsetData
+	 */
+	OFFSET_CENTER_Y("N"),
+	/**
+	 * Offset Center Z [O]
+	 * @see OffsetData
+	 */
+	OFFSET_CENTER_Z("O"),
+	/**
 	 * Rotation X [X]
 	 * @see OffsetData
 	 */
@@ -145,6 +160,11 @@ public enum PropSyntax {
 	 */
 	TEXTURE_MIPMAP("m"),
 	/**
+	 * Texture Lighting [l]
+	 * @see TextureData
+	 */
+	TEXTURE_LIGHTING("l"),
+	/**
 	 * Texture Blend Src [b]
 	 * @see TextureData
 	 */
@@ -154,7 +174,18 @@ public enum PropSyntax {
 	 * @see TextureData
 	 */
 	TEXTURE_BLEND_DST("d"),
-
+	/**
+	 * Texture Light X [f]
+	 * @see TextureData
+	 */
+	TEXTURE_LIGHT_X("f"),
+	/**
+	 * Texture Light Y [g]
+	 * @see TextureData
+	 */
+	TEXTURE_LIGHT_Y("g"),
+	_reserved_e("e"),
+	_reserved_E("E");
 	;
 	public final @Nonnull String id;
 
