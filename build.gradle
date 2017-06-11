@@ -31,9 +31,9 @@ version = "${project.version_minecraft}-${modversion}"
 compileJava.options.encoding = 'UTF-8'
 compileApiJava.options.encoding = 'UTF-8'
 
-sourceCompatibility = targetCompatibility = "1.6"
+sourceCompatibility = targetCompatibility = "1.8"
 compileJava {
-    sourceCompatibility = targetCompatibility = "1.6"
+    sourceCompatibility = targetCompatibility = "1.8"
 }
 
 idea {
