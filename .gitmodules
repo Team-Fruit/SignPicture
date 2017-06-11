@@ -1,4 +1,4 @@
 [submodule "BnnWidget"]
 	path = BnnWidget
 	url = https://github.com/Team-Fruit/BnnWidget/
-	branch = 1.9.4
+	branch = 1.12
