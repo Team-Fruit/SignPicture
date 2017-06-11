@@ -29,4 +29,14 @@ public class ConfigGuiFactory implements IModGuiFactory {
 	public @Nullable RuntimeOptionGuiHandler getHandlerFor(final @Nullable RuntimeOptionCategoryElement element) {
 		return null;
 	}
+
+	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(final @Nullable GuiScreen parentScreen) {
+		return new ConfigGui(parentScreen);
+	}
 }
