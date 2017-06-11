@@ -20,6 +20,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.render.WRenderer.WVertex;
 import com.kamesuta.mc.bnnwidget.var.V;
@@ -35,7 +36,6 @@ import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
-import com.kamesuta.mc.signpic.render.RenderHelper;
 import com.kamesuta.mc.signpic.render.StateRender;
 import com.kamesuta.mc.signpic.state.StateType;
 
@@ -61,7 +61,7 @@ public class GuiImage extends WFrame {
 			protected void initWidget() {
 				add(new WBase(new R()) {
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, @Nonnull final RenderOption opt) {
 						final Area a = getGuiPosition(pgp);
 						float opacity = getGuiOpacity(popacity);
 						final Content content = GuiImage.this.entry.getContent();
@@ -93,7 +93,7 @@ public class GuiImage extends WFrame {
 						if (content!=null&&content.state.getType()==StateType.AVAILABLE&&!meta.hasInvalidMeta()) {
 							final float o = meta.o.getMovie().get().data*0.1f;
 							OpenGL.glColor4f(1.0F, 1.0F, 1.0F, opacity*o);
-							content.image.draw(meta);
+							content.image.draw(meta, opt.get("vertex", Area.class), opt.get("trim", Area.class));
 						} else {
 							WRenderer.startShape();
 							OpenGL.glLineWidth(1f);
@@ -114,7 +114,7 @@ public class GuiImage extends WFrame {
 								OpenGL.glTranslatef(-.5f, -.5f, 0f);
 								WRenderer.startTexture();
 								texture().bindTexture(resError);
-								RenderHelper.drawRectTexture(GL_QUADS);
+								drawTexture(opt.get("vertex", Area.class), opt.get("trim", Area.class), null);
 								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
@@ -132,7 +132,7 @@ public class GuiImage extends WFrame {
 		});
 	}
 
-	public void renderSignPicture(final float opacity, final float scale) {
+	public void renderSignPicture(final float opacity, final float scale, @Nonnull final RenderOption opt) {
 		// Load Image
 		final Content content = this.entry.getContent();
 
@@ -195,7 +195,7 @@ public class GuiImage extends WFrame {
 		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? 1f : -1f, 1f);
 
 		OpenGL.glScalef(scale, scale, 1f);
-		drawScreen(0, 0, 0, opacity, size.getWidth()/scale, size.getHeight()/scale);
+		drawScreen(0, 0, 0, opacity, size.getWidth()/scale, size.getHeight()/scale, opt);
 
 		OpenGL.glPopMatrix();
 	}
@@ -289,13 +289,13 @@ public class GuiImage extends WFrame {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final RenderOption opt) {
 			WRenderer.startShape();
 			OpenGL.glLineWidth(1f);
 			OpenGL.glColor4f(1f, 1f, 1f, 1f);
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0f, 0f, .002f);
-			super.draw(ev, pgp, p, frame, popacity);
+			super.draw(ev, pgp, p, frame, popacity, opt);
 			OpenGL.glPopMatrix();
 		}
 	}
@@ -314,13 +314,13 @@ public class GuiImage extends WFrame {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final RenderOption opt) {
 			WRenderer.startShape();
 			OpenGL.glLineWidth(1f);
 			OpenGL.glColor4f(1f, 1f, 1f, 1f);
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0f, 0f, .002f);
-			super.draw(ev, pgp, p, frame, popacity);
+			super.draw(ev, pgp, p, frame, popacity, opt);
 			OpenGL.glPopMatrix();
 		}
 	}
@@ -333,7 +333,7 @@ public class GuiImage extends WFrame {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final RenderOption opt) {
 			final Area a = getGuiPosition(pgp);
 			texture().bindTexture(GuiSettings.update);
 			OpenGL.glColor4f(144f/256f, 191f/256f, 48f/256f, 1f);
@@ -349,8 +349,8 @@ public class GuiImage extends WFrame {
 		}
 	};
 
-	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height) {
+	public void drawScreen(final int mousex, final int mousey, final float f, final float opacity, final float width, final float height, @Nonnull final RenderOption opt) {
 		setWidth(width).setHeight(height);
-		super.drawScreen(mousex, mousey, f, opacity);
+		super.drawScreen(mousex, mousey, f, opacity, opt);
 	}
 }

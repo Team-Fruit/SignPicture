@@ -17,6 +17,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
@@ -115,9 +116,9 @@ public class OverlayFrame extends WFrame {
 				}
 
 				@Override
-				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 					if (Config.getConfig().renderOverlayPanel.get()||instance.isDelegated())
-						super.draw(ev, pgp, p, frame, popacity);
+						super.draw(ev, pgp, p, frame, popacity, opt);
 				}
 			});
 		}
@@ -162,7 +163,7 @@ public class OverlayFrame extends WFrame {
 								}
 
 								@Override
-								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+								public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 									final Area a = getGuiPosition(pgp);
 									WRenderer.startShape();
 									OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity)*.5f);

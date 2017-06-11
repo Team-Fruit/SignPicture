@@ -25,6 +25,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
@@ -95,7 +96,7 @@ public class GuiMain extends WFrame {
 		this.settings = new GuiSettings(new R());
 	}
 
-	private @Nonnull ReflectMethod<GuiScreenBook, Void> bookwriter = ReflectClass.fromClass(GuiScreenBook.class).getMethodFromName(ASMDeobfNames.GuiScreenBookPageInsertIntoCurrent, null, void.class, String.class);
+	private @Nonnull final ReflectMethod<GuiScreenBook, Void> bookwriter = ReflectClass.fromClass(GuiScreenBook.class).getMethodFromName(ASMDeobfNames.GuiScreenBookPageInsertIntoCurrent, null, void.class, String.class);
 
 	public GuiMain(final @Nullable GuiScreen parent) {
 		super(parent);
@@ -124,7 +125,7 @@ public class GuiMain extends WFrame {
 					VMotion m = V.pm(0);
 
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.m.get());
 						draw(getGuiPosition(pgp));
@@ -581,7 +582,7 @@ public class GuiMain extends WFrame {
 		}
 	}
 
-	private @Nonnull CompoundMotion closeCooldown = new CompoundMotion().start();
+	private @Nonnull final CompoundMotion closeCooldown = new CompoundMotion().start();
 
 	@Override
 	public void requestClose() {

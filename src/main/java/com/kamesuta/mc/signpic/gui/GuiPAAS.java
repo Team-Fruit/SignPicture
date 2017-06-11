@@ -16,6 +16,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
@@ -57,7 +58,7 @@ public class GuiPAAS extends WFrame {
 					VMotion c = V.pm(0f).add(Easings.easeLinear.move(.25f, .2f)).start();
 
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, this.c.get());
 						draw(getGuiPosition(pgp));
@@ -67,7 +68,7 @@ public class GuiPAAS extends WFrame {
 				final float f1 = 93.75F;
 				add(new WBase(new R(Coord.right(15), Coord.top(15), Coord.width(f1), Coord.height(f1))) {
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 						final Area a = getGuiPosition(pgp);
 
 						WRenderer.startTexture();

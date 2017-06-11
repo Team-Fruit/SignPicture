@@ -19,6 +19,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
@@ -51,8 +52,8 @@ public class GuiSignOption extends WFrame {
 			}
 
 			@Override
-			public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
-				super.draw(ev, pgp, p, frame, popacity);
+			public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
+				super.draw(ev, pgp, p, frame, popacity, opt);
 			}
 
 			@Override
@@ -86,12 +87,12 @@ public class GuiSignOption extends WFrame {
 					}
 
 					@Override
-					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+					public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 						final Area a = getGuiPosition(pgp);
 						WRenderer.startShape();
 						OpenGL.glColor4f(0f, 0f, 0f, getGuiOpacity(popacity));
 						draw(a);
-						super.draw(ev, pgp, p, frame, popacity);
+						super.draw(ev, pgp, p, frame, popacity, opt);
 					}
 				});
 				add(new WPanel(new R(Coord.pleft(.5f), Coord.ptop(.5f), Coord.width(200f), Coord.height(150f))) {

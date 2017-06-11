@@ -23,6 +23,7 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WGui;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
@@ -70,7 +71,7 @@ public class GuiIngameScreenShot extends WFrame {
 			private boolean takingscreenshot;
 			private boolean disable;
 			private boolean flushing;
-			private @Nonnull VMotion opacity = V.pm(0).start();
+			private @Nonnull final VMotion opacity = V.pm(0).start();
 
 			@Override
 			public boolean mouseClicked(final WEvent ev, final Area pgp, final Point p, final int button) {
@@ -87,7 +88,7 @@ public class GuiIngameScreenShot extends WFrame {
 			}
 
 			@Override
-			public void draw(final WEvent ev, final Area pgp, final Point point2, final float frame, final float popacity) {
+			public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point point2, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 				final boolean continuemode = CurrentMode.instance.isState(CurrentMode.State.CONTINUE);
 				final Area a = getGuiPosition(pgp);
 				WRenderer.startShape(BlendType.ONE_MINUS_DST_COLOR, BlendType.ZERO);
@@ -154,7 +155,7 @@ public class GuiIngameScreenShot extends WFrame {
 					}
 				}
 				WRenderer.startShape();
-				super.draw(ev, pgp, point2, frame, popacity);
+				super.draw(ev, pgp, point2, frame, popacity, opt);
 			}
 
 			private void drawCursor(final Point point) {

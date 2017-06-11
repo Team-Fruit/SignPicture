@@ -30,6 +30,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
@@ -128,21 +129,21 @@ public class GuiSettings extends WPanel {
 							protected R line = new R(Coord.top(0), Coord.top(2));
 
 							@Override
-							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 								final Area a = getGuiPosition(pgp);
 								WRenderer.startShape();
 								OpenGL.glColor4f(0f, 0f, 0f, .6f);
 								draw(a);
 								OpenGL.glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
 								draw(this.line.getAbsolute(a));
-								super.draw(ev, pgp, p, frame, opacity);
+								super.draw(ev, pgp, p, frame, opacity, opt);
 							}
 
 							@Override
 							protected void initWidget() {
 								add(new WBase(new R(Coord.top(5), Coord.left(3), Coord.width(90), Coord.height(26))) {
 									@Override
-									public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+									public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 										final Area a = getGuiPosition(pgp);
 										texture().bindTexture(settings);
 										OpenGL.glColor4f(1, 1, 1, 1);
@@ -219,12 +220,12 @@ public class GuiSettings extends WPanel {
 
 									add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
 										@Override
-										public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+										public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 											final Area a = getGuiPosition(pgp);
 											OpenGL.glColor4f(0f, 0f, 0f, .4f);
 											WRenderer.startShape();
 											draw(a);
-											super.draw(ev, pgp, p, frame, popacity);
+											super.draw(ev, pgp, p, frame, popacity, opt);
 										}
 
 										@Override
@@ -270,7 +271,7 @@ public class GuiSettings extends WPanel {
 												protected void initWidget() {
 													add(new WBase(new R(Coord.width(V.per(vstart, vend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
-														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 															final Area a = getGuiPosition(pgp);
 															texture().bindTexture(update);
 															// glColor4f(1, 1, 1, 1);
@@ -301,10 +302,10 @@ public class GuiSettings extends WPanel {
 														}
 
 														@Override
-														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(0, 0, 10f);
-															super.draw(ev, pgp, p, frame, popacity);
+															super.draw(ev, pgp, p, frame, popacity, opt);
 															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(message));
@@ -321,10 +322,10 @@ public class GuiSettings extends WPanel {
 														}
 
 														@Override
-														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(0, 0, 10f);
-															super.draw(ev, pgp, p, frame, popacity);
+															super.draw(ev, pgp, p, frame, popacity, opt);
 															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(!StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message));
@@ -352,13 +353,13 @@ public class GuiSettings extends WPanel {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 			final Area a = getGuiPosition(pgp);
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
-			super.draw(ev, pgp, p, frame, opacity);
+			super.draw(ev, pgp, p, frame, opacity, opt);
 		}
 
 		protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
@@ -378,13 +379,13 @@ public class GuiSettings extends WPanel {
 			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), WFont.fontRenderer).setText(this.title));
 			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 				@Override
-				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 					final Area a = getGuiPosition(pgp);
 					WRenderer.startShape();
 					OpenGL.glColor4f(0f, 0f, 0f, .2f);
 					OpenGL.glLineWidth(.5f);
 					draw(a, GL_LINE_LOOP);
-					super.draw(ev, pgp, p, frame, opacity);
+					super.draw(ev, pgp, p, frame, opacity, opt);
 				}
 
 				@Override
@@ -432,13 +433,13 @@ public class GuiSettings extends WPanel {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 			final Area a = getGuiPosition(pgp);
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
-			super.draw(ev, pgp, p, frame, opacity);
+			super.draw(ev, pgp, p, frame, opacity, opt);
 		}
 
 		@Override
