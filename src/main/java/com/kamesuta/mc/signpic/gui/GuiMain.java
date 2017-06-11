@@ -10,22 +10,18 @@ import javax.annotation.Nullable;
 import org.lwjgl.input.Keyboard;
 
 import com.kamesuta.mc.bnnwidget.WBase;
-import com.kamesuta.mc.bnnwidget.WCommon;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.WidgetBuilder;
 import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MChatTextField;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.bnnwidget.component.MTab;
 import com.kamesuta.mc.bnnwidget.motion.CompoundMotion;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Coord;
-import com.kamesuta.mc.bnnwidget.position.Coord.CoordSide;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
@@ -83,6 +79,10 @@ public class GuiMain extends WFrame {
 	public void setId(final @Nonnull EntryId id) {
 		this.signid = id;
 		exportId();
+	}
+
+	public @Nonnull EntryId getId() {
+		return this.signid;
 	}
 
 	public void exportId() {
@@ -158,16 +158,16 @@ public class GuiMain extends WFrame {
 					}
 				});
 
-				final MTab tab = new MTab(new R(Coord.left(0f), Coord.right(75f)), CoordSide.Top, 15, 15);
-				tab.addTab("Sign", new WidgetBuilder<WCommon>() {
-					@Override
-					public WCommon build() {
-						return GuiMain.this.editor = new SignEditor(new R());
-					}
-				});
-				tab.addTab("E", new WPanel(new R()));
-				add(tab);
-				// add(new SignEditor(new R(Coord.left(0f), Coord.right(75f))));
+				//				final MTab tab = new MTab(new R(Coord.left(0f), Coord.right(75f)), CoordSide.Top, 15, 15);
+				//				tab.addTab("Sign", new WidgetBuilder<WCommon>() {
+				//					@Override
+				//					public WCommon build() {
+				//						return GuiMain.this.editor = new SignEditor(new R());
+				//					}
+				//				});
+				//				tab.addTab("E", new WPanel(new R()));
+				//				add(tab);
+				add(new SignEditor(new R(Coord.left(0f), Coord.right(75f))));
 
 				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
 				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(80), Coord.bottom(0))) {
@@ -379,7 +379,7 @@ public class GuiMain extends WFrame {
 	}
 
 	public class SignEditor extends WPanel {
-		private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder();
+		private final @Nonnull EntryIdBuilder signbuilder = new EntryIdBuilder().load(getId());
 
 		private @Nonnull MainTextField field;
 
@@ -519,12 +519,12 @@ public class GuiMain extends WFrame {
 				}
 			});
 
-			add(new GuiVariable(new R(Coord.top(5), Coord.left(15*8+5), Coord.right(5), Coord.bottom(5)), this.signbuilder.getMeta()) {
-				@Override
-				protected void onUpdate() {
-					export();
-				}
-			});
+			//			add(new GuiVariable(new R(Coord.top(5), Coord.left(15*8+5), Coord.right(5), Coord.bottom(5)), this.signbuilder.getMeta()) {
+			//				@Override
+			//				protected void onUpdate() {
+			//					export();
+			//				}
+			//			});
 		}
 
 		public class MainTextField extends MChatTextField {

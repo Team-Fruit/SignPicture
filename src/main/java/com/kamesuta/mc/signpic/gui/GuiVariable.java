@@ -1,5 +1,5 @@
 package com.kamesuta.mc.signpic.gui;
-
+/*
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -233,8 +233,8 @@ public abstract class GuiVariable extends WPanel {
 				add(new Type(new R(Coord.left(15*0), Coord.top(0), Coord.width(15), Coord.bottom(0)), this.prop));
 				add(new MNumber(new R(Coord.left(15*1), Coord.top(0), Coord.right(15*2), Coord.bottom(0)), 15) {
 					{
-						// if (RotationElement.this.prop.rotate!=0f)
-						// 	setNumber(RotationElement.this.prop.rotate);
+						if (RotationElement.this.prop.rotate!=0f)
+						 	setNumber(RotationElement.this.prop.rotate);
 					}
 
 					@Override
@@ -339,3 +339,4 @@ public abstract class GuiVariable extends WPanel {
 		}
 	}
 }
+*/

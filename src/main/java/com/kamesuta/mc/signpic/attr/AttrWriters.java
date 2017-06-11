@@ -79,7 +79,8 @@ public class AttrWriters {
 		}
 
 		public @Nonnull AttrWriter add(final @Nonnull IPropBuilder<?, ?> e) {
-			this.metawriter.add(e);
+			if (!this.metawriter.contains(e))
+				this.metawriter.add(e);
 			return this;
 		}
 
