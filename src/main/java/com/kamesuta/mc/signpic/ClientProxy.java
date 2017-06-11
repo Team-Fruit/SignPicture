@@ -23,6 +23,9 @@ public class ClientProxy extends CommonProxy {
 	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
 		super.preInit(event);
 
+		Log.log = event.getModLog();
+		Config.init(event.getSuggestedConfigurationFile());
+
 		// Setup stencil clip
 		// StencilClip.init();
 
@@ -69,5 +72,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
 		super.postInit(event);
+
+		Config.getConfig().save();
 	}
 }
