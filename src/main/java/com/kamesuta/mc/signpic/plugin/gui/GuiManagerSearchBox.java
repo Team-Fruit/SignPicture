@@ -48,10 +48,14 @@ public class GuiManagerSearchBox extends WPanel {
 					this.timer.set(-.5f);
 			}
 
+			private float timeCache;
+
 			@Override
 			public void update(final WEvent ev, final Area pgp, final Point p) {
 				super.update(ev, pgp, p);
-				if (this.timer.getTime()<0f) {
+				if (this.timer.getTime()<0f)
+					GuiManagerSearchBox.this.searching = StringUtils.isNotEmpty(this.textField.getText());
+				if (this.timer.getTime()>=0f&&this.timeCache<0f) {
 					final Searchable target = GuiManagerSearchBox.this.searchTarget;
 					if (target!=null) {
 						GuiManagerSearchBox.this.searching = StringUtils.isNotEmpty(this.textField.getText());
@@ -61,6 +65,7 @@ public class GuiManagerSearchBox extends WPanel {
 							target.filter(null);
 					}
 				}
+				this.timeCache = this.timer.getTime();
 			}
 		};
 		this.advancedSearch = new GuiManagerButton(new R(Coord.right(220), Coord.height(15), Coord.width(85), Coord.top(5))) {
