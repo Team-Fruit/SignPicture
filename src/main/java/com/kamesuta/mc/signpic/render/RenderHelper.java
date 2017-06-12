@@ -50,16 +50,13 @@ public class RenderHelper {
 		final double ey = Math.sin(eangle);
 
 		WRenderer.w.pos(sx*r, sy*r, 0).endVertex();
-		vertex.pos(sx*r, sy*r, 0);
 		for (int i = (int) (end<start ? Math.floor(start*acc) : Math.ceil(start*acc)); end<start ? i>end*acc : i<end*acc; i += end<start ? -1 : 1) {
 			final double angle = Math.PI*(2d*i/acc-.5);
 			final double ix = Math.cos(angle);
 			final double iy = Math.sin(angle);
 			WRenderer.w.pos(ix*r, iy*r, 0).endVertex();
-			vertex.pos(ix*r, iy*r, 0);
 		}
 		WRenderer.w.pos(ex*r, ey*r, 0).endVertex();
-		vertex.pos(ex*r, ey*r, 0);
 	}
 
 	public static void addCircleVertex(final WVertex vertex, final float start, final float end, final float r) {
