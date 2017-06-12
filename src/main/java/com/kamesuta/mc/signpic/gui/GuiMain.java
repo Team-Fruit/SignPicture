@@ -168,7 +168,7 @@ public class GuiMain extends WFrame {
 				//				});
 				//				tab.addTab("E", new WPanel(new R()));
 				//				add(tab);
-				add(new SignEditor(new R(Coord.left(0f), Coord.right(75f))));
+				add(GuiMain.this.editor = new SignEditor(new R(Coord.left(0f), Coord.right(75f))));
 
 				final VMotion p = V.am(-65).add(Easings.easeOutBack.move(.25f, 0)).start();
 				add(new WPanel(new R(Coord.top(0), Coord.right(p), Coord.width(80), Coord.bottom(0))) {
