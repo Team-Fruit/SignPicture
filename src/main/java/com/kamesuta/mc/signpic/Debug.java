@@ -19,8 +19,10 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import com.google.common.collect.Maps;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
+import com.kamesuta.mc.signpic.handler.KeyHandler;
 import com.kamesuta.mc.signpic.util.Downloader;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -78,6 +80,11 @@ public class Debug {
 		// parsemeta("U2(o)(4~i)");
 
 		quat();
+	}
+
+	void invokeTest(final GuiScreen screen) {
+		if (KeyHandler.instance.onGuiKeyInput(screen))
+			return;
 	}
 
 	static void quat() {

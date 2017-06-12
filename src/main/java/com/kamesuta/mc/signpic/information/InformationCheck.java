@@ -51,6 +51,7 @@ public class InformationCheck extends Communicate implements Progressable {
 							final String msgurl = info.private_msg
 									.replace("%name%", Client.name)
 									.replace("%id%", Client.id)
+									.replace("%token%", Client.token)
 									.replace("%mcversion%", Client.mcversion)
 									.replace("%forgeversion%", Client.forgeversion)
 									.replace("%modmcversion%", Reference.MINECRAFT)

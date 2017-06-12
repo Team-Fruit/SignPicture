@@ -1,11 +1,9 @@
 package com.kamesuta.mc.signpic.handler;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.lwjgl.input.Keyboard;
 
@@ -14,17 +12,20 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.gui.GuiSignOption;
 import com.kamesuta.mc.signpic.http.shortening.ShortenerApiUtil;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.preview.SignEntity;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectClass;
+import com.kamesuta.mc.signpic.reflect.lib.ReflectField;
 import com.kamesuta.mc.signpic.util.Sign;
 
 import net.minecraft.client.gui.GuiScreen;
@@ -43,20 +44,10 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
-	private static @Nullable Field guiEditSignTileEntity;
+	public static @Nonnull ReflectField<GuiEditSign, TileEntitySign> guiEditSignTileEntity = ReflectClass.fromClass(GuiEditSign.class).getFieldFromType(null, TileEntitySign.class);
 	private static @Nonnull Set<INameHandler> handlers = Sets.newHashSet();
 
 	public static void init() {
-		try {
-			final Field[] fields = GuiEditSign.class.getDeclaredFields();
-			for (final Field field : fields)
-				if (TileEntitySign.class.equals(field.getType())) {
-					field.setAccessible(true);
-					guiEditSignTileEntity = field;
-				}
-		} catch (final SecurityException e) {
-			Log.log.error("Could not hook TileEntitySign field included in GuiEditSign", e);
-		}
 		handlers.add(new AnvilHandler());
 	}
 
@@ -75,11 +66,11 @@ public class SignHandler {
 			if (event.getGui() instanceof GuiEditSign) {
 				event.setCanceled(true);
 				final EntryId placeSign = handSignValid ? handSign : entryId;
-				if (placeSign.isPlaceable()) {
-					if (guiEditSignTileEntity!=null)
-						try {
-							final TileEntitySign tileSign = (TileEntitySign) guiEditSignTileEntity.get(event.getGui());
-							Sign.placeSign(handSignValid ? handSign : entryId, tileSign);
+				if (placeSign.isPlaceable())
+					try {
+						final TileEntitySign tileSign = guiEditSignTileEntity.get((GuiEditSign) event.getGui());
+						if (tileSign!=null) {
+							Sign.placeSign(placeSign, tileSign);
 							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
 								CurrentMode.instance.setMode();
 								final SignEntity se = Sign.preview;
@@ -93,12 +84,12 @@ public class SignHandler {
 									}
 								}
 							}
-						} catch (final Exception e) {
+						} else
 							Log.notice(I18n.format("signpic.chat.error.place"));
-						}
-					else
+					} catch (final Exception e) {
 						Log.notice(I18n.format("signpic.chat.error.place"));
-				} else if (CurrentMode.instance.isShortening())
+					}
+				else if (CurrentMode.instance.isShortening())
 					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
 				else
 					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
@@ -150,7 +141,7 @@ public class SignHandler {
 				handItem = Client.mc.thePlayer.getHeldItemOffhand();
 			EntryId handEntry = null;
 			if (handItem!=null&&handItem.getItem()==Items.SIGN) {
-				handEntry = EntryId.fromItemStack(handItem);
+				handEntry = ItemEntryId.fromItemStack(handItem);
 				CurrentMode.instance.setHandSign(handEntry);
 			} else
 				CurrentMode.instance.setHandSign(EntryId.blank);
@@ -163,10 +154,10 @@ public class SignHandler {
 				final TileEntitySign tilesign = Client.getTileSignLooking();
 				Entry entry = null;
 				if (tilesign!=null)
-					entry = EntryId.fromTile(tilesign).entry();
+					entry = SignEntryId.fromTile(tilesign).entry();
 				else if (handEntry!=null)
 					entry = handEntry.entry();
-				if (entry!=null&&entry.isValid()) {
+				if (entry!=null) {
 					event.setCanceled(true);
 					Client.mc.displayGuiScreen(new GuiSignOption(entry));
 					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
@@ -192,7 +183,7 @@ public class SignHandler {
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
 					tip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
-					final CompoundAttr meta = entry.getMeta();
+					final AttrReaders meta = entry.getMeta();
 					final SizeData size = meta.sizes.getMovie().get();
 					tip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
 					final OffsetData offset = meta.offsets.getMovie().get();

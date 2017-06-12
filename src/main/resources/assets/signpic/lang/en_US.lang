@@ -1,9 +1,13 @@
 # Overlay
 ## Overlay
+signpic.over.hub.usage.takerange=[%s]: Take screenshot of a specified range
+signpic.over.hub.usage.takeall=[%s]: Take screenshot
+signpic.over.hub.usage.takerangewindow=[%s]: Take window screenshot of a specified range
+signpic.over.hub.usage.release=[Release]: Open SignPicture GUI
+### Mode
 signpic.over.mode.place=Place Sign and Apply Image
 signpic.over.mode.option=Click Sign Picture and Open Sign Option GUI.
 signpic.over.mode.setpreview=Click Block and Set Preview Location
-
 ## F3
 signpic.over.sign=[§6Sign§r] §7[§r%s§7]
 signpic.over.id=[§6Sign-URL§r] %s
@@ -43,6 +47,7 @@ signpic.gui.editor.place=Place
 signpic.gui.editor.cancel=Cancel
 signpic.gui.editor.file=Upload
 signpic.gui.editor.paste=Paste
+signpic.gui.editor.openurl=Open URL
 signpic.gui.editor.textfield=Place URL Here!
 signpic.gui.editor.number.neg=-
 signpic.gui.editor.number.pos=+
@@ -93,11 +98,13 @@ signpic.gui.settings.api.key=API Key
 signpic.gui.settings.default=Default
 signpic.gui.settings.config=Config
 signpic.gui.settings.paas=Prevent Cheat
+signpic.gui.settings.hide=Disable
 ### Sign Option
 signpic.gui.settings.sign=Sign Option
 signpic.gui.settings.sign.load=Load URL and Meta
 signpic.gui.settings.sign.load.content=Load URL
 signpic.gui.settings.sign.load.meta=Load Meta
+signpic.gui.settings.sign.openurl=Open URL
 signpic.gui.settings.sign.loadcancel=Cancel Loading
 signpic.gui.settings.sign.reload=Reload
 signpic.gui.settings.sign.redownload=Redownload
@@ -122,6 +129,8 @@ signpic.gui.notice.uploadfailed=Upload Failed: §7%s
 signpic.gui.notice.downloading=Downloading %s
 signpic.gui.notice.downloaded=Finished downloading %s
 signpic.gui.notice.downloadfailed=Download Failed: §7%s
+signpic.gui.notice.openurlfailed=Open URL Failed: §7%s
+signpic.gui.notice.openurlfailed.invalid=Invalid URL
 signpic.gui.notice.versioning.downloadedAlready=Close your game, delete the old version and load it again to update!
 signpic.gui.notice.versioning.downloadingAlready=The update is already downloading!
 signpic.gui.notice.toolongname=URL+metadata length must be less than 40 characters to name!
@@ -130,6 +139,10 @@ signpic.gui.notice.shortening=Please wait... The URL is being shortened
 signpic.gui.notice.shortened=URL shortening completed
 signpic.gui.notice.shorteningfailed=URL shortening failed
 signpic.gui.notice.shorteningother=Please wait... Other shortening URL tasks are not finished
+signpic.gui.notice.screenshot.ingame.error=An error has occured. %s
+signpic.gui.notice.screenshot.ingame.capture.error=Could not take a screenshot. %s
+signpic.gui.notice.screenshot.window.error=An error has occured. %s
+signpic.gui.notice.screenshot.window.capture.error=Could not take a window screenshot. %s
 
 # Upload UI
 signpic.ui.title=SignPicture!File
@@ -161,6 +174,8 @@ signpic.advmsg.ioerror=Failed to Read: §7%s
 signpic.advmsg.unknown=Unknown Error: §7%s
 signpic.advmsg.format.unsupported=Unsupported SignPicture
 signpic.advmsg.format.needupdate=Try a new Version!
+signpic.advmsg.format.outdated=Outdated SignPicture!
+signpic.advmsg.format.needreplace=Import with "Option" and Replace!
 
 # Command
 signpic.command.aliases=Aliases: %s
