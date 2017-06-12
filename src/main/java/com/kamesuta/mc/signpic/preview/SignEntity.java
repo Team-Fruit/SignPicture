@@ -37,7 +37,7 @@ public class SignEntity {
 
 				if (side==EnumFacing.UP) {
 					this.tileSign.setBlockType(Blocks.STANDING_SIGN);
-					final int i = MathHelper.floor_double((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
+					final int i = MathHelper.floor((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
 					this.tileSign.setBlockMetadata(i);
 				} else {
 					this.tileSign.setBlockType(Blocks.WALL_SIGN);
@@ -52,8 +52,8 @@ public class SignEntity {
 	}
 
 	public @Nullable TileEntitySign capturePlace() {
-		final EntityPlayerSP player = Client.mc.thePlayer;
-		final WorldClient world = Client.mc.theWorld;
+		final EntityPlayerSP player = Client.mc.player;
+		final WorldClient world = Client.mc.world;
 		if (player!=null&&world!=null) {
 			final RayTraceResult m = MovePos.getMovingPos();
 			final MovePos p = MovePos.getBlockPos();

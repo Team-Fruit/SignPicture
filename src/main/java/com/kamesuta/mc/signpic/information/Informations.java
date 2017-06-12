@@ -284,7 +284,7 @@ public final class Informations {
 	}
 
 	public void onTick(final @Nullable InfoSource source, final @Nonnull InfoState state) {
-		final EntityPlayer player = Client.mc.thePlayer;
+		final EntityPlayer player = Client.mc.player;
 		if (Config.getConfig().informationNotice.get()&&!state.triedToWarnPlayer)
 			notice(source, state, player);
 	}

@@ -138,7 +138,7 @@ public class CustomChatRender {
 	}
 
 	private static int getChatWidth(final @Nonnull GuiNewChat chat) {
-		return MathHelper.floor_float(chat.getChatWidth()/chat.getChatScale());
+		return MathHelper.floor(chat.getChatWidth()/chat.getChatScale());
 	}
 
 	@CoreInvoke

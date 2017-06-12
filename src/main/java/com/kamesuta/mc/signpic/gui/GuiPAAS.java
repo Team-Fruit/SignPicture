@@ -139,7 +139,7 @@ public class GuiPAAS extends WFrame {
 							final int last = id.getLastLine();
 							id.toEntity(GuiPAAS.this.task.entity);
 							GuiPAAS.this.task.entity.lineBeingEdited = last;
-							final TileEntity e1 = Client.mc.theWorld.getTileEntity(GuiPAAS.this.task.entity.getPos());
+							final TileEntity e1 = Client.mc.world.getTileEntity(GuiPAAS.this.task.entity.getPos());
 							if (e1 instanceof TileEntitySign) {
 								final TileEntitySign tileSign = (TileEntitySign) e1;
 								id.toEntity(tileSign);

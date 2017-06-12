@@ -213,7 +213,7 @@ public class GuiImage extends WFrame {
 				int lpicture = 0;
 
 				if (lightx!=-2&&lightx!=-3||lighty!=-2&&lighty!=-3)
-					lsign = Client.mc.theWorld.getLightFor(EnumSkyBlock.SKY, new BlockPos(MathHelper.floor_float(x), MathHelper.floor_float(y), MathHelper.floor_float(z)));
+					lsign = Client.mc.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(MathHelper.floor(x), MathHelper.floor(y), MathHelper.floor(z)));
 
 				if (lightx==-2||lighty==-2||lightx==-3||lighty==-3) {
 					final OffsetData offset = attr.offsets.getMovie().get();
@@ -238,7 +238,7 @@ public class GuiImage extends WFrame {
 					m.transform(p);
 
 					if (lightx==-2||lighty==-2)
-						lcenter = Client.mc.theWorld.getLightFor(EnumSkyBlock.SKY, new BlockPos(MathHelper.floor_float(p.x), MathHelper.floor_float(p.y), MathHelper.floor_float(p.z)));
+						lcenter = Client.mc.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(MathHelper.floor(p.x), MathHelper.floor(p.y), MathHelper.floor(p.z)));
 
 					if (lightx==-3||lighty==-3) {
 						final Point3f p2 = new Point3f();
@@ -254,7 +254,7 @@ public class GuiImage extends WFrame {
 
 						p.sub(p2);
 
-						lpicture = Client.mc.theWorld.getLightFor(EnumSkyBlock.SKY, new BlockPos(MathHelper.floor_float(p.x), MathHelper.floor_float(p.y), MathHelper.floor_float(p.z)));
+						lpicture = Client.mc.world.getLightFor(EnumSkyBlock.SKY, new BlockPos(MathHelper.floor(p.x), MathHelper.floor(p.y), MathHelper.floor(p.z)));
 					}
 				}
 				if (lightx<0)

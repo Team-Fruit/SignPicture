@@ -15,7 +15,7 @@ public interface IModCommand extends ICommand {
 
 	@Override
 	@Nullable
-	List<String> getCommandAliases();
+	List<String> getAliases();
 
 	int getRequiredPermissionLevel();
 

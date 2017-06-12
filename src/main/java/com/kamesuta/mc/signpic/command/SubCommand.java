@@ -25,7 +25,8 @@ public abstract class SubCommand implements IModCommand {
 	private final @Nonnull SortedSet<SubCommand> children;
 
 	public static enum PermLevel {
-		EVERYONE(0), ADMIN(2);
+		EVERYONE(0),
+		ADMIN(2);
 
 		int permLevel;
 
@@ -49,7 +50,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nonnull String getCommandName() {
+	public @Nonnull String getName() {
 		return this.name;
 	}
 
@@ -73,12 +74,12 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nonnull List<String> getCommandAliases() {
+	public @Nonnull List<String> getAliases() {
 		return this.aliases;
 	}
 
 	@Override
-	public @Nullable List<String> getTabCompletionOptions(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
+	public @Nullable List<String> getTabCompletions(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
 		return null;
 	}
 
@@ -109,7 +110,7 @@ public abstract class SubCommand implements IModCommand {
 	@Override
 	public boolean checkPermission(final @Nullable MinecraftServer server, final @Nullable ICommandSender sender) {
 		if (sender!=null)
-			return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
+			return sender.canUseCommand(getRequiredPermissionLevel(), getName());
 		return false;
 	}
 
@@ -119,7 +120,7 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
+	public @Nonnull String getUsage(final @Nullable ICommandSender sender) {
 		return "/"+getFullCommandString()+" help";
 	}
 
@@ -131,14 +132,14 @@ public abstract class SubCommand implements IModCommand {
 	@Override
 	public @Nonnull String getFullCommandString() {
 		if (this.parent!=null)
-			return this.parent.getFullCommandString()+" "+getCommandName();
-		return " "+getCommandName();
+			return this.parent.getFullCommandString()+" "+getName();
+		return " "+getName();
 	}
 
 	@Override
 	public int compareTo(final @Nullable ICommand command) {
 		if (command!=null)
-			return getCommandName().compareTo(command.getCommandName());
+			return getName().compareTo(command.getName());
 		return 0;
 	}
 }

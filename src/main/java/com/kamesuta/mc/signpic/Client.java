@@ -157,14 +157,14 @@ public class Client {
 		public static @Nullable IBlockState getBlockState() {
 			final MovePos movePos = getBlockPos();
 			if (movePos!=null)
-				return mc.theWorld.getBlockState(movePos.pos);
+				return mc.world.getBlockState(movePos.pos);
 			return null;
 		}
 
 		public static @Nullable TileEntity getTile() {
 			final MovePos movePos = getBlockPos();
 			if (movePos!=null)
-				return mc.theWorld.getTileEntity(movePos.pos);
+				return mc.world.getTileEntity(movePos.pos);
 			return null;
 		}
 
