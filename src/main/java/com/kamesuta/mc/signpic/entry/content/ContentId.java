@@ -8,9 +8,12 @@ import org.apache.commons.lang3.StringUtils;
 import net.minecraft.util.ResourceLocation;
 
 public class ContentId {
+	public static final @Nonnull ResourceLocation hideTexture = new ResourceLocation("signpic", "textures/state/hide.png");
+	public static final @Nonnull ContentId hideContent = ContentId.fromResource(hideTexture);
+
 	private final @Nonnull String id;
 
-	public ContentId(@Nonnull String uri) {
+	protected ContentId(@Nonnull String uri) {
 		if (StringUtils.contains(uri, "http://"))
 			uri = ""+StringUtils.substring(uri, 7, StringUtils.length(uri));
 		else if (StringUtils.contains(uri, "https://"))
@@ -70,7 +73,11 @@ public class ContentId {
 		return ContentManager.instance.get(this);
 	}
 
+	public static @Nonnull ContentId from(final @Nonnull String uri) {
+		return new ContentId(uri);
+	}
+
 	public static @Nonnull ContentId fromResource(final @Nonnull ResourceLocation location) {
-		return new ContentId("!"+location.toString());
+		return from("!"+location.toString());
 	}
 }

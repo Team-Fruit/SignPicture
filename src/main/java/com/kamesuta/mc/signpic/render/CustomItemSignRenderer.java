@@ -13,7 +13,8 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -75,7 +76,7 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
 		final Entry entry = EntryId.fromItemStack(item).entry();
-		final CompoundAttr attr = entry.getMeta();
+		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
 		// Size
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
@@ -88,7 +89,7 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 			OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
 			OpenGL.glTranslatef(-.5f, -.5f, 0f);
 			OpenGL.glScalef(slot, slot, 1f);
-			entry.gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot);
+			entry.getGui().drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot, new RenderOption());
 		} else {
 			OpenGL.glScalef(2f, 2f, 1f);
 			if (type==TransformType.GROUND)
@@ -113,7 +114,7 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 			final OffsetData offset = attr.offsets.getMovie().get();
 			OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);
 			RotationGL.glRotate(attr.rotations.getMovie().get().getRotate());
-			entry.gui.drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight());
+			entry.getGui().drawScreen(0, 0, 0f, 1f, size.getWidth(), size.getHeight(), new RenderOption());
 		}
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
@@ -165,4 +166,5 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 	public @Nonnull ItemOverrideList getOverrides() {
 		return this.overrides;
 	}
+
 }

@@ -25,7 +25,8 @@ public abstract class SubCommand implements IModCommand {
 	private final @Nonnull SortedSet<SubCommand> children;
 
 	public static enum PermLevel {
-		EVERYONE(0), ADMIN(2);
+		EVERYONE(0),
+		ADMIN(2);
 
 		int permLevel;
 

@@ -7,5 +7,13 @@
 				"stream": false
 			}
 		]
+	},
+	"gui.screenshot":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "gui/screenshot"
+			}
+		]
 	}
 }

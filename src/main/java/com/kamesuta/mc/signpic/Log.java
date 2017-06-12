@@ -18,7 +18,7 @@ public class Log {
 	public static @Nonnull Logger dev = new DevLogger(log);
 
 	private static class DevLogger extends AbstractLogger {
-		private Logger logger;
+		private final Logger logger;
 
 		public DevLogger(@Nonnull final Logger logger) {
 			this.logger = logger;

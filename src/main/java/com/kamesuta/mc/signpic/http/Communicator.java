@@ -1,21 +1,19 @@
 package com.kamesuta.mc.signpic.http;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.kamesuta.mc.bnnwidget.util.NotifyCollections.NotifyArrayDeque;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.state.Progressable;
+import com.kamesuta.mc.signpic.util.ThreadUtils;
 
 public class Communicator {
 	public static @Nonnull Communicator instance = new Communicator();
 
 	private final @Nonnull NotifyArrayDeque<Progressable> tasks = new NotifyArrayDeque<Progressable>();
-	private final @Nonnull ExecutorService threadpool = Executors.newFixedThreadPool(Config.getConfig().communicateThreads.get(),
-			new ThreadFactoryBuilder().setNameFormat("signpic-http-%d").build());
+	private final @Nonnull ExecutorService threadpool = ThreadUtils.newFixedCachedThreadPool(Config.getConfig().communicateThreads.get(), "signpic-http-%d");
 
 	public @Nonnull NotifyArrayDeque<Progressable> getTasks() {
 		return this.tasks;

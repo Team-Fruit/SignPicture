@@ -224,10 +224,8 @@ public final class Informations {
 	public void notice(final @Nullable InfoSource source, final @Nullable InfoState state, final @Nullable EntityPlayer player) {
 		if (player!=null&&source!=null&&state!=null) {
 			final String lang = Client.mc.gameSettings.language;
-			if (
-				source.info.versions!=null&&
-						!StringUtils.equals(Reference.VERSION, "${version}")
-			) {
+			if (source.info.versions!=null&&
+					!StringUtils.equals(Reference.VERSION, "${version}")) {
 				final InfoVersion online = source.onlineVersion();
 
 				if (online.compare(VersionClient)) {
