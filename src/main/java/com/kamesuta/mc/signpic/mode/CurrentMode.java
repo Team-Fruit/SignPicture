@@ -62,6 +62,10 @@ public class CurrentMode {
 		return this.states.contains(state);
 	}
 
+	public void toggleState(final @Nonnull State state) {
+		setState(state, !isState(state));
+	}
+
 	public void setEntryId(final @Nonnull EntryId sign) {
 		this.entryId = sign;
 		Sign.updatePreview(sign);
@@ -80,7 +84,10 @@ public class CurrentMode {
 	}
 
 	public static enum Mode {
-		PLACE("signpic.over.mode.place"), OPTION("signpic.over.mode.option"), SETPREVIEW("signpic.over.mode.setpreview"), NONE("signpic.over.mode.none"),
+		PLACE("signpic.over.mode.place"),
+		OPTION("signpic.over.mode.option"),
+		SETPREVIEW("signpic.over.mode.setpreview"),
+		NONE("signpic.over.mode.none"),
 		;
 
 		public final @Nonnull String message;
@@ -91,7 +98,10 @@ public class CurrentMode {
 	}
 
 	public static enum State {
-		CONTINUE, SEE, PREVIEW,
+		CONTINUE,
+		SEE,
+		PREVIEW,
+		HIDE,
 		;
 	}
 }

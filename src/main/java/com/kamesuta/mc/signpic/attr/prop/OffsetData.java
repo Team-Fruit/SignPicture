@@ -42,9 +42,15 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 	}
 
 	public static class OffsetBuilder implements IPropBuilder<OffsetData, OffsetData> {
-		public final @Nonnull OffsetPropBuilder x = new OffsetPropBuilder("L", "R");
-		public final @Nonnull OffsetPropBuilder y = new OffsetPropBuilder("D", "U");
-		public final @Nonnull OffsetPropBuilder z = new OffsetPropBuilder("B", "F");
+		public final @Nonnull OffsetPropBuilder x;
+		public final @Nonnull OffsetPropBuilder y;
+		public final @Nonnull OffsetPropBuilder z;
+
+		public OffsetBuilder(final @Nonnull OffsetPropBuilder x, final @Nonnull OffsetPropBuilder y, final @Nonnull OffsetPropBuilder z) {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
@@ -100,13 +106,11 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 	}
 
 	public static class OffsetPropBuilder implements IPropBuilder<OffsetPropData, OffsetPropData> {
-		public final @Nonnull String neg;
 		public final @Nonnull String pos;
 
-		private float offset;
+		protected float offset;
 
-		public OffsetPropBuilder(final @Nonnull String neg, final @Nonnull String pos) {
-			this.neg = neg;
+		public OffsetPropBuilder(final @Nonnull String pos) {
 			this.pos = pos;
 		}
 
@@ -128,26 +132,12 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 
 		@Override
 		public @Nonnull String toString() {
-			return "OffsetPropBuilder [neg="+this.neg+", pos="+this.pos+", offset="+this.offset+"]";
+			return "OffsetPropBuilder [pos="+this.pos+", offset="+this.offset+"]";
 		}
 
-		/**
-		 * L=left
-		 * R=right
-		 * D=down
-		 * U=up
-		 * B=back
-		 * F=front
-		 * @param src
-		 */
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
-			if (StringUtils.equals(key, this.neg))
-				if (StringUtils.isEmpty(value))
-					this.offset -= OffsetData.defaultOffset;
-				else
-					this.offset -= NumberUtils.toFloat(value, 0f);
-			else if (StringUtils.equals(key, this.pos))
+			if (StringUtils.equals(key, this.pos))
 				if (StringUtils.isEmpty(value))
 					this.offset += OffsetData.defaultOffset;
 				else
@@ -157,28 +147,53 @@ public class OffsetData implements IPropInterpolatable<OffsetData> {
 			return true;
 		}
 
-		/**
-		 * L=left
-		 * R=right
-		 * D=down
-		 * U=up
-		 * B=back
-		 * F=front
-		 */
 		@Override
 		public @Nonnull String compose() {
-			final StringBuilder stb = new StringBuilder();
+			if (this.offset!=0)
+				if (this.offset==OffsetData.defaultOffset)
+					return this.pos;
+				else
+					return this.pos+ShortestFloatFormatter.format(this.offset);
+			return "";
+		}
+	}
+
+	public static class OffsetDoublePropBuilder extends OffsetPropBuilder {
+		public final @Nonnull String neg;
+
+		public OffsetDoublePropBuilder(final @Nonnull String neg, final @Nonnull String pos) {
+			super(pos);
+			this.neg = neg;
+		}
+
+		@Override
+		public @Nonnull String toString() {
+			return "OffsetPropBuilder [neg="+this.neg+", pos="+this.pos+", offset="+this.offset+"]";
+		}
+
+		@Override
+		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
+			if (StringUtils.equals(key, this.neg))
+				if (StringUtils.isEmpty(value))
+					this.offset -= OffsetData.defaultOffset;
+				else
+					this.offset -= NumberUtils.toFloat(value, 0f);
+			else
+				return super.parse(src, key, value);
+			return true;
+		}
+
+		@Override
+		public @Nonnull String compose() {
 			if (this.offset!=0)
 				if (this.offset<0)
 					if (this.offset==-OffsetData.defaultOffset)
-						stb.append(this.neg);
+						return this.neg;
 					else
-						stb.append(this.neg).append(ShortestFloatFormatter.format(-this.offset));
-				else if (this.offset==OffsetData.defaultOffset)
-					stb.append(this.pos);
+						return this.neg+ShortestFloatFormatter.format(-this.offset);
 				else
-					stb.append(this.pos).append(ShortestFloatFormatter.format(this.offset));
-			return stb.toString();
+					return super.compose();
+			return "";
 		}
 	}
 }

@@ -29,6 +29,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -40,7 +41,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class CoreHandler {
 	public final @Nonnull Config configHandler = Config.getConfig();
-	public final @Nonnull KeyHandler keyHandler = new KeyHandler();
+	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;
 	public final @Nonnull SignHandler signHandler = new SignHandler();
 	public final @Nonnull EntryManager signEntryManager = EntryManager.instance;
 	public final @Nonnull ContentManager contentManager = ContentManager.instance;
@@ -111,10 +112,16 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent
+	public void onResourceReloaded(final @Nonnull TextureStitchEvent.Post event) {
+		this.contentManager.onResourceReloaded(event);
+	}
+
+	@SubscribeEvent
 	public void onTick(final @Nonnull ClientTickEvent event) {
 		if (event.phase==Phase.END) {
 			Client.startSection("signpic_load");
 			debugKey();
+			// this.keyHandler.onTick();
 			this.signEntryManager.onTick();
 			this.signHandler.onTick();
 			this.contentManager.onTick();
@@ -154,10 +161,12 @@ public class CoreHandler {
 		final DebugCommunicate debug = new DebugCommunicate();
 		debug.getState().getMeta().put(GuiTask.HighlightPanel, true);
 		Communicator.instance.communicate(debug);
+		// Log.log.info(FMLDeobfuscatingRemapper.INSTANCE.mapMethodName("net/minecraft/client/gui/GuiNewChat", "resetScroll", DescHelper.toDesc(void.class, new Object[0])));
+		// Log.log.info(FMLDeobfuscatingRemapper.INSTANCE.mapMethodName("net/minecraft/client/gui/GuiNewChat", "resetScroll", DescHelper.toDesc(void.class, new Object[0])));
 	}
 
-	private static class DebugCommunicate implements ICommunicate, Progressable {
-		private @Nonnull State state = new State();
+	static class DebugCommunicate implements ICommunicate, Progressable {
+		private @Nonnull final State state = new State();
 		{
 			this.state.setName("Debug Progress").getProgress().setOverall(10);
 		}
