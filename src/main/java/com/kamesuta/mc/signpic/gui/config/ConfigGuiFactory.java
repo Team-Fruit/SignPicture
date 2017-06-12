@@ -14,6 +14,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
 		return ConfigGui.class;
@@ -28,5 +29,15 @@ public class ConfigGuiFactory implements IModGuiFactory {
 	@Override
 	public @Nullable RuntimeOptionGuiHandler getHandlerFor(final @Nullable RuntimeOptionCategoryElement element) {
 		return null;
+	}
+
+	@Override
+	public boolean hasConfigGui() {
+		return true;
+	}
+
+	@Override
+	public GuiScreen createConfigGui(final @Nullable GuiScreen parentScreen) {
+		return new ConfigGui(parentScreen);
 	}
 }
