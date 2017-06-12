@@ -15,22 +15,20 @@ import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRema
 public class MethodMatcher {
 	private final @Nonnull String clsName;
 	private final @Nonnull String description;
-	private final @Nonnull String srgName;
-	private final @Nonnull String mcpName;
+	private final @Nonnull RefName refname;;
 
-	public MethodMatcher(final @Nonnull String clsName, final @Nonnull String description, final @Nonnull String mcpName, final @Nonnull String srgName) {
+	public MethodMatcher(final @Nonnull String clsName, final @Nonnull String description, final @Nonnull RefName refname) {
 		this.clsName = clsName;
 		this.description = description;
-		this.srgName = srgName;
-		this.mcpName = mcpName;
+		this.refname = refname;
 	}
 
-	public MethodMatcher(final @Nonnull MappedType cls, final @Nonnull String description, final @Nonnull String mcpName, final @Nonnull String srgName) {
-		this(cls.name(), description, mcpName, srgName);
+	public MethodMatcher(final @Nonnull MappedType cls, final @Nonnull String description, final @Nonnull RefName refname) {
+		this(cls.name(), description, refname);
 	}
 
 	public boolean match(final @Nonnull String methodName, final @Nonnull String methodDesc) {
-		if (methodName.equals(this.mcpName))
+		if (methodName.equals(this.refname.mcpName()))
 			return true;
 		if (!VisitorHelper.useSrgNames())
 			return false;
@@ -38,12 +36,11 @@ public class MethodMatcher {
 		if (!unmappedDesc.equals(this.description))
 			return false;
 		final String unmappedName = FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(this.clsName, methodName, methodDesc);
-		return unmappedName.equals(this.srgName);
+		return unmappedName.equals(this.refname.srgName());
 	}
 
 	@Override
 	public @Nonnull String toString() {
-		return String.format("Matcher: %s.[%s,%s] %s", this.clsName, this.srgName, this.mcpName, this.description);
+		return String.format("Matcher: %s.%s %s", this.clsName, this.refname, this.description);
 	}
-
 }

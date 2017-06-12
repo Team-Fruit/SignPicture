@@ -13,8 +13,9 @@ import com.kamesuta.mc.bnnwidget.position.Area;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -46,7 +47,7 @@ public class SignPicLabel extends WBase {
 	}
 
 	@Override
-	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+	public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 		final Area a = getGuiPosition(pgp);
 		final float opacity = getGuiOpacity(popacity);
 		final EntryId entryId = getEntryId();
@@ -61,25 +62,25 @@ public class SignPicLabel extends WBase {
 					upentry = this.update.entry();
 
 				if (!StringUtils.isEmpty(content.id.getID()))
-					drawEntry(a, opacity, entry);
+					drawEntry(a, opacity, entry, opt);
 				else if (upentry!=null&&upentry.isValid())
-					drawEntry(a, opacity, upentry);
+					drawEntry(a, opacity, upentry, opt);
 				else {
 					WRenderer.startTexture();
 					OpenGL.glColor4f(1f, 1f, 1f, .2f);
 					texture().bindTexture(defaultTexture);
 					final SizeData size1 = ImageSizes.INNER.defineSize(SizeData.create(1, 1), SizeData.create(a));
-					drawTexture(new Area(a.x1()+a.w()/2-size1.getWidth()/2, a.y1()+a.h()/2-size1.getHeight()/2, a.x1()+a.w()/2+size1.getWidth()/2, a.y1()+a.h()/2+size1.getHeight()/2));
+					drawTexture(Area.abs(a.x1()+a.w()/2-size1.getWidth()/2, a.y1()+a.h()/2-size1.getHeight()/2, a.x1()+a.w()/2+size1.getWidth()/2, a.y1()+a.h()/2+size1.getHeight()/2), null, null);
 				}
 			}
 		}
 	}
 
-	public static void drawEntry(final @Nonnull Area a, final float opacity, final @Nonnull Entry entry) {
+	public static void drawEntry(final @Nonnull Area a, final float opacity, final @Nonnull Entry entry, @Nonnull final RenderOption opt) {
 		OpenGL.glDisable(GL_CULL_FACE);
 		OpenGL.glPushMatrix();
 
-		final CompoundAttr attr = entry.getMeta();
+		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
 		final SizeData size00 = attr.sizes.getMovie().get();
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
@@ -89,8 +90,9 @@ public class SignPicLabel extends WBase {
 
 		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
 		OpenGL.glTranslatef((a.w()-size2.getWidth())/2f, (a.h()-size2.getHeight())/2f, 0f);
+		OpenGL.glScalef(size.getWidth()<0 ? -1f : 1f, size.getHeight()<0 ? -1f : 1f, 1f);
 		OpenGL.glScalef(100, 100, 1f);
-		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
+		entry.getGui().drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight(), opt);
 
 		OpenGL.glPopMatrix();
 		OpenGL.glEnable(GL_CULL_FACE);

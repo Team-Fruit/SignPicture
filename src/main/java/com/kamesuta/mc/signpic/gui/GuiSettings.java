@@ -14,13 +14,15 @@ import com.kamesuta.mc.bnnwidget.WBase;
 import com.kamesuta.mc.bnnwidget.WBox;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
+import com.kamesuta.mc.bnnwidget.component.FunnyButton;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MCheckBox;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
 import com.kamesuta.mc.bnnwidget.component.MScaledLabel;
 import com.kamesuta.mc.bnnwidget.component.MSelectField;
 import com.kamesuta.mc.bnnwidget.component.MSelectLabel;
 import com.kamesuta.mc.bnnwidget.component.MTab;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -28,6 +30,7 @@ import com.kamesuta.mc.bnnwidget.position.Coord;
 import com.kamesuta.mc.bnnwidget.position.Point;
 import com.kamesuta.mc.bnnwidget.position.R;
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VCommon;
@@ -44,6 +47,7 @@ import com.kamesuta.mc.signpic.Config.ConfigProperty;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
@@ -59,7 +63,12 @@ public class GuiSettings extends WPanel {
 	protected boolean closing;
 
 	public void show() {
-		this.bottom.stop().add(Easings.easeOutQuad.move(.7f, 1f)).start();
+		this.bottom.stop().add(Motion.blank(.25f).setAfter(new Runnable() {
+			@Override
+			public void run() {
+				mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(new ResourceLocation("signpic", "gui.show")), 1.0F));
+			}
+		})).add(Easings.easeOutQuad.move(.7f, 1f)).start();
 	}
 
 	public void hide() {
@@ -86,10 +95,8 @@ public class GuiSettings extends WPanel {
 						final boolean b = a.pointInside(p);
 						if (!GuiSettings.this.closing)
 							if (b) {
-								if (!GuiSettings.this.show) {
+								if (!GuiSettings.this.show)
 									show();
-									mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(new ResourceLocation("signpic", "gui.show")), 1.0F));
-								}
 								GuiSettings.this.show = true;
 							} else {
 								if (GuiSettings.this.show)
@@ -123,33 +130,33 @@ public class GuiSettings extends WPanel {
 							protected R line = new R(Coord.top(0), Coord.top(2));
 
 							@Override
-							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+							public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 								final Area a = getGuiPosition(pgp);
 								WRenderer.startShape();
 								OpenGL.glColor4f(0f, 0f, 0f, .6f);
 								draw(a);
 								OpenGL.glColor4f(0f/256f, 78f/256f, 155f/256f, 1f);
 								draw(this.line.getAbsolute(a));
-								super.draw(ev, pgp, p, frame, opacity);
+								super.draw(ev, pgp, p, frame, opacity, opt);
 							}
 
 							@Override
 							protected void initWidget() {
 								add(new WBase(new R(Coord.top(5), Coord.left(3), Coord.width(90), Coord.height(26))) {
 									@Override
-									public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+									public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 										final Area a = getGuiPosition(pgp);
 										texture().bindTexture(settings);
 										OpenGL.glColor4f(1, 1, 1, 1);
 										WRenderer.startTexture();
-										drawTexture(a);
+										drawTexture(a, null, null);
 									}
 								});
 								final MTab tab = new MTab(new R(Coord.left(5), Coord.width(250), Coord.top(33), Coord.height(82)), Coord.CoordSide.Left, 15f, 15f);
 								tab.addTab(I18n.format("signpic.gui.settings.api.upimage"), new GuiApis<ImageUploaderFactory>(new R(), Apis.instance.imageUploaders, I18n.format("signpic.gui.settings.api.upimage.desc")));
 								tab.addTab(I18n.format("signpic.gui.settings.api.urlshortener"), new GuiApis<URLShortenerFactory>(new R(), Apis.instance.urlShorteners, I18n.format("signpic.gui.settings.api.urlshortener.desc")));
 								add(tab);
-								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
+								add(new WPanel(new R(Coord.bottom(5+updatepanelHeight+80), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected void initWidget() {
 										add(new MCheckBox(new R(Coord.left(0), Coord.width(15))) {
@@ -166,9 +173,21 @@ public class GuiSettings extends WPanel {
 												getConfig().set(isCheck());
 											}
 										});
-										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
+										add(new FontLabel(new R(Coord.left(15), Coord.right(0)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.paas")));
 									}
 								});
+								add(new FunnyButton(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
+									@Override
+									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
+										CurrentMode.instance.toggleState(CurrentMode.State.HIDE);
+										return true;
+									}
+
+									@Override
+									public boolean isHighlight() {
+										return CurrentMode.instance.isState(CurrentMode.State.HIDE);
+									}
+								}.setText(I18n.format("signpic.gui.settings.hide")));
 								add(new MButton(new R(Coord.bottom(5+updatepanelHeight+40), Coord.right(5), Coord.width(100), Coord.height(15))) {
 									@Override
 									protected boolean onClicked(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final int button) {
@@ -202,12 +221,12 @@ public class GuiSettings extends WPanel {
 
 									add(new WPanel(new R(Coord.bottom(0), Coord.height(updatepanelHeight))) {
 										@Override
-										public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+										public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 											final Area a = getGuiPosition(pgp);
 											OpenGL.glColor4f(0f, 0f, 0f, .4f);
 											WRenderer.startShape();
 											draw(a);
-											super.draw(ev, pgp, p, frame, popacity);
+											super.draw(ev, pgp, p, frame, popacity, opt);
 										}
 
 										@Override
@@ -253,7 +272,7 @@ public class GuiSettings extends WPanel {
 												protected void initWidget() {
 													add(new WBase(new R(Coord.width(V.per(vstart, vend, state)), Coord.pleft(.5f)).child(Coord.pleft(-.5f))) {
 														@Override
-														public void draw(final WEvent ev, final Area pgp, final Point p, final float frame, final float opacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 															final Area a = getGuiPosition(pgp);
 															texture().bindTexture(update);
 															// glColor4f(1, 1, 1, 1);
@@ -264,7 +283,7 @@ public class GuiSettings extends WPanel {
 															OpenGL.glTranslatef(a.x1()+a.w()/2, a.y1()+a.h()/2, 0f);
 															OpenGL.glRotatef((orot+rot.get())*360, 0, 0, 1);
 															OpenGL.glTranslatef(-a.x1()-a.w()/2, -a.y1()-a.h()/2, 0f);
-															drawTexture(a);
+															drawTexture(a, null, null);
 															OpenGL.glPopMatrix();
 														}
 													});
@@ -284,10 +303,10 @@ public class GuiSettings extends WPanel {
 														}
 
 														@Override
-														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(0, 0, 10f);
-															super.draw(ev, pgp, p, frame, popacity);
+															super.draw(ev, pgp, p, frame, popacity, opt);
 															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(message));
@@ -304,10 +323,10 @@ public class GuiSettings extends WPanel {
 														}
 
 														@Override
-														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity) {
+														public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 															OpenGL.glPushMatrix();
 															OpenGL.glTranslatef(0, 0, 10f);
-															super.draw(ev, pgp, p, frame, popacity);
+															super.draw(ev, pgp, p, frame, popacity, opt);
 															OpenGL.glPopMatrix();
 														}
 													}.setShadow(true).setText(!StringUtils.isEmpty(update) ? I18n.format("signpic.gui.update.message.changelog", update) : message));
@@ -335,13 +354,13 @@ public class GuiSettings extends WPanel {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 			final Area a = getGuiPosition(pgp);
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
-			super.draw(ev, pgp, p, frame, opacity);
+			super.draw(ev, pgp, p, frame, opacity, opt);
 		}
 
 		protected WBox box = new WBox(new R(Coord.left(1), Coord.right(1), Coord.top(1+15+32+1), Coord.height(32))) {
@@ -358,21 +377,21 @@ public class GuiSettings extends WPanel {
 		@Override
 		protected void initWidget() {
 			float top = 1;
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(this.title));
+			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), WFont.fontRenderer).setText(this.title));
 			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 				@Override
-				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 					final Area a = getGuiPosition(pgp);
 					WRenderer.startShape();
 					OpenGL.glColor4f(0f, 0f, 0f, .2f);
 					OpenGL.glLineWidth(.5f);
 					draw(a, GL_LINE_LOOP);
-					super.draw(ev, pgp, p, frame, opacity);
+					super.draw(ev, pgp, p, frame, opacity, opt);
 				}
 
 				@Override
 				protected void initWidget() {
-					add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.type")));
+					add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.api.type")));
 					add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 						@Override
 						protected void initWidget() {
@@ -415,18 +434,18 @@ public class GuiSettings extends WPanel {
 		}
 
 		@Override
-		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity) {
+		public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
 			final Area a = getGuiPosition(pgp);
 			WRenderer.startShape();
 			OpenGL.glColor4f(0f, 0f, 0f, .2f);
 			OpenGL.glLineWidth(.5f);
 			draw(a, GL_LINE_LOOP);
-			super.draw(ev, pgp, p, frame, opacity);
+			super.draw(ev, pgp, p, frame, opacity, opt);
 		}
 
 		@Override
 		protected void initWidget() {
-			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.key")));
+			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.api.key")));
 			add(new MSelectField(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {

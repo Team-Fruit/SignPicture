@@ -96,7 +96,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 					this.result = Client.gson.<ImgurResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
 					final String link = getLink();
 					if (link!=null) {
-						final Content content = new ContentId(link).content();
+						final Content content = ContentId.from(link).content();
 						final String id = content.meta.getCacheID();
 						if (id!=null)
 							FileUtils.moveFile(tmp, ContentLocation.cacheLocation(id));

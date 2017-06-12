@@ -35,7 +35,7 @@ public class Info {
 				public @Nullable List<Config> config;
 
 				public static class Config {
-					public @Nullable String clientid;
+					public @Nullable String key;
 				}
 			}
 

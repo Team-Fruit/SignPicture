@@ -10,6 +10,7 @@ import com.mojang.util.UUIDTypeAdapter;
 
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.Session;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -21,6 +22,9 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
 		super.preInit(event);
+
+		Log.log = event.getModLog();
+		Config.init(event.getSuggestedConfigurationFile());
 
 		// Setup stencil clip
 		// StencilClip.init();
@@ -34,7 +38,9 @@ public class ClientProxy extends CommonProxy {
 			final Object o = UUIDTypeAdapter.fromString(id);
 			if (o!=null) {
 				Client.id = id;
-				Client.name = Client.mc.getSession().getUsername();
+				final Session s = Client.mc.getSession();
+				Client.name = s.getUsername();
+				Client.token = s.getToken();
 			}
 		} catch (final IllegalArgumentException e) {
 		}
@@ -67,5 +73,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
 		super.postInit(event);
+
+		Config.getConfig().save();
 	}
 }

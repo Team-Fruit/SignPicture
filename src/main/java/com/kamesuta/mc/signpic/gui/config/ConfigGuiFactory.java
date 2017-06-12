@@ -14,6 +14,7 @@ public class ConfigGuiFactory implements IModGuiFactory {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
 		return ConfigGui.class;
