@@ -76,15 +76,15 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				 * 335  invokestatic com.kamesuta.mc.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
 				 */
 				super.visitVarInsn(Opcodes.ALOAD, 0);
-				super.visitVarInsn(Opcodes.ALOAD, 12);
+				super.visitVarInsn(Opcodes.ALOAD, 10);
 				super.visitVarInsn(Opcodes.ILOAD, 16);
-				super.visitVarInsn(Opcodes.ILOAD, 11);
+				super.visitVarInsn(Opcodes.FLOAD, 6);
 				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
 						DescHelper.toDesc(int.class,
 								"net.minecraft.client.gui.FontRenderer",
-								"java.lang.String", int.class, int.class, int.class,
+								"java.lang.String", float.class, float.class, int.class,
 								"net.minecraft.client.gui.GuiNewChat",
-								"net.minecraft.client.gui.ChatLine", int.class, int.class),
+								"net.minecraft.client.gui.ChatLine", int.class, float.class),
 						false);
 			} else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
@@ -131,7 +131,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				super.visitTypeInsn(Opcodes.CHECKCAST, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine");
 				super.visitVarInsn(Opcodes.ALOAD, 0);
 				super.visitVarInsn(Opcodes.ILOAD, 6);
-				super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.IChatComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
+				super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.text.ITextComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
 				super.visitVarInsn(Opcodes.ASTORE, 11);
 				super.visitVarInsn(Opcodes.ALOAD, 11);
 				super.visitJumpInsn(Opcodes.IFNULL, l);
