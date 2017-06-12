@@ -151,7 +151,7 @@ public class ChatBuilder {
 			if (chat.useId)
 				mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(msg, chat.id);
 			else
-				mc.thePlayer.addChatComponentMessage(msg, false);
+				mc.thePlayer.addChatComponentMessage(msg);
 		}
 	}
 

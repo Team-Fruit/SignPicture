@@ -1,13 +1,15 @@
 package com.kamesuta.mc.signpic.gui;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
-import com.kamesuta.mc.bnnwidget.component.MLabel;
+import com.kamesuta.mc.bnnwidget.component.FontLabel;
 import com.kamesuta.mc.bnnwidget.component.MNumber;
+import com.kamesuta.mc.bnnwidget.font.WFont;
 import com.kamesuta.mc.bnnwidget.motion.Easings;
 import com.kamesuta.mc.bnnwidget.motion.Motion;
 import com.kamesuta.mc.bnnwidget.position.Area;
@@ -20,19 +22,27 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class GuiSize extends WPanel {
-	protected @Nonnull SizeBuilder size;
-
-	public GuiSize(final @Nonnull R position, final @Nonnull SizeBuilder size) {
+public abstract class GuiSize extends WPanel {
+	public GuiSize(final @Nonnull R position) {
 		super(position);
-		this.size = size;
 	}
+
+	protected @Nonnull abstract SizeBuilder size();
+
+	protected abstract void onUpdate();
 
 	@Override
 	protected void initWidget() {
-		final VMotion label = V.pm(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new MLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
+		final VMotion label = V.pm(-1f).start();
+		add(new FontLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), WFont.fontRenderer) {
+			@Override
+			public void onAdded() {
+				super.onAdded();
+				label.stop().add(Easings.easeOutBack.move(.25f, 0f));
+			}
+
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));
@@ -44,8 +54,8 @@ public class GuiSize extends WPanel {
 				return label.isFinished();
 			}
 		}.setText(I18n.format("signpic.gui.editor.size.category")));
-		final VMotion w = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(w), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0) {
+		final VMotion w = V.pm(-1f).start();
+		add(new SizeElement(new R(Coord.left(w), Coord.pwidth(1f), Coord.top(15*1), Coord.height(15)), w, 0) {
 			{
 				this.label.setText(I18n.format("signpic.gui.editor.size.width"));
 				this.number.setNegLabel(I18n.format("signpic.gui.editor.size.width.neg"));
@@ -54,20 +64,20 @@ public class GuiSize extends WPanel {
 			}
 
 			@Override
-			protected void initWidget() {
-				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
-				super.initWidget();
+			public void onAdded() {
+				super.onAdded();
+				addDelay(this.left.stop()).add(Easings.easeOutBack.move(.25f, 0f));
 			}
 
 			@Override
 			protected void set(final float f) {
-				GuiSize.this.size.width = f;
+				size().width = f;
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiSize.this.size.width;
+				return size().width;
 			}
 
 			@Override
@@ -75,8 +85,8 @@ public class GuiSize extends WPanel {
 				return c.add(Motion.blank(1*.025f));
 			}
 		});
-		final VMotion h = V.pm(-1f);
-		add(new OffsetElement(new R(Coord.left(h), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1) {
+		final VMotion h = V.pm(-1f).start();
+		add(new SizeElement(new R(Coord.left(h), Coord.pwidth(1f), Coord.top(15*2), Coord.height(15)), h, 1) {
 			{
 				this.label.setText(I18n.format("signpic.gui.editor.size.height"));
 				this.number.setNegLabel(I18n.format("signpic.gui.editor.size.height.neg"));
@@ -86,19 +96,24 @@ public class GuiSize extends WPanel {
 
 			@Override
 			protected void initWidget() {
-				addDelay(this.left).add(Easings.easeOutBack.move(.25f, 0f)).start();
 				super.initWidget();
 			}
 
 			@Override
+			public void onAdded() {
+				super.onAdded();
+				addDelay(this.left.stop()).add(Easings.easeOutBack.move(.25f, 0f));
+			}
+
+			@Override
 			protected void set(final float f) {
-				GuiSize.this.size.height = f;
+				size().height = f;
 				onUpdate();
 			}
 
 			@Override
 			protected final float get() {
-				return GuiSize.this.size.height;
+				return size().height;
 			}
 
 			@Override
@@ -108,17 +123,14 @@ public class GuiSize extends WPanel {
 		});
 	}
 
-	protected void onUpdate() {
-	}
-
-	protected abstract class OffsetElement extends WPanel {
-		public @Nonnull MLabel label;
+	protected abstract class SizeElement extends WPanel {
+		public @Nonnull FontLabel label;
 		public @Nonnull MNumber number;
 		protected @Nonnull VMotion left;
 
-		public OffsetElement(final @Nonnull R position, final @Nonnull VMotion left, final int i) {
+		public SizeElement(final @Nonnull R position, final @Nonnull VMotion left, final int i) {
 			super(position);
-			this.label = new MLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)));
+			this.label = new FontLabel(new R(Coord.left(0), Coord.width(15f), Coord.top(0), Coord.pheight(1f)), WFont.fontRenderer);
 			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
 				@Override
 				protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
@@ -126,7 +138,8 @@ public class GuiSize extends WPanel {
 						set(NumberUtils.toFloat(newText));
 					else
 						set(SizeData.Unknown);
-					onUpdate();
+					if (this.initialized)
+						onUpdate();
 				}
 
 				@Override
@@ -151,7 +164,19 @@ public class GuiSize extends WPanel {
 		@Override
 		protected void initWidget() {
 			add(this.label);
-			add(this.number.setNumber(get()));
+			onChanged(null);
+			add(this.number);
+		}
+
+		@SubscribeEvent
+		public void onChanged(final @Nullable PropertyChangeEvent ev) {
+			this.number.setNumber(get());
+		}
+
+		@Override
+		public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
+			ev.bus.register(this);
+			super.update(ev, pgp, p);
 		}
 
 		protected abstract float get();
