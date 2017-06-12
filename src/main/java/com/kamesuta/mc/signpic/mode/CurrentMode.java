@@ -14,8 +14,8 @@ public class CurrentMode {
 	}
 
 	private boolean isShortening;
-	private @Nonnull EntryId handSign = EntryId.blank;
-	private @Nonnull EntryId entryId = EntryId.blank;
+	private @Nonnull EntryId handSign = EntryId.from("#{}");
+	private @Nonnull EntryId entryId = EntryId.from("#{}");
 	private @Nonnull Mode mode = Mode.NONE;
 	private final @Nonnull EnumSet<State> states = EnumSet.noneOf(State.class);
 
