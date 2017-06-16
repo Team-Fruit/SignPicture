@@ -23,7 +23,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 		@Override
 		public void visitMethodInsn(final int opcode, final @Nullable String owner, final @Nullable String name, final @Nullable String desc, final boolean itf) {
 			if (name!=null&&desc!=null&&this.matcher.match(name, desc))
-				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomBookRenderer", "hookDrawSplitString", desc, itf);
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomBookRenderer", "hookDrawSplitString", DescHelper.toDesc(void.class, owner, "java.lang.String", int.class, int.class, int.class, int.class), itf);
 			else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 		}
