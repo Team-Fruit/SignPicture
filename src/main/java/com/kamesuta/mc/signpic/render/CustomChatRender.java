@@ -142,12 +142,12 @@ public class CustomChatRender {
 	}
 
 	@CoreInvoke
-	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
+	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final float x, final float y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final float opacity) {
 		if (chatline instanceof PicChatLine) {
 			final PicChatLine cline = (PicChatLine) chatline;
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0f, j2, 0f);
-			OpenGL.glColor4i(255, 255, 255, opacity);
+			OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			cline.draw(chat, font.FONT_HEIGHT);
 			OpenGL.glPopMatrix();
 			WRenderer.startTexture();
