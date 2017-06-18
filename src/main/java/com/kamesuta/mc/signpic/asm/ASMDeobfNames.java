@@ -5,6 +5,7 @@ import javax.annotation.Nonnull;
 import com.kamesuta.mc.signpic.asm.lib.RefName;
 
 public class ASMDeobfNames {
+	public static final @Nonnull RefName TileEntityGetRenderBoundingBox = RefName.deobName("getRenderBoundingBox", "func_184177_bl");
 	public static final @Nonnull RefName GuiNewChatDrawnChatLines = RefName.deobName("field_146253_i", "field_146253_i");
 	public static final @Nonnull RefName GuiScreenHandleInput = RefName.deobName("handleInput", "func_146269_k");
 	public static final @Nonnull RefName FontRendererDrawStringWithShadow = RefName.deobName("drawStringWithShadow", "func_78261_a");
