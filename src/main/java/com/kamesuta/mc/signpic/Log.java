@@ -118,7 +118,7 @@ public class Log {
 
 		@Override
 		public void logMessage(final @Nullable String fqcn, final @Nullable Level level, final @Nullable Marker marker, final @Nullable Message message, final @Nullable Throwable t) {
-			logMessage(fqcn, level, marker, message, t);
+			log(level, marker, message, t);
 		}
 
 		@Override
