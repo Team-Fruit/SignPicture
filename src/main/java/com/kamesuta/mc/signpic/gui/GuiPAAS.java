@@ -107,7 +107,7 @@ public class GuiPAAS extends WFrame {
 							OpenGL.glTranslatef(0.0F, -.02348F, 0.0F);
 						}
 
-						TileEntityRendererDispatcher.instance.renderTileEntityAt(sign, -0.5D, -0.75D, -0.5D, 0.0F);
+						TileEntityRendererDispatcher.instance.render(sign, -0.5D, -0.75D, -0.5D, 0.0F);
 						OpenGL.glPopMatrix();
 					}
 				});

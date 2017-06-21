@@ -105,7 +105,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.getConfig().renderSeeOpacity.get().floatValue());
-				super.func_192841_a(tile, x, y, z, partialTicks, destroy, 0f);
+				super.render(tile, x, y, z, partialTicks, destroy, 0f);
 			}
 
 			OpenGL.glPushMatrix();
@@ -126,12 +126,12 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
-			super.func_192841_a(tile, x, y, z, partialTicks, destroy, 0f);
+			super.render(tile, x, y, z, partialTicks, destroy, 0f);
 		}
 	}
 
 	@Override
-	public void func_192841_a(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float p_192841_10_) {
+	public void render(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float p_192841_10_) {
 		if (tile!=null) {
 			Client.startSection("signpic-render");
 			renderSignPictureBase(tile, x, y, z, partialTicks, destroy, 1f);
