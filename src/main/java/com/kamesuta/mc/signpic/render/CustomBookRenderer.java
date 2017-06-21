@@ -24,7 +24,7 @@ import net.minecraft.client.gui.FontRenderer;
 @CoreInvoke
 public class CustomBookRenderer {
 	@CoreInvoke
-	public static void hookDrawSplitString(@Nonnull final String s, final int x, final int y, final int width, final int color) {
+	public static void hookDrawSplitString(final FontRenderer font, @Nonnull final String s, final int x, final int y, final int width, final int color) {
 		final FontRenderer f = WRenderer.font();
 
 		final String str = StringUtils.removeEnd(s, "\n");
