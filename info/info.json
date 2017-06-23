@@ -1,13 +1,12 @@
 {
 	"versions": {
 		"1.7.10": {
-			"version": "2.7.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.7.1/SignPicture-1.7.10-2.7.1-universal.jar",
-			"local": "SignPicture-1.7.10-2.7.1-universal.jar",
-			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
-			"message": "Some bug fixes",
+			"version": "2.8.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.8.0/SignPicture-1.7.10-2.8.0-universal.jar",
+			"local": "SignPicture-1.7.10-2.8.0-universal.jar",
+			"message": "Bug fixes and new features",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正しました"
+				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
 			}
 		},
 		"1.8": {
@@ -31,33 +30,30 @@
 			}
 		},
 		"1.8.9": {
-			"version": "2.7.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.7.1/SignPicture-1.8.9-2.7.1-universal.jar",
-			"local": "SignPicture-1.8.9-2.7.1-universal.jar",
-			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
-			"message": "Some bug fixes",
+			"version": "2.8.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.8.0/SignPicture-1.8.9-2.8.0-universal.jar",
+			"local": "SignPicture-1.8.9-2.8.0-universal.jar",
+			"message": "Bug fixes and new features",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正しました"
+				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
 			}
 		},
 		"1.9.4": {
-			"version": "2.7.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.7.1/SignPicture-1.9.4-2.7.1-universal.jar",
-			"local": "SignPicture-1.9.4-2.7.1-universal.jar",
-			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
-			"message": "Some bug fixes",
+			"version": "2.8.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.8.0/SignPicture-1.9.4-2.8.0-universal.jar",
+			"local": "SignPicture-1.9.4-2.8.0-universal.jar",
+			"message": "Bug fixes and new features",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正しました"
+				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
 			}
 		},
 		"1.10.2": {
-			"version": "2.7.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.7.1/SignPicture-1.10.2-2.7.1-universal.jar",
-			"local": "SignPicture-1.10.2-2.7.1-universal.jar",
-			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
-			"message": "Some bug fixes",
+			"version": "2.8.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.8.0/SignPicture-1.10.2-2.8.0-universal.jar",
+			"local": "SignPicture-1.10.2-2.8.0-universal.jar",
+			"message": "Bug fixes and new features",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正しました"
+				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
 			}
 		},
 		"1.11": {
@@ -71,23 +67,21 @@
 			}
 		},
 		"1.11.2": {
-			"version": "2.7.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11.2-2.7.1/SignPicture-1.11.2-2.7.1-universal.jar",
-			"local": "SignPicture-1.11.2-2.7.1-universal.jar",
-			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
-			"message": "Some bug fixes",
+			"version": "2.8.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11.2-2.8.0/SignPicture-1.11.2-2.8.0-universal.jar",
+			"local": "SignPicture-1.11.2-2.8.0-universal.jar",
+			"message": "Bug fixes and new features",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正しました"
+				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
 			}
 		},
 		"1.12": {
-			"version": "2.7.1",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.12-2.7.1/SignPicture-1.12-2.7.1-universal.jar",
-			"local": "SignPicture-1.12-2.7.1-universal.jar",
-			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
-			"message": "Some bug fixes",
+			"version": "2.8.0",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.12-2.8.0/SignPicture-1.12-2.8.0-universal.jar",
+			"local": "SignPicture-1.12-2.8.0-universal.jar",
+			"message": "Bug fixes and new features",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正しました"
+				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
 			}
 		}
 	},
