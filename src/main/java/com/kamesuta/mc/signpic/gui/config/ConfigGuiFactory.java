@@ -14,22 +14,22 @@ public class ConfigGuiFactory implements IModGuiFactory {
 
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
-		return ConfigGui.class;
-	}
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
+//		return ConfigGui.class;
+//	}
 
 	@Override
 	public @Nullable Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
 		return null;
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public @Nullable RuntimeOptionGuiHandler getHandlerFor(final @Nullable RuntimeOptionCategoryElement element) {
-		return null;
-	}
+//	@SuppressWarnings("deprecation")
+//	@Override
+//	public @Nullable RuntimeOptionGuiHandler getHandlerFor(final @Nullable RuntimeOptionCategoryElement element) {
+//		return null;
+//	}
 
 	@Override
 	public boolean hasConfigGui() {
