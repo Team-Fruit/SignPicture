@@ -37,9 +37,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 
-public class CustomItemSignRenderer implements IPerspectiveAwareModel {
+public class CustomItemSignRenderer implements IBakedModel {
 	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
 	private final @Nonnull IBakedModel baseModel;
 	private @Nullable ItemStack itemStack;
@@ -51,12 +50,10 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 
 	@Override
 	public @Nullable Pair<? extends IBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
-		Pair<? extends IBakedModel, Matrix4f> pair = null;
-		if (this.baseModel instanceof IPerspectiveAwareModel)
-			pair = ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
-		if (this.itemStack!=null&&cameraTransformType!=null&&this.isOverride) {
+		Pair<? extends IBakedModel, Matrix4f> pair = this.baseModel.handlePerspective(cameraTransformType);
+		if (this.itemStack!=null&&this.isOverride) {
 			OpenGL.glPushMatrix();
-			if (pair!=null&&pair.getRight()!=null)
+			if (pair.getRight()!=null)
 				ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
 			OpenGL.glDisable(GL11.GL_CULL_FACE);
 			renderItem(cameraTransformType, this.itemStack);
@@ -66,8 +63,8 @@ public class CustomItemSignRenderer implements IPerspectiveAwareModel {
 			OpenGL.glEnable(GL11.GL_CULL_FACE);
 			OpenGL.glPopMatrix();
 		}
-		if (pair!=null&&!this.isOverride)
-			return ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
+		if (!this.isOverride)
+			return this.baseModel.handlePerspective(cameraTransformType);
 		return Pair.of(this, null);
 	}
 
