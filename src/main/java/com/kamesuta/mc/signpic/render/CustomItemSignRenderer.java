@@ -50,8 +50,8 @@ public class CustomItemSignRenderer implements IBakedModel {
 
 	@Override
 	public @Nullable Pair<? extends IBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
-		Pair<? extends IBakedModel, Matrix4f> pair = this.baseModel.handlePerspective(cameraTransformType);
-		if (this.itemStack!=null&&this.isOverride) {
+		final Pair<? extends IBakedModel, Matrix4f> pair = this.baseModel.handlePerspective(cameraTransformType);
+		if (this.itemStack!=null&&cameraTransformType!=null&&this.isOverride) {
 			OpenGL.glPushMatrix();
 			if (pair.getRight()!=null)
 				ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
@@ -150,7 +150,7 @@ public class CustomItemSignRenderer implements IBakedModel {
 			return this.baseModel.getQuads(state, side, rand);
 	}
 
-	private @Nonnull ItemOverrideList overrides = new ItemOverrideList(ImmutableList.<ItemOverride> of()) {
+	private @Nonnull final ItemOverrideList overrides = new ItemOverrideList(ImmutableList.<ItemOverride> of()) {
 		@Override
 		public @Nullable IBakedModel handleItemState(final @Nullable IBakedModel originalModel, final @Nullable ItemStack stack, final @Nullable World world, final @Nullable EntityLivingBase entity) {
 			CustomItemSignRenderer.this.itemStack = stack;
