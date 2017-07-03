@@ -132,6 +132,7 @@ public class CustomItemSignRenderer implements IBakedModel {
 		return this.baseModel.getParticleTexture();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
 		return ItemCameraTransforms.DEFAULT;

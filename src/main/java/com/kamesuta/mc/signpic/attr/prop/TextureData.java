@@ -258,7 +258,7 @@ public interface TextureData {
 			@Override
 			public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
 				if (StringUtils.equals(key, this.type.identifier)) {
-					if (NumberUtils.isNumber(value))
+					if (NumberUtils.isCreatable(value))
 						data = BlendType.fromId(NumberUtils.toInt(value));
 					return true;
 				}

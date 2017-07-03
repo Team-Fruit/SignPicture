@@ -3,11 +3,11 @@ package com.kamesuta.mc.signpic.information;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +62,7 @@ public class InformationCheck extends Communicate implements Progressable {
 							final HttpEntity entity1 = response1.getEntity();
 							input1 = entity1.getContent();
 							this.status.getProgress().setDone(3);
-							source.privateMsg = Client.gson.fromJson(jsonReader2 = new JsonReader(new InputStreamReader(input1, Charsets.UTF_8)), Info.PrivateMsg.class);
+							source.privateMsg = Client.gson.fromJson(jsonReader2 = new JsonReader(new InputStreamReader(input1, StandardCharsets.UTF_8)), Info.PrivateMsg.class);
 						}
 					} catch (final Exception e1) {
 					} finally {

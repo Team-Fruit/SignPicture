@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 
 import com.google.gson.stream.JsonReader;
@@ -37,7 +37,7 @@ public abstract class MetaIO<E extends IData> {
 		JsonReader reader = null;
 		try {
 			if (this.location.exists()) {
-				reader = new JsonReader(new InputStreamReader(new FileInputStream(this.location), Charsets.UTF_8));
+				reader = new JsonReader(new InputStreamReader(new FileInputStream(this.location), StandardCharsets.UTF_8));
 				final E data = Client.gson.fromJson(reader, this.clazz);
 				IOUtils.closeQuietly(reader);
 				if (data!=null&&data.getFormat()==IData.FormatVersion)
@@ -60,7 +60,7 @@ public abstract class MetaIO<E extends IData> {
 	private void saveData(final @Nullable E data) {
 		JsonWriter writer = null;
 		try {
-			writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(this.location), Charsets.UTF_8));
+			writer = new JsonWriter(new OutputStreamWriter(new FileOutputStream(this.location), StandardCharsets.UTF_8));
 			Client.gson.toJson(data, this.clazz, writer);
 		} catch (final Exception e) {
 		} finally {

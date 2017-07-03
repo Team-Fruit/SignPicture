@@ -134,7 +134,7 @@ public abstract class GuiSize extends WPanel {
 			this.number = new MNumber(new R(Coord.left(15), Coord.right(0), Coord.top(0), Coord.pheight(1f)), 15) {
 				@Override
 				protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
-					if (NumberUtils.isNumber(newText))
+					if (NumberUtils.isCreatable(newText))
 						set(NumberUtils.toFloat(newText));
 					else
 						set(SizeData.Unknown);

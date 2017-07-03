@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CountingInputStream;
@@ -93,7 +93,7 @@ public class ImgurUpload extends Communicate implements Progressable, IUploader 
 				final HttpEntity resEntity = response.getEntity();
 				if (resEntity!=null) {
 					resstream = resEntity.getContent();
-					this.result = Client.gson.<ImgurResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), ImgurResult.class);
+					this.result = Client.gson.<ImgurResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, StandardCharsets.UTF_8)), ImgurResult.class);
 					final String link = getLink();
 					if (link!=null) {
 						final Content content = ContentId.from(link).content();

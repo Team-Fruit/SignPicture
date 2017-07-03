@@ -233,7 +233,7 @@ public abstract class GuiRotation extends WPanel {
 
 					@Override
 					protected void onNumberChanged(final @Nonnull String oldText, final @Nonnull String newText) {
-						if (NumberUtils.isNumber(newText)) {
+						if (NumberUtils.isCreatable(newText)) {
 							final float f = NumberUtils.toFloat(newText);
 							RotationElement.this.rotate.rotate = GuiRotation.this.rotation.isFirst() ? (f%8+8)%8 : f;
 						} else

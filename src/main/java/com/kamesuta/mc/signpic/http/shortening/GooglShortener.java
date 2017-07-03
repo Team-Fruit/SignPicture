@@ -3,11 +3,11 @@ package com.kamesuta.mc.signpic.http.shortening;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -63,7 +63,7 @@ public class GooglShortener extends Communicate implements Progressable, IShorte
 				final HttpEntity resEntity = response.getEntity();
 				if (resEntity!=null) {
 					resstream = resEntity.getContent();
-					this.result = Client.gson.<GooglResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, Charsets.UTF_8)), GooglResult.class);
+					this.result = Client.gson.<GooglResult> fromJson(jsonReader1 = new JsonReader(new InputStreamReader(resstream, StandardCharsets.UTF_8)), GooglResult.class);
 					onDone(new CommunicateResponse(true, null));
 					return;
 				}
