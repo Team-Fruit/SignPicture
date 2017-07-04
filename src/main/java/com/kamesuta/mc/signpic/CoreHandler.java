@@ -132,7 +132,7 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent
-	public void onModelBakeEvent(final @Nonnull ModelBakeEvent event) {
+	public void onModelBake(final @Nonnull ModelBakeEvent event) {
 		final IBakedModel object = event.getModelRegistry().getObject(CustomItemSignRenderer.modelResourceLocation);
 		if (object!=null) {
 			final CustomItemSignRenderer atlas6 = new CustomItemSignRenderer(object);
