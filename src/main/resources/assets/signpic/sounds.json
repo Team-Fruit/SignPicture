@@ -12,7 +12,7 @@
 		"category":"player",
 		"sounds":[
 			{
-				"name": "gui/screenshot"
+				"name": "signpic:gui/screenshot"
 			}
 		]
 	}

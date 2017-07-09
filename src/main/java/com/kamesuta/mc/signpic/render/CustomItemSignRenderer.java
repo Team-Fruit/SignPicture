@@ -46,6 +46,7 @@ public class CustomItemSignRenderer implements IBakedModel {
 
 	public CustomItemSignRenderer(final @Nonnull IBakedModel model) {
 		this.baseModel = model;
+
 	}
 
 	@Override
