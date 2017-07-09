@@ -22,13 +22,17 @@ import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.init.Items;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.obj.OBJLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -134,7 +138,13 @@ public class CoreHandler {
 	}
 
 	@SubscribeEvent
-	public void onModelBake(final @Nonnull ModelBakeEvent event) {
+	public static void onModelRegistry(final ModelRegistryEvent event) {
+		OBJLoader.INSTANCE.addDomain("signpic");
+		ModelLoader.setCustomModelResourceLocation(Items.SIGN, 0, CustomItemSignRenderer.modelResourceLocation);
+	}
+
+	@SubscribeEvent
+	public void onModelBake(final ModelBakeEvent event) {
 		final IBakedModel object = event.getModelRegistry().getObject(CustomItemSignRenderer.modelResourceLocation);
 		if (object!=null) {
 			final CustomItemSignRenderer atlas6 = new CustomItemSignRenderer(object);
