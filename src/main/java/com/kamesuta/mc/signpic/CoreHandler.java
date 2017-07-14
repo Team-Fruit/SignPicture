@@ -38,8 +38,9 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.relauncher.Side;
 
-@Mod.EventBusSubscriber(modid = Reference.MODID)
+@Mod.EventBusSubscriber(Side.CLIENT)
 public class CoreHandler {
 	public final @Nonnull Config configHandler = Config.getConfig();
 	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;

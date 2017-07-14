@@ -80,7 +80,7 @@ public class CustomItemSignModel implements ICustomModelLoader {
 				return atlas6;
 			} else
 				Log.log.error("Failed to register ItemSignPicture");
-			return null;
+			return ModelLoaderRegistry.getMissingModel().bake(state, format, bakedTextureGetter);
 		}
 
 		@Override
