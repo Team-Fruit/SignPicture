@@ -16,6 +16,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.animation.IClip;
 
@@ -48,7 +49,7 @@ public class CustomItemSignModel implements ICustomModelLoader {
 			final IModel model = this.loader.loadModel(modelLocation);
 			return new ItemSignModel(model);
 		}
-		return null;
+		return ModelLoaderRegistry.getMissingModel();
 	}
 
 	@Override
