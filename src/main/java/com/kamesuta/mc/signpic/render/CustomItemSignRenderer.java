@@ -39,6 +39,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 
 public class CustomItemSignRenderer implements IBakedModel {
+	@Deprecated
 	public static final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign", "inventory");
 	private final @Nonnull IBakedModel baseModel;
 	private @Nullable ItemStack itemStack;
@@ -133,7 +134,6 @@ public class CustomItemSignRenderer implements IBakedModel {
 		return this.baseModel.getParticleTexture();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public @Nullable ItemCameraTransforms getItemCameraTransforms() {
 		return ItemCameraTransforms.DEFAULT;

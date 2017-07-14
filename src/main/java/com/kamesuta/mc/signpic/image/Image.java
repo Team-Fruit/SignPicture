@@ -21,8 +21,6 @@ import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.state.StateType;
 
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-
 public abstract class Image implements IInitable, IAsyncProcessable, IDivisionProcessable, ICollectable, ILoadCancelable {
 	protected final @Nonnull Content content;
 

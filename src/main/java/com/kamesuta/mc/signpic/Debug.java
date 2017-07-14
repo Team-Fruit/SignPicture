@@ -3,12 +3,15 @@ package com.kamesuta.mc.signpic;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.vecmath.AxisAngle4f;
 import javax.vecmath.Quat4f;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.CloseShieldInputStream;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -145,7 +148,14 @@ public class Debug {
 	}
 
 	static String convertStreamToString(final java.io.InputStream is) {
-		final java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+		final InputStream wis = new CloseShieldInputStream(is);
+		Scanner s = null;
+		try {
+			s = new Scanner(wis);
+			s.useDelimiter("\\A");
+		} finally {
+			IOUtils.closeQuietly(s);
+		}
 		return s.hasNext() ? s.next() : "";
 	}
 

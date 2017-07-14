@@ -16,23 +16,19 @@ import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.information.Informations;
-import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
+import com.kamesuta.mc.signpic.render.CustomItemSignModel;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.init.Items;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.obj.OBJLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -43,7 +39,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Reference.MODID)
 public class CoreHandler {
 	public final @Nonnull Config configHandler = Config.getConfig();
 	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;
@@ -139,10 +135,10 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public static void onModelRegistry(final ModelRegistryEvent event) {
-		OBJLoader.INSTANCE.addDomain("signpic");
-		ModelLoader.setCustomModelResourceLocation(Items.SIGN, 0, CustomItemSignRenderer.modelResourceLocation);
+		ModelLoaderRegistry.registerLoader(CustomItemSignModel.INSTANCE);
 	}
 
+	/*
 	@SubscribeEvent
 	public void onModelBake(final ModelBakeEvent event) {
 		final IBakedModel object = event.getModelRegistry().getObject(CustomItemSignRenderer.modelResourceLocation);
@@ -152,6 +148,7 @@ public class CoreHandler {
 		} else
 			Log.log.error("Failed to register ItemSignPicture");
 	}
+	*/
 
 	private boolean debugKey;
 
