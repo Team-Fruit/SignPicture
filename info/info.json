@@ -76,12 +76,12 @@
 			}
 		},
 		"1.12": {
-			"version": "2.8.0",
-			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.12-2.8.0/SignPicture-1.12-2.8.0-universal.jar",
-			"local": "SignPicture-1.12-2.8.0-universal.jar",
-			"message": "Bug fixes and new features",
+			"version": "2.8.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.12-2.8.1/SignPicture-1.12-2.8.1-universal.jar",
+			"local": "SignPicture-1.12-2.8.1-universal.jar",
+			"message": "Forge 14.21.1.x compatible version",
 			"message_local": {
-				"ja_JP": "いくつかのバグを修正し、新機能を追加しました"
+				"ja_JP": "Forge14.21.1.x対応バージョン"
 			}
 		}
 	},
