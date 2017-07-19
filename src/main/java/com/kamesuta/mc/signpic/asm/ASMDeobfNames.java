@@ -5,9 +5,9 @@ import javax.annotation.Nonnull;
 import com.kamesuta.mc.signpic.asm.lib.RefName;
 
 public class ASMDeobfNames {
-	public static final @Nonnull RefName GuiNewChatDrawnChatLines = RefName.deobName("field_146253_i", "field_146253_i");
+	public static final @Nonnull RefName GuiNewChatDrawnChatLines = RefName.deobName("drawnChatLines", "field_146253_i");
 	public static final @Nonnull RefName GuiScreenHandleInput = RefName.deobName("handleInput", "func_146269_k");
-	public static final @Nonnull RefName FontRendererDrawStringWithShadow = RefName.deobName("drawStringWithShadow", "func_78261_a");
+	public static final @Nonnull RefName FontRendererDrawStringWithShadow = RefName.deobName("drawStringWithShadow", "func_175063_a");
 	public static final @Nonnull RefName FontRendererDrawSplitString = RefName.deobName("drawSplitString", "func_78279_b");
 	public static final @Nonnull RefName GuiNewChatDrawChat = RefName.deobName("drawChat", "func_146230_a");
 	public static final @Nonnull RefName GuiNewChatGetChatComponent = RefName.deobName("getChatComponent", "func_146236_a");

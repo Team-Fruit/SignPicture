@@ -81,7 +81,7 @@ public class CustomChatRender {
 				// draw first line
 				final Area lvert = vert.scaleSize(1, height*linesplit).translate(ix-2, 0);
 				WRenderer.startShape();
-				OpenGL.glColor4f(.5f, .5f, .5f, .5f);
+				OpenGL.glColor4f(.5f, .5f, .5f, (color>>24&0xff)/255f);
 				WGui.draw(lvert.trimArea(trim));
 				OpenGL.glColorRGBA(color);
 			}
@@ -143,12 +143,12 @@ public class CustomChatRender {
 	}
 
 	@CoreInvoke
-	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final float x, final float y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final float opacity) {
+	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final float x, final float y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
 		if (chatline instanceof PicChatLine) {
 			final PicChatLine cline = (PicChatLine) chatline;
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0f, j2, 0f);
-			OpenGL.glColor4f(1f, 1f, 1f, opacity);
+			OpenGL.glColor4f(1f, 1f, 1f, opacity/255f);
 			cline.draw(chat, font.FONT_HEIGHT);
 			OpenGL.glPopMatrix();
 			WRenderer.startTexture();

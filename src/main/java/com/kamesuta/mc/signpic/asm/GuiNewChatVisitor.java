@@ -49,7 +49,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 
 		public DrawChatHookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
-			this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(int.class, "java.lang.String", int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
+			this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(int.class, "java.lang.String", float.class, float.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
 		}
 
 		@Override
@@ -78,13 +78,13 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				super.visitVarInsn(Opcodes.ALOAD, 0);
 				super.visitVarInsn(Opcodes.ALOAD, 10);
 				super.visitVarInsn(Opcodes.ILOAD, 16);
-				super.visitVarInsn(Opcodes.FLOAD, 6);
+				super.visitVarInsn(Opcodes.ILOAD, 14);
 				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
 						DescHelper.toDesc(int.class,
 								"net.minecraft.client.gui.FontRenderer",
 								"java.lang.String", float.class, float.class, int.class,
 								"net.minecraft.client.gui.GuiNewChat",
-								"net.minecraft.client.gui.ChatLine", int.class, float.class),
+								"net.minecraft.client.gui.ChatLine", int.class, int.class),
 						false);
 			} else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
