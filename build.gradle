@@ -1,0 +1,321 @@
+buildscript {
+}
+
+plugins {
+	id 'com.palantir.git-version' version '0.7.1'
+	id 'co.riiid.gradle' version '0.4.2'
+	id 'com.jfrog.bintray' version '1.7.3'
+}
+
+allprojects {
+	project.metaClass {
+		isProperty = { propName ->
+			return delegate.hasProperty(propName)&&!delegate.property(propName).empty
+		}
+	}
+}
+
+import org.apache.commons.lang.StringUtils
+
+ext {
+	mod_build_prefix = 'b'
+
+	assert project.isProperty('version_major'): 'missing property: version_major'
+	assert project.isProperty('version_minor'): 'missing property: version_minor'
+	assert project.isProperty('version_patch'): 'missing property: version_patch'
+
+	mod_travis = System.getenv('TRAVIS') as boolean
+	mod_buildnumber = System.getenv('TRAVIS_BUILD_NUMBER') as Integer
+	mod_buildtag = System.getenv('TRAVIS_TAG')
+	mod_prerelease = mod_autorelease = mod_travis && StringUtils.isEmpty(mod_buildtag)
+
+	if (mod_buildtag!=null && mod_buildtag.startsWith(mod_build_prefix))
+		throw new GradleException("Oops, circulated travis build. A push starting with the prefix '${mod_build_prefix}' was detected: ${mod_buildtag}")
+
+	(mod_version_build, mod_version_meta) = ({
+		if (mod_buildnumber)
+			return [".${mod_buildnumber}", '']
+		else
+			return ({
+				def buildnumberfile = file '.buildnumber/buildnum.properties'
+
+				def version_build = ({
+					def buildnumbermicro = 1
+					def props = new Properties()
+					if (buildnumberfile.exists())
+						buildnumberfile.withInputStream { stream ->
+							props.load stream
+						}
+
+					if (props.buildnumber &&
+							props.version_major == project.version_major &&
+							props.version_minor == project.version_minor &&
+							props.version_patch == project.version_patch)
+						buildnumbermicro = props.buildnumber as Integer
+					return buildnumbermicro
+				})()
+
+				def buildtextmicro = String.format('%03d', version_build)
+				def buildtext = "+${buildtextmicro}"
+
+				task increment {
+					doLast {
+						def props = new Properties()
+						props.version_major = project.version_major
+						props.version_minor = project.version_minor
+						props.version_patch = project.version_patch
+						props.buildnumber = buildnumbermicro+1 as String
+						buildnumberfile.parentFile.mkdirs()
+						buildnumberfile.withOutputStream { stream ->
+							props.store stream, 'Build Number Property'
+						}
+					}
+				}
+
+				subprojects {
+					afterEvaluate {
+						tasks.build.dependsOn increment
+					}
+				}
+
+				['.git', buildtext]
+			})()
+	})()
+
+	mod_version_min = "${project.version_major}.${project.version_minor}.${project.version_patch}"
+	mod_version = "${mod_version_min}${mod_version_build}"
+	mod_version_full = "${mod_version}${mod_version_meta}"
+	mod_artifacts_dir = file "artifacts/${mod_version_min}/${mod_version_full}"
+	mod_artifacts_release_dir = file 'artifacts/release'
+
+	mod_git_repo = plugins.findPlugin('com.palantir.git-version').gitRepo(rootProject).repository
+	mod_git_head = mod_git_repo.getRef('HEAD').objectId.name()
+
+	def parseChangelog = { changelog ->
+		def title = null
+		def msg = null
+		def releasetype = 'release'
+
+		if (changelog!=null) {
+			if (StringUtils.contains(changelog, '[beta]')) {
+				changelog = StringUtils.replace(changelog, '[beta]', '')
+				releasetype = 'beta'
+			} else if (StringUtils.contains(changelog, '[alpha]')) {
+				changelog = StringUtils.replace(changelog, '[alpha]', '')
+				releasetype = 'alpha'
+			}
+
+			def tagtitle = StringUtils.substringBefore(changelog, '\n')
+			def tagmsg = StringUtils.stripStart(StringUtils.substringAfter(changelog, '\n'), '\n')
+			if (!StringUtils.isEmpty(tagtitle) && !StringUtils.isEmpty(tagmsg)) {
+				title = tagtitle
+				msg = tagmsg
+			}
+		}
+		return [title, msg, releasetype]
+	}
+
+	(mod_changelog_title, mod_changelog, mod_releasetype) = ({
+		def (changelog_title, changelog, releasetype) = parseChangelog(({
+			if (!StringUtils.isEmpty(mod_buildtag)) {
+				def git_ref = mod_git_repo.getRef "refs/tags/${mod_buildtag}"
+
+				if (git_ref!=null) {
+					def git_revwalk = new org.eclipse.jgit.revwalk.RevWalk(mod_git_repo)
+					try {
+						return git_revwalk.parseTag(git_ref.getObjectId()).getFullMessage()
+					} catch(org.eclipse.jgit.errors.IncorrectObjectTypeException e) {
+					} finally {
+						git_revwalk.dispose()
+					}
+				}
+			} else {
+				def fileChangelog = project.isProperty('extra_changelog_location') ? file(project.extra_changelog_location) : file('changelog.md')
+				if (fileChangelog.exists())
+					return fileChangelog.getText('UTF-8')
+			}
+			return null
+		})())
+
+		def (r_changelog_title, r_changelog) = ({
+			def r_change = [changelog_title, changelog]
+					*.replace('{version}', mod_version)
+					*.replace('{version_full}', mod_version_full)
+			if (mod_buildnumber==null)
+				return r_change
+			else if (mod_buildnumber!=null)
+				return r_change
+					*.replace('{version_number}', mod_buildnumber)
+		})()
+
+		if (mod_buildnumber!=null) {
+			if (changelog_title!=null && changelog!=null)
+				return [r_changelog_title, r_changelog, releasetype]
+			return ["v${mod_version}", "v${mod_version_min} Build${mod_buildnumber}", 'alpha']
+		} else {
+			if (changelog_title!=null && changelog!=null)
+				return [r_changelog_title, r_changelog, releasetype]
+			return ["v${mod_version_full}", "v${mod_version_full}", 'alpha']
+		}
+	})()
+
+	sec_curseforge_key = System.getenv('CURSEFORGE_TOKEN') ?: project.isProperty('api_key_curseforge') ? project.api_key_curseforge : null
+	sec_github_key = System.getenv('GITHUB_TOKEN') ?: project.isProperty('api_key_github') ? project.api_key_github : null
+	sec_bintray_user = System.getenv('BINTRAY_USER') ?: project.isProperty('api_user_bintray') ? project.api_user_bintray : null
+	sec_bintray_key = System.getenv('BINTRAY_KEY') ?: project.isProperty('api_key_bintray') ? project.api_key_github : null
+	sec_keystore_location = System.getenv('KEYSTORE_LOCATION') ?: project.isProperty('keystore_location') ? project.keystore_location : null
+	sec_keystore_alias = System.getenv('KEYSTORE_ALIAS') ?: project.isProperty('keystore_alias') ? project.keystore_alias : null
+	sec_keystore_password = System.getenv('KEYSTORE_PASSWORD') ?: project.isProperty('keystore_password') ? project.keystore_password : null
+}
+
+class DeployExtension {
+	def project, targets
+
+	DeployExtension(proj, List tar) {
+		targets = tar
+		project = proj
+	}
+
+	DeployExtension(proj) {
+		this(proj, [])
+	}
+
+	void target(File t) {
+		targets.add(t)
+	}
+
+	void target(String t) {
+		target(project.file(t))
+	}
+}
+
+class ManifestExtension {
+	def manifests
+
+	ManifestExtension(def mf) {
+		manifests = mf
+	}
+
+	ManifestExtension() {
+		this([:])
+	}
+
+	void manifest(String key, String value) {
+		targets.put(key, value)
+	}
+
+	void manifest(Map map) {
+		targets.putAll(map)
+	}
+}
+
+project.extensions.create('deploy', DeployExtension, project)
+project.extensions.create('manifests', ManifestExtension)
+['private.gradle', 'properties.gradle'].each { def its = file(it); if (its.exists()) apply from: its }
+
+subprojects {
+	ext.deploy_target = project.extensions.create('deploy', DeployExtension, project, deploy.targets.clone())
+	ext.manifests = project.extensions.create('manifests', ManifestExtension, manifests.manifests.clone())
+	['private.gradle', 'properties.gradle'].each { def its = file(it); if (its.exists()) apply from: its }
+}
+
+evaluationDependsOnChildren()
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+version = "${mod_version}"
+
+jar {
+	subprojects.each { p ->
+		if (p.name=='common') {
+			manifest p.commonManifest
+			p.tasks.shadowJar.outputs.files.each { f ->
+				from zipTree(f)
+			}
+		} else {
+			p.tasks.jar.outputs.files.each { f ->
+				from(f) {
+					rename '.*', p.name+'.jar'
+				}
+			}
+		}
+		dependsOn p.tasks.build
+		mustRunAfter p.tasks.signJars
+	}
+	classifier = 'universal'
+	destinationDir = mod_artifacts_dir
+}
+
+task releaseArtifacts(dependsOn: 'build', type: Sync) {
+    from mod_artifacts_dir
+    into mod_artifacts_release_dir
+}
+
+github {
+	gradle.taskGraph.whenReady {taskGraph ->
+		if (taskGraph.hasTask(tasks.githubRelease)) {
+			assert sec_github_key!=null, 'missing sec_github_key'
+			assert project.isProperty('extra_github_owner'), 'missing extra_github_owner'
+			assert project.isProperty('extra_github_repo'), 'missing extra_github_repo'
+		}
+	}
+
+	tasks.githubRelease.dependsOn 'build'
+	prerelease = mod_prerelease
+	owner = project.extra_github_owner
+	repo = project.extra_github_repo
+	token = sec_github_key
+	tagName = mod_travis ? (mod_autorelease ? "${mod_build_prefix}${mod_buildnumber}" : mod_buildtag) : mod_version_full
+	targetCommitish = mod_git_head
+	name = mod_changelog_title
+	body = mod_changelog
+	draft = false
+	def allassets = [jar]
+	subprojects.each { p ->
+		allassets.addAll([p.tasks.shadowJar, p.tasks.jar, p.tasks.devJar, p.tasks.sourceJar, p.tasks.apiJar]*.outputs*.files*.asPath*.tr('\\','/'))
+	}
+	assets = allassets
+}
+
+publishing {
+	publications {
+		ModPublication(MavenPublication) {
+			groupId = project.group
+			artifactId = project.modid
+			version = "${mod_version}"
+			artifact jar
+			subprojects.each { p ->
+				artifact p.shadowJar
+				artifact p.jar
+				artifact p.devJar
+				artifact p.sourceJar
+				artifact p.apiJar
+			}
+		}
+	}
+}
+
+bintray {
+	tasks.bintrayUpload.enabled = !mod_autorelease
+	gradle.taskGraph.whenReady {taskGraph ->
+		if (taskGraph.hasTask(tasks.bintrayUpload)) {
+			assert sec_bintray_user!=null, 'missing sec_bintray_user'
+			assert sec_bintray_key!=null, 'missing sec_bintray_key'
+			assert project.isProperty('extra_bintray_repo'), 'missing extra_bintray_repo'
+			assert project.isProperty('extra_bintray_name'), 'missing extra_bintray_name'
+		}
+	}
+	user = sec_bintray_user
+	key = sec_bintray_key
+	publications = ['ModPublication']
+	publish = true
+	pkg {
+		repo = project.extra_bintray_repo
+		name = project.extra_bintray_name
+		version {
+			name = "${mod_version}"
+			released = new Date()
+		}
+	}
+}

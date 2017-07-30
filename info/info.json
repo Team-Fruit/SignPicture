@@ -1,0 +1,131 @@
+{
+	"versions": {
+		"1.7.10": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.7.10-2.7.1/SignPicture-1.7.10-2.7.1-universal.jar",
+			"local": "SignPicture-1.7.10-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.8": {
+			"version": "2.7.1.beta",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8-2.7.1/SignPicture-1.8-2.7.1.beta-universal.jar",
+			"local": "SignPicture-1.8-2.7.1.beta-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes. There is a known bug. Please check Github for details.",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました。 既知のバグがあります。 詳しくはGithubをご確認ください。"
+			}
+		},
+		"1.8.8": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.8-2.7.1/SignPicture-1.8.8-2.7.1-universal.jar",
+			"local": "SignPicture-1.8.8-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.8.9": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.8.9-2.7.1/SignPicture-1.8.9-2.7.1-universal.jar",
+			"local": "SignPicture-1.8.9-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.9.4": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.9.4-2.7.1/SignPicture-1.9.4-2.7.1-universal.jar",
+			"local": "SignPicture-1.9.4-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.10.2": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.10.2-2.7.1/SignPicture-1.10.2-2.7.1-universal.jar",
+			"local": "SignPicture-1.10.2-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.11": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11-2.7.1/SignPicture-1.11-2.7.1-universal.jar",
+			"local": "SignPicture-1.11-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.11.2": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.11.2-2.7.1/SignPicture-1.11.2-2.7.1-universal.jar",
+			"local": "SignPicture-1.11.2-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		},
+		"1.12": {
+			"version": "2.7.1",
+			"remote": "https://github.com/Team-Fruit/SignPicture/releases/download/1.12-2.7.1/SignPicture-1.12-2.7.1-universal.jar",
+			"local": "SignPicture-1.12-2.7.1-universal.jar",
+			"image":"https://i.gyazo.com/8bbb7246c6666e2b4296ad4a469c0e06.png",
+			"message": "Some bug fixes",
+			"message_local": {
+				"ja_JP": "いくつかのバグを修正しました"
+			}
+		}
+	},
+	"apis": {
+		"image": {
+			"gyazo": {
+				"config": [
+					{
+						"key": "686916898dfc9588c16378912cca7a059975ab07374b5badcb072f90c9fdd9cf"
+					}
+				]
+			},
+			"imgur": {
+				"config": [
+					{
+						"clientid": "7896a166a54f0bc"
+					}
+				]
+			}
+		},
+		"shortener": {
+			"bitly": {
+				"config": [
+					{
+						"key": "9a2bae8d0385870dfad9e4ad0b874c468df04149"
+					}
+				]
+			},
+			"googl": {
+				"config": [
+					{
+						"key": "AIzaSyCbJC4zTqtSRMGrMj1C4_jOesDhrB-TOuM"
+					}
+				]
+			}
+		}
+	},
+	"website": "https://minecraft.curseforge.com/projects/sign-picture",
+	"changelog": "https://github.com/Team-Fruit/SignPicture/releases",
+	"private_msg": "http://signpic.teamfruit.net/signpic.php/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
+}

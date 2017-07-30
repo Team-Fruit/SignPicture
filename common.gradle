@@ -1,0 +1,308 @@
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = 'forge'
+			url = 'http://files.minecraftforge.net/maven'
+		}
+		maven {
+			name = 'sonatype'
+			url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+		}
+	}
+
+	dependencies {
+		classpath project.forgegradle
+	}
+}
+
+plugins {
+	id 'com.github.johnrengelman.shadow' version '2.0.1'
+	id 'com.matthewprenger.cursegradle' version '1.0.8'
+}
+
+apply plugin: project.forgegradle_plugin
+
+version = (project.name=='common') ? "all-${mod_version}" : "${project.version_minecraft}-${mod_version}"
+archivesBaseName = rootProject.name
+
+configurations {
+	shade
+	compile.extendsFrom shade
+}
+
+[compileJava, compileApiJava, compileTestJava]*.options*.encoding = 'UTF-8'
+sourceCompatibility = targetCompatibility = '1.8'
+
+minecraft {
+	version = "${project.version_minecraft}-${project.version_forge}"
+
+	if (project.isProperty('version_mappings'))
+		mappings = project.version_mappings
+
+	if (!project.isProperty('run_location'))
+		runDir = 'run'
+	else
+		runDir = run_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft)
+
+	replaceIn 'Reference.java'
+	replace '${modid}', project.modid
+	replace '${modname}', project.modname
+	replace '${version}', mod_version
+	replace '${mcversion}', project.version_minecraft
+	replace '${forgeversion}', project.version_forge
+}
+
+task setupSourceSets {
+	doLast {
+		sourceSets*.java.srcDirs*.each { it.mkdirs() }
+		sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+	}
+	[tasks.eclipse, tasks.idea]*.dependsOn 'setupSourceSets'
+}
+
+processResources {
+	// this will ensure that this task is redone when the versions change.
+	inputs.property 'version', project.version
+	inputs.property 'mcversion', project.minecraft.version
+
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+
+		expand([
+				'modid'		  : project.modid,
+				'modname'		: project.modname,
+				'version'		: mod_version,
+				'mcversion'	  : project.version_minecraft,
+				'forgeversion'   : project.version_forge,
+				'minforgeversion': project.isProperty('version_minforge') ? project.version_minforge : project.version_forge,
+		])
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+}
+
+repositories {
+	jcenter()
+	maven {
+		name = 'CurseForge'
+		url = 'https://minecraft.curseforge.com/api/maven/'
+	}
+}
+
+def projectName = "${rootProject.name}-${project.name}"
+
+idea {
+	module {
+		name = projectName
+	}
+}
+
+eclipse {
+	project {
+		name = projectName
+	}
+}
+
+dependencies {
+	compile fileTree(dir: 'libs', include: '*.jar')
+	shade fileTree(dir: 'libs/shade', include: '*.jar')
+	compile fileTree(dir: '../libs', include: '*.jar')
+	shade fileTree(dir: '../libs/shade', include: '*.jar')
+
+	if (project.name!='common')
+		shade rootProject.project('common')
+}
+
+ext.commonManifest = {
+	if (project.isProperty('extra_fmlcore'))
+		attributes 'FMLCorePlugin': project.extra_fmlcore
+	if (project.isProperty('extra_fmlmod'))
+		attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlcore
+	if (project.isProperty('extra_fmlat'))
+		attributes 'FMLAT': project.extra_fmlat
+	attributes manifests.manifests
+}
+
+// println(shadowJar.getSource().getFiles())
+shadowJar.configurations = [project.configurations.shade]
+
+shadowJar {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	classifier 'universal'
+	manifest commonManifest
+}
+
+jar {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	classifier 'diff'
+	manifest commonManifest
+}
+
+// println !reobf.hasProperty('dependsOn')
+if (!reobf.hasProperty('dependsOn')) {
+	reobf {
+		shadowJar { mappingType = 'SEARGE' }
+	}
+} else {
+	task reobfShadowJar(dependsOn: 'genSrgs', type: net.minecraftforge.gradle.tasks.user.reobf.ReobfTask) {
+		def fg_plugin = plugins.findPlugin project.forgegradle_plugin
+		exceptorCfg = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.EXC_SRG
+		srg = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.REOBF_SRG
+		fieldCsv = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.FIELD_CSV
+		fieldCsv = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.METHOD_CSV
+		mcVersion = fg_plugin.delayedString '{MC_VERSION}'
+		mustRunAfter 'test'
+		mustRunAfter 'shadowJar'
+		reobf.dependsOn 'reobfShadowJar'
+		reobf(tasks.shadowJar) { arg ->
+			def javaConv = project.convention.plugins.get 'java'
+			arg.classpath = javaConv.getSourceSets().getByName('main').compileClasspath
+		}
+		extraSrg = fg_plugin.extension.srgExtra
+		afterEvaluate {
+			if (fg_plugin.extension.decomp) {
+				deobfFile = tasks.deobfuscateJar.delayedOutput
+				recompFile = fg_plugin.delayedDirtyFile fg_plugin.srcDepName, null, 'jar'
+			}
+		}
+	}
+	reobf.dependsOn 'reobfShadowJar'
+}
+
+if (tasks.findByPath('sourceJar')==null) {
+	task sourceJar(dependsOn: 'classes', type: Jar) {
+		from sourceSets.main.allSource
+		classifier = 'sources'
+		manifest commonManifest
+	}
+}
+
+sourceJar {
+	from sourceSets.api.allSource
+}
+
+// An Error occured while switching above 1.8 -> under 1.7
+task cleanMakeStart(type: Delete) {
+	// makeStart.dependsOn 'cleanMakeStart'
+	delete file(new File(tasks.makeStart.getTemporaryDir(), 'extracted'))
+}
+
+task devJar(dependsOn: 'classes', type: Jar) {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	classifier = 'dev'
+	manifest commonManifest
+}
+
+task apiJar(dependsOn: 'classes', type: Jar) {
+	from sourceSets.api.output
+	classifier = 'api'
+	manifest commonManifest
+}
+
+[jar, shadowJar, devJar, sourceJar, apiJar]*.destinationDir = mod_artifacts_dir
+
+artifacts {
+	archives jar
+	archives shadowJar
+	archives devJar
+	archives sourceJar
+	archives apiJar
+}
+
+task signJars(dependsOn: 'build') {
+	gradle.taskGraph.whenReady {taskGraph ->
+		if (taskGraph.hasTask(tasks.signJars))
+			assert sec_keystore_location!=null, 'missing sec_keystore_location'
+	}
+
+	def keystore_location = sec_keystore_location ?: ''
+	def keystore_alias = sec_keystore_alias ?: ''
+	def keystore_password = sec_keystore_password ?: ''
+
+	inputs.dir shadowJar.destinationDir
+	inputs.file keystore_location
+	inputs.property 'keystore_alias', keystore_alias
+	inputs.property 'keystore_password', keystore_password
+	outputs.dir shadowJar.destinationDir
+
+	doLast {
+		[jar, shadowJar, devJar, sourceJar, apiJar].each { eachtask ->
+			eachtask.outputs.files.each { file ->
+				if (!file.path.endsWith('.jar'))
+					return
+
+				logger.lifecycle "signing ${file}"
+				ant.signjar(
+						destDir: file.parentFile,
+						jar: file,
+						keystore: keystore_location,
+						alias: keystore_alias,
+						storepass: keystore_password
+				)
+			}
+		}
+	}
+}
+
+task deploy(dependsOn: 'build', type: Copy) {
+	mustRunAfter 'signJars'
+
+	deploy_target.targets.each { target ->
+		def dest = target.name.endsWith('.jar') ? target.parentFile : target
+
+		from(project.tasks.shadowJar.outputs.files.singleFile)
+		into(dest)
+
+		rename { String oldname ->
+			target.name.endsWith('.jar') ? target.name : oldname
+		}
+
+		eachFile { file ->
+			def path = file.relativePath.getFile(dest)
+			logger.lifecycle "copying to ${path}"
+		}
+	}
+}
+
+curseforge {
+	tasks.curseforge.enabled = !mod_autorelease
+	gradle.taskGraph.whenReady {taskGraph ->
+		if (taskGraph.hasTask(tasks.curseforge)) {
+			assert sec_curseforge_key!=null, 'missing sec_curseforge_key'
+			assert project.isProperty('extra_curseforge_id'), 'missing extra_curseforge_id'
+		}
+	}
+
+	tasks.curseforge.dependsOn 'reobfShadowJar'
+	tasks.curseforge.mustRunAfter 'signJars'
+	apiKey = sec_curseforge_key
+	project {
+		id = project.extra_curseforge_id
+
+		changelogType = 'markdown'
+		changelog = mod_changelog
+
+		releaseType = mod_releasetype
+
+		mainArtifact(shadowJar) {
+			displayName = "${shadowJar.baseName}-${shadowJar.version}"
+		}
+		[jar, devJar, sourceJar, apiJar].each { jar ->
+			addArtifact(jar) {
+				displayName = "${jar.baseName}-${jar.version}-${jar.classifier}"
+			}
+		}
+
+		relations {
+		}
+	}
+}
+
+['project.gradle'].each { f -> [rootProject, project].each { p -> def fs = p.file(f); if (fs.exists()) apply from: fs } }
