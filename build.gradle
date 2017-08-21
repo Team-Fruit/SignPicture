@@ -78,7 +78,7 @@ ext {
 					}
 				}
 
-				['.git', buildtext]
+				['', buildtext]
 			})()
 	})()
 
@@ -252,30 +252,31 @@ task releaseArtifacts(dependsOn: 'build', type: Sync) {
     into mod_artifacts_release_dir
 }
 
-github {
-	gradle.taskGraph.whenReady {taskGraph ->
-		if (taskGraph.hasTask(tasks.githubRelease)) {
-			assert sec_github_key!=null, 'missing sec_github_key'
-			assert project.isProperty('extra_github_owner'), 'missing extra_github_owner'
-			assert project.isProperty('extra_github_repo'), 'missing extra_github_repo'
+gradle.taskGraph.whenReady {taskGraph ->
+	if (taskGraph.hasTask(tasks.githubRelease)) {
+		assert sec_github_key!=null, 'missing sec_github_key'
+		assert project.isProperty('extra_github_owner'), 'missing extra_github_owner'
+		assert project.isProperty('extra_github_repo'), 'missing extra_github_repo'
+	}
+}
+if (sec_github_key!=null&&project.isProperty('extra_github_owner')&&project.isProperty('extra_github_repo')) {
+	github {
+		tasks.githubRelease.dependsOn 'build'
+		prerelease = mod_prerelease
+		owner = project.extra_github_owner
+		repo = project.extra_github_repo
+		token = sec_github_key
+		tagName = mod_travis ? (mod_autorelease ? "${mod_build_prefix}${mod_buildnumber}" : mod_buildtag) : mod_version_full
+		targetCommitish = mod_git_head
+		name = mod_changelog_title
+		body = mod_changelog
+		draft = false
+		def allassets = [jar]
+		subprojects.each { p ->
+			allassets.addAll([p.tasks.shadowJar, p.tasks.jar, p.tasks.devJar, p.tasks.sourceJar, p.tasks.apiJar]*.outputs*.files*.asPath*.tr('\\','/'))
 		}
+		assets = allassets
 	}
-
-	tasks.githubRelease.dependsOn 'build'
-	prerelease = mod_prerelease
-	owner = project.extra_github_owner
-	repo = project.extra_github_repo
-	token = sec_github_key
-	tagName = mod_travis ? (mod_autorelease ? "${mod_build_prefix}${mod_buildnumber}" : mod_buildtag) : mod_version_full
-	targetCommitish = mod_git_head
-	name = mod_changelog_title
-	body = mod_changelog
-	draft = false
-	def allassets = [jar]
-	subprojects.each { p ->
-		allassets.addAll([p.tasks.shadowJar, p.tasks.jar, p.tasks.devJar, p.tasks.sourceJar, p.tasks.apiJar]*.outputs*.files*.asPath*.tr('\\','/'))
-	}
-	assets = allassets
 }
 
 publishing {
@@ -296,26 +297,29 @@ publishing {
 	}
 }
 
-bintray {
-	tasks.bintrayUpload.enabled = !mod_autorelease
-	gradle.taskGraph.whenReady {taskGraph ->
-		if (taskGraph.hasTask(tasks.bintrayUpload)) {
-			assert sec_bintray_user!=null, 'missing sec_bintray_user'
-			assert sec_bintray_key!=null, 'missing sec_bintray_key'
-			assert project.isProperty('extra_bintray_repo'), 'missing extra_bintray_repo'
-			assert project.isProperty('extra_bintray_name'), 'missing extra_bintray_name'
-		}
-	}
-	user = sec_bintray_user
-	key = sec_bintray_key
-	publications = ['ModPublication']
-	publish = true
-	pkg {
-		repo = project.extra_bintray_repo
-		name = project.extra_bintray_name
-		version {
-			name = "${mod_version}"
-			released = new Date()
-		}
+gradle.taskGraph.whenReady {taskGraph ->
+	if (taskGraph.hasTask(tasks.bintrayUpload)) {
+		assert sec_bintray_user!=null, 'missing sec_bintray_user'
+		assert sec_bintray_key!=null, 'missing sec_bintray_key'
+		assert project.isProperty('extra_bintray_repo'), 'missing extra_bintray_repo'
+		assert project.isProperty('extra_bintray_name'), 'missing extra_bintray_name'
 	}
 }
+if (sec_bintray_user!=null&&sec_bintray_key!=null&&project.isProperty('extra_bintray_repo')&&project.isProperty('extra_bintray_name')) {
+	bintray {
+		tasks.bintrayUpload.enabled = !mod_autorelease
+		user = sec_bintray_user
+		key = sec_bintray_key
+		publications = ['ModPublication']
+		publish = true
+		pkg {
+			repo = project.extra_bintray_repo
+			name = project.extra_bintray_name
+			version {
+				name = "${mod_version}"
+				released = new Date()
+			}
+		}
+	}
+} else
+	tasks.bintrayUpload.enabled = false

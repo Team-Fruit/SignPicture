@@ -24,7 +24,7 @@ plugins {
 
 apply plugin: project.forgegradle_plugin
 
-version = (project.name=='common') ? "all-${mod_version}" : "${project.version_minecraft}-${mod_version}"
+version = (project.name=='common') ? "${mod_version}" : "${project.version_minecraft}-${mod_version}"
 archivesBaseName = rootProject.name
 
 configurations {
@@ -271,38 +271,41 @@ task deploy(dependsOn: 'build', type: Copy) {
 	}
 }
 
-curseforge {
-	tasks.curseforge.enabled = !mod_autorelease
-	gradle.taskGraph.whenReady {taskGraph ->
-		if (taskGraph.hasTask(tasks.curseforge)) {
-			assert sec_curseforge_key!=null, 'missing sec_curseforge_key'
-			assert project.isProperty('extra_curseforge_id'), 'missing extra_curseforge_id'
-		}
-	}
-
-	tasks.curseforge.dependsOn 'reobfShadowJar'
-	tasks.curseforge.mustRunAfter 'signJars'
-	apiKey = sec_curseforge_key
-	project {
-		id = project.extra_curseforge_id
-
-		changelogType = 'markdown'
-		changelog = mod_changelog
-
-		releaseType = mod_releasetype
-
-		mainArtifact(shadowJar) {
-			displayName = "${shadowJar.baseName}-${shadowJar.version}"
-		}
-		[jar, devJar, sourceJar, apiJar].each { jar ->
-			addArtifact(jar) {
-				displayName = "${jar.baseName}-${jar.version}-${jar.classifier}"
-			}
-		}
-
-		relations {
-		}
+gradle.taskGraph.whenReady {taskGraph ->
+	if (taskGraph.hasTask(tasks.curseforge)) {
+		assert sec_curseforge_key!=null, 'missing sec_curseforge_key'
+		assert project.isProperty('extra_curseforge_id'), 'missing extra_curseforge_id'
 	}
 }
+if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
+	curseforge {
+		tasks.curseforge.enabled = !mod_autorelease
+
+		tasks.curseforge.dependsOn 'reobfShadowJar'
+		tasks.curseforge.mustRunAfter 'signJars'
+		apiKey = sec_curseforge_key
+		project {
+			id = project.extra_curseforge_id
+
+			changelogType = 'markdown'
+			changelog = mod_changelog
+
+			releaseType = mod_releasetype
+
+			mainArtifact(shadowJar) {
+				displayName = "${shadowJar.baseName}-${shadowJar.version}"
+			}
+			[jar, devJar, sourceJar, apiJar].each { jar ->
+				addArtifact(jar) {
+					displayName = "${jar.baseName}-${jar.version}-${jar.classifier}"
+				}
+			}
+
+			relations {
+			}
+		}
+	}
+} else
+	tasks.curseforge.enabled = false
 
 ['project.gradle'].each { f -> [rootProject, project].each { p -> def fs = p.file(f); if (fs.exists()) apply from: fs } }
