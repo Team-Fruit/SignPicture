@@ -26,7 +26,7 @@ apply plugin: project.forgegradle_plugin
 
 // Fix compatibility issue between Gradle 4 and ForgeGradle 2.1
 if (project.forgegradle.contains('1.2') || project.forgegradle.contains('2.1'))
-	if (level.compareTo(org.gradle.api.logging.LogLevel.LIFECYCLE) >= 0)
+	if (gradle.startParameter.logLevel.compareTo(org.gradle.api.logging.LogLevel.LIFECYCLE) >= 0)
 		ant.lifecycleLogLevel = 'ERROR'
 if (project.forgegradle.contains('2.1')) {
 	def levels = [:]
