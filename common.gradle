@@ -24,6 +24,25 @@ plugins {
 
 apply plugin: project.forgegradle_plugin
 
+// Fix compatibility issue between Gradle 4 and ForgeGradle 2.1
+if (project.forgegradle.contains('1.2') || project.forgegradle.contains('2.1'))
+	if (level.compareTo(org.gradle.api.logging.LogLevel.LIFECYCLE) >= 0)
+		ant.lifecycleLogLevel = 'ERROR'
+if (project.forgegradle.contains('2.1')) {
+	def levels = [:]
+	[tasks.makeStart, tasks.recompileMc]*.doFirst {
+		def level = gradle.startParameter.logLevel
+		if (level.compareTo(org.gradle.api.logging.LogLevel.LIFECYCLE) >= 0) {
+			levels.put(delegate, level)
+			gradle.startParameter.logLevel = org.gradle.api.logging.LogLevel.INFO
+		}
+	}*.doLast {
+		def level = levels.get(delegate)
+		if (level!=null)
+			gradle.startParameter.logLevel = level
+	}
+}
+
 version = (project.name=='common') ? "${mod_version}" : "${project.version_minecraft}-${mod_version}"
 archivesBaseName = rootProject.name
 
