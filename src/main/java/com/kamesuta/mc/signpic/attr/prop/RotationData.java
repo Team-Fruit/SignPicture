@@ -123,22 +123,22 @@ public abstract class RotationData {
 		public @Nonnull String compose() {
 			final StringBuilder stb = new StringBuilder(this.base.compose());
 			if (this.diffangleaxis.angle!=defaultAngle)
-				stb.append("A").append(ShortestFloatFormatter.format(RotationMath.toDegrees(this.diffangleaxis.angle)*8f/360f));
+				stb.append(PropSyntax.ROTATION_ANGLE.id).append(ShortestFloatFormatter.format(RotationMath.toDegrees(this.diffangleaxis.angle)*8f/360f));
 			if (this.diffangleaxis.x!=0)
 				if (this.diffangleaxis.x==defaultAxis)
-					stb.append("P");
+					stb.append(PropSyntax.ROTATION_AXIS_X.id);
 				else
-					stb.append("P").append(ShortestFloatFormatter.format(this.diffangleaxis.x));
+					stb.append(PropSyntax.ROTATION_AXIS_X.id).append(ShortestFloatFormatter.format(this.diffangleaxis.x));
 			if (this.diffangleaxis.y!=0)
 				if (this.diffangleaxis.y==defaultAxis)
-					stb.append("Q");
+					stb.append(PropSyntax.ROTATION_AXIS_Y.id);
 				else
-					stb.append("Q").append(ShortestFloatFormatter.format(this.diffangleaxis.y));
+					stb.append(PropSyntax.ROTATION_AXIS_Y.id).append(ShortestFloatFormatter.format(this.diffangleaxis.y));
 			if (this.diffangleaxis.z!=0)
 				if (this.diffangleaxis.z==defaultAxis)
-					stb.append("R");
+					stb.append(PropSyntax.ROTATION_AXIS_Z.id);
 				else
-					stb.append("R").append(ShortestFloatFormatter.format(this.diffangleaxis.z));
+					stb.append(PropSyntax.ROTATION_AXIS_Z.id).append(ShortestFloatFormatter.format(this.diffangleaxis.z));
 			for (final Rotate rotate : this.diffglobalaxis)
 				stb.append(rotate.compose());
 			return stb.toString();
@@ -168,13 +168,13 @@ public abstract class RotationData {
 		}
 
 		public @Nonnull String compose() {
-			final float rotate = (this.rotate%8+8)%8;
+			final float rotate = this.rotate;
 			if (rotate==0)
 				return "";
 			else if (rotate==defaultOffset)
-				return this.type.name();
+				return this.type.id;
 			else
-				return this.type.name()+ShortestFloatFormatter.format(rotate);
+				return this.type.id+ShortestFloatFormatter.format(rotate);
 		}
 
 		@Override
@@ -184,25 +184,31 @@ public abstract class RotationData {
 	}
 
 	public static enum RotateType {
-		X {
+		X(PropSyntax.ROTATION_X.id) {
 			@Override
 			public @Nonnull Quat4f getRotate(final float f) {
 				return RotationMath.quatDeg(f*360f/8f, 1f, 0f, 0f);
 			}
 		},
-		Y {
+		Y(PropSyntax.ROTATION_Y.id) {
 			@Override
 			public @Nonnull Quat4f getRotate(final float f) {
 				return RotationMath.quatDeg(f*360f/8f, 0f, 1f, 0f);
 			}
 		},
-		Z {
+		Z(PropSyntax.ROTATION_Z.id) {
 			@Override
 			public @Nonnull Quat4f getRotate(final float f) {
 				return RotationMath.quatDeg(f*360f/8f, 0f, 0f, 1f);
 			}
 		},
 		;
+
+		public final @Nonnull String id;
+
+		private RotateType(@Nonnull final String id) {
+			this.id = id;
+		}
 
 		public abstract @Nonnull Quat4f getRotate(float f);
 	}
@@ -285,25 +291,25 @@ public abstract class RotationData {
 
 		@Override
 		public boolean parse(final @Nonnull String src, final @Nonnull String key, final @Nonnull String value) {
-			if (StringUtils.equals(key, RotateType.X.name()))
+			if (StringUtils.equals(key, PropSyntax.ROTATION_X.id))
 				this.rotates.add(new ImageRotate(RotateType.X, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, RotateType.Y.name()))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_Y.id))
 				this.rotates.add(new ImageRotate(RotateType.Y, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, RotateType.Z.name()))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_Z.id))
 				this.rotates.add(new ImageRotate(RotateType.Z, NumberUtils.toFloat(value, RotationData.defaultOffset)));
-			else if (StringUtils.equals(key, "A"))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_ANGLE.id))
 				this.angle += RotationMath.toRadians(NumberUtils.toFloat(value, RotationData.defaultAngle)*360f/8f);
-			else if (StringUtils.equals(key, "P"))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_AXIS_X.id))
 				if (StringUtils.isEmpty(value))
 					this.x += RotationData.defaultAxis;
 				else
 					this.x += NumberUtils.toFloat(value, RotationData.defaultAxis);
-			else if (StringUtils.equals(key, "Q"))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_AXIS_Y.id))
 				if (StringUtils.isEmpty(value))
 					this.y += RotationData.defaultAxis;
 				else
 					this.y += NumberUtils.toFloat(value, RotationData.defaultAxis);
-			else if (StringUtils.equals(key, "R"))
+			else if (StringUtils.equals(key, PropSyntax.ROTATION_AXIS_Z.id))
 				if (StringUtils.isEmpty(value))
 					this.z += RotationData.defaultAxis;
 				else
@@ -319,8 +325,8 @@ public abstract class RotationData {
 		}
 
 		@Override
-		public @Nonnull String toString() {
-			return compose();
+		public String toString() {
+			return String.format("RotationBuilder [rotates=%s, x=%s, y=%s, z=%s, angle=%s, base=%s]", this.rotates, this.x, this.y, this.z, this.angle, this.base);
 		}
 
 		public static class ImageRotate {

@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.render;
 import static org.lwjgl.opengl.GL11.*;
 
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.bnnwidget.render.WRenderer.WVertex;
 
 public class RenderHelper {
 	public static void drawLoadingCircle(final int msPerRoundInner, final int msPerRoundOuter) {
@@ -12,6 +13,10 @@ public class RenderHelper {
 		addCircleVertex(time1, time1+0.2f, 1.07f);
 		addCircleVertex(time1+0.2f, time1, 1.09f);
 		WRenderer.t.draw();
+		final WVertex vertex1 = WRenderer.begin(GL_LINE_LOOP);
+		addCircleVertex(time1, time1+0.2f, 1.07f);
+		addCircleVertex(time1+0.2f, time1, 1.09f);
+		vertex1.draw();
 		final float time2 = time%Math.abs(msPerRoundInner)/(float) msPerRoundInner;
 		WRenderer.w.startDrawing(GL_LINE_LOOP);
 		addCircleVertex(time2, time2+0.1f, 1.03f);

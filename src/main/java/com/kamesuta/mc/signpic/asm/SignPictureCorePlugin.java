@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 public class SignPictureCorePlugin implements IFMLLoadingPlugin {
+
 	@Override
 	public @Nullable String[] getASMTransformerClass() {
 		return new String[] {

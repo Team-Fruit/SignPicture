@@ -1,9 +1,13 @@
 # Overlay
 ## Overlay
+signpic.over.hub.usage.takerange=[%s]: 範囲を指定してスクリーンショット
+signpic.over.hub.usage.takeall=[%s]: スクリーンショット
+signpic.over.hub.usage.takerangewindow=[%s]: 範囲を指定してウィンドウスクリーンショット
+signpic.over.hub.usage.release=[離す]: SignPictureのGUIを開く
+### Mode
 signpic.over.mode.place=看板を置いて画像を適用
 signpic.over.mode.option=画像看板をクリックして詳細設定を表示
 signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位置を設定
-
 # Chat
 signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
 
@@ -29,6 +33,7 @@ signpic.gui.editor.place=設置
 signpic.gui.editor.cancel=キャンセル
 signpic.gui.editor.file=アップロード
 signpic.gui.editor.paste=貼り付け
+signpic.gui.editor.openurl=URLを開く
 signpic.gui.editor.textfield=ここにURLを入力!
 ### Size
 signpic.gui.editor.size.category=サイズ
@@ -50,11 +55,13 @@ signpic.gui.settings.api.key=APIキー
 signpic.gui.settings.default=自動
 signpic.gui.settings.config=コンフィグ
 signpic.gui.settings.paas=チート回避
+signpic.gui.settings.hide=無効化
 ### Sign Option
 signpic.gui.settings.sign=看板オプション
 signpic.gui.settings.sign.load=URLとメタ情報をロード
 signpic.gui.settings.sign.load.content=URLをロード
 signpic.gui.settings.sign.load.meta=メタ情報をロード
+signpic.gui.settings.sign.openurl=URLを開く
 signpic.gui.settings.sign.loadcancel=ロードキャンセル
 signpic.gui.settings.sign.reload=再読み込み
 signpic.gui.settings.sign.redownload=再ダウンロード
@@ -79,6 +86,8 @@ signpic.gui.notice.uploadfailed=アップロード失敗: §7%s
 signpic.gui.notice.downloading=ダウンロード開始 %s
 signpic.gui.notice.downloaded=ダウンロード完了 %s
 signpic.gui.notice.downloadfailed=ダウンロード失敗: §7%s
+signpic.gui.notice.openurlfailed=URLオープン失敗: §7%s
+signpic.gui.notice.openurlfailed.invalid=不正なURL
 signpic.gui.notice.versioning.downloadedAlready=古いバージョンのファイルを消して再起動してください
 signpic.gui.notice.versioning.downloadingAlready=最新版は既にダウンロード中です！
 signpic.gui.notice.toolongname=名前を付けるためにはURL+メタデータの長さが40文字以下である必要があります
@@ -116,6 +125,8 @@ signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
 signpic.advmsg.unknown=不明なエラー: §7%s
 signpic.advmsg.format.unsupported=未対応のSignPicture
 signpic.advmsg.format.needupdate=新しいバージョンをお試しください！
+signpic.advmsg.format.outdated=SignPictureが古すぎます!
+signpic.advmsg.format.needreplace=「詳細設定」より読み込み、再設置してください！
 
 # Version Checking
 signpic.versioning.check.start=更新データの確認開始

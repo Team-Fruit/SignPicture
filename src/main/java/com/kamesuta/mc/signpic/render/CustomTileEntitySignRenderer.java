@@ -6,10 +6,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.render.OpenGL;
+import com.kamesuta.mc.bnnwidget.render.RenderOption;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
-import com.kamesuta.mc.signpic.attr.CompoundAttr;
+import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
@@ -34,7 +35,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		// Load Image
 		final Content content = entry.getContent();
 
-		final CompoundAttr attr = entry.getMeta();
+		final AttrReaders attr = entry.getMeta();
 
 		// Size
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
@@ -49,7 +50,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		OpenGL.glTranslatef(-size.getWidth()/2, size.getHeight()+(size.getHeight()>=0 ? 0 : -size.getHeight())-.5f, 0f);
 		OpenGL.glScalef(1f, -1f, 1f);
 
-		entry.gui.drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight());
+		entry.getGui().drawScreen(0, 0, 0, opacity, size.getWidth(), size.getHeight(), new RenderOption());
 
 		if (destroy>=0) {
 			OpenGL.glPushMatrix();
