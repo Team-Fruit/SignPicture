@@ -1,0 +1,212 @@
+# Italian Translation by Ermen07
+
+# Overlay
+## Overlay
+signpic.over.hub.usage.takerange=[%s]: Fai uno screenshot di uno specifico raggio
+signpic.over.hub.usage.takeall=[%s]: Fai uno screenshot
+signpic.over.hub.usage.takerangewindow=[%s]: Fai uno screenshot della finestra di uno specifico raggio
+signpic.over.hub.usage.release=[Release]: Apri la GUI di SignPicture
+### Mode
+signpic.over.mode.place=Piazza un Cartello e Applica l'Immagine
+signpic.over.mode.option=Clicca su Sign Picture e Apri le Opzioni del Cartello.
+signpic.over.mode.setpreview=Clicca su Blocco e Fai Anteprima Posizione
+## F3
+signpic.over.sign=[§6Cartello§r] §7[§r%s§7]
+signpic.over.id=[§6URL-Cartello§r] %s
+signpic.over.size=[§6Grandezza-Cartello§r] §7[§r%s§7] [§dCartello:§7[§r%s§7×§r%s§7], §dImmagine:§7[§r%s§7×§r%s§7], §dVista:§7[§r%s§7×§r%s§7]]
+signpic.over.status=[§6Stato-Cartello§r] %s
+signpic.over.advmsg=[§6Info-Cartello§r] %s
+signpic.over.raw=[§6Cartello-Greggio§r] [[§r%s§7], [§r%s§7], [§r%s§7], [§r%s§7]]
+signpic.over.local=[§6Cartello-Locale§r] §7[§r%s§7]
+
+# Chat
+signpic.chat.error.place=[§6SignPicture§r] Spiacente, non sarai in grado di utilizzare questa funzionalità a causa di un errore.
+
+# Item
+signpic.item.hold=§7Tieni Premuto §3§o%s §7per Maggiori Dettagli
+signpic.item.sign.desc=§dPremi §a%s§d per modificare SignPicture
+signpic.item.sign.desc.keyconflict=§cApri §a%2$s§c su §a%1$s§c e risolvi il conflitto con il tasto!
+signpic.item.sign.desc.keyconflict.key=§c - conflitto §a%2$s§c su §a%1$s
+signpic.item.sign.desc.named=Sign Picture§r §7(%s)
+signpic.item.sign.desc.named.prop.size=§7 - grandezza: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - offset: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - rotazione: %s
+signpic.item.sign.desc.named.url=§7url: %s§7
+signpic.item.sign.desc.named.meta=§7meta: %s§7
+signpic.item.sign.desc.named.raw=§7nome: [%s§7]
+
+# Key
+signpic.key.category=Sign Picture
+signpic.key.gui=Apri la GUI
+
+# GUI
+## Sign Editor
+signpic.gui.editor.see=Guarda il Cartello
+signpic.gui.editor.preview=Anteprima
+signpic.gui.editor.continue=Continua
+signpic.gui.editor.option=Opzioni
+signpic.gui.editor.place=Piazza
+signpic.gui.editor.cancel=Cancella
+signpic.gui.editor.file=Carica
+signpic.gui.editor.paste=Incolla
+signpic.gui.editor.openurl=Apri URL
+signpic.gui.editor.textfield=Metti URL Qui!
+signpic.gui.editor.number.neg=-
+signpic.gui.editor.number.pos=+
+signpic.gui.editor.number.unknown=?
+### Size
+signpic.gui.editor.size.category=Grandezza
+signpic.gui.editor.size.width=W
+signpic.gui.editor.size.height=H
+signpic.gui.editor.size.width.neg=-
+signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.width.unknown=Proporzioni
+signpic.gui.editor.size.height.neg=-
+signpic.gui.editor.size.height.pos=+
+signpic.gui.editor.size.height.unknown=Proporzioni
+### Offset
+signpic.gui.editor.offset.category=Offset
+signpic.gui.editor.offset.x=X
+signpic.gui.editor.offset.x.neg=⇦
+signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.x.unknown=0
+signpic.gui.editor.offset.y=Y
+signpic.gui.editor.offset.y.neg=⇩
+signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.y.unknown=0
+signpic.gui.editor.offset.z=Z
+signpic.gui.editor.offset.z.neg=↗
+signpic.gui.editor.offset.z.pos=↙
+signpic.gui.editor.offset.z.unknown=0
+### Rotation
+signpic.gui.editor.rotation.category=Rotazione
+signpic.gui.editor.rotation.up=↑
+signpic.gui.editor.rotation.down=↓
+signpic.gui.editor.rotation.x=X
+signpic.gui.editor.rotation.y=Y
+signpic.gui.editor.rotation.z=Z
+signpic.gui.editor.rotation.remove=-
+signpic.gui.editor.rotation.add=+
+signpic.gui.editor.rotation.neg=-
+signpic.gui.editor.rotation.pos=+
+signpic.gui.editor.rotation.unknown=0
+## Settings
+signpic.gui.settings.api.upimage=Immagine
+signpic.gui.settings.api.upimage.desc=Impostazioni Caricamento Immagine
+signpic.gui.settings.api.urlshortener=Restringimento URL
+signpic.gui.settings.api.urlshortener.desc=Impostazioni Restringimento URL
+signpic.gui.settings.api.type=Tipo Api
+signpic.gui.settings.api.key=Chiave Api
+signpic.gui.settings.default=Predefinito
+signpic.gui.settings.config=Config
+signpic.gui.settings.paas=Impedisci Cheat
+signpic.gui.settings.hide=Disabilita
+### Sign Option
+signpic.gui.settings.sign=Opzioni Cartello
+signpic.gui.settings.sign.load=Carica URL e Meta
+signpic.gui.settings.sign.load.content=Carica URL
+signpic.gui.settings.sign.load.meta=Carica Meta
+signpic.gui.settings.sign.openurl=Apri URL
+signpic.gui.settings.sign.loadcancel=Annulla Caricamento
+signpic.gui.settings.sign.reload=Ricarica
+signpic.gui.settings.sign.redownload=Riscarica
+signpic.gui.settings.sign.block=Blocca
+signpic.gui.settings.sign.unblock=Sblocca
+signpic.gui.settings.sign.reloadall=Ricarica Tutto
+signpic.gui.settings.sign.redownloadall=Riscarica Tutto
+## Update
+signpic.gui.update.message=Una nuova versione di SignPicture! e' disponibile!  Clicca qui per aggiornare.
+signpic.gui.update.message.changelog=%s
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=Attendere Prego ( %d / %d lettere )
+signpic.gui.paas.time=Premi Esc per Annullare ( %.2f / %.2f secondi )
+
+# Notice
+signpic.gui.notice.paste.unsupported=Non Supportato
+signpic.gui.notice.paste.typeunsupported=Tipo non Supportato
+signpic.gui.notice.paste.error=Incolla l'Errore: %s
+signpic.gui.notice.uploading=Caricamento %s
+signpic.gui.notice.uploaded=Caricamento Completato %s
+signpic.gui.notice.uploadfailed=Caricamento Fallito: §7%s
+signpic.gui.notice.downloading=Download %s
+signpic.gui.notice.downloaded=Download Completato %s
+signpic.gui.notice.downloadfailed=Download Fallito: §7%s
+signpic.gui.notice.openurlfailed=Apri URL Fallito: §7%s
+signpic.gui.notice.openurlfailed.invalid=URL Invalido
+signpic.gui.notice.versioning.downloadedAlready=Chiudi il gioco, elimina la vecchia versione e caricala nuovamente per aggiornare!
+signpic.gui.notice.versioning.downloadingAlready=L'aggiornamento si sta' gia' scaricando!
+signpic.gui.notice.toolongname=La lunghezza di URL+metadata deve essere inferiore a 40 caratteri per nominarla!
+signpic.gui.notice.toolongplace=La lunghezza di URL+metadata deve essere inferiore a 60 caratteri per posizionarla!
+signpic.gui.notice.shortening=Attendere Prego... L'URL si sta restringendo
+signpic.gui.notice.shortened=Restringimento URL completato
+signpic.gui.notice.shorteningfailed=Restringimento URL fallito
+signpic.gui.notice.shorteningother=Attendere Prego... Altri URL si stanno restringendo
+signpic.gui.notice.screenshot.ingame.error=Si è verificato un errore. %s
+signpic.gui.notice.screenshot.ingame.capture.error=Impossibile eseguire uno screenshot. %s
+signpic.gui.notice.screenshot.window.error=Si è verificato un errore. %s
+signpic.gui.notice.screenshot.window.capture.error=Impossibile eseguire uno screenshot della finestra. %s
+
+# Upload UI
+signpic.ui.title=SignPicture!File
+signpic.ui.description=Un Caricatore di File!
+signpic.ui.drop=Trascinare e rilasciare un'immagine
+signpic.ui.select=o seleziona un'immagine da caricare
+signpic.ui.title.file=SignPicture!File
+
+# Image State
+signpic.state.init=Attendi...
+signpic.state.initalized=Inizializzato!
+signpic.state.downloading=Downloading... (%d%%)
+signpic.state.downloaded=Download Completato!
+signpic.state.loading=Caricamento... (%d%%)
+signpic.state.loaded=Caricamento Completato!
+signpic.state.available=Disponibile! (%d%%)
+signpic.state.failed=Caricamento Fallito... (%d%%)
+signpic.state.error=ERRORE
+signpic.state.format.unsupported=Non supportato. Prova una nuova Versione!
+
+# Image State Additional Message
+signpic.advmsg.invalidurl=URL Invalido
+signpic.advmsg.loadstopped=Download Fermato
+signpic.advmsg.capacityover=Capacità oltre al limite
+signpic.advmsg.blocked=Immagine Bloccata
+signpic.advmsg.retryover=MaxRetryCountOver
+signpic.advmsg.invalidimage=Immagine Invalida
+signpic.advmsg.ioerror=Fallita la lettura: §7%s
+signpic.advmsg.unknown=Errore Sconosciuto: §7%s
+signpic.advmsg.format.unsupported=SignPicture Non Supportato
+signpic.advmsg.format.needupdate=Prova una nuova Versione!
+signpic.advmsg.format.outdated=SignPicture Obsoleto!
+signpic.advmsg.format.needreplace=Importa con "Opzioni" e Rimpiazza!
+
+# Command
+signpic.command.aliases=Alias: %s
+signpic.command.help=Scrivi '%s' per aiuto.
+signpic.command.list=Sub-Commandi Disponibili:
+signpic.command.permlevel=Livello Permesso: %s
+signpic.command.noperms=Non hai i permessi per utilizzare questo comando.
+signpic.command.signpic.help=Vari Comandi per la Railcraft
+signpic.command.signpic.format=Formato: /%s <sub-commando>
+signpic.command.signpic.version.desc=- %s : Versione Strumenti
+signpic.command.signpic.version.help=Strumenti per la gestione della versione.
+signpic.command.signpic.version.format=Formato: /%s
+signpic.command.signpic.version.check.desc=- %s : Controlla la nuova versione
+signpic.command.signpic.version.check.help=Esegui la verifica della versione.
+signpic.command.signpic.version.check.format=Formato: /%s
+signpic.command.signpic.version.update.desc=- %s : Aggiorna SignPicture
+signpic.command.signpic.version.update.help=Inizio Aggiornamento SignPicture.
+signpic.command.signpic.version.update.format=Formato: /%s
+
+# Version Checking
+signpic.versioning.check.start=Avvia Controllo
+signpic.versioning.check.cooldown=Controllo non riuscito: §7Tempo Cooldown richiesto
+signpic.versioning.noupdate=Nessun Aggiornamento Disponibile
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] Nuova versione Disponibile: ",{"text":"$new$","color":"green"},"."," [",{"text":"Scarica","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Clicca per scaricare automaticamente la versione più recente","color":"green"}},"clickEvent":$download$},"] [",{"text":"Sito","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Clicca qui per andare al sito delle mod","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Clicca qui per andare al Changelog della versione","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] [§aAggiornamento§r] %s
+signpic.versioning.startingDownload=[{"text":"Avvio Download di %s. Non rimuovere il disco rigido. Divertiti ","color":"aqua"}]
+signpic.versioning.doneDownloading=Download Completato %s. Elimina il vecchio SignPicture .jar e riavvia il gioco per aggiornare.
+signpic.versioning.doneDownloadingWithFile=Download Completato %s. Elimina %s e riavvia il gioco per aggiornare.
+signpic.versioning.downloadedAlready=Hai già scaricato la nuova versione. Chiudi il gioco, elimina la vecchia versione dalla cartella mods e riapri il gioco per aggiornare!
+signpic.versioning.downloadingAlready=L'aggiornamento si sta' gia' scaricando, dagli un po' di tempo, ok?
+signpic.versioning.error=Noo! Sembra che qualcosa sia andato storto mentre si stava scaricando l'aggiornamento di Sign Picture.
+signpic.versioning.disabled=Spiacente. Questa funzionalita' e' attualmente disattivata, dovrebbe tornare presto.
