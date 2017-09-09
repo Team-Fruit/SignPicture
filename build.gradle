@@ -18,6 +18,7 @@ allprojects {
 import org.apache.commons.lang.StringUtils
 
 ext {
+	mod_commonname = "${rootProject.name}-common"
 	mod_build_prefix = 'b'
 
 	assert project.isProperty('version_major'): 'missing property: version_major'
@@ -64,7 +65,7 @@ ext {
 						props.version_major = project.version_major
 						props.version_minor = project.version_minor
 						props.version_patch = project.version_patch
-						props.buildnumber = buildnumbermicro+1 as String
+						props.buildnumber = version_build+1 as String
 						buildnumberfile.parentFile.mkdirs()
 						buildnumberfile.withOutputStream { stream ->
 							props.store stream, 'Build Number Property'
@@ -222,13 +223,34 @@ subprojects {
 evaluationDependsOnChildren()
 
 apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
 apply plugin: 'maven-publish'
+
+sourceSets {
+	delegate.each { s ->
+		s.java {
+			srcDirs = []
+		}
+		s.resources {
+			srcDirs = []
+		}
+	}
+}
+
+task setupSourceSets {
+	doLast {
+		sourceSets*.java.srcDirs*.each { it.mkdirs() }
+		sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+	}
+	[tasks.eclipse, tasks.idea]*.dependsOn 'setupSourceSets'
+}
 
 version = "${mod_version}"
 
 jar {
 	subprojects.each { p ->
-		if (p.name=='common') {
+		if (p.name==mod_commonname) {
 			manifest p.commonManifest
 			p.tasks.shadowJar.outputs.files.each { f ->
 				from zipTree(f)
@@ -236,7 +258,7 @@ jar {
 		} else {
 			p.tasks.jar.outputs.files.each { f ->
 				from(f) {
-					rename '.*', p.name+'.jar'
+					rename '.*', p.version_minecraft+'.jar'
 				}
 			}
 		}

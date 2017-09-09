@@ -12,7 +12,7 @@ install: "./gradlew setupCIWorkspace --continue"
 script: "./gradlew build --continue"
 after_success:
   - ./gradlew githubRelease --continue
-  #- ./gradlew bintrayUpload
+  #- ./gradlew bintrayUpload --continue
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -22,12 +22,6 @@ cache:
     - $HOME/.gradle/wrapper/
 notifications:
   email: false
-#deploy:
-#  provider: releases
-#  skip_cleanup: true
-#  api_key: ${GITHUB_TOKEN}
-#  file_glob: true
-#  file: artifacts/release/*
-#  on:
-#    all_branches: true
-#    tags: false
+  webhooks:
+    urls:
+      secure: "hvM4M+vEqJvOcoLA86vsDGltGZIrJi2oApoIokV0xfyH88O3NeE0FvHKQllvUEQ47w/z7xdEmkH7MrJ3Nzn83Wwy+/AW3v2+EAnA7m//Sctt/lHg0E98nTm/Lxvca0FNvovMcGpFtIset2wDn+Rb3QA02rqm/hw7/5ognUj6Jzt01S6462rgWJPn6NcW0WGJwW4uM688NeIo0iSqTqotjW3PTFXtVONaaRWF/Bqz0nlEBLcJvu87cM304aXbXxCBiy0vskbATLNlNdnRdqQNgrQ566SHr60PB/uAPO3HNg55KLjGauhRdkZNGNDmUkJdWmBcqo42UpXXb41ks25kfIu/r+BEaiRgDIbswNjySMN7aAAzBjdeEwTq0D36bFrInAdZuTBjVdCwHQZgk9YrtNWNKf2ZZdEOyWlM+70tjk1/2plXMaZvTm7J4JdklW6GWivzulBaE3VShVZy96/GfYDJDEwRPM3Vz2tmF6Bm5Dc9pwpQvFFx4TOlSj8JEXTE7Tuq0inrF+s7GWdHVmrrfyI2FMJrCa77Hnz0MY5dKviqSA4B7wIJUpwroCG4sPMLKPJwmMEdrqWySo1C027hUu81hWp4q1NBbdM1gdLBR/SlHxgXqLun+m9g8YlpwiO7dCY+dbzoFL+jHvghiUgCIJX5ecTZdKLoEjxiNbLPgzQ="

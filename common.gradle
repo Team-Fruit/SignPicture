@@ -43,8 +43,7 @@ if (project.forgegradle.contains('2.1')) {
 	}
 }
 
-version = (project.name=='common') ? "${mod_version}" : "${project.version_minecraft}-${mod_version}"
-archivesBaseName = rootProject.name
+version = mod_version
 
 configurations {
 	shade
@@ -83,7 +82,7 @@ task setupSourceSets {
 
 processResources {
 	// this will ensure that this task is redone when the versions change.
-	inputs.property 'version', project.version
+	inputs.property 'version', mod_version
 	inputs.property 'mcversion', project.minecraft.version
 
 	from(sourceSets.main.resources.srcDirs) {
@@ -112,28 +111,27 @@ repositories {
 	}
 }
 
-def projectName = "${rootProject.name}-${project.name}"
-
-idea {
-	module {
-		name = projectName
-	}
-}
-
-eclipse {
-	project {
-		name = projectName
-	}
-}
-
 dependencies {
 	compile fileTree(dir: 'libs', include: '*.jar')
 	shade fileTree(dir: 'libs/shade', include: '*.jar')
 	compile fileTree(dir: '../libs', include: '*.jar')
 	shade fileTree(dir: '../libs/shade', include: '*.jar')
+}
 
-	if (project.name!='common')
-		shade rootProject.project('common')
+sourceSets {
+	def fg_plugin = plugins.findPlugin project.forgegradle_plugin
+	[[common: common_api, src: api], [common: common_main, src: main], [common: common_test, src: test]].each { s ->
+		s.common.java {
+			srcDirs = ["../src/${s.src.name}/java"]
+		}
+		s.common.resources {
+			srcDirs = ["../src/${s.src.name}/resources"]
+		}
+		s.common.compileClasspath += s.src.compileClasspath
+		s.common.runtimeClasspath += s.src.runtimeClasspath
+		s.src.compileClasspath += s.common.output
+		s.src.runtimeClasspath += s.common.output
+	}
 }
 
 ext.commonManifest = {
@@ -152,6 +150,8 @@ shadowJar.configurations = [project.configurations.shade]
 shadowJar {
 	from sourceSets.main.output
 	from sourceSets.api.output
+	from sourceSets.common_main.output
+	from sourceSets.common_api.output
 	classifier 'universal'
 	manifest commonManifest
 }

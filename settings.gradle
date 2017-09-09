@@ -3,4 +3,5 @@ include 'common'
 include '1.7.10', '1.8.9', '1.9.4', '1.10.2', '1.11.2', '1.12'
 rootProject.children.each { project ->
 	project.buildFileName = '../common.gradle'
+	project.name = "${rootProject.name}-${project.name}"
 }

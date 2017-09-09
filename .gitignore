@@ -1,8 +1,10 @@
 ## .gitignore ##
 # ignore all
 *
-1.*/
 changelog.md
+
+1.*/*
+common/*
 
 # allow any
 !*.md
@@ -26,6 +28,7 @@ changelog.md
 !.gitignore
 !.gitattributes
 !.travis.yml
+
 !1.*/
 !1.*/lib/
 !1.*/build.gradle
@@ -34,3 +37,11 @@ changelog.md
 !1.*/properties.gradle
 !1.*/.gitmodules
 !1.*/.gitignore
+!common/
+!common/lib/
+!common/build.gradle
+!common/project.gradle
+!common/gradle.properties
+!common/properties.gradle
+!common/.gitmodules
+!common/.gitignore
