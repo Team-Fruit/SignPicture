@@ -1,0 +1,210 @@
+# Overlay
+## Overlay
+signpic.over.hub.usage.takerange=[%s]: 특정한 범위의 스크린샷 찍기
+signpic.over.hub.usage.takeall=[%s]: 스크린샷 찍기
+signpic.over.hub.usage.takerangewindow=[%s]: 특정한 범위의 윈도우 스크린샷 찍기
+signpic.over.hub.usage.release=[Release]: SignPicture GUI 열기
+### Mode
+signpic.over.mode.place=Sign설치후 이미지적용
+signpic.over.mode.option=Sign Picture선택후.GUI열기
+signpic.over.mode.setpreview=프리뷰 장소 선택하기
+## F3
+signpic.over.sign=[§6Sign§r] §7[§r%s§7]
+signpic.over.id=[§6Sign-URL§r] %s
+signpic.over.size=[§6Sign-크기§r] §7[§r%s§7] [§dSign:§7[§r%s§7×§r%s§7], §dImage:§7[§r%s§7×§r%s§7], §dView:§7[§r%s§7×§r%s§7]]
+signpic.over.status=[§6Sign-수치§r] %s
+signpic.over.advmsg=[§6Sign-정보§r] %s
+signpic.over.raw=[§6Sign-순정§r] [[§r%s§7], [§r%s§7], [§r%s§7], [§r%s§7]]
+signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
+
+# Chat
+signpic.chat.error.place=[§6SignPicture§r] 미안합니다, 당신은 에러에 의해 이것을 사용할수없습니다.
+
+# Item
+signpic.item.hold=§7Hold §3§o%s §7세부사항
+signpic.item.sign.desc=§dPress §a%s§d SignPicture 만들기
+signpic.item.sign.desc.keyconflict=§cOpen §a%2$s§c in §a%1$s§c 설정에서 키가 중복되었습니다!
+signpic.item.sign.desc.keyconflict.key=§c - 충돌 §a%2$s§c in §a%1$s
+signpic.item.sign.desc.named=Sign Picture§r §7(%s)
+signpic.item.sign.desc.named.prop.size=§7 - 크기: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - 오프셋: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - 주기: %s
+signpic.item.sign.desc.named.url=§7url: %s§7
+signpic.item.sign.desc.named.meta=§7meta: %s§7
+signpic.item.sign.desc.named.raw=§7이름: [%s§7]
+
+# Key
+signpic.key.category=Sign Picture
+signpic.key.gui=GUI 열기
+
+# GUI
+## Sign Editor
+signpic.gui.editor.see=Sign 보기
+signpic.gui.editor.preview=미리보기
+signpic.gui.editor.continue=계속하기
+signpic.gui.editor.option=설정
+signpic.gui.editor.place=설치
+signpic.gui.editor.cancel=취소
+signpic.gui.editor.file=업로드
+signpic.gui.editor.paste=붙여넣기
+signpic.gui.editor.openurl=URL 열기
+signpic.gui.editor.textfield=URL을 입력해주세요!
+signpic.gui.editor.number.neg=-
+signpic.gui.editor.number.pos=+
+signpic.gui.editor.number.unknown=?
+### Size
+signpic.gui.editor.size.category=크기
+signpic.gui.editor.size.width=W
+signpic.gui.editor.size.height=H
+signpic.gui.editor.size.width.neg=-
+signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.width.unknown=면 비율
+signpic.gui.editor.size.height.neg=-
+signpic.gui.editor.size.height.pos=+
+signpic.gui.editor.size.height.unknown=면 비율
+### Offset
+signpic.gui.editor.offset.category=오프셋
+signpic.gui.editor.offset.x=X
+signpic.gui.editor.offset.x.neg=⇦
+signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.x.unknown=0
+signpic.gui.editor.offset.y=Y
+signpic.gui.editor.offset.y.neg=⇩
+signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.y.unknown=0
+signpic.gui.editor.offset.z=Z
+signpic.gui.editor.offset.z.neg=↗
+signpic.gui.editor.offset.z.pos=↙
+signpic.gui.editor.offset.z.unknown=0
+### Rotation
+signpic.gui.editor.rotation.category=회전
+signpic.gui.editor.rotation.up=↑
+signpic.gui.editor.rotation.down=↓
+signpic.gui.editor.rotation.x=X
+signpic.gui.editor.rotation.y=Y
+signpic.gui.editor.rotation.z=Z
+signpic.gui.editor.rotation.remove=-
+signpic.gui.editor.rotation.add=+
+signpic.gui.editor.rotation.neg=-
+signpic.gui.editor.rotation.pos=+
+signpic.gui.editor.rotation.unknown=0
+## Settings
+signpic.gui.settings.api.upimage=이미지
+signpic.gui.settings.api.upimage.desc=Image 업로드 설정
+signpic.gui.settings.api.urlshortener=단축기
+signpic.gui.settings.api.urlshortener.desc=URL 단축기 설정
+signpic.gui.settings.api.type=API 타입
+signpic.gui.settings.api.key=API 키
+signpic.gui.settings.default=Default
+signpic.gui.settings.config=Config
+signpic.gui.settings.paas=치트 방지
+signpic.gui.settings.hide=꺼짐
+### Sign Option
+signpic.gui.settings.sign=Sign 설정
+signpic.gui.settings.sign.load=URL 과 Meta 불러오기
+signpic.gui.settings.sign.load.content=URL 불러오기
+signpic.gui.settings.sign.load.meta=Meta 불러오기
+signpic.gui.settings.sign.openurl=URL 열기
+signpic.gui.settings.sign.loadcancel=로딩 취소
+signpic.gui.settings.sign.reload=다시불러오기
+signpic.gui.settings.sign.redownload=다시다운로드
+signpic.gui.settings.sign.block=Block
+signpic.gui.settings.sign.unblock=Unblock
+signpic.gui.settings.sign.reloadall=Reload All
+signpic.gui.settings.sign.redownloadall=Redownload All
+## Update
+signpic.gui.update.message=새로운 버전의 SignPicture감지! 여기를 클릭해 !
+signpic.gui.update.message.changelog=%s
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=잠시기다려주십시오 ( %d / %d letters )
+signpic.gui.paas.time=Esc를 눌러 취소 ( %.2f / %.2f seconds )
+
+# Notice
+signpic.gui.notice.paste.unsupported=지원하지않음
+signpic.gui.notice.paste.typeunsupported=지원하지않는 종류
+signpic.gui.notice.paste.error=붙여넣기 에러: %s
+signpic.gui.notice.uploading=Uploading %s
+signpic.gui.notice.uploaded=uploading 완료 %s
+signpic.gui.notice.uploadfailed=Upload 실패: §7%s
+signpic.gui.notice.downloading=Downloading %s
+signpic.gui.notice.downloaded=downloading 완료 %s
+signpic.gui.notice.downloadfailed=Download 실패: §7%s
+signpic.gui.notice.openurlfailed=URL열기 실패: §7%s
+signpic.gui.notice.openurlfailed.invalid=무효한 URL
+signpic.gui.notice.versioning.downloadedAlready=게임을끄고, 구버전을 삭제하고 업데이트를 위해 다시 로드
+signpic.gui.notice.versioning.downloadingAlready=업데이트가 이미 !
+signpic.gui.notice.toolongname=URL+metadata 길이가 40자 이내여야함!
+signpic.gui.notice.toolongplace=URL+metadata 길이가 60자 이내여야함!
+signpic.gui.notice.shortening=잠시만 기다려주십시오... URL을 압축하는중
+signpic.gui.notice.shortened=URL 압축 완료
+signpic.gui.notice.shorteningfailed=URL 압축 실패
+signpic.gui.notice.shorteningother=잠시만 기다려주십시오... 다른 URL압축 작업이 완료되지않았습니다
+signpic.gui.notice.screenshot.ingame.error=에러발견. %s
+signpic.gui.notice.screenshot.ingame.capture.error=스크린샷을 찍을수없었습니다. %s
+signpic.gui.notice.screenshot.window.error=에러발견. %s
+signpic.gui.notice.screenshot.window.capture.error=윈도우 스크린샷을 찍을수없었습니다. %s
+
+# Upload UI
+signpic.ui.title=SignPicture!File
+signpic.ui.description=A File Uploader!
+signpic.ui.drop=이미지를 드래그앤 드롭하세요
+signpic.ui.select=또는 업로드할 이미지를 선택
+signpic.ui.title.file=SignPicture!File
+
+# Image State
+signpic.state.init=기다리는중...
+signpic.state.initalized=준비완료!
+signpic.state.downloading=다운로드... (%d%%)
+signpic.state.downloaded=다운로드 완료!
+signpic.state.loading=로딩중... (%d%%)
+signpic.state.loaded=로딩 완료!
+signpic.state.available=사용가능! (%d%%)
+signpic.state.failed=로딩실패... (%d%%)
+signpic.state.error=에러
+signpic.state.format.unsupported=지원되지않습니다. 새로운버전으로 시도를
+
+# Image State Additional Message
+signpic.advmsg.invalidurl=무효한 URL
+signpic.advmsg.loadstopped=다운로드 정지
+signpic.advmsg.capacityover=용량 초과
+signpic.advmsg.blocked=막힌 이미지
+signpic.advmsg.retryover=MaxRetryCountOver
+signpic.advmsg.invalidimage=무효한 이미지
+signpic.advmsg.ioerror=읽는데 실패하였습니다: §7%s
+signpic.advmsg.unknown=알수없는 에러: §7%s
+signpic.advmsg.format.unsupported=지원되지않는 SignPicture
+signpic.advmsg.format.needupdate=새버전으로 시도해보세요!
+signpic.advmsg.format.outdated=구버전의 SignPicture!
+signpic.advmsg.format.needreplace=Import with "Option" and Replace!
+
+# Command
+signpic.command.aliases=Aliases: %s
+signpic.command.help=Type '%s' for help.
+signpic.command.list=Available Sub-Commands:
+signpic.command.permlevel=Permission Level: %s
+signpic.command.noperms=You do not have permission to use this command.
+signpic.command.signpic.help=Various commands for Railcraft
+signpic.command.signpic.format=Format: /%s <sub-command>
+signpic.command.signpic.version.desc=- %s : Version Tools
+signpic.command.signpic.version.help=Tools for version manage.
+signpic.command.signpic.version.format=Format: /%s
+signpic.command.signpic.version.check.desc=- %s : Check New Version
+signpic.command.signpic.version.check.help=Run version checker.
+signpic.command.signpic.version.check.format=Format: /%s
+signpic.command.signpic.version.update.desc=- %s : Update SignPicture
+signpic.command.signpic.version.update.help=Start SignPicture updating.
+signpic.command.signpic.version.update.format=Format: /%s
+
+# Version Checking
+signpic.versioning.check.start=Start Checking
+signpic.versioning.check.cooldown=Checking Failed: §7Required Cooldown Time
+signpic.versioning.noupdate=No Update Available
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] New version available: ",{"text":"$new$","color":"green"},"."," [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to automatically download the latest version","color":"green"}},"clickEvent":$download$},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's website","color":"green"}},"clickEvent":$website$},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the version's Changelog","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] [§aUpdate§r] %s
+signpic.versioning.startingDownload=[{"text":"Starting download of %s. Please do not remove your hard disk. Enjoying ","color":"aqua"}]
+signpic.versioning.doneDownloading=Finished downloading %s. Delete your old SignPicture .jar and reload your game to update.
+signpic.versioning.doneDownloadingWithFile=Finished downloading %s. Delete %s and reload your game to update.
+signpic.versioning.downloadedAlready=You already downloaded the latest version. Close your game, delete the old version from your mods folder and load it again to update!
+signpic.versioning.downloadingAlready=The update is already downloading, give it some time, will you?
+signpic.versioning.error=Woah! It seems like something went wrong while trying to download the Sign Picture update.
+signpic.versioning.disabled=Sorry. This feature is currently disabled, it should be back soon.
