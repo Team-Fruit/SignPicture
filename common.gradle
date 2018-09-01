@@ -19,10 +19,41 @@ buildscript {
 
 plugins {
 	id 'com.github.johnrengelman.shadow' version '2.0.1'
-	id 'com.matthewprenger.cursegradle' version '1.0.8'
+}
+
+apply plugin: 'com.matthewprenger.cursegradle'
+
+// ForgeGradle 2.3 with Kotlin to add new sourceSets
+apply plugin: 'java'
+sourceSets {
+	common_api {}
+	common_main {}
+	common_test {}
 }
 
 apply plugin: project.forgegradle_plugin
+def fg_plugin = plugins.findPlugin project.forgegradle_plugin
+
+sourceSets {
+	[[common: common_api, src: api], [common: common_main, src: main], [common: common_test, src: test]].each { s ->
+		s.src.java {
+			srcDirs = ["../src/${s.src.name}/java"]
+		}
+		s.src.resources {
+			srcDirs = ["../src/${s.src.name}/resources"]
+		}
+		s.common.java {
+			srcDirs = ["./src/${s.src.name}/java"]
+		}
+		s.common.resources {
+			srcDirs = ["./src/${s.src.name}/resources"]
+		}
+		s.common.compileClasspath += s.src.compileClasspath
+		s.common.runtimeClasspath += s.src.runtimeClasspath
+		s.src.compileClasspath += s.common.output
+		s.src.runtimeClasspath += s.common.output
+	}
+}
 
 // Fix compatibility issue between Gradle 4 and ForgeGradle 2.1
 if (project.forgegradle.contains('1.2') || project.forgegradle.contains('2.1'))
@@ -50,7 +81,7 @@ configurations {
 	compile.extendsFrom shade
 }
 
-[compileJava, compileApiJava, compileTestJava]*.options*.encoding = 'UTF-8'
+[compileJava, compileApiJava, compileTestJava, compileCommon_mainJava, compileCommon_apiJava, compileCommon_testJava]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = '1.8'
 
 minecraft {
@@ -77,28 +108,28 @@ task setupSourceSets {
 		sourceSets*.java.srcDirs*.each { it.mkdirs() }
 		sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 	}
-	[tasks.eclipse, tasks.idea]*.dependsOn 'setupSourceSets'
+	[tasks.eclipseClasspath, tasks.ideaModule]*.dependsOn 'setupSourceSets'
 }
 
 processResources {
 	// this will ensure that this task is redone when the versions change.
 	inputs.property 'version', mod_version
-	inputs.property 'mcversion', project.minecraft.version
+	inputs.property 'mcversion', project.version_minecraft
 
-	from(sourceSets.main.resources.srcDirs) {
+	from(sourceSets.common_main.resources.srcDirs) {
 		include 'mcmod.info'
 
-		expand([
+		/*expand([
 				'modid'		  : project.modid,
 				'modname'		: project.modname,
 				'version'		: mod_version,
 				'mcversion'	  : project.version_minecraft,
 				'forgeversion'   : project.version_forge,
 				'minforgeversion': project.isProperty('version_minforge') ? project.version_minforge : project.version_forge,
-		])
+		])*/
 	}
 
-	from(sourceSets.main.resources.srcDirs) {
+	from(sourceSets.common_main.resources.srcDirs) {
 		exclude 'mcmod.info'
 	}
 }
@@ -109,6 +140,10 @@ repositories {
 		name = 'CurseForge'
 		url = 'https://minecraft.curseforge.com/api/maven/'
 	}
+	maven {
+		name = 'Bintray TeamFruit'
+		url = "https://dl.bintray.com/team-fruit/mods/"
+	}
 }
 
 dependencies {
@@ -116,22 +151,9 @@ dependencies {
 	shade fileTree(dir: 'libs/shade', include: '*.jar')
 	compile fileTree(dir: '../libs', include: '*.jar')
 	shade fileTree(dir: '../libs/shade', include: '*.jar')
-}
 
-sourceSets {
-	def fg_plugin = plugins.findPlugin project.forgegradle_plugin
-	[[common: common_api, src: api], [common: common_main, src: main], [common: common_test, src: test]].each { s ->
-		s.common.java {
-			srcDirs = ["../src/${s.src.name}/java"]
-		}
-		s.common.resources {
-			srcDirs = ["../src/${s.src.name}/resources"]
-		}
-		s.common.compileClasspath += s.src.compileClasspath
-		s.common.runtimeClasspath += s.src.runtimeClasspath
-		s.src.compileClasspath += s.common.output
-		s.src.runtimeClasspath += s.common.output
-	}
+	if (project.name==mod_commonname)
+		compile 'net.teamfruit:fmllegacydependency:1.0.2'
 }
 
 ext.commonManifest = {
@@ -141,6 +163,8 @@ ext.commonManifest = {
 		attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlcore
 	if (project.isProperty('extra_fmlat'))
 		attributes 'FMLAT': project.extra_fmlat
+	// Prevent from CurseForge duplicate error
+	attributes 'ModVersion': mod_version_full
 	attributes manifests.manifests
 }
 
@@ -148,20 +172,21 @@ ext.commonManifest = {
 shadowJar.configurations = [project.configurations.shade]
 
 shadowJar {
-	from sourceSets.main.output
-	from sourceSets.api.output
 	from sourceSets.common_main.output
 	from sourceSets.common_api.output
+	from sourceSets.main.output
+	from sourceSets.api.output
 	classifier 'universal'
 	manifest commonManifest
 }
 
 jar {
-	from sourceSets.main.output
-	from sourceSets.api.output
+	from sourceSets.common_main.output
+	from sourceSets.common_api.output
 	classifier 'diff'
 	manifest commonManifest
 }
+tasks.jar.dependsOn 'shadowJar'
 
 // println !reobf.hasProperty('dependsOn')
 if (!reobf.hasProperty('dependsOn')) {
@@ -170,7 +195,6 @@ if (!reobf.hasProperty('dependsOn')) {
 	}
 } else {
 	task reobfShadowJar(dependsOn: 'genSrgs', type: net.minecraftforge.gradle.tasks.user.reobf.ReobfTask) {
-		def fg_plugin = plugins.findPlugin project.forgegradle_plugin
 		exceptorCfg = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.EXC_SRG
 		srg = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.REOBF_SRG
 		fieldCsv = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.FIELD_CSV
@@ -203,6 +227,7 @@ if (tasks.findByPath('sourceJar')==null) {
 }
 
 sourceJar {
+	from sourceSets.common_api.allSource
 	from sourceSets.api.allSource
 }
 
@@ -213,6 +238,8 @@ task cleanMakeStart(type: Delete) {
 }
 
 task devJar(dependsOn: 'classes', type: Jar) {
+	from sourceSets.common_main.output
+	from sourceSets.common_api.output
 	from sourceSets.main.output
 	from sourceSets.api.output
 	classifier = 'dev'
@@ -220,6 +247,7 @@ task devJar(dependsOn: 'classes', type: Jar) {
 }
 
 task apiJar(dependsOn: 'classes', type: Jar) {
+	from sourceSets.common_api.allSource
 	from sourceSets.api.output
 	classifier = 'api'
 	manifest commonManifest
@@ -298,7 +326,7 @@ gradle.taskGraph.whenReady {taskGraph ->
 }
 if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
 	curseforge {
-		tasks.curseforge.enabled = !mod_autorelease
+		tasks.curseforge.enabled = !mod_autorelease && project.name!=mod_commonname
 
 		tasks.curseforge.dependsOn 'reobfShadowJar'
 		tasks.curseforge.mustRunAfter 'signJars'
@@ -314,14 +342,16 @@ if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
 			mainArtifact(shadowJar) {
 				displayName = "${shadowJar.baseName}-${shadowJar.version}"
 			}
-			[jar, devJar, sourceJar, apiJar].each { jar ->
+			[/*jar, */devJar, sourceJar, apiJar].each { jar ->
 				addArtifact(jar) {
 					displayName = "${jar.baseName}-${jar.version}-${jar.classifier}"
 				}
 			}
 
+			/*
 			relations {
 			}
+			*/
 		}
 	}
 } else

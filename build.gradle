@@ -5,6 +5,7 @@ plugins {
 	id 'com.palantir.git-version' version '0.7.1'
 	id 'co.riiid.gradle' version '0.4.2'
 	id 'com.jfrog.bintray' version '1.7.3'
+	id 'com.matthewprenger.cursegradle' version '1.0.10'
 }
 
 allprojects {
@@ -92,12 +93,14 @@ ext {
 	mod_git_repo = plugins.findPlugin('com.palantir.git-version').gitRepo(rootProject).repository
 	mod_git_head = mod_git_repo.getRef('HEAD').objectId.name()
 
+	// Parse Changelog
 	def parseChangelog = { changelog ->
 		def title = null
 		def msg = null
 		def releasetype = 'release'
 
 		if (changelog!=null) {
+			// Beta mode and Alpha mode
 			if (StringUtils.contains(changelog, '[beta]')) {
 				changelog = StringUtils.replace(changelog, '[beta]', '')
 				releasetype = 'beta'
@@ -106,17 +109,20 @@ ext {
 				releasetype = 'alpha'
 			}
 
+			// Split Title and Body
 			def tagtitle = StringUtils.substringBefore(changelog, '\n')
 			def tagmsg = StringUtils.stripStart(StringUtils.substringAfter(changelog, '\n'), '\n')
-			if (!StringUtils.isEmpty(tagtitle) && !StringUtils.isEmpty(tagmsg)) {
+			if (!StringUtils.isEmpty(tagtitle))
 				title = tagtitle
+			if (!StringUtils.isEmpty(tagmsg))
 				msg = tagmsg
-			}
 		}
 		return [title, msg, releasetype]
 	}
 
+	// Changelog Text
 	(mod_changelog_title, mod_changelog, mod_releasetype) = ({
+		// Get Changelog from Git Tag or File
 		def (changelog_title, changelog, releasetype) = parseChangelog(({
 			if (!StringUtils.isEmpty(mod_buildtag)) {
 				def git_ref = mod_git_repo.getRef "refs/tags/${mod_buildtag}"
@@ -138,26 +144,30 @@ ext {
 			return null
 		})())
 
-		def (r_changelog_title, r_changelog) = ({
-			def r_change = [changelog_title, changelog]
-					*.replace('{version}', mod_version)
-					*.replace('{version_full}', mod_version_full)
-			if (mod_buildnumber==null)
-				return r_change
-			else if (mod_buildnumber!=null)
-				return r_change
-					*.replace('{version_number}', mod_buildnumber)
+		// Replace Version Text
+		def convertChangelog = { str ->
+			def str1 = str
+				.replace('{version}', mod_version)
+				.replace('{version_full}', mod_version_full)
+			if (mod_buildnumber!=null)
+				return str1
+					.replace('{version_number}', "${mod_buildnumber}")
+			return str1
+		}
+
+		// Generate Default Changelog
+		def (n_changelog_title, n_changelog) = ({
+			if (mod_buildnumber!=null)
+				return ["v${mod_version}", "v${mod_version_min} Build${mod_buildnumber}"]
+			else
+				return ["v${mod_version_full}", "v${mod_version_full}"]
 		})()
 
-		if (mod_buildnumber!=null) {
-			if (changelog_title!=null && changelog!=null)
-				return [r_changelog_title, r_changelog, releasetype]
-			return ["v${mod_version}", "v${mod_version_min} Build${mod_buildnumber}", 'alpha']
-		} else {
-			if (changelog_title!=null && changelog!=null)
-				return [r_changelog_title, r_changelog, releasetype]
-			return ["v${mod_version_full}", "v${mod_version_full}", 'alpha']
-		}
+		if (changelog_title!=null)
+			n_changelog_title = convertChangelog(changelog_title)
+		if (changelog!=null)
+			n_changelog = convertChangelog(changelog)
+		return [n_changelog_title, n_changelog, releasetype]
 	})()
 
 	sec_curseforge_key = System.getenv('CURSEFORGE_TOKEN') ?: project.isProperty('api_key_curseforge') ? project.api_key_curseforge : null
@@ -243,7 +253,7 @@ task setupSourceSets {
 		sourceSets*.java.srcDirs*.each { it.mkdirs() }
 		sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 	}
-	[tasks.eclipse, tasks.idea]*.dependsOn 'setupSourceSets'
+	[tasks.eclipseClasspath, tasks.ideaModule]*.dependsOn 'setupSourceSets'
 }
 
 version = "${mod_version}"
@@ -295,9 +305,9 @@ if (sec_github_key!=null&&project.isProperty('extra_github_owner')&&project.isPr
 		draft = false
 		def allassets = [jar]
 		subprojects.each { p ->
-			allassets.addAll([p.tasks.shadowJar, p.tasks.jar, p.tasks.devJar, p.tasks.sourceJar, p.tasks.apiJar]*.outputs*.files*.asPath*.tr('\\','/'))
+			allassets.addAll([p.tasks.shadowJar, p.tasks.jar, p.tasks.devJar, p.tasks.sourceJar, p.tasks.apiJar])
 		}
-		assets = allassets
+		assets = allassets*.outputs*.files*.asPath*.tr('\\','/')
 	}
 }
 
@@ -345,3 +355,34 @@ if (sec_bintray_user!=null&&sec_bintray_key!=null&&project.isProperty('extra_bin
 	}
 } else
 	tasks.bintrayUpload.enabled = false
+
+if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
+	curseforge {
+		tasks.curseforge.enabled = !mod_autorelease
+
+		tasks.curseforge.dependsOn 'build'
+		apiKey = sec_curseforge_key
+		project {
+			id = project.extra_curseforge_id
+
+			changelogType = 'markdown'
+			changelog = mod_changelog
+
+			releaseType = mod_releasetype
+
+			mainArtifact(jar) {
+				displayName = "${jar.baseName}-${jar.version} Universal"
+			}
+
+			subprojects.each { p ->
+				addGameVersion p.version_minecraft
+			}
+
+			/*
+			relations {
+			}
+			*/
+		}
+	}
+} else
+	tasks.curseforge.enabled = false
