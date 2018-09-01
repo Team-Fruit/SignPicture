@@ -1,0 +1,143 @@
+# Overlay
+## Overlay
+signpic.over.hub.usage.takerange=[%s]: 範囲を指定してスクリーンショット
+signpic.over.hub.usage.takeall=[%s]: スクリーンショット
+signpic.over.hub.usage.takerangewindow=[%s]: 範囲を指定してウィンドウスクリーンショット
+signpic.over.hub.usage.release=[離す]: SignPictureのGUIを開く
+### Mode
+signpic.over.mode.place=看板を置いて画像を適用
+signpic.over.mode.option=画像看板をクリックして詳細設定を表示
+signpic.over.mode.setpreview=ブロックをクリックしてプレビュー位置を設定
+# Chat
+signpic.chat.error.place=[§6SignPicture§r] 申し訳ございませんがエラーが発生したためこの機能をご利用になることができません。
+
+# Item
+signpic.item.hold=§3§o%s §7キーを押すと詳細を表示します
+signpic.item.sign.desc=§a%s§d を押してSignPictureを編集
+signpic.item.sign.desc.keyconflict=§a%s§c の §a%s§c を開き、キー競合を解決してください！
+signpic.item.sign.desc.keyconflict.key=§c - 競合 §a%s§c の §a%s
+signpic.item.sign.desc.named.prop.size=§7 - サイズ: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - オフセット: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - 回転: %s
+signpic.item.sign.desc.named.meta=§7URL: %s§7
+signpic.item.sign.desc.named.meta=§7メタ情報: %s§7
+signpic.item.sign.desc.named.raw=§7名前: [%s§7]
+
+# GUI
+## Sign Editor
+signpic.gui.editor.see=実体表示
+signpic.gui.editor.preview=プレビュー
+signpic.gui.editor.continue=連続
+signpic.gui.editor.option=詳細設定
+signpic.gui.editor.place=設置
+signpic.gui.editor.cancel=キャンセル
+signpic.gui.editor.file=アップロード
+signpic.gui.editor.paste=貼り付け
+signpic.gui.editor.openurl=URLを開く
+signpic.gui.editor.textfield=ここにURLを入力!
+### Size
+signpic.gui.editor.size.category=サイズ
+signpic.gui.editor.size.width=幅
+signpic.gui.editor.size.width.unknown=縦横比を使用
+signpic.gui.editor.size.height=高さ
+signpic.gui.editor.size.height.unknown=縦横比を使用
+### Offset
+signpic.gui.editor.offset.category=オフセット
+### Rotation
+signpic.gui.editor.rotation.category=回転
+## Settings
+signpic.gui.settings.api.upimage=画像
+signpic.gui.settings.api.upimage.desc=画像アップロード設定
+signpic.gui.settings.api.urlshortener=短縮URL
+signpic.gui.settings.api.urlshortener.desc=URL短縮設定
+signpic.gui.settings.api.type=APIの種類
+signpic.gui.settings.api.key=APIキー
+signpic.gui.settings.default=自動
+signpic.gui.settings.config=コンフィグ
+signpic.gui.settings.paas=チート回避
+signpic.gui.settings.hide=無効化
+### Sign Option
+signpic.gui.settings.sign=看板オプション
+signpic.gui.settings.sign.load=URLとメタ情報をロード
+signpic.gui.settings.sign.load.content=URLをロード
+signpic.gui.settings.sign.load.meta=メタ情報をロード
+signpic.gui.settings.sign.openurl=URLを開く
+signpic.gui.settings.sign.loadcancel=ロードキャンセル
+signpic.gui.settings.sign.reload=再読み込み
+signpic.gui.settings.sign.redownload=再ダウンロード
+signpic.gui.settings.sign.block=ブロック
+signpic.gui.settings.sign.unblock=ブロック解除
+signpic.gui.settings.sign.reloadall=全再読み込み
+signpic.gui.settings.sign.redownloadall=全再ダウンロード
+## Update
+signpic.gui.update.message=SignPictureの新しいバージョンがリリースされています！こちらをクリックしてアップデートして下さい。
+signpic.gui.update.message.changelog=%s
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=しばらくお待ちください ( %s / %s 文字 )
+signpic.gui.paas.time=Esc でキャンセル ( %s / %s 秒 )
+
+# Notice
+signpic.gui.notice.paste.unsupported=非対応
+signpic.gui.notice.paste.typeunsupported=非対応な種類
+signpic.gui.notice.paste.error=貼り付けエラー: %s
+signpic.gui.notice.uploading=アップロード開始 %s
+signpic.gui.notice.uploaded=アップロード完了 %s
+signpic.gui.notice.uploadfailed=アップロード失敗: §7%s
+signpic.gui.notice.downloading=ダウンロード開始 %s
+signpic.gui.notice.downloaded=ダウンロード完了 %s
+signpic.gui.notice.downloadfailed=ダウンロード失敗: §7%s
+signpic.gui.notice.openurlfailed=URLオープン失敗: §7%s
+signpic.gui.notice.openurlfailed.invalid=不正なURL
+signpic.gui.notice.versioning.downloadedAlready=古いバージョンのファイルを消して再起動してください
+signpic.gui.notice.versioning.downloadingAlready=最新版は既にダウンロード中です！
+signpic.gui.notice.toolongname=名前を付けるためにはURL+メタデータの長さが40文字以下である必要があります
+signpic.gui.notice.toolongplace=設置するためにはURL+メタデータの長さが60文字以下である必要があります
+signpic.gui.notice.shortening=URLを短縮中です・・・ しばらくお待ちください
+signpic.gui.notice.shortened=URL短縮完了
+signpic.gui.notice.shorteningfailed=URL短縮失敗
+signpic.gui.notice.shorteningother=短縮URLタスクが終了していません・・・ しばらくお待ちください
+
+# Upload UI
+signpic.ui.description=ファイルアップローダー!
+signpic.ui.drop=ここに画像をドラッグ＆ドロップ
+signpic.ui.select=またはファイルを選択
+
+# Image State
+signpic.state.init=待機中...
+signpic.state.initalized=初期化完了！
+signpic.state.downloading=ダウンロード中... (%d%%)
+signpic.state.downloaded=ダウンロード完了!
+signpic.state.loading=読み込み中... (%d%%)
+signpic.state.loaded=読み込み完了!
+signpic.state.available=正常 (%d%%)
+signpic.state.failed=読み込み失敗... (%d%%)
+signpic.state.error=エラー
+signpic.state.format.unsupported=未対応 新しいバージョンをお試しください！
+
+# Image State Additional Message
+signpic.advmsg.invalidurl=不正なURL
+signpic.advmsg.loadstopped=ロード中止
+signpic.advmsg.capacityover=容量オーバー
+signpic.advmsg.blocked=ブロックした画像
+signpic.advmsg.retryover=最大再試行回数制限オーバー
+signpic.advmsg.invalidimage=不正な画像
+signpic.advmsg.ioerror=ファイル読み込み失敗: §7%s
+signpic.advmsg.unknown=不明なエラー: §7%s
+signpic.advmsg.format.unsupported=未対応のSignPicture
+signpic.advmsg.format.needupdate=新しいバージョンをお試しください！
+signpic.advmsg.format.outdated=SignPictureが古すぎます!
+signpic.advmsg.format.needreplace=「詳細設定」より読み込み、再設置してください！
+
+# Version Checking
+signpic.versioning.check.start=更新データの確認開始
+signpic.versioning.check.cooldown=Checking Failed: §7もう少し時間をおいてお試しください
+signpic.versioning.noupdate=更新はありませんでした
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] 新しいバージョンがご利用可能です: ",{"text":"$new$","color":"green"},"."," [",{"text":"ダウンロード","color":"green","hoverEvent":{"action":"show_text","value":{"text":"自動的に最新バージョンをダウンロードします","color":"green"}},"clickEvent":$download$},"] [",{"text":"ウェブサイト","color":"green","hoverEvent":{"action":"show_text","value":{"text":"ウェブサイトへ","color":"green"}},"clickEvent":$website$},"] [",{"text":"チェンジログ","color":"green","hoverEvent":{"action":"show_text","value":{"text":"更新履歴を見る","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] [§a更新§r] %s
+signpic.versioning.startingDownload=[{"text":"ダウンロード開始 %s","color":"aqua"}]
+signpic.versioning.doneDownloading=ダウンロード完了 %s 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
+signpic.versioning.doneDownloadingWithFile=ダウンロード完了 %s 適用するためには %s を消し、Minecraftを再起動してください
+signpic.versioning.downloadedAlready=最新版は既にダウンロード済みです 適用するためには古いSignPictureの.jarファイルを消し、Minecraftを再起動してください
+signpic.versioning.downloadingAlready=最新版は既にダウンロード中です 少々お待ちください
+signpic.versioning.error=SignPictureのアップデートに問題が発生したようです。
+signpic.versioning.disabled=申し訳ございませんがこの機能は無効にされているようです

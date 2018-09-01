@@ -1,0 +1,18 @@
+{
+	"gui.show":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "gui/show"
+			}
+		]
+	},
+	"gui.screenshot":{
+		"category":"player",
+		"sounds":[
+			{
+				"name": "gui/screenshot"
+			}
+		]
+	}
+}
