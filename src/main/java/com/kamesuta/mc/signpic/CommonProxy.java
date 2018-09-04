@@ -2,17 +2,18 @@ package com.kamesuta.mc.signpic;
 
 import javax.annotation.Nonnull;
 
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatProxy;
 
-public class CommonProxy {
-	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
+public class CommonProxy extends CompatProxy {
+	@Override
+	public void preInit(final @Nonnull CompatFMLPreInitializationEvent event) {
 	}
 
-	public void init(final @Nonnull FMLInitializationEvent event) {
+	@Override
+	public void init(final @Nonnull CompatFMLInitializationEvent event) {
 	}
 
-	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
+	@Override
+	public void postInit(final @Nonnull CompatFMLPostInitializationEvent event) {
 	}
 }

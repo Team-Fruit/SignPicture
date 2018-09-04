@@ -5,22 +5,18 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatItemSignRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatItemSignRendererRegistrar;
 import com.mojang.util.UUIDTypeAdapter;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.Session;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
+	public void preInit(final @Nonnull CompatFMLPreInitializationEvent event) {
 		super.preInit(event);
 
 		Log.log = event.getModLog();
@@ -44,6 +40,8 @@ public class ClientProxy extends CommonProxy {
 			}
 		} catch (final IllegalArgumentException e) {
 		}
+
+		CompatItemSignRendererRegistrar.registerPreInit(new CompatItemSignRenderer());
 	}
 
 	private @Nonnull File getDataDirectory() {
@@ -57,12 +55,12 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void init(final @Nonnull FMLInitializationEvent event) {
+	public void init(final @Nonnull CompatFMLInitializationEvent event) {
 		super.init(event);
 
 		// Replace Sign Renderer
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.renderer);
-		MinecraftForgeClient.registerItemRenderer(Items.sign, new CustomItemSignRenderer());
+		CompatItemSignRendererRegistrar.registerInit(new CompatItemSignRenderer());
 
 		// Event Register
 		Client.handler.init();
@@ -70,7 +68,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
+	public void postInit(final @Nonnull CompatFMLPostInitializationEvent event) {
 		super.postInit(event);
 
 		Config.getConfig().save();

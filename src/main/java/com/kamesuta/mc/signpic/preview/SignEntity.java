@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Client.MovePos;
+import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.multiplayer.WorldClient;

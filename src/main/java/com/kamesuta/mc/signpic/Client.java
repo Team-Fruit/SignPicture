@@ -25,25 +25,24 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.signpic.command.CommandImage;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatSoundHandler;
+import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockSign;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeVersion;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Client {
-	public static final @Nonnull Minecraft mc = FMLClientHandler.instance().getClient();
+	public static final @Nonnull Minecraft mc = CompatMinecraft.getMinecraft();
 
 	public static final @Nonnull Gson gson = new Gson();
 
@@ -98,7 +97,7 @@ public class Client {
 	}
 
 	public static void playSound(final @Nonnull ResourceLocation location, final float volume) {
-		mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(location, volume));
+		CompatSoundHandler.playSound(location, volume);
 	}
 
 	public static final Set<String> schemes = ImmutableSet.of("http", "https");
@@ -127,43 +126,6 @@ public class Client {
 			Log.log.warn("Failed to open URL", e);
 		}
 		return false;
-	}
-
-	public static class MovePos {
-		public int x;
-		public int y;
-		public int z;
-
-		public MovePos(final int x, final int y, final int z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-
-		public static @Nullable MovingObjectPosition getMovingPos() {
-			return mc.objectMouseOver;
-		}
-
-		public static @Nullable MovePos getBlockPos() {
-			final MovingObjectPosition movingPos = getMovingPos();
-			if (movingPos!=null)
-				return new MovePos(movingPos.blockX, movingPos.blockY, movingPos.blockZ);
-			return null;
-		}
-
-		public static @Nullable TileEntity getTile() {
-			final MovePos movePos = getBlockPos();
-			if (movePos!=null)
-				return mc.theWorld.getTileEntity(movePos.x, movePos.y, movePos.z);
-			return null;
-		}
-
-		public static @Nullable Block getBlock() {
-			final MovePos movePos = getBlockPos();
-			if (movePos!=null)
-				return mc.theWorld.getBlock(movePos.x, movePos.y, movePos.z);
-			return null;
-		}
 	}
 
 	@SuppressWarnings("unchecked")

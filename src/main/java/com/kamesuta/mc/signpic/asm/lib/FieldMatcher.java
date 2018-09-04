@@ -10,7 +10,7 @@ package com.kamesuta.mc.signpic.asm.lib;
 
 import javax.annotation.Nonnull;
 
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import com.kamesuta.mc.signpic.compat.Compat.CompatFMLDeobfuscatingRemapper;
 
 public class FieldMatcher {
 	private final @Nonnull String clsName;
@@ -30,7 +30,7 @@ public class FieldMatcher {
 			return true;
 		if (!VisitorHelper.useSrgNames())
 			return false;
-		final String unmappedName = FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(this.clsName, fieldName, fieldDesc);
+		final String unmappedName = CompatFMLDeobfuscatingRemapper.mapFieldName(this.clsName, fieldName, fieldDesc);
 		return unmappedName.equals(this.refname.srgName());
 	}
 }
