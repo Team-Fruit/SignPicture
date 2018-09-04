@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.Logger;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -15,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
@@ -152,6 +154,10 @@ public class Compat {
 	}
 
 	public static class CompatItemSignRendererRegistrar {
+		public static void bindTileEntitySpecialRenderer(final Class<? extends TileEntity> tileEntityClass, final TileEntitySpecialRenderer specialRenderer) {
+			ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass, specialRenderer);
+		}
+
 		public static void registerPreInit(@Nonnull final CompatItemSignRenderer renderer) {
 
 		}

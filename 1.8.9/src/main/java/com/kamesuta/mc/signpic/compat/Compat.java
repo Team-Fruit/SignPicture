@@ -13,6 +13,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +22,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -162,6 +164,10 @@ public class Compat {
 	}
 
 	public static class CompatItemSignRendererRegistrar {
+		public static <T extends TileEntity> void bindTileEntitySpecialRenderer(final Class<T> tileEntityClass, final TileEntitySpecialRenderer<? super T> specialRenderer) {
+			ClientRegistry.bindTileEntitySpecialRenderer(tileEntityClass, specialRenderer);
+		}
+
 		public static void registerPreInit(@Nonnull final CompatItemSignRenderer renderer) {
 			ModelLoader.setCustomModelResourceLocation(Items.sign, 0, renderer.modelResourceLocation);
 		}
