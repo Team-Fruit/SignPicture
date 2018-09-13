@@ -29,6 +29,7 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.Compat.CompatSoundHandler;
 import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.gui.GuiMain;
+import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
 
 import net.minecraft.block.BlockSign;
@@ -46,7 +47,8 @@ public class Client {
 
 	public static final @Nonnull Gson gson = new Gson();
 
-	public static @Nonnull CustomTileEntitySignRenderer renderer = new CustomTileEntitySignRenderer();
+	public static @Nonnull CustomTileEntitySignRenderer rendererTile = new CustomTileEntitySignRenderer();
+	public static @Nonnull CustomItemSignRenderer itemRenderer = new CustomItemSignRenderer();
 	public static @Nonnull CoreHandler handler = new CoreHandler();
 	private static @Nullable Locations location;
 

@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
-import com.kamesuta.mc.signpic.compat.Compat.CompatItemSignRenderer;
 import com.kamesuta.mc.signpic.compat.Compat.CompatItemSignRendererRegistrar;
 import com.mojang.util.UUIDTypeAdapter;
 
@@ -41,7 +40,7 @@ public class ClientProxy extends CommonProxy {
 		} catch (final IllegalArgumentException e) {
 		}
 
-		CompatItemSignRendererRegistrar.registerPreInit(new CompatItemSignRenderer());
+		CompatItemSignRendererRegistrar.registerPreInit(Client.itemRenderer);
 	}
 
 	private @Nonnull File getDataDirectory() {
@@ -59,8 +58,8 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.renderer);
-		CompatItemSignRendererRegistrar.registerInit(new CompatItemSignRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.rendererTile);
+		CompatItemSignRendererRegistrar.registerInit(Client.itemRenderer);
 
 		// Event Register
 		Client.handler.init();

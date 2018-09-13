@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
@@ -157,10 +156,6 @@ public class Compat {
 
 		public void postInit(final @Nonnull FMLPostInitializationEvent event) {
 		}
-	}
-
-	public static class CompatItemSignRenderer {
-		protected ModelResourceLocation modelResourceLocation;
 	}
 
 	public static class CompatItemSignRendererRegistrar {

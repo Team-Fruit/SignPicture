@@ -43,7 +43,7 @@ public class SignPicRender {
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
 			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
-				Client.renderer.renderSignPictureBase(tile, tile.xCoord-TileEntityRendererDispatcher.staticPlayerX, tile.yCoord-TileEntityRendererDispatcher.staticPlayerY, tile.zCoord-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity);
+				Client.rendererTile.renderSignPictureBase(tile, tile.xCoord-TileEntityRendererDispatcher.staticPlayerX, tile.yCoord-TileEntityRendererDispatcher.staticPlayerY, tile.zCoord-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity);
 			}
 	}
 
