@@ -69,10 +69,10 @@ public class SignEntity {
 		final WorldClient world = Client.mc.theWorld;
 		if (player!=null&&world!=null) {
 			final MovingObjectPosition m = MovePos.getMovingPos();
-			final MovePos p = MovePos.getBlockPos();
+			final MovePos p = MovePos.getMovingBlockPos();
 			if (m!=null&&p!=null) {
 				setVisible(true);
-				return onItemUse(player, world, p.x, p.y, p.z, m.sideHit);
+				return onItemUse(player, world, p.getX(), p.getY(), p.getZ(), m.sideHit);
 			}
 		}
 		return null;

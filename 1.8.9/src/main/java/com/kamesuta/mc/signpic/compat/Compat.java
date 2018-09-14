@@ -13,12 +13,15 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Items;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -68,11 +71,42 @@ public class Compat {
 			this.pos = pos;
 		}
 
+		public int getX() {
+			return this.pos.getX();
+		}
+
+		public int getY() {
+			return this.pos.getY();
+		}
+
+		public int getZ() {
+			return this.pos.getZ();
+		}
+
+		public @Nullable IBlockState getBlockState() {
+			return CompatMinecraft.getWorld().getBlockState(this.pos);
+		}
+
+		public @Nullable TileEntity getTile() {
+			return CompatMinecraft.getWorld().getTileEntity(this.pos);
+		}
+
+		public @Nullable Block getBlock() {
+			final IBlockState blockState = getBlockState();
+			if (blockState!=null)
+				return blockState.getBlock();
+			return null;
+		}
+
+		public static @Nonnull MovePos fromCoords(final int xCoord, final int yCoord, final int zCoord) {
+			return new MovePos(new BlockPos(xCoord, yCoord, zCoord));
+		}
+
 		public static @Nullable MovingObjectPosition getMovingPos() {
 			return CompatMinecraft.getMinecraft().objectMouseOver;
 		}
 
-		public static @Nullable MovePos getBlockPos() {
+		public static @Nullable MovePos getMovingBlockPos() {
 			final MovingObjectPosition movingPos = getMovingPos();
 			if (movingPos!=null) {
 				final BlockPos pos = movingPos.getBlockPos();
@@ -82,25 +116,8 @@ public class Compat {
 			return null;
 		}
 
-		public static @Nullable IBlockState getBlockState() {
-			final MovePos movePos = getBlockPos();
-			if (movePos!=null)
-				return CompatMinecraft.getWorld().getBlockState(movePos.pos);
-			return null;
-		}
-
-		public static @Nullable TileEntity getTile() {
-			final MovePos movePos = getBlockPos();
-			if (movePos!=null)
-				return CompatMinecraft.getWorld().getTileEntity(movePos.pos);
-			return null;
-		}
-
-		public static @Nullable Block getBlock() {
-			final IBlockState blockState = getBlockState();
-			if (blockState!=null)
-				return blockState.getBlock();
-			return null;
+		public static @Nonnull MovePos getTileEntityPos(@Nonnull final TileEntity tile) {
+			return new MovePos(tile.getPos());
 		}
 	}
 
@@ -171,6 +188,21 @@ public class Compat {
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
 
+		}
+	}
+
+	public static abstract class CompatTileEntitySignRenderer extends TileEntitySignRenderer {
+		public void renderBaseTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
+			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
+		}
+
+		@Override
+		public abstract void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy);
+	}
+
+	public static class CompatWorld {
+		public static int getLightFor(final MovePos pos) {
+			return CompatMinecraft.getWorld().getLightFor(EnumSkyBlock.SKY, pos.pos);
 		}
 	}
 }

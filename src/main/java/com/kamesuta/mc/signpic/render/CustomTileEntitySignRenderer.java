@@ -15,19 +15,19 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySignRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 
-public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
+public class CustomTileEntitySignRenderer extends CompatTileEntitySignRenderer {
 	public static final @Nonnull ResourceLocation resError = new ResourceLocation("signpic", "textures/state/error.png");
 
 	public CustomTileEntitySignRenderer() {
@@ -75,7 +75,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 		}
 	}
 
-	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity) {
+	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity, final int destroy) {
 		final Entry entry = SignEntryId.fromTile(tile).entry();
 		if (entry.isOutdated()&&CurrentMode.instance.isState(CurrentMode.State.SEE))
 			OpenGL.glDisable(GL11.GL_DEPTH_TEST);
@@ -83,7 +83,7 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.getConfig().renderSeeOpacity.get().floatValue());
-				super.renderTileEntityAt(tile, x, y, z, partialTicks);
+				renderBaseTileEntityAt(tile, x, y, z, partialTicks, destroy);
 			}
 
 			OpenGL.glPushMatrix();
@@ -93,7 +93,8 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 			OpenGL.glDisable(GL_CULL_FACE);
 
 			final GuiImage gui = entry.getGui();
-			gui.applyLight(tile.xCoord, tile.yCoord, tile.zCoord, getSignRotate(tile));
+			final MovePos pos = MovePos.getTileEntityPos(tile);
+			gui.applyLight(pos.getX(), pos.getY(), pos.getZ(), getSignRotate(tile));
 			gui.renderSignPicture(opacity, 1f, new RenderOption());
 
 			OpenGL.glEnable(GL_CULL_FACE);
@@ -104,23 +105,18 @@ public class CustomTileEntitySignRenderer extends TileEntitySignRenderer {
 				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
-			super.renderTileEntityAt(tile, x, y, z, partialTicks);
+			renderBaseTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}
 		OpenGL.glEnable(GL11.GL_DEPTH_TEST);
 		WRenderer.startTexture();
 	}
 
 	@Override
-	public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks) {
+	public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
 		if (tile!=null) {
 			Client.startSection("signpic-render");
-			renderSignPictureBase(tile, x, y, z, partialTicks, 1f);
+			renderSignPictureBase(tile, x, y, z, partialTicks, 1f, destroy);
 			Client.endSection();
 		}
-	}
-
-	@Override
-	public void renderTileEntityAt(final @Nullable TileEntity tile, final double x, final double y, final double z, final float partialTicks) {
-		this.renderTileEntityAt((TileEntitySign) tile, x, y, z, partialTicks);
 	}
 }

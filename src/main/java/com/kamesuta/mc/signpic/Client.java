@@ -90,8 +90,9 @@ public class Client {
 	}
 
 	public static @Nullable TileEntitySign getTileSignLooking() {
-		if (MovePos.getBlock() instanceof BlockSign) {
-			final TileEntity tile = MovePos.getTile();
+		final MovePos pos = MovePos.getMovingBlockPos();
+		if (pos!=null&&pos.getBlock() instanceof BlockSign) {
+			final TileEntity tile = pos.getTile();
 			if (tile instanceof TileEntitySign)
 				return (TileEntitySign) tile;
 		}
