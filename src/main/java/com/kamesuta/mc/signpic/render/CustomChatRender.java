@@ -19,6 +19,9 @@ import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
+import com.kamesuta.mc.signpic.compat.Compat.CompatChatLine;
+import com.kamesuta.mc.signpic.compat.Compat.CompatGuiNewChat;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -81,7 +84,7 @@ public class CustomChatRender {
 				// draw first line
 				final Area lvert = vert.scaleSize(1, height*linesplit).translate(ix-2, 0);
 				WRenderer.startShape();
-				OpenGL.glColor4f(.5f, .5f, .5f, .5f);
+				OpenGL.glColor4f(.5f, .5f, .5f, (color>>24&0xff)/255f);
 				WGui.draw(lvert.trimArea(trim));
 				OpenGL.glColorRGBA(color);
 			}
@@ -139,7 +142,7 @@ public class CustomChatRender {
 	}
 
 	private static int getChatWidth(final @Nonnull GuiNewChat chat) {
-		return MathHelper.floor_float(chat.func_146228_f()/chat.func_146244_h());
+		return MathHelper.floor_float(CompatGuiNewChat.getChatWidth(chat)/CompatGuiNewChat.getChatScale(chat));
 	}
 
 	@CoreInvoke
@@ -229,8 +232,8 @@ public class CustomChatRender {
 					for (final ChatLine line : lines) {
 						updateCounterCreated = line.getUpdatedCounter();
 						chatLineID = line.getChatLineID();
-						final IChatComponent cc = line.func_151461_a();
-						final List<ClickEvent> clinks = getLinksFromChat(cc);
+						final CompatTextComponent cc = CompatChatLine.getChatComponent(line);
+						final List<ClickEvent> clinks = cc.getLinksFromChat();
 						for (final ClickEvent clink : clinks) {
 							final EntryId entryid = new EntryIdBuilder().setURI(clink.getValue()).build();
 							if (!addedentries.contains(entryid))
@@ -259,23 +262,6 @@ public class CustomChatRender {
 		@Override
 		public String toString() {
 			return String.format("PicChatNode [pendentryids=%s, updateCounterCreated=%s, chatLineID=%s]", this.pendentryids, this.updateCounterCreated, this.chatLineID);
-		}
-
-		public static @Nonnull List<ClickEvent> getLinksFromChat(final @Nonnull IChatComponent chat) {
-			final List<ClickEvent> list = Lists.newLinkedList();
-			getLinksFromChat0(list, chat);
-			return list;
-		}
-
-		private static void getLinksFromChat0(final @Nonnull List<ClickEvent> list, final @Nonnull IChatComponent pchat) {
-			final List<?> chats = pchat.getSiblings();
-			for (final Object o : chats) {
-				final IChatComponent chat = (IChatComponent) o;
-				final ClickEvent ev = chat.getChatStyle().getChatClickEvent();
-				if (ev!=null&&ev.getAction()==ClickEvent.Action.OPEN_URL)
-					list.add(ev);
-				getLinksFromChat0(list, chat);
-			}
 		}
 
 		public int getLineSplit() {

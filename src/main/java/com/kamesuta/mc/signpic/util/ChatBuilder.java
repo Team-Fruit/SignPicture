@@ -8,25 +8,17 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
-import com.kamesuta.mc.signpic.Client;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.server.management.ServerConfigurationManager;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 
 public class ChatBuilder {
 	public static final int DefaultId = 877;
 
-	private @Nullable IChatComponent chat = null;
-	private @Nullable ChatStyle style = null;
+	private @Nullable CompatTextComponent chat = null;
+	private @Nullable CompatTextStyle style = null;
 	private @Nonnull String text = "";
 	private @Nonnull Object[] params = new Object[0];
 	private boolean useTranslation = false;
@@ -35,12 +27,12 @@ public class ChatBuilder {
 	private final @Nonnull Map<String, String> replace = Maps.newHashMap();
 	private int id = -1;
 
-	public @Nonnull IChatComponent build() {
-		IChatComponent chat;
+	public @Nonnull CompatTextComponent build() {
+		CompatTextComponent chat;
 		if (this.chat!=null)
 			chat = this.chat;
 		else if (this.useTranslation&&!this.useJson)
-			chat = new ChatComponentTranslation(this.text, this.params);
+			chat = CompatTextComponent.fromTranslation(this.text, this.params);
 		else {
 			String s;
 			if (this.useTranslation)
@@ -56,12 +48,12 @@ public class ChatBuilder {
 
 			if (this.useJson)
 				try {
-					chat = IChatComponent.Serializer.func_150699_a(s);
+					chat = CompatTextComponent.jsonToComponent(s);
 				} catch (final Exception e) {
-					chat = new ChatComponentText("Invaild Json: "+this.text);
+					chat = CompatTextComponent.fromText("Invaild Json: "+this.text);
 				}
 			else
-				chat = new ChatComponentText(this.text);
+				chat = CompatTextComponent.fromText(this.text);
 		}
 		if (this.style!=null)
 			chat.setChatStyle(this.style);
@@ -88,7 +80,7 @@ public class ChatBuilder {
 		return this;
 	}
 
-	public @Nonnull ChatBuilder setChat(final @Nullable IChatComponent chat) {
+	public @Nonnull ChatBuilder setChat(final @Nullable CompatTextComponent chat) {
 		this.chat = chat;
 		return this;
 	}
@@ -103,7 +95,7 @@ public class ChatBuilder {
 		return this;
 	}
 
-	public @Nonnull ChatBuilder setStyle(final @Nullable ChatStyle style) {
+	public @Nonnull ChatBuilder setStyle(final @Nullable CompatTextStyle style) {
 		this.style = style;
 		return this;
 	}
@@ -127,7 +119,7 @@ public class ChatBuilder {
 		return new ChatBuilder().setText(text);
 	}
 
-	@SideOnly(Side.CLIENT)
+	//@SideOnly(Side.CLIENT)
 	public void chatClient() {
 		if (!isEmpty())
 			chatClient(this);
@@ -138,25 +130,21 @@ public class ChatBuilder {
 			sendPlayer(target, this);
 	}
 
-	@SideOnly(Side.CLIENT)
+	//@SideOnly(Side.CLIENT)
 	public static void chatClient(final @Nonnull ChatBuilder chat) {
-		final Minecraft mc = Client.mc;
-		if (mc.thePlayer!=null) {
-			final IChatComponent msg = chat.build();
-			if (chat.useId)
-				mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(msg, chat.id);
-			else
-				mc.thePlayer.addChatComponentMessage(msg);
-		}
+		final CompatTextComponent msg = chat.build();
+		if (chat.useId)
+			msg.sendClientWithId(chat.id);
+		else
+			msg.sendClient();
 	}
 
 	public static void sendPlayer(final @Nonnull ICommandSender target, final @Nonnull ChatBuilder chat) {
-		target.addChatMessage(chat.build());
+		chat.build().sendPlayer(target);
 	}
 
-	@SideOnly(Side.SERVER)
+	//@SideOnly(Side.SERVER)
 	public static void sendServer(final @Nonnull ChatBuilder chat) {
-		final ServerConfigurationManager sender = FMLCommonHandler.instance().getMinecraftServerInstance().getConfigurationManager();
-		sender.sendChatMsg(chat.build());
+		chat.build().sendBroadcast();
 	}
 }

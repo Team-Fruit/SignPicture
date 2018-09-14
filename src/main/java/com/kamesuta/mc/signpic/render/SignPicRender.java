@@ -12,6 +12,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -43,7 +44,8 @@ public class SignPicRender {
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
 			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
-				Client.rendererTile.renderSignPictureBase(tile, tile.xCoord-TileEntityRendererDispatcher.staticPlayerX, tile.yCoord-TileEntityRendererDispatcher.staticPlayerY, tile.zCoord-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity, 0);
+				final MovePos pos = MovePos.getTileEntityPos(tile);
+				Client.rendererTile.renderSignPictureBase(tile, pos.getX()-TileEntityRendererDispatcher.staticPlayerX, pos.getY()-TileEntityRendererDispatcher.staticPlayerY, pos.getZ()-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity, -1);
 			}
 	}
 

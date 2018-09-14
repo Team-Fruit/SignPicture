@@ -23,6 +23,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.LoadCanceledException;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.http.Communicate;
 import com.kamesuta.mc.signpic.http.CommunicateResponse;
 import com.kamesuta.mc.signpic.information.Info.Version;
@@ -33,10 +36,6 @@ import com.kamesuta.mc.signpic.util.ChatBuilder;
 import com.kamesuta.mc.signpic.util.Downloader;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 
 public class ModDownload extends Communicate implements Progressable {
 	protected boolean canceled;
@@ -101,11 +100,12 @@ public class ModDownload extends Communicate implements Progressable {
 			if (!f1.exists())
 				FileUtils.moveFile(tmp, f1);
 
-			IChatComponent chat;
+			CompatTextComponent chat;
 			if (Client.getLocation().modFile.isFile())
-				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897).setParams(local, Client.getLocation().modFile.getName()).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
+				chat = ChatBuilder.create("signpic.versioning.doneDownloadingWithFile").useTranslation().setId(897)
+						.setParams(local, Client.getLocation().modFile.getName()).setStyle(CompatTextStyle.create().setColor(CompatTextFormatting.GREEN)).build();
 			else
-				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)).build();
+				chat = ChatBuilder.create("signpic.versioning.doneDownloading").useTranslation().setId(897).setParams(local).setStyle(CompatTextStyle.create().setColor(CompatTextFormatting.GREEN)).build();
 			Log.notice(I18n.format("signpic.gui.notice.downloaded", local));
 
 			Desktop.getDesktop().open(Client.getLocation().modDir.getCanonicalFile());
@@ -116,7 +116,7 @@ public class ModDownload extends Communicate implements Progressable {
 			return;
 		} catch (final Throwable e) {
 			Log.log.warn("Updater Downloading Error", e);
-			final IChatComponent chat = new ChatBuilder().setChat(new ChatComponentTranslation("signpic.versioning.error").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED))).build();
+			final CompatTextComponent chat = new ChatBuilder().setChat(CompatTextComponent.fromTranslation("signpic.versioning.error").setChatStyle(CompatTextStyle.create().setColor(CompatTextFormatting.RED))).build();
 			this.result = new ModDLResult(chat);
 			onDone(new CommunicateResponse(false, e));
 			return;
@@ -141,10 +141,10 @@ public class ModDownload extends Communicate implements Progressable {
 	}
 
 	public static class ModDLResult {
-		public final @Nonnull IChatComponent response;
+		public final @Nonnull CompatTextComponent response;
 
-		public ModDLResult(final @Nonnull IChatComponent response) {
-			this.response = response;
+		public ModDLResult(final @Nonnull CompatTextComponent chat) {
+			this.response = chat;
 		}
 	}
 }

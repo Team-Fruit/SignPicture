@@ -16,10 +16,10 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.gui.GuiTask;
 import com.kamesuta.mc.signpic.http.Communicator;
-import com.kamesuta.mc.signpic.http.ICommunicateCallback;
-import com.kamesuta.mc.signpic.http.ICommunicateResponse;
 import com.kamesuta.mc.signpic.http.download.ModDownload;
 import com.kamesuta.mc.signpic.http.download.ModDownload.ModDLResult;
 import com.kamesuta.mc.signpic.information.Info.PrivateMsg;
@@ -29,8 +29,6 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 
 public final class Informations {
 	public static final @Nonnull Informations instance = new Informations();
@@ -127,16 +125,13 @@ public final class Informations {
 	public void onlineCheck(final @Nullable Runnable after) {
 		this.lastCheck = System.currentTimeMillis();
 		final InformationCheck checker = new InformationCheck();
-		checker.setCallback(new ICommunicateCallback() {
-			@Override
-			public void onDone(final ICommunicateResponse res) {
-				if (checker.result!=null)
-					setSource(checker.result);
-				if (res.getError()!=null)
-					Log.log.warn("Could not check version information", res.getError());
-				if (after!=null)
-					after.run();
-			}
+		checker.setCallback(res -> {
+			if (checker.result!=null)
+				setSource(checker.result);
+			if (res.getError()!=null)
+				Log.log.warn("Could not check version information", res.getError());
+			if (after!=null)
+				after.run();
 		});
 		Communicator.instance.communicate(checker);
 	}
@@ -188,7 +183,7 @@ public final class Informations {
 			final Info.Version version = source.onlineVersion().version;
 			if (version!=null&&!StringUtils.isEmpty(version.remote))
 				if (state.isDownloaded()) {
-					ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
+					ChatBuilder.create("signpic.versioning.downloadedAlready").useTranslation().setStyle(CompatTextStyle.create().setColor(CompatTextFormatting.RED)).chatClient();
 					Log.notice(I18n.format("signpic.gui.notice.versioning.downloadedAlready"));
 					try {
 						Desktop.getDesktop().open(Client.getLocation().modDir.getCanonicalFile());
@@ -196,19 +191,16 @@ public final class Informations {
 						Log.log.error(e.getMessage(), e);
 					}
 				} else if (state.downloading) {
-					ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)).chatClient();
+					ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(CompatTextStyle.create().setColor(CompatTextFormatting.RED)).chatClient();
 					Log.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"));
 				} else {
 					final ModDownload downloader = new ModDownload();
 					downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
 					downloader.getState().getMeta().put(GuiTask.ShowPanel, 3f);
-					downloader.setCallback(new ICommunicateCallback() {
-						@Override
-						public void onDone(final ICommunicateResponse res) {
-							final ModDLResult result = downloader.result;
-							if (result!=null)
-								new ChatBuilder().setChat(result.response).chatClient();
-						}
+					downloader.setCallback(res -> {
+						final ModDLResult result = downloader.result;
+						if (result!=null)
+							new ChatBuilder().setChat(result.response).chatClient();
 					});
 					Communicator.instance.communicate(downloader);
 				}

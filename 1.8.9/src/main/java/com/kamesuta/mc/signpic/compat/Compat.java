@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.compat;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -8,23 +9,38 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -51,7 +67,11 @@ public class Compat {
 
 	public static class CompatMinecraft {
 		public static @Nonnull Minecraft getMinecraft() {
-			return Minecraft.getMinecraft();
+			return FMLClientHandler.instance().getClient();
+		}
+
+		public static @Nonnull MinecraftServer getMinecraftServer() {
+			return FMLCommonHandler.instance().getMinecraftServerInstance();
 		}
 
 		public static @Nonnull FontRenderer getFontRenderer() {
@@ -203,6 +223,134 @@ public class Compat {
 	public static class CompatWorld {
 		public static int getLightFor(final MovePos pos) {
 			return CompatMinecraft.getWorld().getLightFor(EnumSkyBlock.SKY, pos.pos);
+		}
+	}
+
+	public static class CompatGuiNewChat {
+		public static int getChatWidth(final GuiNewChat chat) {
+			return chat.getChatWidth();
+		}
+
+		public static float getChatScale(final GuiNewChat chat) {
+			return chat.getChatScale();
+		}
+	}
+
+	public static class CompatTextComponent {
+		public final IChatComponent component;
+
+		public CompatTextComponent(final IChatComponent component) {
+			this.component = component;
+		}
+
+		public @Nonnull List<ClickEvent> getLinksFromChat() {
+			final List<ClickEvent> list = Lists.newLinkedList();
+			getLinksFromChat0(list, this.component);
+			return list;
+		}
+
+		private void getLinksFromChat0(final @Nonnull List<ClickEvent> list, final @Nonnull IChatComponent pchat) {
+			final List<?> chats = pchat.getSiblings();
+			for (final Object o : chats) {
+				final IChatComponent chat = (IChatComponent) o;
+				final ClickEvent ev = chat.getChatStyle().getChatClickEvent();
+				if (ev!=null&&ev.getAction()==ClickEvent.Action.OPEN_URL)
+					list.add(ev);
+				getLinksFromChat0(list, chat);
+			}
+		}
+
+		public CompatTextComponent setChatStyle(final CompatTextStyle style) {
+			this.component.setChatStyle(style.style);
+			return this;
+		}
+
+		public String getUnformattedText() {
+			return this.component.getUnformattedText();
+		}
+
+		public static CompatTextComponent jsonToComponent(final String json) {
+			return new CompatTextComponent(IChatComponent.Serializer.jsonToComponent(json));
+		}
+
+		public static CompatTextComponent fromText(final String text) {
+			return new CompatTextComponent(new ChatComponentText(text));
+		}
+
+		public static CompatTextComponent fromTranslation(final String text, final Object... params) {
+			return new CompatTextComponent(new ChatComponentTranslation(text, params));
+		}
+
+		public void sendClient() {
+			CompatMinecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(this.component);
+		}
+
+		public void sendClientWithId(final int id) {
+			CompatMinecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(this.component, id);
+		}
+
+		public void sendPlayer(final @Nonnull ICommandSender target) {
+			target.addChatMessage(this.component);
+		}
+
+		public void sendBroadcast() {
+			final ServerConfigurationManager sender = CompatMinecraft.getMinecraftServer().getConfigurationManager();
+			sender.sendChatMsg(this.component);
+		}
+	}
+
+	public static class CompatTextStyle {
+		public final ChatStyle style;
+
+		public CompatTextStyle(final ChatStyle style) {
+			this.style = style;
+		}
+
+		public CompatTextStyle setColor(final CompatTextFormatting format) {
+			this.style.setColor(format.format);
+			return this;
+		}
+
+		public static CompatTextStyle create() {
+			return new CompatTextStyle(new ChatStyle());
+		}
+	}
+
+	public static class CompatChatLine {
+		public static CompatTextComponent getChatComponent(final ChatLine line) {
+			return new CompatTextComponent(line.getChatComponent());
+		}
+	}
+
+	public static enum CompatTextFormatting {
+		BLACK(EnumChatFormatting.BLACK),
+		DARK_BLUE(EnumChatFormatting.DARK_BLUE),
+		DARK_GREEN(EnumChatFormatting.DARK_GREEN),
+		DARK_AQUA(EnumChatFormatting.DARK_AQUA),
+		DARK_RED(EnumChatFormatting.DARK_RED),
+		DARK_PURPLE(EnumChatFormatting.DARK_PURPLE),
+		GOLD(EnumChatFormatting.GOLD),
+		GRAY(EnumChatFormatting.GRAY),
+		DARK_GRAY(EnumChatFormatting.DARK_GRAY),
+		BLUE(EnumChatFormatting.BLUE),
+		GREEN(EnumChatFormatting.GREEN),
+		AQUA(EnumChatFormatting.AQUA),
+		RED(EnumChatFormatting.RED),
+		LIGHT_PURPLE(EnumChatFormatting.LIGHT_PURPLE),
+		YELLOW(EnumChatFormatting.YELLOW),
+		WHITE(EnumChatFormatting.WHITE),
+		OBFUSCATED(EnumChatFormatting.OBFUSCATED),
+		BOLD(EnumChatFormatting.BOLD),
+		STRIKETHROUGH(EnumChatFormatting.STRIKETHROUGH),
+		UNDERLINE(EnumChatFormatting.UNDERLINE),
+		ITALIC(EnumChatFormatting.ITALIC),
+		RESET(EnumChatFormatting.RESET),
+		;
+
+		public final EnumChatFormatting format;
+
+		private CompatTextFormatting(final EnumChatFormatting format) {
+			this.format = format;
 		}
 	}
 }

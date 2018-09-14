@@ -10,13 +10,13 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 
 public class CommandHelpers {
 	public static void throwWrongUsage(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command) throws WrongUsageException {
@@ -35,11 +35,11 @@ public class CommandHelpers {
 	}
 
 	public static void printHelp(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command) {
-		final ChatStyle header = new ChatStyle();
-		header.setColor(EnumChatFormatting.BLUE);
+		final CompatTextStyle header = CompatTextStyle.create();
+		header.setColor(CompatTextFormatting.BLUE);
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".format").useTranslation().setStyle(header).setParams(command.getFullCommandString()).sendPlayer(sender);
-		final ChatStyle body = new ChatStyle();
-		body.setColor(EnumChatFormatting.GRAY);
+		final CompatTextStyle body = CompatTextStyle.create();
+		body.setColor(CompatTextFormatting.GRAY);
 		final List<String> aliases = command.getCommandAliases();
 		if (aliases!=null)
 			ChatBuilder.create("signpic.command.aliases").useTranslation().setStyle(body).setParams(aliases.toString().replace("[", "").replace("]", "")).sendPlayer(sender);
