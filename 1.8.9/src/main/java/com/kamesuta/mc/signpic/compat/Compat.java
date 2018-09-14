@@ -145,6 +145,7 @@ public class Compat {
 		public abstract void init(final @Nonnull CompatFMLInitializationEvent event);
 
 		public void init(final @Nonnull FMLInitializationEvent event) {
+			init(new CompatFMLInitializationEvent(event));
 		}
 
 		public static class CompatFMLPostInitializationEvent {
@@ -155,6 +156,7 @@ public class Compat {
 		public abstract void postInit(final @Nonnull CompatFMLPostInitializationEvent event);
 
 		public void postInit(final @Nonnull FMLPostInitializationEvent event) {
+			postInit(new CompatFMLPostInitializationEvent(event));
 		}
 	}
 

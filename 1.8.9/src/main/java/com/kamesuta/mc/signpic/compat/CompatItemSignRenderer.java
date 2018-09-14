@@ -41,7 +41,7 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 	public void renderSign(@Nullable final ItemStack item) {
 	}
 
-	public static enum SignTransformType {
+	public static enum ItemSignTransformType {
 		NONE,
 		THIRD_PERSON,
 		FIRST_PERSON,
@@ -51,7 +51,7 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		FIXED,
 		;
 
-		public static @Nonnull SignTransformType fromType(final @Nullable TransformType type) {
+		public static @Nonnull ItemSignTransformType fromType(final @Nullable TransformType type) {
 			if (type==null)
 				return NONE;
 			switch (type) {
@@ -73,17 +73,17 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		}
 	}
 
-	public static enum SignCompatVersion {
+	public static enum ItemSignCompatVersion {
 		V7,
 		V8,
 		V10;
 
-		public static @Nonnull SignCompatVersion version() {
+		public static @Nonnull ItemSignCompatVersion version() {
 			return V8;
 		}
 	}
 
-	public abstract void renderSignPicture(final @Nonnull SignTransformType type, final @Nonnull SignCompatVersion version, final @Nullable ItemStack item);
+	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull ItemSignCompatVersion version, final @Nullable ItemStack item);
 
 	public final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
 	private @Nullable IBakedModel baseModel = null;
@@ -136,7 +136,7 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		}
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
-		renderSignPicture(SignTransformType.fromType(type), SignCompatVersion.version(), item);
+		renderSignPicture(ItemSignTransformType.fromType(type), ItemSignCompatVersion.version(), item);
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
 	}

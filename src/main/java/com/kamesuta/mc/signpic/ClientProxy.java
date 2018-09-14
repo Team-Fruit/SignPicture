@@ -11,7 +11,6 @@ import com.mojang.util.UUIDTypeAdapter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.Session;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class ClientProxy extends CommonProxy {
 	@Override
@@ -58,7 +57,7 @@ public class ClientProxy extends CommonProxy {
 		super.init(event);
 
 		// Replace Sign Renderer
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.rendererTile);
+		CompatItemSignRendererRegistrar.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.rendererTile);
 		CompatItemSignRendererRegistrar.registerInit(Client.itemRenderer);
 
 		// Event Register

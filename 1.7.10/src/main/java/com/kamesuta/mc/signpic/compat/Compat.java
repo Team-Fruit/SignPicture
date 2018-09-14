@@ -22,7 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 public class Compat {
@@ -136,6 +135,7 @@ public class Compat {
 		public abstract void init(final @Nonnull CompatFMLInitializationEvent event);
 
 		public void init(final @Nonnull FMLInitializationEvent event) {
+			init(new CompatFMLInitializationEvent(event));
 		}
 
 		public static class CompatFMLPostInitializationEvent {
@@ -146,11 +146,8 @@ public class Compat {
 		public abstract void postInit(final @Nonnull CompatFMLPostInitializationEvent event);
 
 		public void postInit(final @Nonnull FMLPostInitializationEvent event) {
+			postInit(new CompatFMLPostInitializationEvent(event));
 		}
-	}
-
-	public static class CompatItemSignRenderer {
-		protected IItemRenderer itemRenderer;
 	}
 
 	public static class CompatItemSignRendererRegistrar {
@@ -163,7 +160,7 @@ public class Compat {
 		}
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
-			MinecraftForgeClient.registerItemRenderer(Items.sign, renderer.itemRenderer);
+			MinecraftForgeClient.registerItemRenderer(Items.sign, renderer);
 		}
 	}
 }

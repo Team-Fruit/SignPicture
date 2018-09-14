@@ -34,7 +34,7 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		ItemRenderer.renderItemIn2D(Tessellator.instance, f1, f2, f, f3, iicon.getIconWidth(), iicon.getIconHeight(), 0.0625f);
 	}
 
-	public static enum SignTransformType {
+	public static enum ItemSignTransformType {
 		NONE,
 		THIRD_PERSON,
 		FIRST_PERSON,
@@ -44,7 +44,7 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		FIXED,
 		;
 
-		public static @Nonnull SignTransformType fromType(final @Nullable ItemRenderType type) {
+		public static @Nonnull ItemSignTransformType fromType(final @Nullable ItemRenderType type) {
 			if (type==null)
 				return NONE;
 			switch (type) {
@@ -61,17 +61,17 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		}
 	}
 
-	public static enum SignCompatVersion {
+	public static enum ItemSignCompatVersion {
 		V7,
 		V8,
 		V10;
 
-		public static @Nonnull SignCompatVersion version() {
+		public static @Nonnull ItemSignCompatVersion version() {
 			return V7;
 		}
 	}
 
-	public abstract void renderSignPicture(final @Nonnull SignTransformType type, final @Nullable ItemStack item);
+	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull ItemSignCompatVersion version, final @Nullable ItemStack item);
 
 	@Override
 	public boolean handleRenderType(final @Nullable ItemStack item, final @Nullable ItemRenderType type) {
@@ -96,7 +96,7 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		}
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
-		renderSignPicture(SignTransformType.fromType(type), item);
+		renderSignPicture(ItemSignTransformType.fromType(type), ItemSignCompatVersion.version(), item);
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
 	}

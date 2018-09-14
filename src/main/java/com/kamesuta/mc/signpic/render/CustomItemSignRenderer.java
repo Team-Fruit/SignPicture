@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.RenderOption;
+import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
@@ -15,6 +16,7 @@ import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.gui.GuiImage;
+import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,14 +24,12 @@ import net.minecraft.item.ItemStack;
 public class CustomItemSignRenderer extends CompatItemSignRenderer {
 	@Override
 	public boolean isSeeMode() {
-		// TODO 自動生成されたメソッド・スタブ
-		return false;
+		return CurrentMode.instance.isState(CurrentMode.State.SEE);
 	}
 
 	@Override
 	public float getRenderSeeOpacity() {
-		// TODO 自動生成されたメソッド・スタブ
-		return 0;
+		return Config.getConfig().renderSeeOpacity.get().floatValue();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 	}
 
 	@Override
-	public void renderSignPicture(final @Nonnull SignTransformType type, final @Nonnull SignCompatVersion version, final @Nullable ItemStack item) {
+	public void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull ItemSignCompatVersion version, final @Nullable ItemStack item) {
 		final Entry entry = ItemEntryId.fromItemStack(item).entry();
 		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
@@ -48,8 +48,8 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 		final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 		final SizeData size = attr.sizes.getMovie().get().aspectSize(size01);
 		final GuiImage gui = entry.getGui();
-		if (type==SignTransformType.GUI) {
-			if (version==SignCompatVersion.V7) {
+		if (type==ItemSignTransformType.GUI) {
+			if (version==ItemSignCompatVersion.V7) {
 				final float slot = 16f;
 				final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
 				OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
@@ -65,14 +65,14 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 				OpenGL.glScalef(slot, slot, 1f);
 				gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot, new RenderOption());
 			}
-		} else if (version==SignCompatVersion.V7) {
-			if (type==SignTransformType.FIXED) {
+		} else if (version==ItemSignCompatVersion.V7) {
+			if (type==ItemSignTransformType.FIXED) {
 				OpenGL.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
 				OpenGL.glTranslatef(0f, 0.025f, 0f);
 				OpenGL.glScalef(1.6F, -1.6F, 1f);
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.getWidth()/2f, -.5f, f*4);
-			} else if (type==SignTransformType.GROUND) {
+			} else if (type==ItemSignTransformType.GROUND) {
 				OpenGL.glRotatef(180f, 1f, 0f, 0f);
 				OpenGL.glScalef(2f, 2f, 1f);
 				OpenGL.glTranslatef(.5f, -1f, 0f);
@@ -88,17 +88,17 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 			gui.renderSignPicture(1f, 1f, new RenderOption());
 		} else {
 			OpenGL.glScalef(1f, -1f, 1f);
-			if (type==SignTransformType.GROUND)
+			if (type==ItemSignTransformType.GROUND)
 				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
-			else if (type==SignTransformType.FIXED) {
+			else if (type==ItemSignTransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
-			} else if (type==SignTransformType.FIRST_PERSON)
+			} else if (type==ItemSignTransformType.FIRST_PERSON)
 				OpenGL.glTranslatef(-.25f, .25f, 0f);
-			else if (type==SignTransformType.THIRD_PERSON) {
+			else if (type==ItemSignTransformType.THIRD_PERSON) {
 				OpenGL.glTranslatef(.25f, .25f, 0f);
 				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
-			} else if (type==SignTransformType.HEAD)
+			} else if (type==ItemSignTransformType.HEAD)
 				;// Minecraft 1.8.x doesn't support Item Head.
 			OpenGL.glTranslatef(0f, -size.getHeight(), 0f);
 			final OffsetData offset = attr.offsets.getMovie().get();
