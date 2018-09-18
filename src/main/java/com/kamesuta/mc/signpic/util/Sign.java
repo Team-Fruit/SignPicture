@@ -2,12 +2,15 @@ package com.kamesuta.mc.signpic.util;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.io.Charsets;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.compat.Compat.CompatC12PacketUpdateSign;
+import com.kamesuta.mc.signpic.compat.Compat.CompatC17PacketCustomPayload;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySign;
+import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.GuiPAAS;
@@ -16,8 +19,6 @@ import com.kamesuta.mc.signpic.preview.SignEntity;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.inventory.ContainerRepair;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.tileentity.TileEntitySign;
 
 public class Sign {
@@ -34,8 +35,10 @@ public class Sign {
 		entryId.toEntity(sourceentity);
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
-		if (nethandlerplayclient!=null)
-			nethandlerplayclient.addToSendQueue(new C12PacketUpdateSign(sourceentity.xCoord, sourceentity.yCoord, sourceentity.zCoord, sourceentity.signText));
+		if (nethandlerplayclient!=null) {
+			final MovePos pos = MovePos.getTileEntityPos(sourceentity);
+			nethandlerplayclient.addToSendQueue(CompatC12PacketUpdateSign.create(pos, CompatTileEntitySign.getSignText(sourceentity)));
+		}
 		sourceentity.setEditable(true);
 	}
 
@@ -47,7 +50,7 @@ public class Sign {
 	}
 
 	public static void sendRepairName(final @Nonnull String name) {
-		Client.mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", name.getBytes(Charsets.UTF_8)));
+		Client.mc.thePlayer.sendQueue.addToSendQueue(CompatC17PacketCustomPayload.create("MC|ItemName", name));
 	}
 
 	public static void setRepairName(final @Nonnull String name, final @Nonnull GuiTextField textField, final @Nonnull ContainerRepair containerRepair) {

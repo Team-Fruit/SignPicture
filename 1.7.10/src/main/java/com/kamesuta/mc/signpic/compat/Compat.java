@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
@@ -28,6 +29,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
+import net.minecraft.network.play.client.C12PacketUpdateSign;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.tileentity.TileEntity;
@@ -350,6 +353,27 @@ public class Compat {
 
 		private CompatTextFormatting(final EnumChatFormatting format) {
 			this.format = format;
+		}
+	}
+
+	public static class CompatC12PacketUpdateSign {
+		public static C12PacketUpdateSign create(final MovePos pos, final List<CompatTextComponent> clines) {
+			final List<String> lines = Lists.transform(clines, input -> {
+				return input==null ? null : input.component.getUnformattedText();
+			});
+			return new C12PacketUpdateSign(pos.getX(), pos.getY(), pos.getZ(), lines.toArray(new String[lines.size()]));
+		}
+	}
+
+	public static class CompatC17PacketCustomPayload {
+		public static C17PacketCustomPayload create(final String channel, final String data) {
+			return new C17PacketCustomPayload(channel, data.getBytes(Charsets.UTF_8));
+		}
+	}
+
+	public static abstract class CompatTileEntitySign {
+		public static List<CompatTextComponent> getSignText(final TileEntitySign tile) {
+			return Lists.transform(Lists.newArrayList(tile.signText), t -> CompatTextComponent.fromText(t));
 		}
 	}
 }
