@@ -1,6 +1,7 @@
 package com.kamesuta.mc.signpic.compat;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -268,7 +269,7 @@ public class Compat {
 		}
 
 		public String getUnformattedText() {
-			return this.component.getUnformattedText();
+			return this.component==null ? null : this.component.getUnformattedText();
 		}
 
 		public static CompatTextComponent jsonToComponent(final String json) {
@@ -374,6 +375,13 @@ public class Compat {
 	public static abstract class CompatTileEntitySign {
 		public static List<CompatTextComponent> getSignText(final TileEntitySign tile) {
 			return Lists.transform(Lists.newArrayList(tile.signText), t -> CompatTextComponent.fromText(t));
+		}
+
+		public static void setSignText(final TileEntitySign tile, final List<CompatTextComponent> clines) {
+			final List<String> lines = Lists.transform(clines, t -> t==null ? null : t.getUnformattedText());
+			final Iterator<String> itr = lines.iterator();
+			for (int i = 0; i<tile.signText.length; i++)
+				tile.signText[i] = itr.hasNext() ? itr.next() : "";
 		}
 	}
 }

@@ -1,22 +1,23 @@
 package com.kamesuta.mc.signpic.entry;
 
-import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.Lists;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.AttrWriters;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySign;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 
 public class EntryId {
 	public static final @Nonnull EntryId blank = new EntryId("");
@@ -103,7 +104,15 @@ public class EntryId {
 			if (itemStack!=null) {
 				final NBTTagCompound nbt = itemStack.getTagCompound();
 				if (nbt!=null)
-					if (ItemEntryId.hasName(nbt)) {
+					if (nbt.hasKey("BlockEntityTag", 10)) {
+						final NBTTagCompound tag = (NBTTagCompound) nbt.getTag("BlockEntityTag");
+						final TileEntitySign tile = new TileEntitySign();
+						tile.readFromNBT(tag);
+						String name = null;
+						if (ItemEntryId.hasName(nbt))
+							name = itemStack.getDisplayName();
+						return new ItemEntryId(SignEntryId.fromTile(tile), name);
+					} else if (ItemEntryId.hasName(nbt)) {
 						final String name = itemStack.getDisplayName();
 						final int index = StringUtils.lastIndexOf(name, "}");
 						String itemname = StringUtils.substringAfterLast(name, "}");
@@ -117,98 +126,51 @@ public class EntryId {
 	}
 
 	public static class SignEntryId extends EntryId {
-		public static final @Nonnull IChatComponent blankChat = new ChatComponentText("");
-		public static final @Nonnull SignEntryId blank = new SignEntryId("",
-				new String[] { "", "", "", "" }, new IChatComponent[] { blankChat, blankChat, blankChat, blankChat });
+		public static final @Nonnull SignEntryId blank = new SignEntryId("", Lists.newArrayList());
 
-		public final @Nonnull String[] strings;
-		private @Nullable IChatComponent[] chats;
+		public final List<CompatTextComponent> chats;
 
-		protected SignEntryId(final @Nonnull String id, final @Nonnull String[] strings) {
+		protected SignEntryId(final @Nonnull String id, final @Nonnull List<CompatTextComponent> chats) {
 			super(id);
-			this.strings = strings;
-		}
-
-		protected SignEntryId(final @Nonnull String id, final @Nonnull String[] strings, final @Nonnull IChatComponent[] chats) {
-			this(id, strings);
 			this.chats = chats;
-		}
-
-		protected static @Nonnull SignEntryId fromSignStrings(final @Nonnull String[] strings) {
-			return new SignEntryId(StringUtils.join(strings), strings);
-		}
-
-		protected static @Nonnull SignEntryId fromSignChats(final @Nonnull String[] strings, final @Nonnull IChatComponent[] chats) {
-			return new SignEntryId(StringUtils.join(strings), strings, chats);
-		}
-
-		public @Nonnull IChatComponent[] chats() {
-			if (this.chats!=null)
-				return this.chats;
-			final IChatComponent[] chats = this.chats = new IChatComponent[4];
-			int i = 0;
-			for (final String str : this.strings) {
-				if (i>=4)
-					break;
-				chats[i] = new ChatComponentText(str);
-				i++;
-			}
-			return chats;
 		}
 
 		@Override
 		public String toString() {
-			return String.format("SignEntryId [strings=%s, chats=%s]", Arrays.toString(this.strings), Arrays.toString(this.chats));
+			return String.format("SignEntryId [chats=%s]", this.chats);
 		}
 
-		@Override
 		public void toEntity(final @Nullable TileEntitySign tile) {
 			if (tile!=null)
-				System.arraycopy(this.strings, 0, tile.signText, 0, 4);
+				CompatTileEntitySign.setSignText(tile, this.chats);
 		}
 
-		public static @Nonnull SignEntryId fromStrings(@Nullable final String[] strings) {
-			if (strings==null)
+		public static @Nonnull SignEntryId fromEntryId(final @Nullable EntryId entryId) {
+			if (entryId==null)
 				return blank;
-			String[] strs = strings;
-			if (strs.length<4)
-				strs = Arrays.copyOf(strs, 4);
-			int i = 0;
-			for (final String str : strs) {
-				if (i>=4)
-					break;
-				if (str==null)
-					strs[i] = "";
-				i++;
-			}
-			return fromSignStrings(strs);
+			if (entryId instanceof SignEntryId)
+				return (SignEntryId) entryId;
+			final String id = entryId.id();
+			final int length = StringUtils.length(id);
+			final List<String> lines = Lists.newArrayList();
+			for (int i = 0; i<4; i++)
+				lines.add(StringUtils.substring(id, 15*i, Math.min(15*(i+1), length)));
+			final List<CompatTextComponent> clines = Lists.transform(lines, t -> CompatTextComponent.fromText(t));
+			return new SignEntryId(id, clines);
 		}
 
-		public static @Nonnull SignEntryId fromChats(final @Nullable IChatComponent[] chats) {
-			if (chats==null)
+		public static @Nonnull SignEntryId fromChats(final @Nullable List<CompatTextComponent> clines) {
+			if (clines==null)
 				return blank;
-			IChatComponent[] chs = chats;
-			if (chs.length<4)
-				chs = Arrays.copyOf(chs, 4);
-			final String[] strs = new String[4];
-			int i = 0;
-			for (final IChatComponent ch : chs) {
-				if (i>=4)
-					break;
-				if (ch==null) {
-					chs[i] = blankChat;
-					strs[i] = "";
-				} else
-					strs[i] = ch.getUnformattedText();
-				i++;
-			}
-			return fromSignChats(strs, chs);
+			final List<String> lines = Lists.transform(clines, t -> t==null ? null : t.getUnformattedText());
+			final String id = StringUtils.join(lines, null);
+			return new SignEntryId(id, clines);
 		}
 
 		public static @Nonnull SignEntryId fromTile(final @Nullable TileEntitySign tile) {
 			if (tile==null)
 				return blank;
-			return fromSignStrings(tile.signText);
+			return fromChats(CompatTileEntitySign.getSignText(tile));
 		}
 	}
 
@@ -325,21 +287,8 @@ public class EntryId {
 		return StringUtils.length(id())<=40;
 	}
 
-	public void toStrings(final @Nullable String[] sign) {
-		if (sign!=null) {
-			final int length = StringUtils.length(id());
-			for (int i = 0; i<4; i++)
-				sign[i] = StringUtils.substring(id(), 15*i, Math.min(15*(i+1), length));
-		}
-	}
-
 	public int getLastLine() {
 		return StringUtils.length(id())/15;
-	}
-
-	public void toEntity(final @Nullable TileEntitySign tile) {
-		if (tile!=null)
-			toStrings(tile.signText);
 	}
 
 	public @Nonnull Entry entry() {

@@ -12,6 +12,7 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatC17PacketCustomPayload;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySign;
 import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.gui.GuiPAAS;
 import com.kamesuta.mc.signpic.preview.SignEntity;
@@ -28,11 +29,11 @@ public class Sign {
 	public static @Nonnull EntryIdBuilder builder = new EntryIdBuilder();
 
 	public static void updatePreview(final @Nonnull EntryId entryId) {
-		entryId.toEntity(preview.getTileEntity());
+		SignEntryId.fromEntryId(entryId).toEntity(preview.getTileEntity());
 	}
 
 	public static void sendSign(final @Nonnull EntryId entryId, final @Nonnull TileEntitySign sourceentity) {
-		entryId.toEntity(sourceentity);
+		SignEntryId.fromEntryId(entryId).toEntity(sourceentity);
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
 		if (nethandlerplayclient!=null) {
@@ -69,7 +70,7 @@ public class Sign {
 		public SendPacketTask(final @Nonnull EntryId id, final @Nonnull TileEntitySign entity) {
 			this.timer = new Timer();
 			this.lines = new String[4];
-			id.toStrings(this.lines);
+			SignEntryId.fromEntryId(id).toEntity(entity);
 			this.limit = getExpectedEditTime(this.lines, false);
 			this.id = id;
 			this.entity = entity;

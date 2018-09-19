@@ -41,6 +41,7 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationBuilder;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
+import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.entry.content.ContentId;
@@ -288,7 +289,7 @@ public class GuiMain extends WFrame {
 									if (screen instanceof GuiEditSign) {
 										final GuiEditSign guiEditSign = (GuiEditSign) screen;
 										final TileEntitySign entitySign = SignHandler.guiEditSignTileEntity.get(guiEditSign);
-										entry.id.toEntity(entitySign);
+										SignEntryId.fromEntryId(entry.id).toEntity(entitySign);
 									}
 									if (screen instanceof GuiScreenBook) {
 										final GuiScreenBook book = (GuiScreenBook) screen;
