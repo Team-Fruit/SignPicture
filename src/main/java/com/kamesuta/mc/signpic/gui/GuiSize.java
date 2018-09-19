@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import com.google.common.eventbus.Subscribe;
 import com.kamesuta.mc.bnnwidget.WEvent;
 import com.kamesuta.mc.bnnwidget.WPanel;
 import com.kamesuta.mc.bnnwidget.component.FontLabel;
@@ -21,7 +22,6 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.SizeBuilder;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.resources.I18n;
 
 public abstract class GuiSize extends WPanel {
@@ -168,7 +168,7 @@ public abstract class GuiSize extends WPanel {
 			add(this.number);
 		}
 
-		@SubscribeEvent
+		@Subscribe
 		public void onChanged(final @Nullable PropertyChangeEvent ev) {
 			this.number.setNumber(get());
 		}

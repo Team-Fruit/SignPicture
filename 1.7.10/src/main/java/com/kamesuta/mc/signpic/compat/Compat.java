@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
@@ -25,6 +27,8 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.command.ICommandSender;
@@ -46,6 +50,9 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Property;
 
 public class Compat {
 	public static class CompatFMLDeobfuscatingRemapper {
@@ -478,6 +485,41 @@ public class Compat {
 			if (0<=facing&&facing<cfacings.length)
 				return cfacings[facing];
 			return DOWN;
+		}
+	}
+
+	public static class CompatTextureUtil {
+		public static void processPixelValues(final int[] pixel, final int displayWidth, final int displayHeight) {
+			TextureUtil.func_147953_a(pixel, displayWidth, displayHeight);
+		}
+	}
+
+	public static class CompatGuiConfig extends GuiConfig {
+		public CompatGuiConfig(final GuiScreen parentScreen, final List<CompatConfigElement> configElements, final String modID, final boolean allRequireWorldRestart, final boolean allRequireMcRestart, final String title) {
+			super(parentScreen, CompatConfigElement.getConfigElements(configElements), modID, allRequireWorldRestart, allRequireMcRestart, GuiConfig.getAbridgedConfigPath(title));
+		}
+	}
+
+	public static class CompatConfigElement {
+		@SuppressWarnings("rawtypes")
+		public final IConfigElement element;
+
+		@SuppressWarnings("rawtypes")
+		public CompatConfigElement(final IConfigElement element) {
+			this.element = element;
+		}
+
+		@SuppressWarnings("rawtypes")
+		public static List<IConfigElement> getConfigElements(final List<CompatConfigElement> elements) {
+			return Lists.transform(elements, t -> t==null ? null : t.element);
+		}
+
+		public static CompatConfigElement fromCategory(final ConfigCategory category) {
+			return new CompatConfigElement(new ConfigElement<>(category));
+		}
+
+		public static CompatConfigElement fromProperty(final Property prop) {
+			return new CompatConfigElement(new ConfigElement<>(prop));
 		}
 	}
 }

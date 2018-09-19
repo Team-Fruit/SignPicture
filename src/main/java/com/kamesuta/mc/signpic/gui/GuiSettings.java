@@ -44,12 +44,12 @@ import com.kamesuta.mc.signpic.Apis.Setting;
 import com.kamesuta.mc.signpic.Apis.URLShortenerFactory;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.Config.ConfigProperty;
+import com.kamesuta.mc.signpic.compat.Compat.CompatSoundHandler;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
 import com.kamesuta.mc.signpic.gui.config.ConfigGui;
 import com.kamesuta.mc.signpic.information.Informations;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
-import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -62,7 +62,7 @@ public class GuiSettings extends WPanel {
 	protected boolean closing;
 
 	public void show() {
-		this.bottom.stop().add(Motion.blank(.25f).setAfter(() -> mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("signpic", "gui.show"), 1.0F)))).add(Easings.easeOutQuad.move(.7f, 1f)).start();
+		this.bottom.stop().add(Motion.blank(.25f).setAfter(() -> CompatSoundHandler.playSound(new ResourceLocation("signpic", "gui.show"), 1.0F))).add(Easings.easeOutQuad.move(.7f, 1f)).start();
 	}
 
 	public void hide() {

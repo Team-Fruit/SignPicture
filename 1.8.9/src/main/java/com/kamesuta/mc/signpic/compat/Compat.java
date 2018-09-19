@@ -20,6 +20,8 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.command.ICommandSender;
@@ -44,7 +46,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.config.GuiConfig;
+import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
@@ -479,6 +486,38 @@ public class Compat {
 			if (0<=facing&&facing<cfacings.length)
 				return cfacings[facing];
 			return DOWN;
+		}
+	}
+
+	public static class CompatTextureUtil {
+		public static void processPixelValues(final int[] pixel, final int displayWidth, final int displayHeight) {
+			TextureUtil.processPixelValues(pixel, displayWidth, displayHeight);
+		}
+	}
+
+	public static class CompatGuiConfig extends GuiConfig {
+		public CompatGuiConfig(final GuiScreen parentScreen, final List<CompatConfigElement> configElements, final String modID, final boolean allRequireWorldRestart, final boolean allRequireMcRestart, final String title) {
+			super(parentScreen, CompatConfigElement.getConfigElements(configElements), modID, allRequireWorldRestart, allRequireMcRestart, GuiConfig.getAbridgedConfigPath(title));
+		}
+	}
+
+	public static class CompatConfigElement {
+		public final IConfigElement element;
+
+		public CompatConfigElement(final IConfigElement element) {
+			this.element = element;
+		}
+
+		public static List<IConfigElement> getConfigElements(final List<CompatConfigElement> elements) {
+			return Lists.transform(elements, t -> t==null ? null : t.element);
+		}
+
+		public static CompatConfigElement fromCategory(final ConfigCategory category) {
+			return new CompatConfigElement(new ConfigElement(category));
+		}
+
+		public static CompatConfigElement fromProperty(final Property prop) {
+			return new CompatConfigElement(new ConfigElement(prop));
 		}
 	}
 }

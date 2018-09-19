@@ -30,13 +30,13 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextureUtil;
 import com.kamesuta.mc.signpic.http.upload.UploadCallback;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.FileUtilitiy;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.util.ResourceLocation;
@@ -220,9 +220,9 @@ public class GuiIngameScreenShot extends WFrame {
 
 			buffer.get(pixel);
 			if (fboEnabled)
-				TextureUtil.func_147953_a(pixel, displayWidth, displayHeight);
+				CompatTextureUtil.processPixelValues(pixel, displayWidth, displayHeight);
 			else
-				TextureUtil.func_147953_a(pixel, w, h);
+				CompatTextureUtil.processPixelValues(pixel, w, h);
 			BufferedImage bufferedimage = null;
 
 			if (fboEnabled) {
