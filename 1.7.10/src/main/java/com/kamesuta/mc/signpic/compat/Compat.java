@@ -40,6 +40,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
@@ -83,12 +84,33 @@ public class Compat {
 		}
 	}
 
-	public static class MovePos {
-		private int x;
-		private int y;
-		private int z;
+	public static class CompatMovingObjectPosition {
+		private final MovingObjectPosition movingPos;
 
-		public MovePos(final int x, final int y, final int z) {
+		public CompatMovingObjectPosition(final MovingObjectPosition movingPos) {
+			this.movingPos = movingPos;
+		}
+
+		public static @Nullable CompatMovingObjectPosition getMovingPos() {
+			final MovingObjectPosition movingPos = CompatMinecraft.getMinecraft().objectMouseOver;
+			return movingPos==null ? null : new CompatMovingObjectPosition(movingPos);
+		}
+
+		public @Nullable CompatBlockPos getMovingBlockPos() {
+			return new CompatBlockPos(this.movingPos.blockX, this.movingPos.blockY, this.movingPos.blockZ);
+		}
+
+		public CompatEnumFacing getSideHit() {
+			return CompatEnumFacing.fromFacingId(this.movingPos.sideHit);
+		}
+	}
+
+	public static class CompatBlockPos {
+		private final int x;
+		private final int y;
+		private final int z;
+
+		public CompatBlockPos(final int x, final int y, final int z) {
 			this.x = x;
 			this.y = y;
 			this.z = z;
@@ -114,23 +136,24 @@ public class Compat {
 			return CompatMinecraft.getWorld().getBlock(this.x, this.y, this.z);
 		}
 
-		public static @Nullable MovingObjectPosition getMovingPos() {
-			return CompatMinecraft.getMinecraft().objectMouseOver;
+		public @Nonnull CompatBlockPos offset(final CompatEnumFacing facing) {
+			if (facing==null)
+				return this;
+			return fromCoords(getX()+facing.offsetX, getY()+facing.offsetY, getZ()+facing.offsetZ);
 		}
 
-		public static @Nonnull MovePos fromCoords(final int xCoord, final int yCoord, final int zCoord) {
-			return new MovePos(xCoord, yCoord, zCoord);
+		public static @Nonnull CompatBlockPos fromCoords(final int xCoord, final int yCoord, final int zCoord) {
+			return new CompatBlockPos(xCoord, yCoord, zCoord);
 		}
 
-		public static @Nullable MovePos getMovingBlockPos() {
-			final MovingObjectPosition movingPos = getMovingPos();
-			if (movingPos!=null)
-				return new MovePos(movingPos.blockX, movingPos.blockY, movingPos.blockZ);
-			return null;
+		public static @Nonnull CompatBlockPos getTileEntityPos(@Nonnull final TileEntity tile) {
+			return new CompatBlockPos(tile.xCoord, tile.yCoord, tile.zCoord);
 		}
 
-		public static @Nonnull MovePos getTileEntityPos(@Nonnull final TileEntity tile) {
-			return new MovePos(tile.xCoord, tile.yCoord, tile.zCoord);
+		public void setTileEntityPos(@Nonnull final TileEntity tile) {
+			tile.xCoord = getX();
+			tile.yCoord = getY();
+			tile.zCoord = getZ();
 		}
 	}
 
@@ -224,8 +247,42 @@ public class Compat {
 	}
 
 	public static class CompatWorld {
-		public static int getLightFor(final MovePos pos) {
-			return CompatMinecraft.getWorld().getLightBrightnessForSkyBlocks(pos.getX(), pos.getY(), pos.getZ(), 0);
+		private final World world;
+
+		public CompatWorld(final World world) {
+			this.world = world;
+		}
+
+		public static CompatWorld getWorld() {
+			return new CompatWorld(CompatMinecraft.getWorld());
+		}
+
+		public World getWorldObj() {
+			return this.world;
+		}
+
+		public int getLightFor(final CompatBlockPos pos) {
+			return this.world.getLightBrightnessForSkyBlocks(pos.getX(), pos.getY(), pos.getZ(), 0);
+		}
+
+		public CompatBlock getBlock(final CompatBlockPos pos) {
+			return new CompatBlock(this.world.getBlock(pos.getX(), pos.getY(), pos.getZ()));
+		}
+	}
+
+	public static class CompatBlock {
+		private final Block block;
+
+		public CompatBlock(final Block block) {
+			this.block = block;
+		}
+
+		public Block getBlockObj() {
+			return this.block;
+		}
+
+		public boolean canPlaceBlockAt(final CompatWorld world, final CompatBlockPos pos) {
+			return this.block.canPlaceBlockAt(world.getWorldObj(), pos.getX(), pos.getY(), pos.getX());
 		}
 	}
 
@@ -358,7 +415,7 @@ public class Compat {
 	}
 
 	public static class CompatC12PacketUpdateSign {
-		public static C12PacketUpdateSign create(final MovePos pos, final List<CompatTextComponent> clines) {
+		public static C12PacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
 			final List<String> lines = Lists.transform(clines, input -> {
 				return input==null ? null : input.component.getUnformattedText();
 			});
@@ -382,6 +439,45 @@ public class Compat {
 			final Iterator<String> itr = lines.iterator();
 			for (int i = 0; i<tile.signText.length; i++)
 				tile.signText[i] = itr.hasNext() ? itr.next() : "";
+		}
+	}
+
+	public static enum CompatEnumFacing {
+		DOWN(0, -1, 0, EnumFacing.DOWN),
+		UP(0, 1, 0, EnumFacing.UP),
+		NORTH(0, 0, -1, EnumFacing.NORTH),
+		SOUTH(0, 0, 1, EnumFacing.SOUTH),
+		WEST(-1, 0, 0, EnumFacing.WEST),
+		EAST(1, 0, 0, EnumFacing.EAST);
+
+		public final int offsetX;
+		public final int offsetY;
+		public final int offsetZ;
+		private final EnumFacing facing;
+
+		private CompatEnumFacing(final int offsetX, final int offsetY, final int offsetZ, final EnumFacing facing) {
+			this.offsetX = offsetX;
+			this.offsetY = offsetY;
+			this.offsetZ = offsetZ;
+			this.facing = facing;
+		}
+
+		public int getIndex() {
+			return ordinal();
+		}
+
+		public static @Nonnull CompatEnumFacing fromFacing(@Nonnull final EnumFacing facing) {
+			for (final CompatEnumFacing cfacing : values())
+				if (facing==cfacing.facing)
+					return cfacing;
+			return DOWN;
+		}
+
+		public static @Nonnull CompatEnumFacing fromFacingId(final int facing) {
+			final CompatEnumFacing[] cfacings = values();
+			if (0<=facing&&facing<cfacings.length)
+				return cfacings[facing];
+			return DOWN;
 		}
 	}
 }

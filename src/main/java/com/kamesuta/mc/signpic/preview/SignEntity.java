@@ -4,15 +4,17 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.compat.Compat.MovePos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlock;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatEnumFacing;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMovingObjectPosition;
+import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
 
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class SignEntity {
@@ -20,41 +22,27 @@ public class SignEntity {
 	private boolean renderable = false;
 	private boolean visible = false;
 
-	private @Nullable PreviewTileEntitySign onItemUse(final @Nonnull EntityPlayer playerIn, final @Nonnull World worldIn, int x, int y, int z, final int direction) {
-		if (direction==0)
+	private @Nullable PreviewTileEntitySign onItemUse(final @Nonnull EntityPlayer playerIn, final @Nonnull World worldIn, @Nonnull CompatBlockPos pos, final @Nonnull CompatEnumFacing side) {
+		final CompatWorld world = new CompatWorld(worldIn);
+		if (side==CompatEnumFacing.DOWN)
 			return null;
-		else if (!worldIn.getBlock(x, y, z).getMaterial().isSolid())
+		else if (!CompatWorld.getWorld().getBlock(pos).getBlockObj().getMaterial().isSolid())
 			return null;
 		else {
-			if (direction==1)
-				++y;
+			pos = pos.offset(side);
 
-			if (direction==2)
-				--z;
-
-			if (direction==3)
-				++z;
-
-			if (direction==4)
-				--x;
-
-			if (direction==5)
-				++x;
-
-			if (!Blocks.standing_sign.canPlaceBlockAt(worldIn, x, y, z))
+			if (!new CompatBlock(Blocks.standing_sign).canPlaceBlockAt(world, pos))
 				return null;
 			else {
-				this.tileSign.xCoord = x;
-				this.tileSign.yCoord = y;
-				this.tileSign.zCoord = z;
+				pos.setTileEntityPos(this.tileSign);
 
-				if (direction==1) {
+				if (side==CompatEnumFacing.UP) {
 					this.tileSign.setBlockType(Blocks.standing_sign);
 					final int i = MathHelper.floor_double((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
 					this.tileSign.setBlockMetadata(i);
 				} else {
 					this.tileSign.setBlockType(Blocks.wall_sign);
-					this.tileSign.setBlockMetadata(direction);
+					this.tileSign.setBlockMetadata(side.getIndex());
 				}
 
 				this.renderable = true;
@@ -65,14 +53,16 @@ public class SignEntity {
 	}
 
 	public @Nullable TileEntitySign capturePlace() {
-		final EntityClientPlayerMP player = Client.mc.thePlayer;
+		final EntityPlayer player = Client.mc.thePlayer;
 		final WorldClient world = Client.mc.theWorld;
 		if (player!=null&&world!=null) {
-			final MovingObjectPosition m = MovePos.getMovingPos();
-			final MovePos p = MovePos.getMovingBlockPos();
-			if (m!=null&&p!=null) {
-				setVisible(true);
-				return onItemUse(player, world, p.getX(), p.getY(), p.getZ(), m.sideHit);
+			final CompatMovingObjectPosition m = CompatMovingObjectPosition.getMovingPos();
+			if (m!=null) {
+				final CompatBlockPos p = m.getMovingBlockPos();
+				if (p!=null) {
+					setVisible(true);
+					return onItemUse(player, world, p, m.getSideHit());
+				}
 			}
 		}
 		return null;

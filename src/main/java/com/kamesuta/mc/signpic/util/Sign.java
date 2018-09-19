@@ -10,7 +10,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.compat.Compat.CompatC12PacketUpdateSign;
 import com.kamesuta.mc.signpic.compat.Compat.CompatC17PacketCustomPayload;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySign;
-import com.kamesuta.mc.signpic.compat.Compat.MovePos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -37,7 +37,7 @@ public class Sign {
 		sourceentity.markDirty();
 		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
 		if (nethandlerplayclient!=null) {
-			final MovePos pos = MovePos.getTileEntityPos(sourceentity);
+			final CompatBlockPos pos = CompatBlockPos.getTileEntityPos(sourceentity);
 			nethandlerplayclient.addToSendQueue(CompatC12PacketUpdateSign.create(pos, CompatTileEntitySign.getSignText(sourceentity)));
 		}
 		sourceentity.setEditable(true);

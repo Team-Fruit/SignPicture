@@ -25,9 +25,10 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.signpic.command.CommandImage;
 import com.kamesuta.mc.signpic.command.CommandVersion;
 import com.kamesuta.mc.signpic.command.RootCommand;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMovingObjectPosition;
 import com.kamesuta.mc.signpic.compat.Compat.CompatSoundHandler;
-import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -90,11 +91,14 @@ public class Client {
 	}
 
 	public static @Nullable TileEntitySign getTileSignLooking() {
-		final MovePos pos = MovePos.getMovingBlockPos();
-		if (pos!=null&&pos.getBlock() instanceof BlockSign) {
-			final TileEntity tile = pos.getTile();
-			if (tile instanceof TileEntitySign)
-				return (TileEntitySign) tile;
+		final CompatMovingObjectPosition mpos = CompatMovingObjectPosition.getMovingPos();
+		if (mpos!=null) {
+			final CompatBlockPos pos = mpos.getMovingBlockPos();
+			if (pos!=null&&pos.getBlock() instanceof BlockSign) {
+				final TileEntity tile = pos.getTile();
+				if (tile instanceof TileEntitySign)
+					return (TileEntitySign) tile;
+			}
 		}
 		return null;
 	}

@@ -31,8 +31,8 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
-import com.kamesuta.mc.signpic.compat.Compat.MovePos;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -213,7 +213,7 @@ public class GuiImage extends WFrame {
 				int lpicture = 0;
 
 				if (lightx!=-2&&lightx!=-3||lighty!=-2&&lighty!=-3)
-					lsign = CompatWorld.getLightFor(MovePos.fromCoords(MathHelper.floor_float(x), MathHelper.floor_float(y), MathHelper.floor_float(z)));
+					lsign = CompatWorld.getWorld().getLightFor(CompatBlockPos.fromCoords(MathHelper.floor_float(x), MathHelper.floor_float(y), MathHelper.floor_float(z)));
 
 				if (lightx==-2||lighty==-2||lightx==-3||lighty==-3) {
 					final OffsetData offset = attr.offsets.getMovie().get();
@@ -238,7 +238,7 @@ public class GuiImage extends WFrame {
 					m.transform(p);
 
 					if (lightx==-2||lighty==-2)
-						lcenter = CompatWorld.getLightFor(MovePos.fromCoords(MathHelper.floor_float(p.x), MathHelper.floor_float(p.y), MathHelper.floor_float(p.z)));
+						lcenter = CompatWorld.getWorld().getLightFor(CompatBlockPos.fromCoords(MathHelper.floor_float(p.x), MathHelper.floor_float(p.y), MathHelper.floor_float(p.z)));
 
 					if (lightx==-3||lighty==-3) {
 						final Point3f p2 = new Point3f();
@@ -254,7 +254,7 @@ public class GuiImage extends WFrame {
 
 						p.sub(p2);
 
-						lpicture = CompatWorld.getLightFor(MovePos.fromCoords(MathHelper.floor_float(p.x), MathHelper.floor_float(p.y), MathHelper.floor_float(p.z)));
+						lpicture = CompatWorld.getWorld().getLightFor(CompatBlockPos.fromCoords(MathHelper.floor_float(p.x), MathHelper.floor_float(p.y), MathHelper.floor_float(p.z)));
 					}
 				}
 				if (lightx<0)

@@ -16,7 +16,7 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationMath;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySignRenderer;
-import com.kamesuta.mc.signpic.compat.Compat.MovePos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.gui.GuiImage;
@@ -93,7 +93,7 @@ public class CustomTileEntitySignRenderer extends CompatTileEntitySignRenderer {
 			OpenGL.glDisable(GL_CULL_FACE);
 
 			final GuiImage gui = entry.getGui();
-			final MovePos pos = MovePos.getTileEntityPos(tile);
+			final CompatBlockPos pos = CompatBlockPos.getTileEntityPos(tile);
 			gui.applyLight(pos.getX(), pos.getY(), pos.getZ(), getSignRotate(tile));
 			gui.renderSignPicture(opacity, 1f, new RenderOption());
 
