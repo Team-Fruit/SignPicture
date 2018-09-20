@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -181,4 +182,9 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		return Attributes.DEFAULT_BAKED_FORMAT;
 	}
 
+	public void registerModelBakery(final CompatModelBakeEvent event) {
+		final IBakedModel object = event.getModelRegistry().getObject(this.modelResourceLocation);
+		setBaseModel(object);
+		event.getModelRegistry().putObject(this.modelResourceLocation, this);
+	}
 }

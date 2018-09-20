@@ -5,10 +5,18 @@ import javax.annotation.Nonnull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
-import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent;
-import com.kamesuta.mc.signpic.compat.Compat.CompatConfigChangedEvent;
-import com.kamesuta.mc.signpic.compat.Compat.CompatInputEvent;
-import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatConfigChangedEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiOpenEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiScreenEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatHandler;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatInputEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatItemTooltipEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatMouseEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderWorldLastEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatTextureStitchEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatTickEvent;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -24,23 +32,7 @@ import com.kamesuta.mc.signpic.render.SignPicRender;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.InputEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
-
-public class CoreHandler {
+public class CoreHandler extends CompatHandler {
 	public final @Nonnull Config configHandler = Config.getConfig();
 	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;
 	public final @Nonnull SignHandler signHandler = new SignHandler();
@@ -52,86 +44,102 @@ public class CoreHandler {
 	public final @Nonnull Apis apiHandler = Apis.instance;
 
 	public void init() {
-		FMLCommonHandler.instance().bus().register(this);
-		MinecraftForge.EVENT_BUS.register(this);
+		registerHandler();
 		KeyHandler.init();
 		SignHandler.init();
 		this.informationHandler.init();
 		this.apiHandler.init();
 	}
 
-	@SubscribeEvent
-	public void onKeyInput(final @Nonnull InputEvent event) {
-		this.keyHandler.onKeyInput(new CompatInputEvent());
+	@Override
+	@CoreEvent
+	public void onKeyInput(final @Nonnull CompatInputEvent event) {
+		this.keyHandler.onKeyInput(event);
 	}
 
-	@SubscribeEvent
-	public void onRenderTick(final @Nonnull TickEvent.RenderTickEvent event) {
+	@Override
+	@CoreEvent
+	public void onRenderTick(final @Nonnull CompatTickEvent.CompatRenderTickEvent event) {
 		Timer.tick();
 	}
 
-	@SubscribeEvent
-	public void onSign(final @Nonnull GuiOpenEvent event) {
+	@Override
+	@CoreEvent
+	public void onSign(final @Nonnull CompatGuiOpenEvent event) {
 		this.signHandler.onSign(event);
 	}
 
-	@SubscribeEvent
-	public void onClick(final @Nonnull MouseEvent event) {
+	@Override
+	@CoreEvent
+	public void onClick(final @Nonnull CompatMouseEvent event) {
 		this.signHandler.onClick(event);
 	}
 
-	@SubscribeEvent
-	public void onTooltip(final @Nonnull ItemTooltipEvent event) {
+	@Override
+	@CoreEvent
+	public void onTooltip(final @Nonnull CompatItemTooltipEvent event) {
 		this.signHandler.onTooltip(event);
 	}
 
-	@SubscribeEvent
-	public void onRender(final @Nonnull RenderWorldLastEvent event) {
+	@Override
+	@CoreEvent
+	public void onRender(final @Nonnull CompatRenderWorldLastEvent event) {
 		this.renderHandler.onRender(event);
 	}
 
-	@SubscribeEvent()
-	public void onDraw(final @Nonnull RenderGameOverlayEvent.Post event) {
+	@Override
+	@CoreEvent()
+	public void onDraw(final @Nonnull CompatRenderGameOverlayEvent.CompatPost event) {
 		this.renderHandler.onDraw(event);
-		this.overlayHandler.onDraw(new CompatRenderGameOverlayEvent.Post(event));
+		this.overlayHandler.onDraw(event);
 	}
 
-	@SubscribeEvent()
-	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
+	@Override
+	@CoreEvent()
+	public void onDraw(final @Nonnull CompatGuiScreenEvent.CompatDrawScreenEvent.CompatPost event) {
 		this.overlayHandler.onDraw(event);
 		this.signHandler.onDraw(event);
 	}
 
-	@SubscribeEvent
-	public void onText(final @Nonnull RenderGameOverlayEvent.Text event) {
+	@Override
+	@CoreEvent
+	public void onText(final @Nonnull CompatRenderGameOverlayEvent.CompatText event) {
 		this.renderHandler.onText(event);
 	}
 
-	@SubscribeEvent
-	public void onConfigChanged(final @Nonnull ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		this.configHandler.onConfigChanged(new CompatConfigChangedEvent.CompatOnConfigChangedEvent(eventArgs));
+	@Override
+	@CoreEvent
+	public void onConfigChanged(final @Nonnull CompatConfigChangedEvent.CompatOnConfigChangedEvent event) {
+		this.configHandler.onConfigChanged(event);
 	}
 
-	@SubscribeEvent
-	public void onResourceReloaded(final @Nonnull TextureStitchEvent.Post event) {
+	@Override
+	@CoreEvent
+	public void onResourceReloaded(final @Nonnull CompatTextureStitchEvent.CompatPost event) {
 		this.contentManager.onResourceReloaded(event);
 	}
 
-	@SubscribeEvent
-	public void onTick(final @Nonnull ClientTickEvent event) {
-		if (event.phase==Phase.END) {
+	@Override
+	@CoreEvent
+	public void onTick(final @Nonnull CompatTickEvent.CompatClientTickEvent event) {
+		if (event.getTickPhase()==CompatTickEvent.CompatPhase.END) {
 			Client.startSection("signpic_load");
 			debugKey();
 			// this.keyHandler.onTick();
 			this.signEntryManager.onTick();
 			this.signHandler.onTick();
 			this.contentManager.onTick();
-			final CompatClientTickEvent tickEvent = new CompatClientTickEvent(event);
-			this.overlayHandler.onTick(tickEvent);
-			this.informationHandler.onTick(tickEvent);
+			this.overlayHandler.onTick(event);
+			this.informationHandler.onTick(event);
 			EntrySlot.Tick();
 			Client.endSection();
 		}
+	}
+
+	@Override
+	@CoreEvent
+	public void onModelBakeEvent(final @Nonnull CompatModelBakeEvent event) {
+		Client.itemRenderer.registerModelBakery(event);
 	}
 
 	private boolean debugKey;
@@ -158,7 +166,7 @@ public class CoreHandler {
 	}
 
 	static class DebugCommunicate implements ICommunicate, Progressable {
-		private @Nonnull State state = new State();
+		private final @Nonnull State state = new State();
 		{
 			this.state.setName("Debug Progress").getProgress().setOverall(10);
 		}

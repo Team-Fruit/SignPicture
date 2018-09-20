@@ -12,6 +12,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatTextureStitchEvent;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.IAsyncProcessable;
 import com.kamesuta.mc.signpic.entry.ICollectable;
@@ -19,8 +20,6 @@ import com.kamesuta.mc.signpic.entry.IDivisionProcessable;
 import com.kamesuta.mc.signpic.entry.IInitable;
 import com.kamesuta.mc.signpic.entry.ITickEntry;
 import com.kamesuta.mc.signpic.util.ThreadUtils;
-
-import net.minecraftforge.client.event.TextureStitchEvent;
 
 public class ContentManager implements ITickEntry {
 	public static @Nonnull ContentManager instance = new ContentManager();
@@ -36,14 +35,11 @@ public class ContentManager implements ITickEntry {
 	}
 
 	public void enqueueAsync(final @Nonnull IAsyncProcessable asyncProcessable) {
-		this.threadpool.execute(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					asyncProcessable.onAsyncProcess();
-				} catch (final Throwable e) {
-					e.printStackTrace();
-				}
+		this.threadpool.execute(() -> {
+			try {
+				asyncProcessable.onAsyncProcess();
+			} catch (final Throwable e) {
+				e.printStackTrace();
 			}
 		});
 	}
@@ -116,7 +112,7 @@ public class ContentManager implements ITickEntry {
 	}
 
 	@CoreEvent
-	public void onResourceReloaded(final @Nonnull TextureStitchEvent.Post event) {
+	public void onResourceReloaded(final @Nonnull CompatTextureStitchEvent.CompatPost event) {
 		reloadAll();
 	}
 

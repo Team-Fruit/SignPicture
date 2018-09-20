@@ -11,7 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
-import com.kamesuta.mc.signpic.compat.Compat.CompatConfigChangedEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatConfigChangedEvent;
 import com.kamesuta.mc.signpic.image.ImageIOLoader;
 
 import net.minecraftforge.common.config.Configuration;

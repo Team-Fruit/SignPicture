@@ -17,6 +17,10 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiOpenEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiScreenEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatItemTooltipEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatMouseEvent;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
@@ -30,6 +34,7 @@ import com.kamesuta.mc.signpic.reflect.lib.ReflectClass;
 import com.kamesuta.mc.signpic.reflect.lib.ReflectField;
 import com.kamesuta.mc.signpic.util.Sign;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
@@ -38,10 +43,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.MouseEvent;
-import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 public class SignHandler {
 	public static @Nonnull ReflectField<GuiEditSign, TileEntitySign> guiEditSignTileEntity = ReflectClass.fromClass(GuiEditSign.class).getFieldFromType(null, TileEntitySign.class);
@@ -54,7 +55,7 @@ public class SignHandler {
 	private boolean isPlaceMode;
 
 	@CoreEvent
-	public void onSign(final @Nonnull GuiOpenEvent event) {
+	public void onSign(final @Nonnull CompatGuiOpenEvent event) {
 		for (final INameHandler handler : handlers)
 			if (handler!=null)
 				handler.reset();
@@ -63,12 +64,13 @@ public class SignHandler {
 		this.isPlaceMode = CurrentMode.instance.isMode(CurrentMode.Mode.PLACE);
 		if (handSignValid||this.isPlaceMode) {
 			final EntryId entryId = CurrentMode.instance.getEntryId();
-			if (event.gui instanceof GuiEditSign) {
+			final GuiScreen gui = event.getGui();
+			if (gui instanceof GuiEditSign) {
 				event.setCanceled(true);
 				final EntryId placeSign = handSignValid ? handSign : entryId;
 				if (placeSign.isPlaceable())
 					try {
-						final TileEntitySign tileSign = guiEditSignTileEntity.get((GuiEditSign) event.gui);
+						final TileEntitySign tileSign = guiEditSignTileEntity.get((GuiEditSign) gui);
 						if (tileSign!=null) {
 							Sign.placeSign(placeSign, tileSign);
 							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
@@ -98,7 +100,7 @@ public class SignHandler {
 				boolean b = false;
 				for (final INameHandler handler : handlers)
 					if (handler!=null)
-						b = handler.onOpen(event.gui, entryId)||b;
+						b = handler.onOpen(gui, entryId)||b;
 				if (b) {
 					if (!entryId.isNameable()) {
 						final ContentId id = entryId.entry().contentId;
@@ -125,16 +127,18 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (this.isPlaceMode)
+	public void onDraw(final @Nonnull CompatGuiScreenEvent.CompatDrawScreenEvent.CompatPost event) {
+		if (this.isPlaceMode) {
+			final GuiScreen gui = event.getGui();
 			for (final INameHandler handler : handlers)
-				if (handler!=null&&event.gui!=null)
-					handler.onDraw(event.gui);
+				if (handler!=null&&gui!=null)
+					handler.onDraw(gui);
+		}
 	}
 
 	@CoreEvent
-	public void onClick(final @Nonnull MouseEvent event) {
-		if (event.buttonstate&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.button-100) {
+	public void onClick(final @Nonnull CompatMouseEvent event) {
+		if (event.getButtonState()&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.getButton()-100) {
 			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
 			EntryId handEntry = null;
 			if (handItem!=null&&handItem.getItem()==Items.sign) {
@@ -165,30 +169,32 @@ public class SignHandler {
 	}
 
 	@CoreEvent
-	public void onTooltip(final @Nonnull ItemTooltipEvent event) {
-		if (event.itemStack.getItem()==Items.sign) {
-			final ItemEntryId id = ItemEntryId.fromItemStack(event.itemStack);
+	public void onTooltip(final @Nonnull CompatItemTooltipEvent event) {
+		final ItemStack itemStack = event.getItemStack();
+		final List<String> tooltip = event.getTooltip();
+		if (itemStack.getItem()==Items.sign) {
+			final ItemEntryId id = ItemEntryId.fromItemStack(itemStack);
 			final Entry entry = id.entry();
 			if (entry.isValid()) {
-				final String raw = !event.toolTip.isEmpty() ? event.toolTip.get(0) : "";
+				final String raw = !tooltip.isEmpty() ? tooltip.get(0) : "";
 				if (id.hasName())
-					event.toolTip.set(0, id.getName());
+					tooltip.set(0, id.getName());
 				else if (entry.contentId!=null)
-					event.toolTip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
+					tooltip.set(0, I18n.format("signpic.item.sign.desc.named", entry.contentId.getURI()));
 				final KeyBinding sneak = Client.mc.gameSettings.keyBindSneak;
 				if (!Keyboard.isKeyDown(sneak.getKeyCode()))
-					event.toolTip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
+					tooltip.add(I18n.format("signpic.item.hold", GameSettings.getKeyDisplayString(sneak.getKeyCode())));
 				else {
 					final AttrReaders meta = entry.getMeta();
 					final SizeData size = meta.sizes.getMovie().get();
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
+					tooltip.add(I18n.format("signpic.item.sign.desc.named.prop.size", size.getWidth(), size.getHeight()));
 					final OffsetData offset = meta.offsets.getMovie().get();
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
-					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
+					tooltip.add(I18n.format("signpic.item.sign.desc.named.prop.offset", offset.x.offset, offset.y.offset, offset.z.offset));
+					// tooltip.add(I18n.format("signpic.item.sign.desc.named.prop.rotation", meta.rotation.compose()));
 					if (id.hasName()&&entry.contentId!=null)
-						event.toolTip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
-					// event.toolTip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
+						tooltip.add(I18n.format("signpic.item.sign.desc.named.url", entry.contentId.getURI()));
+					// tooltip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
+					tooltip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 				}
 			} else if (Config.getConfig().signTooltip.get()||!Config.getConfig().guiExperienced.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
@@ -196,11 +202,11 @@ public class SignHandler {
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());
 				if (!conflict.isEmpty())
 					keyDisplay = EnumChatFormatting.RED+keyDisplay;
-				event.toolTip.add(I18n.format("signpic.item.sign.desc", keyDisplay));
+				tooltip.add(I18n.format("signpic.item.sign.desc", keyDisplay));
 				if (!conflict.isEmpty()) {
-					event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict", I18n.format("menu.options"), I18n.format("options.controls")));
+					tooltip.add(I18n.format("signpic.item.sign.desc.keyconflict", I18n.format("menu.options"), I18n.format("options.controls")));
 					for (final KeyBinding key : conflict)
-						event.toolTip.add(I18n.format("signpic.item.sign.desc.keyconflict.key", I18n.format(key.getKeyCategory()), I18n.format(key.getKeyDescription())));
+						tooltip.add(I18n.format("signpic.item.sign.desc.keyconflict.key", I18n.format(key.getKeyCategory()), I18n.format(key.getKeyDescription())));
 				}
 			}
 		}

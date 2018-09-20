@@ -22,7 +22,6 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -49,8 +48,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
@@ -59,15 +56,12 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class Compat {
 	public static class CompatFMLDeobfuscatingRemapper {
@@ -576,44 +570,6 @@ public class Compat {
 		}
 	}
 
-	public static class CompatRenderGameOverlayEvent {
-		private final RenderGameOverlayEvent event;
-
-		public CompatRenderGameOverlayEvent(final RenderGameOverlayEvent event) {
-			this.event = event;
-		}
-
-		public static class Post extends CompatRenderGameOverlayEvent {
-			public Post(final RenderGameOverlayEvent event) {
-				super(event);
-			}
-		}
-
-		public ScaledResolution getResolution() {
-			return this.event.resolution;
-		}
-
-		public CompatElementType getType() {
-			return CompatElementType.getType(this.event.type);
-		}
-
-		public float getPartialTicks() {
-			return this.event.partialTicks;
-		}
-
-		public static enum CompatElementType {
-			CHAT,
-			OTHER,
-			;
-
-			public static CompatElementType getType(final ElementType type) {
-				if (type==ElementType.CHAT)
-					return CompatElementType.CHAT;
-				return CompatElementType.OTHER;
-			}
-		}
-	}
-
 	public static abstract class CompatModGuiFactory implements IModGuiFactory {
 		@Override
 		public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
@@ -623,57 +579,6 @@ public class Compat {
 		@Override
 		public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
 			return null;
-		}
-	}
-
-	public static class CompatClientTickEvent {
-		private final ClientTickEvent event;
-
-		public CompatClientTickEvent(final ClientTickEvent event) {
-			this.event = event;
-		}
-
-		public CompatPhase getTickPhase() {
-			return CompatPhase.getPhase(this.event.phase);
-		}
-
-		public enum CompatPhase {
-			START,
-			END;
-			;
-
-			public static CompatPhase getPhase(final Phase phase) {
-				if (phase==null)
-					return START;
-				switch (phase) {
-					default:
-					case START:
-						return START;
-					case END:
-						return START;
-				}
-			}
-		}
-	}
-
-	public static class CompatInputEvent {
-	}
-
-	public static class CompatConfigChangedEvent {
-		private ConfigChangedEvent event;
-
-		public CompatConfigChangedEvent(final ConfigChangedEvent event) {
-			this.event = event;
-		}
-
-		public String getModId() {
-			return this.event.modID;
-		}
-
-		public static class CompatOnConfigChangedEvent extends CompatConfigChangedEvent {
-			public CompatOnConfigChangedEvent(final ConfigChangedEvent event) {
-				super(event);
-			}
 		}
 	}
 }

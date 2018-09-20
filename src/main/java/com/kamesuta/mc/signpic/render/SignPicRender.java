@@ -3,6 +3,8 @@ package com.kamesuta.mc.signpic.render;
 import static com.kamesuta.mc.bnnwidget.render.WRenderer.*;
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
@@ -13,6 +15,9 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent.CompatElementType;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderWorldLastEvent;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -24,9 +29,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public class SignPicRender {
 	public static final @Nonnull ResourceLocation resSign = new ResourceLocation("textures/items/sign.png");
@@ -35,7 +37,7 @@ public class SignPicRender {
 	}
 
 	@CoreEvent
-	public void onRender(final @Nonnull RenderWorldLastEvent event) {
+	public void onRender(final @Nonnull CompatRenderWorldLastEvent event) {
 		float opacity = Config.getConfig().renderPreviewFixedOpacity.get().floatValue();
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
@@ -45,13 +47,13 @@ public class SignPicRender {
 			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {
 				final TileEntitySign tile = Sign.preview.getRenderTileEntity();
 				final CompatBlockPos pos = CompatBlockPos.getTileEntityPos(tile);
-				Client.rendererTile.renderSignPictureBase(tile, pos.getX()-TileEntityRendererDispatcher.staticPlayerX, pos.getY()-TileEntityRendererDispatcher.staticPlayerY, pos.getZ()-TileEntityRendererDispatcher.staticPlayerZ, event.partialTicks, opacity, -1);
+				Client.rendererTile.renderSignPictureBase(tile, pos.getX()-TileEntityRendererDispatcher.staticPlayerX, pos.getY()-TileEntityRendererDispatcher.staticPlayerY, pos.getZ()-TileEntityRendererDispatcher.staticPlayerZ, event.getPartialTicks(), opacity, -1);
 			}
 	}
 
 	@CoreEvent
-	public void onDraw(final @Nonnull RenderGameOverlayEvent.Post event) {
-		if (event.type==ElementType.EXPERIENCE)
+	public void onDraw(final @Nonnull CompatRenderGameOverlayEvent.CompatPost event) {
+		if (event.getType()==CompatElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode())
 				if ((int) (System.currentTimeMillis()/500)%2==0) {
 					final FontRenderer fontrenderer = font();
@@ -80,7 +82,7 @@ public class SignPicRender {
 	}
 
 	@CoreEvent
-	public void onText(final @Nonnull RenderGameOverlayEvent.Text event) {
+	public void onText(final @Nonnull CompatRenderGameOverlayEvent.CompatText event) {
 		if (Client.mc.gameSettings.showDebugInfo) {
 			final TileEntitySign tilesign = Client.getTileSignLooking();
 			if (tilesign!=null) {
@@ -88,27 +90,28 @@ public class SignPicRender {
 				if (entry.isValid()) {
 					final AttrReaders meta = entry.getMeta();
 					final SizeData signsize = meta.sizes.getMovie().get();
+					final List<String> left = event.getLeft();
 
-					event.left.add("");
-					event.left.add(I18n.format("signpic.over.sign", entry.id.id()));
+					left.add("");
+					left.add(I18n.format("signpic.over.sign", entry.id.id()));
 					if (entry.contentId!=null)
-						event.left.add(I18n.format("signpic.over.id", entry.contentId.getURI()));
+						left.add(I18n.format("signpic.over.id", entry.contentId.getURI()));
 					final Content content = entry.getContent();
 					final SizeData imagesize = content!=null ? content.image.getSize() : SizeData.UnknownSize;
 					final SizeData viewsize = signsize.aspectSize(imagesize);
-					event.left.add(I18n.format("signpic.over.size", signsize, signsize.getWidth(), signsize.getHeight(), imagesize.getWidth(), imagesize.getHeight(), viewsize.getWidth(), viewsize.getHeight()));
+					left.add(I18n.format("signpic.over.size", signsize, signsize.getWidth(), signsize.getHeight(), imagesize.getWidth(), imagesize.getHeight(), viewsize.getWidth(), viewsize.getHeight()));
 					if (content!=null)
-						event.left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
+						left.add(I18n.format("signpic.over.status", content.state.getStateMessage()));
 					if (entry.isNotSupported())
-						event.left.add(I18n.format("signpic.over.advmsg", I18n.format("signpic.state.format.unsupported")));
+						left.add(I18n.format("signpic.over.advmsg", I18n.format("signpic.state.format.unsupported")));
 					else if (content!=null) {
 						final String advmsg = content.state.getMessage();
-						event.left.add(I18n.format("signpic.over.advmsg", advmsg));
+						left.add(I18n.format("signpic.over.advmsg", advmsg));
 					}
 					if (tilesign.signText!=null)
-						event.left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
+						left.add(I18n.format("signpic.over.raw", tilesign.signText[0], tilesign.signText[1], tilesign.signText[2], tilesign.signText[3]));
 					if (content!=null)
-						event.left.add(I18n.format("signpic.over.local", content.image.getLocal()));
+						left.add(I18n.format("signpic.over.local", content.image.getLocal()));
 				}
 			}
 		}

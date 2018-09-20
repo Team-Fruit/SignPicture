@@ -25,12 +25,13 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
-import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent;
-import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent;
-import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent.CompatElementType;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiScreenEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent.CompatElementType;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatTickEvent.CompatClientTickEvent;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.client.event.GuiScreenEvent;
 
 public class OverlayFrame extends WFrame {
 	public static final @Nonnull OverlayFrame instance = new OverlayFrame();
@@ -48,22 +49,23 @@ public class OverlayFrame extends WFrame {
 	}
 
 	@CoreEvent
-	public void onDraw(final @Nonnull GuiScreenEvent.DrawScreenEvent.Post event) {
-		if (event.gui==null)
+	public void onDraw(final @Nonnull CompatGuiScreenEvent.CompatDrawScreenEvent.CompatPost event) {
+		final GuiScreen gui = event.getGui();
+		if (gui==null)
 			return;
 		if (Config.getConfig().renderGuiOverlay.get())
 			if (!isDelegated()) {
-				setWidth(event.gui.width);
-				setHeight(event.gui.height);
+				setWidth(gui.width);
+				setHeight(gui.height);
 				OpenGL.glPushMatrix();
 				OpenGL.glTranslatef(0f, 0f, 1000f);
-				drawScreen(event.mouseX, event.mouseY, event.renderPartialTicks);
+				drawScreen(event.getMouseX(), event.getMouseY(), event.getRenderPartialTicks());
 				OpenGL.glPopMatrix();
 			}
 	}
 
 	@CoreEvent
-	public void onDraw(final @Nonnull CompatRenderGameOverlayEvent.Post event) {
+	public void onDraw(final @Nonnull CompatRenderGameOverlayEvent.CompatPost event) {
 		final ScaledResolution resolution = event.getResolution();
 		if (resolution==null)
 			return;
