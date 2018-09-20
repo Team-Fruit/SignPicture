@@ -15,6 +15,7 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 
@@ -23,7 +24,7 @@ public class CommandHelpers {
 		throw new WrongUsageException(I18n.format("signpic.command.help", command.getCommandUsage(sender)));
 	}
 
-	public static void processChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) {
+	public static void processChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) throws CommandException {
 		if (!sender.canCommandSenderUseCommand(child.getRequiredPermissionLevel(), child.getFullCommandString()))
 			throw new WrongUsageException(I18n.format("signpic.command.noperms"));
 		else
@@ -77,7 +78,7 @@ public class CommandHelpers {
 		return complete;
 	}
 
-	public static boolean processCommands(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command, final @Nonnull String[] args) {
+	public static boolean processCommands(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command, final @Nonnull String[] args) throws CommandException {
 		if (args.length>=1) {
 			if (args[0].equals("help")) {
 				command.printHelp(sender);

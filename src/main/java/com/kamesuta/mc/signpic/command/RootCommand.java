@@ -10,19 +10,18 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.signpic.compat.Compat.CompatRootCommand;
 
-import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 
-public class RootCommand extends CommandBase implements IModCommand {
+public class RootCommand extends CompatRootCommand implements IModCommand {
 	public static final @Nonnull String ROOT_COMMAND_NAME = "signpic";
-	private final @Nonnull SortedSet<SubCommand> children = Sets.newTreeSet(new Comparator<SubCommand>() {
-		@Override
-		public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
-			if (o1!=null&&o2!=null)
-				return o1.compareTo(o2);
-			return 0;
-		}
+	private final @Nonnull SortedSet<SubCommand> children = Sets.newTreeSet((Comparator<SubCommand>) (final @Nullable SubCommand o1, final @Nullable SubCommand o2) -> {
+		if (o1!=null&&o2!=null)
+			return o1.compareTo(o2);
+		return 0;
 	});
 
 	public void addChildCommand(final @Nonnull SubCommand child) {
@@ -58,14 +57,14 @@ public class RootCommand extends CommandBase implements IModCommand {
 	}
 
 	@Override
-	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) throws WrongUsageException, CommandException {
 		if (sender!=null&&args!=null)
 			if (!CommandHelpers.processCommands(sender, this, args))
 				CommandHelpers.throwWrongUsage(sender, this);
 	}
 
 	@Override
-	public @Nullable List<String> addTabCompletionOptions(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+	public @Nullable List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args) {
 		if (sender!=null&&args!=null)
 			return CommandHelpers.completeCommands(sender, this, args);
 		return null;

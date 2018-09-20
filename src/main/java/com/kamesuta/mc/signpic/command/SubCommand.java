@@ -9,11 +9,14 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.signpic.compat.Compat.CompatSubCommand;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.WrongUsageException;
 
-public abstract class SubCommand implements IModCommand {
+public abstract class SubCommand extends CompatSubCommand implements IModCommand {
 	private final @Nonnull String name;
 	private final @Nonnull List<String> aliases = Lists.newArrayList();
 	private @Nonnull SubCommand.PermLevel permLevel;
@@ -21,7 +24,8 @@ public abstract class SubCommand implements IModCommand {
 	private final @Nonnull SortedSet<SubCommand> children;
 
 	public static enum PermLevel {
-		EVERYONE(0), ADMIN(2);
+		EVERYONE(0),
+		ADMIN(2);
 
 		int permLevel;
 
@@ -33,13 +37,10 @@ public abstract class SubCommand implements IModCommand {
 	public SubCommand(final @Nonnull String name) {
 		this.permLevel = SubCommand.PermLevel.EVERYONE;
 
-		this.children = Sets.newTreeSet(new Comparator<SubCommand>() {
-			@Override
-			public int compare(final @Nullable SubCommand o1, final @Nullable SubCommand o2) {
-				if (o1!=null&&o2!=null)
-					return o1.compareTo(o2);
-				return 0;
-			}
+		this.children = Sets.newTreeSet((Comparator<SubCommand>) (final @Nullable SubCommand o1, final @Nullable SubCommand o2) -> {
+			if (o1!=null&&o2!=null)
+				return o1.compareTo(o2);
+			return 0;
 		});
 		this.name = name;
 	}
@@ -74,12 +75,12 @@ public abstract class SubCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nullable List<?> addTabCompletionOptions(final @Nullable ICommandSender p_71516_1_, final @Nullable String[] p_71516_2_) {
+	public @Nullable List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args) {
 		return null;
 	}
 
 	@Override
-	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
 		if (sender!=null&&args!=null&&!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}
@@ -88,7 +89,7 @@ public abstract class SubCommand implements IModCommand {
 		return CommandHelpers.completeCommands(sender, this, args);
 	}
 
-	public void processSubCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) {
+	public void processSubCommand(final @Nonnull ICommandSender sender, final @Nonnull String[] args) throws WrongUsageException {
 		CommandHelpers.throwWrongUsage(sender, this);
 	}
 
@@ -131,14 +132,10 @@ public abstract class SubCommand implements IModCommand {
 		return " "+getCommandName();
 	}
 
-	public int compareTo(final @Nullable ICommand command) {
+	@Override
+	public int compare(final @Nullable ICommand command) {
 		if (command!=null)
 			return getCommandName().compareTo(command.getCommandName());
 		return 0;
-	}
-
-	@Override
-	public int compareTo(final @Nullable Object command) {
-		return this.compareTo((ICommand) command);
 	}
 }

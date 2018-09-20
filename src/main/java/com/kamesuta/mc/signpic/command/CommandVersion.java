@@ -10,6 +10,7 @@ import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.information.Informations;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
 public class CommandVersion extends SubCommand {
@@ -33,7 +34,7 @@ public class CommandVersion extends SubCommand {
 		}
 
 		@Override
-		public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+		public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
 			Config.getConfig().informationJoinBeta.set(false);
 			super.processCommand(sender, args);
 		}
@@ -50,12 +51,7 @@ public class CommandVersion extends SubCommand {
 			final long cooldown = TimeUnit.HOURS.toMillis(2l);
 			if (Informations.instance.shouldCheck(cooldown)) {
 				Log.notice(I18n.format("signpic.versioning.check.start"));
-				Informations.instance.onlineCheck(new Runnable() {
-					@Override
-					public void run() {
-						Informations.instance.check();
-					}
-				});
+				Informations.instance.onlineCheck(() -> Informations.instance.check());
 			} else
 				//final long d = System.currentTimeMillis()-Informations.instance.getLastCheck();
 				// Client.notice(I18n.format("signpic.versioning.check.cooldown", TimeUnit.MILLISECONDS.toHours(d)));
@@ -74,14 +70,11 @@ public class CommandVersion extends SubCommand {
 			// ChatBuilder.sendPlayerChat(var1, ChatBuilder.create("signpic.versioning.disabled").setStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
 			final long cooldown = TimeUnit.HOURS.toMillis(2l);
 			if (Informations.instance.shouldCheck(cooldown))
-				Informations.instance.onlineCheck(new Runnable() {
-					@Override
-					public void run() {
-						if (Informations.instance.isUpdateRequired())
-							Informations.instance.runUpdate();
-						else
-							Log.notice(I18n.format("signpic.versioning.noupdate"));
-					}
+				Informations.instance.onlineCheck(() -> {
+					if (Informations.instance.isUpdateRequired())
+						Informations.instance.runUpdate();
+					else
+						Log.notice(I18n.format("signpic.versioning.noupdate"));
 				});
 			else if (Informations.instance.isUpdateRequired())
 				Informations.instance.runUpdate();

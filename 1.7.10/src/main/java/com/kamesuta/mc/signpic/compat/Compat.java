@@ -35,6 +35,8 @@ import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
@@ -590,6 +592,43 @@ public class Compat {
 		@Override
 		public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
 			return null;
+		}
+	}
+
+	public static abstract class CompatRootCommand extends CommandBase implements ICommand {
+		@Override
+		public @Nullable List<String> addTabCompletionOptions(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+			return addTabCompletionOptionsList(sender, args);
+		}
+
+		public @Nullable abstract List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args);
+	}
+
+	public static abstract class CompatSubCommand implements ICommand {
+		@Override
+		public @Nullable List<String> addTabCompletionOptions(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+			return addTabCompletionOptionsList(sender, args);
+		}
+
+		public @Nullable abstract List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args);
+
+		public abstract int compare(final @Nullable ICommand command);
+
+		public int compareTo(final @Nullable ICommand command) {
+			return compare(command);
+		}
+
+		@Override
+		public int compareTo(final @Nullable Object command) {
+			if (command instanceof ICommand)
+				return compare((ICommand) command);
+			return 0;
+		}
+	}
+
+	public static class CompatCommandBase {
+		public static String buildString(final ICommandSender sender, final String[] args, final int startPos) {
+			return CommandBase.func_82360_a(sender, args, startPos);
 		}
 	}
 }
