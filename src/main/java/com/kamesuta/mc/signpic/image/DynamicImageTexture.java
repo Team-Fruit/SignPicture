@@ -20,6 +20,8 @@ import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextureUtil;
 
 import net.minecraft.client.renderer.texture.TextureUtil;
 
@@ -148,7 +150,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 			if (mipdata!=null&&mipdata.length>=1) {
 				final int id = getId();
 				if (this.miplevel>=1) {
-					TextureUtil.allocateTextureImpl(id, this.miplevel, this.width, this.height, Client.mc.gameSettings.anisotropicFiltering);
+					CompatTextureUtil.allocateTextureImpl(id, this.miplevel, this.width, this.height, CompatMinecraft.getSettings().getAnisotropicFiltering());
 					TextureUtil.uploadTextureMipmap(mipdata, this.width, this.height, 0, 0, false, false);
 				} else {
 					TextureUtil.allocateTexture(id, this.width, this.height);

@@ -5,6 +5,8 @@ import javax.annotation.Nonnull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
+import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
 import com.kamesuta.mc.signpic.entry.content.ContentManager;
@@ -89,7 +91,7 @@ public class CoreHandler {
 	@SubscribeEvent()
 	public void onDraw(final @Nonnull RenderGameOverlayEvent.Post event) {
 		this.renderHandler.onDraw(event);
-		this.overlayHandler.onDraw(event);
+		this.overlayHandler.onDraw(new CompatRenderGameOverlayEvent.Post(event));
 	}
 
 	@SubscribeEvent()
@@ -122,7 +124,7 @@ public class CoreHandler {
 			this.signEntryManager.onTick();
 			this.signHandler.onTick();
 			this.contentManager.onTick();
-			this.overlayHandler.onTick(event);
+			this.overlayHandler.onTick(new CompatClientTickEvent());
 			this.informationHandler.onTick(event);
 			EntrySlot.Tick();
 			Client.endSection();

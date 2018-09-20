@@ -3,6 +3,7 @@ package com.kamesuta.mc.signpic.compat;
 import java.io.File;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.collect.Lists;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -28,9 +30,11 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
@@ -50,6 +54,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Property;
@@ -88,6 +94,22 @@ public class Compat {
 
 		public static @Nonnull World getWorld() {
 			return getMinecraft().theWorld;
+		}
+
+		public static @Nonnull CompatGameSettings getSettings() {
+			return new CompatGameSettings(getMinecraft().gameSettings);
+		}
+	}
+
+	public static class CompatGameSettings {
+		private final GameSettings settings;
+
+		public CompatGameSettings(final GameSettings settings) {
+			this.settings = settings;
+		}
+
+		public int getAnisotropicFiltering() {
+			return this.settings.anisotropicFiltering;
 		}
 	}
 
@@ -492,6 +514,10 @@ public class Compat {
 		public static void processPixelValues(final int[] pixel, final int displayWidth, final int displayHeight) {
 			TextureUtil.func_147953_a(pixel, displayWidth, displayHeight);
 		}
+
+		public static void allocateTextureImpl(final int id, final int miplevel, final int width, final int height, final float anisotropicFiltering) {
+			TextureUtil.allocateTextureImpl(id, miplevel, width, height, anisotropicFiltering);
+		}
 	}
 
 	public static class CompatGuiConfig extends GuiConfig {
@@ -521,5 +547,58 @@ public class Compat {
 		public static CompatConfigElement fromProperty(final Property prop) {
 			return new CompatConfigElement(new ConfigElement<>(prop));
 		}
+	}
+
+	public static class CompatRenderGameOverlayEvent {
+		private final RenderGameOverlayEvent event;
+
+		public CompatRenderGameOverlayEvent(final RenderGameOverlayEvent event) {
+			this.event = event;
+		}
+
+		public static class Post extends CompatRenderGameOverlayEvent {
+			public Post(final RenderGameOverlayEvent event) {
+				super(event);
+			}
+		}
+
+		public ScaledResolution getResolution() {
+			return this.event.resolution;
+		}
+
+		public CompatElementType getType() {
+			return CompatElementType.getType(this.event.type);
+		}
+
+		public float getPartialTicks() {
+			return this.event.partialTicks;
+		}
+
+		public static enum CompatElementType {
+			CHAT,
+			OTHER,
+			;
+
+			public static CompatElementType getType(final ElementType type) {
+				if (type==ElementType.CHAT)
+					return CompatElementType.CHAT;
+				return CompatElementType.OTHER;
+			}
+		}
+	}
+
+	public static abstract class CompatModGuiFactory implements IModGuiFactory {
+		@Override
+		public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
+			return null;
+		}
+
+		@Override
+		public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
+			return null;
+		}
+	}
+
+	public static class CompatClientTickEvent {
 	}
 }

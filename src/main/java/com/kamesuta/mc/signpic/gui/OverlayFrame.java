@@ -25,11 +25,12 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent.CompatElementType;
 
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.GuiScreenEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class OverlayFrame extends WFrame {
 	public static final @Nonnull OverlayFrame instance = new OverlayFrame();
@@ -62,14 +63,15 @@ public class OverlayFrame extends WFrame {
 	}
 
 	@CoreEvent
-	public void onDraw(final @Nonnull RenderGameOverlayEvent.Post event) {
-		if (event.resolution==null)
+	public void onDraw(final @Nonnull CompatRenderGameOverlayEvent.Post event) {
+		final ScaledResolution resolution = event.getResolution();
+		if (resolution==null)
 			return;
-		if (event.type==ElementType.CHAT&&Client.mc.currentScreen==null)
+		if (event.getType()==CompatElementType.CHAT&&Client.mc.currentScreen==null)
 			if (!isDelegated()) {
-				setWidth(event.resolution.getScaledWidth());
-				setHeight(event.resolution.getScaledHeight());
-				drawScreen(event.mouseX, event.mouseY, event.partialTicks);
+				setWidth(resolution.getScaledWidth());
+				setHeight(resolution.getScaledHeight());
+				drawScreen(0, 0, event.getPartialTicks());
 			}
 	}
 
@@ -83,7 +85,7 @@ public class OverlayFrame extends WFrame {
 	}
 
 	@CoreEvent
-	public void onTick(final @Nonnull ClientTickEvent event) {
+	public void onTick(final @Nonnull CompatClientTickEvent event) {
 		updateScreen();
 	}
 
