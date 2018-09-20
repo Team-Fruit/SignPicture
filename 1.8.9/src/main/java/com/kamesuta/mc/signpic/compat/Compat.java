@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
@@ -58,12 +59,15 @@ import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class Compat {
 	public static class CompatFMLDeobfuscatingRemapper {
@@ -191,6 +195,28 @@ public class Compat {
 		public void setTileEntityPos(@Nonnull final TileEntity tile) {
 			tile.setPos(this.pos);
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime*result+this.pos.hashCode();
+			return result;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (this==obj)
+				return true;
+			if (obj==null)
+				return false;
+			if (!(obj instanceof CompatBlockPos))
+				return false;
+			final CompatBlockPos other = (CompatBlockPos) obj;
+			if (!this.pos.equals(other.pos))
+				return false;
+			return true;
+		}
 	}
 
 	public static class CompatSoundHandler {
@@ -260,6 +286,12 @@ public class Compat {
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
 
+		}
+	}
+
+	public static class CompatKeyRegistrar {
+		public static void registerKeyBinding(final KeyBinding key) {
+			ClientRegistry.registerKeyBinding(key);
 		}
 	}
 
@@ -595,5 +627,53 @@ public class Compat {
 	}
 
 	public static class CompatClientTickEvent {
+		private final ClientTickEvent event;
+
+		public CompatClientTickEvent(final ClientTickEvent event) {
+			this.event = event;
+		}
+
+		public CompatPhase getTickPhase() {
+			return CompatPhase.getPhase(this.event.phase);
+		}
+
+		public enum CompatPhase {
+			START,
+			END;
+			;
+
+			public static CompatPhase getPhase(final Phase phase) {
+				if (phase==null)
+					return START;
+				switch (phase) {
+					default:
+					case START:
+						return START;
+					case END:
+						return START;
+				}
+			}
+		}
+	}
+
+	public static class CompatInputEvent {
+	}
+
+	public static class CompatConfigChangedEvent {
+		private ConfigChangedEvent event;
+
+		public CompatConfigChangedEvent(final ConfigChangedEvent event) {
+			this.event = event;
+		}
+
+		public String getModId() {
+			return this.event.modID;
+		}
+
+		public static class CompatOnConfigChangedEvent extends CompatConfigChangedEvent {
+			public CompatOnConfigChangedEvent(final ConfigChangedEvent event) {
+				super(event);
+			}
+		}
 	}
 }

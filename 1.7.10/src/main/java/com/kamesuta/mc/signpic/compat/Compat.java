@@ -17,12 +17,15 @@ import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.IModGuiFactory;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
+import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -35,6 +38,7 @@ import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Items;
@@ -184,6 +188,34 @@ public class Compat {
 			tile.yCoord = getY();
 			tile.zCoord = getZ();
 		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime*result+this.x;
+			result = prime*result+this.y;
+			result = prime*result+this.z;
+			return result;
+		}
+
+		@Override
+		public boolean equals(final Object obj) {
+			if (this==obj)
+				return true;
+			if (obj==null)
+				return false;
+			if (!(obj instanceof CompatBlockPos))
+				return false;
+			final CompatBlockPos other = (CompatBlockPos) obj;
+			if (this.x!=other.x)
+				return false;
+			if (this.y!=other.y)
+				return false;
+			if (this.z!=other.z)
+				return false;
+			return true;
+		}
 	}
 
 	public static class CompatSoundHandler {
@@ -253,6 +285,12 @@ public class Compat {
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
 			MinecraftForgeClient.registerItemRenderer(Items.sign, renderer);
+		}
+	}
+
+	public static class CompatKeyRegistrar {
+		public static void registerKeyBinding(final KeyBinding key) {
+			ClientRegistry.registerKeyBinding(key);
 		}
 	}
 
@@ -600,5 +638,53 @@ public class Compat {
 	}
 
 	public static class CompatClientTickEvent {
+		private final ClientTickEvent event;
+
+		public CompatClientTickEvent(final ClientTickEvent event) {
+			this.event = event;
+		}
+
+		public CompatPhase getTickPhase() {
+			return CompatPhase.getPhase(this.event.phase);
+		}
+
+		public enum CompatPhase {
+			START,
+			END;
+			;
+
+			public static CompatPhase getPhase(final Phase phase) {
+				if (phase==null)
+					return START;
+				switch (phase) {
+					default:
+					case START:
+						return START;
+					case END:
+						return START;
+				}
+			}
+		}
+	}
+
+	public static class CompatInputEvent {
+	}
+
+	public static class CompatConfigChangedEvent {
+		private ConfigChangedEvent event;
+
+		public CompatConfigChangedEvent(final ConfigChangedEvent event) {
+			this.event = event;
+		}
+
+		public String getModId() {
+			return this.event.modID;
+		}
+
+		public static class CompatOnConfigChangedEvent extends CompatConfigChangedEvent {
+			public CompatOnConfigChangedEvent(final ConfigChangedEvent event) {
+				super(event);
+			}
+		}
 	}
 }

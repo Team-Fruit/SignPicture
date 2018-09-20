@@ -16,6 +16,7 @@ import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
@@ -75,7 +76,9 @@ public class SignHandler {
 								final SignEntity se = Sign.preview;
 								if (se.isRenderable()) {
 									final TileEntitySign preview = se.getTileEntity();
-									if (preview.xCoord==tileSign.xCoord&&preview.yCoord==tileSign.yCoord&&preview.zCoord==tileSign.zCoord) {
+									final CompatBlockPos previewpos = CompatBlockPos.getTileEntityPos(preview);
+									final CompatBlockPos tilepos = CompatBlockPos.getTileEntityPos(tileSign);
+									if (previewpos.equals(tilepos)) {
 										se.setVisible(false);
 										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
 										CurrentMode.instance.setState(CurrentMode.State.SEE, false);

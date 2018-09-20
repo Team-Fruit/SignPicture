@@ -13,13 +13,13 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.CoreInvoke;
+import com.kamesuta.mc.signpic.compat.Compat.CompatInputEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatKeyRegistrar;
 import com.kamesuta.mc.signpic.gui.GuiHub;
 import com.kamesuta.mc.signpic.gui.GuiIngameScreenShot;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiWindowScreenShot;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 
@@ -72,7 +72,7 @@ public class KeyHandler {
 	public static enum Keys {
 		KEY_BINDING_GUI(new KeyBinding("signpic.key.gui", Keyboard.KEY_BACKSLASH, "signpic.key.category")) {
 			@Override
-			public void onKeyInput(final @Nonnull InputEvent event, final @Nonnull KeyBinding binding) {
+			public void onKeyInput(final @Nonnull CompatInputEvent event, final @Nonnull KeyBinding binding) {
 				if (WFrame.getCurrent()==null&&binding.isPressed())
 					WFrame.displayFrame(new GuiHub(WFrame.getCurrent()));
 			}
@@ -85,12 +85,12 @@ public class KeyHandler {
 			this.binding = binding;
 		}
 
-		public abstract void onKeyInput(@Nonnull InputEvent event, @Nonnull KeyBinding binding);
+		public abstract void onKeyInput(@Nonnull CompatInputEvent event, @Nonnull KeyBinding binding);
 	}
 
 	public static void init() {
 		for (final Keys key : Keys.values())
-			ClientRegistry.registerKeyBinding(key.binding);
+			CompatKeyRegistrar.registerKeyBinding(key.binding);
 	}
 
 	public static final @Nonnull KeyHandler instance = new KeyHandler();
@@ -103,7 +103,7 @@ public class KeyHandler {
 	}
 
 	@CoreEvent
-	public void onKeyInput(final @Nonnull InputEvent event) {
+	public void onKeyInput(final @Nonnull CompatInputEvent event) {
 		for (final Keys key : Keys.values())
 			key.onKeyInput(event, key.binding);
 	}

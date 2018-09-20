@@ -16,6 +16,8 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent.CompatPhase;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.gui.GuiTask;
@@ -25,8 +27,6 @@ import com.kamesuta.mc.signpic.http.download.ModDownload.ModDLResult;
 import com.kamesuta.mc.signpic.information.Info.PrivateMsg;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -208,8 +208,8 @@ public final class Informations {
 	}
 
 	@CoreEvent
-	public void onTick(final @Nonnull ClientTickEvent event) {
-		if (event.phase==Phase.END)
+	public void onTick(final @Nonnull CompatClientTickEvent event) {
+		if (event.getTickPhase()==CompatPhase.END)
 			onTick(getSource(), getState());
 	}
 

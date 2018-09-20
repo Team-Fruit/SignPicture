@@ -11,9 +11,9 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.collect.Sets;
 import com.kamesuta.mc.bnnwidget.component.MButton;
 import com.kamesuta.mc.bnnwidget.component.MPanel;
+import com.kamesuta.mc.signpic.compat.Compat.CompatConfigChangedEvent;
 import com.kamesuta.mc.signpic.image.ImageIOLoader;
 
-import cpw.mods.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -50,18 +50,8 @@ public final class Config extends Configuration {
 	public final @Nonnull ConfigProperty<String> signpicDir = propertyString(get("General", "SignpicDir", "").setRequiresMcRestart(true));
 	public final @Nonnull ConfigProperty<Boolean> signTooltip = propertyBoolean(get("General", "SignToolTip", false)).setComment("add tooltip line to sign");
 
-	public final @Nonnull ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512)).setListener(new ConfigListener<Integer>() {
-		@Override
-		public void onChanged(@Nonnull final Integer value) {
-			ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(value, Config.this.imageHeightLimit.get());
-		}
-	});
-	public final @Nonnull ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512)).setListener(new ConfigListener<Integer>() {
-		@Override
-		public void onChanged(@Nonnull final Integer value) {
-			ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(Config.this.imageWidthLimit.get(), value);
-		};
-	});
+	public final @Nonnull ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512)).setListener((@Nonnull final Integer value) -> ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(value, Config.this.imageHeightLimit.get()));
+	public final @Nonnull ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512)).setListener((@Nonnull final Integer value) -> ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(Config.this.imageWidthLimit.get(), value));
 	public final @Nonnull ConfigProperty<Boolean> imageResizeFast = propertyBoolean(get("Image", "FastResize", false));
 	public final @Nonnull ConfigProperty<Boolean> imageAnimationGif = propertyBoolean(get("Image", "AnimateGif", true).setRequiresMcRestart(true));
 
@@ -148,8 +138,8 @@ public final class Config extends Configuration {
 	}
 
 	@CoreEvent
-	public void onConfigChanged(final @Nonnull ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		if (StringUtils.equals(eventArgs.modID, Reference.MODID)) {
+	public void onConfigChanged(final @Nonnull CompatConfigChangedEvent.CompatOnConfigChangedEvent eventArgs) {
+		if (StringUtils.equals(eventArgs.getModId(), Reference.MODID)) {
 			save();
 			reload();
 		}

@@ -6,6 +6,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
 import com.kamesuta.mc.signpic.compat.Compat.CompatClientTickEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatConfigChangedEvent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatInputEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatRenderGameOverlayEvent;
 import com.kamesuta.mc.signpic.entry.EntryManager;
 import com.kamesuta.mc.signpic.entry.EntrySlot;
@@ -60,7 +62,7 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onKeyInput(final @Nonnull InputEvent event) {
-		this.keyHandler.onKeyInput(event);
+		this.keyHandler.onKeyInput(new CompatInputEvent());
 	}
 
 	@SubscribeEvent
@@ -107,7 +109,7 @@ public class CoreHandler {
 
 	@SubscribeEvent
 	public void onConfigChanged(final @Nonnull ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
-		this.configHandler.onConfigChanged(eventArgs);
+		this.configHandler.onConfigChanged(new CompatConfigChangedEvent.CompatOnConfigChangedEvent(eventArgs));
 	}
 
 	@SubscribeEvent
@@ -124,8 +126,9 @@ public class CoreHandler {
 			this.signEntryManager.onTick();
 			this.signHandler.onTick();
 			this.contentManager.onTick();
-			this.overlayHandler.onTick(new CompatClientTickEvent());
-			this.informationHandler.onTick(event);
+			final CompatClientTickEvent tickEvent = new CompatClientTickEvent(event);
+			this.overlayHandler.onTick(tickEvent);
+			this.informationHandler.onTick(tickEvent);
 			EntrySlot.Tick();
 			Client.endSection();
 		}
