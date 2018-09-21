@@ -631,4 +631,14 @@ public class Compat {
 			return CommandBase.func_82360_a(sender, args, startPos);
 		}
 	}
+
+	public static enum ASMCompatVersion {
+		V7,
+		V8,
+		V10;
+
+		public static @Nonnull ASMCompatVersion version() {
+			return V7;
+		}
+	}
 }

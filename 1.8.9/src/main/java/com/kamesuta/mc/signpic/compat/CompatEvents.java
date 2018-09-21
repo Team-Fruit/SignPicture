@@ -191,7 +191,7 @@ public class CompatEvents {
 					case START:
 						return START;
 					case END:
-						return START;
+						return END;
 				}
 			}
 		}

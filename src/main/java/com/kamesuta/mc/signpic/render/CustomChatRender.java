@@ -146,6 +146,11 @@ public class CustomChatRender {
 	}
 
 	@CoreInvoke
+	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final float x, final float y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
+		return hookDrawStringWithShadow(font, str, (int) x, (int) y, color, chat, chatline, j2, opacity);
+	}
+
+	@CoreInvoke
 	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
 		if (chatline instanceof PicChatLine) {
 			final PicChatLine cline = (PicChatLine) chatline;

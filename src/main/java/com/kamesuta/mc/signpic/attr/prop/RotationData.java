@@ -32,7 +32,7 @@ public abstract class RotationData {
 	public abstract @Nonnull Quat4f getRotate(float scale);
 
 	public static class PerRotation extends RotationData {
-		private @Nonnull Quat4f rotate;
+		private @Nonnull final Quat4f rotate;
 
 		public PerRotation(final @Nonnull Quat4f rotate) {
 			this.rotate = rotate;

@@ -614,4 +614,14 @@ public class Compat {
 			return CommandBase.buildString(args, startPos);
 		}
 	}
+
+	public static enum ASMCompatVersion {
+		V7,
+		V8,
+		V10;
+
+		public static @Nonnull ASMCompatVersion version() {
+			return V8;
+		}
+	}
 }
