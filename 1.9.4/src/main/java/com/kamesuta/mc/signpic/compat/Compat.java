@@ -31,6 +31,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
@@ -47,7 +48,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -218,7 +221,7 @@ public class Compat {
 
 	public static class CompatSoundHandler {
 		public static void playSound(final @Nonnull ResourceLocation location, final float volume) {
-			CompatMinecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(location, volume));
+			CompatMinecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(location, volume)));
 		}
 	}
 
@@ -343,6 +346,10 @@ public class Compat {
 		public boolean canPlaceBlockAt(final CompatWorld world, final CompatBlockPos pos) {
 			return this.block.canPlaceBlockAt(world.getWorldObj(), pos.pos);
 		}
+	}
+
+	public static class CompatBlocks {
+		public static final Block STANDING_SIGN = Blocks.STANDING_SIGN;
 	}
 
 	public static class CompatGuiNewChat {
@@ -658,6 +665,12 @@ public class Compat {
 
 		public static @Nonnull DrawSignCompatVersion version() {
 			return V8;
+		}
+	}
+
+	public static class CompatMathHelper {
+		public static int floor_float(final float value) {
+			return MathHelper.floor_float(value);
 		}
 	}
 }

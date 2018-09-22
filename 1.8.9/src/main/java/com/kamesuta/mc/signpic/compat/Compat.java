@@ -32,6 +32,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
@@ -47,6 +48,7 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumSkyBlock;
@@ -343,6 +345,10 @@ public class Compat {
 		public boolean canPlaceBlockAt(final CompatWorld world, final CompatBlockPos pos) {
 			return this.block.canPlaceBlockAt(world.getWorldObj(), pos.pos);
 		}
+	}
+
+	public static class CompatBlocks {
+		public static final Block STANDING_SIGN = Blocks.standing_sign;
 	}
 
 	public static class CompatGuiNewChat {
@@ -658,6 +664,12 @@ public class Compat {
 
 		public static @Nonnull DrawSignCompatVersion version() {
 			return V8;
+		}
+	}
+
+	public static class CompatMathHelper {
+		public static int floor_float(final float value) {
+			return MathHelper.floor_float(value);
 		}
 	}
 }

@@ -22,6 +22,7 @@ import com.kamesuta.mc.bnnwidget.var.V;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlocks;
 import com.kamesuta.mc.signpic.compat.Compat.DrawSignCompatVersion;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
@@ -31,7 +32,6 @@ import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 
@@ -99,7 +99,7 @@ public class GuiPAAS extends WFrame {
 						OpenGL.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 						final Block block = sign.getBlockType();
 
-						if (block==Blocks.standing_sign) {
+						if (block==CompatBlocks.STANDING_SIGN) {
 							final float f2 = sign.getBlockMetadata()*360/16.0F;
 							OpenGL.glRotatef(f2, 0.0F, 1.0F, 0.0F);
 							OpenGL.glTranslatef(0F, -.33590F, 0.0F);
