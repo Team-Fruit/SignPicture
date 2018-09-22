@@ -150,7 +150,6 @@ public class Debug {
 		return StringUtils.length(entryId)<=15*4;
 	}
 
-	// TODO: Fix and test this method.
 	static void PostData() throws Exception {
 		final String url = "https://upload.gyazo.com/api/upload";
 		final HttpClient httpclient = new Downloader().client;

@@ -13,6 +13,7 @@ import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.CoreInvoke;
+import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.compat.Compat.CompatKeyRegistrar;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatInputEvent;
 import com.kamesuta.mc.signpic.gui.GuiHub;
@@ -20,6 +21,7 @@ import com.kamesuta.mc.signpic.gui.GuiIngameScreenShot;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.gui.GuiWindowScreenShot;
 
+import net.minecraft.client.gui.GuiControls;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.settings.KeyBinding;
 
@@ -46,7 +48,16 @@ public class KeyHandler {
 		public static abstract class AbstractKey implements Key {
 			@Override
 			public boolean isKeyPressed() {
-				return Keyboard.isKeyDown(getCode());
+				final int code = getCode();
+				try {
+					if (code<0)
+						return Mouse.isButtonDown(code+100);
+					else
+						return Keyboard.isKeyDown(code);
+				} catch (final Exception e) {
+					Log.log.warn("key hook error", e);
+				}
+				return false;
 			}
 
 			@Override
@@ -112,7 +123,7 @@ public class KeyHandler {
 	public boolean onGuiKeyInput(final @Nonnull GuiScreen screen) {
 		final WFrame widget = WFrame.getWidget(screen);
 		final float time = this.signpickeypressed.getTime();
-		if (!(widget instanceof GuiIngameScreenShot||widget instanceof GuiWindowScreenShot))
+		if (!(widget instanceof GuiIngameScreenShot||widget instanceof GuiWindowScreenShot||screen instanceof GuiControls))
 			if (keySignPicture.isKeyPressed()) {
 				if (!keyHook(screen)) {
 					this.signpickeypressed.resume();

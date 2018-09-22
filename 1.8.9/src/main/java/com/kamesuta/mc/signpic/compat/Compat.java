@@ -624,4 +624,14 @@ public class Compat {
 			return V8;
 		}
 	}
+
+	public static enum DrawSignCompatVersion {
+		V7,
+		V8,
+		V10;
+
+		public static @Nonnull DrawSignCompatVersion version() {
+			return V8;
+		}
+	}
 }
