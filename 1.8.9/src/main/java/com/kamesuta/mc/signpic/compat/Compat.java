@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.event.ClickEvent;
@@ -296,8 +297,12 @@ public class Compat {
 			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
 		}
 
+		public abstract void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy);
+
 		@Override
-		public abstract void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy);
+		public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
+			renderTileEntityAtCompat(tile, x, y, z, partialTicks, -1);
+		}
 	}
 
 	public static class CompatWorld {
@@ -484,7 +489,7 @@ public class Compat {
 		}
 	}
 
-	public static abstract class CompatTileEntitySign {
+	public static class CompatTileEntitySign {
 		public static List<CompatTextComponent> getSignText(final TileEntitySign tile) {
 			return Lists.transform(Lists.newArrayList(tile.signText), t -> new CompatTextComponent(t));
 		}
@@ -587,19 +592,40 @@ public class Compat {
 	public static abstract class CompatRootCommand extends CommandBase implements ICommand {
 		@Override
 		public @Nullable List<String> addTabCompletionOptions(final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
-			return addTabCompletionOptionsList(sender, args);
+			return addTabCompletionOptionCompat(sender, args);
 		}
 
-		public @Nullable abstract List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args);
+		public @Nullable abstract List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args);
+
+		@Override
+		public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
+			processCommandCompat(sender, args);
+		}
+
+		public abstract void processCommandCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException;
 	}
 
 	public static abstract class CompatSubCommand implements ICommand {
 		@Override
 		public @Nullable List<String> addTabCompletionOptions(final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
-			return addTabCompletionOptionsList(sender, args);
+			return addTabCompletionOptionCompat(sender, args);
 		}
 
-		public @Nullable abstract List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args);
+		public @Nullable abstract List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args);
+
+		@Override
+		public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
+			processCommandCompat(sender, args);
+		}
+
+		public abstract void processCommandCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException;
+
+		@Override
+		public boolean canCommandSenderUseCommand(final ICommandSender sender) {
+			return canCommandSenderUseCommandCompat(sender);
+		}
+
+		public abstract boolean canCommandSenderUseCommandCompat(final @Nullable ICommandSender sender);
 
 		public abstract int compare(final @Nullable ICommand command);
 

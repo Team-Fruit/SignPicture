@@ -28,7 +28,7 @@ public class CommandHelpers {
 		if (!sender.canCommandSenderUseCommand(child.getRequiredPermissionLevel(), child.getFullCommandString()))
 			throw new WrongUsageException(I18n.format("signpic.command.noperms"));
 		else
-			child.processCommand(sender, Arrays.copyOfRange(args, 1, args.length));
+			child.processCommandCompat(sender, Arrays.copyOfRange(args, 1, args.length));
 	}
 
 	public static @Nullable List<String> completeChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) {

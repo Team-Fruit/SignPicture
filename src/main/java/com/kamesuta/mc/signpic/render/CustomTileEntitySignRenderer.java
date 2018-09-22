@@ -112,7 +112,7 @@ public class CustomTileEntitySignRenderer extends CompatTileEntitySignRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
+	public void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
 		if (tile!=null) {
 			Client.startSection("signpic-render");
 			renderSignPictureBase(tile, x, y, z, partialTicks, 1f, destroy);

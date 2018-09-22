@@ -57,14 +57,14 @@ public class RootCommand extends CompatRootCommand implements IModCommand {
 	}
 
 	@Override
-	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) throws WrongUsageException, CommandException {
+	public void processCommandCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) throws WrongUsageException, CommandException {
 		if (sender!=null&&args!=null)
 			if (!CommandHelpers.processCommands(sender, this, args))
 				CommandHelpers.throwWrongUsage(sender, this);
 	}
 
 	@Override
-	public @Nullable List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+	public @Nullable List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) {
 		if (sender!=null&&args!=null)
 			return CommandHelpers.completeCommands(sender, this, args);
 		return null;

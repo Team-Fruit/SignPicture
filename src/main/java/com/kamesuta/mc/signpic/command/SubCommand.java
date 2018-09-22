@@ -75,12 +75,12 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	}
 
 	@Override
-	public @Nullable List<String> addTabCompletionOptionsList(final @Nullable ICommandSender sender, final @Nullable String[] args) {
+	public @Nullable List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) {
 		return null;
 	}
 
 	@Override
-	public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
+	public void processCommandCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
 		if (sender!=null&&args!=null&&!CommandHelpers.processCommands(sender, this, args))
 			processSubCommand(sender, args);
 	}
@@ -104,7 +104,7 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(final @Nullable ICommandSender sender) {
+	public boolean canCommandSenderUseCommandCompat(final @Nullable ICommandSender sender) {
 		if (sender!=null)
 			return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
 		return false;

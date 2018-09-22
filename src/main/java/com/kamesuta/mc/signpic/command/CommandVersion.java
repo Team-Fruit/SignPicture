@@ -34,9 +34,9 @@ public class CommandVersion extends SubCommand {
 		}
 
 		@Override
-		public void processCommand(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
+		public void processCommandCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
 			Config.getConfig().informationJoinBeta.set(false);
-			super.processCommand(sender, args);
+			super.processCommandCompat(sender, args);
 		}
 	}
 
