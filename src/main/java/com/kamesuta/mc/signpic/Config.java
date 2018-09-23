@@ -48,7 +48,7 @@ public final class Config extends Configuration {
 	}
 
 	public final @Nonnull ConfigProperty<String> signpicDir = propertyString(get("General", "SignpicDir", "").setRequiresMcRestart(true));
-	public final @Nonnull ConfigProperty<Boolean> signTooltip = propertyBoolean(get("General", "SignToolTip", false)).setComment("add tooltip line to sign");
+	public final @Nonnull ConfigProperty<Boolean> signTooltip = propertyBoolean(get("General", "SignToolTip", false, "add tooltip line to sign"));
 
 	public final @Nonnull ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512)).setListener((@Nonnull final Integer value) -> ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(value, Config.this.imageHeightLimit.get()));
 	public final @Nonnull ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512)).setListener((@Nonnull final Integer value) -> ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(Config.this.imageWidthLimit.get(), value));
@@ -57,15 +57,15 @@ public final class Config extends Configuration {
 
 	public final @Nonnull ConfigProperty<Integer> entryGCtick = propertyInteger(get("Entry", "GCDelayTick", 15*20));
 
-	public final @Nonnull ConfigProperty<Integer> communicateThreads = propertyInteger(get("Http", "HttpThreads", 3).setRequiresMcRestart(true)).setComment("parallel processing number such as Downloading");
-	public final @Nonnull ConfigProperty<Integer> communicateDLTimedout = propertyInteger(get("Http", "DownloadTimedout", 15000).setRequiresMcRestart(true)).setComment("milliseconds of max waiting response time. 0 is infinity.");
+	public final @Nonnull ConfigProperty<Integer> communicateThreads = propertyInteger(get("Http", "HttpThreads", 3, "parallel processing number such as Downloading").setRequiresMcRestart(true));
+	public final @Nonnull ConfigProperty<Integer> communicateDLTimedout = propertyInteger(get("Http", "DownloadTimedout", 15000, "milliseconds of max waiting response time. 0 is infinity.").setRequiresMcRestart(true));
 
-	public final @Nonnull ConfigProperty<Integer> contentLoadThreads = propertyInteger(get("Content", "LoadThreads", 3).setRequiresMcRestart(true)).setComment("parallel processing number such as Image Loading");
-	public final @Nonnull ConfigProperty<Integer> contentMaxByte = propertyInteger(get("Content", "MaxByte", 32*1024*1024)).setComment("limit of size before downloading. 0 is infinity.");
-	public final @Nonnull ConfigProperty<Integer> contentGCtick = propertyInteger(get("Content", "GCDelayTick", 15*20)).setComment("delay ticks of Garbage Collection");
-	public final @Nonnull ConfigProperty<Integer> contentLoadTick = propertyInteger(get("Content", "LoadStartIntervalTick", 0)).setComment("ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...");
-	public final @Nonnull ConfigProperty<Integer> contentSyncTick = propertyInteger(get("Content", "SyncLoadIntervalTick", 0)).setComment("ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading");
-	public final @Nonnull ConfigProperty<Integer> contentMaxRetry = propertyInteger(get("Content", "MaxRetry", 3)).setComment("limit of retry count. 0 is infinity.");
+	public final @Nonnull ConfigProperty<Integer> contentLoadThreads = propertyInteger(get("Content", "LoadThreads", 3, "parallel processing number such as Image Loading").setRequiresMcRestart(true));
+	public final @Nonnull ConfigProperty<Integer> contentMaxByte = propertyInteger(get("Content", "MaxByte", 32*1024*1024, "limit of size before downloading. 0 is infinity."));
+	public final @Nonnull ConfigProperty<Integer> contentGCtick = propertyInteger(get("Content", "GCDelayTick", 15*20, "delay ticks of Garbage Collection"));
+	public final @Nonnull ConfigProperty<Integer> contentLoadTick = propertyInteger(get("Content", "LoadStartIntervalTick", 0, "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading..."));
+	public final @Nonnull ConfigProperty<Integer> contentSyncTick = propertyInteger(get("Content", "SyncLoadIntervalTick", 0, "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading"));
+	public final @Nonnull ConfigProperty<Integer> contentMaxRetry = propertyInteger(get("Content", "MaxRetry", 3, "limit of retry count. 0 is infinity"));
 
 	public final @Nonnull ConfigProperty<Boolean> informationNotice = propertyBoolean(get("Version", "Notice", true));
 	public final @Nonnull ConfigProperty<Boolean> informationJoinBeta;
@@ -80,14 +80,14 @@ public final class Config extends Configuration {
 	/** Minimum time needed to type a character. */
 	public final @Nonnull ConfigProperty<Integer> multiplayPAASMinCharTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", 50));
 
-	public final @Nonnull ConfigProperty<Boolean> chatpicEnable = propertyBoolean(get("ChatPicture", "Enable", true)).setComment("enable ChatPicture extension");
-	public final @Nonnull ConfigProperty<Integer> chatpicLine = propertyInteger(get("ChatPicture", "ImageLines", 4)).setComment("how many lines does image use");
-	public final @Nonnull ConfigProperty<Integer> chatpicStackTick = propertyInteger(get("ChatPicture", "StackTicks", 50)).setComment("stack chat lines within interval ticks");
+	public final @Nonnull ConfigProperty<Boolean> chatpicEnable = propertyBoolean(get("ChatPicture", "Enable", true, "enable ChatPicture extension"));
+	public final @Nonnull ConfigProperty<Integer> chatpicLine = propertyInteger(get("ChatPicture", "ImageLines", 4, "how many lines does image use"));
+	public final @Nonnull ConfigProperty<Integer> chatpicStackTick = propertyInteger(get("ChatPicture", "StackTicks", 50, "stack chat lines within interval ticks"));
 
-	public final @Nonnull ConfigProperty<Boolean> renderOverlayPanel = propertyBoolean(get("Render", "OverlayPanel", true)).setComment("Overlay signpic!online");
-	public final @Nonnull ConfigProperty<Boolean> renderGuiOverlay = propertyBoolean(get("Render", "GuiOverlay", true)).setComment("Overlay on GUI");
-	public final @Nonnull ConfigProperty<Boolean> renderUseMipmap = propertyBoolean(get("Render", "Mipmap", true)).setComment("Require OpenGL 3.0 or later");
-	public final @Nonnull ConfigProperty<Boolean> renderMipmapTypeNearest = propertyBoolean(get("Render", "MipmapTypeNearest", false)).setComment("true = Nearest, false = Linear");
+	public final @Nonnull ConfigProperty<Boolean> renderOverlayPanel = propertyBoolean(get("Render", "OverlayPanel", true, "Overlay signpic!online"));
+	public final @Nonnull ConfigProperty<Boolean> renderGuiOverlay = propertyBoolean(get("Render", "GuiOverlay", true, "Overlay on GUI"));
+	public final @Nonnull ConfigProperty<Boolean> renderUseMipmap = propertyBoolean(get("Render", "Mipmap", true, "Require OpenGL 3.0 or later"));
+	public final @Nonnull ConfigProperty<Boolean> renderMipmapTypeNearest = propertyBoolean(get("Render", "MipmapTypeNearest", false, "true = Nearest, false = Linear"));
 	public final @Nonnull ConfigProperty<Double> renderSeeOpacity = propertyDouble(get("Render.Opacity", "ViewSign", .5f));
 	public final @Nonnull ConfigProperty<Double> renderPreviewFixedOpacity = propertyDouble(get("Render.Opacity", "PreviewFixedSign", .7f));
 	public final @Nonnull ConfigProperty<Double> renderPreviewFloatedOpacity = propertyDouble(get("Render.Opacity", "PreviewFloatedSign", .7f*.7f));
@@ -97,9 +97,9 @@ public final class Config extends Configuration {
 	public final @Nonnull ConfigProperty<String> apiShortenerType = propertyString(get("Api.Shortener", "Type", ""));
 	public final @Nonnull ConfigProperty<String> apiShortenerKey = propertyString(get("Api.Shortener", "Key", ""));
 
-	public final @Nonnull ConfigProperty<Boolean> debugLog = propertyBoolean(get("Debug", "DebugLog", false)).setComment("Output Debug Log");
+	public final @Nonnull ConfigProperty<Boolean> debugLog = propertyBoolean(get("Debug", "DebugLog", false, "Output Debug Log"));
 
-	public final @Nonnull ConfigProperty<Boolean> guiExperienced = propertyBoolean(get("Internal", "GuiExperienced", false)).setComment("Have you ever opened SignPicture GUI yet?");
+	public final @Nonnull ConfigProperty<Boolean> guiExperienced = propertyBoolean(get("Internal", "GuiExperienced", false, "Have you ever opened SignPicture GUI yet?"));
 
 	{
 		this.informationTryNew.setListener(new ConfigListener<Boolean>() {
@@ -183,11 +183,6 @@ public final class Config extends Configuration {
 
 		public @Nonnull ConfigProperty<E> setListener(@Nullable final ConfigListener<E> listener) {
 			this.listener = listener;
-			return this;
-		}
-
-		public @Nonnull ConfigProperty<E> setComment(final @Nonnull String comment) {
-			this.property.comment = comment;
 			return this;
 		}
 
