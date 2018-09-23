@@ -8,11 +8,11 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Maps;
+import com.kamesuta.mc.signpic.compat.Compat.CompatI18n;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.StatCollector;
 
 public class ChatBuilder {
 	public static final int DefaultId = 877;
@@ -36,7 +36,7 @@ public class ChatBuilder {
 		else {
 			String s;
 			if (this.useTranslation)
-				s = StatCollector.translateToLocal(this.text);
+				s = CompatI18n.translateToLocal(this.text);
 			else
 				s = this.text;
 

@@ -24,10 +24,12 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandBase;
@@ -41,6 +43,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
@@ -58,6 +62,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -117,6 +122,11 @@ public class Compat {
 
 		public static @Nonnull CompatGameSettings getSettings() {
 			return new CompatGameSettings(getMinecraft().gameSettings);
+		}
+
+		public static @Nullable CompatNetHandlerPlayClient getConnection() {
+			final NetHandlerPlayClient connection = getMinecraft().getNetHandler();
+			return connection!=null ? new CompatNetHandlerPlayClient(connection) : null;
 		}
 	}
 
@@ -602,18 +612,46 @@ public class Compat {
 		}
 	}
 
-	public static class CompatC12PacketUpdateSign {
-		public static C12PacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
-			final List<IChatComponent> lines = Lists.transform(clines, input -> {
-				return input==null ? null : input.component;
-			});
-			return new C12PacketUpdateSign(pos.pos, lines.toArray(new IChatComponent[lines.size()]));
+	public static class CompatNetHandlerPlayClient {
+		private final NetHandlerPlayClient connection;
+
+		public CompatNetHandlerPlayClient(final NetHandlerPlayClient connection) {
+			this.connection = connection;
+		}
+
+		public void sendPacket(final CompatPacket packet) {
+			this.connection.addToSendQueue(packet.packet);
 		}
 	}
 
-	public static class CompatC17PacketCustomPayload {
-		public static C17PacketCustomPayload create(final String channel, final String data) {
-			return new C17PacketCustomPayload(channel, new PacketBuffer(Unpooled.buffer()).writeString(data));
+	public static class CompatPacket {
+		public final Packet<? extends INetHandler> packet;
+
+		public CompatPacket(final Packet<? extends INetHandler> packet) {
+			this.packet = packet;
+		}
+	}
+
+	public static class CompatC12PacketUpdateSign extends CompatPacket {
+		public CompatC12PacketUpdateSign(final C12PacketUpdateSign packet) {
+			super(packet);
+		}
+
+		public static CompatC12PacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
+			final List<IChatComponent> lines = Lists.transform(clines, input -> {
+				return input==null ? null : input.component;
+			});
+			return new CompatC12PacketUpdateSign(new C12PacketUpdateSign(pos.pos, lines.toArray(new IChatComponent[lines.size()])));
+		}
+	}
+
+	public static class CompatC17PacketCustomPayload extends CompatPacket {
+		public CompatC17PacketCustomPayload(final C17PacketCustomPayload packet) {
+			super(packet);
+		}
+
+		public static CompatC17PacketCustomPayload create(final String channel, final String data) {
+			return new CompatC17PacketCustomPayload(new C17PacketCustomPayload(channel, new PacketBuffer(Unpooled.buffer()).writeString(data)));
 		}
 	}
 
@@ -818,6 +856,16 @@ public class Compat {
 			}
 
 			public abstract @Nullable CompatTextComponent onClickedCompat(final @Nonnull GuiNewChat chat, final int x);
+		}
+	}
+
+	public static class CompatI18n {
+		public static String format(final String format, final Object... args) {
+			return I18n.format(format, args);
+		}
+
+		public static String translateToLocal(final String text) {
+			return StatCollector.translateToLocal(text);
 		}
 	}
 }

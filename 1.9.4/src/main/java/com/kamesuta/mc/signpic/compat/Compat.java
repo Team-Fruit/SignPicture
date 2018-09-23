@@ -24,10 +24,12 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.command.CommandBase;
@@ -39,6 +41,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.INetHandler;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.CPacketCustomPayload;
 import net.minecraft.network.play.client.CPacketUpdateSign;
@@ -118,6 +122,11 @@ public class Compat {
 
 		public static @Nonnull CompatGameSettings getSettings() {
 			return new CompatGameSettings(getMinecraft().gameSettings);
+		}
+
+		public static @Nullable CompatNetHandlerPlayClient getConnection() {
+			final NetHandlerPlayClient connection = getMinecraft().getConnection();
+			return connection!=null ? new CompatNetHandlerPlayClient(connection) : null;
 		}
 	}
 
@@ -603,18 +612,46 @@ public class Compat {
 		}
 	}
 
-	public static class CompatC12PacketUpdateSign {
-		public static CPacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
-			final List<ITextComponent> lines = Lists.transform(clines, input -> {
-				return input==null ? null : input.component;
-			});
-			return new CPacketUpdateSign(pos.pos, lines.toArray(new ITextComponent[lines.size()]));
+	public static class CompatNetHandlerPlayClient {
+		private final NetHandlerPlayClient connection;
+
+		public CompatNetHandlerPlayClient(final NetHandlerPlayClient connection) {
+			this.connection = connection;
+		}
+
+		public void sendPacket(final CompatPacket packet) {
+			this.connection.sendPacket(packet.packet);
 		}
 	}
 
-	public static class CompatC17PacketCustomPayload {
-		public static CPacketCustomPayload create(final String channel, final String data) {
-			return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.buffer()).writeString(data));
+	public static class CompatPacket {
+		public final Packet<? extends INetHandler> packet;
+
+		public CompatPacket(final Packet<? extends INetHandler> packet) {
+			this.packet = packet;
+		}
+	}
+
+	public static class CompatC12PacketUpdateSign extends CompatPacket {
+		public CompatC12PacketUpdateSign(final CPacketUpdateSign packet) {
+			super(packet);
+		}
+
+		public static CompatC12PacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
+			final List<ITextComponent> lines = Lists.transform(clines, input -> {
+				return input==null ? null : input.component;
+			});
+			return new CompatC12PacketUpdateSign(new CPacketUpdateSign(pos.pos, lines.toArray(new ITextComponent[lines.size()])));
+		}
+	}
+
+	public static class CompatC17PacketCustomPayload extends CompatPacket {
+		public CompatC17PacketCustomPayload(final CPacketCustomPayload packet) {
+			super(packet);
+		}
+
+		public static CompatC17PacketCustomPayload create(final String channel, final String data) {
+			return new CompatC17PacketCustomPayload(new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.buffer()).writeString(data)));
 		}
 	}
 
@@ -819,6 +856,17 @@ public class Compat {
 			}
 
 			public abstract @Nullable CompatTextComponent onClickedCompat(final @Nonnull GuiNewChat chat, final int x);
+		}
+	}
+
+	public static class CompatI18n {
+		public static String format(final String format, final Object... args) {
+			return I18n.format(format, args);
+		}
+
+		@SuppressWarnings("deprecation")
+		public static String translateToLocal(final String text) {
+			return net.minecraft.util.text.translation.I18n.translateToLocal(text);
 		}
 	}
 }

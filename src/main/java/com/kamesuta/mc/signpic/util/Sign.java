@@ -7,10 +7,12 @@ import org.lwjgl.util.Timer;
 import com.kamesuta.mc.bnnwidget.WFrame;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.Config;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatC12PacketUpdateSign;
 import com.kamesuta.mc.signpic.compat.Compat.CompatC17PacketCustomPayload;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatNetHandlerPlayClient;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntitySign;
-import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -18,7 +20,6 @@ import com.kamesuta.mc.signpic.gui.GuiPAAS;
 import com.kamesuta.mc.signpic.preview.SignEntity;
 
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.tileentity.TileEntitySign;
 
@@ -35,10 +36,10 @@ public class Sign {
 	public static void sendSign(final @Nonnull EntryId entryId, final @Nonnull TileEntitySign sourceentity) {
 		SignEntryId.fromEntryId(entryId).toEntity(sourceentity);
 		sourceentity.markDirty();
-		final NetHandlerPlayClient nethandlerplayclient = Client.mc.getNetHandler();
+		final CompatNetHandlerPlayClient nethandlerplayclient = CompatMinecraft.getConnection();
 		if (nethandlerplayclient!=null) {
 			final CompatBlockPos pos = CompatBlockPos.getTileEntityPos(sourceentity);
-			nethandlerplayclient.addToSendQueue(CompatC12PacketUpdateSign.create(pos, CompatTileEntitySign.getSignText(sourceentity)));
+			nethandlerplayclient.sendPacket(CompatC12PacketUpdateSign.create(pos, CompatTileEntitySign.getSignText(sourceentity)));
 		}
 		sourceentity.setEditable(true);
 	}
@@ -51,7 +52,9 @@ public class Sign {
 	}
 
 	public static void sendRepairName(final @Nonnull String name) {
-		Client.mc.thePlayer.sendQueue.addToSendQueue(CompatC17PacketCustomPayload.create("MC|ItemName", name));
+		final CompatNetHandlerPlayClient nethandlerplayclient = CompatMinecraft.getConnection();
+		if (nethandlerplayclient!=null)
+			nethandlerplayclient.sendPacket(CompatC17PacketCustomPayload.create("MC|ItemName", name));
 	}
 
 	public static void setRepairName(final @Nonnull String name, final @Nonnull GuiTextField textField, final @Nonnull ContainerRepair containerRepair) {
