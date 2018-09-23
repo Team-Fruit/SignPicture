@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -31,9 +33,12 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
@@ -100,8 +105,12 @@ public class Compat {
 			return getMinecraft().fontRendererObj;
 		}
 
-		public static @Nonnull World getWorld() {
-			return getMinecraft().theWorld;
+		public static @Nonnull CompatWorld getWorld() {
+			return new CompatWorld(getMinecraft().theWorld);
+		}
+
+		public static @Nonnull CompatEntityPlayer getPlayer() {
+			return new CompatEntityPlayer(getMinecraft().thePlayer);
 		}
 
 		public static @Nonnull CompatGameSettings getSettings() {
@@ -163,11 +172,11 @@ public class Compat {
 		}
 
 		public @Nullable IBlockState getBlockState() {
-			return CompatMinecraft.getWorld().getBlockState(this.pos);
+			return CompatMinecraft.getWorld().getWorldObj().getBlockState(this.pos);
 		}
 
 		public @Nullable TileEntity getTile() {
-			return CompatMinecraft.getWorld().getTileEntity(this.pos);
+			return CompatMinecraft.getWorld().getWorldObj().getTileEntity(this.pos);
 		}
 
 		public @Nullable Block getBlock() {
@@ -280,7 +289,7 @@ public class Compat {
 		}
 
 		public static void registerPreInit(@Nonnull final CompatItemSignRenderer renderer) {
-			ModelLoader.setCustomModelResourceLocation(Items.sign, 0, renderer.modelResourceLocation);
+			ModelLoader.setCustomModelResourceLocation(CompatItems.SIGN, 0, renderer.modelResourceLocation);
 		}
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
@@ -307,15 +316,31 @@ public class Compat {
 		}
 	}
 
+	public static class CompatEntityPlayer {
+		private final EntityPlayer player;
+
+		public CompatEntityPlayer(final EntityPlayer player) {
+			this.player = player;
+		}
+
+		public EntityPlayer getPlayerObj() {
+			return this.player;
+		}
+
+		public @Nullable ItemStack getHeldItemMainhand() {
+			return this.player.getCurrentEquippedItem();
+		}
+
+		public @Nullable ItemStack getHeldItemOffhand() {
+			return null;
+		}
+	}
+
 	public static class CompatWorld {
 		private final World world;
 
 		public CompatWorld(final World world) {
 			this.world = world;
-		}
-
-		public static CompatWorld getWorld() {
-			return new CompatWorld(CompatMinecraft.getWorld());
 		}
 
 		public World getWorldObj() {
@@ -326,8 +351,28 @@ public class Compat {
 			return this.world.getLightFor(EnumSkyBlock.SKY, pos.pos);
 		}
 
-		public CompatBlock getBlock(final CompatBlockPos pos) {
-			return new CompatBlock(this.world.getBlockState(pos.pos).getBlock());
+		public CompatBlockState getBlockState(final CompatBlockPos pos) {
+			return new CompatBlockState(this.world.getBlockState(pos.pos));
+		}
+	}
+
+	public static class CompatBlockState {
+		private final IBlockState blockstate;
+
+		public CompatBlockState(final IBlockState blockstate) {
+			this.blockstate = blockstate;
+		}
+
+		public IBlockState getBlockStateObj() {
+			return this.blockstate;
+		}
+
+		public CompatBlock getBlock() {
+			return new CompatBlock(this.blockstate.getBlock());
+		}
+
+		public Material getMaterial() {
+			return this.blockstate.getBlock().getMaterial();
 		}
 	}
 
@@ -349,6 +394,11 @@ public class Compat {
 
 	public static class CompatBlocks {
 		public static final Block STANDING_SIGN = Blocks.standing_sign;
+		public static final Block WALL_SIGN = Blocks.wall_sign;
+	}
+
+	public static class CompatItems {
+		public static final Item SIGN = Items.sign;
 	}
 
 	public static class CompatGuiNewChat {
@@ -478,6 +528,11 @@ public class Compat {
 		private CompatTextFormatting(final EnumChatFormatting format) {
 			this.format = format;
 		}
+
+		@Override
+		public String toString() {
+			return this.format.toString();
+		}
 	}
 
 	public static class CompatC12PacketUpdateSign {
@@ -548,6 +603,8 @@ public class Compat {
 	}
 
 	public static class CompatTextureUtil {
+		public static final DynamicTexture missingTexture = TextureUtil.missingTexture;
+
 		public static void processPixelValues(final int[] pixel, final int displayWidth, final int displayHeight) {
 			TextureUtil.processPixelValues(pixel, displayWidth, displayHeight);
 		}

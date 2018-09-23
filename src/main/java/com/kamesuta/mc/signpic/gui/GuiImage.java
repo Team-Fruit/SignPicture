@@ -33,7 +33,7 @@ import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMathHelper;
-import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -213,7 +213,7 @@ public class GuiImage extends WFrame {
 				int lpicture = 0;
 
 				if (lightx!=-2&&lightx!=-3||lighty!=-2&&lighty!=-3)
-					lsign = CompatWorld.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(x), CompatMathHelper.floor_float(y), CompatMathHelper.floor_float(z)));
+					lsign = CompatMinecraft.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(x), CompatMathHelper.floor_float(y), CompatMathHelper.floor_float(z)));
 
 				if (lightx==-2||lighty==-2||lightx==-3||lighty==-3) {
 					final OffsetData offset = attr.offsets.getMovie().get();
@@ -238,7 +238,7 @@ public class GuiImage extends WFrame {
 					m.transform(p);
 
 					if (lightx==-2||lighty==-2)
-						lcenter = CompatWorld.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
+						lcenter = CompatMinecraft.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
 
 					if (lightx==-3||lighty==-3) {
 						final Point3f p2 = new Point3f();
@@ -254,7 +254,7 @@ public class GuiImage extends WFrame {
 
 						p.sub(p2);
 
-						lpicture = CompatWorld.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
+						lpicture = CompatMinecraft.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
 					}
 				}
 				if (lightx<0)

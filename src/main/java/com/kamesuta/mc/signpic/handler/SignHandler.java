@@ -17,6 +17,9 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatItems;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiOpenEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatGuiScreenEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatItemTooltipEvent;
@@ -39,10 +42,8 @@ import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.EnumChatFormatting;
 
 public class SignHandler {
 	public static @Nonnull ReflectField<GuiEditSign, TileEntitySign> guiEditSignTileEntity = ReflectClass.fromClass(GuiEditSign.class).getFieldFromType(null, TileEntitySign.class);
@@ -139,9 +140,11 @@ public class SignHandler {
 	@CoreEvent
 	public void onClick(final @Nonnull CompatMouseEvent event) {
 		if (event.getButtonState()&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.getButton()-100) {
-			final ItemStack handItem = Client.mc.thePlayer.getCurrentEquippedItem();
+			ItemStack handItem = CompatMinecraft.getPlayer().getHeldItemMainhand();
+			if (handItem==null||handItem.getItem()!=CompatItems.SIGN)
+				handItem = CompatMinecraft.getPlayer().getHeldItemOffhand();
 			EntryId handEntry = null;
-			if (handItem!=null&&handItem.getItem()==Items.sign) {
+			if (handItem!=null&&handItem.getItem()==CompatItems.SIGN) {
 				handEntry = ItemEntryId.fromItemStack(handItem);
 				CurrentMode.instance.setHandSign(handEntry);
 			} else
@@ -172,7 +175,7 @@ public class SignHandler {
 	public void onTooltip(final @Nonnull CompatItemTooltipEvent event) {
 		final ItemStack itemStack = event.getItemStack();
 		final List<String> tooltip = event.getTooltip();
-		if (itemStack.getItem()==Items.sign) {
+		if (itemStack.getItem()==CompatItems.SIGN) {
 			final ItemEntryId id = ItemEntryId.fromItemStack(itemStack);
 			final Entry entry = id.entry();
 			if (entry.isValid()) {
@@ -201,7 +204,7 @@ public class SignHandler {
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());
 				if (!conflict.isEmpty())
-					keyDisplay = EnumChatFormatting.RED+keyDisplay;
+					keyDisplay = CompatTextFormatting.RED+keyDisplay;
 				tooltip.add(I18n.format("signpic.item.sign.desc", keyDisplay));
 				if (!conflict.isEmpty()) {
 					tooltip.add(I18n.format("signpic.item.sign.desc.keyconflict", I18n.format("menu.options"), I18n.format("options.controls")));

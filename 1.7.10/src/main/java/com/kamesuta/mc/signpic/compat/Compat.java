@@ -24,12 +24,14 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -39,9 +41,12 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.server.MinecraftServer;
@@ -95,8 +100,12 @@ public class Compat {
 			return getMinecraft().fontRenderer;
 		}
 
-		public static @Nonnull World getWorld() {
-			return getMinecraft().theWorld;
+		public static @Nonnull CompatWorld getWorld() {
+			return new CompatWorld(getMinecraft().theWorld);
+		}
+
+		public static @Nonnull CompatEntityPlayer getPlayer() {
+			return new CompatEntityPlayer(getMinecraft().thePlayer);
 		}
 
 		public static @Nonnull CompatGameSettings getSettings() {
@@ -161,11 +170,11 @@ public class Compat {
 		}
 
 		public @Nullable TileEntity getTile() {
-			return CompatMinecraft.getWorld().getTileEntity(this.x, this.y, this.z);
+			return CompatMinecraft.getWorld().getWorldObj().getTileEntity(this.x, this.y, this.z);
 		}
 
 		public @Nullable Block getBlock() {
-			return CompatMinecraft.getWorld().getBlock(this.x, this.y, this.z);
+			return CompatMinecraft.getWorld().getWorldObj().getBlock(this.x, this.y, this.z);
 		}
 
 		public @Nonnull CompatBlockPos offset(final CompatEnumFacing facing) {
@@ -283,7 +292,7 @@ public class Compat {
 		}
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
-			MinecraftForgeClient.registerItemRenderer(Items.sign, renderer);
+			MinecraftForgeClient.registerItemRenderer(CompatItems.SIGN, renderer);
 		}
 	}
 
@@ -312,15 +321,31 @@ public class Compat {
 		}
 	}
 
+	public static class CompatEntityPlayer {
+		private final EntityPlayer player;
+
+		public CompatEntityPlayer(final EntityPlayer player) {
+			this.player = player;
+		}
+
+		public EntityPlayer getPlayerObj() {
+			return this.player;
+		}
+
+		public @Nullable ItemStack getHeldItemMainhand() {
+			return this.player.getCurrentEquippedItem();
+		}
+
+		public @Nullable ItemStack getHeldItemOffhand() {
+			return null;
+		}
+	}
+
 	public static class CompatWorld {
 		private final World world;
 
 		public CompatWorld(final World world) {
 			this.world = world;
-		}
-
-		public static CompatWorld getWorld() {
-			return new CompatWorld(CompatMinecraft.getWorld());
 		}
 
 		public World getWorldObj() {
@@ -331,8 +356,24 @@ public class Compat {
 			return this.world.getLightBrightnessForSkyBlocks(pos.getX(), pos.getY(), pos.getZ(), 0);
 		}
 
-		public CompatBlock getBlock(final CompatBlockPos pos) {
-			return new CompatBlock(this.world.getBlock(pos.getX(), pos.getY(), pos.getZ()));
+		public CompatBlockState getBlockState(final CompatBlockPos pos) {
+			return new CompatBlockState(this.world.getBlock(pos.getX(), pos.getY(), pos.getZ()));
+		}
+	}
+
+	public static class CompatBlockState {
+		private final Block blockstate;
+
+		public CompatBlockState(final Block blockstate) {
+			this.blockstate = blockstate;
+		}
+
+		public CompatBlock getBlock() {
+			return new CompatBlock(this.blockstate);
+		}
+
+		public Material getMaterial() {
+			return this.blockstate.getMaterial();
 		}
 	}
 
@@ -354,6 +395,11 @@ public class Compat {
 
 	public static class CompatBlocks {
 		public static final Block STANDING_SIGN = Blocks.standing_sign;
+		public static final Block WALL_SIGN = Blocks.wall_sign;
+	}
+
+	public static class CompatItems {
+		public static final Item SIGN = Items.sign;
 	}
 
 	public static class CompatGuiNewChat {
@@ -482,6 +528,11 @@ public class Compat {
 		private CompatTextFormatting(final EnumChatFormatting format) {
 			this.format = format;
 		}
+
+		@Override
+		public String toString() {
+			return this.format.toString();
+		}
 	}
 
 	public static class CompatC12PacketUpdateSign {
@@ -552,6 +603,8 @@ public class Compat {
 	}
 
 	public static class CompatTextureUtil {
+		public static final DynamicTexture missingTexture = TextureUtil.missingTexture;
+
 		public static void processPixelValues(final int[] pixel, final int displayWidth, final int displayHeight) {
 			TextureUtil.func_147953_a(pixel, displayWidth, displayHeight);
 		}

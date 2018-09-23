@@ -15,6 +15,7 @@ import com.google.common.collect.Lists;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -31,8 +33,11 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C12PacketUpdateSign;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
@@ -43,14 +48,14 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -101,8 +106,12 @@ public class Compat {
 			return getMinecraft().fontRendererObj;
 		}
 
-		public static @Nonnull World getWorld() {
-			return getMinecraft().theWorld;
+		public static @Nonnull CompatWorld getWorld() {
+			return new CompatWorld(getMinecraft().theWorld);
+		}
+
+		public static @Nonnull CompatEntityPlayer getPlayer() {
+			return new CompatEntityPlayer(getMinecraft().thePlayer);
 		}
 
 		public static @Nonnull CompatGameSettings getSettings() {
@@ -120,14 +129,14 @@ public class Compat {
 	}
 
 	public static class CompatMovingObjectPosition {
-		private final MovingObjectPosition movingPos;
+		private final RayTraceResult movingPos;
 
-		public CompatMovingObjectPosition(final MovingObjectPosition movingPos) {
+		public CompatMovingObjectPosition(final RayTraceResult movingPos) {
 			this.movingPos = movingPos;
 		}
 
 		public static @Nullable CompatMovingObjectPosition getMovingPos() {
-			final MovingObjectPosition movingPos = CompatMinecraft.getMinecraft().objectMouseOver;
+			final RayTraceResult movingPos = CompatMinecraft.getMinecraft().objectMouseOver;
 			return movingPos==null ? null : new CompatMovingObjectPosition(movingPos);
 		}
 
@@ -164,11 +173,11 @@ public class Compat {
 		}
 
 		public @Nullable IBlockState getBlockState() {
-			return CompatMinecraft.getWorld().getBlockState(this.pos);
+			return CompatMinecraft.getWorld().getWorldObj().getBlockState(this.pos);
 		}
 
 		public @Nullable TileEntity getTile() {
-			return CompatMinecraft.getWorld().getTileEntity(this.pos);
+			return CompatMinecraft.getWorld().getWorldObj().getTileEntity(this.pos);
 		}
 
 		public @Nullable Block getBlock() {
@@ -221,7 +230,7 @@ public class Compat {
 
 	public static class CompatSoundHandler {
 		public static void playSound(final @Nonnull ResourceLocation location, final float volume) {
-			CompatMinecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(location, volume)));
+			CompatMinecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(new SoundEvent(location), volume));
 		}
 	}
 
@@ -281,7 +290,7 @@ public class Compat {
 		}
 
 		public static void registerPreInit(@Nonnull final CompatItemSignRenderer renderer) {
-			ModelLoader.setCustomModelResourceLocation(Items.sign, 0, renderer.modelResourceLocation);
+			ModelLoader.setCustomModelResourceLocation(CompatItems.SIGN, 0, renderer.modelResourceLocation);
 		}
 
 		public static void registerInit(@Nonnull final CompatItemSignRenderer renderer) {
@@ -315,10 +324,6 @@ public class Compat {
 			this.world = world;
 		}
 
-		public static CompatWorld getWorld() {
-			return new CompatWorld(CompatMinecraft.getWorld());
-		}
-
 		public World getWorldObj() {
 			return this.world;
 		}
@@ -327,8 +332,48 @@ public class Compat {
 			return this.world.getLightFor(EnumSkyBlock.SKY, pos.pos);
 		}
 
-		public CompatBlock getBlock(final CompatBlockPos pos) {
-			return new CompatBlock(this.world.getBlockState(pos.pos).getBlock());
+		public CompatBlockState getBlockState(final CompatBlockPos pos) {
+			return new CompatBlockState(this.world.getBlockState(pos.pos));
+		}
+	}
+
+	public static class CompatEntityPlayer {
+		private final EntityPlayer player;
+
+		public CompatEntityPlayer(final EntityPlayer player) {
+			this.player = player;
+		}
+
+		public EntityPlayer getPlayerObj() {
+			return this.player;
+		}
+
+		public @Nullable ItemStack getHeldItemMainhand() {
+			return this.player.getHeldItemMainhand();
+		}
+
+		public @Nullable ItemStack getHeldItemOffhand() {
+			return this.player.getHeldItemOffhand();
+		}
+	}
+
+	public static class CompatBlockState {
+		private final IBlockState blockstate;
+
+		public CompatBlockState(final IBlockState blockstate) {
+			this.blockstate = blockstate;
+		}
+
+		public IBlockState getBlockStateObj() {
+			return this.blockstate;
+		}
+
+		public CompatBlock getBlock() {
+			return new CompatBlock(this.blockstate.getBlock());
+		}
+
+		public Material getMaterial() {
+			return this.blockstate.getMaterial();
 		}
 	}
 
@@ -350,6 +395,11 @@ public class Compat {
 
 	public static class CompatBlocks {
 		public static final Block STANDING_SIGN = Blocks.STANDING_SIGN;
+		public static final Block WALL_SIGN = Blocks.WALL_SIGN;
+	}
+
+	public static class CompatItems {
+		public static final Item SIGN = Items.SIGN;
 	}
 
 	public static class CompatGuiNewChat {
@@ -451,33 +501,38 @@ public class Compat {
 	}
 
 	public static enum CompatTextFormatting {
-		BLACK(EnumChatFormatting.BLACK),
-		DARK_BLUE(EnumChatFormatting.DARK_BLUE),
-		DARK_GREEN(EnumChatFormatting.DARK_GREEN),
-		DARK_AQUA(EnumChatFormatting.DARK_AQUA),
-		DARK_RED(EnumChatFormatting.DARK_RED),
-		DARK_PURPLE(EnumChatFormatting.DARK_PURPLE),
-		GOLD(EnumChatFormatting.GOLD),
-		GRAY(EnumChatFormatting.GRAY),
-		DARK_GRAY(EnumChatFormatting.DARK_GRAY),
-		BLUE(EnumChatFormatting.BLUE),
-		GREEN(EnumChatFormatting.GREEN),
-		AQUA(EnumChatFormatting.AQUA),
-		RED(EnumChatFormatting.RED),
-		LIGHT_PURPLE(EnumChatFormatting.LIGHT_PURPLE),
-		YELLOW(EnumChatFormatting.YELLOW),
-		WHITE(EnumChatFormatting.WHITE),
-		OBFUSCATED(EnumChatFormatting.OBFUSCATED),
-		BOLD(EnumChatFormatting.BOLD),
-		STRIKETHROUGH(EnumChatFormatting.STRIKETHROUGH),
-		UNDERLINE(EnumChatFormatting.UNDERLINE),
-		ITALIC(EnumChatFormatting.ITALIC),
-		RESET(EnumChatFormatting.RESET),;
+		BLACK(TextFormatting.BLACK),
+		DARK_BLUE(TextFormatting.DARK_BLUE),
+		DARK_GREEN(TextFormatting.DARK_GREEN),
+		DARK_AQUA(TextFormatting.DARK_AQUA),
+		DARK_RED(TextFormatting.DARK_RED),
+		DARK_PURPLE(TextFormatting.DARK_PURPLE),
+		GOLD(TextFormatting.GOLD),
+		GRAY(TextFormatting.GRAY),
+		DARK_GRAY(TextFormatting.DARK_GRAY),
+		BLUE(TextFormatting.BLUE),
+		GREEN(TextFormatting.GREEN),
+		AQUA(TextFormatting.AQUA),
+		RED(TextFormatting.RED),
+		LIGHT_PURPLE(TextFormatting.LIGHT_PURPLE),
+		YELLOW(TextFormatting.YELLOW),
+		WHITE(TextFormatting.WHITE),
+		OBFUSCATED(TextFormatting.OBFUSCATED),
+		BOLD(TextFormatting.BOLD),
+		STRIKETHROUGH(TextFormatting.STRIKETHROUGH),
+		UNDERLINE(TextFormatting.UNDERLINE),
+		ITALIC(TextFormatting.ITALIC),
+		RESET(TextFormatting.RESET),;
 
-		public final EnumChatFormatting format;
+		public final TextFormatting format;
 
-		private CompatTextFormatting(final EnumChatFormatting format) {
+		private CompatTextFormatting(final TextFormatting format) {
 			this.format = format;
+		}
+
+		@Override
+		public String toString() {
+			return this.format.toString();
 		}
 	}
 
@@ -549,6 +604,8 @@ public class Compat {
 	}
 
 	public static class CompatTextureUtil {
+		public static final DynamicTexture missingTexture = TextureUtil.MISSING_TEXTURE;
+
 		public static void processPixelValues(final int[] pixel, final int displayWidth, final int displayHeight) {
 			TextureUtil.processPixelValues(pixel, displayWidth, displayHeight);
 		}
