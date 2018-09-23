@@ -22,8 +22,10 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.compat.Compat.CompatChatLine;
 import com.kamesuta.mc.signpic.compat.Compat.CompatClickEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatGuiNewChat;
+import com.kamesuta.mc.signpic.compat.Compat.CompatHoverEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMathHelper;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryIdBuilder;
@@ -34,10 +36,7 @@ import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 
 @CoreInvoke
 public class CustomChatRender {
@@ -131,10 +130,10 @@ public class CustomChatRender {
 				if (x<ix)
 					if (content!=null) {
 						final String url = content.id.getURI();
-						return new ChatComponentText("")
-								.setChatStyle(new ChatStyle()
-										.setChatHoverEvent(new HoverEvent(net.minecraft.event.HoverEvent.Action.SHOW_TEXT, new ChatComponentText(url)))
-										.setChatClickEvent(new ClickEvent(Action.RUN_COMMAND, "/signpic image open "+url)));
+						return CompatTextComponent.fromText("")
+								.setChatStyle(CompatTextStyle.create()
+										.setChatHoverEvent(CompatHoverEvent.create(CompatHoverEvent.CompatAction.SHOW_TEXT, CompatTextComponent.fromText(url)))
+										.setChatClickEvent(CompatClickEvent.create(CompatClickEvent.CompatAction.RUN_COMMAND, "/signpic image open "+url)));
 					}
 			}
 			return null;

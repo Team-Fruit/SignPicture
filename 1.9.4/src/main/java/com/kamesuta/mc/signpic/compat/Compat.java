@@ -57,6 +57,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.ModelLoader;
@@ -487,6 +488,49 @@ public class Compat {
 		public String getValue() {
 			return this.event.getValue();
 		}
+
+		public static CompatClickEvent create(final CompatAction action, final String text) {
+			return new CompatClickEvent(new ClickEvent(action.action, text));
+		}
+
+		public static enum CompatAction {
+			OPEN_URL(ClickEvent.Action.OPEN_URL),
+			OPEN_FILE(ClickEvent.Action.OPEN_FILE),
+			RUN_COMMAND(ClickEvent.Action.RUN_COMMAND),
+			SUGGEST_COMMAND(ClickEvent.Action.SUGGEST_COMMAND),
+			;
+
+			public final ClickEvent.Action action;
+
+			private CompatAction(final ClickEvent.Action action) {
+				this.action = action;
+			}
+		}
+	}
+
+	public static class CompatHoverEvent {
+		public final HoverEvent event;
+
+		public CompatHoverEvent(final HoverEvent event) {
+			this.event = event;
+		}
+
+		public static CompatHoverEvent create(final CompatAction action, final CompatTextComponent text) {
+			return new CompatHoverEvent(new HoverEvent(action.action, text.component));
+		}
+
+		public static enum CompatAction {
+			SHOW_TEXT(HoverEvent.Action.SHOW_TEXT),
+			SHOW_ACHIEVEMENT(HoverEvent.Action.SHOW_ACHIEVEMENT),
+			SHOW_ITEM(HoverEvent.Action.SHOW_ITEM),
+			;
+
+			public final HoverEvent.Action action;
+
+			private CompatAction(final HoverEvent.Action action) {
+				this.action = action;
+			}
+		}
 	}
 
 	public static class CompatTextStyle {
@@ -503,6 +547,16 @@ public class Compat {
 
 		public static CompatTextStyle create() {
 			return new CompatTextStyle(new Style());
+		}
+
+		public CompatTextStyle setChatHoverEvent(final CompatHoverEvent event) {
+			this.style.setHoverEvent(event.event);
+			return this;
+		}
+
+		public CompatTextStyle setChatClickEvent(final CompatClickEvent event) {
+			this.style.setClickEvent(event.event);
+			return this;
 		}
 	}
 
