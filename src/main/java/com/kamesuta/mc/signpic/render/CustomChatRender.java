@@ -20,7 +20,9 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.compat.Compat.CompatChatLine;
+import com.kamesuta.mc.signpic.compat.Compat.CompatClickEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatGuiNewChat;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMathHelper;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -31,13 +33,11 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.event.ClickEvent;
-import net.minecraft.event.ClickEvent.Action;
-import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 
 @CoreInvoke
 public class CustomChatRender {
@@ -142,7 +142,7 @@ public class CustomChatRender {
 	}
 
 	private static int getChatWidth(final @Nonnull GuiNewChat chat) {
-		return MathHelper.floor_float(CompatGuiNewChat.getChatWidth(chat)/CompatGuiNewChat.getChatScale(chat));
+		return CompatMathHelper.floor_float(CompatGuiNewChat.getChatWidth(chat)/CompatGuiNewChat.getChatScale(chat));
 	}
 
 	@CoreInvoke
@@ -238,8 +238,8 @@ public class CustomChatRender {
 						updateCounterCreated = line.getUpdatedCounter();
 						chatLineID = line.getChatLineID();
 						final CompatTextComponent cc = CompatChatLine.getChatComponent(line);
-						final List<ClickEvent> clinks = cc.getLinksFromChat();
-						for (final ClickEvent clink : clinks) {
+						final List<CompatClickEvent> clinks = cc.getLinksFromChat();
+						for (final CompatClickEvent clink : clinks) {
 							final EntryId entryid = new EntryIdBuilder().setURI(clink.getValue()).build();
 							if (!addedentries.contains(entryid))
 								this.pendentryids.add(entryid);

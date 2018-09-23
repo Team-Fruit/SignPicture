@@ -187,7 +187,7 @@ public final class Config extends Configuration {
 		}
 
 		public @Nonnull ConfigProperty<E> setComment(final @Nonnull String comment) {
-			this.property.comment = comment;
+			this.property.setComment(comment);
 			return this;
 		}
 

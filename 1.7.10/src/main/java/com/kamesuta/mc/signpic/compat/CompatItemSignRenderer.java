@@ -37,8 +37,10 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 
 	public static enum ItemSignTransformType {
 		NONE,
-		THIRD_PERSON,
-		FIRST_PERSON,
+		THIRD_PERSON_LEFT_HAND,
+		THIRD_PERSON_RIGHT_HAND,
+		FIRST_PERSON_LEFT_HAND,
+		FIRST_PERSON_RIGHT_HAND,
 		HEAD,
 		GUI,
 		GROUND,

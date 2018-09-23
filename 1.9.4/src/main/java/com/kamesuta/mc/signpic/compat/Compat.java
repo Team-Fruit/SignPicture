@@ -39,22 +39,22 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.client.C12PacketUpdateSign;
-import net.minecraft.network.play.client.C17PacketCustomPayload;
+import net.minecraft.network.play.client.CPacketCustomPayload;
+import net.minecraft.network.play.client.CPacketUpdateSign;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.management.ServerConfigurationManager;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.world.EnumSkyBlock;
@@ -415,31 +415,31 @@ public class Compat {
 	public static class CompatTextComponent {
 		public static CompatTextComponent blank = fromText("");
 
-		public final IChatComponent component;
+		public final ITextComponent component;
 
-		public CompatTextComponent(final IChatComponent component) {
+		public CompatTextComponent(final ITextComponent component) {
 			this.component = component;
 		}
 
-		public @Nonnull List<ClickEvent> getLinksFromChat() {
-			final List<ClickEvent> list = Lists.newLinkedList();
+		public @Nonnull List<CompatClickEvent> getLinksFromChat() {
+			final List<CompatClickEvent> list = Lists.newLinkedList();
 			getLinksFromChat0(list, this.component);
 			return list;
 		}
 
-		private void getLinksFromChat0(final @Nonnull List<ClickEvent> list, final @Nonnull IChatComponent pchat) {
+		private void getLinksFromChat0(final @Nonnull List<CompatClickEvent> list, final @Nonnull ITextComponent pchat) {
 			final List<?> chats = pchat.getSiblings();
 			for (final Object o : chats) {
-				final IChatComponent chat = (IChatComponent) o;
-				final ClickEvent ev = chat.getChatStyle().getChatClickEvent();
+				final ITextComponent chat = (ITextComponent) o;
+				final ClickEvent ev = chat.getStyle().getClickEvent();
 				if (ev!=null&&ev.getAction()==ClickEvent.Action.OPEN_URL)
-					list.add(ev);
+					list.add(new CompatClickEvent(ev));
 				getLinksFromChat0(list, chat);
 			}
 		}
 
 		public CompatTextComponent setChatStyle(final CompatTextStyle style) {
-			this.component.setChatStyle(style.style);
+			this.component.setStyle(style.style);
 			return this;
 		}
 
@@ -448,15 +448,15 @@ public class Compat {
 		}
 
 		public static CompatTextComponent jsonToComponent(final String json) {
-			return new CompatTextComponent(IChatComponent.Serializer.jsonToComponent(json));
+			return new CompatTextComponent(ITextComponent.Serializer.jsonToComponent(json));
 		}
 
 		public static CompatTextComponent fromText(final String text) {
-			return new CompatTextComponent(new ChatComponentText(text));
+			return new CompatTextComponent(new TextComponentString(text));
 		}
 
 		public static CompatTextComponent fromTranslation(final String text, final Object... params) {
-			return new CompatTextComponent(new ChatComponentTranslation(text, params));
+			return new CompatTextComponent(new TextComponentTranslation(text, params));
 		}
 
 		public void sendClient() {
@@ -472,15 +472,27 @@ public class Compat {
 		}
 
 		public void sendBroadcast() {
-			final ServerConfigurationManager sender = CompatMinecraft.getMinecraftServer().getConfigurationManager();
+			final PlayerList sender = CompatMinecraft.getMinecraftServer().getPlayerList();
 			sender.sendChatMsg(this.component);
 		}
 	}
 
-	public static class CompatTextStyle {
-		public final ChatStyle style;
+	public static class CompatClickEvent {
+		private final ClickEvent event;
 
-		public CompatTextStyle(final ChatStyle style) {
+		public CompatClickEvent(final ClickEvent event) {
+			this.event = event;
+		}
+
+		public String getValue() {
+			return this.event.getValue();
+		}
+	}
+
+	public static class CompatTextStyle {
+		public final Style style;
+
+		public CompatTextStyle(final Style style) {
 			this.style = style;
 		}
 
@@ -490,7 +502,7 @@ public class Compat {
 		}
 
 		public static CompatTextStyle create() {
-			return new CompatTextStyle(new ChatStyle());
+			return new CompatTextStyle(new Style());
 		}
 	}
 
@@ -537,17 +549,17 @@ public class Compat {
 	}
 
 	public static class CompatC12PacketUpdateSign {
-		public static C12PacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
-			final List<IChatComponent> lines = Lists.transform(clines, input -> {
+		public static CPacketUpdateSign create(final CompatBlockPos pos, final List<CompatTextComponent> clines) {
+			final List<ITextComponent> lines = Lists.transform(clines, input -> {
 				return input==null ? null : input.component;
 			});
-			return new C12PacketUpdateSign(pos.pos, lines.toArray(new IChatComponent[lines.size()]));
+			return new CPacketUpdateSign(pos.pos, lines.toArray(new ITextComponent[lines.size()]));
 		}
 	}
 
 	public static class CompatC17PacketCustomPayload {
-		public static C17PacketCustomPayload create(final String channel, final String data) {
-			return new C17PacketCustomPayload(channel, new PacketBuffer(Unpooled.buffer()).writeString(data));
+		public static CPacketCustomPayload create(final String channel, final String data) {
+			return new CPacketCustomPayload(channel, new PacketBuffer(Unpooled.buffer()).writeString(data));
 		}
 	}
 
@@ -557,8 +569,8 @@ public class Compat {
 		}
 
 		public static void setSignText(final TileEntitySign tile, final List<CompatTextComponent> clines) {
-			final List<IChatComponent> lines = Lists.transform(clines, t -> t==null ? null : t.component);
-			final Iterator<IChatComponent> itr = lines.iterator();
+			final List<ITextComponent> lines = Lists.transform(clines, t -> t==null ? null : t.component);
+			final Iterator<ITextComponent> itr = lines.iterator();
 			for (int i = 0; i<tile.signText.length; i++)
 				tile.signText[i] = itr.hasNext() ? itr.next() : CompatTextComponent.blank.component;
 		}

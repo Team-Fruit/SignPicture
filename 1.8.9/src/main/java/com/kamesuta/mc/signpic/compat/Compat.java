@@ -420,19 +420,19 @@ public class Compat {
 			this.component = component;
 		}
 
-		public @Nonnull List<ClickEvent> getLinksFromChat() {
-			final List<ClickEvent> list = Lists.newLinkedList();
+		public @Nonnull List<CompatClickEvent> getLinksFromChat() {
+			final List<CompatClickEvent> list = Lists.newLinkedList();
 			getLinksFromChat0(list, this.component);
 			return list;
 		}
 
-		private void getLinksFromChat0(final @Nonnull List<ClickEvent> list, final @Nonnull IChatComponent pchat) {
+		private void getLinksFromChat0(final @Nonnull List<CompatClickEvent> list, final @Nonnull IChatComponent pchat) {
 			final List<?> chats = pchat.getSiblings();
 			for (final Object o : chats) {
 				final IChatComponent chat = (IChatComponent) o;
 				final ClickEvent ev = chat.getChatStyle().getChatClickEvent();
 				if (ev!=null&&ev.getAction()==ClickEvent.Action.OPEN_URL)
-					list.add(ev);
+					list.add(new CompatClickEvent(ev));
 				getLinksFromChat0(list, chat);
 			}
 		}
@@ -473,6 +473,18 @@ public class Compat {
 		public void sendBroadcast() {
 			final ServerConfigurationManager sender = CompatMinecraft.getMinecraftServer().getConfigurationManager();
 			sender.sendChatMsg(this.component);
+		}
+	}
+
+	public static class CompatClickEvent {
+		private final ClickEvent event;
+
+		public CompatClickEvent(final ClickEvent event) {
+			this.event = event;
+		}
+
+		public String getValue() {
+			return this.event.getValue();
 		}
 	}
 

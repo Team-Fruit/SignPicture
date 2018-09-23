@@ -16,23 +16,24 @@ import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.Attributes;
-import net.minecraftforge.client.model.IFlexibleBakedModel;
 import net.minecraftforge.client.model.IPerspectiveAwareModel;
-import net.minecraftforge.client.model.ISmartItemModel;
 
 @SuppressWarnings("deprecation")
-public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspectiveAwareModel {
+public abstract class CompatItemSignRenderer implements IPerspectiveAwareModel {
 	public abstract boolean isSignPicture(@Nullable final ItemStack item);
 
 	public abstract boolean isSeeMode();
@@ -44,8 +45,10 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 
 	public static enum ItemSignTransformType {
 		NONE,
-		THIRD_PERSON,
-		FIRST_PERSON,
+		THIRD_PERSON_LEFT_HAND,
+		THIRD_PERSON_RIGHT_HAND,
+		FIRST_PERSON_LEFT_HAND,
+		FIRST_PERSON_RIGHT_HAND,
 		HEAD,
 		GUI,
 		GROUND,
@@ -56,10 +59,14 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 			if (type==null)
 				return NONE;
 			switch (type) {
-				case THIRD_PERSON:
-					return THIRD_PERSON;
-				case FIRST_PERSON:
-					return FIRST_PERSON;
+				case THIRD_PERSON_LEFT_HAND:
+					return THIRD_PERSON_LEFT_HAND;
+				case THIRD_PERSON_RIGHT_HAND:
+					return THIRD_PERSON_RIGHT_HAND;
+				case FIRST_PERSON_LEFT_HAND:
+					return FIRST_PERSON_LEFT_HAND;
+				case FIRST_PERSON_RIGHT_HAND:
+					return FIRST_PERSON_RIGHT_HAND;
 				case HEAD:
 					return HEAD;
 				case GUI:
@@ -89,30 +96,22 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 	public final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
 	private @Nullable IBakedModel baseModel = null;
 	private @Nullable ItemStack itemStack;
+	private boolean isOverride;
 
-	public void setBaseModel(final @Nonnull IBakedModel model) {
+	public void setBaseModel(final @Nullable IBakedModel model) {
 		this.baseModel = model;
 	}
 
 	@Override
-	public @Nullable IBakedModel handleItemState(final @Nullable ItemStack stack) {
-		this.itemStack = stack;
-		if (isSignPicture(stack))
-			return this;
-		else
-			return this.baseModel;
-	}
-
-	@Override
-	public @Nullable Pair<? extends IFlexibleBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
+	public @Nullable Pair<? extends IBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
+		Pair<? extends IBakedModel, Matrix4f> pair = null;
 		final ItemStack itemStack = this.itemStack;
-		if (itemStack!=null&&cameraTransformType!=null) {
+		if (this.baseModel instanceof IPerspectiveAwareModel)
+			pair = ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
+		if (this.itemStack!=null&&cameraTransformType!=null&&this.isOverride) {
 			OpenGL.glPushMatrix();
-			if (this.baseModel instanceof IPerspectiveAwareModel) {
-				final Pair<? extends IFlexibleBakedModel, Matrix4f> pair = ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
-				if (pair.getRight()!=null)
-					ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
-			}
+			if (pair!=null&&pair.getRight()!=null)
+				ForgeHooksClient.multiplyCurrentGlMatrix(pair.getRight());
 			OpenGL.glDisable(GL11.GL_CULL_FACE);
 			renderItem(cameraTransformType, itemStack);
 			// TODO
@@ -122,6 +121,8 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 			OpenGL.glEnable(GL11.GL_CULL_FACE);
 			OpenGL.glPopMatrix();
 		}
+		if (pair!=null&&this.baseModel!=null&&!this.isOverride)
+			return ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
 		return Pair.of(this, null);
 	}
 
@@ -144,12 +145,12 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 
 	@Override
 	public boolean isGui3d() {
-		return false;
+		return this.baseModel!=null&&this.baseModel.isGui3d();
 	}
 
 	@Override
 	public boolean isBuiltInRenderer() {
-		return false;
+		return this.baseModel!=null&&this.baseModel.isBuiltInRenderer();
 	}
 
 	@Override
@@ -158,13 +159,11 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 	}
 
 	@Override
-	public @Nullable List<BakedQuad> getFaceQuads(final @Nullable EnumFacing facing) {
-		return this.baseModel!=null ? this.baseModel.getFaceQuads(facing) : null;
-	}
-
-	@Override
-	public @Nullable List<BakedQuad> getGeneralQuads() {
-		return ImmutableList.of();
+	public @Nullable List<BakedQuad> getQuads(final @Nullable IBlockState state, final @Nullable EnumFacing side, final long rand) {
+		if (!this.isOverride&&this.baseModel!=null)
+			return this.baseModel.getQuads(state, side, rand);
+		else
+			return ImmutableList.<BakedQuad> of();
 	}
 
 	@Override
@@ -177,9 +176,21 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		return this.baseModel!=null&&this.baseModel.isAmbientOcclusion();
 	}
 
+	private @Nonnull ItemOverrideList overrides = new ItemOverrideList(ImmutableList.<ItemOverride> of()) {
+		@Override
+		public @Nullable IBakedModel handleItemState(final @Nullable IBakedModel originalModel, final @Nullable ItemStack stack, final @Nullable World world, final @Nullable EntityLivingBase entity) {
+			CompatItemSignRenderer.this.itemStack = stack;
+			CompatItemSignRenderer.this.isOverride = isSignPicture(stack);
+			final IBakedModel baseModel = CompatItemSignRenderer.this.baseModel;
+			if (baseModel!=null)
+				return baseModel.getOverrides().handleItemState(originalModel, stack, world, entity);
+			return null;
+		}
+	};
+
 	@Override
-	public @Nullable VertexFormat getFormat() {
-		return Attributes.DEFAULT_BAKED_FORMAT;
+	public @Nonnull ItemOverrideList getOverrides() {
+		return this.overrides;
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {

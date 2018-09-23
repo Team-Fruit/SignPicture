@@ -11,6 +11,7 @@ import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.RotationData.RotationGL;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
+import com.kamesuta.mc.signpic.compat.Compat.CompatItems;
 import com.kamesuta.mc.signpic.compat.CompatItemSignRenderer;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
@@ -18,7 +19,6 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.gui.GuiImage;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class CustomItemSignRenderer extends CompatItemSignRenderer {
@@ -34,7 +34,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 
 	@Override
 	public boolean isSignPicture(@Nullable final ItemStack item) {
-		if (item==null||item.getItem()!=Items.sign)
+		if (item==null||item.getItem()!=CompatItems.SIGN)
 			return false;
 		return ItemEntryId.fromItemStack(item).entry().isValid();
 	}
@@ -87,19 +87,28 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 			OpenGL.glScalef(1f, -1f, 1f);
 			gui.renderSignPicture(1f, 1f, new RenderOption());
 		} else {
-			OpenGL.glScalef(1f, -1f, 1f);
+			if (version==ItemSignCompatVersion.V8)
+				OpenGL.glScalef(1f, -1f, 1f);
+			else
+				OpenGL.glScalef(2f, 2f, 1f);
 			if (type==ItemSignTransformType.GROUND)
 				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
 			else if (type==ItemSignTransformType.FIXED) {
 				final float f = 0.0078125F; // vanilla map offset
 				OpenGL.glTranslatef(-size.getWidth()/2f, .5f, f);
-			} else if (type==ItemSignTransformType.FIRST_PERSON)
-				OpenGL.glTranslatef(-.25f, .25f, 0f);
-			else if (type==ItemSignTransformType.THIRD_PERSON) {
+			} else if (type==ItemSignTransformType.FIRST_PERSON_LEFT_HAND) {
+				OpenGL.glScalef(-1f, 1f, 1f);
 				OpenGL.glTranslatef(.25f, .25f, 0f);
 				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
-			} else if (type==ItemSignTransformType.HEAD)
-				;// Minecraft 1.8.x doesn't support Item Head.
+			} else if (type==ItemSignTransformType.FIRST_PERSON_RIGHT_HAND)
+				OpenGL.glTranslatef(-.25f, .25f, 0f);
+			else if (type==ItemSignTransformType.THIRD_PERSON_LEFT_HAND) {
+				OpenGL.glTranslatef(.25f, .25f, 0f);
+				OpenGL.glTranslatef(-size.getWidth(), 0f, 0f);
+			} else if (type==ItemSignTransformType.THIRD_PERSON_RIGHT_HAND)
+				OpenGL.glTranslatef(-.25f, .25f, 0f);
+			else if (type==ItemSignTransformType.HEAD)
+				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
 			OpenGL.glTranslatef(0f, -size.getHeight(), 0f);
 			final OffsetData offset = attr.offsets.getMovie().get();
 			OpenGL.glTranslatef(offset.x.offset, offset.y.offset, offset.z.offset);

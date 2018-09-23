@@ -8,10 +8,10 @@ import com.kamesuta.mc.signpic.CoreEvent;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IRegistry;
+import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -203,7 +203,7 @@ public class CompatEvents {
 		}
 
 		public GuiScreen getGui() {
-			return this.event.gui;
+			return this.event.getGui();
 		}
 	}
 
@@ -213,11 +213,11 @@ public class CompatEvents {
 		}
 
 		public boolean getButtonState() {
-			return this.event.buttonstate;
+			return this.event.isButtonstate();
 		}
 
 		public int getButton() {
-			return this.event.button;
+			return this.event.getButton();
 		}
 	}
 
@@ -227,11 +227,11 @@ public class CompatEvents {
 		}
 
 		public ItemStack getItemStack() {
-			return this.event.itemStack;
+			return this.event.getItemStack();
 		}
 
 		public List<String> getTooltip() {
-			return this.event.toolTip;
+			return this.event.getToolTip();
 		}
 	}
 
@@ -241,7 +241,7 @@ public class CompatEvents {
 		}
 
 		public float getPartialTicks() {
-			return this.event.partialTicks;
+			return this.event.getPartialTicks();
 		}
 	}
 
@@ -262,20 +262,20 @@ public class CompatEvents {
 			}
 
 			public List<String> getLeft() {
-				return this.event.left;
+				return this.event.getLeft();
 			}
 		}
 
 		public ScaledResolution getResolution() {
-			return this.event.resolution;
+			return this.event.getResolution();
 		}
 
 		public CompatElementType getType() {
-			return CompatElementType.getType(this.event.type);
+			return CompatElementType.getType(this.event.getType());
 		}
 
 		public float getPartialTicks() {
-			return this.event.partialTicks;
+			return this.event.getPartialTicks();
 		}
 
 		public static enum CompatElementType {
@@ -310,19 +310,19 @@ public class CompatEvents {
 			}
 
 			public GuiScreen getGui() {
-				return this.event.gui;
+				return this.event.getGui();
 			}
 
 			public int getMouseX() {
-				return this.event.mouseX;
+				return this.event.getMouseX();
 			}
 
 			public int getMouseY() {
-				return this.event.mouseY;
+				return this.event.getMouseY();
 			}
 
 			public float getRenderPartialTicks() {
-				return this.event.renderPartialTicks;
+				return this.event.getRenderPartialTicks();
 			}
 
 			public static class CompatPost extends CompatDrawScreenEvent {
@@ -339,7 +339,7 @@ public class CompatEvents {
 		}
 
 		public String getModId() {
-			return this.event.modID;
+			return this.event.getModID();
 		}
 
 		public static class CompatOnConfigChangedEvent extends CompatConfigChangedEvent {
@@ -367,7 +367,7 @@ public class CompatEvents {
 		}
 
 		public IRegistry<ModelResourceLocation, IBakedModel> getModelRegistry() {
-			return this.event.modelRegistry;
+			return this.event.getModelRegistry();
 		}
 	}
 }

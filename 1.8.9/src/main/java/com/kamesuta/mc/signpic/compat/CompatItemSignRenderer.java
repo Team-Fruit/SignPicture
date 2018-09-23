@@ -44,8 +44,10 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 
 	public static enum ItemSignTransformType {
 		NONE,
-		THIRD_PERSON,
-		FIRST_PERSON,
+		THIRD_PERSON_LEFT_HAND,
+		THIRD_PERSON_RIGHT_HAND,
+		FIRST_PERSON_LEFT_HAND,
+		FIRST_PERSON_RIGHT_HAND,
 		HEAD,
 		GUI,
 		GROUND,
@@ -57,9 +59,9 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 				return NONE;
 			switch (type) {
 				case THIRD_PERSON:
-					return THIRD_PERSON;
+					return THIRD_PERSON_RIGHT_HAND;
 				case FIRST_PERSON:
-					return FIRST_PERSON;
+					return FIRST_PERSON_RIGHT_HAND;
 				case HEAD:
 					return HEAD;
 				case GUI:
