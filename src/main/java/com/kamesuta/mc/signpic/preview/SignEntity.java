@@ -8,6 +8,7 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatBlock;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlocks;
 import com.kamesuta.mc.signpic.compat.Compat.CompatEnumFacing;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMathHelper;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMovingObjectPosition;
 import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
@@ -15,7 +16,6 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 public class SignEntity {
@@ -39,7 +39,7 @@ public class SignEntity {
 
 				if (side==CompatEnumFacing.UP) {
 					this.tileSign.setBlockType(CompatBlocks.STANDING_SIGN);
-					final int i = MathHelper.floor_double((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
+					final int i = CompatMathHelper.floor_double((playerIn.rotationYaw+180.0F)*16.0F/360.0F+0.5D)&15;
 					this.tileSign.setBlockMetadata(i);
 				} else {
 					this.tileSign.setBlockType(CompatBlocks.WALL_SIGN);

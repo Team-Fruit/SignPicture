@@ -12,6 +12,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.signpic.CoreInvoke;
 
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
@@ -794,6 +795,30 @@ public class Compat {
 	public static class CompatMathHelper {
 		public static int floor_float(final float value) {
 			return MathHelper.floor_float(value);
+		}
+
+		public static int floor_double(final double value) {
+			return MathHelper.floor_double(value);
+		}
+	}
+
+	public static class CompatChatRender {
+		public static abstract class CompatPicChatLine extends ChatLine {
+			public static final @Nonnull CompatTextComponent dummytext = CompatTextComponent.fromText("");
+
+			public CompatPicChatLine(final int updateCounterCreated, final int lineId) {
+				super(updateCounterCreated, dummytext.component, lineId);
+			}
+
+			@CoreInvoke
+			public @Nullable ITextComponent onClicked(final @Nonnull GuiNewChat chat, final int x) {
+				final CompatTextComponent component = onClickedCompat(chat, x);
+				if (component!=null)
+					return component.component;
+				return null;
+			}
+
+			public abstract @Nullable CompatTextComponent onClickedCompat(final @Nonnull GuiNewChat chat, final int x);
 		}
 	}
 }

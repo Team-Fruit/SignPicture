@@ -85,23 +85,17 @@ public class GuiNewChatVisitor extends ClassVisitor {
 						 * 333  iload 11 [i2]
 						 * 335  invokestatic com.kamesuta.mc.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
 						 */
+						super.visitVarInsn(Opcodes.ISTORE, 32);
+						super.visitVarInsn(Opcodes.ISTORE, 33);
+						super.visitInsn(Opcodes.I2F);
+						super.visitVarInsn(Opcodes.ILOAD, 33);
+						super.visitInsn(Opcodes.I2F);
+						super.visitVarInsn(Opcodes.ILOAD, 32);
+					default:
 						super.visitVarInsn(Opcodes.ALOAD, 0);
 						super.visitVarInsn(Opcodes.ALOAD, 12);
 						super.visitVarInsn(Opcodes.ILOAD, 16);
 						super.visitVarInsn(Opcodes.ILOAD, 11);
-						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
-								DescHelper.toDesc(int.class,
-										"net.minecraft.client.gui.FontRenderer",
-										"java.lang.String", int.class, int.class, int.class,
-										"net.minecraft.client.gui.GuiNewChat",
-										"net.minecraft.client.gui.ChatLine", int.class, int.class),
-								false);
-						break;
-					default:
-						super.visitVarInsn(Opcodes.ALOAD, 0);
-						super.visitVarInsn(Opcodes.ALOAD, 10);
-						super.visitVarInsn(Opcodes.ILOAD, 16);
-						super.visitVarInsn(Opcodes.ILOAD, 14);
 						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
 								DescHelper.toDesc(int.class,
 										"net.minecraft.client.gui.FontRenderer",

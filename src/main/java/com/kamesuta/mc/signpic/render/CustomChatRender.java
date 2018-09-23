@@ -20,6 +20,7 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.compat.Compat.CompatChatLine;
+import com.kamesuta.mc.signpic.compat.Compat.CompatChatRender.CompatPicChatLine;
 import com.kamesuta.mc.signpic.compat.Compat.CompatClickEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatGuiNewChat;
 import com.kamesuta.mc.signpic.compat.Compat.CompatHoverEvent;
@@ -35,21 +36,18 @@ import com.kamesuta.mc.signpic.state.StateType;
 import net.minecraft.client.gui.ChatLine;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 
 @CoreInvoke
 public class CustomChatRender {
 	@CoreInvoke
-	public static class PicChatLine extends ChatLine {
-		public static final @Nonnull IChatComponent dummytext = new ChatComponentText("");
+	public static class PicChatLine extends CompatPicChatLine {
 		private final @Nonnull PicChatNode node;
 		public final int num;
 		private final float space = 1f;
 		private static final float offset = 4f;
 
 		public PicChatLine(final @Nonnull PicChatNode node, final int num) {
-			super(node.updateCounterCreated, dummytext, node.chatLineID);
+			super(node.updateCounterCreated, node.chatLineID);
 			this.node = node;
 			this.num = num;
 		}
@@ -108,8 +106,8 @@ public class CustomChatRender {
 			OpenGL.glPopMatrix();
 		}
 
-		@CoreInvoke
-		public @Nullable IChatComponent onClicked(final @Nonnull GuiNewChat chat, final int x) {
+		@Override
+		public @Nullable CompatTextComponent onClickedCompat(final @Nonnull GuiNewChat chat, final int x) {
 			this.node.xpos = x;
 			final int width = getChatWidth(chat);
 
@@ -146,22 +144,22 @@ public class CustomChatRender {
 
 	@CoreInvoke
 	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final float x, final float y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
-		return hookDrawStringWithShadow(font, str, (int) x, (int) y, color, chat, chatline, j2, opacity);
+		return hookDrawStringWithShadow(font, str, x, y, color, chat, chatline, j2, opacity/255f);
 	}
 
 	@CoreInvoke
-	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final int x, final int y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final int opacity) {
+	public static int hookDrawStringWithShadow(final @Nonnull FontRenderer font, final @Nonnull String str, final float x, final float y, final int color, final @Nonnull GuiNewChat chat, final @Nonnull ChatLine chatline, final int j2, final float opacity) {
 		if (chatline instanceof PicChatLine) {
 			final PicChatLine cline = (PicChatLine) chatline;
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0f, j2, 0f);
-			OpenGL.glColor4i(255, 255, 255, opacity);
+			OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			cline.draw(chat, font.FONT_HEIGHT);
 			OpenGL.glPopMatrix();
 			WRenderer.startTexture();
 		} else
 			// this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
-			font.drawStringWithShadow(str, x, y, color);
+			font.drawStringWithShadow(str, (int) x, (int) y, color);
 		return 0;
 	}
 
