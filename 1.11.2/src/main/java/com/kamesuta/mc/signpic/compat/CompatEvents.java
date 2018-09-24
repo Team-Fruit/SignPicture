@@ -15,6 +15,7 @@ import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -129,6 +130,9 @@ public class CompatEvents {
 
 		@CoreEvent
 		public abstract void onResourceReloaded(final @Nonnull CompatTextureStitchEvent.CompatPost event);
+
+		@CoreEvent
+		public abstract void onModelRegistry(final CompatModelRegistryEvent event);
 
 		@SubscribeEvent
 		public void onModelBakeEvent(final @Nonnull ModelBakeEvent event) {
@@ -368,6 +372,12 @@ public class CompatEvents {
 
 		public IRegistry<ModelResourceLocation, IBakedModel> getModelRegistry() {
 			return this.event.getModelRegistry();
+		}
+	}
+
+	public static class CompatModelRegistryEvent extends CompatEvent<ModelRegistryEvent> {
+		public CompatModelRegistryEvent(final ModelRegistryEvent event) {
+			super(event);
 		}
 	}
 }

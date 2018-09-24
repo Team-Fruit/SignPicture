@@ -130,6 +130,9 @@ public class CompatEvents {
 		@CoreEvent
 		public abstract void onResourceReloaded(final @Nonnull CompatTextureStitchEvent.CompatPost event);
 
+		@CoreEvent
+		public abstract void onModelRegistry(final CompatModelRegistryEvent event);
+
 		@SubscribeEvent
 		public void onModelBakeEvent(final @Nonnull ModelBakeEvent event) {
 			onModelBakeEvent(new CompatModelBakeEvent(event));
@@ -368,6 +371,12 @@ public class CompatEvents {
 
 		public IRegistry<ModelResourceLocation, IBakedModel> getModelRegistry() {
 			return this.event.modelRegistry;
+		}
+	}
+
+	public static class CompatModelRegistryEvent extends CompatEvent<Event> {
+		public CompatModelRegistryEvent(final Event event) {
+			super(event);
 		}
 	}
 }

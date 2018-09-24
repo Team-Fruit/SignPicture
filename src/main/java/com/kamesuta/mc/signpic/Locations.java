@@ -45,7 +45,7 @@ public class Locations {
 		if (!StringUtils.isEmpty(Config.getConfig().signpicDir.get())) {
 			if (dir.exists()&&dir.isDirectory()&&!dir.equals(defaultdir))
 				return dir;
-			Log.dev.error("invalid signpic dir location! use default dir.");
+			Log.log.debug("invalid signpic dir location! use default dir.");
 		}
 		return new File(defaultdir, "signpic");
 	}

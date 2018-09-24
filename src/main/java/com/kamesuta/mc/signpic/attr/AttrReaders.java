@@ -117,7 +117,7 @@ public class AttrReaders {
 
 		this.hasInvalidMeta = !bb;
 
-		Log.dev.info("signmeta={"+src+"}, unsupported="+!bb);
+		Log.log.debug("signmeta={"+src+"}, unsupported="+!bb);
 	}
 
 	public boolean hasInvalidMeta() {

@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
@@ -92,6 +93,9 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		renderSignPicture(ItemSignTransformType.fromType(type), CompatVersion.version(), item);
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
+	}
+
+	public void registerModelRegistry(final CompatModelRegistryEvent event) {
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {

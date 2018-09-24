@@ -12,6 +12,7 @@ import com.kamesuta.mc.signpic.compat.CompatEvents.CompatHandler;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatInputEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatItemTooltipEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatMouseEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderWorldLastEvent;
@@ -134,6 +135,12 @@ public class CoreHandler extends CompatHandler {
 			EntrySlot.Tick();
 			Client.endSection();
 		}
+	}
+
+	@CoreEvent
+	@Override
+	public void onModelRegistry(final CompatModelRegistryEvent event) {
+		Client.itemRenderer.registerModelRegistry(event);
 	}
 
 	@Override

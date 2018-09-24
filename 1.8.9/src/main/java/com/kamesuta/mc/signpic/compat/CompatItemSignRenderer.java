@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -172,6 +173,9 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 	@Override
 	public @Nullable VertexFormat getFormat() {
 		return Attributes.DEFAULT_BAKED_FORMAT;
+	}
+
+	public void registerModelRegistry(final CompatModelRegistryEvent event) {
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {

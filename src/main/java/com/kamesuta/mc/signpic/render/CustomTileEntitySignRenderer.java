@@ -75,7 +75,7 @@ public class CustomTileEntitySignRenderer extends CompatTileEntitySignRenderer {
 		}
 	}
 
-	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final float opacity, final int destroy) {
+	public void renderSignPictureBase(final @Nonnull TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float opacity) {
 		final Entry entry = SignEntryId.fromTile(tile).entry();
 		if (entry.isOutdated()&&CurrentMode.instance.isState(CurrentMode.State.SEE))
 			OpenGL.glDisable(GL11.GL_DEPTH_TEST);
@@ -83,7 +83,7 @@ public class CustomTileEntitySignRenderer extends CompatTileEntitySignRenderer {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.getConfig().renderSeeOpacity.get().floatValue());
-				renderBaseTileEntityAt(tile, x, y, z, partialTicks, destroy);
+				renderBaseTileEntityAt(tile, x, y, z, partialTicks, destroy, opacity);
 			}
 
 			OpenGL.glPushMatrix();
@@ -105,17 +105,17 @@ public class CustomTileEntitySignRenderer extends CompatTileEntitySignRenderer {
 				WRenderer.startTexture();
 				OpenGL.glColor4f(1f, 1f, 1f, opacity);
 			}
-			renderBaseTileEntityAt(tile, x, y, z, partialTicks, destroy);
+			renderBaseTileEntityAt(tile, x, y, z, partialTicks, destroy, opacity);
 		}
 		OpenGL.glEnable(GL11.GL_DEPTH_TEST);
 		WRenderer.startTexture();
 	}
 
 	@Override
-	public void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
+	public void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float opacity) {
 		if (tile!=null) {
 			Client.startSection("signpic-render");
-			renderSignPictureBase(tile, x, y, z, partialTicks, 1f, destroy);
+			renderSignPictureBase(tile, x, y, z, partialTicks, destroy, 1f);
 			Client.endSection();
 		}
 	}

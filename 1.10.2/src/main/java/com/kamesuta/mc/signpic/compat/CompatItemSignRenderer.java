@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -180,6 +181,9 @@ public abstract class CompatItemSignRenderer implements IPerspectiveAwareModel {
 	@Override
 	public @Nonnull ItemOverrideList getOverrides() {
 		return this.overrides;
+	}
+
+	public void registerModelRegistry(final CompatModelRegistryEvent event) {
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {

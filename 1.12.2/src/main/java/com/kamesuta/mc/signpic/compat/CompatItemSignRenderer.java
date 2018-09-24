@@ -15,6 +15,7 @@ import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
+import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -30,9 +31,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 
-public abstract class CompatItemSignRenderer implements IPerspectiveAwareModel {
+public abstract class CompatItemSignRenderer implements IBakedModel {
 	public abstract boolean isSignPicture(@Nullable final ItemStack item);
 
 	public abstract boolean isSeeMode();
@@ -94,9 +95,9 @@ public abstract class CompatItemSignRenderer implements IPerspectiveAwareModel {
 	@Override
 	public @Nullable Pair<? extends IBakedModel, Matrix4f> handlePerspective(final @Nullable TransformType cameraTransformType) {
 		Pair<? extends IBakedModel, Matrix4f> pair = null;
+		if (this.baseModel!=null)
+			pair = this.baseModel.handlePerspective(cameraTransformType);
 		final ItemStack itemStack = this.itemStack;
-		if (this.baseModel instanceof IPerspectiveAwareModel)
-			pair = ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
 		if (this.itemStack!=null&&cameraTransformType!=null&&this.isOverride) {
 			OpenGL.glPushMatrix();
 			if (pair!=null&&pair.getRight()!=null)
@@ -111,7 +112,7 @@ public abstract class CompatItemSignRenderer implements IPerspectiveAwareModel {
 			OpenGL.glPopMatrix();
 		}
 		if (pair!=null&&this.baseModel!=null&&!this.isOverride)
-			return ((IPerspectiveAwareModel) this.baseModel).handlePerspective(cameraTransformType);
+			return this.baseModel.handlePerspective(cameraTransformType);
 		return Pair.of(this, null);
 	}
 
@@ -180,6 +181,10 @@ public abstract class CompatItemSignRenderer implements IPerspectiveAwareModel {
 	@Override
 	public @Nonnull ItemOverrideList getOverrides() {
 		return this.overrides;
+	}
+
+	public void registerModelRegistry(final CompatModelRegistryEvent event) {
+		ModelLoaderRegistry.registerLoader(CustomItemSignModel.INSTANCE);
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {

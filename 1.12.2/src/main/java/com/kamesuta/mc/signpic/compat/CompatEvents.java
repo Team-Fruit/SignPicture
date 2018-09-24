@@ -15,6 +15,7 @@ import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -22,12 +23,15 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CompatEvents {
+	@Mod.EventBusSubscriber(Side.CLIENT)
 	public static abstract class CompatHandler {
 		public void registerHandler() {
 			// FMLCommonHandler.instance().bus().register(this);
@@ -129,6 +133,14 @@ public class CompatEvents {
 
 		@CoreEvent
 		public abstract void onResourceReloaded(final @Nonnull CompatTextureStitchEvent.CompatPost event);
+
+		@SubscribeEvent
+		public static void onModelRegistry(final ModelRegistryEvent event) {
+			onModelRegistry(event);
+		}
+
+		@CoreEvent
+		public abstract void onModelRegistry(final CompatModelRegistryEvent event);
 
 		@SubscribeEvent
 		public void onModelBakeEvent(final @Nonnull ModelBakeEvent event) {
@@ -368,6 +380,12 @@ public class CompatEvents {
 
 		public IRegistry<ModelResourceLocation, IBakedModel> getModelRegistry() {
 			return this.event.getModelRegistry();
+		}
+	}
+
+	public static class CompatModelRegistryEvent extends CompatEvent<ModelRegistryEvent> {
+		public CompatModelRegistryEvent(final ModelRegistryEvent event) {
+			super(event);
 		}
 	}
 }
