@@ -60,7 +60,8 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 				OpenGL.glScalef(1f, -1f, 1f);
 				final float slot = 1f;
 				final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
-				OpenGL.glScalef(.5f, .5f, 1f);
+				if (version==CompatVersion.V8)
+					OpenGL.glScalef(.5f, .5f, 1f);
 				OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
 				OpenGL.glTranslatef(-.5f, -.5f, 0f);
 				OpenGL.glScalef(slot, slot, 1f);
@@ -91,7 +92,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 			if (version==CompatVersion.V8)
 				OpenGL.glScalef(1f, -1f, 1f);
 			else
-				OpenGL.glScalef(2f, 2f, 1f);
+				OpenGL.glScalef(2f, -2f, 1f);
 			if (type==ItemSignTransformType.GROUND)
 				OpenGL.glTranslatef(-size.getWidth()/2f, .25f, 0f);
 			else if (type==ItemSignTransformType.FIXED) {

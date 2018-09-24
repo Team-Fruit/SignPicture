@@ -63,8 +63,8 @@ public class SignPictureTransformer implements IClassTransformer {
 		initIntelliInput(name, transformedName);
 
 		try {
-			if (CompatVersion.newer(CompatVersion.V9))
-				if (transformedName.equals("net.minecraft.tileentity.TileEntity"))
+			if (transformedName.equals("net.minecraft.tileentity.TileEntity"))
+				if (CompatVersion.newer(CompatVersion.V9))
 					return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
 						@Override
 						public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
