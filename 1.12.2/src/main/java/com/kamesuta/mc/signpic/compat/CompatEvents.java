@@ -135,8 +135,8 @@ public class CompatEvents {
 		public abstract void onResourceReloaded(final @Nonnull CompatTextureStitchEvent.CompatPost event);
 
 		@SubscribeEvent
-		public static void onModelRegistry(final ModelRegistryEvent event) {
-			onModelRegistry(event);
+		public void onModelRegistry(final ModelRegistryEvent event) {
+			onModelRegistry(new CompatModelRegistryEvent(event));
 		}
 
 		@CoreEvent
