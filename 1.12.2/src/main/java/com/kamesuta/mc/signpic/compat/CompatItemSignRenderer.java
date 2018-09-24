@@ -83,7 +83,7 @@ public abstract class CompatItemSignRenderer implements IBakedModel {
 
 	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull CompatVersion version, final @Nullable ItemStack item);
 
-	public final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
+	public final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign", "inventory");
 	private @Nullable IBakedModel baseModel = null;
 	private @Nullable ItemStack itemStack;
 	private boolean isOverride;

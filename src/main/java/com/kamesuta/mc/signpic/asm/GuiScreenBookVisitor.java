@@ -10,7 +10,6 @@ import org.objectweb.asm.Opcodes;
 import com.kamesuta.mc.signpic.asm.lib.DescHelper;
 import com.kamesuta.mc.signpic.asm.lib.MethodMatcher;
 import com.kamesuta.mc.signpic.asm.lib.VisitorHelper;
-import com.kamesuta.mc.signpic.compat.CompatVersion;
 
 public class GuiScreenBookVisitor extends ClassVisitor {
 	private static class HookMethodVisitor extends MethodVisitor {
@@ -24,14 +23,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 		@Override
 		public void visitMethodInsn(final int opcode, final @Nullable String owner, final @Nullable String name, final @Nullable String desc, final boolean itf) {
 			if (name!=null&&desc!=null&&this.matcher.match(name, desc))
-				switch (CompatVersion.version()) {
-					case V7:
-						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomBookRenderer", "hookDrawSplitString", desc, itf);
-						break;
-					default:
-						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomBookRenderer", "hookDrawSplitString", DescHelper.toDesc(void.class, owner, "java.lang.String", int.class, int.class, int.class, int.class), itf);
-						break;
-				}
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomBookRenderer", "hookDrawSplitString", DescHelper.toDesc(void.class, owner, "java.lang.String", int.class, int.class, int.class, int.class), itf);
 			else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 		}
