@@ -11,8 +11,6 @@ public class ASMDeobfNames {
 	public static final @Nonnull RefName TileEntityGetRenderBoundingBox = RefName.deobName("getRenderBoundingBox", "func_184177_bl");
 	public static final @Nonnull RefName GuiNewChatDrawnChatLines = ((Supplier<RefName>) () -> {
 		switch (CompatVersion.version()) {
-			case V7:
-				return RefName.deobName("field_146253_i", "field_146253_i");
 			case V8:
 				return RefName.deobName("drawnChatLines", "field_146253_i");
 			default:
