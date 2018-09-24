@@ -35,7 +35,7 @@ public class RootCommand extends CompatRootCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nonnull String getCommandName() {
+	public @Nonnull String getCommandNameCompat() {
 		return ROOT_COMMAND_NAME;
 	}
 
@@ -45,15 +45,15 @@ public class RootCommand extends CompatRootCommand implements IModCommand {
 	}
 
 	@Override
-	public @Nullable List<String> getCommandAliases() {
+	public @Nullable List<String> getCommandAliasesCompat() {
 		final ArrayList<String> aliases = Lists.newArrayList();
 		aliases.add("signpicture");
 		return aliases;
 	}
 
 	@Override
-	public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
-		return "/"+getCommandName()+" help";
+	public @Nonnull String getCommandUsageCompat(final @Nullable ICommandSender sender) {
+		return "/"+getCommandNameCompat()+" help";
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class RootCommand extends CompatRootCommand implements IModCommand {
 
 	@Override
 	public @Nonnull String getFullCommandString() {
-		return getCommandName();
+		return getCommandNameCompat();
 	}
 
 	@Override

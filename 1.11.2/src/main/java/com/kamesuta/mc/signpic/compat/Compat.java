@@ -113,11 +113,11 @@ public class Compat {
 		}
 
 		public static @Nonnull CompatWorld getWorld() {
-			return new CompatWorld(getMinecraft().theWorld);
+			return new CompatWorld(getMinecraft().world);
 		}
 
 		public static @Nonnull CompatEntityPlayer getPlayer() {
-			return new CompatEntityPlayer(getMinecraft().thePlayer);
+			return new CompatEntityPlayer(getMinecraft().player);
 		}
 
 		public static @Nonnull CompatGameSettings getSettings() {
@@ -468,12 +468,12 @@ public class Compat {
 		}
 
 		public void sendPlayer(final @Nonnull ICommandSender target) {
-			target.addChatMessage(this.component);
+			target.sendMessage(this.component);
 		}
 
 		public void sendBroadcast() {
 			final PlayerList sender = CompatMinecraft.getMinecraftServer().getPlayerList();
-			sender.sendChatMsg(this.component);
+			sender.sendMessage(this.component);
 		}
 	}
 
@@ -749,48 +749,48 @@ public class Compat {
 
 	public static class CompatCommand {
 		public static @Nonnull String getCommandName(final ICommand command) {
-			return command.getCommandName();
+			return command.getName();
 		}
 
 		public static @Nullable List<String> getCommandAliases(final ICommand command) {
-			return command.getCommandAliases();
+			return command.getAliases();
 		}
 
 		public static @Nonnull String getCommandUsage(final ICommand command, final @Nullable ICommandSender sender) {
-			return command.getCommandUsage(sender);
+			return command.getUsage(sender);
 		}
 	}
 
 	public static class CompatCommandSender {
 		public static boolean canCommandSenderUseCommand(final ICommandSender sender, final int level, final String name) {
-			return sender.canCommandSenderUseCommand(level, name);
+			return sender.canUseCommand(level, name);
 		}
 	}
 
 	public static abstract class CompatRootCommand extends CommandBase implements ICommand {
 		@Override
-		public @Nullable List<String> getTabCompletionOptions(final MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
+		public @Nullable List<String> getTabCompletions(final MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
 			return addTabCompletionOptionCompat(sender, args);
 		}
 
 		public @Nullable abstract List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args);
 
 		@Override
-		public @Nonnull String getCommandName() {
+		public @Nonnull String getName() {
 			return getCommandNameCompat();
 		}
 
 		public abstract @Nonnull String getCommandNameCompat();
 
 		@Override
-		public @Nullable List<String> getCommandAliases() {
+		public @Nullable List<String> getAliases() {
 			return getCommandAliasesCompat();
 		}
 
 		public abstract @Nullable List<String> getCommandAliasesCompat();
 
 		@Override
-		public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
+		public @Nonnull String getUsage(final @Nullable ICommandSender sender) {
 			return getCommandUsageCompat(sender);
 		}
 
@@ -806,28 +806,28 @@ public class Compat {
 
 	public static abstract class CompatSubCommand implements ICommand {
 		@Override
-		public @Nullable List<String> getTabCompletionOptions(final MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
+		public @Nullable List<String> getTabCompletions(final MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
 			return addTabCompletionOptionCompat(sender, args);
 		}
 
 		public @Nullable abstract List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args);
 
 		@Override
-		public @Nonnull String getCommandName() {
+		public @Nonnull String getName() {
 			return getCommandNameCompat();
 		}
 
 		public abstract @Nonnull String getCommandNameCompat();
 
 		@Override
-		public @Nullable List<String> getCommandAliases() {
+		public @Nullable List<String> getAliases() {
 			return getCommandAliasesCompat();
 		}
 
 		public abstract @Nullable List<String> getCommandAliasesCompat();
 
 		@Override
-		public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
+		public @Nonnull String getUsage(final @Nullable ICommandSender sender) {
 			return getCommandUsageCompat(sender);
 		}
 

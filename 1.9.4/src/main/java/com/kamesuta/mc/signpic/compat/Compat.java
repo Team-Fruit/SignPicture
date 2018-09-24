@@ -746,6 +746,26 @@ public class Compat {
 		}
 	}
 
+	public static class CompatCommand {
+		public static @Nonnull String getCommandName(final ICommand command) {
+			return command.getCommandName();
+		}
+
+		public static @Nullable List<String> getCommandAliases(final ICommand command) {
+			return command.getCommandAliases();
+		}
+
+		public static @Nonnull String getCommandUsage(final ICommand command, final @Nullable ICommandSender sender) {
+			return command.getCommandUsage(sender);
+		}
+	}
+
+	public static class CompatCommandSender {
+		public static boolean canCommandSenderUseCommand(final ICommandSender sender, final int level, final String name) {
+			return sender.canCommandSenderUseCommand(level, name);
+		}
+	}
+
 	public static abstract class CompatRootCommand extends CommandBase implements ICommand {
 		@Override
 		public @Nullable List<String> getTabCompletionOptions(final MinecraftServer server, final @Nullable ICommandSender sender, final @Nullable String[] args, final @Nullable BlockPos pos) {
@@ -753,6 +773,27 @@ public class Compat {
 		}
 
 		public @Nullable abstract List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args);
+
+		@Override
+		public @Nonnull String getCommandName() {
+			return getCommandNameCompat();
+		}
+
+		public abstract @Nonnull String getCommandNameCompat();
+
+		@Override
+		public @Nullable List<String> getCommandAliases() {
+			return getCommandAliasesCompat();
+		}
+
+		public abstract @Nullable List<String> getCommandAliasesCompat();
+
+		@Override
+		public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
+			return getCommandUsageCompat(sender);
+		}
+
+		public abstract @Nonnull String getCommandUsageCompat(final @Nullable ICommandSender sender);
 
 		@Override
 		public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {
@@ -769,6 +810,27 @@ public class Compat {
 		}
 
 		public @Nullable abstract List<String> addTabCompletionOptionCompat(final @Nullable ICommandSender sender, final @Nullable String[] args);
+
+		@Override
+		public @Nonnull String getCommandName() {
+			return getCommandNameCompat();
+		}
+
+		public abstract @Nonnull String getCommandNameCompat();
+
+		@Override
+		public @Nullable List<String> getCommandAliases() {
+			return getCommandAliasesCompat();
+		}
+
+		public abstract @Nullable List<String> getCommandAliasesCompat();
+
+		@Override
+		public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
+			return getCommandUsageCompat(sender);
+		}
+
+		public abstract @Nonnull String getCommandUsageCompat(final @Nullable ICommandSender sender);
 
 		@Override
 		public void execute(final MinecraftServer server, final ICommandSender sender, final String[] args) throws CommandException {

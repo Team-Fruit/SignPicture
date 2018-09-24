@@ -9,6 +9,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.kamesuta.mc.signpic.compat.Compat.CompatCommand;
+import com.kamesuta.mc.signpic.compat.Compat.CompatCommandSender;
 import com.kamesuta.mc.signpic.compat.Compat.CompatSubCommand;
 
 import net.minecraft.command.CommandException;
@@ -46,7 +48,7 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	}
 
 	@Override
-	public @Nonnull String getCommandName() {
+	public @Nonnull String getCommandNameCompat() {
 		return this.name;
 	}
 
@@ -70,7 +72,7 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	}
 
 	@Override
-	public @Nonnull List<String> getCommandAliases() {
+	public @Nonnull List<String> getCommandAliasesCompat() {
 		return this.aliases;
 	}
 
@@ -106,7 +108,7 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	@Override
 	public boolean canCommandSenderUseCommandCompat(final @Nullable ICommandSender sender) {
 		if (sender!=null)
-			return sender.canCommandSenderUseCommand(getRequiredPermissionLevel(), getCommandName());
+			return CompatCommandSender.canCommandSenderUseCommand(sender, getRequiredPermissionLevel(), getCommandNameCompat());
 		return false;
 	}
 
@@ -116,7 +118,7 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	}
 
 	@Override
-	public @Nonnull String getCommandUsage(final @Nullable ICommandSender sender) {
+	public @Nonnull String getCommandUsageCompat(final @Nullable ICommandSender sender) {
 		return "/"+getFullCommandString()+" help";
 	}
 
@@ -128,14 +130,14 @@ public abstract class SubCommand extends CompatSubCommand implements IModCommand
 	@Override
 	public @Nonnull String getFullCommandString() {
 		if (this.parent!=null)
-			return this.parent.getFullCommandString()+" "+getCommandName();
-		return " "+getCommandName();
+			return this.parent.getFullCommandString()+" "+getCommandNameCompat();
+		return " "+getCommandNameCompat();
 	}
 
 	@Override
 	public int compare(final @Nullable ICommand command) {
 		if (command!=null)
-			return getCommandName().compareTo(command.getCommandName());
+			return getCommandNameCompat().compareTo(CompatCommand.getCommandName(command));
 		return 0;
 	}
 }

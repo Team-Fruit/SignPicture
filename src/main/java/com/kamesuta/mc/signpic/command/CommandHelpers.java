@@ -10,6 +10,8 @@ import javax.annotation.Nullable;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
+import com.kamesuta.mc.signpic.compat.Compat.CompatCommand;
+import com.kamesuta.mc.signpic.compat.Compat.CompatCommandSender;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
@@ -21,11 +23,11 @@ import net.minecraft.command.WrongUsageException;
 
 public class CommandHelpers {
 	public static void throwWrongUsage(final @Nonnull ICommandSender sender, final @Nonnull IModCommand command) throws WrongUsageException {
-		throw new WrongUsageException(I18n.format("signpic.command.help", command.getCommandUsage(sender)));
+		throw new WrongUsageException(I18n.format("signpic.command.help", CompatCommand.getCommandUsage(command, sender)));
 	}
 
 	public static void processChildCommand(final @Nonnull ICommandSender sender, final @Nonnull SubCommand child, final @Nonnull String[] args) throws CommandException {
-		if (!sender.canCommandSenderUseCommand(child.getRequiredPermissionLevel(), child.getFullCommandString()))
+		if (!CompatCommandSender.canCommandSenderUseCommand(sender, child.getRequiredPermissionLevel(), child.getFullCommandString()))
 			throw new WrongUsageException(I18n.format("signpic.command.noperms"));
 		else
 			child.processCommandCompat(sender, Arrays.copyOfRange(args, 1, args.length));
@@ -41,7 +43,7 @@ public class CommandHelpers {
 		ChatBuilder.create("signpic.command."+command.getFullCommandString().replace(" ", ".")+".format").useTranslation().setStyle(header).setParams(command.getFullCommandString()).sendPlayer(sender);
 		final CompatTextStyle body = CompatTextStyle.create();
 		body.setColor(CompatTextFormatting.GRAY);
-		final List<String> aliases = command.getCommandAliases();
+		final List<String> aliases = CompatCommand.getCommandAliases(command);
 		if (aliases!=null)
 			ChatBuilder.create("signpic.command.aliases").useTranslation().setStyle(body).setParams(aliases.toString().replace("[", "").replace("]", "")).sendPlayer(sender);
 		ChatBuilder.create("signpic.command.permlevel").useTranslation().setStyle(body).setParams(Integer.valueOf(command.getRequiredPermissionLevel())).sendPlayer(sender);
@@ -51,7 +53,7 @@ public class CommandHelpers {
 			final Iterator<SubCommand> arg3 = command.getChildren().iterator();
 			while (arg3.hasNext()) {
 				final SubCommand child = arg3.next();
-				ChatBuilder.create("signpic.command."+child.getFullCommandString().replace(" ", ".")+".desc").useTranslation().setParams(child.getCommandName()).sendPlayer(sender);
+				ChatBuilder.create("signpic.command."+child.getFullCommandString().replace(" ", ".")+".desc").useTranslation().setParams(child.getCommandNameCompat()).sendPlayer(sender);
 			}
 		}
 
@@ -62,18 +64,18 @@ public class CommandHelpers {
 			final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 			while (arg2.hasNext()) {
 				final SubCommand child = arg2.next();
-				if (StringUtils.equals(args[0], child.getCommandName()))
+				if (StringUtils.equals(args[0], child.getCommandNameCompat()))
 					return completeChildCommand(sender, child, args);
 			}
 			return null;
 		}
 		final List<String> complete = Lists.newArrayList();
-		if (!StringUtils.equals("help", command.getCommandName()))
+		if (!StringUtils.equals("help", CompatCommand.getCommandName(command)))
 			complete.add("help");
 		final Iterator<SubCommand> arg2 = command.getChildren().iterator();
 		while (arg2.hasNext()) {
 			final SubCommand child = arg2.next();
-			complete.add(child.getCommandName());
+			complete.add(child.getCommandNameCompat());
 		}
 		return complete;
 	}
@@ -99,10 +101,10 @@ public class CommandHelpers {
 	}
 
 	public static boolean matches(final @Nonnull String commandName, final @Nonnull IModCommand command) {
-		if (commandName.equals(command.getCommandName()))
+		if (commandName.equals(CompatCommand.getCommandName(command)))
 			return true;
 		else {
-			final List<String> aliases = command.getCommandAliases();
+			final List<String> aliases = CompatCommand.getCommandAliases(command);
 			if (aliases!=null) {
 				final Iterator<String> arg1 = aliases.iterator();
 				while (arg1.hasNext()) {
