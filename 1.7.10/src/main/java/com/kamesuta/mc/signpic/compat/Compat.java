@@ -180,14 +180,6 @@ public class Compat {
 			return this.z;
 		}
 
-		public @Nullable TileEntity getTile() {
-			return CompatMinecraft.getWorld().getWorldObj().getTileEntity(this.x, this.y, this.z);
-		}
-
-		public @Nullable Block getBlock() {
-			return CompatMinecraft.getWorld().getWorldObj().getBlock(this.x, this.y, this.z);
-		}
-
 		public @Nonnull CompatBlockPos offset(final CompatEnumFacing facing) {
 			if (facing==null)
 				return this;
@@ -370,6 +362,10 @@ public class Compat {
 		public CompatBlockState getBlockState(final CompatBlockPos pos) {
 			return new CompatBlockState(this.world.getBlock(pos.getX(), pos.getY(), pos.getZ()));
 		}
+
+		public @Nullable TileEntity getTileEntity(final CompatBlockPos pos) {
+			return this.world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
+		}
 	}
 
 	public static class CompatBlockState {
@@ -453,7 +449,7 @@ public class Compat {
 		}
 
 		public String getUnformattedText() {
-			return this.component==null ? null : this.component.getUnformattedText();
+			return this.component.getUnformattedText();
 		}
 
 		public static CompatTextComponent jsonToComponent(final String json) {

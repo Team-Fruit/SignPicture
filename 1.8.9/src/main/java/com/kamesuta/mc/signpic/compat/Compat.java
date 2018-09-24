@@ -183,21 +183,6 @@ public class Compat {
 			return this.pos.getZ();
 		}
 
-		public @Nullable IBlockState getBlockState() {
-			return CompatMinecraft.getWorld().getWorldObj().getBlockState(this.pos);
-		}
-
-		public @Nullable TileEntity getTile() {
-			return CompatMinecraft.getWorld().getWorldObj().getTileEntity(this.pos);
-		}
-
-		public @Nullable Block getBlock() {
-			final IBlockState blockState = getBlockState();
-			if (blockState!=null)
-				return blockState.getBlock();
-			return null;
-		}
-
 		public @Nonnull CompatBlockPos offset(final CompatEnumFacing facing) {
 			if (facing==null)
 				return this;
@@ -365,6 +350,10 @@ public class Compat {
 
 		public CompatBlockState getBlockState(final CompatBlockPos pos) {
 			return new CompatBlockState(this.world.getBlockState(pos.pos));
+		}
+
+		public @Nullable TileEntity getTileEntity(final CompatBlockPos pos) {
+			return this.world.getTileEntity(pos.pos);
 		}
 	}
 
@@ -598,7 +587,8 @@ public class Compat {
 		STRIKETHROUGH(EnumChatFormatting.STRIKETHROUGH),
 		UNDERLINE(EnumChatFormatting.UNDERLINE),
 		ITALIC(EnumChatFormatting.ITALIC),
-		RESET(EnumChatFormatting.RESET),;
+		RESET(EnumChatFormatting.RESET),
+		;
 
 		public final EnumChatFormatting format;
 

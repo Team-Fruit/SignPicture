@@ -23,6 +23,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlocks;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.CompatVersion;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
@@ -144,7 +145,7 @@ public class GuiPAAS extends WFrame {
 							final int last = id.getLastLine();
 							SignEntryId.fromEntryId(id).toEntity(GuiPAAS.this.task.entity);
 							GuiPAAS.this.task.entity.lineBeingEdited = last;
-							final TileEntity e1 = CompatBlockPos.getTileEntityPos(GuiPAAS.this.task.entity).getTile();
+							final TileEntity e1 = CompatMinecraft.getWorld().getTileEntity(CompatBlockPos.getTileEntityPos(GuiPAAS.this.task.entity));
 							if (e1 instanceof TileEntitySign) {
 								final TileEntitySign tileSign = (TileEntitySign) e1;
 								SignEntryId.fromEntryId(id).toEntity(tileSign);

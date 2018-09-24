@@ -183,21 +183,6 @@ public class Compat {
 			return this.pos.getZ();
 		}
 
-		public @Nullable IBlockState getBlockState() {
-			return CompatMinecraft.getWorld().getWorldObj().getBlockState(this.pos);
-		}
-
-		public @Nullable TileEntity getTile() {
-			return CompatMinecraft.getWorld().getWorldObj().getTileEntity(this.pos);
-		}
-
-		public @Nullable Block getBlock() {
-			final IBlockState blockState = getBlockState();
-			if (blockState!=null)
-				return blockState.getBlock();
-			return null;
-		}
-
 		public @Nonnull CompatBlockPos offset(final CompatEnumFacing facing) {
 			if (facing==null)
 				return this;
@@ -328,6 +313,26 @@ public class Compat {
 		}
 	}
 
+	public static class CompatEntityPlayer {
+		private final EntityPlayer player;
+
+		public CompatEntityPlayer(final EntityPlayer player) {
+			this.player = player;
+		}
+
+		public EntityPlayer getPlayerObj() {
+			return this.player;
+		}
+
+		public @Nullable ItemStack getHeldItemMainhand() {
+			return this.player.getHeldItemMainhand();
+		}
+
+		public @Nullable ItemStack getHeldItemOffhand() {
+			return this.player.getHeldItemOffhand();
+		}
+	}
+
 	public static class CompatWorld {
 		private final World world;
 
@@ -346,25 +351,9 @@ public class Compat {
 		public CompatBlockState getBlockState(final CompatBlockPos pos) {
 			return new CompatBlockState(this.world.getBlockState(pos.pos));
 		}
-	}
 
-	public static class CompatEntityPlayer {
-		private final EntityPlayer player;
-
-		public CompatEntityPlayer(final EntityPlayer player) {
-			this.player = player;
-		}
-
-		public EntityPlayer getPlayerObj() {
-			return this.player;
-		}
-
-		public @Nullable ItemStack getHeldItemMainhand() {
-			return this.player.getHeldItemMainhand();
-		}
-
-		public @Nullable ItemStack getHeldItemOffhand() {
-			return this.player.getHeldItemOffhand();
+		public @Nullable TileEntity getTileEntity(final CompatBlockPos pos) {
+			return this.world.getTileEntity(pos.pos);
 		}
 	}
 

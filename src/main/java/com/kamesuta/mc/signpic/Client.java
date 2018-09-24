@@ -94,8 +94,8 @@ public class Client {
 		final CompatMovingObjectPosition mpos = CompatMovingObjectPosition.getMovingPos();
 		if (mpos!=null) {
 			final CompatBlockPos pos = mpos.getMovingBlockPos();
-			if (pos!=null&&pos.getBlock() instanceof BlockSign) {
-				final TileEntity tile = pos.getTile();
+			if (pos!=null&&CompatMinecraft.getWorld().getBlockState(pos).getBlock().getBlockObj() instanceof BlockSign) {
+				final TileEntity tile = CompatMinecraft.getWorld().getTileEntity(pos);
 				if (tile instanceof TileEntitySign)
 					return (TileEntitySign) tile;
 			}
