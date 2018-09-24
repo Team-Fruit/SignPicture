@@ -14,6 +14,7 @@ import org.objectweb.asm.ClassWriter;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.asm.lib.VisitorHelper;
 import com.kamesuta.mc.signpic.asm.lib.VisitorHelper.TransformProvider;
+import com.kamesuta.mc.signpic.compat.CompatVersion;
 
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
@@ -62,6 +63,16 @@ public class SignPictureTransformer implements IClassTransformer {
 		initIntelliInput(name, transformedName);
 
 		try {
+			if (CompatVersion.newer(CompatVersion.V9))
+				if (transformedName.equals("net.minecraft.tileentity.TileEntity"))
+					return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
+						@Override
+						public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
+							Log.log.info(String.format("Patching TileEntity.getRenderBoundingBox (class: %s)", name));
+							return new TileEntityVisitor(name, cv);
+						}
+					});
+
 			if (transformedName.equals("net.minecraft.client.gui.GuiScreenBook"))
 				return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
 					@Override

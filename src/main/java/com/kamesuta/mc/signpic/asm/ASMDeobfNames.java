@@ -19,10 +19,10 @@ public class ASMDeobfNames {
 	public static final @Nonnull RefName GuiScreenHandleInput = RefName.deobName("handleInput", "func_146269_k");
 	public static final @Nonnull RefName FontRendererDrawStringWithShadow = ((Supplier<RefName>) () -> {
 		switch (ASMCompatVersion.version()) {
-			case V7:
-				return RefName.deobName("drawStringWithShadow", "func_78261_a");
-			default:
+			case V8:
 				return RefName.deobName("drawStringWithShadow", "func_175063_a");
+			default:
+				return RefName.deobName("drawStringWithShadow", "func_78261_a");
 		}
 	}).get();
 	public static final @Nonnull RefName FontRendererDrawSplitString = RefName.deobName("drawSplitString", "func_78279_b");

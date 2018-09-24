@@ -817,26 +817,6 @@ public class Compat {
 		}
 	}
 
-	public static enum ASMCompatVersion {
-		V7,
-		V8,
-		V10;
-
-		public static @Nonnull ASMCompatVersion version() {
-			return V7;
-		}
-	}
-
-	public static enum DrawSignCompatVersion {
-		V7,
-		V8,
-		V10;
-
-		public static @Nonnull DrawSignCompatVersion version() {
-			return V7;
-		}
-	}
-
 	public static class CompatMathHelper {
 		public static int floor_float(final float value) {
 			return MathHelper.floor_float(value);

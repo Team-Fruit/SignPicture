@@ -76,17 +76,7 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		}
 	}
 
-	public static enum ItemSignCompatVersion {
-		V7,
-		V8,
-		V10;
-
-		public static @Nonnull ItemSignCompatVersion version() {
-			return V8;
-		}
-	}
-
-	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull ItemSignCompatVersion version, final @Nullable ItemStack item);
+	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull CompatVersion version, final @Nullable ItemStack item);
 
 	public final @Nonnull ModelResourceLocation modelResourceLocation = new ModelResourceLocation("minecraft:sign");
 	private @Nullable IBakedModel baseModel = null;
@@ -139,7 +129,7 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		}
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
-		renderSignPicture(ItemSignTransformType.fromType(type), ItemSignCompatVersion.version(), item);
+		renderSignPicture(ItemSignTransformType.fromType(type), CompatVersion.version(), item);
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
 	}

@@ -23,7 +23,7 @@ import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlocks;
-import com.kamesuta.mc.signpic.compat.Compat.DrawSignCompatVersion;
+import com.kamesuta.mc.signpic.compat.CompatVersion;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
@@ -87,14 +87,10 @@ public class GuiPAAS extends WFrame {
 						OpenGL.glTranslatef(0.0F, 0.0F, 50.0F);
 						final float f1 = 93.75F;
 						OpenGL.glScalef(-f1, -f1, -f1);
-						switch (DrawSignCompatVersion.version()) {
-							case V7:
-								break;
-							default:
-								OpenGL.glRotatef(180f, 0f, 1f, 0f);
-								Client.rendererTile.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D);
-								Client.rendererTile.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, 1f, -1);
-								break;
+						if (!CompatVersion.older(CompatVersion.V7)) {
+							OpenGL.glRotatef(180f, 0f, 1f, 0f);
+							Client.rendererTile.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D);
+							Client.rendererTile.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, 1f, -1);
 						}
 						OpenGL.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 						final Block block = sign.getBlockType();

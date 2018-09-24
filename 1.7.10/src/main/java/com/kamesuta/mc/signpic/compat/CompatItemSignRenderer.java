@@ -64,17 +64,7 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		}
 	}
 
-	public static enum ItemSignCompatVersion {
-		V7,
-		V8,
-		V10;
-
-		public static @Nonnull ItemSignCompatVersion version() {
-			return V7;
-		}
-	}
-
-	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull ItemSignCompatVersion version, final @Nullable ItemStack item);
+	public abstract void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull CompatVersion version, final @Nullable ItemStack item);
 
 	@Override
 	public boolean handleRenderType(final @Nullable ItemStack item, final @Nullable ItemRenderType type) {
@@ -99,7 +89,7 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		}
 		OpenGL.glPushAttrib();
 		OpenGL.glDisable(GL_CULL_FACE);
-		renderSignPicture(ItemSignTransformType.fromType(type), ItemSignCompatVersion.version(), item);
+		renderSignPicture(ItemSignTransformType.fromType(type), CompatVersion.version(), item);
 		OpenGL.glPopAttrib();
 		OpenGL.glPopMatrix();
 	}

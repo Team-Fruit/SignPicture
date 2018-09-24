@@ -13,7 +13,7 @@ import com.kamesuta.mc.signpic.asm.lib.DescHelper;
 import com.kamesuta.mc.signpic.asm.lib.MethodMatcher;
 import com.kamesuta.mc.signpic.asm.lib.RefName;
 import com.kamesuta.mc.signpic.asm.lib.VisitorHelper;
-import com.kamesuta.mc.signpic.compat.Compat.ASMCompatVersion;
+import com.kamesuta.mc.signpic.compat.CompatVersion;
 
 public class GuiNewChatVisitor extends ClassVisitor {
 	private static class InitHookMethodVisitor extends MethodVisitor {
@@ -50,7 +50,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 
 		public DrawChatHookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
-			switch (ASMCompatVersion.version()) {
+			switch (CompatVersion.version()) {
 				case V7:
 					this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(int.class, "java.lang.String", int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
 					break;
@@ -75,8 +75,8 @@ public class GuiNewChatVisitor extends ClassVisitor {
 
 		@Override
 		public void visitMethodInsn(final int opcode, @Nullable final String owner, @Nullable final String name, @Nullable final String desc, final boolean itf) {
-			if (name!=null&&desc!=null&&this.matcher.match(name, desc))
-				switch (ASMCompatVersion.version()) {
+			if (name!=null&&desc!=null&&this.matcher.match(name, desc)) {
+				switch (CompatVersion.version()) {
 					case V7:
 						/*
 						 * 328  aload_0 [this]
@@ -91,21 +91,45 @@ public class GuiNewChatVisitor extends ClassVisitor {
 						super.visitVarInsn(Opcodes.ILOAD, 33);
 						super.visitInsn(Opcodes.I2F);
 						super.visitVarInsn(Opcodes.ILOAD, 32);
-					default:
+
 						super.visitVarInsn(Opcodes.ALOAD, 0);
 						super.visitVarInsn(Opcodes.ALOAD, 12);
 						super.visitVarInsn(Opcodes.ILOAD, 16);
 						super.visitVarInsn(Opcodes.ILOAD, 11);
-						super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
-								DescHelper.toDesc(int.class,
-										"net.minecraft.client.gui.FontRenderer",
-										"java.lang.String", float.class, float.class, int.class,
-										"net.minecraft.client.gui.GuiNewChat",
-										"net.minecraft.client.gui.ChatLine", int.class, int.class),
-								false);
+
+						super.visitInsn(Opcodes.I2F);
+						super.visitLdcInsn(255f);
+						super.visitInsn(Opcodes.FDIV);
+
+						break;
+					case V8:
+						super.visitVarInsn(Opcodes.ALOAD, 0);
+						super.visitVarInsn(Opcodes.ALOAD, 10);
+						super.visitVarInsn(Opcodes.ILOAD, 16);
+						super.visitVarInsn(Opcodes.ILOAD, 14);
+
+						super.visitInsn(Opcodes.I2F);
+						super.visitLdcInsn(255f);
+						super.visitInsn(Opcodes.FDIV);
+
+						break;
+					default:
+						super.visitVarInsn(Opcodes.ALOAD, 0);
+						super.visitVarInsn(Opcodes.ALOAD, 10);
+						super.visitVarInsn(Opcodes.ILOAD, 16);
+						super.visitVarInsn(Opcodes.FLOAD, 6);
+
 						break;
 				}
-			else
+
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
+						DescHelper.toDesc(int.class,
+								"net.minecraft.client.gui.FontRenderer",
+								"java.lang.String", float.class, float.class, int.class,
+								"net.minecraft.client.gui.GuiNewChat",
+								"net.minecraft.client.gui.ChatLine", int.class, float.class),
+						false);
+			} else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 		}
 	}
@@ -150,7 +174,10 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				super.visitTypeInsn(Opcodes.CHECKCAST, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine");
 				super.visitVarInsn(Opcodes.ALOAD, 0);
 				super.visitVarInsn(Opcodes.ILOAD, 6);
-				super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.IChatComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
+				if (CompatVersion.older(CompatVersion.V8))
+					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.IChatComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
+				else
+					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.text.ITextComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
 				super.visitVarInsn(Opcodes.ASTORE, 11);
 				super.visitVarInsn(Opcodes.ALOAD, 11);
 				super.visitJumpInsn(Opcodes.IFNULL, l);

@@ -13,6 +13,7 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData.ImageSizes;
 import com.kamesuta.mc.signpic.compat.Compat.CompatItems;
 import com.kamesuta.mc.signpic.compat.CompatItemSignRenderer;
+import com.kamesuta.mc.signpic.compat.CompatVersion;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.ItemEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -40,7 +41,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 	}
 
 	@Override
-	public void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull ItemSignCompatVersion version, final @Nullable ItemStack item) {
+	public void renderSignPicture(final @Nonnull ItemSignTransformType type, final @Nonnull CompatVersion version, final @Nullable ItemStack item) {
 		final Entry entry = ItemEntryId.fromItemStack(item).entry();
 		final AttrReaders attr = entry.getMeta();
 		final Content content = entry.getContent();
@@ -49,7 +50,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 		final SizeData size = attr.sizes.getMovie().get().aspectSize(size01);
 		final GuiImage gui = entry.getGui();
 		if (type==ItemSignTransformType.GUI) {
-			if (version==ItemSignCompatVersion.V7) {
+			if (version==CompatVersion.V7) {
 				final float slot = 16f;
 				final SizeData size2 = ImageSizes.INNER.defineSize(size, slot, slot);
 				OpenGL.glTranslatef((slot-size2.getWidth())/2f, (slot-size2.getHeight())/2f, 0f);
@@ -65,7 +66,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 				OpenGL.glScalef(slot, slot, 1f);
 				gui.drawScreen(0, 0, 0f, 1f, size2.getWidth()/slot, size2.getHeight()/slot, new RenderOption());
 			}
-		} else if (version==ItemSignCompatVersion.V7) {
+		} else if (version==CompatVersion.V7) {
 			if (type==ItemSignTransformType.FIXED) {
 				OpenGL.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
 				OpenGL.glTranslatef(0f, 0.025f, 0f);
@@ -87,7 +88,7 @@ public class CustomItemSignRenderer extends CompatItemSignRenderer {
 			OpenGL.glScalef(1f, -1f, 1f);
 			gui.renderSignPicture(1f, 1f, new RenderOption());
 		} else {
-			if (version==ItemSignCompatVersion.V8)
+			if (version==CompatVersion.V8)
 				OpenGL.glScalef(1f, -1f, 1f);
 			else
 				OpenGL.glScalef(2f, 2f, 1f);
