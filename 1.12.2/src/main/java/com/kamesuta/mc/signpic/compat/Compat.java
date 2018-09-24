@@ -27,6 +27,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
@@ -109,7 +110,7 @@ public class Compat {
 		}
 
 		public static @Nonnull FontRenderer getFontRenderer() {
-			return getMinecraft().fontRendererObj;
+			return getMinecraft().fontRenderer;
 		}
 
 		public static @Nullable CompatWorld getWorld() {
@@ -307,15 +308,21 @@ public class Compat {
 	}
 
 	public static abstract class CompatTileEntitySignRenderer extends TileEntitySignRenderer {
-		public void renderBaseTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
-			super.renderTileEntityAt(tile, x, y, z, partialTicks, destroy);
+		public void renderBaseTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha) {
+			super.render(tile, x, y, z, partialTicks, destroy, alpha);
 		}
 
-		public abstract void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy);
+		public abstract void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha);
 
 		@Override
-		public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
-			renderTileEntityAtCompat(tile, x, y, z, partialTicks, -1);
+		public void render(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha) {
+			renderTileEntityAtCompat(tile, x, y, z, partialTicks, destroy, alpha);
+		}
+	}
+
+	public static class CompatTileEntityRendererDispatcher {
+		public static void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha) {
+			TileEntityRendererDispatcher.instance.render(tile, x, y, z, partialTicks, destroy, alpha);
 		}
 	}
 
@@ -526,7 +533,6 @@ public class Compat {
 
 		public static enum CompatAction {
 			SHOW_TEXT(HoverEvent.Action.SHOW_TEXT),
-			SHOW_ACHIEVEMENT(HoverEvent.Action.SHOW_ACHIEVEMENT),
 			SHOW_ITEM(HoverEvent.Action.SHOW_ITEM),
 			;
 
@@ -746,20 +752,9 @@ public class Compat {
 			return null;
 		}
 
-		@SuppressWarnings("deprecation")
-		@Override
-		public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
-			return null;
-		}
-
 		@Override
 		public boolean hasConfigGui() {
 			return mainConfigGuiClassCompat()!=null;
-		}
-
-		@Override
-		public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
-			return mainConfigGuiClassCompat();
 		}
 
 		public abstract @Nullable Class<? extends GuiScreen> mainConfigGuiClassCompat();

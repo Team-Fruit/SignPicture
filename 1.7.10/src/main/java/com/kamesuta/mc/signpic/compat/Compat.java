@@ -35,6 +35,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySignRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
@@ -312,21 +313,27 @@ public class Compat {
 	}
 
 	public static abstract class CompatTileEntitySignRenderer extends TileEntitySignRenderer {
-		public void renderBaseTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy) {
+		public void renderBaseTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha) {
 			super.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
 
-		public abstract void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy);
+		public abstract void renderTileEntityAtCompat(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha);
 
 		@Override
 		public void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks) {
-			renderTileEntityAtCompat(tile, x, y, z, partialTicks, -1);
+			renderTileEntityAtCompat(tile, x, y, z, partialTicks, -1, 1f);
 		}
 
 		@Override
 		public void renderTileEntityAt(final @Nullable TileEntity tile, final double x, final double y, final double z, final float partialTicks) {
 			if (tile instanceof TileEntitySign)
 				renderTileEntityAt((TileEntitySign) tile, x, y, z, partialTicks);
+		}
+	}
+
+	public static class CompatTileEntityRendererDispatcher {
+		public static void renderTileEntityAt(final @Nullable TileEntitySign tile, final double x, final double y, final double z, final float partialTicks, final int destroy, final float alpha) {
+			TileEntityRendererDispatcher.instance.renderTileEntityAt(tile, x, y, z, partialTicks);
 		}
 	}
 
@@ -531,7 +538,6 @@ public class Compat {
 
 		public static enum CompatAction {
 			SHOW_TEXT(HoverEvent.Action.SHOW_TEXT),
-			SHOW_ACHIEVEMENT(HoverEvent.Action.SHOW_ACHIEVEMENT),
 			SHOW_ITEM(HoverEvent.Action.SHOW_ITEM),
 			;
 

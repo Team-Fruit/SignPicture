@@ -24,6 +24,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlocks;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatTileEntityRendererDispatcher;
 import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
 import com.kamesuta.mc.signpic.compat.CompatVersion;
 import com.kamesuta.mc.signpic.entry.EntryId;
@@ -32,7 +33,6 @@ import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign.SendPacketTask;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
@@ -114,7 +114,7 @@ public class GuiPAAS extends WFrame {
 							OpenGL.glTranslatef(0.0F, -.02348F, 0.0F);
 						}
 
-						TileEntityRendererDispatcher.instance.renderTileEntityAt(sign, -0.5D, -0.75D, -0.5D, 0.0F);
+						CompatTileEntityRendererDispatcher.renderTileEntityAt(sign, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
 						OpenGL.glPopMatrix();
 					}
 				});
