@@ -29,6 +29,7 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMovingObjectPosition;
 import com.kamesuta.mc.signpic.compat.Compat.CompatSoundHandler;
+import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
 import com.kamesuta.mc.signpic.gui.GuiMain;
 import com.kamesuta.mc.signpic.render.CustomItemSignRenderer;
 import com.kamesuta.mc.signpic.render.CustomTileEntitySignRenderer;
@@ -92,10 +93,11 @@ public class Client {
 
 	public static @Nullable TileEntitySign getTileSignLooking() {
 		final CompatMovingObjectPosition mpos = CompatMovingObjectPosition.getMovingPos();
-		if (mpos!=null) {
+		final CompatWorld world = CompatMinecraft.getWorld();
+		if (mpos!=null&&world!=null) {
 			final CompatBlockPos pos = mpos.getMovingBlockPos();
-			if (pos!=null&&CompatMinecraft.getWorld().getBlockState(pos).getBlock().getBlockObj() instanceof BlockSign) {
-				final TileEntity tile = CompatMinecraft.getWorld().getTileEntity(pos);
+			if (pos!=null&&world.getBlockState(pos).getBlock().getBlockObj() instanceof BlockSign) {
+				final TileEntity tile = world.getTileEntity(pos);
 				if (tile instanceof TileEntitySign)
 					return (TileEntitySign) tile;
 			}

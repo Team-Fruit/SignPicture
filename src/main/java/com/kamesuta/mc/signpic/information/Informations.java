@@ -16,6 +16,8 @@ import com.kamesuta.mc.signpic.Config;
 import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.compat.Compat.CompatEntityPlayer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatTickEvent;
@@ -28,7 +30,6 @@ import com.kamesuta.mc.signpic.information.Info.PrivateMsg;
 import com.kamesuta.mc.signpic.util.ChatBuilder;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
 
 public final class Informations {
 	public static final @Nonnull Informations instance = new Informations();
@@ -213,7 +214,7 @@ public final class Informations {
 			onTick(getSource(), getState());
 	}
 
-	public void notice(final @Nullable InfoSource source, final @Nullable InfoState state, final @Nullable EntityPlayer player) {
+	public void notice(final @Nullable InfoSource source, final @Nullable InfoState state, final @Nullable CompatEntityPlayer player) {
 		if (player!=null&&source!=null&&state!=null) {
 			final String lang = Client.mc.gameSettings.language;
 			if (
@@ -278,7 +279,7 @@ public final class Informations {
 	}
 
 	public void onTick(final @Nullable InfoSource source, final @Nonnull InfoState state) {
-		final EntityPlayer player = Client.mc.thePlayer;
+		final CompatEntityPlayer player = CompatMinecraft.getPlayer();
 		if (Config.getConfig().informationNotice.get()&&!state.triedToWarnPlayer)
 			notice(source, state, player);
 	}

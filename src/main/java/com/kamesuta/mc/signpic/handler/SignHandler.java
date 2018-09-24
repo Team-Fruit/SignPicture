@@ -17,6 +17,7 @@ import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.OffsetData;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatEntityPlayer;
 import com.kamesuta.mc.signpic.compat.Compat.CompatItems;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextFormatting;
@@ -140,32 +141,35 @@ public class SignHandler {
 	@CoreEvent
 	public void onClick(final @Nonnull CompatMouseEvent event) {
 		if (event.getButtonState()&&Client.mc.gameSettings.keyBindUseItem.getKeyCode()==event.getButton()-100) {
-			ItemStack handItem = CompatMinecraft.getPlayer().getHeldItemMainhand();
-			if (handItem==null||handItem.getItem()!=CompatItems.SIGN)
-				handItem = CompatMinecraft.getPlayer().getHeldItemOffhand();
-			EntryId handEntry = null;
-			if (handItem!=null&&handItem.getItem()==CompatItems.SIGN) {
-				handEntry = ItemEntryId.fromItemStack(handItem);
-				CurrentMode.instance.setHandSign(handEntry);
-			} else
-				CurrentMode.instance.setHandSign(EntryId.blank);
-			if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
-				Sign.preview.capturePlace();
-				event.setCanceled(true);
-				CurrentMode.instance.setMode();
-				Client.openEditor();
-			} else if (CurrentMode.instance.isMode(CurrentMode.Mode.OPTION)) {
-				final TileEntitySign tilesign = Client.getTileSignLooking();
-				Entry entry = null;
-				if (tilesign!=null)
-					entry = SignEntryId.fromTile(tilesign).entry();
-				else if (handEntry!=null)
-					entry = handEntry.entry();
-				if (entry!=null) {
+			final CompatEntityPlayer player = CompatMinecraft.getPlayer();
+			if (player!=null) {
+				ItemStack handItem = player.getHeldItemMainhand();
+				if (handItem==null||handItem.getItem()!=CompatItems.SIGN)
+					handItem = player.getHeldItemOffhand();
+				EntryId handEntry = null;
+				if (handItem!=null&&handItem.getItem()==CompatItems.SIGN) {
+					handEntry = ItemEntryId.fromItemStack(handItem);
+					CurrentMode.instance.setHandSign(handEntry);
+				} else
+					CurrentMode.instance.setHandSign(EntryId.blank);
+				if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)) {
+					Sign.preview.capturePlace();
 					event.setCanceled(true);
-					WFrame.displayFrame(new GuiSignOption(entry));
-					if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
-						CurrentMode.instance.setMode();
+					CurrentMode.instance.setMode();
+					Client.openEditor();
+				} else if (CurrentMode.instance.isMode(CurrentMode.Mode.OPTION)) {
+					final TileEntitySign tilesign = Client.getTileSignLooking();
+					Entry entry = null;
+					if (tilesign!=null)
+						entry = SignEntryId.fromTile(tilesign).entry();
+					else if (handEntry!=null)
+						entry = handEntry.entry();
+					if (entry!=null) {
+						event.setCanceled(true);
+						WFrame.displayFrame(new GuiSignOption(entry));
+						if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE))
+							CurrentMode.instance.setMode();
+					}
 				}
 			}
 		}

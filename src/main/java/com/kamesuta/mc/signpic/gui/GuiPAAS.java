@@ -24,6 +24,7 @@ import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlocks;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
 import com.kamesuta.mc.signpic.compat.CompatVersion;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.EntryId.SignEntryId;
@@ -141,15 +142,18 @@ public class GuiPAAS extends WFrame {
 					if (!GuiPAAS.this.task.tick()) {
 						this.c = (int) (GuiPAAS.this.task.timer.getTime()*1000/GuiPAAS.this.task.limit*this.max);
 						if (this.cursor!=this.c) {
-							final EntryId id = EntryId.from(StringUtils.substring(GuiPAAS.this.task.id.id(), 0, this.c));
-							final int last = id.getLastLine();
-							SignEntryId.fromEntryId(id).toEntity(GuiPAAS.this.task.entity);
-							GuiPAAS.this.task.entity.lineBeingEdited = last;
-							final TileEntity e1 = CompatMinecraft.getWorld().getTileEntity(CompatBlockPos.getTileEntityPos(GuiPAAS.this.task.entity));
-							if (e1 instanceof TileEntitySign) {
-								final TileEntitySign tileSign = (TileEntitySign) e1;
-								SignEntryId.fromEntryId(id).toEntity(tileSign);
-								tileSign.lineBeingEdited = last;
+							final CompatWorld world = CompatMinecraft.getWorld();
+							if (world!=null) {
+								final EntryId id = EntryId.from(StringUtils.substring(GuiPAAS.this.task.id.id(), 0, this.c));
+								final int last = id.getLastLine();
+								SignEntryId.fromEntryId(id).toEntity(GuiPAAS.this.task.entity);
+								GuiPAAS.this.task.entity.lineBeingEdited = last;
+								final TileEntity e1 = world.getTileEntity(CompatBlockPos.getTileEntityPos(GuiPAAS.this.task.entity));
+								if (e1 instanceof TileEntitySign) {
+									final TileEntitySign tileSign = (TileEntitySign) e1;
+									SignEntryId.fromEntryId(id).toEntity(tileSign);
+									tileSign.lineBeingEdited = last;
+								}
 							}
 						}
 						this.cursor = this.c;

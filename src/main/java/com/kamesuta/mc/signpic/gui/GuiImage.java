@@ -34,6 +34,7 @@ import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMathHelper;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
+import com.kamesuta.mc.signpic.compat.Compat.CompatWorld;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId.PreviewEntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -203,76 +204,79 @@ public class GuiImage extends WFrame {
 	}
 
 	public void applyLight(final float x, final float y, final float z, final @Nonnull Quat4f signrotate) {
-		final AttrReaders attr = this.entry.getMeta();
-		int lightx = (int) attr.f.getMovie().get().data;
-		int lighty = (int) attr.g.getMovie().get().data;
-		if (lightx!=-1||lighty!=-1) {
-			if (lightx<0||lighty<0) {
-				int lsign = 0;
-				int lcenter = 0;
-				int lpicture = 0;
+		final CompatWorld world = CompatMinecraft.getWorld();
+		if (world!=null) {
+			final AttrReaders attr = this.entry.getMeta();
+			int lightx = (int) attr.f.getMovie().get().data;
+			int lighty = (int) attr.g.getMovie().get().data;
+			if (lightx!=-1||lighty!=-1) {
+				if (lightx<0||lighty<0) {
+					int lsign = 0;
+					int lcenter = 0;
+					int lpicture = 0;
 
-				if (lightx!=-2&&lightx!=-3||lighty!=-2&&lighty!=-3)
-					lsign = CompatMinecraft.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(x), CompatMathHelper.floor_float(y), CompatMathHelper.floor_float(z)));
+					if (lightx!=-2&&lightx!=-3||lighty!=-2&&lighty!=-3)
+						lsign = world.getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(x), CompatMathHelper.floor_float(y), CompatMathHelper.floor_float(z)));
 
-				if (lightx==-2||lighty==-2||lightx==-3||lighty==-3) {
-					final OffsetData offset = attr.offsets.getMovie().get();
-					final OffsetData centeroffset = attr.centeroffsets.getMovie().get();
-					final Matrix4f m = new Matrix4f();
-					final Point3f p = new Point3f();
-					final Quat4f rotate = attr.rotations.getMovie().get().getRotate();
-					final Vector3f tv = new Vector3f(x, y, z);
-					final Vector3f ov = new Vector3f(offset.x.offset, offset.y.offset, offset.z.offset);
-					final Vector3f cv = new Vector3f(centeroffset.x.offset, centeroffset.y.offset, centeroffset.z.offset);
+					if (lightx==-2||lighty==-2||lightx==-3||lighty==-3) {
+						final OffsetData offset = attr.offsets.getMovie().get();
+						final OffsetData centeroffset = attr.centeroffsets.getMovie().get();
+						final Matrix4f m = new Matrix4f();
+						final Point3f p = new Point3f();
+						final Quat4f rotate = attr.rotations.getMovie().get().getRotate();
+						final Vector3f tv = new Vector3f(x, y, z);
+						final Vector3f ov = new Vector3f(offset.x.offset, offset.y.offset, offset.z.offset);
+						final Vector3f cv = new Vector3f(centeroffset.x.offset, centeroffset.y.offset, centeroffset.z.offset);
 
-					m.set(ov);
-					m.transform(p);
-
-					m.set(cv);
-					m.transform(p);
-
-					m.set(signrotate);
-					m.transform(p);
-
-					m.set(tv);
-					m.transform(p);
-
-					if (lightx==-2||lighty==-2)
-						lcenter = CompatMinecraft.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
-
-					if (lightx==-3||lighty==-3) {
-						final Point3f p2 = new Point3f();
+						m.set(ov);
+						m.transform(p);
 
 						m.set(cv);
-						m.transform(p2);
+						m.transform(p);
 
 						m.set(signrotate);
-						m.transform(p2);
+						m.transform(p);
 
-						m.set(rotate);
-						m.transform(p2);
+						m.set(tv);
+						m.transform(p);
 
-						p.sub(p2);
+						if (lightx==-2||lighty==-2)
+							lcenter = world.getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
 
-						lpicture = CompatMinecraft.getWorld().getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
+						if (lightx==-3||lighty==-3) {
+							final Point3f p2 = new Point3f();
+
+							m.set(cv);
+							m.transform(p2);
+
+							m.set(signrotate);
+							m.transform(p2);
+
+							m.set(rotate);
+							m.transform(p2);
+
+							p.sub(p2);
+
+							lpicture = world.getLightFor(CompatBlockPos.fromCoords(CompatMathHelper.floor_float(p.x), CompatMathHelper.floor_float(p.y), CompatMathHelper.floor_float(p.z)));
+						}
 					}
+					if (lightx<0)
+						if (lightx==-2)
+							lightx = lcenter%65536>>4;
+						else if (lightx==-3)
+							lightx = lpicture%65536>>4;
+						else
+							lightx = lsign%65536>>4;
+					if (lighty<0)
+						if (lighty==-2)
+							lighty = lcenter/65536>>4;
+						else if (lighty==-3)
+							lighty = lpicture/65536>>4;
+						else
+							lighty = lsign/65536>>4;
 				}
-				if (lightx<0)
-					if (lightx==-2)
-						lightx = lcenter%65536>>4;
-					else if (lightx==-3)
-						lightx = lpicture%65536>>4;
-					else
-						lightx = lsign%65536>>4;
-				if (lighty<0)
-					if (lighty==-2)
-						lighty = lcenter/65536>>4;
-					else if (lighty==-3)
-						lighty = lpicture/65536>>4;
-					else
-						lighty = lsign/65536>>4;
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightx<<4, lighty<<4);
 			}
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightx<<4, lighty<<4);
 		}
 	}
 

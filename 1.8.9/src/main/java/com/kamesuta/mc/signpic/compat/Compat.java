@@ -112,12 +112,18 @@ public class Compat {
 			return getMinecraft().fontRendererObj;
 		}
 
-		public static @Nonnull CompatWorld getWorld() {
-			return new CompatWorld(getMinecraft().theWorld);
+		public static @Nullable CompatWorld getWorld() {
+			final World world = getMinecraft().theWorld;
+			if (world!=null)
+				return new CompatWorld(world);
+			return null;
 		}
 
-		public static @Nonnull CompatEntityPlayer getPlayer() {
-			return new CompatEntityPlayer(getMinecraft().thePlayer);
+		public static @Nullable CompatEntityPlayer getPlayer() {
+			final EntityPlayer player = getMinecraft().thePlayer;
+			if (player!=null)
+				return new CompatEntityPlayer(player);
+			return null;
 		}
 
 		public static @Nonnull CompatGameSettings getSettings() {
@@ -316,7 +322,7 @@ public class Compat {
 	public static class CompatEntityPlayer {
 		private final EntityPlayer player;
 
-		public CompatEntityPlayer(final EntityPlayer player) {
+		public CompatEntityPlayer(@Nonnull final EntityPlayer player) {
 			this.player = player;
 		}
 
@@ -336,7 +342,7 @@ public class Compat {
 	public static class CompatWorld {
 		private final World world;
 
-		public CompatWorld(final World world) {
+		public CompatWorld(@Nonnull final World world) {
 			this.world = world;
 		}
 
@@ -745,6 +751,15 @@ public class Compat {
 		public RuntimeOptionGuiHandler getHandlerFor(final RuntimeOptionCategoryElement element) {
 			return null;
 		}
+
+		@Override
+		public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
+			return mainConfigGuiClassCompat();
+		}
+
+		public abstract @Nullable Class<? extends GuiScreen> mainConfigGuiClassCompat();
+
+		public abstract GuiScreen createConfigGuiCompat(GuiScreen parentScreen);
 	}
 
 	public static class CompatCommand {

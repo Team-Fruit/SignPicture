@@ -14,7 +14,12 @@ public class ConfigGuiFactory extends CompatModGuiFactory {
 	}
 
 	@Override
-	public @Nullable Class<? extends GuiScreen> mainConfigGuiClass() {
+	public @Nullable Class<? extends GuiScreen> mainConfigGuiClassCompat() {
 		return ConfigGui.class;
+	}
+
+	@Override
+	public GuiScreen createConfigGuiCompat(final GuiScreen parentScreen) {
+		return new ConfigGui(parentScreen);
 	}
 }
