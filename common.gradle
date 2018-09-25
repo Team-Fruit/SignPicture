@@ -84,6 +84,14 @@ configurations {
 [compileJava, compileApiJava, compileTestJava, compileCommon_mainJava, compileCommon_apiJava, compileCommon_testJava]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = '1.8'
 
+if (tasks.findByPath('makeEclipseCleanRunClient')!=null) {
+	tasks.makeEclipseCleanRunClient.doFirst {
+		setArguments '--username Kamesuta'
+		if (project.isProperty('extra_fmlcore'))
+			setJvmArguments project.extra_fmlcore
+	}
+}
+
 minecraft {
 	version = "${project.version_minecraft}-${project.version_forge}"
 
