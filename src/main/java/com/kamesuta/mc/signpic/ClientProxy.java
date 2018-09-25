@@ -39,6 +39,9 @@ public class ClientProxy extends CommonProxy {
 		} catch (final IllegalArgumentException e) {
 		}
 
+		// Event Register
+		Client.handler.init();
+
 		CompatItemSignRendererRegistrar.registerPreInit(Client.itemRenderer);
 	}
 
@@ -60,8 +63,6 @@ public class ClientProxy extends CommonProxy {
 		CompatItemSignRendererRegistrar.bindTileEntitySpecialRenderer(TileEntitySign.class, Client.rendererTile);
 		CompatItemSignRendererRegistrar.registerInit(Client.itemRenderer);
 
-		// Event Register
-		Client.handler.init();
 		ClientCommandHandler.instance.registerCommand(Client.rootCommand);
 	}
 
