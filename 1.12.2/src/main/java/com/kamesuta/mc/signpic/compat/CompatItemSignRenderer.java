@@ -89,8 +89,6 @@ public abstract class CompatItemSignRenderer implements IBakedModel {
 	private boolean isOverride;
 
 	public void setBaseModel(final @Nullable IBakedModel model) {
-		if (model==this)
-			throw new IllegalArgumentException("model is this");
 		this.baseModel = model;
 	}
 
