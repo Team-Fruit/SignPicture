@@ -11,4 +11,5 @@ public class Reference {
 	public static final @Nonnull String PROXY_SERVER = "com.kamesuta.mc.signpic.CommonProxy";
 	public static final @Nonnull String PROXY_CLIENT = "com.kamesuta.mc.signpic.ClientProxy";
 	public static final @Nonnull String GUI_FACTORY = "com.kamesuta.mc.signpic.gui.config.ConfigGuiFactory";
+	public static final @Nonnull String TRANSFORMER = "com.kamesuta.mc.signpic.asm.SignPictureTransformer";
 }

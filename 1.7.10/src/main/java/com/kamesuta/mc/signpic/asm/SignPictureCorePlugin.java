@@ -4,13 +4,15 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.kamesuta.mc.signpic.Reference;
+
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 
 public class SignPictureCorePlugin implements IFMLLoadingPlugin {
 	@Override
 	public @Nullable String[] getASMTransformerClass() {
 		return new String[] {
-				SignPictureTransformer.class.getName()
+				Reference.TRANSFORMER
 		};
 	}
 
