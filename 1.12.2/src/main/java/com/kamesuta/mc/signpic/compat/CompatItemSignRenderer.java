@@ -183,8 +183,8 @@ public abstract class CompatItemSignRenderer implements IBakedModel {
 		return this.overrides;
 	}
 
-	public void registerModelRegistry(final CompatModelRegistryEvent event) {
-		ModelLoaderRegistry.registerLoader(CustomItemSignModel.INSTANCE);
+	public void registerModelRegistry(final CompatModelRegistryEvent event, final CompatItemSignModelLoader modelLoader) {
+		ModelLoaderRegistry.registerLoader(modelLoader);
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {

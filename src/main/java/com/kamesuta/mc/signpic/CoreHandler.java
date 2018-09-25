@@ -29,6 +29,7 @@ import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.http.ICommunicate;
 import com.kamesuta.mc.signpic.http.ICommunicateCallback;
 import com.kamesuta.mc.signpic.information.Informations;
+import com.kamesuta.mc.signpic.render.CustomItemSignModelLoader;
 import com.kamesuta.mc.signpic.render.SignPicRender;
 import com.kamesuta.mc.signpic.state.Progressable;
 import com.kamesuta.mc.signpic.state.State;
@@ -140,7 +141,7 @@ public class CoreHandler extends CompatHandler {
 	@CoreEvent
 	@Override
 	public void onModelRegistry(final CompatModelRegistryEvent event) {
-		Client.itemRenderer.registerModelRegistry(event);
+		Client.itemRenderer.registerModelRegistry(event, CustomItemSignModelLoader.INSTANCE);
 	}
 
 	@Override

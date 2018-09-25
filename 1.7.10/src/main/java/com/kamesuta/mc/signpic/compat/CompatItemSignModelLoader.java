@@ -7,81 +7,55 @@ import java.util.function.Function;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
-import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Log;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.animation.IClip;
 
-public class CustomItemSignModel implements ICustomModelLoader {
-	public static CustomItemSignModel INSTANCE = new CustomItemSignModel();
-
-	private @Nullable ICustomModelLoader loader;
-
-	private CustomItemSignModel() {
-		try {
-			this.loader = getInstance();
-		} catch (final Exception e) {
-			Log.log.warn("An error has occurred, ItemSignPicture won't work.", e);
-		}
-	}
-
-	private <T extends Enum<T>> T getInstance() throws Exception {
-		@SuppressWarnings("unchecked")
-		final Class<T> $class = (Class<T>) Class.forName("net.minecraftforge.client.model.ModelLoader$VanillaLoader");
-		return Enum.<T> valueOf($class, "INSTANCE");
-	}
-
+public abstract class CompatItemSignModelLoader {
 	@Override
 	public void onResourceManagerReload(@Nullable final IResourceManager resourceManager) {
+		onResourceManagerReloadCompat(resourceManager);
 	}
+
+	public abstract void onResourceManagerReloadCompat(@Nullable final IResourceManager resourceManager);
 
 	@Override
 	public @Nullable IModel loadModel(@Nullable final ResourceLocation modelLocation) throws Exception {
-		if (this.loader!=null) {
-			final IModel model = this.loader.loadModel(modelLocation);
-			return new ItemSignModel(model);
-		}
-		return ModelLoaderRegistry.getMissingModel();
+		return loadModelCompat(modelLocation);
 	}
+
+	public abstract @Nullable IModel loadModelCompat(@Nullable final ResourceLocation modelLocation) throws Exception;
 
 	@Override
 	public boolean accepts(@Nullable final ResourceLocation modelLocation) {
-		if (modelLocation!=null&&modelLocation.getResourceDomain().equals("minecraft")&&modelLocation.getResourcePath().equals("models/item/sign"))
-			if (this.loader!=null)
-				return this.loader.accepts(modelLocation);
-		return false;
+		return acceptsCompat(modelLocation);
 	}
 
-	@Override
-	public String toString() {
-		return "CustomItemSignModel.INSTANCE";
-	}
+	public abstract boolean acceptsCompat(@Nullable final ResourceLocation modelLocation);
 
-	public static class ItemSignModel implements IModel {
+	public static abstract class CompatItemSignModel implements IModel {
 		private final IModel delegate;
 
-		public ItemSignModel(final IModel delegate) {
+		public CompatItemSignModel(final IModel delegate) {
 			this.delegate = delegate;
 		}
 
 		@Override
 		public @Nullable IBakedModel bake(@Nullable final IModelState state, @Nullable final VertexFormat format, @Nullable final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
 			final IBakedModel bakedModel = this.delegate.bake(state, format, bakedTextureGetter);
-			if (bakedModel!=null) {
-				Client.itemRenderer.setBaseModel(bakedModel);
-				return Client.itemRenderer;
-			}
+			if (bakedModel!=null)
+				return injectBakedModel(bakedModel);
 			return ModelLoaderRegistry.getMissingModel().bake(state, format, bakedTextureGetter);
 		}
+
+		public abstract IBakedModel injectBakedModel(IBakedModel bakedModel);
 
 		@Override
 		public Collection<ResourceLocation> getDependencies() {
