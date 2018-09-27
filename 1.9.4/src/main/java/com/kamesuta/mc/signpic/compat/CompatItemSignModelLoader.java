@@ -34,5 +34,9 @@ public abstract class CompatItemSignModelLoader {
 		}
 
 		public abstract @Nullable CompatBakedModel injectBakedModel(CompatBakedModel bakedModel);
+
+		public CompatModel getModel() {
+			return new CompatModel();
+		}
 	}
 }

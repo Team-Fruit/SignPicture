@@ -22,8 +22,10 @@ public class CustomItemSignModelLoader extends CompatItemSignModelLoader {
 
 	@Override
 	public @Nullable CompatModel loadModelCompat(@Nullable final ResourceLocation modelLocation) throws Exception {
-		if (this.loader!=null)
-			return this.loader.loadModel(modelLocation);
+		if (this.loader!=null) {
+			final CompatModel model = this.loader.loadModel(modelLocation);
+			return new ItemSignModel(model).getModel();
+		}
 		return CompatModelLoaderRegistry.getMissingModel();
 	}
 

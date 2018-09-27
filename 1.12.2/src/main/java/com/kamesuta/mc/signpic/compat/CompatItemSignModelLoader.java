@@ -141,6 +141,10 @@ public abstract class CompatItemSignModelLoader implements ICustomModelLoader {
 		public IModel retexture(@Nullable final ImmutableMap<String, String> textures) {
 			return this.delegate.model.retexture(textures);
 		}
+
+		public CompatModel getModel() {
+			return new CompatModel(this);
+		}
 	}
 
 	public static CompatModel getMissingModel() {
