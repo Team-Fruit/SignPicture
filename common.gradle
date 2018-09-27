@@ -88,7 +88,7 @@ if (tasks.findByPath('makeEclipseCleanRunClient')!=null) {
 	tasks.makeEclipseCleanRunClient.doFirst {
 		setArguments '--username Kamesuta'
 		if (project.isProperty('extra_fmlcore'))
-			setJvmArguments project.extra_fmlcore
+			setJvmArguments "-Dfml.coreMods.load=${project.extra_fmlcore}"
 	}
 }
 

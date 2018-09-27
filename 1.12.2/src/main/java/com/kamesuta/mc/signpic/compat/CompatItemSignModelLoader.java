@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableMap;
 import com.kamesuta.mc.signpic.Log;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBakedModel;
 import com.kamesuta.mc.signpic.compat.Compat.CompatModel;
+import com.kamesuta.mc.signpic.compat.CompatItemSignRenderer.CompatModelLoaderRegistry;
 
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -91,7 +92,7 @@ public abstract class CompatItemSignModelLoader implements ICustomModelLoader {
 				final CompatBakedModel compatBakedModel = injectBakedModel(new CompatBakedModel(bakedModel));
 				return compatBakedModel!=null ? compatBakedModel.bakedModel : null;
 			}
-			return ModelLoaderRegistry.getMissingModel().bake(state, format, bakedTextureGetter);
+			return CompatModelLoaderRegistry.getMissingModel().model.bake(state, format, bakedTextureGetter);
 		}
 
 		public abstract @Nullable CompatBakedModel injectBakedModel(CompatBakedModel bakedModel);
