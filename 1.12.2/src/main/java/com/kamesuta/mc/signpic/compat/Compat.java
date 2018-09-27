@@ -25,6 +25,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -66,6 +67,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
@@ -919,6 +921,22 @@ public class Compat {
 		@SuppressWarnings("deprecation")
 		public static String translateToLocal(final String text) {
 			return net.minecraft.util.text.translation.I18n.translateToLocal(text);
+		}
+	}
+
+	public static class CompatModel {
+		public final IModel model;
+
+		public CompatModel(@Nonnull final IModel model) {
+			this.model = model;
+		}
+	}
+
+	public static class CompatBakedModel {
+		public final IBakedModel bakedModel;
+
+		public CompatBakedModel(@Nonnull final IBakedModel bakedModel) {
+			this.bakedModel = bakedModel;
 		}
 	}
 }

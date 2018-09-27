@@ -7,6 +7,8 @@ import javax.annotation.Nullable;
 
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBakedModel;
+import com.kamesuta.mc.signpic.compat.Compat.CompatModel;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
@@ -95,9 +97,19 @@ public abstract class CompatItemSignRenderer implements IItemRenderer {
 		OpenGL.glPopMatrix();
 	}
 
-	public void registerModelRegistry(final CompatModelRegistryEvent event) {
+	public void registerModelRegistry(final CompatModelRegistryEvent event, final CompatItemSignModelLoader modelLoader) {
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {
+	}
+
+	public CompatBakedModel injectBakedModel(@Nonnull final CompatBakedModel bakedModel) {
+		return new CompatBakedModel();
+	}
+
+	public static class CompatModelLoaderRegistry {
+		public static CompatModel getMissingModel() {
+			return new CompatModel();
+		}
 	}
 }

@@ -3,46 +3,28 @@ package com.kamesuta.mc.signpic.render;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.Client;
-import com.kamesuta.mc.signpic.Log;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBakedModel;
+import com.kamesuta.mc.signpic.compat.Compat.CompatModel;
 import com.kamesuta.mc.signpic.compat.CompatItemSignModelLoader;
+import com.kamesuta.mc.signpic.compat.CompatItemSignRenderer.CompatModelLoaderRegistry;
 
-import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ICustomModelLoader;
-import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 
 public class CustomItemSignModelLoader extends CompatItemSignModelLoader {
 	public static CustomItemSignModelLoader INSTANCE = new CustomItemSignModelLoader();
 
-	private @Nullable ICustomModelLoader loader;
-
-	private CustomItemSignModelLoader() {
-		try {
-			this.loader = getInstance();
-		} catch (final Exception e) {
-			Log.log.warn("An error has occurred, ItemSignPicture won't work.", e);
-		}
-	}
-
-	private <T extends Enum<T>> T getInstance() throws Exception {
-		@SuppressWarnings("unchecked")
-		final Class<T> $class = (Class<T>) Class.forName("net.minecraftforge.client.model.ModelLoader$VanillaLoader");
-		return Enum.<T> valueOf($class, "INSTANCE");
-	}
+	private final CompatModelLoader loader = CompatModelLoader.create();
 
 	@Override
 	public void onResourceManagerReloadCompat(@Nullable final IResourceManager resourceManager) {
 	}
 
 	@Override
-	public @Nullable IModel loadModelCompat(@Nullable final ResourceLocation modelLocation) throws Exception {
-		if (this.loader!=null) {
-			final IModel model = this.loader.loadModel(modelLocation);
-			return new ItemSignModel(model);
-		}
-		return ModelLoaderRegistry.getMissingModel();
+	public @Nullable CompatModel loadModelCompat(@Nullable final ResourceLocation modelLocation) throws Exception {
+		if (this.loader!=null)
+			return this.loader.loadModel(modelLocation);
+		return CompatModelLoaderRegistry.getMissingModel();
 	}
 
 	@Override
@@ -59,14 +41,13 @@ public class CustomItemSignModelLoader extends CompatItemSignModelLoader {
 	}
 
 	public static class ItemSignModel extends CompatItemSignModel {
-		public ItemSignModel(final IModel delegate) {
+		public ItemSignModel(final CompatModel delegate) {
 			super(delegate);
 		}
 
 		@Override
-		public IBakedModel injectBakedModel(final IBakedModel bakedModel) {
-			Client.itemRenderer.setBaseModel(bakedModel);
-			return Client.itemRenderer;
+		public CompatBakedModel injectBakedModel(final CompatBakedModel bakedModel) {
+			return Client.itemRenderer.injectBakedModel(bakedModel);
 		}
 	}
 }

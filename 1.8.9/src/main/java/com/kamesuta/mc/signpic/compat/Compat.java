@@ -921,4 +921,10 @@ public class Compat {
 			return StatCollector.translateToLocal(text);
 		}
 	}
+
+	public static class CompatModel {
+	}
+
+	public static class CompatBakedModel {
+	}
 }

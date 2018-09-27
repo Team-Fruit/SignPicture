@@ -932,4 +932,10 @@ public class Compat {
 			return net.minecraft.util.text.translation.I18n.translateToLocal(text);
 		}
 	}
+
+	public static class CompatModel {
+	}
+
+	public static class CompatBakedModel {
+	}
 }

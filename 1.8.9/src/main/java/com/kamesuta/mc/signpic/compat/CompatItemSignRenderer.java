@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBakedModel;
+import com.kamesuta.mc.signpic.compat.Compat.CompatModel;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
@@ -175,12 +177,22 @@ public abstract class CompatItemSignRenderer implements ISmartItemModel, IPerspe
 		return Attributes.DEFAULT_BAKED_FORMAT;
 	}
 
-	public void registerModelRegistry(final CompatModelRegistryEvent event) {
+	public void registerModelRegistry(final CompatModelRegistryEvent event, final CompatItemSignModelLoader modelLoader) {
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {
 		final IBakedModel object = event.getModelRegistry().getObject(this.modelResourceLocation);
 		setBaseModel(object);
 		event.getModelRegistry().putObject(this.modelResourceLocation, this);
+	}
+
+	public CompatBakedModel injectBakedModel(@Nonnull final CompatBakedModel bakedModel) {
+		return new CompatBakedModel();
+	}
+
+	public static class CompatModelLoaderRegistry {
+		public static CompatModel getMissingModel() {
+			return new CompatModel();
+		}
 	}
 }

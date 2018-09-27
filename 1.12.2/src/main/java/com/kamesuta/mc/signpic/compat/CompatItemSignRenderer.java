@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 import com.google.common.collect.ImmutableList;
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatBakedModel;
+import com.kamesuta.mc.signpic.compat.Compat.CompatModel;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelBakeEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatModelRegistryEvent;
 
@@ -188,5 +190,16 @@ public abstract class CompatItemSignRenderer implements IBakedModel {
 	}
 
 	public void registerModelBakery(final CompatModelBakeEvent event) {
+	}
+
+	public CompatBakedModel injectBakedModel(@Nonnull final CompatBakedModel bakedModel) {
+		setBaseModel(bakedModel.bakedModel);
+		return new CompatBakedModel(this);
+	}
+
+	public static class CompatModelLoaderRegistry {
+		public static CompatModel getMissingModel() {
+			return new CompatModel(ModelLoaderRegistry.getMissingModel());
+		}
 	}
 }
