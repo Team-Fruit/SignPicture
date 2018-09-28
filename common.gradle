@@ -93,6 +93,9 @@ if (tasks.findByPath('makeEclipseCleanRunClient')!=null) {
 }
 
 minecraft {
+	if (project.forgegradle.contains('2.2'))
+		setSuppressVersionTest(true);
+
 	version = "${project.version_minecraft}-${project.version_forge}"
 
 	if (project.isProperty('version_mappings'))
@@ -189,8 +192,6 @@ shadowJar {
 }
 
 jar {
-	from sourceSets.common_main.output
-	from sourceSets.common_api.output
 	classifier 'diff'
 	manifest commonManifest
 }
