@@ -5,12 +5,27 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import com.kamesuta.mc.signpic.Reference;
+import com.kamesuta.mc.signpic.UniversalVersioner;
 
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 public class SignPictureCorePlugin implements IFMLLoadingPlugin {
+	public static class UniversalVersionerInjector {
+		static {
+			try {
+				Class.forName("com.kamesuta.mc.signpic.compat.Compat");
+			} catch (final ClassNotFoundException e) {
+				UniversalVersioner.loadVersionFromCoreMod(SignPictureCorePlugin.class);
+			}
+		}
+
+		public static void inject() {
+		}
+	}
+
 	@Override
 	public @Nullable String[] getASMTransformerClass() {
+		UniversalVersionerInjector.inject();
 		return new String[] {
 				Reference.TRANSFORMER
 		};
