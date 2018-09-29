@@ -21,9 +21,6 @@ import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -243,53 +240,25 @@ public class Compat {
 	}
 
 	public static abstract class CompatProxy {
-		public static class CompatFMLPreInitializationEvent {
-			private final @Nonnull FMLPreInitializationEvent event;
+		public static interface CompatFMLPreInitializationEvent {
+			Logger getModLog();
 
-			private CompatFMLPreInitializationEvent(final FMLPreInitializationEvent event) {
-				this.event = event;
-			}
+			File getSuggestedConfigurationFile();
 
-			public Logger getModLog() {
-				return this.event.getModLog();
-			}
-
-			public File getSuggestedConfigurationFile() {
-				return this.event.getSuggestedConfigurationFile();
-			}
-
-			public File getSourceFile() {
-				return this.event.getSourceFile();
-			}
+			File getSourceFile();
 		}
 
 		public abstract void preInit(final @Nonnull CompatFMLPreInitializationEvent event);
 
-		public void preInit(final @Nonnull FMLPreInitializationEvent event) {
-			preInit(new CompatFMLPreInitializationEvent(event));
-		}
-
-		public static class CompatFMLInitializationEvent {
-			private CompatFMLInitializationEvent(final FMLInitializationEvent event) {
-			}
+		public static interface CompatFMLInitializationEvent {
 		}
 
 		public abstract void init(final @Nonnull CompatFMLInitializationEvent event);
 
-		public void init(final @Nonnull FMLInitializationEvent event) {
-			init(new CompatFMLInitializationEvent(event));
-		}
-
-		public static class CompatFMLPostInitializationEvent {
-			private CompatFMLPostInitializationEvent(final FMLPostInitializationEvent event) {
-			}
+		public static interface CompatFMLPostInitializationEvent {
 		}
 
 		public abstract void postInit(final @Nonnull CompatFMLPostInitializationEvent event);
-
-		public void postInit(final @Nonnull FMLPostInitializationEvent event) {
-			postInit(new CompatFMLPostInitializationEvent(event));
-		}
 	}
 
 	public static class CompatItemSignRendererRegistrar {

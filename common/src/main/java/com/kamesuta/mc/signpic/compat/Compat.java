@@ -79,9 +79,6 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class Compat {
 	public static class CompatFMLDeobfuscatingRemapper {
@@ -240,83 +237,25 @@ public class Compat {
 	}
 
 	public static abstract class CompatProxy {
-		public static abstract class CompatFMLPreInitializationEvent {
-			public abstract Logger getModLog();
+		public static interface CompatFMLPreInitializationEvent {
+			Logger getModLog();
 
-			public abstract File getSuggestedConfigurationFile();
+			File getSuggestedConfigurationFile();
 
-			public abstract File getSourceFile();
-		}
-
-		public static class CompatFMLPreInitializationEventF extends CompatFMLPreInitializationEvent {
-			private final @Nonnull FMLPreInitializationEvent event;
-
-			private CompatFMLPreInitializationEventF(final FMLPreInitializationEvent event) {
-				this.event = event;
-			}
-
-			@Override
-			public Logger getModLog() {
-				return this.event.getModLog();
-			}
-
-			@Override
-			public File getSuggestedConfigurationFile() {
-				return this.event.getSuggestedConfigurationFile();
-			}
-
-			@Override
-			public File getSourceFile() {
-				return this.event.getSourceFile();
-			}
-		}
-
-		public static class CompatFMLPreInitializationEventL extends CompatFMLPreInitializationEvent {
-			private final @Nonnull cpw.mods.fml.common.event.FMLPreInitializationEvent event;
-
-			private CompatFMLPreInitializationEventL(final cpw.mods.fml.common.event.FMLPreInitializationEvent event) {
-				this.event = event;
-			}
-
-			@Override
-			public Logger getModLog() {
-				return this.event.getModLog();
-			}
-
-			@Override
-			public File getSuggestedConfigurationFile() {
-				return this.event.getSuggestedConfigurationFile();
-			}
-
-			@Override
-			public File getSourceFile() {
-				return this.event.getSourceFile();
-			}
+			File getSourceFile();
 		}
 
 		public abstract void preInit(final @Nonnull CompatFMLPreInitializationEvent event);
 
-		public void preInit(final @Nonnull FMLPreInitializationEvent event) {
-			preInit(new CompatFMLPreInitializationEvent());
-		}
-
-		public static class CompatFMLInitializationEvent {
+		public static interface CompatFMLInitializationEvent {
 		}
 
 		public abstract void init(final @Nonnull CompatFMLInitializationEvent event);
 
-		public void init(final @Nonnull FMLInitializationEvent event) {
-			init(new CompatFMLInitializationEvent());
-		}
-
-		public static class CompatFMLPostInitializationEvent {
+		public static interface CompatFMLPostInitializationEvent {
 		}
 
 		public abstract void postInit(final @Nonnull CompatFMLPostInitializationEvent event);
-
-		public void postInit(final @Nonnull FMLPostInitializationEvent event) {
-			postInit(new CompatFMLPostInitializationEvent());
-		}
 	}
 
 	public static class CompatItemSignRendererRegistrar {
