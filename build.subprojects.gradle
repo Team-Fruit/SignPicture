@@ -41,9 +41,9 @@ def fg_plugin = plugins.findPlugin project.forgegradle_plugin
 
 sourceSets {
 	[
-		[src: api, base: base_api, compat: compat_api, universal: universal_api],
-		[src: main, base: base_main, compat: compat_main, universal: universal_main],
-		[src: test, base: base_test, compat: compat_test, universal: universal_test]
+		[src: api, base: base_api, bootstrap: bootstrap_api, compat: compat_api, universal: universal_api],
+		[src: main, base: base_main, bootstrap: bootstrap_main, compat: compat_main, universal: universal_main],
+		[src: test, base: base_test, bootstrap: bootstrap_test, compat: compat_test, universal: universal_test]
 	].each { s ->
 		s.src.java {
 			srcDirs = ["../src/default/${s.src.name}/java"]
@@ -57,11 +57,17 @@ sourceSets {
 		s.base.resources {
 			srcDirs = ["../src/base/${s.src.name}/resources"]
 		}
+		s.bootstrap.java {
+			srcDirs = ["./src/bootstrap/${s.src.name}/java"]
+		}
+		s.bootstrap.resources {
+			srcDirs = ["./src/bootstrap/${s.src.name}/resources"]
+		}
 		s.compat.java {
-			srcDirs = ["./src/${s.src.name}/java"]
+			srcDirs = ["./src/compat/${s.src.name}/java"]
 		}
 		s.compat.resources {
-			srcDirs = ["./src/${s.src.name}/resources"]
+			srcDirs = ["./src/compat/${s.src.name}/resources"]
 		}
 		s.universal.java {
 			srcDirs = ["../src/universal/${s.src.name}/java"]
@@ -72,11 +78,15 @@ sourceSets {
 
 		s.base.compileClasspath += s.src.compileClasspath
 		s.base.runtimeClasspath += s.src.runtimeClasspath
+		s.bootstrap.compileClasspath += s.src.compileClasspath
+		s.bootstrap.runtimeClasspath += s.src.runtimeClasspath
 		s.compat.compileClasspath += s.src.compileClasspath
 		s.compat.runtimeClasspath += s.src.runtimeClasspath
 		s.universal.compileClasspath += s.src.compileClasspath
 		s.universal.runtimeClasspath += s.src.runtimeClasspath
 
+		s.bootstrap.compileClasspath += s.base.output
+		s.bootstrap.runtimeClasspath += s.base.output
 		s.compat.compileClasspath += s.base.output
 		s.compat.runtimeClasspath += s.base.output
 		s.universal.compileClasspath += s.compat.output
@@ -221,6 +231,8 @@ shadowJar {
 	from sourceSets.api.output
 	from sourceSets.base_main.output
 	from sourceSets.base_api.output
+	from sourceSets.bootstrap_main.output
+	from sourceSets.bootstrap_api.output
 	if (project.name!=mod_commonname) {
 		from sourceSets.compat_main.output
 		from sourceSets.compat_api.output
@@ -237,6 +249,8 @@ jar {
 	if (project.name==mod_commonname) {
 		from sourceSets.base_main.output
 		from sourceSets.base_api.output
+		from sourceSets.bootstrap_main.output
+		from sourceSets.bootstrap_api.output
 		from sourceSets.universal_main.output
 		from sourceSets.universal_api.output
 	} else {
@@ -291,6 +305,8 @@ sourceJar {
 	from sourceSets.api.allSource
 	from sourceSets.base_main.allSource
 	from sourceSets.base_api.allSource
+	from sourceSets.bootstrap_main.allSource
+	from sourceSets.bootstrap_api.allSource
 	from sourceSets.compat_main.allSource
 	from sourceSets.compat_api.allSource
 	from sourceSets.universal_main.allSource
@@ -308,6 +324,8 @@ task devJar(dependsOn: 'classes', type: Jar) {
 	from sourceSets.api.allSource
 	from sourceSets.base_main.allSource
 	from sourceSets.base_api.allSource
+	from sourceSets.bootstrap_main.output
+	from sourceSets.bootstrap_api.output
 	from sourceSets.compat_main.allSource
 	from sourceSets.compat_api.allSource
 	from sourceSets.universal_main.allSource
@@ -319,6 +337,7 @@ task devJar(dependsOn: 'classes', type: Jar) {
 task apiJar(dependsOn: 'classes', type: Jar) {
 	from sourceSets.api.allSource
 	from sourceSets.base_api.allSource
+	from sourceSets.bootstrap_api.output
 	from sourceSets.compat_api.allSource
 	from sourceSets.universal_api.allSource
 	classifier = 'api'
