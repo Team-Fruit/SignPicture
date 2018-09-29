@@ -8,7 +8,7 @@ common/*
 
 # allow any
 !*.md
-!src/
+!sources/
 !gradle/
 !lib/
 !info/

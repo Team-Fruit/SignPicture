@@ -45,36 +45,16 @@ sourceSets {
 		[src: main, base: base_main, bootstrap: bootstrap_main, compat: compat_main, universal: universal_main],
 		[src: test, base: base_test, bootstrap: bootstrap_test, compat: compat_test, universal: universal_test]
 	].each { s ->
-		s.src.java {
-			srcDirs = ["../src/default/${s.src.name}/java"]
-		}
-		s.src.resources {
-			srcDirs = ["../src/default/${s.src.name}/resources"]
-		}
-		s.base.java {
-			srcDirs = ["../src/base/${s.src.name}/java"]
-		}
-		s.base.resources {
-			srcDirs = ["../src/base/${s.src.name}/resources"]
-		}
-		s.bootstrap.java {
-			srcDirs = ["./src/bootstrap/${s.src.name}/java"]
-		}
-		s.bootstrap.resources {
-			srcDirs = ["./src/bootstrap/${s.src.name}/resources"]
-		}
-		s.compat.java {
-			srcDirs = ["./src/compat/${s.src.name}/java"]
-		}
-		s.compat.resources {
-			srcDirs = ["./src/compat/${s.src.name}/resources"]
-		}
-		s.universal.java {
-			srcDirs = ["../src/universal/${s.src.name}/java"]
-		}
-		s.universal.resources {
-			srcDirs = ["../src/universal/${s.src.name}/resources"]
-		}
+		s.src.java.srcDirs = ["../sources/default/src/${s.src.name}/java"]
+		s.src.resources.srcDirs = ["../sources/default/src/${s.src.name}/resources"]
+		s.base.java.srcDirs = ["../sources/base/src/${s.src.name}/java"]
+		s.base.resources.srcDirs = ["../sources/base/src/${s.src.name}/resources"]
+		s.bootstrap.java.srcDirs = ["./sources/bootstrap/src/${s.src.name}/java"]
+		s.bootstrap.resources.srcDirs = ["./sources/bootstrap/src/${s.src.name}/resources"]
+		s.compat.java.srcDirs = ["./sources/compat/src/${s.src.name}/java"]
+		s.compat.resources.srcDirs = ["./sources/compat/src/${s.src.name}/resources"]
+		s.universal.java.srcDirs = ["../sources/universal/src/${s.src.name}/java"]
+		s.universal.resources.srcDirs = ["../sources/universal/src/${s.src.name}/resources"]
 
 		s.base.compileClasspath += s.src.compileClasspath
 		s.base.runtimeClasspath += s.src.runtimeClasspath
@@ -85,10 +65,14 @@ sourceSets {
 		s.universal.compileClasspath += s.src.compileClasspath
 		s.universal.runtimeClasspath += s.src.runtimeClasspath
 
+		s.src.compileClasspath += s.base.output
+		s.src.runtimeClasspath += s.base.output
 		s.bootstrap.compileClasspath += s.base.output
 		s.bootstrap.runtimeClasspath += s.base.output
 		s.compat.compileClasspath += s.base.output
 		s.compat.runtimeClasspath += s.base.output
+		s.universal.compileClasspath += s.base.output
+		s.universal.runtimeClasspath += s.base.output
 		s.universal.compileClasspath += s.compat.output
 		s.universal.runtimeClasspath += s.compat.output
 	}
