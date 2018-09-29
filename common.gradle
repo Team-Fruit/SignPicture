@@ -23,35 +23,64 @@ plugins {
 
 apply plugin: 'com.matthewprenger.cursegradle'
 
-// ForgeGradle 2.3 with Kotlin to add new sourceSets
 apply plugin: 'java'
 sourceSets {
-	common_api {}
-	common_main {}
-	common_test {}
+	base_api {}
+	base_main {}
+	base_test {}
+	compat_api {}
+	compat_main {}
+	compat_test {}
+	universal_api {}
+	universal_main {}
+	universal_test {}
 }
 
 apply plugin: project.forgegradle_plugin
 def fg_plugin = plugins.findPlugin project.forgegradle_plugin
 
 sourceSets {
-	[[common: common_api, src: api], [common: common_main, src: main], [common: common_test, src: test]].each { s ->
+	[
+		[src: api, base: base_api, compat: compat_api, universal: universal_api],
+		[src: main, base: base_main, compat: compat_main, universal: universal_main],
+		[src: test, base: base_test, compat: compat_test, universal: universal_test]
+	].each { s ->
 		s.src.java {
-			srcDirs = ["../src/${s.src.name}/java"]
+			srcDirs = ["../src/default/${s.src.name}/java"]
 		}
 		s.src.resources {
-			srcDirs = ["../src/${s.src.name}/resources"]
+			srcDirs = ["../src/default/${s.src.name}/resources"]
 		}
-		s.common.java {
+		s.base.java {
+			srcDirs = ["../src/base/${s.src.name}/java"]
+		}
+		s.base.resources {
+			srcDirs = ["../src/base/${s.src.name}/resources"]
+		}
+		s.compat.java {
 			srcDirs = ["./src/${s.src.name}/java"]
 		}
-		s.common.resources {
+		s.compat.resources {
 			srcDirs = ["./src/${s.src.name}/resources"]
 		}
-		s.common.compileClasspath += s.src.compileClasspath
-		s.common.runtimeClasspath += s.src.runtimeClasspath
-		s.src.compileClasspath += s.common.output
-		s.src.runtimeClasspath += s.common.output
+		s.universal.java {
+			srcDirs = ["../src/universal/${s.src.name}/java"]
+		}
+		s.universal.resources {
+			srcDirs = ["../src/universal/${s.src.name}/resources"]
+		}
+
+		s.base.compileClasspath += s.src.compileClasspath
+		s.base.runtimeClasspath += s.src.runtimeClasspath
+		s.compat.compileClasspath += s.src.compileClasspath
+		s.compat.runtimeClasspath += s.src.runtimeClasspath
+		s.universal.compileClasspath += s.src.compileClasspath
+		s.universal.runtimeClasspath += s.src.runtimeClasspath
+
+		s.compat.compileClasspath += s.base.output
+		s.compat.runtimeClasspath += s.base.output
+		s.universal.compileClasspath += s.compat.output
+		s.universal.runtimeClasspath += s.compat.output
 	}
 }
 
@@ -81,7 +110,12 @@ configurations {
 	compile.extendsFrom shade
 }
 
-[compileJava, compileApiJava, compileTestJava, compileCommon_mainJava, compileCommon_apiJava, compileCommon_testJava]*.options*.encoding = 'UTF-8'
+[
+compileJava, compileApiJava, compileTestJava,
+compileBase_mainJava, compileBase_apiJava, compileBase_testJava,
+compileCompat_mainJava, compileCompat_apiJava, compileCompat_testJava,
+compileUniversal_mainJava, compileUniversal_apiJava, compileUniversal_testJava
+]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = '1.8'
 
 if (tasks.findByPath('makeEclipseCleanRunClient')!=null) {
@@ -127,7 +161,7 @@ processResources {
 	inputs.property 'version', mod_version
 	inputs.property 'mcversion', project.version_minecraft
 
-	from(sourceSets.common_main.resources.srcDirs) {
+	from(sourceSets.compat_main.resources.srcDirs) {
 		include 'mcmod.info'
 
 		/*expand([
@@ -140,7 +174,7 @@ processResources {
 		])*/
 	}
 
-	from(sourceSets.common_main.resources.srcDirs) {
+	from(sourceSets.compat_main.resources.srcDirs) {
 		exclude 'mcmod.info'
 	}
 }
@@ -183,15 +217,32 @@ ext.commonManifest = {
 shadowJar.configurations = [project.configurations.shade]
 
 shadowJar {
-	from sourceSets.common_main.output
-	from sourceSets.common_api.output
 	from sourceSets.main.output
 	from sourceSets.api.output
+	from sourceSets.base_main.output
+	from sourceSets.base_api.output
+	if (project.name!=mod_commonname) {
+		from sourceSets.compat_main.output
+		from sourceSets.compat_api.output
+	}
+	from sourceSets.universal_main.output
+	from sourceSets.universal_api.output
 	classifier 'universal'
 	manifest commonManifest
 }
 
 jar {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	if (project.name==mod_commonname) {
+		from sourceSets.base_main.output
+		from sourceSets.base_api.output
+		from sourceSets.universal_main.output
+		from sourceSets.universal_api.output
+	} else {
+		from sourceSets.compat_main.output
+		from sourceSets.compat_api.output
+	}
 	classifier 'diff'
 	manifest commonManifest
 }
@@ -236,8 +287,14 @@ if (tasks.findByPath('sourceJar')==null) {
 }
 
 sourceJar {
-	from sourceSets.common_api.allSource
+	from sourceSets.main.allSource
 	from sourceSets.api.allSource
+	from sourceSets.base_main.allSource
+	from sourceSets.base_api.allSource
+	from sourceSets.compat_main.allSource
+	from sourceSets.compat_api.allSource
+	from sourceSets.universal_main.allSource
+	from sourceSets.universal_api.allSource
 }
 
 // An Error occured while switching above 1.8 -> under 1.7
@@ -247,17 +304,23 @@ task cleanMakeStart(type: Delete) {
 }
 
 task devJar(dependsOn: 'classes', type: Jar) {
-	from sourceSets.common_main.output
-	from sourceSets.common_api.output
-	from sourceSets.main.output
-	from sourceSets.api.output
+	from sourceSets.main.allSource
+	from sourceSets.api.allSource
+	from sourceSets.base_main.allSource
+	from sourceSets.base_api.allSource
+	from sourceSets.compat_main.allSource
+	from sourceSets.compat_api.allSource
+	from sourceSets.universal_main.allSource
+	from sourceSets.universal_api.allSource
 	classifier = 'dev'
 	manifest commonManifest
 }
 
 task apiJar(dependsOn: 'classes', type: Jar) {
-	from sourceSets.common_api.allSource
-	from sourceSets.api.output
+	from sourceSets.api.allSource
+	from sourceSets.base_api.allSource
+	from sourceSets.compat_api.allSource
+	from sourceSets.universal_api.allSource
 	classifier = 'api'
 	manifest commonManifest
 }
