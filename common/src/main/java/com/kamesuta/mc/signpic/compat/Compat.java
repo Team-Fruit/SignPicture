@@ -240,21 +240,55 @@ public class Compat {
 	}
 
 	public static abstract class CompatProxy {
-		public static class CompatFMLPreInitializationEvent {
+		public static abstract class CompatFMLPreInitializationEvent {
+			public abstract Logger getModLog();
+
+			public abstract File getSuggestedConfigurationFile();
+
+			public abstract File getSourceFile();
+		}
+
+		public static class CompatFMLPreInitializationEventF extends CompatFMLPreInitializationEvent {
 			private final @Nonnull FMLPreInitializationEvent event;
 
-			private CompatFMLPreInitializationEvent(final FMLPreInitializationEvent event) {
+			private CompatFMLPreInitializationEventF(final FMLPreInitializationEvent event) {
 				this.event = event;
 			}
 
+			@Override
 			public Logger getModLog() {
 				return this.event.getModLog();
 			}
 
+			@Override
 			public File getSuggestedConfigurationFile() {
 				return this.event.getSuggestedConfigurationFile();
 			}
 
+			@Override
+			public File getSourceFile() {
+				return this.event.getSourceFile();
+			}
+		}
+
+		public static class CompatFMLPreInitializationEventL extends CompatFMLPreInitializationEvent {
+			private final @Nonnull cpw.mods.fml.common.event.FMLPreInitializationEvent event;
+
+			private CompatFMLPreInitializationEventL(final cpw.mods.fml.common.event.FMLPreInitializationEvent event) {
+				this.event = event;
+			}
+
+			@Override
+			public Logger getModLog() {
+				return this.event.getModLog();
+			}
+
+			@Override
+			public File getSuggestedConfigurationFile() {
+				return this.event.getSuggestedConfigurationFile();
+			}
+
+			@Override
 			public File getSourceFile() {
 				return this.event.getSourceFile();
 			}
@@ -263,29 +297,25 @@ public class Compat {
 		public abstract void preInit(final @Nonnull CompatFMLPreInitializationEvent event);
 
 		public void preInit(final @Nonnull FMLPreInitializationEvent event) {
-			preInit(new CompatFMLPreInitializationEvent(event));
+			preInit(new CompatFMLPreInitializationEvent());
 		}
 
 		public static class CompatFMLInitializationEvent {
-			private CompatFMLInitializationEvent(final FMLInitializationEvent event) {
-			}
 		}
 
 		public abstract void init(final @Nonnull CompatFMLInitializationEvent event);
 
 		public void init(final @Nonnull FMLInitializationEvent event) {
-			init(new CompatFMLInitializationEvent(event));
+			init(new CompatFMLInitializationEvent());
 		}
 
 		public static class CompatFMLPostInitializationEvent {
-			private CompatFMLPostInitializationEvent(final FMLPostInitializationEvent event) {
-			}
 		}
 
 		public abstract void postInit(final @Nonnull CompatFMLPostInitializationEvent event);
 
 		public void postInit(final @Nonnull FMLPostInitializationEvent event) {
-			postInit(new CompatFMLPostInitializationEvent(event));
+			postInit(new CompatFMLPostInitializationEvent());
 		}
 	}
 
