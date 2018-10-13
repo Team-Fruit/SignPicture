@@ -7,9 +7,7 @@ import javax.annotation.Nullable;
 import com.kamesuta.mc.signpic.Reference;
 import com.kamesuta.mc.signpic.UniversalVersioner;
 
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-
-public class SignPictureCorePlugin implements IFMLLoadingPlugin {
+public class SignPictureCorePlugin implements net.minecraftforge.fml.relauncher.IFMLLoadingPlugin, cpw.mods.fml.relauncher.IFMLLoadingPlugin {
 	public static class UniversalVersionerInjector {
 		static {
 			try {
