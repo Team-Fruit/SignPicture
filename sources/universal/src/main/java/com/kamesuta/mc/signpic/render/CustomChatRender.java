@@ -25,6 +25,7 @@ import com.kamesuta.mc.signpic.compat.Compat.CompatClickEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatGuiNewChat;
 import com.kamesuta.mc.signpic.compat.Compat.CompatHoverEvent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatMathHelper;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextComponent;
 import com.kamesuta.mc.signpic.compat.Compat.CompatTextStyle;
 import com.kamesuta.mc.signpic.entry.Entry;
@@ -53,7 +54,7 @@ public class CustomChatRender {
 		}
 
 		private @Nonnull SizeData getContentWidth(final @Nullable Content content, final float widthlimit) {
-			final int fheight = WRenderer.font().FONT_HEIGHT;
+			final int fheight = CompatMinecraft.getFontRenderer().getFontRendererObj().FONT_HEIGHT;
 			final SizeData size1 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 			final SizeData size2 = ImageSizes.INNER.defineSize(size1, SizeData.create(widthlimit, fheight*this.node.getLineSplit()));
 			return size2;

@@ -15,6 +15,8 @@ import com.kamesuta.mc.signpic.CoreEvent;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
 import com.kamesuta.mc.signpic.compat.Compat.CompatBlockPos;
+import com.kamesuta.mc.signpic.compat.Compat.CompatFontRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderGameOverlayEvent.CompatElementType;
 import com.kamesuta.mc.signpic.compat.CompatEvents.CompatRenderWorldLastEvent;
@@ -24,7 +26,6 @@ import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.mode.CurrentMode;
 import com.kamesuta.mc.signpic.util.Sign;
 
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.tileentity.TileEntitySign;
@@ -56,7 +57,7 @@ public class SignPicRender {
 		if (event.getType()==CompatElementType.EXPERIENCE)
 			if (CurrentMode.instance.isMode())
 				if ((int) (System.currentTimeMillis()/500)%2==0) {
-					final FontRenderer fontrenderer = font();
+					final CompatFontRenderer fontrenderer = CompatMinecraft.getFontRenderer();
 
 					WRenderer.startTexture();
 					OpenGL.glPushMatrix();
@@ -64,7 +65,7 @@ public class SignPicRender {
 					OpenGL.glScalef(2f, 2f, 1f);
 
 					OpenGL.glPushMatrix();
-					OpenGL.glScalef(fontrenderer.FONT_HEIGHT, fontrenderer.FONT_HEIGHT, 1f);
+					OpenGL.glScalef(fontrenderer.getFontRendererObj().FONT_HEIGHT, fontrenderer.getFontRendererObj().FONT_HEIGHT, 1f);
 					OpenGL.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 					texture().bindTexture(resSign);
@@ -73,7 +74,7 @@ public class SignPicRender {
 
 					OpenGL.glPopMatrix();
 
-					OpenGL.glTranslatef(fontrenderer.FONT_HEIGHT, 0f, 0f);
+					OpenGL.glTranslatef(fontrenderer.getFontRendererObj().FONT_HEIGHT, 0f, 0f);
 					final String str = I18n.format(CurrentMode.instance.getMode().message);
 					fontrenderer.drawStringWithShadow(str, 0, 0, 0xffffff);
 

@@ -119,7 +119,7 @@ public class GuiPAAS extends WFrame {
 					}
 				});
 
-				final int f = font().FONT_HEIGHT/2;
+				final int f = CompatMinecraft.getFontRenderer().getFontRendererObj().FONT_HEIGHT/2;
 
 				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), WFont.fontRenderer) {
 					@Override

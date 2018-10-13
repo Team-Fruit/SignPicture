@@ -24,6 +24,7 @@ import com.kamesuta.mc.bnnwidget.var.VCommon;
 import com.kamesuta.mc.bnnwidget.var.VMotion;
 import com.kamesuta.mc.signpic.Client;
 import com.kamesuta.mc.signpic.ILoadCancelable;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.http.Communicator;
 import com.kamesuta.mc.signpic.state.Progress;
 import com.kamesuta.mc.signpic.state.Progressable;
@@ -208,21 +209,21 @@ public class GuiTask extends WPanel {
 			add(new WPanel(new R(Coord.top(1f), Coord.left(1f), Coord.bottom(0f), Coord.right(0f))) {
 				@Override
 				protected void initWidget() {
-					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(font().FONT_HEIGHT/2), Coord.right(2))) {
+					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(CompatMinecraft.getFontRenderer().getFontRendererObj().FONT_HEIGHT/2), Coord.right(2))) {
 						@Override
 						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
 							final Area a = getGuiPosition(pgp);
 							OpenGL.glPushMatrix();
 							final String cont = "...";
-							final int contwidth = font().getStringWidth(cont);
+							final int contwidth = CompatMinecraft.getFontRenderer().getStringWidth(cont);
 							final String name = TaskElement.this.state.getName();
-							final int namewidth = font().getStringWidth(name);
+							final int namewidth = CompatMinecraft.getFontRenderer().getStringWidth(name);
 							String res;
 							final float prefwidth = a.w()*2;
 							if (namewidth<prefwidth)
 								res = name;
 							else
-								res = font().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
+								res = CompatMinecraft.getFontRenderer().getFontRendererObj().trimStringToWidth(name, (int) (prefwidth-contwidth))+cont;
 							// WRenderer.startShape();
 							// OpenGL.glColor4f(1f, 1f, 1f, 1f);
 							// draw(a, GL11.GL_LINE_LOOP);
@@ -235,7 +236,7 @@ public class GuiTask extends WPanel {
 						}
 					});
 
-					add(new WPanel(new R(Coord.left(4f), Coord.top(font().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
+					add(new WPanel(new R(Coord.left(4f), Coord.top(CompatMinecraft.getFontRenderer().getFontRendererObj().FONT_HEIGHT/2+3.8f), Coord.bottom(1.8f), Coord.right(2))) {
 						protected @Nonnull VMotion progresscoord = V.pm(0f);
 
 						@Override
@@ -250,7 +251,7 @@ public class GuiTask extends WPanel {
 
 									OpenGL.glPushMatrix();
 									final String prog = String.format("%.1f%%", TaskElement.this.progress.getProgress()*100);
-									final int progwidth = font().getStringWidth(prog);
+									final int progwidth = CompatMinecraft.getFontRenderer().getStringWidth(prog);
 									final float maxx = pgp.x2()*2-progwidth;
 									OpenGL.glColor4f(1f, 1f, 1f, getGuiOpacity(popacity)*1f);
 									WRenderer.startTexture();

@@ -104,8 +104,8 @@ public class Compat {
 			return FMLCommonHandler.instance().getMinecraftServerInstance();
 		}
 
-		public static @Nonnull FontRenderer getFontRenderer() {
-			return getMinecraft().fontRendererObj;
+		public static @Nonnull CompatFontRenderer getFontRenderer() {
+			return new CompatFontRenderer(getMinecraft().fontRendererObj);
 		}
 
 		public static @Nullable CompatWorld getWorld() {
@@ -129,6 +129,38 @@ public class Compat {
 		public static @Nullable CompatNetHandlerPlayClient getConnection() {
 			final NetHandlerPlayClient connection = getMinecraft().getConnection();
 			return connection!=null ? new CompatNetHandlerPlayClient(connection) : null;
+		}
+	}
+
+	public static class CompatFontRenderer {
+		private final FontRenderer font;
+
+		public CompatFontRenderer(final FontRenderer font) {
+			this.font = font;
+		}
+
+		public int drawString(final String msg, final float x, final float y, final int color, final boolean shadow) {
+			return this.font.drawString(msg, x, y, color, shadow);
+		}
+
+		public int drawString(final String msg, final float x, final float y, final int color) {
+			return drawString(msg, x, y, color, false);
+		}
+
+		public int drawStringWithShadow(final String msg, final float x, final float y, final int color) {
+			return drawString(msg, x, y, color, true);
+		}
+
+		public int getStringWidth(final @Nullable String s) {
+			return this.font.getStringWidth(s);
+		}
+
+		public int getStringWidthWithoutFormattingCodes(final @Nullable String s) {
+			return getStringWidth(TextFormatting.getTextWithoutFormattingCodes(s));
+		}
+
+		public FontRenderer getFontRendererObj() {
+			return this.font;
 		}
 	}
 

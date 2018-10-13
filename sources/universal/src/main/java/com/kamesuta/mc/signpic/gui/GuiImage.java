@@ -121,7 +121,7 @@ public class GuiImage extends WFrame {
 								OpenGL.glPopMatrix();
 							}
 							StateRender.drawLoading(content.state.getProgress(), content.state.getType().circle, content.state.getType().speed);
-							StateRender.drawMessage(content, font());
+							StateRender.drawMessage(content, CompatMinecraft.getFontRenderer().getFontRendererObj());
 						}
 						OpenGL.glEnable(GL_LIGHTING);
 						OpenGL.glPopMatrix();

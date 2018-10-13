@@ -6,6 +6,7 @@ import org.lwjgl.util.Color;
 
 import com.kamesuta.mc.bnnwidget.compat.OpenGL;
 import com.kamesuta.mc.bnnwidget.render.WRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatFontRenderer;
 import com.kamesuta.mc.signpic.entry.content.Content;
 import com.kamesuta.mc.signpic.state.Progress;
 
@@ -73,19 +74,20 @@ public class StateRender {
 		OpenGL.glTranslatef(0f, 1f, 0f);
 		OpenGL.glPushMatrix();
 		OpenGL.glScalef(f3, f3, 1f);
+		final CompatFontRenderer cfontrenderer = new CompatFontRenderer(fontrenderer);
 		final String msg1 = content.state.getStateMessage();
-		fontrenderer.drawStringWithShadow(msg1, -fontrenderer.getStringWidth(msg1)/2, -fontrenderer.FONT_HEIGHT, 0xffffff);
+		cfontrenderer.drawStringWithShadow(msg1, -cfontrenderer.getStringWidth(msg1)/2, -cfontrenderer.getFontRendererObj().FONT_HEIGHT, 0xffffff);
 		OpenGL.glPopMatrix();
 		f3 = 0.036666668F*f1;
 		OpenGL.glPushMatrix();
 		OpenGL.glScalef(f3, f3, 1f);
 		final String msg2 = content.id.getID();
-		fontrenderer.drawStringWithShadow(msg2, -fontrenderer.getStringWidth(msg2)/2, 0, 0xffffff);
+		cfontrenderer.drawStringWithShadow(msg2, -cfontrenderer.getStringWidth(msg2)/2, 0, 0xffffff);
 		OpenGL.glPopMatrix();
 		final String msg3 = content.state.getMessage();
 		OpenGL.glPushMatrix();
 		OpenGL.glScalef(f3, f3, 1f);
-		fontrenderer.drawStringWithShadow(msg3, -fontrenderer.getStringWidth(msg3)/2, fontrenderer.FONT_HEIGHT, 0xffffff);
+		cfontrenderer.drawStringWithShadow(msg3, -cfontrenderer.getStringWidth(msg3)/2, cfontrenderer.getFontRendererObj().FONT_HEIGHT, 0xffffff);
 		OpenGL.glPopMatrix();
 	}
 

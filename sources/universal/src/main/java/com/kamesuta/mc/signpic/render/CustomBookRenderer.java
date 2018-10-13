@@ -14,6 +14,8 @@ import com.kamesuta.mc.bnnwidget.render.WRenderer;
 import com.kamesuta.mc.signpic.CoreInvoke;
 import com.kamesuta.mc.signpic.attr.AttrReaders;
 import com.kamesuta.mc.signpic.attr.prop.SizeData;
+import com.kamesuta.mc.signpic.compat.Compat.CompatFontRenderer;
+import com.kamesuta.mc.signpic.compat.Compat.CompatMinecraft;
 import com.kamesuta.mc.signpic.entry.Entry;
 import com.kamesuta.mc.signpic.entry.EntryId;
 import com.kamesuta.mc.signpic.entry.content.Content;
@@ -30,7 +32,7 @@ public class CustomBookRenderer {
 
 	@CoreInvoke
 	public static void hookDrawSplitString(@Nonnull final String s, final int x, final int y, final int width, final int color) {
-		final FontRenderer f = WRenderer.font();
+		final CompatFontRenderer f = CompatMinecraft.getFontRenderer();
 
 		final String str = StringUtils.removeEnd(s, "\n");
 
@@ -46,12 +48,12 @@ public class CustomBookRenderer {
 				if (entry.isValid()) {
 					flag = true;
 					newlines.add(s2);
-					final List<?> list = f.listFormattedStringToWidth(line, width);
+					final List<?> list = f.getFontRendererObj().listFormattedStringToWidth(line, width);
 					line = StringUtils.substringAfterLast(line, "}");
 					num = list.size();
 				}
 			}
-			final List<?> list = f.listFormattedStringToWidth(line, width);
+			final List<?> list = f.getFontRendererObj().listFormattedStringToWidth(line, width);
 			for (final Object o : list) {
 				newlines.add((String) o);
 				num--;
@@ -76,8 +78,8 @@ public class CustomBookRenderer {
 							final SizeData size01 = content!=null ? content.image.getSize() : SizeData.DefaultSize;
 							final SizeData size1 = size00.aspectSize(size01);
 							OpenGL.glPushMatrix();
-							OpenGL.glTranslatef(x, iy-f.FONT_HEIGHT/2f, 0f);
-							OpenGL.glScalef(f.FONT_HEIGHT, f.FONT_HEIGHT, 1f);
+							OpenGL.glTranslatef(x, iy-f.getFontRendererObj().FONT_HEIGHT/2f, 0f);
+							OpenGL.glScalef(f.getFontRendererObj().FONT_HEIGHT, f.getFontRendererObj().FONT_HEIGHT, 1f);
 							OpenGL.glTranslatef((size1.getWidth()>=0 ? 1f : -1f)*size1.getWidth()/2f, (size1.getHeight()>=0 ? 1f : -1f)*size1.getHeight(), 0f);
 							OpenGL.glScalef(1f, -1f, 1f);
 							gui.renderSignPicture(1f, 4f, new RenderOption());
@@ -88,10 +90,10 @@ public class CustomBookRenderer {
 						}
 					}
 					f.drawString(s1, x, iy, color);
-					iy += f.FONT_HEIGHT;
+					iy += f.getFontRendererObj().FONT_HEIGHT;
 				}
 			}
 		} else
-			f.drawSplitString(s, x, y, width, color);
+			f.getFontRendererObj().drawSplitString(s, x, y, width, color);
 	}
 }
