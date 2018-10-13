@@ -5,17 +5,11 @@
 			"modid": "signpic",
 			"name": "SignPicture",
 			"description": "The sign tells us how beautiful it is!",
-			"mcversion": "${mcversion}",
-			"version": "${version}",
 			"authorList": [
 				"Kamesuta",
 				"sjcl"
 			],
-			"credits": "2016 TeamFruit",
-			"dependants": [],
-			"dependencies": ["Forge@[${minforgeversion},)"],
-			"parent": "",
-			"requiredMods": ["Forge@[${minforgeversion},)"],
+			"credits": "2016-2018 TeamFruit",
 			"logoFile": "assets/signpic/textures/logo.png",
 			"screenshots": [],
 			"updateUrl": "https://github.com/Team-Fruit/SignPicture/releases",
