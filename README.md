@@ -8,7 +8,8 @@
 ![Minecraft 1.10.2](https://img.shields.io/badge/Minecraft-1.10.2-green.svg?style=flat)
 ![Minecraft 1.11](https://img.shields.io/badge/Minecraft-1.11-green.svg?style=flat)
 ![Minecraft 1.11.2](https://img.shields.io/badge/Minecraft-1.11.2-green.svg?style=flat)
-
+![Minecraft 1.12](https://img.shields.io/badge/Minecraft-1.12-green.svg?style=flat)
+![Minecraft 1.12.2](https://img.shields.io/badge/Minecraft-1.12-green.svg?style=flat)
 ## Table of Contents
 
 * [About](#about)
@@ -57,7 +58,7 @@ You install this mod by putting it into the `minecraft/mods/` folder. It has no 
 
 ## Issues
 
-Sign Picture crashing, have a suggestion, found a bug?  Create an issue now!
+Sign Picture crashing, have a suggestion, found a bug? Create an issue now!
 
 1. Make sure your issue has not already been answered or fixed and you are using the latest version. Also think about whether your issue is a valid one before submitting it.
 2. Go to [the issues page](https://github.com/Team-Fruit/SignPicture/issues) and click [new issue](https://github.com/Team-Fruit/SignPicture/issues/new)
