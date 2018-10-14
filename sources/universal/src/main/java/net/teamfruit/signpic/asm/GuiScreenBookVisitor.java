@@ -7,9 +7,9 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import net.teamfruit.signpic.asm.lib.ClassName;
 import net.teamfruit.signpic.asm.lib.DescHelper;
 import net.teamfruit.signpic.asm.lib.MethodMatcher;
-import net.teamfruit.signpic.asm.lib.VisitorHelper;
 
 public class GuiScreenBookVisitor extends ClassVisitor {
 	private static class HookMethodVisitor extends MethodVisitor {
@@ -17,13 +17,13 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 
 		public HookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
-			this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(void.class, "java.lang.String", int.class, int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawSplitString);
+			this.matcher = new MethodMatcher(ClassName.of("net.minecraft.client.gui.FontRenderer"), DescHelper.toDescMethod(void.class, "java.lang.String", int.class, int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawSplitString);
 		}
 
 		@Override
 		public void visitMethodInsn(final int opcode, final @Nullable String owner, final @Nullable String name, final @Nullable String desc, final boolean itf) {
 			if (name!=null&&desc!=null&&this.matcher.match(name, desc))
-				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomBookRenderer", "hookDrawSplitString", DescHelper.toDesc(void.class, owner, "java.lang.String", int.class, int.class, int.class, int.class), itf);
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, ClassName.of("net.teamfruit.signpic.render.CustomBookRenderer").getBytecodeName(), "hookDrawSplitString", DescHelper.toDescMethod(void.class, owner, ClassName.of("java.lang.String"), int.class, int.class, int.class, int.class), itf);
 			else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
 		}
@@ -33,7 +33,7 @@ public class GuiScreenBookVisitor extends ClassVisitor {
 
 	public GuiScreenBookVisitor(final @Nonnull String obfClassName, final @Nonnull ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
-		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, int.class, int.class, float.class), ASMDeobfNames.GuiScreenBookDrawScreen);
+		this.matcher = new MethodMatcher(ClassName.fromBytecodeName(obfClassName), DescHelper.toDescMethod(void.class, int.class, int.class, float.class), ASMDeobfNames.GuiScreenBookDrawScreen);
 	}
 
 	@Override

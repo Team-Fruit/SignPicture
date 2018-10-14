@@ -9,10 +9,10 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import net.teamfruit.signpic.asm.lib.ClassName;
 import net.teamfruit.signpic.asm.lib.DescHelper;
 import net.teamfruit.signpic.asm.lib.MethodMatcher;
 import net.teamfruit.signpic.asm.lib.RefName;
-import net.teamfruit.signpic.asm.lib.VisitorHelper;
 import net.teamfruit.signpic.compat.CompatVersion;
 
 public class GuiNewChatVisitor extends ClassVisitor {
@@ -26,20 +26,20 @@ public class GuiNewChatVisitor extends ClassVisitor {
 			if (opcode==Opcodes.RETURN) {
 				/*
 				 * 42  aload_0 [this]
-				 * 43  new com.kamesuta.mc.signpic.render.CustomChatRender$PicChatHook [54]
+				 * 43  new net.teamfruit.signpic.render.CustomChatRender$PicChatHook [54]
 				 * 46  dup
 				 * 47  aload_0 [this]
 				 * 48  getfield net.minecraft.client.gui.GuiNewChat.field_146253_i : java.util.List [50]
-				 * 51  invokespecial com.kamesuta.mc.signpic.render.CustomChatRender$PicChatHook(java.util.List) [56]
-				 * 54  putfield net.minecraft.client.gui.GuiNewChat.hook : com.kamesuta.mc.signpic.render.CustomChatRender.PicChatHook [59]
+				 * 51  invokespecial net.teamfruit.signpic.render.CustomChatRender$PicChatHook(java.util.List) [56]
+				 * 54  putfield net.minecraft.client.gui.GuiNewChat.hook : net.teamfruit.signpic.render.CustomChatRender.PicChatHook [59]
 				 */
 				super.visitVarInsn(Opcodes.ALOAD, 0);
-				super.visitTypeInsn(Opcodes.NEW, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatHook");
+				super.visitTypeInsn(Opcodes.NEW, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatHook").getBytecodeName());
 				super.visitInsn(Opcodes.DUP);
 				super.visitVarInsn(Opcodes.ALOAD, 0);
-				super.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/client/gui/GuiNewChat", ASMDeobfNames.GuiNewChatDrawnChatLines.name(), DescHelper.toDesc("java.util.List"));
-				super.visitMethodInsn(Opcodes.INVOKESPECIAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatHook", "<init>", DescHelper.toDesc(void.class, "java.util.List"), false);
-				super.visitFieldInsn(Opcodes.PUTFIELD, "net/minecraft/client/gui/GuiNewChat", "hook", DescHelper.toDesc("com.kamesuta.mc.signpic.render.CustomChatRender$PicChatHook"));
+				super.visitFieldInsn(Opcodes.GETFIELD, ClassName.of("net.minecraft.client.gui.GuiNewChat").getBytecodeName(), ASMDeobfNames.GuiNewChatDrawnChatLines.name(), DescHelper.toDesc(ClassName.of("java.util.List")));
+				super.visitMethodInsn(Opcodes.INVOKESPECIAL, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatHook").getBytecodeName(), "<init>", DescHelper.toDescMethod(void.class, ClassName.of("java.util.List")), false);
+				super.visitFieldInsn(Opcodes.PUTFIELD, ClassName.of("net.minecraft.client.gui.GuiNewChat").getBytecodeName(), "hook", DescHelper.toDesc(ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatHook")));
 			}
 			super.visitInsn(opcode);
 		}
@@ -52,10 +52,10 @@ public class GuiNewChatVisitor extends ClassVisitor {
 			super(Opcodes.ASM5, mv);
 			switch (CompatVersion.version()) {
 				case V7:
-					this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(int.class, "java.lang.String", int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
+					this.matcher = new MethodMatcher(ClassName.of("net.minecraft.client.gui.FontRenderer").toMappedName(), DescHelper.toDescMethod(int.class, ClassName.of("java.lang.String"), int.class, int.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
 					break;
 				default:
-					this.matcher = new MethodMatcher(VisitorHelper.getMappedName("net/minecraft/client/gui/FontRenderer"), DescHelper.toDesc(int.class, "java.lang.String", float.class, float.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
+					this.matcher = new MethodMatcher(ClassName.of("net.minecraft.client.gui.FontRenderer").toMappedName(), DescHelper.toDescMethod(int.class, ClassName.of("java.lang.String"), float.class, float.class, int.class), ASMDeobfNames.FontRendererDrawStringWithShadow);
 					break;
 			}
 		}
@@ -64,12 +64,12 @@ public class GuiNewChatVisitor extends ClassVisitor {
 		public void visitCode() {
 			/*
 			 * 106  aload_0 [this]
-			 * 107  getfield net.minecraft.client.gui.GuiNewChat.hook : com.kamesuta.mc.signpic.gui.PicChatHook [57]
-			 * 110  invokevirtual com.kamesuta.mc.signpic.gui.PicChatHook.updateLines() : void [128]
+			 * 107  getfield net.minecraft.client.gui.GuiNewChat.hook : net.teamfruit.signpic.gui.PicChatHook [57]
+			 * 110  invokevirtual net.teamfruit.signpic.gui.PicChatHook.updateLines() : void [128]
 			 */
 			super.visitVarInsn(Opcodes.ALOAD, 0);
-			super.visitFieldInsn(Opcodes.GETFIELD, "net/minecraft/client/gui/GuiNewChat", "hook", DescHelper.toDesc("com.kamesuta.mc.signpic.render.CustomChatRender$PicChatHook"));
-			super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatHook", "updateLines", DescHelper.toDesc(void.class, new Object[0]), false);
+			super.visitFieldInsn(Opcodes.GETFIELD, ClassName.of("net.minecraft.client.gui.GuiNewChat").getBytecodeName(), "hook", DescHelper.toDesc(ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatHook")));
+			super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatHook").getBytecodeName(), "updateLines", DescHelper.toDescMethod(void.class), false);
 			super.visitCode();
 		}
 
@@ -83,7 +83,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 						 * 329  aload 12 [chatline]
 						 * 331  iload 16 [j2]
 						 * 333  iload 11 [i2]
-						 * 335  invokestatic com.kamesuta.mc.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
+						 * 335  invokestatic net.teamfruit.signpic.gui.PicChatLine.hookDrawStringWithShadow(net.minecraft.client.gui.FontRenderer, java.lang.String, int, int, int, net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.ChatLine, int, int) : int [170]
 						 */
 						super.visitVarInsn(Opcodes.ISTORE, 32);
 						super.visitVarInsn(Opcodes.ISTORE, 33);
@@ -122,12 +122,12 @@ public class GuiNewChatVisitor extends ClassVisitor {
 						break;
 				}
 
-				super.visitMethodInsn(Opcodes.INVOKESTATIC, "com/kamesuta/mc/signpic/render/CustomChatRender", "hookDrawStringWithShadow",
-						DescHelper.toDesc(int.class,
-								"net.minecraft.client.gui.FontRenderer",
-								"java.lang.String", float.class, float.class, int.class,
-								"net.minecraft.client.gui.GuiNewChat",
-								"net.minecraft.client.gui.ChatLine", int.class, float.class),
+				super.visitMethodInsn(Opcodes.INVOKESTATIC, ClassName.of("net.teamfruit.signpic.render.CustomChatRender").getBytecodeName(), "hookDrawStringWithShadow",
+						DescHelper.toDescMethod(int.class,
+								ClassName.of("net.minecraft.client.gui.FontRenderer"), // TODO
+								ClassName.of("java.lang.String"), float.class, float.class, int.class,
+								ClassName.of("net.minecraft.client.gui.GuiNewChat"),
+								ClassName.of("net.minecraft.client.gui.ChatLine"), int.class, float.class),
 						false);
 			} else
 				super.visitMethodInsn(opcode, owner, name, desc, itf);
@@ -143,21 +143,21 @@ public class GuiNewChatVisitor extends ClassVisitor {
 		@Override
 		public void visitTypeInsn(final int opcode, final @Nullable String type) {
 			super.visitTypeInsn(opcode, type);
-			if (opcode==Opcodes.CHECKCAST&&VisitorHelper.getMappedName("net/minecraft/client/gui/ChatLine").equals(type)) {
+			if (opcode==Opcodes.CHECKCAST&&type!=null&&ClassName.of("net.minecraft.client.gui.ChatLine").equals(ClassName.fromBytecodeName(type))) {
 				/*
 				 * 203  checkcast net.minecraft.client.gui.ChatLine [137]
 				 * 206  astore 10 [chatline]
 				 * 208  aload 10 [chatline]
-				 * 210  instanceof com.kamesuta.mc.signpic.gui.PicChatLine [445]
+				 * 210  instanceof net.teamfruit.signpic.gui.PicChatLine [445]
 				 * 213  ifeq 244
 				 * 216  aload 10 [chatline]
-				 * 218  checkcast com.kamesuta.mc.signpic.gui.PicChatLine [445]
+				 * 218  checkcast net.teamfruit.signpic.gui.PicChatLine [445]
 				 * 221  aload_0 [this]
 				 * 222  aload_0 [this]
 				 * 223  getfield net.minecraft.client.gui.GuiNewChat.mc : net.minecraft.client.Minecraft [59]
 				 * 226  getfield net.minecraft.client.Minecraft.fontRenderer : net.minecraft.client.gui.FontRenderer [168]
 				 * 229  iload 6 [l]
-				 * 231  invokevirtual com.kamesuta.mc.signpic.gui.PicChatLine.onClicked(net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.FontRenderer, int) : net.minecraft.util.IChatComponent [447]
+				 * 231  invokevirtual net.teamfruit.signpic.gui.PicChatLine.onClicked(net.minecraft.client.gui.GuiNewChat, net.minecraft.client.gui.FontRenderer, int) : net.minecraft.util.IChatComponent [447]
 				 * 234  astore 11 [c]
 				 * 236  aload 11 [c]
 				 * 238  ifnull 244
@@ -167,17 +167,17 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				 */
 				super.visitVarInsn(Opcodes.ASTORE, 10);
 				super.visitVarInsn(Opcodes.ALOAD, 10);
-				super.visitTypeInsn(Opcodes.INSTANCEOF, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine");
+				super.visitTypeInsn(Opcodes.INSTANCEOF, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName());
 				final Label l = new Label();
 				super.visitJumpInsn(Opcodes.IFEQ, l);
 				super.visitVarInsn(Opcodes.ALOAD, 10);
-				super.visitTypeInsn(Opcodes.CHECKCAST, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine");
+				super.visitTypeInsn(Opcodes.CHECKCAST, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName());
 				super.visitVarInsn(Opcodes.ALOAD, 0);
 				super.visitVarInsn(Opcodes.ILOAD, 6);
 				if (CompatVersion.older(CompatVersion.V8))
-					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.IChatComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
+					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName(), "onClicked", DescHelper.toDescMethod(ClassName.of("net.minecraft.util.IChatComponent"), ClassName.of("net.minecraft.client.gui.GuiNewChat"), int.class), false);
 				else
-					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "com/kamesuta/mc/signpic/render/CustomChatRender$PicChatLine", "onClicked", DescHelper.toDesc("net.minecraft.util.text.ITextComponent", "net.minecraft.client.gui.GuiNewChat", int.class), false);
+					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName(), "onClicked", DescHelper.toDescMethod(ClassName.of("net.minecraft.util.text.ITextComponent"), ClassName.of("net.minecraft.client.gui.GuiNewChat"), int.class), false);
 				super.visitVarInsn(Opcodes.ASTORE, 11);
 				super.visitVarInsn(Opcodes.ALOAD, 11);
 				super.visitJumpInsn(Opcodes.IFNULL, l);
@@ -195,10 +195,10 @@ public class GuiNewChatVisitor extends ClassVisitor {
 
 	public GuiNewChatVisitor(final @Nonnull String obfClassName, final @Nonnull ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
-		visitField(Opcodes.ACC_PUBLIC|Opcodes.ACC_FINAL, "hook", DescHelper.toDesc("com.kamesuta.mc.signpic.render.CustomChatRender$PicChatHook"), null, null);
-		this.initmatcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, new Object[0]), RefName.name("<init>"));
-		this.drawchatmatcher = new MethodMatcher(obfClassName, DescHelper.toDesc(void.class, int.class), ASMDeobfNames.GuiNewChatDrawChat);
-		this.getchatcomponentmatcher = new MethodMatcher(obfClassName, DescHelper.toDesc("net.minecraft.util.IChatComponent", int.class, int.class), ASMDeobfNames.GuiNewChatGetChatComponent);
+		visitField(Opcodes.ACC_PUBLIC|Opcodes.ACC_FINAL, "hook", DescHelper.toDesc(ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatHook")), null, null);
+		this.initmatcher = new MethodMatcher(ClassName.fromBytecodeName(obfClassName), DescHelper.toDescMethod(void.class), RefName.name("<init>"));
+		this.drawchatmatcher = new MethodMatcher(ClassName.fromBytecodeName(obfClassName), DescHelper.toDescMethod(void.class, int.class), ASMDeobfNames.GuiNewChatDrawChat);
+		this.getchatcomponentmatcher = new MethodMatcher(ClassName.fromBytecodeName(obfClassName), DescHelper.toDescMethod(ClassName.of("net.minecraft.util.IChatComponent"), int.class, int.class), ASMDeobfNames.GuiNewChatGetChatComponent);
 	}
 
 	@Override

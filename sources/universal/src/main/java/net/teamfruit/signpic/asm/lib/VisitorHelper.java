@@ -17,7 +17,6 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
 import net.minecraft.launchwrapper.Launch;
-import net.teamfruit.signpic.compat.Compat.CompatFMLDeobfuscatingRemapper;
 
 public class VisitorHelper {
 
@@ -52,13 +51,13 @@ public class VisitorHelper {
 				final ClassLoader classLoader = ClassWriter.class.getClassLoader();
 				try {
 					try {
-						c = Class.forName(type1.replace('/', '.'), false, classLoader);
-						d = Class.forName(type2.replace('/', '.'), false, classLoader);
+						c = Class.forName(ClassName.BytecodeToSourcecodeName(type1), false, classLoader);
+						d = Class.forName(ClassName.BytecodeToSourcecodeName(type2), false, classLoader);
 					} catch (final ClassNotFoundException e) {
 						final ClassLoader launchClassLoader = getClass().getClassLoader();
 						try {
-							c = Class.forName(type1.replace('/', '.'), false, launchClassLoader);
-							d = Class.forName(type2.replace('/', '.'), false, launchClassLoader);
+							c = Class.forName(ClassName.BytecodeToSourcecodeName(type1), false, launchClassLoader);
+							d = Class.forName(ClassName.BytecodeToSourcecodeName(type2), false, launchClassLoader);
 						} catch (final ClassNotFoundException e1) {
 							throw new RuntimeException(String.format("ClassLoader: %s, LaunchClassLoader: %s", e.toString(), e1.toString()));
 						}
@@ -71,12 +70,12 @@ public class VisitorHelper {
 				if (d.isAssignableFrom(c))
 					return type2;
 				if (c.isInterface()||d.isInterface())
-					return "java/lang/Object";
+					return ClassName.SourcecodeToBytecodeName("java.lang.Object");
 				else {
 					do
 						c = c.getSuperclass();
 					while (!c.isAssignableFrom(d));
-					return c.getName().replace('.', '/');
+					return ClassName.SourcecodeToBytecodeName(c.getName());
 				}
 			}
 		};
@@ -93,9 +92,5 @@ public class VisitorHelper {
 	public static boolean useSrgNames() {
 		final Boolean deobfuscated = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 		return deobfuscated==null||!deobfuscated;
-	}
-
-	public static @Nonnull String getMappedName(final @Nonnull String clsName) {
-		return useSrgNames() ? CompatFMLDeobfuscatingRemapper.unmap(clsName) : clsName;
 	}
 }

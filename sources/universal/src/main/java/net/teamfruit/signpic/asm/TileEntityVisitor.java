@@ -7,6 +7,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import net.teamfruit.signpic.asm.lib.ClassName;
 import net.teamfruit.signpic.asm.lib.DescHelper;
 import net.teamfruit.signpic.asm.lib.MethodMatcher;
 
@@ -28,10 +29,10 @@ public class TileEntityVisitor extends ClassVisitor {
 			 *  11  aload_0 [this]
 			 */
 			visitVarInsn(Opcodes.ALOAD, 0);
-			visitTypeInsn(Opcodes.INSTANCEOF, "net/minecraft/tileentity/TileEntitySign");
+			visitTypeInsn(Opcodes.INSTANCEOF, ClassName.of("net.minecraft.tileentity.TileEntitySign").getBytecodeName());
 			final Label skipReturn = new Label();
 			visitJumpInsn(Opcodes.IFEQ, skipReturn);
-			visitFieldInsn(Opcodes.GETSTATIC, "net/minecraft/tileentity/TileEntity", "INFINITE_EXTENT_AABB", DescHelper.toDesc("net.minecraft.util.math.AxisAlignedBB"));
+			visitFieldInsn(Opcodes.GETSTATIC, ClassName.of("net.minecraft.tileentity.TileEntity").getBytecodeName(), "INFINITE_EXTENT_AABB", DescHelper.toDesc(ClassName.of("net.minecraft.util.math.AxisAlignedBB")));
 			visitInsn(Opcodes.ARETURN);
 			visitLabel(skipReturn);
 		}
@@ -41,7 +42,7 @@ public class TileEntityVisitor extends ClassVisitor {
 
 	public TileEntityVisitor(final String obfClassName, final ClassVisitor cv) {
 		super(Opcodes.ASM5, cv);
-		this.matcher = new MethodMatcher(obfClassName, DescHelper.toDesc("net.minecraft.util.math.AxisAlignedBB", new Object[0]), ASMDeobfNames.TileEntityGetRenderBoundingBox);
+		this.matcher = new MethodMatcher(ClassName.fromBytecodeName(obfClassName), DescHelper.toDescMethod(ClassName.of("net.minecraft.util.math.AxisAlignedBB")), ASMDeobfNames.TileEntityGetRenderBoundingBox);
 	}
 
 	@Override
