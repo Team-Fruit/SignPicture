@@ -124,7 +124,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 
 				super.visitMethodInsn(Opcodes.INVOKESTATIC, ClassName.of("net.teamfruit.signpic.render.CustomChatRender").getBytecodeName(), "hookDrawStringWithShadow",
 						DescHelper.toDescMethod(int.class,
-								ClassName.of("net.minecraft.client.gui.FontRenderer"), // TODO
+								ClassName.of("net.minecraft.client.gui.FontRenderer"),
 								ClassName.of("java.lang.String"), float.class, float.class, int.class,
 								ClassName.of("net.minecraft.client.gui.GuiNewChat"),
 								ClassName.of("net.minecraft.client.gui.ChatLine"), int.class, float.class),
@@ -135,15 +135,17 @@ public class GuiNewChatVisitor extends ClassVisitor {
 	}
 
 	private static class GetChatComponentHookMethodVisitor extends MethodVisitor {
+		private final ClassName classmatcher;
 
 		public GetChatComponentHookMethodVisitor(final @Nullable MethodVisitor mv) {
 			super(Opcodes.ASM5, mv);
+			this.classmatcher = ClassName.of("net.minecraft.client.gui.ChatLine").toMappedName();
 		}
 
 		@Override
 		public void visitTypeInsn(final int opcode, final @Nullable String type) {
 			super.visitTypeInsn(opcode, type);
-			if (opcode==Opcodes.CHECKCAST&&type!=null&&ClassName.of("net.minecraft.client.gui.ChatLine").equals(ClassName.fromBytecodeName(type))) {
+			if (opcode==Opcodes.CHECKCAST&&type!=null&&this.classmatcher.equals(ClassName.fromBytecodeName(type))) {
 				/*
 				 * 203  checkcast net.minecraft.client.gui.ChatLine [137]
 				 * 206  astore 10 [chatline]

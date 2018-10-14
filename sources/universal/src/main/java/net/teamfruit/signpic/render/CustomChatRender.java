@@ -26,6 +26,7 @@ import net.teamfruit.signpic.attr.prop.SizeData.ImageSizes;
 import net.teamfruit.signpic.compat.Compat.CompatChatLine;
 import net.teamfruit.signpic.compat.Compat.CompatChatRender.CompatPicChatLine;
 import net.teamfruit.signpic.compat.Compat.CompatClickEvent;
+import net.teamfruit.signpic.compat.Compat.CompatFontRenderer;
 import net.teamfruit.signpic.compat.Compat.CompatGuiNewChat;
 import net.teamfruit.signpic.compat.Compat.CompatHoverEvent;
 import net.teamfruit.signpic.compat.Compat.CompatMathHelper;
@@ -160,7 +161,7 @@ public class CustomChatRender {
 			WRenderer.startTexture();
 		} else
 			// this.mc.fontRenderer.drawStringWithShadow(s, b0, j2-8, 16777215+(i2<<24));
-			font.drawStringWithShadow(str, (int) x, (int) y, color);
+			new CompatFontRenderer(font).drawStringWithShadow(str, x, y, color);
 		return 0;
 	}
 
