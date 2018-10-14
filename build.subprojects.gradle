@@ -283,26 +283,26 @@ task cleanMakeStart(type: Delete) {
 }
 
 task devJar(dependsOn: 'classes', type: Jar) {
-	from sourceSets.main.allSource
-	from sourceSets.api.allSource
-	from sourceSets.base_main.allSource
-	from sourceSets.base_api.allSource
+	from sourceSets.main.output
+	from sourceSets.api.output
+	from sourceSets.base_main.output
+	from sourceSets.base_api.output
 	from sourceSets.bootstrap_main.output
 	from sourceSets.bootstrap_api.output
-	from sourceSets.compat_main.allSource
-	from sourceSets.compat_api.allSource
-	from sourceSets.universal_main.allSource
-	from sourceSets.universal_api.allSource
+	from sourceSets.compat_main.output
+	from sourceSets.compat_api.output
+	from sourceSets.universal_main.output
+	from sourceSets.universal_api.output
 	classifier = 'dev'
 	manifest commonManifest
 }
 
 task apiJar(dependsOn: 'classes', type: Jar) {
-	from sourceSets.api.allSource
-	from sourceSets.base_api.allSource
+	from sourceSets.api.output
+	from sourceSets.base_api.output
 	from sourceSets.bootstrap_api.output
-	from sourceSets.compat_api.allSource
-	from sourceSets.universal_api.allSource
+	from sourceSets.compat_api.output
+	from sourceSets.universal_api.output
 	classifier = 'api'
 	manifest commonManifest
 }
