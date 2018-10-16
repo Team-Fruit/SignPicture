@@ -22,8 +22,8 @@ plugins {
 }
 
 apply plugin: 'com.matthewprenger.cursegradle'
-
 apply plugin: 'java'
+
 sourceSets {
 	base_api {}
 	base_main {}
@@ -309,52 +309,7 @@ task apiJar(dependsOn: 'classes', type: Jar) {
 
 [jar, shadowJar, devJar, sourceJar, apiJar]*.destinationDir = mod_artifacts_dir
 
-artifacts {
-	archives jar
-	archives shadowJar
-	archives devJar
-	archives sourceJar
-	archives apiJar
-}
-
-task signJars(dependsOn: 'build') {
-	gradle.taskGraph.whenReady {taskGraph ->
-		if (taskGraph.hasTask(tasks.signJars))
-			assert sec_keystore_location!=null, 'missing sec_keystore_location'
-	}
-
-	def keystore_location = sec_keystore_location ?: ''
-	def keystore_alias = sec_keystore_alias ?: ''
-	def keystore_password = sec_keystore_password ?: ''
-
-	inputs.dir shadowJar.destinationDir
-	inputs.file keystore_location
-	inputs.property 'keystore_alias', keystore_alias
-	inputs.property 'keystore_password', keystore_password
-	outputs.dir shadowJar.destinationDir
-
-	doLast {
-		[jar, shadowJar, devJar, sourceJar, apiJar].each { eachtask ->
-			eachtask.outputs.files.each { file ->
-				if (!file.path.endsWith('.jar'))
-					return
-
-				logger.lifecycle "signing ${file}"
-				ant.signjar(
-						destDir: file.parentFile,
-						jar: file,
-						keystore: keystore_location,
-						alias: keystore_alias,
-						storepass: keystore_password
-				)
-			}
-		}
-	}
-}
-
 task deploy(dependsOn: 'build', type: Copy) {
-	mustRunAfter 'signJars'
-
 	deploy_target.targets.each { target ->
 		def dest = target.name.endsWith('.jar') ? target.parentFile : target
 
@@ -383,7 +338,6 @@ if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
 		tasks.curseforge.enabled = !mod_autorelease && project.name!=mod_commonname
 
 		tasks.curseforge.dependsOn 'reobfShadowJar'
-		tasks.curseforge.mustRunAfter 'signJars'
 		apiKey = sec_curseforge_key
 		project {
 			id = project.extra_curseforge_id

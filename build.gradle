@@ -4,7 +4,7 @@ buildscript {
 plugins {
 	id 'com.palantir.git-version' version '0.7.1'
 	id 'co.riiid.gradle' version '0.4.2'
-	id 'com.jfrog.bintray' version '1.7.3'
+	id 'com.jfrog.bintray' version '1.8.4'
 	id 'com.matthewprenger.cursegradle' version '1.0.10'
 }
 
@@ -174,9 +174,6 @@ ext {
 	sec_github_key = System.getenv('GITHUB_TOKEN') ?: project.isProperty('api_key_github') ? project.api_key_github : null
 	sec_bintray_user = System.getenv('BINTRAY_USER') ?: project.isProperty('api_user_bintray') ? project.api_user_bintray : null
 	sec_bintray_key = System.getenv('BINTRAY_KEY') ?: project.isProperty('api_key_bintray') ? project.api_key_github : null
-	sec_keystore_location = System.getenv('KEYSTORE_LOCATION') ?: project.isProperty('keystore_location') ? project.keystore_location : null
-	sec_keystore_alias = System.getenv('KEYSTORE_ALIAS') ?: project.isProperty('keystore_alias') ? project.keystore_alias : null
-	sec_keystore_password = System.getenv('KEYSTORE_PASSWORD') ?: project.isProperty('keystore_password') ? project.keystore_password : null
 }
 
 class DeployExtension {
@@ -273,7 +270,6 @@ jar {
 			}
 		}
 		dependsOn p.tasks.build
-		mustRunAfter p.tasks.signJars
 	}
 	classifier = 'universal'
 	destinationDir = mod_artifacts_dir
@@ -311,16 +307,22 @@ if (sec_github_key!=null&&project.isProperty('extra_github_owner')&&project.isPr
 	}
 }
 
-publishing {
-	publications {
-		ModPublication(MavenPublication) {
-			groupId = project.group
-			artifactId = project.modid
-			version = "${mod_version}"
-			artifact jar
-			subprojects.each { p ->
+publishing.publications {
+	ModPublication(MavenPublication) {
+		groupId = project.group
+		artifactId = project.modid
+		version = "${mod_version}"
+		artifact jar
+	}
+
+	subprojects.each { p ->
+		if (p.name!=mod_commonname) {
+			"ModPublication-${p.version_minecraft}"(MavenPublication) {
+				groupId = p.group
+				artifactId = p.modid
+				version = "${p.version_minecraft}-${p.mod_version}"
 				artifact p.shadowJar
-				artifact p.jar
+				//artifact p.jar
 				artifact p.devJar
 				artifact p.sourceJar
 				artifact p.apiJar
@@ -342,14 +344,23 @@ if (sec_bintray_user!=null&&sec_bintray_key!=null&&project.isProperty('extra_bin
 		tasks.bintrayUpload.enabled = !mod_autorelease
 		user = sec_bintray_user
 		key = sec_bintray_key
-		publications = ['ModPublication']
+		def pubs = ['ModPublication']
+		subprojects.each { p ->
+			if (p.name!=mod_commonname)
+				pubs += "ModPublication-${p.version_minecraft}"
+		}
+		publications = pubs
+
 		publish = true
 		pkg {
+			userOrg = project.extra_bintray_org
 			repo = project.extra_bintray_repo
 			name = project.extra_bintray_name
 			version {
 				name = "${mod_version}"
 				released = new Date()
+				desc = "${mod_changelog_title}"+(StringUtils.isEmpty(mod_changelog)?'':"\n\n${mod_changelog}")
+				vcsTag = mod_buildtag
 			}
 		}
 	}
