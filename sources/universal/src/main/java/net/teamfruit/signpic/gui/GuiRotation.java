@@ -14,10 +14,9 @@ import com.google.common.eventbus.Subscribe;
 import net.minecraft.client.resources.I18n;
 import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WPanel;
-import net.teamfruit.bnnwidget.component.FontLabel;
 import net.teamfruit.bnnwidget.component.MButton;
+import net.teamfruit.bnnwidget.component.MLabel;
 import net.teamfruit.bnnwidget.component.MNumber;
-import net.teamfruit.bnnwidget.font.WFont;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.motion.Motion;
 import net.teamfruit.bnnwidget.position.Area;
@@ -65,7 +64,7 @@ public abstract class GuiRotation extends WPanel {
 	@Override
 	protected void initWidget() {
 		final VMotion label = V.pm(-1f).add(Easings.easeOutBack.move(.25f, 0f)).start();
-		add(new FontLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15)), WFont.fontRenderer) {
+		add(new MLabel(new R(Coord.left(label), Coord.pwidth(1f), Coord.top(15*0), Coord.height(15))) {
 			@Override
 			public boolean onCloseRequest() {
 				label.stop().add(Easings.easeInBack.move(.25f, -1f));

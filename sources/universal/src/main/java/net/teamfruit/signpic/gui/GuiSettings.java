@@ -19,15 +19,14 @@ import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.bnnwidget.WPanel;
 import net.teamfruit.bnnwidget.compat.OpenGL;
-import net.teamfruit.bnnwidget.component.FontLabel;
 import net.teamfruit.bnnwidget.component.FunnyButton;
 import net.teamfruit.bnnwidget.component.MButton;
 import net.teamfruit.bnnwidget.component.MCheckBox;
+import net.teamfruit.bnnwidget.component.MLabel;
 import net.teamfruit.bnnwidget.component.MScaledLabel;
 import net.teamfruit.bnnwidget.component.MSelectField;
 import net.teamfruit.bnnwidget.component.MSelectLabel;
 import net.teamfruit.bnnwidget.component.MTab;
-import net.teamfruit.bnnwidget.font.WFont;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.motion.Motion;
 import net.teamfruit.bnnwidget.position.Area;
@@ -167,7 +166,7 @@ public class GuiSettings extends WPanel {
 												getConfig().set(isCheck());
 											}
 										});
-										add(new FontLabel(new R(Coord.left(15), Coord.right(0)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.paas")));
+										add(new MLabel(new R(Coord.left(15), Coord.right(0))).setText(I18n.format("signpic.gui.settings.paas")));
 									}
 								});
 								add(new FunnyButton(new R(Coord.bottom(5+updatepanelHeight+60), Coord.right(5), Coord.width(100), Coord.height(15))) {
@@ -371,7 +370,7 @@ public class GuiSettings extends WPanel {
 		@Override
 		protected void initWidget() {
 			float top = 1;
-			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15)), WFont.fontRenderer).setText(this.title));
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(top), Coord.height(15))).setText(this.title));
 			add(new WPanel(new R(Coord.left(1), Coord.right(1), Coord.top(top += 15), Coord.height(32))) {
 				@Override
 				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float opacity, final @Nonnull RenderOption opt) {
@@ -385,7 +384,7 @@ public class GuiSettings extends WPanel {
 
 				@Override
 				protected void initWidget() {
-					add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.api.type")));
+					add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.type")));
 					add(new MSelectLabel(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 						@Override
 						protected void initWidget() {
@@ -439,7 +438,7 @@ public class GuiSettings extends WPanel {
 
 		@Override
 		protected void initWidget() {
-			add(new FontLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15)), WFont.fontRenderer).setText(I18n.format("signpic.gui.settings.api.key")));
+			add(new MLabel(new R(Coord.left(1), Coord.right(1), Coord.top(1), Coord.height(15))).setText(I18n.format("signpic.gui.settings.api.key")));
 			add(new MSelectField(new R(Coord.left(1), Coord.right(1), Coord.top(16), Coord.height(15)), 15) {
 				@Override
 				protected void initWidget() {

@@ -11,10 +11,9 @@ import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.bnnwidget.WPanel;
 import net.teamfruit.bnnwidget.compat.OpenGL;
-import net.teamfruit.bnnwidget.component.FontLabel;
 import net.teamfruit.bnnwidget.component.MButton;
+import net.teamfruit.bnnwidget.component.MLabel;
 import net.teamfruit.bnnwidget.component.MSelectButton;
-import net.teamfruit.bnnwidget.font.WFont;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.motion.Motion;
 import net.teamfruit.bnnwidget.position.Area;
@@ -108,7 +107,7 @@ public class GuiSignOption extends WFrame {
 								float i = 0f;
 								final VCommon v0 = V.pm(-.3f).add(Motion.blank(i += n)).add(Easings.easeOutBounce.move(d-i, 0f)).start();
 								final VCommon o0 = V.pm(0f).add(Motion.blank(i)).add(Easings.easeLinear.move(od-i, 1f)).start();
-								add(new FontLabel(new R(Coord.left(v0), Coord.top(top += 25f), Coord.height(20f)), WFont.fontRenderer) {
+								add(new MLabel(new R(Coord.left(v0), Coord.top(top += 25f), Coord.height(20f))) {
 									@Override
 									protected @Nonnull VCommon initOpacity() {
 										return o0;

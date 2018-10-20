@@ -13,8 +13,7 @@ import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.bnnwidget.WPanel;
 import net.teamfruit.bnnwidget.compat.OpenGL;
-import net.teamfruit.bnnwidget.component.FontLabel;
-import net.teamfruit.bnnwidget.font.WFont;
+import net.teamfruit.bnnwidget.component.MLabel;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.position.Area;
 import net.teamfruit.bnnwidget.position.Coord;
@@ -120,14 +119,14 @@ public class GuiPAAS extends WFrame {
 
 				final int f = CompatMinecraft.getFontRenderer().getFontRendererObj().FONT_HEIGHT/2;
 
-				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f)), WFont.fontRenderer) {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(-f), Coord.bottom(+f))) {
 					@Override
 					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.count", String.format("%d", c), String.format("%d", max)));
 					}
 				});
 
-				add(new FontLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f)), WFont.fontRenderer) {
+				add(new MLabel(new R(Coord.left(15), Coord.right(15), Coord.top(+f), Coord.bottom(-f))) {
 					@Override
 					public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
 						setText(I18n.format("signpic.gui.paas.time", String.format("%.1f", GuiPAAS.this.task.timer.getTime()), String.format("%.1f", GuiPAAS.this.task.limit/1000f)));
