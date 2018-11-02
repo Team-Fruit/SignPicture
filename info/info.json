@@ -121,5 +121,5 @@
 	},
 	"website": "https://minecraft.curseforge.com/projects/sign-picture",
 	"changelog": "https://github.com/Team-Fruit/SignPicture/releases",
-	"private_msg": "https://signpic.teamfruit.net/msg?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
+	"private_msg": "https://signpic.teamfruit.net/?id=%id%&name=%name%&vmod=%modversion%&vmodmc=%modmcversion%&vmodforge=%modforgeversion%&vmc=%mcversion%&vforge=%forgeversion%"
 }
