@@ -20,8 +20,7 @@ import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.bnnwidget.WPanel;
 import net.teamfruit.bnnwidget.compat.OpenGL;
-import net.teamfruit.bnnwidget.font.FontStyle;
-import net.teamfruit.bnnwidget.font.TrueTypeFont;
+import net.teamfruit.bnnwidget.font.MFont;
 import net.teamfruit.bnnwidget.font.WFontRenderer;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.motion.Motion;
@@ -35,6 +34,7 @@ import net.teamfruit.bnnwidget.var.V;
 import net.teamfruit.bnnwidget.var.VMotion;
 import net.teamfruit.signpic.Client;
 import net.teamfruit.signpic.Log;
+import net.teamfruit.signpic.compat.Compat.CompatMinecraft;
 import net.teamfruit.signpic.compat.Compat.CompatTextureUtil;
 import net.teamfruit.signpic.http.upload.UploadCallback;
 import net.teamfruit.signpic.mode.CurrentMode;
@@ -59,7 +59,7 @@ public class GuiIngameScreenShot extends WFrame {
 		super.onGuiClosed();
 	}
 
-	private static WFontRenderer font = new WFontRenderer(new TrueTypeFont(new FontStyle.Builder().build()));
+	private static WFontRenderer font = new WFontRenderer(new MFont(CompatMinecraft.getFontRenderer().getFontRendererObj()));
 	private boolean takescreenshot;
 
 	@Override

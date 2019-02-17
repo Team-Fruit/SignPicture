@@ -1,3 +1,3 @@
 dependencies {
-	compile(group: 'net.teamfruit', name: 'bnnwidget', version: '1.9.4-1.1.0.17', ext: 'jar', classifier: 'dev')
+	compile(group: 'net.teamfruit', name: 'bnnwidget', version: '1.9.4-${project.version_bnnwidget}', ext: 'jar', classifier: 'dev')
 }

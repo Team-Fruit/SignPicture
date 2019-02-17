@@ -11,7 +11,8 @@ import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WList;
 import net.teamfruit.bnnwidget.WPanel;
 import net.teamfruit.bnnwidget.compat.OpenGL;
-import net.teamfruit.bnnwidget.font.WFont;
+import net.teamfruit.bnnwidget.font.MFont;
+import net.teamfruit.bnnwidget.font.WFontRenderer;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.motion.Motion;
 import net.teamfruit.bnnwidget.position.Area;
@@ -208,6 +209,8 @@ public class GuiTask extends WPanel {
 			add(new WPanel(new R(Coord.top(1f), Coord.left(1f), Coord.bottom(0f), Coord.right(0f))) {
 				@Override
 				protected void initWidget() {
+					final WFontRenderer font = new WFontRenderer(new MFont(CompatMinecraft.getFontRenderer().getFontRendererObj()));
+
 					add(new WBase(new R(Coord.left(5f), Coord.top(2), Coord.height(CompatMinecraft.getFontRenderer().getFontRendererObj().FONT_HEIGHT/2), Coord.right(2))) {
 						@Override
 						public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
@@ -230,7 +233,7 @@ public class GuiTask extends WPanel {
 							final float opacity = getGuiOpacity(popacity);
 							OpenGL.glColor4f(4f, 4f, 4f, opacity);
 							OpenGL.glColor4f(1f, 1f, 1f, Math.max(.05f, opacity*1f));
-							WFont.fontRenderer.drawString(res, a.scaleSize(1f).translate(-1f, -1f), ev.owner.guiScale(), Align.LEFT, false);
+							font.drawString(res, a.scaleSize(1f), ev.owner.guiScale(), Align.LEFT, false);
 							OpenGL.glPopMatrix();
 						}
 					});
@@ -256,7 +259,7 @@ public class GuiTask extends WPanel {
 									WRenderer.startTexture();
 									final float opacity = getGuiOpacity(popacity);
 									OpenGL.glColor4f(1f, 1f, 1f, opacity);
-									WFont.fontRenderer.drawString(prog, Area.size(Math.min(a.x2()+1, maxx/2-1)-4f, a.y1()-.5f, 100f, 3f), ev.owner.guiScale(), Align.LEFT, true);
+									font.drawString(prog, Area.size(Math.min(a.x2()+1, maxx/2-1), a.y1(), 100f, a.h()), ev.owner.guiScale(), Align.LEFT, VerticalAlign.MIDDLE, true);
 									OpenGL.glPopMatrix();
 
 									super.draw(ev, pgp, p, frame, popacity, opt);

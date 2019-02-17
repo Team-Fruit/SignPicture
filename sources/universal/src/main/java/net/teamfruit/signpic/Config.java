@@ -12,8 +12,6 @@ import com.google.common.collect.Sets;
 
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
-import net.teamfruit.bnnwidget.component.MButton;
-import net.teamfruit.bnnwidget.component.MPanel;
 import net.teamfruit.signpic.compat.CompatEvents.CompatConfigChangedEvent;
 import net.teamfruit.signpic.image.ImageIOLoader;
 
@@ -98,22 +96,6 @@ public final class Config extends Configuration {
 	public final @Nonnull ConfigProperty<String> apiShortenerKey = propertyString(get("Api.Shortener", "Key", ""));
 
 	public final @Nonnull ConfigProperty<Boolean> debugLog = propertyBoolean(get("Debug", "DebugLog", false, "Output Debug Log"));
-
-	public final @Nonnull ConfigProperty<Boolean> guiExperienced = propertyBoolean(get("Internal", "GuiExperienced", false, "Have you ever opened SignPicture GUI yet?"));
-
-	{
-		this.informationTryNew.setListener(new ConfigListener<Boolean>() {
-			{
-				onChanged(Config.this.informationTryNew.get());
-			}
-
-			@Override
-			public void onChanged(final Boolean value) {
-				MButton.tryNew = value;
-				MPanel.tryNew = value;
-			}
-		});
-	}
 
 	private Config(final @Nonnull File configFile) {
 		super(configFile);

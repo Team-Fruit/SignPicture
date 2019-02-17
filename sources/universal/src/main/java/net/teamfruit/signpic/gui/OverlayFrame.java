@@ -11,9 +11,8 @@ import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.bnnwidget.WPanel;
 import net.teamfruit.bnnwidget.compat.OpenGL;
-import net.teamfruit.bnnwidget.component.FontScaledLabel;
 import net.teamfruit.bnnwidget.component.MLabel;
-import net.teamfruit.bnnwidget.font.WFont;
+import net.teamfruit.bnnwidget.component.MScaledLabel;
 import net.teamfruit.bnnwidget.motion.Easings;
 import net.teamfruit.bnnwidget.position.Area;
 import net.teamfruit.bnnwidget.position.Coord;
@@ -180,7 +179,7 @@ public class OverlayFrame extends WFrame {
 
 							@Override
 							protected void initWidget() {
-								final MLabel label = new FontScaledLabel(new R(Coord.top(5f), Coord.bottom(4f), Coord.pleft(.1f), Coord.pright(.1f)), WFont.fontRenderer).setText(string).setVerticalAlign(VerticalAlign.MIDDLE);
+								final MLabel label = new MScaledLabel(new R(Coord.top(5f), Coord.bottom(4f), Coord.pleft(.1f), Coord.pright(.1f))).setText(string).setVerticalAlign(VerticalAlign.MIDDLE);
 								add(label);
 							}
 

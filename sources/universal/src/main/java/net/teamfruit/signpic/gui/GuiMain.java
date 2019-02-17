@@ -337,8 +337,6 @@ public class GuiMain extends WFrame {
 		});
 		if (Informations.instance.shouldCheck(Config.getConfig().informationJoinBeta.get() ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
 			Informations.instance.onlineCheck(null);
-		if (!Config.getConfig().guiExperienced.get())
-			Config.getConfig().guiExperienced.set(true);
 	}
 
 	public @Nullable MainTextField getTextField() {
