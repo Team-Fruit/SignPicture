@@ -1,5 +1,7 @@
 package net.teamfruit.signpic.handler;
 
+import static net.teamfruit.signpic.reflect.lib.ReflectionUtil.*;
+
 import java.util.List;
 import java.util.Set;
 
@@ -9,12 +11,15 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Sets;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.signpic.Client;
@@ -44,6 +49,9 @@ import net.teamfruit.signpic.mode.CurrentMode;
 import net.teamfruit.signpic.preview.SignEntity;
 import net.teamfruit.signpic.reflect.lib.ReflectClass;
 import net.teamfruit.signpic.reflect.lib.ReflectField;
+import net.teamfruit.signpic.reflect.lib.ReflectionUtil._Class;
+import net.teamfruit.signpic.reflect.lib.ReflectionUtil._Constructor;
+import net.teamfruit.signpic.reflect.lib.ReflectionUtil._Field;
 import net.teamfruit.signpic.util.Sign;
 
 public class SignHandler {
@@ -55,6 +63,48 @@ public class SignHandler {
 	}
 
 	private boolean isPlaceMode;
+
+	private static class MoarSignCompat {
+		public static MoarSignCompat instance;
+
+		static {
+			try {
+				instance = new MoarSignCompat();
+			} catch (final Exception e) {
+				Log.log.error("Failed to initialize MoarSign: ", e);
+			}
+		}
+
+		public _Class guiMoarSign;
+		public _Class tileMoarSign;
+		public _Field guiMoarSignTileEntity;
+		public _Class packetHandler;
+		public _Field packetHandlerInstance;
+		public _Class messageMoarSignUpdate;
+		public _Constructor messageMoarSignUpdateCtor;
+
+		public MoarSignCompat() throws Exception {
+			this.guiMoarSign = _class($("gory_moon.moarsigns.client.interfaces.sign.GuiMoarSign"));
+			this.tileMoarSign = _class($("gory_moon.moarsigns.tileentites.TileEntityMoarSign"));
+			this.guiMoarSignTileEntity = this.guiMoarSign._psearchfield(null, this.tileMoarSign.$class());
+			this.packetHandler = _class($("gory_moon.moarsigns.network.PacketHandler"));
+			this.packetHandlerInstance = this.packetHandler._field($("INSTANCE"));
+			this.messageMoarSignUpdate = _class($("gory_moon.moarsigns.network.message.MessageSignUpdate"));
+			this.messageMoarSignUpdateCtor = this.messageMoarSignUpdate.__constructor(this.tileMoarSign.$class());
+		}
+
+		public void placeSign(@Nonnull final EntryId entryId, @Nonnull final Object sourceentity) {
+			try {
+				SignEntryId.fromEntryId(entryId).toEntity((TileEntitySign) sourceentity);
+				((TileEntitySign) sourceentity).markDirty();
+				final IMessage message = this.messageMoarSignUpdateCtor.$new(sourceentity);
+				final SimpleNetworkWrapper network = this.packetHandlerInstance.$get(null);
+				network.sendToServer(message);
+			} catch (final Exception e) {
+				Log.log.error("Failed to place MoarSign: ", e);
+			}
+		}
+	}
 
 	@CoreEvent
 	public void onSign(final @Nonnull CompatGuiOpenEvent event) {
@@ -82,6 +132,37 @@ public class SignHandler {
 									final TileEntitySign preview = se.getTileEntity();
 									final CompatBlockPos previewpos = CompatBlockPos.getTileEntityPos(preview);
 									final CompatBlockPos tilepos = CompatBlockPos.getTileEntityPos(tileSign);
+									if (previewpos.equals(tilepos)) {
+										se.setVisible(false);
+										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
+										CurrentMode.instance.setState(CurrentMode.State.SEE, false);
+									}
+								}
+							}
+						} else
+							Log.notice(I18n.format("signpic.chat.error.place"));
+					} catch (final Exception e) {
+						Log.notice(I18n.format("signpic.chat.error.place"));
+					}
+				else if (CurrentMode.instance.isShortening())
+					Log.notice(I18n.format("signpic.gui.notice.shortening"), 1f);
+				else
+					Log.notice(I18n.format("signpic.gui.notice.toolongplace"), 1f);
+			} else if (MoarSignCompat.instance!=null&&MoarSignCompat.instance.guiMoarSign.$class().isInstance(gui)) {
+				event.setCanceled(true);
+				final EntryId placeSign = handSignValid ? handSign : entryId;
+				if (placeSign.isPlaceable())
+					try {
+						final Object tileSign = MoarSignCompat.instance.guiMoarSignTileEntity.$get(gui);
+						if (tileSign!=null) {
+							MoarSignCompat.instance.placeSign(placeSign, tileSign);
+							if (!CurrentMode.instance.isState(CurrentMode.State.CONTINUE)) {
+								CurrentMode.instance.setMode();
+								final SignEntity se = Sign.preview;
+								if (se.isRenderable()) {
+									final TileEntitySign preview = se.getTileEntity();
+									final CompatBlockPos previewpos = CompatBlockPos.getTileEntityPos(preview);
+									final CompatBlockPos tilepos = CompatBlockPos.getTileEntityPos((TileEntity) tileSign);
 									if (previewpos.equals(tilepos)) {
 										se.setVisible(false);
 										CurrentMode.instance.setState(CurrentMode.State.PREVIEW, false);
