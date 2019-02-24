@@ -1,47 +1,142 @@
-## .gitignore ##
-# ignore all
-*
-changelog.md
 
-1.*/*
-common/*
+# Created by https://www.gitignore.io/api/git,java,gradle,eclipse,forgegradle
+# Edit at https://www.gitignore.io/?templates=git,java,gradle,eclipse,forgegradle
 
-# allow any
-!*.md
-!sources/
-!gradle/
-!lib/
-!info/
-!build.gradle
-!build.subprojects.gradle
-!project.gradle
-!settings.gradle
-!gradle.properties
-!properties.gradle
-!gradlew
-!gradlew.bat
-!install.bat
-!build.bat
-!install.sh
-!build.sh
-!.gitmodules
-!.gitignore
-!.gitattributes
-!.travis.yml
+### TeamFruit ###
+.buildnumber/
+artifacts/
 
-!1.*/
-!1.*/lib/
-!1.*/build.gradle
-!1.*/project.gradle
-!1.*/gradle.properties
-!1.*/properties.gradle
-!1.*/.gitmodules
-!1.*/.gitignore
-!common/
-!common/lib/
-!common/build.gradle
-!common/project.gradle
-!common/gradle.properties
-!common/properties.gradle
-!common/.gitmodules
-!common/.gitignore
+### Eclipse ###
+
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+.cproject
+
+# CDT- autotools
+.autotools
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# Tern plugin
+.tern-project
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Annotation Processing
+.apt_generated/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+.cache-main
+.scala_dependencies
+.worksheet
+
+### Eclipse Patch ###
+# Eclipse Core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Annotation Processing
+.apt_generated
+
+.sts4-cache/
+
+### ForgeGradle ###
+# Minecraft client/server files
+run/
+
+### Git ###
+# Created by git for backups. To disable backups in Git:
+# $ git config --global mergetool.keepBackup false
+*.orig
+
+# Created by git when using merge tools for conflicts
+*.BACKUP.*
+*.BASE.*
+*.LOCAL.*
+*.REMOTE.*
+*_BACKUP_*.txt
+*_BASE_*.txt
+*_LOCAL_*.txt
+*_REMOTE_*.txt
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Gradle ###
+.gradle
+build/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+# Cache of project
+.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
+
+### Gradle Patch ###
+**/build/
+
+# End of https://www.gitignore.io/api/git,java,gradle,eclipse,forgegradle
