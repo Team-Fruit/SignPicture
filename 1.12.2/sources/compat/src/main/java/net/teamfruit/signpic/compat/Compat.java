@@ -76,6 +76,8 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.teamfruit.signpic.CoreInvoke;
 
 public class Compat {
@@ -589,6 +591,34 @@ public class Compat {
 		@Override
 		public String toString() {
 			return this.format.toString();
+		}
+	}
+
+	public static class CompatSimpleNetworkWrapper {
+		private final SimpleNetworkWrapper network;
+
+		public CompatSimpleNetworkWrapper(final SimpleNetworkWrapper network) {
+			this.network = network;
+		}
+
+		public CompatSimpleNetworkWrapper(final Object network) {
+			this((SimpleNetworkWrapper) network);
+		}
+
+		public void sendToServer(final CompatMessage message) {
+			this.network.sendToServer(message.message);
+		}
+	}
+
+	public static class CompatMessage {
+		public final IMessage message;
+
+		public CompatMessage(final IMessage message) {
+			this.message = message;
+		}
+
+		public CompatMessage(final Object message) {
+			this((IMessage) message);
 		}
 	}
 

@@ -11,8 +11,6 @@ import org.lwjgl.input.Keyboard;
 
 import com.google.common.collect.Sets;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiEditSign;
 import net.minecraft.client.resources.I18n;
@@ -32,7 +30,9 @@ import net.teamfruit.signpic.attr.prop.SizeData;
 import net.teamfruit.signpic.compat.Compat.CompatBlockPos;
 import net.teamfruit.signpic.compat.Compat.CompatEntityPlayer;
 import net.teamfruit.signpic.compat.Compat.CompatItems;
+import net.teamfruit.signpic.compat.Compat.CompatMessage;
 import net.teamfruit.signpic.compat.Compat.CompatMinecraft;
+import net.teamfruit.signpic.compat.Compat.CompatSimpleNetworkWrapper;
 import net.teamfruit.signpic.compat.Compat.CompatTextFormatting;
 import net.teamfruit.signpic.compat.CompatEvents.CompatGuiOpenEvent;
 import net.teamfruit.signpic.compat.CompatEvents.CompatGuiScreenEvent;
@@ -97,8 +97,8 @@ public class SignHandler {
 			try {
 				SignEntryId.fromEntryId(entryId).toEntity((TileEntitySign) sourceentity);
 				((TileEntitySign) sourceentity).markDirty();
-				final IMessage message = this.messageMoarSignUpdateCtor.$new(sourceentity);
-				final SimpleNetworkWrapper network = this.packetHandlerInstance.$get(null);
+				final CompatMessage message = new CompatMessage(this.messageMoarSignUpdateCtor.$new(sourceentity));
+				final CompatSimpleNetworkWrapper network = new CompatSimpleNetworkWrapper(this.packetHandlerInstance.$get(null));
 				network.sendToServer(message);
 			} catch (final Exception e) {
 				Log.log.error("Failed to place MoarSign: ", e);

@@ -18,6 +18,8 @@ import cpw.mods.fml.client.config.IConfigElement;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -593,6 +595,34 @@ public class Compat {
 		@Override
 		public String toString() {
 			return this.format.toString();
+		}
+	}
+
+	public static class CompatSimpleNetworkWrapper {
+		private final SimpleNetworkWrapper network;
+
+		public CompatSimpleNetworkWrapper(final SimpleNetworkWrapper network) {
+			this.network = network;
+		}
+
+		public CompatSimpleNetworkWrapper(final Object network) {
+			this((SimpleNetworkWrapper) network);
+		}
+
+		public void sendToServer(final CompatMessage message) {
+			this.network.sendToServer(message.message);
+		}
+	}
+
+	public static class CompatMessage {
+		public final IMessage message;
+
+		public CompatMessage(final IMessage message) {
+			this.message = message;
+		}
+
+		public CompatMessage(final Object message) {
+			this((IMessage) message);
 		}
 	}
 
