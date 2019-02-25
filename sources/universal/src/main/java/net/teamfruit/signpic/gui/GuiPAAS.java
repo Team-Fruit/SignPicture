@@ -89,8 +89,8 @@ public class GuiPAAS extends WFrame {
 						OpenGL.glScalef(-f1, -f1, -f1);
 						if (!CompatVersion.older(CompatVersion.V7)) {
 							OpenGL.glRotatef(180f, 0f, 1f, 0f);
-							Client.rendererTile.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D);
-							Client.rendererTile.renderSignPictureBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
+							Client.rendererTile.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D);
+							Client.rendererTile.renderer.renderBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
 						}
 						OpenGL.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 						final Block block = sign.getBlockType();
