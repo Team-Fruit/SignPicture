@@ -1,6 +1,8 @@
+// Buildscript Dependencies
 buildscript {
 }
 
+// Plugins
 plugins {
 	id 'com.palantir.git-version' version '0.7.1'
 	id 'co.riiid.gradle' version '0.4.2'
@@ -8,6 +10,7 @@ plugins {
 	id 'com.matthewprenger.cursegradle' version '1.0.10'
 }
 
+// Configure Utility
 allprojects {
 	project.metaClass {
 		isProperty = { propName ->
@@ -16,6 +19,7 @@ allprojects {
 	}
 }
 
+// Configure Variables
 import org.apache.commons.lang.StringUtils
 
 ext {
@@ -88,7 +92,6 @@ ext {
 	mod_version = "${mod_version_min}${mod_version_build}"
 	mod_version_full = "${mod_version}${mod_version_meta}"
 	mod_artifacts_dir = file "artifacts/${mod_version_min}/${mod_version_full}"
-	mod_artifacts_release_dir = file 'artifacts/release'
 
 	mod_git_repo = plugins.findPlugin('com.palantir.git-version').gitRepo(rootProject).repository
 	mod_git_head = mod_git_repo.getRef('HEAD').objectId.name()
@@ -176,64 +179,16 @@ ext {
 	sec_bintray_key = System.getenv('BINTRAY_KEY') ?: project.isProperty('api_key_bintray') ? project.api_key_github : null
 }
 
-class DeployExtension {
-	def project, targets
-
-	DeployExtension(proj, List tar) {
-		targets = tar
-		project = proj
-	}
-
-	DeployExtension(proj) {
-		this(proj, [])
-	}
-
-	void target(File t) {
-		targets.add(t)
-	}
-
-	void target(String t) {
-		target(project.file(t))
-	}
-}
-
-class ManifestExtension {
-	def manifests
-
-	ManifestExtension(def mf) {
-		manifests = mf
-	}
-
-	ManifestExtension() {
-		this([:])
-	}
-
-	void manifest(String key, String value) {
-		targets.put(key, value)
-	}
-
-	void manifest(Map map) {
-		targets.putAll(map)
-	}
-}
-
-project.extensions.create('deploy', DeployExtension, project)
-project.extensions.create('manifests', ManifestExtension)
-['private.gradle', 'properties.gradle'].each { def its = file(it); if (its.exists()) apply from: its }
-
-subprojects {
-	ext.deploy_target = project.extensions.create('deploy', DeployExtension, project, deploy.targets.clone())
-	ext.manifests = project.extensions.create('manifests', ManifestExtension, manifests.manifests.clone())
-	['private.gradle', 'properties.gradle'].each { def its = file(it); if (its.exists()) apply from: its }
-}
-
+// Configure Subprojects
 evaluationDependsOnChildren()
 
+// Plugins
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
+// Configure Source Sets
 sourceSets {
 	delegate.each { s ->
 		s.java {
@@ -245,6 +200,7 @@ sourceSets {
 	}
 }
 
+// Auto-Generated Directory
 task setupSourceSets {
 	doLast {
 		sourceSets*.java.srcDirs*.each { it.mkdirs() }
@@ -253,8 +209,10 @@ task setupSourceSets {
 	[tasks.eclipseClasspath, tasks.ideaModule]*.dependsOn 'setupSourceSets'
 }
 
+// Configure Version
 version = "${mod_version}"
 
+// Universal Jar
 jar {
 	subprojects.each { p ->
 		if (p.name==mod_commonname) {
@@ -275,11 +233,12 @@ jar {
 	destinationDir = mod_artifacts_dir
 }
 
-task releaseArtifacts(dependsOn: 'build', type: Sync) {
-    from mod_artifacts_dir
-    into mod_artifacts_release_dir
+// Output Jar
+artifacts {
+    archives jar
 }
 
+// Release GitHub
 gradle.taskGraph.whenReady {taskGraph ->
 	if (taskGraph.hasTask(tasks.githubRelease)) {
 		assert sec_github_key!=null, 'missing sec_github_key'
@@ -307,6 +266,7 @@ if (sec_github_key!=null&&project.isProperty('extra_github_owner')&&project.isPr
 	}
 }
 
+// Release Bintray - Maven Publishing
 publishing.publications {
 	ModPublication(MavenPublication) {
 		groupId = project.group
@@ -331,6 +291,7 @@ publishing.publications {
 	}
 }
 
+// Release Bintray
 gradle.taskGraph.whenReady {taskGraph ->
 	if (taskGraph.hasTask(tasks.bintrayUpload)) {
 		assert sec_bintray_user!=null, 'missing sec_bintray_user'
@@ -367,6 +328,7 @@ if (sec_bintray_user!=null&&sec_bintray_key!=null&&project.isProperty('extra_bin
 } else
 	tasks.bintrayUpload.enabled = false
 
+// Release CurseForge
 if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
 	curseforge {
 		tasks.curseforge.enabled = !mod_autorelease

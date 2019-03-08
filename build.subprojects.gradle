@@ -1,7 +1,12 @@
+// Buildscript Dependencies
 buildscript {
 	repositories {
 		mavenCentral()
 		jcenter()
+		maven {
+			name = 'Bintray TeamFruit'
+			url = "https://dl.bintray.com/team-fruit/mods/"
+		}
 		maven {
 			name = 'forge'
 			url = 'http://files.minecraftforge.net/maven'
@@ -17,6 +22,7 @@ buildscript {
 	}
 }
 
+// Plugins
 plugins {
 	id 'com.github.johnrengelman.shadow' version '2.0.1'
 }
@@ -24,6 +30,7 @@ plugins {
 apply plugin: 'com.matthewprenger.cursegradle'
 apply plugin: 'java'
 
+// Configure Source Sets - Step1
 sourceSets {
 	base_api {}
 	base_main {}
@@ -36,9 +43,11 @@ sourceSets {
 	universal_test {}
 }
 
+// Configure Source Sets - Step2
 apply plugin: project.forgegradle_plugin
 def fg_plugin = plugins.findPlugin project.forgegradle_plugin
 
+// Configure Source Sets - Step3
 sourceSets {
 	[
 		[src: api, base: base_api, bootstrap: bootstrap_api, compat: compat_api, universal: universal_api],
@@ -97,13 +106,16 @@ if (project.forgegradle.contains('2.1')) {
 	}
 }
 
+// Configure Version
 version = mod_version
 
+// Configure Shade
 configurations {
 	shade
 	compile.extendsFrom shade
 }
 
+// Configure Java Compile Options
 [
 compileJava, compileApiJava, compileTestJava,
 compileBase_mainJava, compileBase_apiJava, compileBase_testJava,
@@ -113,6 +125,7 @@ compileUniversal_mainJava, compileUniversal_apiJava, compileUniversal_testJava
 ]*.options*.encoding = 'UTF-8'
 sourceCompatibility = targetCompatibility = '1.8'
 
+// Add Arguments for Eclipse
 if (tasks.findByPath('makeEclipseCleanRunClient')!=null) {
 	tasks.makeEclipseCleanRunClient.doFirst {
 		setArguments '--username Kamesuta'
@@ -121,9 +134,10 @@ if (tasks.findByPath('makeEclipseCleanRunClient')!=null) {
 	}
 }
 
+// Configure Minecraft
 minecraft {
 	if (project.forgegradle.contains('2.2'))
-		setSuppressVersionTest(true);
+		setSuppressVersionTest(true)
 
 	version = "${project.version_minecraft}-${project.version_forge}"
 
@@ -143,6 +157,7 @@ minecraft {
 	replace '${forgeversion}', project.version_forge
 }
 
+// Auto-Generated Directory
 task setupSourceSets {
 	doLast {
 		sourceSets*.java.srcDirs*.each { it.mkdirs() }
@@ -151,12 +166,14 @@ task setupSourceSets {
 	[tasks.eclipseClasspath, tasks.ideaModule]*.dependsOn 'setupSourceSets'
 }
 
+// Version Update Check
 processResources {
 	// this will ensure that this task is redone when the versions change.
 	inputs.property 'version', mod_version
 	inputs.property 'mcversion', project.version_minecraft
 }
 
+// Dependency Repositories
 repositories {
 	jcenter()
 	maven {
@@ -169,6 +186,7 @@ repositories {
 	}
 }
 
+// Dependencies
 dependencies {
 	compile fileTree(dir: 'libs', include: '*.jar')
 	shade fileTree(dir: 'libs/shade', include: '*.jar')
@@ -182,18 +200,7 @@ dependencies {
 	}
 }
 
-ext.commonManifest = {
-	if (project.isProperty('extra_fmlcore'))
-		attributes 'FMLCorePlugin': project.extra_fmlcore
-	if (project.isProperty('extra_fmlmod'))
-		attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlcore
-	if (project.isProperty('extra_fmlat'))
-		attributes 'FMLAT': project.extra_fmlat
-	// Prevent from CurseForge duplicate error
-	attributes 'ModVersion': mod_version_full
-	attributes manifests.manifests
-}
-
+// ReobfShadowJar for 1.7.10
 if (!reobf.hasProperty('dependsOn')) {
 	reobf {
 		shadowJar { mappingType = 'SEARGE' }
@@ -223,14 +230,25 @@ if (!reobf.hasProperty('dependsOn')) {
 	reobf.dependsOn 'reobfShadowJar'
 }
 
+// SourceJar for 1.7.10
 if (tasks.findByPath('sourceJar')==null) {
 	task sourceJar(dependsOn: 'classes', type: Jar) {
-		from sourceSets.main.allSource
-		classifier = 'sources'
-		manifest commonManifest
 	}
 }
 
+// Jar Manifest
+ext.commonManifest = {
+	if (project.isProperty('extra_fmlcore'))
+		attributes 'FMLCorePlugin': project.extra_fmlcore
+	if (project.isProperty('extra_fmlmod'))
+		attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlcore
+	if (project.isProperty('extra_fmlat'))
+		attributes 'FMLAT': project.extra_fmlat
+	// Prevent from CurseForge duplicate error
+	attributes 'ModVersion': mod_version_full
+}
+
+// Output Jar Universal
 shadowJar.configurations = [project.configurations.shade]
 
 shadowJar {
@@ -253,6 +271,7 @@ shadowJar {
 	manifest commonManifest
 }
 
+// Output Jar Diff
 jar {
 	from sourceSets.main.output
 	from sourceSets.api.output
@@ -263,6 +282,7 @@ jar {
 }
 tasks.jar.dependsOn 'shadowJar'
 
+// Output Jar Source
 sourceJar {
 	from sourceSets.main.allSource
 	from sourceSets.api.allSource
@@ -274,14 +294,11 @@ sourceJar {
 	from sourceSets.compat_api.allSource
 	from sourceSets.universal_main.allSource
 	from sourceSets.universal_api.allSource
+	classifier 'sources'
+	manifest commonManifest
 }
 
-// An Error occured while switching above 1.8 -> under 1.7
-task cleanMakeStart(type: Delete) {
-	// makeStart.dependsOn 'cleanMakeStart'
-	delete file(new File(tasks.makeStart.getTemporaryDir(), 'extracted'))
-}
-
+// Output Jar Dev
 task devJar(dependsOn: 'classes', type: Jar) {
 	from sourceSets.main.output
 	from sourceSets.api.output
@@ -293,40 +310,34 @@ task devJar(dependsOn: 'classes', type: Jar) {
 	from sourceSets.compat_api.output
 	from sourceSets.universal_main.output
 	from sourceSets.universal_api.output
-	classifier = 'dev'
+	classifier 'dev'
 	manifest commonManifest
 }
 
+// Output Jar Api
 task apiJar(dependsOn: 'classes', type: Jar) {
 	from sourceSets.api.output
 	from sourceSets.base_api.output
 	from sourceSets.bootstrap_api.output
 	from sourceSets.compat_api.output
 	from sourceSets.universal_api.output
-	classifier = 'api'
+	classifier 'api'
 	manifest commonManifest
 }
 
+// Configure Destination Directory
 [jar, shadowJar, devJar, sourceJar, apiJar]*.destinationDir = mod_artifacts_dir
 
-task deploy(dependsOn: 'build', type: Copy) {
-	deploy_target.targets.each { target ->
-		def dest = target.name.endsWith('.jar') ? target.parentFile : target
-
-		from(project.tasks.shadowJar.outputs.files.singleFile)
-		into(dest)
-
-		rename { String oldname ->
-			target.name.endsWith('.jar') ? target.name : oldname
-		}
-
-		eachFile { file ->
-			def path = file.relativePath.getFile(dest)
-			logger.lifecycle "copying to ${path}"
-		}
-	}
+// Output Jar
+artifacts {
+    archives jar
+    archives shadowJar
+    archives devJar
+    archives sourceJar
+    archives apiJar
 }
 
+// Release CurseForge
 gradle.taskGraph.whenReady {taskGraph ->
 	if (taskGraph.hasTask(tasks.curseforge)) {
 		assert sec_curseforge_key!=null, 'missing sec_curseforge_key'
@@ -366,4 +377,5 @@ if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
 } else
 	tasks.curseforge.enabled = false
 
+// Configure Project Settings
 ['project.gradle'].each { f -> [rootProject, project].each { p -> def fs = p.file(f); if (fs.exists()) apply from: fs } }
