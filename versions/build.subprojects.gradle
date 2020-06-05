@@ -1,0 +1,435 @@
+// Buildscript Dependencies
+buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+		maven {
+			name = 'Bintray TeamFruit'
+			url = "https://dl.bintray.com/team-fruit/mods/"
+		}
+		maven {
+			name = 'forge'
+			url = 'http://files.minecraftforge.net/maven'
+		}
+		maven {
+			name = 'sonatype'
+			url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+		}
+	}
+
+	dependencies {
+		classpath project.forgegradle
+	}
+}
+
+// Plugins
+plugins {
+	id 'java'
+	id 'com.github.johnrengelman.shadow' version '2.0.1'
+	id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
+if (project.forgegradle.contains('3.+')) {
+	apply plugin: 'idea'
+}
+
+// Configure Source Sets - Step2
+def fg_plugin = plugins.apply project.forgegradle_plugin
+
+// Configure Source Sets - Step3
+sourceSets {
+	if (project.forgegradle.contains('3.+')) {
+		api.compileClasspath += main.compileClasspath
+		api.runtimeClasspath += main.runtimeClasspath
+	}
+
+	if (!file("${projectDir}/src").exists()) {
+		copy {
+			into "${projectDir}/srcShared/main/resources"
+			from "${project(':shared').projectDir}/src/main/resources"
+			include 'META-INF/*_at.cfg'
+		}
+
+		ext.createSharedImport = { String _main, String _java ->
+			def _mainName = _main == 'main' ? '' : _main
+			def _name = "${_mainName.capitalize()}${_java.capitalize()}"
+			def _task = tasks.create(name: "collectImport${_name}", type: Sync) {
+				into file("${projectDir}/srcShared/${_main}/${_java}")
+				def path ="${project(':shared').projectDir}/src/${_main}/${_java}"
+				from files(path)
+			}
+			tasks.getByName("process${_mainName.capitalize()}Resources").dependsOn(_task)
+			_task
+		}
+
+		api.java.srcDirs = [createSharedImport('api', 'java')]
+		api.resources.srcDirs = [createSharedImport('api', 'resources')]
+		main.java.srcDirs = [createSharedImport('main', 'java')]
+		main.resources.srcDirs = [createSharedImport('main', 'resources')]
+		test.java.srcDirs = [createSharedImport('test', 'java')]
+		test.resources.srcDirs = [createSharedImport('test', 'resources')]
+	}
+
+	// pack.mcmeta
+	main.resources.srcDirs += file("${projectDir}/srcDiff/main/resources")
+
+	// 1.10.2と1.12.2は手動でresourcesの中身をclassesに入れる
+	// ↓ はjarを作るときにエラー
+	//	if (!project.forgegradle.contains('3.+')) {
+	//		api.output.resourcesDir = api.output.classesDir
+	//		main.output.resourcesDir = main.output.classesDir
+	//		test.output.resourcesDir = test.output.classesDir
+	//	}
+}
+
+// Fix compatibility issue between Gradle 4 and ForgeGradle 2.1
+if (project.forgegradle.contains('1.2') || project.forgegradle.contains('2.1'))
+	if (gradle.startParameter.logLevel.compareTo(org.gradle.api.logging.LogLevel.LIFECYCLE) >= 0)
+		ant.lifecycleLogLevel = 'ERROR'
+if (project.forgegradle.contains('2.1')) {
+	def levels = [:]
+	[tasks.makeStart, tasks.recompileMc]*.doFirst {
+		def level = gradle.startParameter.logLevel
+		if (level.compareTo(org.gradle.api.logging.LogLevel.LIFECYCLE) >= 0) {
+			levels.put(delegate, level)
+			gradle.startParameter.logLevel = org.gradle.api.logging.LogLevel.INFO
+		}
+	}*.doLast {
+		def level = levels.get(delegate)
+		if (level!=null)
+			gradle.startParameter.logLevel = level
+	}
+}
+
+// Configure Version
+version = mod_version
+archivesBaseName = "${rootProject.name}-${project.name}"
+
+// Configure Shade
+configurations {
+	shade
+	compile.extendsFrom shade
+}
+
+// Configure Java Compile Options
+tasks.withType(AbstractCompile) {
+	options.encoding = 'UTF-8'
+	sourceCompatibility = targetCompatibility = '1.8'
+}
+tasks.withType(GroovyCompile).each { it.groovyOptions.encoding = 'UTF-8' }
+sourceCompatibility = targetCompatibility = '1.8'
+
+// FG3 task
+if (project.forgegradle.contains('3.+')) {
+	task setupCIWorkspace
+	task setupDevWorkspace(dependsOn: 'prepareRuns')
+	task setupDecompWorkspace(dependsOn: 'prepareRuns')
+	tasks.idea.dependsOn 'genIntellijRuns'
+}
+
+// Configure Minecraft
+minecraft {
+	if (project.forgegradle.contains('2.2'))
+		setSuppressVersionTest(true)
+
+	if (project.isProperty('version_mappings'))
+		mappings = project.version_mappings
+
+	if (project.forgegradle.contains('3.+')) {
+		accessTransformer = file("${project(':shared').projectDir}/src/main/resources/META-INF/accesstransformer.cfg")
+
+		runs {
+			client {
+				taskName = "${project.name}_Client"
+
+				arg '--username Dev'
+
+				if (!project.isProperty('run_location'))
+					workingDirectory project.file('run')
+				else
+					workingDirectory project.file(run_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft))
+
+				property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+				// property 'forge.logging.console.level', 'debug'
+
+				mods {
+					create(project.modid) {
+						source sourceSets.main
+					}
+				}
+			}
+
+			server {
+				taskName = "${project.name}_Server"
+
+				if (!project.isProperty('run_location'))
+					workingDirectory project.file('run')
+				else
+					workingDirectory project.file(run_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft))
+
+				property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+				// property 'forge.logging.console.level', 'debug'
+
+				mods {
+					create(project.modid) {
+						source sourceSets.main
+					}
+				}
+			}
+
+			data {
+				taskName = "${project.name}_Data"
+
+				if (!project.isProperty('run_location'))
+					workingDirectory project.file('run')
+				else
+					workingDirectory project.file(run_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft))
+
+				property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+				// property 'forge.logging.console.level', 'debug'
+
+				args '--mod', project.modid, '--all', '--output', file('src/main/resources/')
+
+				mods {
+					create(project.modid) {
+						source sourceSets.main
+					}
+				}
+			}
+		}
+	} else {
+		version = "${project.version_minecraft}-${project.version_forge}"
+
+		if (!project.forgegradle.contains('1.2')) {
+			clientRunArgs += "--username Dev"
+			if (project.isProperty('extra_fmlcore')) {
+				clientJvmArgs += "-Dfml.coreMods.load=${project.extra_fmlcore}"
+				serverJvmArgs += "-Dfml.coreMods.load=${project.extra_fmlcore}"
+			}
+		}
+
+		if (!project.isProperty('run_location'))
+			runDir = 'run'
+		else
+			runDir = run_location.replace('{modid}', project.modid).replace('{mcversion}', project.version_minecraft)
+
+		replaceIn 'VersionReference.java'
+		replace '${version}', mod_version
+		replace '${mcversion}', project.version_minecraft
+		replace '${forgeversion}', project.version_forge
+	}
+}
+
+// Version Update Check
+processResources {
+	// this will ensure that this task is redone when the versions change.
+	inputs.property 'version', mod_version
+	inputs.property 'mcversion', project.version_minecraft
+
+	// copy everything else, thats not the mcmod.info
+	//sourceSets.each { from(it.resources.srcDirs) }
+}
+
+// Dependency Repositories
+repositories {
+	jcenter()
+	maven {
+		name = 'CurseForge'
+		url = 'https://minecraft.curseforge.com/api/maven/'
+	}
+	maven {
+		name = 'Bintray TeamFruit'
+		url = "https://dl.bintray.com/team-fruit/mods/"
+	}
+	maven {
+		name = 'Sonatype'
+		url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+	}
+}
+
+// Dependencies
+dependencies {
+	if (project.forgegradle.contains('3.+')) {
+		minecraft "net.minecraftforge:forge:${project.version_minecraft}-${project.version_forge}"
+	}
+
+	// Manifold
+	implementation group: 'systems.manifold', name: 'manifold-all', version: '2020.1.12'
+	testImplementation group: 'junit', name: 'junit', version: '4.12'
+
+	// tools.jar dependency (for Java 8 only), primarily to support structural typing without static proxies.
+	// Thus if you are *not* using structural typing, you **don't** need tools.jar
+	implementation files("${System.properties['java.home']}/../lib/tools.jar")
+
+	// Add manifold to -processorpath for javac
+	annotationProcessor group: 'systems.manifold', name: 'manifold-preprocessor', version: '2020.1.12'
+}
+
+// Manifold
+tasks.withType(JavaCompile) {
+	// If you DO NOT define a module-info.java file:
+	options.compilerArgs += ['-Xplugin:Manifold no-bootstrap']
+}
+
+// ReobfShadowJar for 1.7.10
+if (project.forgegradle.contains('3.+')) {
+	afterEvaluate {
+		reobf {
+			shadowJar { mappings = tasks.reobfJar.mappings }
+		}
+	}
+} else if (!reobf.hasProperty('dependsOn')) {
+	reobf {
+		shadowJar { mappingType = 'SEARGE' }
+	}
+} else {
+	task reobfShadowJar(dependsOn: 'genSrgs', type: net.minecraftforge.gradle.tasks.user.reobf.ReobfTask) {
+		exceptorCfg = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.EXC_SRG
+		srg = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.REOBF_SRG
+		fieldCsv = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.FIELD_CSV
+		fieldCsv = fg_plugin.delayedFile net.minecraftforge.gradle.user.UserConstants.METHOD_CSV
+		mcVersion = fg_plugin.delayedString '{MC_VERSION}'
+		mustRunAfter 'test'
+		mustRunAfter 'shadowJar'
+		reobf.dependsOn 'reobfShadowJar'
+		reobf(tasks.shadowJar) { arg ->
+			def javaConv = project.convention.plugins.get 'java'
+			arg.classpath = javaConv.getSourceSets().getByName('main').compileClasspath
+		}
+		extraSrg = fg_plugin.extension.srgExtra
+		afterEvaluate {
+			if (fg_plugin.extension.decomp) {
+				deobfFile = tasks.deobfuscateJar.delayedOutput
+				recompFile = fg_plugin.delayedDirtyFile fg_plugin.srcDepName, null, 'jar'
+			}
+		}
+	}
+	reobf.dependsOn 'reobfShadowJar'
+}
+
+// SourceJar for 1.7.10
+if (tasks.findByPath('sourceJar')==null) {
+	task sourceJar(dependsOn: 'classes', type: Jar) {
+	}
+}
+
+// Jar Manifest
+ext.commonManifest = {
+	if (project.isProperty('extra_fmlcore'))
+		attributes 'FMLCorePlugin': project.extra_fmlcore
+	if (project.isProperty('extra_fmlmod'))
+		attributes 'FMLCorePluginContainsFMLMod': project.extra_fmlmod
+	if (project.isProperty('extra_fmlat'))
+		attributes 'FMLAT': project.extra_fmlat
+
+	if (project.forgegradle.contains('3.+')) {
+		attributes([
+			"Specification-Title": project.modid,
+			"Specification-Vendor": project.modvendor,
+			"Specification-Version": "1", // We are version 1 of ourselves
+			"Implementation-Title": project.modname,
+			"Implementation-Version": project.mod_version,
+			"Implementation-Vendor": project.modvendor,
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
+
+	// Prevent from CurseForge duplicate error
+	attributes 'ModVersionFull': mod_version_full
+	attributes 'ModVersion': mod_version
+	attributes 'ForgeVersion': project.version_forge
+	attributes 'MinecraftVersion': project.version_minecraft
+}
+
+// Output Jar Universal
+shadowJar.configurations = [project.configurations.shade]
+shadowJar {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	classifier 'universal'
+	manifest commonManifest
+}
+
+// Output Jar Diff
+jar {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	classifier 'diff'
+	manifest commonManifest
+}
+tasks.jar.dependsOn 'shadowJar'
+
+// Output Jar Source
+sourceJar {
+	from sourceSets.main.allSource
+	from sourceSets.api.allSource
+	classifier 'sources'
+	manifest commonManifest
+}
+
+// Output Jar Dev
+task devJar(dependsOn: 'classes', type: Jar) {
+	from sourceSets.main.output
+	from sourceSets.api.output
+	classifier 'dev'
+	manifest commonManifest
+}
+
+// Output Jar Api
+task apiJar(dependsOn: 'classes', type: Jar) {
+	from sourceSets.api.output
+	classifier 'api'
+	manifest commonManifest
+}
+
+// Configure Destination Directory
+[jar, shadowJar, devJar, sourceJar, apiJar]*.destinationDir = mod_artifacts_dir
+
+// Output Jar
+artifacts {
+	archives jar
+	archives shadowJar
+	archives devJar
+	archives sourceJar
+	archives apiJar
+}
+
+// Release CurseForge
+if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
+	curseforge {
+		tasks.curseforge.enabled = !mod_autorelease
+
+		tasks.curseforge.dependsOn 'build'
+		apiKey = sec_curseforge_key
+		project {
+			id = project.extra_curseforge_id
+
+			changelogType = 'markdown'
+			changelog = mod_changelog
+
+			releaseType = mod_releasetype
+
+			mainArtifact(shadowJar) {
+				displayName = "${shadowJar.baseName}-${shadowJar.version}"
+			}
+			[/*jar, */devJar, sourceJar, apiJar].each { jar ->
+				addArtifact(jar) {
+					displayName = "${jar.baseName}-${jar.version}-${jar.classifier}"
+				}
+			}
+
+			if (project.isProperty('extra_curseforge_dependency')) {
+				relations {
+					requiredLibrary project.extra_curseforge_dependency
+				}
+			}
+		}
+	}
+} else
+	tasks.curseforge.enabled = false
+
+// Configure Project Settings
+['project.gradle'].each { f -> [project(':versions'), project].each { p -> def fs = p.file(f); if (fs.exists()) apply from: fs } }

@@ -1,0 +1,10 @@
+dependencies {
+	// https://mvnrepository.com/artifact/junit/junit
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+	// https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime
+    shade ('org.apache.httpcomponents:httpmime:4.3.3') { transitive=false }
+}
+
+shadowJar {
+	relocate 'com.madgag.gif.fmsware', 'net.teamfruit.lib.com.madgag.gif.fmsware'
+}

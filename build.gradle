@@ -1,5 +1,17 @@
 // Buildscript Dependencies
 buildscript {
+	repositories {
+		mavenCentral()
+		jcenter()
+	}
+
+	dependencies {
+		// for ForgeGradle Version
+		classpath 'com.google.guava:guava:26.0-jre'
+		// for CurseGradle
+		classpath 'org.apache.httpcomponents:httpmime:4.5.2'
+		classpath 'org.apache.httpcomponents:httpclient:4.5.2'
+	}
 }
 
 // Plugins
@@ -7,7 +19,6 @@ plugins {
 	id 'com.palantir.git-version' version '0.7.1'
 	id 'co.riiid.gradle' version '0.4.2'
 	id 'com.jfrog.bintray' version '1.8.4'
-	id 'com.matthewprenger.cursegradle' version '1.0.10'
 }
 
 // Configure Utility
@@ -21,80 +32,51 @@ allprojects {
 
 // Configure Variables
 import org.apache.commons.lang.StringUtils
-
 ext {
-	mod_commonname = "${rootProject.name}-common"
-	mod_build_prefix = 'b'
-
-	assert project.isProperty('version_major'): 'missing property: version_major'
-	assert project.isProperty('version_minor'): 'missing property: version_minor'
-	assert project.isProperty('version_patch'): 'missing property: version_patch'
+	mod_build_prefix = 'build/b'
 
 	mod_travis = System.getenv('TRAVIS') as boolean
 	mod_buildnumber = System.getenv('TRAVIS_BUILD_NUMBER') as Integer
 	mod_buildtag = System.getenv('TRAVIS_TAG')
 	mod_prerelease = mod_autorelease = mod_travis && StringUtils.isEmpty(mod_buildtag)
 
-	if (mod_buildtag!=null && mod_buildtag.startsWith(mod_build_prefix))
+	if (mod_buildtag != null && mod_buildtag.startsWith(mod_build_prefix))
 		throw new GradleException("Oops, circulated travis build. A push starting with the prefix '${mod_build_prefix}' was detected: ${mod_buildtag}")
+
+	mod_git_repo = plugins.findPlugin('com.palantir.git-version').gitRepo(rootProject).repository
+	mod_git_head = mod_git_repo.getRef('HEAD').objectId.name()
+
+	mod_version_min = ({
+		def git_ref = mod_git_repo.getRef "refs/remotes/origin/update"
+		if (git_ref != null) {
+			def git_revwalk = new org.eclipse.jgit.revwalk.RevWalk(mod_git_repo)
+			try {
+				return git_revwalk.parseCommit(git_ref.getObjectId()).getShortMessage()
+			} catch (org.eclipse.jgit.errors.IncorrectObjectTypeException e) {
+			} finally {
+				git_revwalk.dispose()
+			}
+		}
+		return null
+	})()
+	if (mod_version_min == null) {
+		assert project.isProperty('version_major'): 'missing property: version_major'
+		assert project.isProperty('version_minor'): 'missing property: version_minor'
+		assert project.isProperty('version_patch'): 'missing property: version_patch'
+		mod_version_min = "${project.version_major}.${project.version_minor}.${project.version_patch}"
+	}
+	println("ModVersion: ${mod_version_min}")
 
 	(mod_version_build, mod_version_meta) = ({
 		if (mod_buildnumber)
 			return [".${mod_buildnumber}", '']
 		else
-			return ({
-				def buildnumberfile = file '.buildnumber/buildnum.properties'
-
-				def version_build = ({
-					def buildnumbermicro = 1
-					def props = new Properties()
-					if (buildnumberfile.exists())
-						buildnumberfile.withInputStream { stream ->
-							props.load stream
-						}
-
-					if (props.buildnumber &&
-							props.version_major == project.version_major &&
-							props.version_minor == project.version_minor &&
-							props.version_patch == project.version_patch)
-						buildnumbermicro = props.buildnumber as Integer
-					return buildnumbermicro
-				})()
-
-				def buildtextmicro = String.format('%03d', version_build)
-				def buildtext = "+${buildtextmicro}"
-
-				task increment {
-					doLast {
-						def props = new Properties()
-						props.version_major = project.version_major
-						props.version_minor = project.version_minor
-						props.version_patch = project.version_patch
-						props.buildnumber = version_build+1 as String
-						buildnumberfile.parentFile.mkdirs()
-						buildnumberfile.withOutputStream { stream ->
-							props.store stream, 'Build Number Property'
-						}
-					}
-				}
-
-				subprojects {
-					afterEvaluate {
-						tasks.build.dependsOn increment
-					}
-				}
-
-				['', buildtext]
-			})()
+			return [".git", '']
 	})()
 
-	mod_version_min = "${project.version_major}.${project.version_minor}.${project.version_patch}"
 	mod_version = "${mod_version_min}${mod_version_build}"
 	mod_version_full = "${mod_version}${mod_version_meta}"
 	mod_artifacts_dir = file "artifacts/${mod_version_min}/${mod_version_full}"
-
-	mod_git_repo = plugins.findPlugin('com.palantir.git-version').gitRepo(rootProject).repository
-	mod_git_head = mod_git_repo.getRef('HEAD').objectId.name()
 
 	// Parse Changelog
 	def parseChangelog = { changelog ->
@@ -102,7 +84,7 @@ ext {
 		def msg = null
 		def releasetype = 'release'
 
-		if (changelog!=null) {
+		if (changelog != null) {
 			// Beta mode and Alpha mode
 			if (StringUtils.contains(changelog, '[beta]')) {
 				changelog = StringUtils.replace(changelog, '[beta]', '')
@@ -130,11 +112,11 @@ ext {
 			if (!StringUtils.isEmpty(mod_buildtag)) {
 				def git_ref = mod_git_repo.getRef "refs/tags/${mod_buildtag}"
 
-				if (git_ref!=null) {
+				if (git_ref != null) {
 					def git_revwalk = new org.eclipse.jgit.revwalk.RevWalk(mod_git_repo)
 					try {
 						return git_revwalk.parseTag(git_ref.getObjectId()).getFullMessage()
-					} catch(org.eclipse.jgit.errors.IncorrectObjectTypeException e) {
+					} catch (org.eclipse.jgit.errors.IncorrectObjectTypeException e) {
 					} finally {
 						git_revwalk.dispose()
 					}
@@ -150,105 +132,55 @@ ext {
 		// Replace Version Text
 		def convertChangelog = { str ->
 			def str1 = str
-				.replace('{version}', mod_version)
-				.replace('{version_full}', mod_version_full)
-			if (mod_buildnumber!=null)
+					.replace('{version}', mod_version)
+					.replace('{version_full}', mod_version_full)
+			if (mod_buildnumber != null)
 				return str1
-					.replace('{version_number}', "${mod_buildnumber}")
+						.replace('{version_number}', "${mod_buildnumber}")
 			return str1
 		}
 
 		// Generate Default Changelog
 		def (n_changelog_title, n_changelog) = ({
-			if (mod_buildnumber!=null)
+			if (mod_buildnumber != null)
 				return ["v${mod_version}", "v${mod_version_min} Build${mod_buildnumber}"]
 			else
 				return ["v${mod_version_full}", "v${mod_version_full}"]
 		})()
 
-		if (changelog_title!=null)
+		if (changelog_title != null)
 			n_changelog_title = convertChangelog(changelog_title)
-		if (changelog!=null)
+		if (changelog != null)
 			n_changelog = convertChangelog(changelog)
 		return [n_changelog_title, n_changelog, releasetype]
 	})()
+}
 
+// Configure Tokens
+ext {
 	sec_curseforge_key = System.getenv('CURSEFORGE_TOKEN') ?: project.isProperty('api_key_curseforge') ? project.api_key_curseforge : null
-	sec_github_key = System.getenv('GITHUB_TOKEN') ?: project.isProperty('api_key_github') ? project.api_key_github : null
+	sec_github_user = System.getenv('GITHUB_ACTOR') ?: project.isProperty('api_user_github') ? project.api_user_github : null
+	sec_github_key = System.getenv('GH_TOKEN') ?: project.isProperty('api_key_github') ? project.api_key_github : null
 	sec_bintray_user = System.getenv('BINTRAY_USER') ?: project.isProperty('api_user_bintray') ? project.api_user_bintray : null
 	sec_bintray_key = System.getenv('BINTRAY_KEY') ?: project.isProperty('api_key_bintray') ? project.api_key_github : null
 }
 
 // Configure Subprojects
-evaluationDependsOnChildren()
+project(':versions').subprojects {
+	rootProject.evaluationDependsOn(project.path)
+}
 
 // Plugins
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
 apply plugin: 'maven-publish'
-
-// Configure Source Sets
-sourceSets {
-	delegate.each { s ->
-		s.java {
-			srcDirs = []
-		}
-		s.resources {
-			srcDirs = []
-		}
-	}
-}
-
-// Auto-Generated Directory
-task setupSourceSets {
-	doLast {
-		sourceSets*.java.srcDirs*.each { it.mkdirs() }
-		sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-	}
-	[tasks.eclipseClasspath, tasks.ideaModule]*.dependsOn 'setupSourceSets'
-}
 
 // Configure Version
 version = "${mod_version}"
 
-// Universal Jar
-jar {
-	subprojects.each { p ->
-		if (p.name==mod_commonname) {
-			manifest p.commonManifest
-			p.tasks.shadowJar.outputs.files.each { f ->
-				from zipTree(f)
-			}
-		} else {
-			p.tasks.jar.outputs.files.each { f ->
-				from(f) {
-					rename '.*', p.version_minecraft+'.jar'
-				}
-			}
-		}
-		dependsOn p.tasks.build
-	}
-	classifier = 'universal'
-	destinationDir = mod_artifacts_dir
-}
-
-// Output Jar
-artifacts {
-    archives jar
-}
-
 // Release GitHub
-gradle.taskGraph.whenReady {taskGraph ->
-	if (taskGraph.hasTask(tasks.githubRelease)) {
-		assert sec_github_key!=null, 'missing sec_github_key'
-		assert project.isProperty('extra_github_owner'), 'missing extra_github_owner'
-		assert project.isProperty('extra_github_repo'), 'missing extra_github_repo'
-	}
-}
 if (sec_github_key!=null&&project.isProperty('extra_github_owner')&&project.isProperty('extra_github_repo')) {
+	//tasks.githubRelease.enabled = !mod_autorelease
 	github {
-		tasks.githubRelease.dependsOn 'build'
+		project(':versions').subprojects.each { tasks.githubRelease.dependsOn(it.tasks.findByName('build')) }
 		prerelease = mod_prerelease
 		owner = project.extra_github_owner
 		repo = project.extra_github_repo
@@ -258,57 +190,56 @@ if (sec_github_key!=null&&project.isProperty('extra_github_owner')&&project.isPr
 		name = mod_changelog_title
 		body = mod_changelog
 		draft = false
-		def allassets = [jar]
-		subprojects.each { p ->
-			allassets.addAll([p.tasks.shadowJar, p.tasks.jar, p.tasks.devJar, p.tasks.sourceJar, p.tasks.apiJar])
+		List<Task> allassets = []
+		project(':versions').subprojects {
+			allassets.addAll([tasks.shadowJar, tasks.jar, tasks.devJar, tasks.sourceJar, tasks.apiJar])
 		}
 		assets = allassets*.outputs*.files*.asPath*.tr('\\','/')
 	}
-}
+} else
+	tasks.githubRelease.enabled = false
 
-// Release Bintray - Maven Publishing
-publishing.publications {
-	ModPublication(MavenPublication) {
-		groupId = project.group
-		artifactId = project.modid
-		version = "${mod_version}"
-		artifact jar
+// Maven Publishing
+publishing {
+	publications {
+		project(':versions').subprojects {
+			"ModPublication-${project.version_minecraft}"(MavenPublication) {
+				groupId = project.group
+				artifactId = project.modid
+				version = "${project.version_minecraft}-${project.mod_version}"
+				artifact project.shadowJar
+				//artifact project.jar
+				artifact project.devJar
+				artifact project.sourceJar
+				artifact project.apiJar
+			}
+		}
 	}
 
-	subprojects.each { p ->
-		if (p.name!=mod_commonname) {
-			"ModPublication-${p.version_minecraft}"(MavenPublication) {
-				groupId = p.group
-				artifactId = p.modid
-				version = "${p.version_minecraft}-${p.mod_version}"
-				artifact p.shadowJar
-				//artifact p.jar
-				artifact p.devJar
-				artifact p.sourceJar
-				artifact p.apiJar
+	if (!mod_autorelease) {
+		repositories {
+			maven {
+				name = "GitHubPackages"
+				url = uri("https://maven.pkg.github.com/${project.extra_github_owner}/${project.extra_github_repo}")
+				credentials {
+					username = sec_github_user
+					password = sec_github_key
+				}
 			}
 		}
 	}
 }
 
 // Release Bintray
-gradle.taskGraph.whenReady {taskGraph ->
-	if (taskGraph.hasTask(tasks.bintrayUpload)) {
-		assert sec_bintray_user!=null, 'missing sec_bintray_user'
-		assert sec_bintray_key!=null, 'missing sec_bintray_key'
-		assert project.isProperty('extra_bintray_repo'), 'missing extra_bintray_repo'
-		assert project.isProperty('extra_bintray_name'), 'missing extra_bintray_name'
-	}
-}
 if (sec_bintray_user!=null&&sec_bintray_key!=null&&project.isProperty('extra_bintray_repo')&&project.isProperty('extra_bintray_name')) {
 	bintray {
 		tasks.bintrayUpload.enabled = !mod_autorelease
+		project(':versions').subprojects.each { tasks.githubRelease.dependsOn(it.tasks.findByName('build')) }
 		user = sec_bintray_user
 		key = sec_bintray_key
 		def pubs = ['ModPublication']
-		subprojects.each { p ->
-			if (p.name!=mod_commonname)
-				pubs += "ModPublication-${p.version_minecraft}"
+		project(':versions').subprojects {
+			pubs += "ModPublication-${project.version_minecraft}"
 		}
 		publications = pubs
 
@@ -327,35 +258,3 @@ if (sec_bintray_user!=null&&sec_bintray_key!=null&&project.isProperty('extra_bin
 	}
 } else
 	tasks.bintrayUpload.enabled = false
-
-// Release CurseForge
-if (sec_curseforge_key!=null&&project.isProperty('extra_curseforge_id')) {
-	curseforge {
-		tasks.curseforge.enabled = !mod_autorelease
-
-		tasks.curseforge.dependsOn 'build'
-		apiKey = sec_curseforge_key
-		project {
-			id = project.extra_curseforge_id
-
-			changelogType = 'markdown'
-			changelog = mod_changelog
-
-			releaseType = mod_releasetype
-
-			mainArtifact(jar) {
-				displayName = "${jar.baseName}-${jar.version} Universal"
-			}
-
-			subprojects.each { p ->
-				addGameVersion p.version_minecraft
-			}
-
-			/*
-			relations {
-			}
-			*/
-		}
-	}
-} else
-	tasks.curseforge.enabled = false

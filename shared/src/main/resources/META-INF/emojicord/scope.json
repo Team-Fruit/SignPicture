@@ -1,0 +1,10 @@
+{
+	"input": [
+		"net.minecraft.client.gui.GuiChat",
+		"net.minecraft.client.gui.screen.ChatScreen"
+	],
+	"message": [
+		"net.minecraft.client.gui.GuiNewChat",
+		"net.minecraft.client.gui.NewChatGui"
+	]
+}

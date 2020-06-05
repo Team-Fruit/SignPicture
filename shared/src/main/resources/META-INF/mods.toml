@@ -1,0 +1,23 @@
+modLoader="javafml"
+loaderVersion="[13,)"
+issueTrackerURL="https://github.com/Team-Fruit/Emojicord/issues?q=is%3Aissue"
+logoFile="logo.png"
+
+[[mods]]
+    modId="emojicord"
+    version="${file.jarVersion}"
+    updateJSONURL="https://raw.githubusercontent.com/Team-Fruit/Emojicord/update/update.json"
+    displayName="Emojicord"
+    displayURL="https://emojicord.teamfruit.net/"
+    credits="2019 TeamFruit"
+    authors="Kamesuta"
+    description='''
+    Discord Emojis in Minecraft
+    '''
+
+[[dependencies.emojicord]]
+    modId="forge"
+    mandatory=false
+    versionRange="[24.0.42,)"
+    ordering="NONE"
+    side="CLIENT"
