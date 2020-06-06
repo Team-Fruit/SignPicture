@@ -2,6 +2,7 @@ package net.teamfruit.signpic;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
@@ -112,7 +113,6 @@ public class CoreHandler extends CompatHandler {
 	@Override
 	@CoreEvent
 	public void onConfigChanged(final @Nonnull CompatConfigChangedEvent.CompatOnConfigChangedEvent event) {
-		this.configHandler.onConfigChanged(event);
 	}
 
 	@Override

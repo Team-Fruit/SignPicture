@@ -10,6 +10,7 @@ import com.mojang.util.UUIDTypeAdapter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.Session;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import net.teamfruit.signpic.compat.Compat.CompatItemSignRendererRegistrar;
 
 public class ClientProxy extends CommonProxy {
@@ -18,7 +19,9 @@ public class ClientProxy extends CommonProxy {
 		super.preInit(event);
 
 		Log.log = event.getModLog();
-		Config.init(event.getSuggestedConfigurationFile());
+
+		Config.spec.registerConfigDefine( #if MC_12_LATER Dist #else Side #endif .CLIENT);
+		Config.spec.registerConfigHandler( #if MC_12_LATER Dist #else Side #endif .CLIENT, event.getSuggestedConfigurationFile());
 
 		// Setup stencil clip
 		// StencilClip.init();

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import net.teamfruit.signpic.compat.CompatConfigSpec;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -45,7 +46,6 @@ import net.teamfruit.signpic.Apis.MapSetting;
 import net.teamfruit.signpic.Apis.Setting;
 import net.teamfruit.signpic.Apis.URLShortenerFactory;
 import net.teamfruit.signpic.Config;
-import net.teamfruit.signpic.Config.ConfigProperty;
 import net.teamfruit.signpic.compat.Compat.CompatSoundHandler;
 import net.teamfruit.signpic.entry.content.ContentManager;
 import net.teamfruit.signpic.gui.config.ConfigGui;
