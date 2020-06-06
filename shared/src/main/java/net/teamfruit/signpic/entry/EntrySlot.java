@@ -34,6 +34,6 @@ public class EntrySlot<T> {
 	}
 
 	protected int getCollectTimes() {
-		return Config.getConfig().entryGCtick.get();
+		return Config.ENTRY.entryGCTick.get();
 	}
 }

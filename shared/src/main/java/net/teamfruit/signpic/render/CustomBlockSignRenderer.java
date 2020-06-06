@@ -84,7 +84,7 @@ public class CustomBlockSignRenderer implements IBlockSignRenderer {
 		if (entry.isValid()) {
 			if (CurrentMode.instance.isState(CurrentMode.State.SEE)) {
 				WRenderer.startTexture();
-				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.getConfig().renderSeeOpacity.get().floatValue());
+				OpenGL.glColor4f(1f, 1f, 1f, opacity*Config.RENDER.renderSeeOpacity.get().floatValue());
 				this.base.renderBase(tile, x, y, z, partialTicks, destroy, opacity);
 			}
 

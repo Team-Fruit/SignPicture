@@ -36,7 +36,6 @@ import net.teamfruit.signpic.state.Progressable;
 import net.teamfruit.signpic.state.State;
 
 public class CoreHandler extends CompatHandler {
-	public final @Nonnull Config configHandler = Config.getConfig();
 	public final @Nonnull KeyHandler keyHandler = KeyHandler.instance;
 	public final @Nonnull SignHandler signHandler = new SignHandler();
 	public final @Nonnull EntryManager signEntryManager = EntryManager.instance;

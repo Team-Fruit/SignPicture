@@ -20,23 +20,7 @@ public class CommandVersion extends SubCommand {
 		super("version");
 		addChildCommand(this.cmdcheck = new CommandVersion.CommandVersionCheck());
 		addChildCommand(this.cmdupdate = new CommandVersion.CommandVersionUpdate());
-		addChildCommand(new CommandEnableJoinBeta());
 		setPermLevel(PermLevel.EVERYONE);
-	}
-
-	private class CommandEnableJoinBeta extends SubCommand {
-		private CommandEnableJoinBeta() {
-			super("beta");
-			addChildCommand(CommandVersion.this.cmdcheck);
-			addChildCommand(CommandVersion.this.cmdupdate);
-			setPermLevel(PermLevel.EVERYONE);
-		}
-
-		@Override
-		public void processCommandCompat(final @Nullable ICommandSender sender, final @Nullable String[] args) throws CommandException {
-			Config.getConfig().informationJoinBeta.set(false);
-			super.processCommandCompat(sender, args);
-		}
 	}
 
 	private static class CommandVersionCheck extends SubCommand {

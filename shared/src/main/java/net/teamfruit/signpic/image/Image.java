@@ -59,9 +59,9 @@ public abstract class Image implements IInitable, IAsyncProcessable, IDivisionPr
 				OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 			}
 			if (image.hasMipmap())
-				if (m&&OpenGL.openGl30()&&Config.getConfig().renderUseMipmap.get()) {
-					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.getConfig().renderMipmapTypeNearest.get() ? GL_NEAREST : GL_LINEAR);
-					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.getConfig().renderMipmapTypeNearest.get() ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
+				if (m&&OpenGL.openGl30()&&Config.RENDER.renderUseMipmap.get()) {
+					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, Config.RENDER.renderMipmapTypeNearest.get() ? GL_NEAREST : GL_LINEAR);
+					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, Config.RENDER.renderMipmapTypeNearest.get() ? GL_NEAREST_MIPMAP_LINEAR : GL_LINEAR_MIPMAP_LINEAR);
 				} else {
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 					OpenGL.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

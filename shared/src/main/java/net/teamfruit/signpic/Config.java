@@ -1,315 +1,356 @@
 package net.teamfruit.signpic;
 
-import java.io.File;
-import java.util.Set;
+import net.teamfruit.signpic.compat.CompatConfigSpec;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+public class Config {
+	private static final CompatConfigSpec.Builder BUILDER = new CompatConfigSpec.Builder();
+	public static final General GENERAL = new General(BUILDER);
+	public static final Image IMAGE = new Image(BUILDER);
+	public static final Entry ENTRY = new Entry(BUILDER);
+	public static final Http HTTP = new Http(BUILDER);
+	public static final Content CONTENT = new Content(BUILDER);
+	public static final Version VERSION = new Version(BUILDER);
+	public static final Multiplay MULTIPLAY = new Multiplay(BUILDER);
+	public static final ChatPicture CHATPICTURE = new ChatPicture(BUILDER);
+	public static final Render RENDER = new Render(BUILDER);
+	public static final Api API = new Api(BUILDER);
+	public static final Debug DEBUG = new Debug(BUILDER);
+	public static final CompatConfigSpec spec = BUILDER.build();
 
-import org.apache.commons.lang3.StringUtils;
+	public static class General {
+		public final CompatConfigSpec.ConfigValue<String> signpicDir;
+		public final CompatConfigSpec.ConfigValue<Boolean> signTooltip;
 
-import com.google.common.collect.Sets;
-
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import net.teamfruit.signpic.compat.CompatEvents.CompatConfigChangedEvent;
-import net.teamfruit.signpic.image.ImageIOLoader;
-
-public final class Config extends Configuration {
-	private static @Nullable Config instance;
-
-	public static @Nonnull Config getConfig() {
-		if (instance!=null)
-			return instance;
-		throw new IllegalStateException("config not initialized");
-	}
-
-	public static void init(final @Nonnull File cfgFile) {
-		instance = new Config(cfgFile);
-	}
-
-	private final @Nonnull File configFile;
-	private final @Nonnull Set<IReloadableConfig> configs = Sets.newHashSet();
-
-	public static interface IReloadableConfig {
-		void reload();
-	}
-
-	public @Nonnull <T extends IReloadableConfig> T registerReload(final @Nonnull T config) {
-		this.configs.add(config);
-		return config;
-	}
-
-	public void reload() {
-		for (final IReloadableConfig config : this.configs)
-			config.reload();
-	}
-
-	public final @Nonnull ConfigProperty<String> signpicDir = propertyString(get("General", "SignpicDir", "").setRequiresMcRestart(true));
-	public final @Nonnull ConfigProperty<Boolean> signTooltip = propertyBoolean(get("General", "SignToolTip", false, "add tooltip line to sign"));
-
-	public final @Nonnull ConfigProperty<Integer> imageWidthLimit = propertyInteger(get("Image", "WidthLimit", 512)).setListener((@Nonnull final Integer value) -> ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(value, Config.this.imageHeightLimit.get()));
-	public final @Nonnull ConfigProperty<Integer> imageHeightLimit = propertyInteger(get("Image", "HeightLimit", 512)).setListener((@Nonnull final Integer value) -> ImageIOLoader.MAX_SIZE = ImageIOLoader.maxSize(Config.this.imageWidthLimit.get(), value));
-	public final @Nonnull ConfigProperty<Boolean> imageResizeFast = propertyBoolean(get("Image", "FastResize", false));
-	public final @Nonnull ConfigProperty<Boolean> imageAnimationGif = propertyBoolean(get("Image", "AnimateGif", true).setRequiresMcRestart(true));
-
-	public final @Nonnull ConfigProperty<Integer> entryGCtick = propertyInteger(get("Entry", "GCDelayTick", 15*20));
-
-	public final @Nonnull ConfigProperty<Integer> communicateThreads = propertyInteger(get("Http", "HttpThreads", 3, "parallel processing number such as Downloading").setRequiresMcRestart(true));
-	public final @Nonnull ConfigProperty<Integer> communicateDLTimedout = propertyInteger(get("Http", "DownloadTimedout", 15000, "milliseconds of max waiting response time. 0 is infinity.").setRequiresMcRestart(true));
-
-	public final @Nonnull ConfigProperty<Integer> contentLoadThreads = propertyInteger(get("Content", "LoadThreads", 3, "parallel processing number such as Image Loading").setRequiresMcRestart(true));
-	public final @Nonnull ConfigProperty<Integer> contentMaxByte = propertyInteger(get("Content", "MaxByte", 32*1024*1024, "limit of size before downloading. 0 is infinity."));
-	public final @Nonnull ConfigProperty<Integer> contentGCtick = propertyInteger(get("Content", "GCDelayTick", 15*20, "delay ticks of Garbage Collection"));
-	public final @Nonnull ConfigProperty<Integer> contentLoadTick = propertyInteger(get("Content", "LoadStartIntervalTick", 0, "ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading..."));
-	public final @Nonnull ConfigProperty<Integer> contentSyncTick = propertyInteger(get("Content", "SyncLoadIntervalTick", 0, "ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading"));
-	public final @Nonnull ConfigProperty<Integer> contentMaxRetry = propertyInteger(get("Content", "MaxRetry", 3, "limit of retry count. 0 is infinity"));
-
-	public final @Nonnull ConfigProperty<Boolean> informationNotice = propertyBoolean(get("Version", "Notice", true));
-	public final @Nonnull ConfigProperty<Boolean> informationJoinBeta;
-	public final @Nonnull ConfigProperty<Boolean> informationUpdateGui = propertyBoolean(get("Version", "UpdateGui", true));
-	public final @Nonnull ConfigProperty<Boolean> informationTryNew = propertyBoolean(get("Version", "TryNew", false));
-
-	public final @Nonnull ConfigProperty<Boolean> multiplayPAAS = propertyBoolean(get("Multiplay.PreventAntiAutoSign", "Enable", true));
-	/** Fastest time "possible" estimate for an empty sign. */
-	public final @Nonnull ConfigProperty<Integer> multiplayPAASMinEditTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minEditTime", 150));
-	/** Minimum time needed to add one extra line (not the first). */
-	public final @Nonnull ConfigProperty<Integer> multiplayPAASMinLineTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minLineTime", 50));
-	/** Minimum time needed to type a character. */
-	public final @Nonnull ConfigProperty<Integer> multiplayPAASMinCharTime = propertyInteger(get("Multiplay.PreventAntiAutoSign.Time", "minCharTime", 50));
-
-	public final @Nonnull ConfigProperty<Boolean> chatpicEnable = propertyBoolean(get("ChatPicture", "Enable", true, "enable ChatPicture extension"));
-	public final @Nonnull ConfigProperty<Integer> chatpicLine = propertyInteger(get("ChatPicture", "ImageLines", 4, "how many lines does image use"));
-	public final @Nonnull ConfigProperty<Integer> chatpicStackTick = propertyInteger(get("ChatPicture", "StackTicks", 50, "stack chat lines within interval ticks"));
-
-	public final @Nonnull ConfigProperty<Boolean> renderOverlayPanel = propertyBoolean(get("Render", "OverlayPanel", true, "Overlay signpic!online"));
-	public final @Nonnull ConfigProperty<Boolean> renderGuiOverlay = propertyBoolean(get("Render", "GuiOverlay", true, "Overlay on GUI"));
-	public final @Nonnull ConfigProperty<Boolean> renderUseMipmap = propertyBoolean(get("Render", "Mipmap", true, "Require OpenGL 3.0 or later"));
-	public final @Nonnull ConfigProperty<Boolean> renderMipmapTypeNearest = propertyBoolean(get("Render", "MipmapTypeNearest", false, "true = Nearest, false = Linear"));
-	public final @Nonnull ConfigProperty<Double> renderSeeOpacity = propertyDouble(get("Render.Opacity", "ViewSign", .5f));
-	public final @Nonnull ConfigProperty<Double> renderPreviewFixedOpacity = propertyDouble(get("Render.Opacity", "PreviewFixedSign", .7f));
-	public final @Nonnull ConfigProperty<Double> renderPreviewFloatedOpacity = propertyDouble(get("Render.Opacity", "PreviewFloatedSign", .7f*.7f));
-
-	public final @Nonnull ConfigProperty<String> apiUploaderType = propertyString(get("Api.Upload", "Type", ""));
-	public final @Nonnull ConfigProperty<String> apiUploaderKey = propertyString(get("Api.Upload", "Key", ""));
-	public final @Nonnull ConfigProperty<String> apiShortenerType = propertyString(get("Api.Shortener", "Type", ""));
-	public final @Nonnull ConfigProperty<String> apiShortenerKey = propertyString(get("Api.Shortener", "Key", ""));
-
-	public final @Nonnull ConfigProperty<Boolean> debugLog = propertyBoolean(get("Debug", "DebugLog", false, "Output Debug Log"));
-
-	private Config(final @Nonnull File configFile) {
-		super(configFile);
-		this.configFile = configFile;
-
-		addCustomCategoryComment("Entry", "Entry(sign text parse cache) Management");
-		addCustomCategoryComment("Content", "Content Data Management");
-		addCustomCategoryComment("Multiplay.PreventAntiAutoSign", "Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)");
-		addCustomCategoryComment("Api.Upload", "Api Upload Settings");
-
-		final Property joinBeta = get("Version", "JoinBeta", false);
-		final String[] v = StringUtils.split(Reference.VERSION, "\\.");
-		if (v.length>=4&&StringUtils.equals(v[3], "beta"))
-			joinBeta.set(true);
-		this.informationJoinBeta = propertyBoolean(joinBeta);
-	}
-
-	@Override
-	public void save() {
-		if (hasChanged())
-			super.save();
-	}
-
-	@CoreEvent
-	public void onConfigChanged(final @Nonnull CompatConfigChangedEvent.CompatOnConfigChangedEvent eventArgs) {
-		if (StringUtils.equals(eventArgs.getModId(), Reference.MODID)) {
-			save();
-			reload();
+		public General(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("General Settings")
+					.translation("signpic.config.general")
+					.push("General");
+			this.signpicDir = builder
+					.comment("Location where image cache etc. are saved")
+					.translation("signpic.config.general.location")
+					.mcRestart()
+					.define("Location", "");
+			this.signTooltip = builder
+					.comment("Add tooltip line to sign")
+					.translation("signpic.config.general.tooltip")
+					.define("Location", false);
+			builder.pop();
 		}
 	}
 
-	public @Nonnull String getFilePath() {
-		return this.configFile.getPath();
+	public static class Image {
+		public final CompatConfigSpec.ConfigValue<Integer> imageWidthLimit;
+		public final CompatConfigSpec.ConfigValue<Integer> imageHeightLimit;
+		public final CompatConfigSpec.ConfigValue<Boolean> imageResizeFast;
+		public final CompatConfigSpec.ConfigValue<Boolean> imageAnimationGif;
+
+		public Image(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Image Settings")
+					.translation("signpic.config.image")
+					.push("Image");
+			this.imageWidthLimit = builder
+					.comment("Image width is resized when it is larger")
+					.translation("signpic.config.image.widthlimit")
+					.define("WidthLimit", 512);
+			this.imageHeightLimit = builder
+					.comment("Image width is resized when it is larger")
+					.translation("signpic.config.image.heightlimit")
+					.define("HeightLimit", 512);
+			this.imageResizeFast = builder
+					.comment("Use faster algorithm to resize")
+					.translation("signpic.config.image.fastresize")
+					.define("FastResize", false);
+			this.imageAnimationGif = builder
+					.comment("Enable/Disable Image Animation")
+					.translation("signpic.config.image.animategif")
+					.mcRestart()
+					.define("AnimateGif", true);
+			builder.pop();
+		}
 	}
 
-	public @Nonnull ConfigProperty<String> propertyString(final @Nonnull Property property) {
-		return registerReload(ConfigProperty.propertyString(this, property));
+	public static class Entry {
+		public final CompatConfigSpec.ConfigValue<Integer> entryGCTick;
+
+		public Entry(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Entry(sign text parse cache) Management Settings")
+					.translation("signpic.config.entry")
+					.push("Entry");
+			this.entryGCTick = builder
+					.comment("Garbage Collection Life Tick")
+					.translation("signpic.config.entry.lifetick")
+					.define("LifeTick", 15*20);
+			builder.pop();
+		}
 	}
 
-	public @Nonnull ConfigProperty<Boolean> propertyBoolean(final @Nonnull Property property) {
-		return registerReload(ConfigProperty.propertyBoolean(this, property));
+	public static class Http {
+		public final CompatConfigSpec.ConfigValue<Integer> communicateThreads;
+		public final CompatConfigSpec.ConfigValue<Integer> communicateDLTimeout;
+
+		public Http(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Http Settings")
+					.translation("signpic.config.http")
+					.push("Http");
+			this.communicateThreads = builder
+					.comment("Parallel processing number such as Downloading")
+					.translation("signpic.config.http.threads")
+					.mcRestart()
+					.define("Threads", 3);
+			this.communicateDLTimeout = builder
+					.comment("Milliseconds of max waiting response time. 0 is infinity.")
+					.translation("signpic.config.http.timeout")
+					.mcRestart()
+					.define("Timeout", 15000);
+			builder.pop();
+		}
 	}
 
-	public @Nonnull ConfigProperty<Double> propertyDouble(final @Nonnull Property property) {
-		return registerReload(ConfigProperty.propertyDouble(this, property));
+	public static class Content {
+		public final CompatConfigSpec.ConfigValue<Integer> contentLoadThreads;
+		public final CompatConfigSpec.ConfigValue<Integer> contentMaxByte;
+		public final CompatConfigSpec.ConfigValue<Integer> contentGCTick;
+		public final CompatConfigSpec.ConfigValue<Integer> contentLoadTick;
+		public final CompatConfigSpec.ConfigValue<Integer> contentSyncTick;
+		public final CompatConfigSpec.ConfigValue<Integer> contentMaxRetry;
+
+		public Content(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Content Data Management Settings")
+					.translation("signpic.config.content")
+					.push("Update");
+			this.contentLoadThreads = builder
+					.comment("Parallel processing number such as Image Loading")
+					.translation("signpic.config.content.threads")
+					.mcRestart()
+					.define("LoadThreads", 3);
+			this.contentMaxByte = builder
+					.comment("Limit of size before downloading. 0 is infinity.")
+					.translation("signpic.config.content.maxbytes")
+					.define("MaxByte", 32*1024*1024);
+			this.contentGCTick = builder
+					.comment("Delay ticks of Garbage Collection")
+					.translation("signpic.config.content.lifetick")
+					.define("LifeTick", 15*20);
+			this.contentLoadTick = builder
+					.comment("Ticks of Load process starting delay (Is other threads, it does not disturb the operation) such as Downloading, File Loading...")
+					.translation("signpic.config.content.loadtick")
+					.define("LoadStartIntervalTick", 0);
+			this.contentSyncTick = builder
+					.comment("Ticks of Sync process interval (A drawing thread, affects the behavior. Please increase the value if the operation is heavy.) such as Gl Texture Uploading")
+					.translation("signpic.config.content.synctick")
+					.define("SyncLoadIntervalTick", 0);
+			this.contentMaxRetry = builder
+					.comment("Limit of retry count. 0 is infinity")
+					.translation("signpic.config.content.maxretry")
+					.define("MaxRetry", 3);
+			builder.pop();
+		}
 	}
 
-	public @Nonnull ConfigProperty<Integer> propertyInteger(final @Nonnull Property property) {
-		return registerReload(ConfigProperty.propertyInteger(this, property));
+	public static class Version {
+		public final CompatConfigSpec.ConfigValue<Boolean> informationNotice;
+		public final CompatConfigSpec.ConfigValue<Boolean> informationUpdateGui;
+
+		public Version(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Mod Update Checker Settings")
+					.translation("signpic.config.update")
+					.push("Update");
+			this.informationNotice = builder
+					.comment("Show Update Notification")
+					.translation("signpic.config.update.notification")
+					.define("Notification", true);
+			this.informationUpdateGui = builder
+					.comment("Show Update Notification in Gui")
+					.translation("signpic.config.update.notificationgui")
+					.define("NotificationGui", true);
+			builder.pop();
+		}
 	}
 
-	public static interface ConfigListener<E> {
-		void onChanged(@Nonnull E value);
+	public static class Multiplay {
+		public final CompatConfigSpec.ConfigValue<Boolean> multiplayPAAS;
+		/** Fastest time "possible" estimate for an empty sign. */
+		public final CompatConfigSpec.ConfigValue<Integer> multiplayPAASMinEditTime;
+		/** Minimum time needed to add one extra line (not the first). */
+		public final CompatConfigSpec.ConfigValue<Integer> multiplayPAASMinLineTime;
+		/** Minimum time needed to type a character. */
+		public final CompatConfigSpec.ConfigValue<Integer> multiplayPAASMinCharTime;
+
+		public Multiplay(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Multiplayer Settings (e.g. NoCheatPlus)")
+					.translation("signpic.config.multiplay")
+					.push("Multiplay");
+			{
+				builder
+						.comment("Prevent from Anti-AutoSign Plugin such as NoCheatPlus. (ms)")
+						.translation("signpic.config.multiplay.paas")
+						.push("PreventAntiAutoSign");
+				this.multiplayPAAS = builder
+						.comment("Enable/Disable Prevent Anti Auto-Sign Plugin Feature")
+						.translation("signpic.config.multiplay.paas.enable")
+						.define("Enable", false);
+				this.multiplayPAASMinEditTime = builder
+						.comment("Min Edit Time")
+						.translation("signpic.config.multiplay.paas.edit")
+						.define("EditTime", 150);
+				this.multiplayPAASMinLineTime = builder
+						.comment("Min Line Edit Time")
+						.translation("signpic.config.multiplay.paas.lineedit")
+						.define("EditLineTime", 50);
+				this.multiplayPAASMinCharTime = builder
+						.comment("Min Char Edit Time")
+						.translation("signpic.config.multiplay.paas.charedit")
+						.define("EditCharTime", 50);
+				builder.pop();
+			}
+			builder.pop();
+		}
 	}
 
-	public static abstract class ConfigProperty<E> implements IReloadableConfig {
-		protected final @Nonnull Configuration config;
-		protected final @Nonnull Property property;
-		private transient @Nonnull E prop;
-		private @Nullable ConfigListener<E> listener;
+	public static class ChatPicture {
+		public final CompatConfigSpec.ConfigValue<Boolean> chatpicEnable;
+		public final CompatConfigSpec.ConfigValue<Integer> chatpicLine;
+		public final CompatConfigSpec.ConfigValue<Integer> chatpicStackTick;
 
-		protected ConfigProperty(final @Nonnull Configuration config, final @Nonnull Property property, final @Nonnull E prop) {
-			this.config = config;
-			this.property = property;
-			this.prop = prop;
+		public ChatPicture(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("SignPicture in Chat Settings")
+					.translation("signpic.config.chatpicture")
+					.push("ChatPicture");
+			this.chatpicEnable = builder
+					.comment("Enable ChatPicture extension")
+					.translation("signpic.config.chatpicture.enable")
+					.define("Enable", true);
+			this.chatpicLine = builder
+					.comment("How many lines does image use")
+					.translation("signpic.config.chatpicture.imagelines")
+					.define("ImageLines", 4);
+			this.chatpicStackTick = builder
+					.comment("Stack chat lines within interval ticks")
+					.translation("signpic.config.chatpicture.stackticks")
+					.define("StackTicks", 50);
+			builder.pop();
 		}
+	}
 
-		public @Nonnull ConfigProperty<E> setListener(@Nullable final ConfigListener<E> listener) {
-			this.listener = listener;
-			return this;
+	public static class Render {
+		public final CompatConfigSpec.ConfigValue<Boolean> renderOverlayPanel;
+		public final CompatConfigSpec.ConfigValue<Boolean> renderGuiOverlay;
+		public final CompatConfigSpec.ConfigValue<Boolean> renderUseMipmap;
+		public final CompatConfigSpec.ConfigValue<Boolean> renderMipmapTypeNearest;
+		public final CompatConfigSpec.ConfigValue<Double> renderSeeOpacity;
+		public final CompatConfigSpec.ConfigValue<Double> renderPreviewFixedOpacity;
+		public final CompatConfigSpec.ConfigValue<Double> renderPreviewFloatedOpacity;
+
+		public Render(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Mod Update Checker Settings")
+					.translation("signpic.config.render")
+					.push("Render");
+			this.renderOverlayPanel = builder
+					.comment("Overlay signpic!online")
+					.translation("signpic.config.render.overlaypanel")
+					.define("OverlayPanel", true);
+			this.renderGuiOverlay = builder
+					.comment("Overlay on GUI")
+					.translation("signpic.config.render.guioverlay")
+					.define("GuiOverlay", true);
+			this.renderUseMipmap = builder
+					.comment("Require OpenGL 3.0 or later")
+					.translation("signpic.config.render.minimap")
+					.define("Mipmap", true);
+			this.renderMipmapTypeNearest = builder
+					.comment("true = Nearest, false = Linear")
+					.translation("signpic.config.render.minimap.nearest")
+					.define("MipmapTypeNearest", false);
+			{
+				builder
+						.comment("Opacity")
+						.translation("signpic.config.render.opacity")
+						.push("Opacity");
+				this.renderSeeOpacity = builder
+						.comment("Opacity")
+						.translation("signpic.config.render.opacity.sign")
+						.define("ViewSign", .5);
+				this.renderPreviewFixedOpacity = builder
+						.comment("Preview Opacity")
+						.translation("signpic.config.render.opacity.sign.preview.fixed")
+						.define("PreviewFixedSign", .7);
+				this.renderPreviewFloatedOpacity = builder
+						.comment("Preview Opacity before right click")
+						.translation("signpic.config.render.opacity.sign.preview.floating")
+						.define("PreviewFloatedSign", .7 * .7);
+				builder.pop();
+			}
+			builder.pop();
 		}
+	}
 
-		protected void setProp(final @Nonnull E prop) {
-			if (!this.property.requiresMcRestart()) {
-				this.prop = prop;
-				if (this.listener!=null)
-					this.listener.onChanged(prop);
+	public static class Api {
+		public final CompatConfigSpec.ConfigValue<String> apiUploaderType;
+		public final CompatConfigSpec.ConfigValue<String> apiUploaderKey;
+		public final CompatConfigSpec.ConfigValue<String> apiShortenerType;
+		public final CompatConfigSpec.ConfigValue<String> apiShortenerKey;
+
+		public Api(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Api Upload Settings")
+					.translation("signpic.config.api")
+					.push("Api");
+			{
+				builder
+						.comment("Uploader Settings")
+						.translation("signpic.config.api.uploader")
+						.push("Uploader");
+				this.apiUploaderType = builder
+						.comment("")
+						.translation("signpic.config.api.uploader.type")
+						.define("Type", "");
+				this.apiUploaderKey = builder
+						.comment("")
+						.translation("signpic.config.api.uploader.key")
+						.define("Key", "");
+				builder.pop();
 			}
+			{
+				builder
+						.comment("Shortener Settings")
+						.translation("signpic.config.api.shortener")
+						.push("Shortener");
+				this.apiShortenerType = builder
+						.comment("")
+						.translation("signpic.config.api.shortener.type")
+						.define("Type", "");
+				this.apiShortenerKey = builder
+						.comment("")
+						.translation("signpic.config.api.shortener.key")
+						.define("Key", "");
+				builder.pop();
+			}
+			builder.pop();
 		}
+	}
 
-		public @Nonnull E get() {
-			return this.prop;
-		}
+	public static class Debug {
+		public final CompatConfigSpec.ConfigValue<Boolean> debugLog;
 
-		public abstract @Nonnull ConfigProperty<E> set(@Nonnull E value);
-
-		public abstract @Nonnull ConfigProperty<E> reset();
-
-		public static @Nonnull ConfigProperty<String> propertyString(final @Nonnull Config config, final @Nonnull Property property) {
-			return new StringConfigProperty(config, property);
-		}
-
-		public static @Nonnull ConfigProperty<Boolean> propertyBoolean(final @Nonnull Config config, final @Nonnull Property property) {
-			return new BooleanConfigProperty(config, property);
-		}
-
-		public static @Nonnull ConfigProperty<Double> propertyDouble(final @Nonnull Config config, final @Nonnull Property property) {
-			return new DoubleConfigProperty(config, property);
-		}
-
-		public static @Nonnull ConfigProperty<Integer> propertyInteger(final @Nonnull Config config, final @Nonnull Property property) {
-			return new IntegerConfigProperty(config, property);
-		}
-
-		private static class StringConfigProperty extends ConfigProperty<String> {
-			protected StringConfigProperty(final @Nonnull Configuration config, final @Nonnull Property property) {
-				super(config, property, property.getString());
-			}
-
-			@Override
-			public @Nonnull StringConfigProperty set(final @Nonnull String value) {
-				this.property.set(value);
-				setProp(value);
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public @Nonnull StringConfigProperty reset() {
-				final String p = this.property.getDefault();
-				this.property.set(p);
-				setProp(p);
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public void reload() {
-				setProp(this.property.getString());
-			}
-		}
-
-		private static class BooleanConfigProperty extends ConfigProperty<Boolean> {
-			protected BooleanConfigProperty(final @Nonnull Configuration config, final @Nonnull Property property) {
-				super(config, property, property.getBoolean());
-			}
-
-			@Override
-			public @Nonnull BooleanConfigProperty set(final @Nonnull Boolean value) {
-				this.property.set(value);
-				setProp(value);
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public @Nonnull BooleanConfigProperty reset() {
-				final String p = this.property.getDefault();
-				this.property.set(p);
-				setProp(this.property.getBoolean());
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public void reload() {
-				setProp(this.property.getBoolean());
-			}
-		}
-
-		private static class DoubleConfigProperty extends ConfigProperty<Double> {
-			protected DoubleConfigProperty(final @Nonnull Configuration config, final @Nonnull Property property) {
-				super(config, property, property.getDouble());
-			}
-
-			@Override
-			public @Nonnull DoubleConfigProperty set(final @Nonnull Double value) {
-				this.property.set(value);
-				setProp(value);
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public @Nonnull DoubleConfigProperty reset() {
-				final String p = this.property.getDefault();
-				this.property.set(p);
-				setProp(this.property.getDouble());
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public void reload() {
-				setProp(this.property.getDouble());
-			}
-		}
-
-		private static class IntegerConfigProperty extends ConfigProperty<Integer> {
-			protected IntegerConfigProperty(final @Nonnull Configuration config, final @Nonnull Property property) {
-				super(config, property, property.getInt());
-			}
-
-			@Override
-			public @Nonnull IntegerConfigProperty set(final @Nonnull Integer value) {
-				this.property.set(value);
-				setProp(value);
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public @Nonnull IntegerConfigProperty reset() {
-				final String p = this.property.getDefault();
-				this.property.set(p);
-				setProp(this.property.getInt());
-				this.config.save();
-				return this;
-			}
-
-			@Override
-			public void reload() {
-				setProp(this.property.getInt());
-			}
+		public Debug(final CompatConfigSpec.Builder builder) {
+			builder
+					.comment("Debug")
+					.translation("signpic.config.debug")
+					.push("Debug");
+			this.debugLog = builder
+					.comment("Output Debug Log")
+					.translation("signpic.config.debug.log")
+					.define("DebugLog", false);
+			builder.pop();
 		}
 	}
 }

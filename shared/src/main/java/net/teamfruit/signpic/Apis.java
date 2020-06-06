@@ -57,26 +57,26 @@ public class Apis {
 	public final @Nonnull MapSetting<ImageUploaderFactory> imageUploaders = new MapSetting<ImageUploaderFactory>() {
 		@Override
 		public @Nonnull String getConfig() {
-			return Config.getConfig().apiUploaderType.get();
+			return Config.API.apiUploaderType.get();
 		}
 
 		@Override
 		public void setConfig(final String setting) {
-			Config.getConfig().apiUploaderType.set(setting);
-			Config.getConfig().apiUploaderKey.set("");
+			Config.API.apiUploaderType.set(setting);
+			Config.API.apiUploaderKey.set("");
 		};
 	};
 
 	public final @Nonnull MapSetting<URLShortenerFactory> urlShorteners = new MapSetting<URLShortenerFactory>() {
 		@Override
 		public @Nonnull String getConfig() {
-			return Config.getConfig().apiShortenerType.get();
+			return Config.API.apiShortenerType.get();
 		}
 
 		@Override
 		public void setConfig(final @Nonnull String setting) {
-			Config.getConfig().apiShortenerType.set(setting);
-			Config.getConfig().apiShortenerKey.set("");
+			Config.API.apiShortenerType.set(setting);
+			Config.API.apiShortenerKey.set("");
 		};
 	};
 
@@ -103,12 +103,12 @@ public class Apis {
 
 		@Override
 		public @Nonnull String getConfig() {
-			return Config.getConfig().apiUploaderKey.get();
+			return Config.API.apiUploaderKey.get();
 		}
 
 		@Override
 		public void setConfig(final @Nonnull String setting) {
-			Config.getConfig().apiUploaderKey.set(setting);
+			Config.API.apiUploaderKey.set(setting);
 		}
 	}
 
@@ -119,12 +119,12 @@ public class Apis {
 
 		@Override
 		public @Nonnull String getConfig() {
-			return Config.getConfig().apiShortenerKey.get();
+			return Config.API.apiShortenerKey.get();
 		}
 
 		@Override
 		public void setConfig(final @Nonnull String setting) {
-			Config.getConfig().apiShortenerKey.set(setting);
+			Config.API.apiShortenerKey.set(setting);
 		}
 	}
 

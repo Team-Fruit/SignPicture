@@ -1,36 +1,45 @@
 package net.teamfruit.signpic.gui.config;
 
-import java.util.List;
+#if !MC_12_LATER
+
+import com.google.common.collect.Lists;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.ConfigElement;
+import net.minecraftforge.fml.client.config.GuiConfig;
+import net.minecraftforge.fml.client.config.IConfigElement;
+import net.teamfruit.signpic.Config;
+import net.teamfruit.signpic.Reference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
-import com.google.common.collect.Lists;
+#if MC_7_LATER
+#else
+import cpw.mods.fml.client.config.GuiConfig;
+import cpw.mods.fml.client.config.IConfigElement;
+#endif
 
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.teamfruit.signpic.Config;
-import net.teamfruit.signpic.Reference;
-import net.teamfruit.signpic.compat.Compat.CompatConfigElement;
-import net.teamfruit.signpic.compat.Compat.CompatGuiConfig;
-
-public class ConfigGui extends CompatGuiConfig {
+public class ConfigGui extends #if MC_12_LATER Config #else GuiConfig #endif {
 	public ConfigGui(final @Nullable GuiScreen parent) {
-		super(parent, getConfigElements(), Reference.MODID, false, false, Config.getConfig().getFilePath());
+		super(parent, getConfigElements(), Reference.MODID, false, false, GuiConfig.getAbridgedConfigPath(Config.spec.getConfigFile().getName()));
 	}
 
-	private static @Nonnull List<CompatConfigElement> getConfigElements() {
-		final List<CompatConfigElement> list = Lists.newArrayList();
+	private static @Nonnull
+	List<IConfigElement> getConfigElements() {
+		final List<IConfigElement> list = Lists.newArrayList();
 
-		for (final String cat : Config.getConfig().getCategoryNames()) {
-			final ConfigCategory cc = Config.getConfig().getCategory(cat);
+		for (final String cat : Config.spec.getConfiguration().getCategoryNames()) {
+			final ConfigCategory cc = Config.spec.getConfiguration().getCategory(cat);
 
 			if (cc.isChild())
 				continue;
 
-			list.add(CompatConfigElement.fromCategory(cc));
+			list.add(new ConfigElement(cc));
 		}
 
 		return list;
 	}
 }
+#endif

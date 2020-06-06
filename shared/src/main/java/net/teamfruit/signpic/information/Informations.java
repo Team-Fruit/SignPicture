@@ -60,8 +60,7 @@ public final class Informations {
 
 		public @Nonnull InfoVersion onlineVersion() {
 			final InfoVersion stable = stableVersion();
-			final InfoVersion unstable = unstableVersion();
-			return Config.getConfig().informationJoinBeta.get()&&unstable.compare(stable) ? unstable : stable;
+			return stable;
 		}
 
 		public static boolean equalsVersion(final @Nullable InfoSource a, final @Nullable InfoSource b) {
@@ -279,7 +278,7 @@ public final class Informations {
 
 	public void onTick(final @Nullable InfoSource source, final @Nonnull InfoState state) {
 		final CompatEntityPlayer player = CompatMinecraft.getPlayer();
-		if (Config.getConfig().informationNotice.get()&&!state.triedToWarnPlayer)
+		if (Config.VERSION.informationNotice.get()&&!state.triedToWarnPlayer)
 			notice(source, state, player);
 	}
 

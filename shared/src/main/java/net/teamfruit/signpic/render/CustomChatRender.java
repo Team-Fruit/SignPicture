@@ -280,13 +280,13 @@ public class CustomChatRender {
 		private final @Nonnull Map<PicChatID, PicChatNode> id2node = Maps.newHashMap();
 
 		public boolean isEnable() {
-			if (!Config.getConfig().chatpicEnable.get())
+			if (!Config.CHATPICTURE.chatpicEnable.get())
 				return false;
-			return Config.getConfig().chatpicLine.get()>0;
+			return Config.CHATPICTURE.chatpicLine.get()>0;
 		}
 
 		public int getLineSplit() {
-			return Config.getConfig().chatpicLine.get();
+			return Config.CHATPICTURE.chatpicLine.get();
 		}
 
 		@CoreInvoke
@@ -314,7 +314,7 @@ public class CustomChatRender {
 				for (final ChatLine line : clist) {
 					final int id = line.getUpdatedCounter();
 
-					final int stacktick = Config.getConfig().chatpicStackTick.get();
+					final int stacktick = Config.CHATPICTURE.chatpicStackTick.get();
 					final int diff = id-_lastlineunits;
 					if (diff<-stacktick||stacktick<diff) {
 						lineunits.add(new PicChatID(_lastlineunits, _lineunits));

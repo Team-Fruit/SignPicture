@@ -56,7 +56,7 @@ public class RemoteImage extends Image {
 			if (cacheid!=null&&!StringUtils.isEmpty(cacheid))
 				cachemeta = new ContentCache(ContentLocation.cachemetaLocation(cacheid));
 			if (cachemeta==null||cachemeta.isDirty()||!cachemeta.isAvailable()||!(cacheid!=null&&ContentLocation.cacheLocation(cacheid).exists())) {
-				if (Config.getConfig().contentMaxRetry.get()>0&&this.content.meta.getTryCount()>Config.getConfig().contentMaxRetry.get())
+				if (Config.CONTENT.contentMaxRetry.get()>0&&this.content.meta.getTryCount()>Config.CONTENT.contentMaxRetry.get())
 					throw new RetryCountOverException();
 				this.content.meta.setTryCount(this.content.meta.getTryCount()+1);
 				this.content.state.setType(StateType.DOWNLOADING);

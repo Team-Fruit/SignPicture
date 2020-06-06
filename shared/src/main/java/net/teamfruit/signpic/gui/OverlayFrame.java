@@ -51,7 +51,7 @@ public class OverlayFrame extends WFrame {
 		final GuiScreen gui = event.getGui();
 		if (gui==null)
 			return;
-		if (Config.getConfig().renderGuiOverlay.get())
+		if (Config.RENDER.renderGuiOverlay.get())
 			if (!isDelegated()) {
 				setWidth(gui.width);
 				setHeight(gui.height);
@@ -119,7 +119,7 @@ public class OverlayFrame extends WFrame {
 
 				@Override
 				public void draw(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final float frame, final float popacity, final @Nonnull RenderOption opt) {
-					if (Config.getConfig().renderOverlayPanel.get()||instance.isDelegated())
+					if (Config.RENDER.renderOverlayPanel.get()||instance.isDelegated())
 						super.draw(ev, pgp, p, frame, popacity, opt);
 				}
 			});

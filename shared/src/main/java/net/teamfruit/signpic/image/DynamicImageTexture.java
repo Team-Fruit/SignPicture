@@ -73,7 +73,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 	}
 
 	public static @Nonnull DynamicImageTexture create(final @Nonnull BufferedImage image, final int width, final int height) {
-		if (Config.getConfig().renderUseMipmap.get())
+		if (Config.RENDER.renderUseMipmap.get())
 			return MipmapDynamicTexture.createFromImage(image, width, height, Client.mc.gameSettings.mipmapLevels);
 		else
 			return DynamicTexture.createFromImage(image, width, height);
@@ -127,7 +127,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 			// resize
 			final BufferedImage s = new BufferedImage(width, height, image.getType());
 			final Graphics2D g = s.createGraphics();
-			g.drawImage(image.getScaledInstance(width, height, Config.getConfig().imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
+			g.drawImage(image.getScaledInstance(width, height, Config.IMAGE.imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
 			g.dispose();
 			return createFromSizedImage(s);
 		}
@@ -200,7 +200,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 			// resize
 			final BufferedImage s = new BufferedImage(nwidth, nheight, image.getType());
 			final Graphics2D g = s.createGraphics();
-			g.drawImage(image.getScaledInstance(nwidth, nheight, Config.getConfig().imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
+			g.drawImage(image.getScaledInstance(nwidth, nheight, Config.IMAGE.imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
 			g.dispose();
 			return createFromSizedImage(s, miplevel);
 		}
@@ -402,7 +402,7 @@ public abstract class DynamicImageTexture implements ImageTexture {
 			// resize
 			final BufferedImage s = new BufferedImage(width, height, image.getType());
 			final Graphics2D g = s.createGraphics();
-			g.drawImage(image.getScaledInstance(width, height, Config.getConfig().imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
+			g.drawImage(image.getScaledInstance(width, height, Config.IMAGE.imageResizeFast.get() ? java.awt.Image.SCALE_FAST : java.awt.Image.SCALE_SMOOTH), 0, 0, null);
 			g.dispose();
 			return createFromSizedImage(s, miplevel);
 		}

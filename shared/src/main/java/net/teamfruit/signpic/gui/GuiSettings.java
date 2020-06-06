@@ -74,7 +74,7 @@ public class GuiSettings extends WPanel {
 
 	@Override
 	protected void initWidget() {
-		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.getConfig().informationUpdateGui.get();
+		final boolean isUpdateRequired = Informations.instance.isUpdateRequired()&&Config.VERSION.informationUpdateGui.get();
 		final int updatepanelHeight = isUpdateRequired ? 40 : 0;
 		final float hitarea = 5f;
 		add(new WPanel(new R(Coord.bottom(0), Coord.height(122+updatepanelHeight))) {
@@ -157,8 +157,8 @@ public class GuiSettings extends WPanel {
 												check(getConfig().get());
 											}
 
-											private @Nonnull ConfigProperty<Boolean> getConfig() {
-												return Config.getConfig().multiplayPAAS;
+											private @Nonnull CompatConfigSpec.ConfigValue<Boolean> getConfig() {
+												return Config.MULTIPLAY.multiplayPAAS;
 											}
 
 											@Override

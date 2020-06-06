@@ -14,7 +14,7 @@ public class Communicator {
 	public static @Nonnull Communicator instance = new Communicator();
 
 	private final @Nonnull NotifyDeque<Progressable> tasks = new NotifyDeque<Progressable>(new ArrayDeque<Progressable>());
-	private final @Nonnull ExecutorService threadpool = ThreadUtils.newFixedCachedThreadPool(Config.getConfig().communicateThreads.get(), "signpic-http-%d");
+	private final @Nonnull ExecutorService threadpool = ThreadUtils.newFixedCachedThreadPool(Config.HTTP.communicateThreads.get(), "signpic-http-%d");
 
 	public @Nonnull NotifyDeque<Progressable> getTasks() {
 		return this.tasks;

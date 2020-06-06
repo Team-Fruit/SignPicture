@@ -70,6 +70,6 @@ public class ClientProxy extends CommonProxy {
 	public void postInit(final @Nonnull CompatFMLPostInitializationEvent event) {
 		super.postInit(event);
 
-		Config.getConfig().save();
+		Config.spec.save();
 	}
 }

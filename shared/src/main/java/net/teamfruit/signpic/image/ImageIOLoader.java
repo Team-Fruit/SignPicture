@@ -36,7 +36,7 @@ import net.teamfruit.signpic.state.Progress;
 import net.teamfruit.signpic.state.StateType;
 
 public class ImageIOLoader implements ILoadCancelable {
-	public static @Nonnull SizeData MAX_SIZE = maxSize(Config.getConfig().imageWidthLimit.get(), Config.getConfig().imageHeightLimit.get());
+	public static @Nonnull SizeData MAX_SIZE = maxSize(Config.IMAGE.imageWidthLimit.get(), Config.IMAGE.imageHeightLimit.get());
 
 	public static @Nonnull SizeData maxSize(final int limitWidth, final int limitHeight) {
 		return SizeData.create(
@@ -67,7 +67,7 @@ public class ImageIOLoader implements ILoadCancelable {
 			this.content.state.setType(StateType.LOADING);
 			this.content.state.setProgress(new Progress());
 			RemoteImageTexture textures;
-			if (Config.getConfig().imageAnimationGif.get()&&reader.getFormatName()=="gif")
+			if (Config.IMAGE.imageAnimationGif.get()&&reader.getFormatName()=="gif")
 				textures = loadGif();
 			else
 				textures = loadImage(reader, imagestream);

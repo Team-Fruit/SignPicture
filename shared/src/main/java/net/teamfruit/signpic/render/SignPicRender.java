@@ -38,10 +38,10 @@ public class SignPicRender {
 
 	@CoreEvent
 	public void onRender(final @Nonnull CompatRenderWorldLastEvent event) {
-		float opacity = Config.getConfig().renderPreviewFixedOpacity.get().floatValue();
+		float opacity = Config.RENDER.renderPreviewFixedOpacity.get().floatValue();
 		if (CurrentMode.instance.isMode(CurrentMode.Mode.SETPREVIEW)||CurrentMode.instance.isMode(CurrentMode.Mode.PLACE)) {
 			Sign.preview.capturePlace();
-			opacity = Config.getConfig().renderPreviewFloatedOpacity.get().floatValue();
+			opacity = Config.RENDER.renderPreviewFloatedOpacity.get().floatValue();
 		}
 		if (CurrentMode.instance.isState(CurrentMode.State.PREVIEW))
 			if (Sign.preview.isRenderable()&&Sign.preview.isVisible()) {

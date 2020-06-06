@@ -25,7 +25,7 @@ import net.teamfruit.signpic.util.ThreadUtils;
 public class ContentManager implements ITickEntry {
 	public static @Nonnull ContentManager instance = new ContentManager();
 
-	public final @Nonnull ExecutorService threadpool = ThreadUtils.newFixedCachedThreadPool(Config.getConfig().contentLoadThreads.get(), "signpic-content-%d");
+	public final @Nonnull ExecutorService threadpool = ThreadUtils.newFixedCachedThreadPool(Config.CONTENT.contentLoadThreads.get(), "signpic-content-%d");
 	private final @Nonnull Map<ContentId, ContentSlot> registry = Maps.newConcurrentMap();
 	private final @Nonnull Queue<ContentSlot> loadqueue = Queues.newConcurrentLinkedQueue();
 	private final @Nonnull Queue<IDivisionProcessable> divisionqueue = Queues.newConcurrentLinkedQueue();
@@ -66,7 +66,7 @@ public class ContentManager implements ITickEntry {
 	@Override
 	public void onTick() {
 		this.loadtick++;
-		if (this.loadtick>Config.getConfig().contentLoadTick.get()) {
+		if (this.loadtick>Config.CONTENT.contentLoadTick.get()) {
 			this.loadtick = 0;
 			final ContentSlot loadprogress = this.loadqueue.poll();
 			if (loadprogress!=null)
@@ -74,7 +74,7 @@ public class ContentManager implements ITickEntry {
 		}
 
 		this.divisiontick++;
-		if (this.divisiontick>Config.getConfig().contentSyncTick.get()) {
+		if (this.divisiontick>Config.CONTENT.contentSyncTick.get()) {
 			this.divisiontick = 0;
 			IDivisionProcessable divisionprocess;
 			if ((divisionprocess = this.divisionqueue.peek())!=null)
@@ -139,7 +139,7 @@ public class ContentManager implements ITickEntry {
 
 		@Override
 		protected int getCollectTimes() {
-			return Config.getConfig().contentGCtick.get();
+			return Config.CONTENT.contentGCTick.get();
 		}
 	}
 }

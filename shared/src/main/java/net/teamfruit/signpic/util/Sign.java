@@ -44,7 +44,7 @@ public class Sign {
 	}
 
 	public static void placeSign(final @Nonnull EntryId entryId, final @Nonnull TileEntitySign sourceentity) {
-		if (Config.getConfig().multiplayPAAS.get()&&!Client.mc.isSingleplayer())
+		if (Config.MULTIPLAY.multiplayPAAS.get()&&!Client.mc.isSingleplayer())
 			WFrame.displayFrame(new GuiPAAS(new SendPacketTask(entryId, sourceentity)));
 		else
 			sendSign(entryId, sourceentity);
@@ -91,8 +91,8 @@ public class Sign {
 		}
 
 		private static long getExpectedEditTime(final @Nonnull String[] lines, final boolean skipEmpty) {
-			long expected = Config.getConfig().multiplayPAASMinEditTime.get();
-			final int minchartime = Config.getConfig().multiplayPAASMinCharTime.get();
+			long expected = Config.MULTIPLAY.multiplayPAASMinEditTime.get();
+			final int minchartime = Config.MULTIPLAY.multiplayPAASMinCharTime.get();
 			int n = 0;
 			for (String line : lines)
 				if (line!=null) {
@@ -106,7 +106,7 @@ public class Sign {
 			if (skipEmpty&&n==0)
 				return 0;
 			if (n>1)
-				expected += Config.getConfig().multiplayPAASMinLineTime.get()*n;
+				expected += Config.MULTIPLAY.multiplayPAASMinLineTime.get()*n;
 			return expected;
 		}
 	}

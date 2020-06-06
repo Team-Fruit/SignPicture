@@ -335,7 +335,7 @@ public class GuiMain extends WFrame {
 				add(OverlayFrame.instance.pane);
 			}
 		});
-		if (Informations.instance.shouldCheck(Config.getConfig().informationJoinBeta.get() ? TimeUnit.HOURS.toMillis(6) : TimeUnit.DAYS.toMillis(1l)))
+		if (Informations.instance.shouldCheck(TimeUnit.DAYS.toMillis(1l)))
 			Informations.instance.onlineCheck(null);
 	}
 

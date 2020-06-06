@@ -284,7 +284,7 @@ public class SignHandler {
 					// tooltip.add(I18n.format("signpic.item.sign.desc.named.meta", meta.compose()));
 					tooltip.add(I18n.format("signpic.item.sign.desc.named.raw", raw));
 				}
-			} else if (Config.getConfig().signTooltip.get()) {
+			} else if (Config.GENERAL.signTooltip.get()) {
 				final KeyBinding binding = KeyHandler.Keys.KEY_BINDING_GUI.binding;
 				final List<KeyBinding> conflict = KeyHandler.getKeyConflict(binding);
 				String keyDisplay = GameSettings.getKeyDisplayString(binding.getKeyCode());
