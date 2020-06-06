@@ -1,41 +1,45 @@
-/*
- * This class is from the OpenModsLib.
- * https://github.com/OpenMods/OpenModsLib
- *
- * Code Copyright (c) 2013 Open Mods
- * Code released under the MIT license
- * https://github.com/OpenMods/OpenModsLib/blob/master/LICENSE
- */
 package net.teamfruit.signpic.asm.lib;
 
+import net.teamfruit.signpic.compat.CompatFMLDeobfuscatingRemapper;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FieldNode;
+
 import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
-import net.teamfruit.signpic.compat.Compat.CompatFMLDeobfuscatingRemapper;
+public class FieldMatcher implements Predicate<FieldNode> {
+    private final @Nonnull ClassName clsName;
+    private final @Nonnull String description;
+    private final @Nonnull RefName refname;
 
-public class FieldMatcher {
-	private final @Nonnull ClassName clsName;
-	private final @Nonnull String description;
-	private final @Nonnull RefName refname;;
+    public FieldMatcher(final @Nonnull ClassName clsName, final @Nonnull String description, final @Nonnull RefName refname) {
+        this.clsName = clsName;
+        this.description = description;
+        this.refname = refname;
+    }
 
-	public FieldMatcher(final @Nonnull ClassName clsName, final @Nonnull String description, final @Nonnull RefName refname) {
-		this.clsName = clsName;
-		this.description = description;
-		this.refname = refname;
-	}
+    public boolean match(final @Nonnull String fieldName, final @Nonnull String fieldDesc) {
+        if (CompatFMLDeobfuscatingRemapper.useMcpNames())
+            return fieldName.equals(this.refname.mcpName()) && fieldDesc.equals(this.description);
+        final String srgDesc = CompatFMLDeobfuscatingRemapper.mapDesc(fieldDesc);
+        if (!srgDesc.equals(this.description))
+            return false;
+        final String srgFieldName = CompatFMLDeobfuscatingRemapper.mapFieldName(CompatFMLDeobfuscatingRemapper.unmap(this.clsName.getBytecodeName()), fieldName, fieldDesc);
+        return srgFieldName.equals(this.refname.srgName());
+    }
 
-	public boolean match(final @Nonnull String fieldName, final @Nonnull String fieldDesc) {
-		if (!fieldDesc.equals(this.description))
-			return false;
-		if (fieldName.equals(this.refname.mcpName()))
-			return true;
-		if (!VisitorHelper.useSrgNames())
-			return false;
-		final String unmappedName = CompatFMLDeobfuscatingRemapper.mapFieldName(this.clsName.getBytecodeName(), fieldName, fieldDesc);
-		return unmappedName.equals(this.refname.srgName());
-	}
+    @Override
+    public boolean test(final FieldNode node) {
+        return match(node.name, node.desc);
+    }
 
-	@Override
-	public @Nonnull String toString() {
-		return String.format("Field Matcher: %s.%s %s", this.clsName.getBytecodeName(), this.refname, this.description);
-	}
+    public Predicate<AbstractInsnNode> insnMatcher() {
+        return node -> node instanceof FieldInsnNode && match(((FieldInsnNode) node).name, ((FieldInsnNode) node).desc);
+    }
+
+    @Override
+    public @Nonnull String toString() {
+        return String.format("Field Matcher: %s.%s %s", this.clsName.getBytecodeName(), this.refname, this.description);
+    }
 }

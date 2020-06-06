@@ -1,13 +1,11 @@
 package net.teamfruit.signpic.asm;
 
-import java.util.Map;
+#if !MC_12_LATER
 
 import javax.annotation.Nullable;
+import java.util.Map;
 
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import net.teamfruit.signpic.Reference;
-
-public class SignPictureCorePlugin implements IFMLLoadingPlugin {
+public class SignPictureCorePlugin implements #if MC_7_LATER net.minecraftforge.fml.relauncher.IFMLLoadingPlugin #else cpw.mods.fml.relauncher.IFMLLoadingPlugin #endif {
 	@Override
 	public @Nullable String[] getASMTransformerClass() {
 		return new String[] {
@@ -34,3 +32,4 @@ public class SignPictureCorePlugin implements IFMLLoadingPlugin {
 		return null;
 	}
 }
+#endif

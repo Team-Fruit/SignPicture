@@ -1,12 +1,5 @@
 package net.teamfruit.signpic.gui;
 
-import static org.lwjgl.opengl.GL11.*;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.StringUtils;
-
 import net.minecraft.util.ResourceLocation;
 import net.teamfruit.bnnwidget.WBase;
 import net.teamfruit.bnnwidget.WEvent;
@@ -21,10 +14,14 @@ import net.teamfruit.signpic.attr.prop.SizeData;
 import net.teamfruit.signpic.attr.prop.SizeData.ImageSizes;
 import net.teamfruit.signpic.entry.Entry;
 import net.teamfruit.signpic.entry.EntryId;
-import net.teamfruit.signpic.entry.EntryIdBuilder;
 import net.teamfruit.signpic.entry.content.Content;
 import net.teamfruit.signpic.entry.content.ContentManager;
-import net.teamfruit.signpic.information.Informations;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 
 public class SignPicLabel extends WBase {
 	public static final @Nonnull ResourceLocation defaultTexture = new ResourceLocation("signpic", "textures/logo.png");
@@ -35,14 +32,14 @@ public class SignPicLabel extends WBase {
 	public SignPicLabel(final @Nonnull R position, final @Nonnull ContentManager manager) {
 		super(position);
 		this.manager = manager;
-		if (Informations.instance.isUpdateRequired()) {
-			final String image = Informations.instance.getUpdateImage();
-			if (image!=null) {
-				final EntryIdBuilder eidb = new EntryIdBuilder();
-				eidb.setURI(image);
-				this.update = eidb.build();
-			}
-		}
+//		if (Compat.CompatVersionChecker.isOutdated(Reference.MODID)) {
+//			final String image = Compat.CompatVersionChecker.getResult(Reference.MODID).;
+//			if (image!=null) {
+//				final EntryIdBuilder eidb = new EntryIdBuilder();
+//				eidb.setURI(image);
+//				this.update = eidb.build();
+//			}
+//		}
 	}
 
 	@Override

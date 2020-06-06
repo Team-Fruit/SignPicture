@@ -11,6 +11,7 @@ import javax.vecmath.Vector3f;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeVersion;
 import net.teamfruit.bnnwidget.WBase;
 import net.teamfruit.bnnwidget.WEvent;
 import net.teamfruit.bnnwidget.WFrame;
@@ -30,10 +31,13 @@ import net.teamfruit.bnnwidget.var.V;
 import net.teamfruit.bnnwidget.var.VCommon;
 import net.teamfruit.bnnwidget.var.VMotion;
 import net.teamfruit.signpic.Client;
+import net.teamfruit.signpic.Config;
+import net.teamfruit.signpic.Reference;
 import net.teamfruit.signpic.attr.AttrReaders;
 import net.teamfruit.signpic.attr.prop.OffsetData;
 import net.teamfruit.signpic.attr.prop.RotationData.RotationGL;
 import net.teamfruit.signpic.attr.prop.SizeData;
+import net.teamfruit.signpic.compat.Compat;
 import net.teamfruit.signpic.compat.Compat.CompatBlockPos;
 import net.teamfruit.signpic.compat.Compat.CompatMathHelper;
 import net.teamfruit.signpic.compat.Compat.CompatMinecraft;
@@ -41,7 +45,6 @@ import net.teamfruit.signpic.compat.Compat.CompatWorld;
 import net.teamfruit.signpic.entry.Entry;
 import net.teamfruit.signpic.entry.EntryId.PreviewEntryId;
 import net.teamfruit.signpic.entry.content.Content;
-import net.teamfruit.signpic.information.Informations;
 import net.teamfruit.signpic.mode.CurrentMode;
 import net.teamfruit.signpic.render.StateRender;
 import net.teamfruit.signpic.state.StateType;
@@ -289,8 +292,10 @@ public class GuiImage extends WFrame {
 			final VCommon var = V.a(.8f);
 			add(new UpdateLogo(new R(Coord.width(var), Coord.height(var), Coord.pleft(.5f), Coord.ptop(.5f)).child(Coord.pleft(-.5f), Coord.ptop(-.5f))));
 			add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.top(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.unsupported")).setColor(0xff9900).setShadow(true));
-			if (Informations.instance.isUpdateRequired())
+
+			if (Config.VERSION.informationUpdateGui.get() && Compat.CompatVersionChecker.isOutdated(Reference.MODID)) {
 				add(new MScaledLabel(new R(Coord.pleft(.5f), Coord.bottom(0), Coord.pheight(.4f), Coord.width(2)).child(Coord.pleft(-.5f))).setText(I18n.format("signpic.advmsg.format.needupdate")).setColor(0xff9900).setShadow(true));
+			}
 		}
 
 		@Override

@@ -1,108 +1,58 @@
 package net.teamfruit.signpic.asm;
 
-import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.List;
-import java.util.ListIterator;
-
-import javax.annotation.Nullable;
-
-import net.teamfruit.signpic.compat.CompatBaseVersion;
-import org.apache.commons.lang3.StringUtils;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-
-import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.teamfruit.signpic.Log;
-import net.teamfruit.signpic.asm.lib.VisitorHelper;
-import net.teamfruit.signpic.asm.lib.VisitorHelper.TransformProvider;
-import net.teamfruit.signpic.compat.CompatVersion;
+import net.teamfruit.signpic.asm.lib.*;
+import net.teamfruit.signpic.compat.CompatTransformer;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.ClassNode;
 
-public class SignPictureTransformer implements IClassTransformer {
-	private boolean intelliinputloaded;
-	private boolean intelliinputinitialized;
+import javax.annotation.Nonnull;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-	private void initIntelliInput(final String name, final String transformedName) {
-		if (!this.intelliinputloaded) {
-			if (StringUtils.equals(transformedName, "$wrapper.com.tsoft_web.IntelliInput.asm.IntelliInputTransformer"))
-				this.intelliinputloaded = true;
-		} else if (!this.intelliinputinitialized) {
-			this.intelliinputinitialized = true;
-			try {
-				final Field $transformers = LaunchClassLoader.class.getDeclaredField("transformers");
-				$transformers.setAccessible(true);
-				@SuppressWarnings("unchecked")
-				final List<IClassTransformer> transformers = (List<IClassTransformer>) $transformers.get(Launch.classLoader);
-				int signpic = -1, intelliinput = -1;
-				for (final ListIterator<IClassTransformer> itr = transformers.listIterator(); itr.hasNext();) {
-					final int index = itr.nextIndex();
-					final IClassTransformer transformer = itr.next();
-					final String tname = transformer.getClass().getName();
-					if (StringUtils.equals(tname, "$wrapper."+SignPictureTransformer.class.getName()))
-						signpic = index;
-					else if (StringUtils.equals(tname, "$wrapper.com.tsoft_web.IntelliInput.asm.IntelliInputTransformer"))
-						intelliinput = index;
-				}
-				if (signpic>=0&&intelliinput>=0&&intelliinput>signpic) {
-					Collections.swap(transformers, signpic, intelliinput);
-					Log.log.info("The order of SignPictureTransformer and IntelliInputTransformer has been swapped while loading "+transformedName);
-				}
-			} catch (final Exception e) {
-				Log.log.error(e.getMessage(), e);
-			}
-		}
-	}
+public class SignPictureTransformer extends CompatTransformer #if MC_12_LATER implements cpw.mods.modlauncher.api.ITransformer<ClassNode> #endif {
+    @Override
+    public ClassNode read(@Nonnull final byte[] bytes) {
+        return VisitorHelper.read(bytes, ClassReader.SKIP_FRAMES);
+    }
 
-	@Override
-	public @Nullable byte[] transform(final @Nullable String name, final @Nullable String transformedName, final @Nullable byte[] bytes) {
-		if (bytes==null||name==null||transformedName==null)
-			return bytes;
+    @Override
+    public byte[] write(@Nonnull final ClassNode node) {
+        return VisitorHelper.write(node, ClassWriter.COMPUTE_FRAMES);
+    }
 
-		initIntelliInput(name, transformedName);
+    public final INodeCoreTransformer[] transformers = SignPictureTransforms.transformers;
 
-		try {
-			if (transformedName.equals("net.minecraft.tileentity.TileEntity"))
-				if (CompatVersion.version().newer(CompatBaseVersion.V9))
-					return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
-						@Override
-						public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
-							Log.log.info(String.format("Patching TileEntity.getRenderBoundingBox (class: %s)", name));
-							return new TileEntityVisitor(name, cv);
-						}
-					});
+    private final Set<String> transformerNames = Stream.of(this.transformers).map(INodeTransformer::getClassName).map(ClassName::getName).collect(Collectors.toSet());
 
-			if (transformedName.equals("net.minecraft.client.gui.GuiScreenBook"))
-				return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
-					@Override
-					public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
-						Log.log.info(String.format("Patching GuiScreenBook.drawScreen (class: %s)", name));
-						return new GuiScreenBookVisitor(name, cv);
-					}
-				});
+    @Override
+    public ClassNode transform(final ClassNode input, final CompatTransformerVotingContext context) {
+        try {
+            for (final INodeCoreTransformer transformer : this.transformers)
+                if (transformer.getMatcher().test(input))
+                    return VisitorHelper.apply(input, transformer, Log.log);
+        } catch (final Exception e) {
+            throw new RuntimeException("Could not transform: ", e);
+        }
 
-			if (transformedName.equals("net.minecraft.client.gui.GuiNewChat"))
-				return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
-					@Override
-					public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
-						Log.log.info(String.format("Patching GuiNewChat (class: %s)", name));
-						return new GuiNewChatVisitor(name, cv);
-					}
-				});
+        return input;
+    }
 
-			if (transformedName.equals("net.minecraft.client.gui.GuiScreen"))
-				return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
-					@Override
-					public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {
-						Log.log.info(String.format("Patching GuiScreen.handleInput (class: %s)", name));
-						return new GuiScreenVisitor(name, cv);
-					}
-				});
-		} catch (final Exception e) {
-			Log.log.fatal("Could not transform: ", e);
-		}
+    public static final DeferredTransform intelliInputDeferred = new DeferredTransform(SignPictureTransformer.class.getName(), "com.tsoft_web.IntelliInput.asm.IntelliInputTransformer");
 
-		return bytes;
-	}
+    public static final DeferredTransform[] deferredTransforms = {
+            intelliInputDeferred,
+    };
+
+    @Override
+    public DeferredTransform[] deferredTransforms() {
+        return deferredTransforms;
+    }
+
+    @Override
+    public Set<String> targetNames() {
+        return this.transformerNames;
+    }
 }

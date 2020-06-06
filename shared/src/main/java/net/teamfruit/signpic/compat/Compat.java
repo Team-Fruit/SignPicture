@@ -1,16 +1,6 @@
 package net.teamfruit.signpic.compat;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.Validate;
-
 import com.google.common.collect.Lists;
-
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -55,17 +45,15 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.*;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Property;
@@ -75,27 +63,155 @@ import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.teamfruit.bnnwidget.component.MScaledLabel;
+import net.teamfruit.bnnwidget.position.Coord;
+import net.teamfruit.bnnwidget.position.R;
+import net.teamfruit.signpic.Config;
 import net.teamfruit.signpic.CoreInvoke;
+import net.teamfruit.signpic.Reference;
+import org.apache.commons.lang3.Validate;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 public class Compat {
-	public static class CompatFMLDeobfuscatingRemapper {
-		public static @Nonnull String mapMethodDesc(@Nonnull final String desc) {
-			return FMLDeobfuscatingRemapper.INSTANCE.mapMethodDesc(desc);
+	public static @Nonnull Minecraft getMinecraft() {
+		#if MC_12_LATER
+		return Minecraft.getInstance();
+		#else
+		return FMLClientHandler.instance().getClient();
+		#endif
+	}
+
+	public static class CompatI18n {
+		public static String format(final String format, final Object... args) {
+			return net.minecraft.client.resources.I18n.format(format, args);
 		}
 
-		public static @Nonnull String mapFieldName(@Nonnull final String owner, @Nonnull final String name, @Nonnull final String desc) {
-			return FMLDeobfuscatingRemapper.INSTANCE.mapFieldName(owner, name, desc);
+		public static boolean hasKey(final String key) {
+			#if MC_7_LATER
+			return net.minecraft.client.resources.I18n.hasKey(key);
+			#else
+			return net.minecraft.util.StatCollector.canTranslate(key);
+			#endif
 		}
 
-		public static @Nonnull String unmap(@Nonnull final String typeName) {
-			return FMLDeobfuscatingRemapper.INSTANCE.unmap(typeName);
+		@SuppressWarnings("deprecation")
+		public static String translateToLocal(final String text) {
+			#if MC_12_LATER
+			return hasKey(text) ? format(text) : text;
+			#elif MC_7_LATER
+			return net.minecraft.util.text.translation.I18n.translateToLocal(text);
+			#else
+			return net.minecraft.util.StatCollector.translateToLocal(text);
+			#endif
+		}
+	}
+
+	public static class CompatTexture {
+		public static void uploadTexture(Supplier<Integer> genTextureId, final InputStream image) throws IOException {
+			final boolean blur = true;
+			final boolean clamp = false;
+
+			#if MC_12_LATER
+			try (
+					NativeImage nativeimage = NativeImage.read(image);
+			) {
+				TextureUtil.prepareImage(genTextureId.get(), 0, nativeimage.getWidth(), nativeimage.getHeight());
+				nativeimage.uploadTextureSub(0, 0, 0, 0, 0, nativeimage.getWidth(), nativeimage.getHeight(), blur, clamp, false #if MC_14_LATER , true #endif );
+			}
+			#else
+			final BufferedImage bufferedimage = #if MC_7_LATER TextureUtil.readBufferedImage #else ImageIO.read #endif (image);
+			uploadTexture(genTextureId, bufferedimage);
+			#endif
 		}
 
-		public static @Nonnull String mapMethodName(@Nonnull final String owner, @Nonnull final String name, @Nonnull final String desc) {
-			return FMLDeobfuscatingRemapper.INSTANCE.mapMethodName(owner, name, desc);
+		public static void uploadTexture(Supplier<Integer> genTextureId, final BufferedImage bufferedimage) throws IOException {
+			final boolean blur = true;
+			final boolean clamp = false;
+
+			#if MC_12_LATER
+			final int width = bufferedimage.getWidth();
+			final int height = bufferedimage.getHeight();
+			try (
+					NativeImage nativeimage = new NativeImage(NativeImage.PixelFormat.RGBA, width, height, false);
+			) {
+				final int[] pixels = new int[width*height];
+				bufferedimage.getRGB(0, 0, width, height, pixels, 0, width);
+
+				for (int y = 0; y<height; y++)
+					for (int x = 0; x<width; x++) {
+						final int argb = pixels[y*width+x];
+						final int alpha = 0xFF&argb>>24;
+						final int red = 0xFF&argb>>16;
+						final int green = 0xFF&argb>>8;
+						final int blue = 0xFF&argb>>0;
+						final int abgr = alpha<<24|blue<<16|green<<8|red<<0;
+
+						// ABGR
+						nativeimage.setPixelRGBA(x, y, abgr);
+					}
+
+				TextureUtil.prepareImage(genTextureId.get(), 0, nativeimage.getWidth(), nativeimage.getHeight());
+				nativeimage.uploadTextureSub(0, 0, 0, 0, 0, nativeimage.getWidth(), nativeimage.getHeight(), blur, clamp, false #if MC_14_LATER , true #endif );
+			}
+			#else
+			if (bufferedimage != null)
+				TextureUtil.uploadTextureImageAllocate(genTextureId.get(), bufferedimage, blur, clamp);
+			#endif
+		}
+	}
+
+	public static class CompatBufferBuilder {
+		public CompatBufferBuilder() {
+		}
+	}
+
+	public static class CompatVersionChecker {
+		public static void startVersionCheck(final String modId, final String modVersion, final String updateURL) {
+		}
+
+		public static @Nonnull #if (MC_7_LATER && !MC_12_LATER) ForgeVersion.CheckResult #else VersionChecker.CheckResult #endif getResult(final String modId) {
+			#if MC_12_LATER
+			final IModInfo container = ModList.get().getModContainerById(modId)
+					.map(e -> e.getModInfo())
+					.orElse(null);
+			return VersionChecker.getResult(container);
+			#elif MC_7_LATER
+			final ModContainer container = Loader.instance().getIndexedModList().get(modId);
+			return ForgeVersion.getResult(container);
+			#else
+			return VersionChecker.getResult();
+			#endif
+		}
+
+		public static boolean isOutdated(final String modid) {
+			return Compat.CompatVersionChecker.getResult(modid).status == #if MC_7_LATER && !MC_12_LATER ForgeVersion #else VersionChecker #endif .Status.OUTDATED;
+		}
+	}
+
+	public static class CompatMinecraftVersion {
+		public static String getMinecraftVersion() {
+			#if MC_12_LATER
+			return MCPVersion.getMCVersion();
+			#else
+			return MinecraftForge.MC_VERSION;
+			#endif
+		}
+
+		public static String getForgeVersion() {
+			return ForgeVersion.getVersion();
 		}
 	}
 
@@ -917,17 +1033,6 @@ public class Compat {
 			}
 
 			public abstract @Nullable CompatTextComponent onClickedCompat(final @Nonnull GuiNewChat chat, final int x);
-		}
-	}
-
-	public static class CompatI18n {
-		public static String format(final String format, final Object... args) {
-			return I18n.format(format, args);
-		}
-
-		@SuppressWarnings("deprecation")
-		public static String translateToLocal(final String text) {
-			return net.minecraft.util.text.translation.I18n.translateToLocal(text);
 		}
 	}
 

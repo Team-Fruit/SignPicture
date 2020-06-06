@@ -2,11 +2,9 @@ package net.teamfruit.signpic;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.Timer;
 
-import net.teamfruit.signpic.CoreEvent;
 import net.teamfruit.signpic.compat.CompatEvents.CompatConfigChangedEvent;
 import net.teamfruit.signpic.compat.CompatEvents.CompatGuiOpenEvent;
 import net.teamfruit.signpic.compat.CompatEvents.CompatGuiScreenEvent;
@@ -30,7 +28,6 @@ import net.teamfruit.signpic.handler.SignHandler;
 import net.teamfruit.signpic.http.Communicator;
 import net.teamfruit.signpic.http.ICommunicate;
 import net.teamfruit.signpic.http.ICommunicateCallback;
-import net.teamfruit.signpic.information.Informations;
 import net.teamfruit.signpic.render.CustomItemSignModelLoader;
 import net.teamfruit.signpic.render.SignPicRender;
 import net.teamfruit.signpic.state.Progressable;
@@ -43,14 +40,12 @@ public class CoreHandler extends CompatHandler {
 	public final @Nonnull ContentManager contentManager = ContentManager.instance;
 	public final @Nonnull SignPicRender renderHandler = new SignPicRender();
 	public final @Nonnull OverlayFrame overlayHandler = OverlayFrame.instance;
-	public final @Nonnull Informations informationHandler = Informations.instance;
 	public final @Nonnull Apis apiHandler = Apis.instance;
 
 	public void init() {
 		registerHandler();
 		KeyHandler.init();
 		SignHandler.init();
-		this.informationHandler.init();
 		this.apiHandler.init();
 	}
 
@@ -132,7 +127,6 @@ public class CoreHandler extends CompatHandler {
 			this.signHandler.onTick();
 			this.contentManager.onTick();
 			this.overlayHandler.onTick(event);
-			this.informationHandler.onTick(event);
 			EntrySlot.Tick();
 			Client.endSection();
 		}

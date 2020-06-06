@@ -1,21 +1,12 @@
 package net.teamfruit.signpic;
 
 import java.awt.Desktop;
-import java.awt.GraphicsEnvironment;
-import java.io.Closeable;
-import java.io.File;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.swing.JOptionPane;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,15 +16,11 @@ import com.google.gson.Gson;
 import net.minecraft.block.BlockSign;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.common.MinecraftForge;
 import net.teamfruit.bnnwidget.WFrame;
 import net.teamfruit.signpic.command.CommandImage;
-import net.teamfruit.signpic.command.CommandVersion;
 import net.teamfruit.signpic.command.RootCommand;
 import net.teamfruit.signpic.compat.Compat.CompatBlockPos;
 import net.teamfruit.signpic.compat.Compat.CompatMinecraft;
@@ -64,18 +51,10 @@ public class Client {
 		location = locations;
 	}
 
-	public static @Nonnull String mcversion = MinecraftForge.MC_VERSION;
-	public static @Nonnull String forgeversion = ForgeVersion.getVersion();
-
-	public static @Nullable String id;
-	public static @Nullable String name;
-	public static @Nullable String token;
-
 	public static @Nullable RootCommand rootCommand;
 
 	static {
 		final RootCommand cmd = rootCommand = new RootCommand();
-		cmd.addChildCommand(new CommandVersion());
 		cmd.addChildCommand(new CommandImage());
 	}
 
