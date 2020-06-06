@@ -7,6 +7,7 @@ import java.net.URI;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.teamfruit.signpic.VersionReference;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.CharEncoding;
@@ -55,9 +56,9 @@ public class InformationCheck extends Communicate implements Progressable {
 									.replace("%token%", Client.token)
 									.replace("%mcversion%", Client.mcversion)
 									.replace("%forgeversion%", Client.forgeversion)
-									.replace("%modmcversion%", Reference.MINECRAFT)
-									.replace("%modforgeversion%", Reference.FORGE)
-									.replace("%modversion%", Reference.VERSION);
+									.replace("%modmcversion%", VersionReference.MINECRAFT)
+									.replace("%modforgeversion%", VersionReference.FORGE)
+									.replace("%modversion%", VersionReference.VERSION);
 							final HttpUriRequest req1 = new HttpGet(new URI(msgurl));
 							final HttpResponse response1 = Downloader.downloader.client.execute(req1);
 							final HttpEntity entity1 = response1.getEntity();

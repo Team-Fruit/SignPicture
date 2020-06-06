@@ -3,6 +3,7 @@ package net.teamfruit.signpic.asm;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.teamfruit.signpic.compat.CompatBaseVersion;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
@@ -176,7 +177,7 @@ public class GuiNewChatVisitor extends ClassVisitor {
 				super.visitTypeInsn(Opcodes.CHECKCAST, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName());
 				super.visitVarInsn(Opcodes.ALOAD, 0);
 				super.visitVarInsn(Opcodes.ILOAD, 6);
-				if (CompatVersion.older(CompatVersion.V8))
+				if (CompatVersion.version().older(CompatBaseVersion.V8))
 					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName(), "onClicked", DescHelper.toDescMethod(ClassName.of("net.minecraft.util.IChatComponent"), ClassName.of("net.minecraft.client.gui.GuiNewChat"), int.class), false);
 				else
 					super.visitMethodInsn(Opcodes.INVOKEVIRTUAL, ClassName.of("net.teamfruit.signpic.render.CustomChatRender$PicChatLine").getBytecodeName(), "onClicked", DescHelper.toDescMethod(ClassName.of("net.minecraft.util.text.ITextComponent"), ClassName.of("net.minecraft.client.gui.GuiNewChat"), int.class), false);

@@ -12,13 +12,12 @@ import net.minecraft.util.Session;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.teamfruit.signpic.compat.Compat.CompatItemSignRendererRegistrar;
+import net.teamfruit.signpic.compat.CompatBaseProxy;
 
 public class ClientProxy extends CommonProxy {
 	@Override
-	public void preInit(final @Nonnull CompatFMLPreInitializationEvent event) {
+	public void preInit(final @Nonnull CompatBaseProxy.CompatFMLPreInitializationEvent event) {
 		super.preInit(event);
-
-		Log.log = event.getModLog();
 
 		Config.spec.registerConfigDefine( #if MC_12_LATER Dist #else Side #endif .CLIENT);
 		Config.spec.registerConfigHandler( #if MC_12_LATER Dist #else Side #endif .CLIENT, event.getSuggestedConfigurationFile());
@@ -27,7 +26,7 @@ public class ClientProxy extends CommonProxy {
 		// StencilClip.init();
 
 		// Setup location
-		Client.initLocation(new Locations(event.getSourceFile(), getDataDirectory()));
+		Client.initLocation(new Locations(getDataDirectory()));
 
 		// Get Id
 		final String id = Client.mc.getSession().getPlayerID();

@@ -6,8 +6,14 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.apache.logging.log4j.Logger;
-
+#if MC_12_LATER
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+#elif MC_7_LATER
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -17,72 +23,119 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.relauncher.Side;
-import net.teamfruit.signpic.compat.CompatProxy;
-import net.teamfruit.signpic.compat.CompatProxy.CompatFMLInitializationEvent;
-import net.teamfruit.signpic.compat.CompatProxy.CompatFMLPostInitializationEvent;
-import net.teamfruit.signpic.compat.CompatProxy.CompatFMLPreInitializationEvent;
+#else
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.SidedProxy;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.relauncher.Side;
+#endif
 
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTORY)
+import net.teamfruit.signpic.compat.CompatBaseProxy;
+import net.teamfruit.signpic.compat.CompatBaseProxy.CompatFMLInitializationEvent;
+import net.teamfruit.signpic.compat.CompatBaseProxy.CompatFMLPostInitializationEvent;
+import net.teamfruit.signpic.compat.CompatBaseProxy.CompatFMLPreInitializationEvent;
+import net.teamfruit.signpic.compat.CompatBaseProxy;
+
+@Mod(
+        #if MC_12_LATER
+        value = Reference.MODID
+        #else
+        modid = Reference.MODID,
+        name = Reference.NAME,
+        version = VersionReference.VERSION,
+        guiFactory = Reference.GUI_FACTORY
+        #if MC_7_LATER , updateJSON = Reference.UPDATE_JSON #endif
+        #endif
+)
 public class SignPicture {
-	@Instance(Reference.MODID)
-	public static @Nullable SignPicture instance;
+    #if !MC_12_LATER
+    @Instance(Reference.MODID)
+	#endif
+    public static @Nullable SignPicture instance;
 
-	@SidedProxy(serverSide = Reference.PROXY_SERVER, clientSide = Reference.PROXY_CLIENT)
-	public static @Nullable CompatProxy proxy;
-
-	@NetworkCheckHandler
-	public boolean checkModList(final @Nonnull Map<String, String> versions, final @Nonnull Side side) {
-		return true;
-	}
-
-	@EventHandler
-	public void preInit(final @Nonnull FMLPreInitializationEvent event) {
-		if (proxy!=null)
-			proxy.preInit(new CompatFMLPreInitializationEventImpl(event));
-	}
-
-	@EventHandler
-	public void init(final @Nonnull FMLInitializationEvent event) {
-		if (proxy!=null)
-			proxy.init(new CompatFMLInitializationEventImpl(event));
-	}
-
-	@EventHandler
-	public void postInit(final @Nonnull FMLPostInitializationEvent event) {
-		if (proxy!=null)
-			proxy.postInit(new CompatFMLPostInitializationEventImpl(event));
-	}
-
-	private static class CompatFMLPreInitializationEventImpl implements CompatFMLPreInitializationEvent {
-		private final @Nonnull FMLPreInitializationEvent event;
-
-		public CompatFMLPreInitializationEventImpl(final FMLPreInitializationEvent event) {
-			this.event = event;
+    #if !MC_12_LATER
+    @SidedProxy(serverSide = Reference.PROXY_SERVER, clientSide = Reference.PROXY_CLIENT)
+	#endif
+    public static @Nullable CompatBaseProxy proxy
+	#if MC_12_LATER
+	= DistExecutor.<CompatBaseProxy> runForDist(() -> () -> {
+		try {
+			return (CompatBaseProxy) Class.forName(Reference.PROXY_CLIENT).newInstance();
+		} catch (InstantiationException|IllegalAccessException|ClassNotFoundException e) {
+			throw new RuntimeException("Could not load proxy class: ", e);
 		}
-
-		@Override
-		public Logger getModLog() {
-			return this.event.getModLog();
+	}, () -> () -> {
+		try {
+			return (CompatBaseProxy) Class.forName(Reference.PROXY_SERVER).newInstance();
+		} catch (InstantiationException|IllegalAccessException|ClassNotFoundException e) {
+			throw new RuntimeException("Could not load proxy class: ", e);
 		}
+	})
+	#endif ;
 
-		@Override
-		public File getSuggestedConfigurationFile() {
-			return this.event.getSuggestedConfigurationFile();
-		}
+    #if MC_12_LATER
+    public Emojicord() {
+        instance = this;
 
-		@Override
-		public File getSourceFile() {
-			return this.event.getSourceFile();
-		}
-	}
+        // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postInit);
 
-	private static class CompatFMLInitializationEventImpl implements CompatFMLInitializationEvent {
-		public CompatFMLInitializationEventImpl(final FMLInitializationEvent event) {
-		}
-	}
+        if (proxy!=null)
+            proxy.preInit(new CompatFMLPreInitializationEventImpl());
+    }
+    #else
+    @NetworkCheckHandler
+    public boolean checkModList(final @Nonnull Map<String, String> versions, final @Nonnull Side side) {
+        return true;
+    }
+	#endif
 
-	private static class CompatFMLPostInitializationEventImpl implements CompatFMLPostInitializationEvent {
-		public CompatFMLPostInitializationEventImpl(final FMLPostInitializationEvent event) {
-		}
-	}
+    #if !MC_12_LATER
+    @EventHandler
+    public void preInit(final @Nonnull FMLPreInitializationEvent event) {
+        if (proxy != null)
+            proxy.preInit(new CompatFMLPreInitializationEventImpl(event));
+    }
+	#endif
+
+    #if MC_12_LATER @SubscribeEvent #else
+    @EventHandler #endif
+    public void init(final @Nonnull #if MC_12_LATER FMLClientSetupEvent #else FMLInitializationEvent #endif event) {
+        if (proxy != null)
+            proxy.init(new CompatFMLInitializationEventImpl());
+    }
+
+    #if MC_12_LATER @SubscribeEvent #else
+    @EventHandler #endif
+    public void postInit(final @Nonnull #if MC_12_LATER FMLLoadCompleteEvent #else FMLPostInitializationEvent #endif event) {
+        if (proxy != null)
+            proxy.postInit(new CompatFMLPostInitializationEventImpl());
+    }
+
+    private static class CompatFMLPreInitializationEventImpl implements CompatBaseProxy.CompatFMLPreInitializationEvent {
+        #if !MC_12_LATER
+        private final @Nonnull FMLPreInitializationEvent event;
+
+        public CompatFMLPreInitializationEventImpl(final FMLPreInitializationEvent event) {
+            this.event = event;
+        }
+		#endif
+
+        @Override
+        public File getSuggestedConfigurationFile() {
+            return #if MC_12_LATER null #else this.event.getSuggestedConfigurationFile() #endif ;
+        }
+    }
+
+    private static class CompatFMLInitializationEventImpl implements CompatBaseProxy.CompatFMLInitializationEvent {
+    }
+
+    private static class CompatFMLPostInitializationEventImpl implements CompatBaseProxy.CompatFMLPostInitializationEvent {
+    }
 }

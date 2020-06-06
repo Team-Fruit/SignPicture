@@ -11,7 +11,7 @@ public class SignPictureCorePlugin implements IFMLLoadingPlugin {
 	@Override
 	public @Nullable String[] getASMTransformerClass() {
 		return new String[] {
-				Reference.TRANSFORMER
+				SignPictureTransformer.class.getName()
 		};
 	}
 

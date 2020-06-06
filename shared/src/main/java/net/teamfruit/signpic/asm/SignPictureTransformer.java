@@ -7,6 +7,7 @@ import java.util.ListIterator;
 
 import javax.annotation.Nullable;
 
+import net.teamfruit.signpic.compat.CompatBaseVersion;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -63,7 +64,7 @@ public class SignPictureTransformer implements IClassTransformer {
 
 		try {
 			if (transformedName.equals("net.minecraft.tileentity.TileEntity"))
-				if (CompatVersion.newer(CompatVersion.V9))
+				if (CompatVersion.version().newer(CompatBaseVersion.V9))
 					return VisitorHelper.apply(bytes, name, new TransformProvider(ClassWriter.COMPUTE_FRAMES) {
 						@Override
 						public ClassVisitor createVisitor(final String name, final ClassVisitor cv) {

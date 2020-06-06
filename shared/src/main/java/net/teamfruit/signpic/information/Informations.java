@@ -8,32 +8,25 @@ import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.teamfruit.signpic.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import net.minecraft.client.resources.I18n;
-import net.teamfruit.signpic.Client;
-import net.teamfruit.signpic.Config;
-import net.teamfruit.signpic.CoreEvent;
-import net.teamfruit.signpic.Log;
-import net.teamfruit.signpic.Reference;
 import net.teamfruit.signpic.compat.Compat.CompatEntityPlayer;
 import net.teamfruit.signpic.compat.Compat.CompatMinecraft;
 import net.teamfruit.signpic.compat.Compat.CompatTextFormatting;
 import net.teamfruit.signpic.compat.Compat.CompatTextStyle;
 import net.teamfruit.signpic.compat.CompatEvents.CompatTickEvent;
 import net.teamfruit.signpic.compat.CompatEvents.CompatTickEvent.CompatClientTickEvent;
-import net.teamfruit.signpic.gui.GuiTask;
 import net.teamfruit.signpic.http.Communicator;
-import net.teamfruit.signpic.http.download.ModDownload;
-import net.teamfruit.signpic.http.download.ModDownload.ModDLResult;
 import net.teamfruit.signpic.information.Info.PrivateMsg;
 import net.teamfruit.signpic.util.ChatBuilder;
 
 public final class Informations {
 	public static final @Nonnull Informations instance = new Informations();
 
-	public static final @Nonnull Version VersionClient = new Version(Reference.VERSION);
+	public static final @Nonnull Version VersionClient = new Version(VersionReference.VERSION);
 
 	private Informations() {
 	}
@@ -138,7 +131,7 @@ public final class Informations {
 	public boolean isUpdateRequired() {
 		final InfoSource source = getSource();
 		if (source!=null)
-			return !StringUtils.equals(Reference.VERSION, "${version}")&&source.onlineVersion().compare(VersionClient);
+			return !StringUtils.equals(VersionReference.VERSION, "${version}")&&source.onlineVersion().compare(VersionClient);
 		return false;
 	}
 
@@ -193,15 +186,15 @@ public final class Informations {
 					ChatBuilder.create("signpic.versioning.downloadingAlready").useTranslation().setStyle(CompatTextStyle.create().setColor(CompatTextFormatting.RED)).chatClient();
 					Log.notice(I18n.format("signpic.gui.notice.versioning.downloadingAlready"));
 				} else {
-					final ModDownload downloader = new ModDownload();
-					downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
-					downloader.getState().getMeta().put(GuiTask.ShowPanel, 3f);
-					downloader.setCallback(res -> {
-						final ModDLResult result = downloader.result;
-						if (result!=null)
-							new ChatBuilder().setChat(result.response).chatClient();
-					});
-					Communicator.instance.communicate(downloader);
+//					final ModDownload downloader = new ModDownload();
+//					downloader.getState().getMeta().put(GuiTask.HighlightPanel, true);
+//					downloader.getState().getMeta().put(GuiTask.ShowPanel, 3f);
+//					downloader.setCallback(res -> {
+//						final ModDLResult result = downloader.result;
+//						if (result!=null)
+//							new ChatBuilder().setChat(result.response).chatClient();
+//					});
+//					Communicator.instance.communicate(downloader);
 				}
 		}
 	}
@@ -217,7 +210,7 @@ public final class Informations {
 			final String lang = Client.mc.gameSettings.language;
 			if (
 				source.info.versions!=null&&
-						!StringUtils.equals(Reference.VERSION, "${version}")
+						!StringUtils.equals(VersionReference.VERSION, "${version}")
 			) {
 				final InfoVersion online = source.onlineVersion();
 
@@ -248,7 +241,7 @@ public final class Informations {
 							changelog = "https://github.com/Team-Fruit/SignPicture/releases";
 
 						ChatBuilder.create("signpic.versioning.updateMessage").useTranslation().useJson()
-								.replace("$old$", Reference.VERSION)
+								.replace("$old$", VersionReference.VERSION)
 								.replace("$new$", ver)
 								.replace("$download$", "{\"action\":\"run_command\",\"value\":\"/signpic version update\"}")
 								.replace("$website$", "{\"action\":\"open_url\",\"value\":\""+website+"\"}")

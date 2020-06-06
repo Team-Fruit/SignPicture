@@ -1,10 +1,10 @@
 package net.teamfruit.signpic;
 
+import net.teamfruit.signpic.compat.CompatBaseProxy;
+
 import javax.annotation.Nonnull;
 
-import net.teamfruit.signpic.compat.CompatProxy;
-
-public class CommonProxy implements CompatProxy {
+public class CommonProxy implements CompatBaseProxy {
 	@Override
 	public void preInit(final @Nonnull CompatFMLPreInitializationEvent event) {
 	}

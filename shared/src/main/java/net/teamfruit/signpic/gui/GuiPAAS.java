@@ -2,6 +2,7 @@ package net.teamfruit.signpic.gui;
 
 import javax.annotation.Nonnull;
 
+import net.teamfruit.signpic.compat.CompatBaseVersion;
 import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.block.Block;
@@ -87,7 +88,7 @@ public class GuiPAAS extends WFrame {
 						OpenGL.glTranslatef(0.0F, 0.0F, 50.0F);
 						final float f1 = 93.75F;
 						OpenGL.glScalef(-f1, -f1, -f1);
-						if (!CompatVersion.older(CompatVersion.V7)) {
+						if (!CompatVersion.version().older(CompatBaseVersion.V7)) {
 							OpenGL.glRotatef(180f, 0f, 1f, 0f);
 							Client.rendererTile.renderer.translateBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D);
 							Client.rendererTile.renderer.renderBase(GuiPAAS.this.task.entity, -0.5D, -0.75D, -0.5D, 0.0F, -1, 1f);
