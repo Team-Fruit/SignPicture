@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import com.google.common.eventbus.EventBus;
 
 import net.teamfruit.bnnwidget.render.WRenderer;
+import org.lwjgl.glfw.GLFW;
 
 /**
  * いくつかのデータをGUI全体で共有するのに役立ちます。
@@ -53,7 +54,7 @@ public class WEvent {
 	 * ユーザー設定のダブルクリック間隔を取得します。
 	 */
 	public final int multiClickInterval;
-	private Timer lastClickedTime = new Timer();
+	private double lastClickedTime = GLFW.glfwGetTime();
 	private boolean isDoubleClicked;
 
 	public WEvent(final @Nonnull WFrame owner) {
@@ -80,10 +81,10 @@ public class WEvent {
 	}
 
 	protected void updateDoubleClick() {
-		if (this.lastClickedTime.getTime()*1000<this.multiClickInterval)
+		if (this.lastClickedTime*1000<this.multiClickInterval)
 			this.isDoubleClicked = true;
 		else {
-			this.lastClickedTime.rest();
+			this.lastClickedTime =  0d;
 			this.isDoubleClicked = false;
 		}
 	}

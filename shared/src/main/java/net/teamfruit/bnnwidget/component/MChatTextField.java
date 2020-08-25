@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.client.gui.GuiTextField;
 import net.teamfruit.bnnwidget.OverridablePoint;
 import net.teamfruit.bnnwidget.WBase;
 import net.teamfruit.bnnwidget.WEvent;
@@ -119,12 +118,12 @@ public class MChatTextField extends WBase {
 		updateArea(a);
 		final int x = this.t.getX();
 		final int y = this.t.getY();
-		final int w = this.t.width;
-		final int h = this.t.height;
+		final int w = this.t.getWidth();
+		final int h = this.t.getHeight();
 		this.t.setX(1);
 		this.t.setY(1);
-		this.t.width = (int) a.w()-2;
-		this.t.height = (int) a.h()-2;
+		this.t.setWidth((int) a.w()-2);
+		this.t.setHeight((int) a.h()-2);
 		OpenGL.glPushMatrix();
 		OpenGL.glTranslatef(a.x1(), a.y1(), 0f);
 
@@ -133,8 +132,8 @@ public class MChatTextField extends WBase {
 		OpenGL.glPopMatrix();
 		this.t.setX(x);
 		this.t.setY(y);
-		this.t.width = w;
-		this.t.height = h;
+		this.t.setWidth(w);
+		this.t.setHeight(h);
 	}
 
 	@Override
@@ -180,12 +179,12 @@ public class MChatTextField extends WBase {
 
 	@Override
 	public void update(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p) {
-		this.t.updateCursorCounter();
+		// this.t.updateCursorCounter();
 	}
 
 	@Override
 	public boolean keyTyped(final @Nonnull WEvent ev, final @Nonnull Area pgp, final @Nonnull Point p, final char c, final int keycode) {
-		this.t.textboxKeyTyped(c, keycode);
+		// this.t.keyPressed(c, keycode);
 		return isFocused();
 	}
 
@@ -203,8 +202,8 @@ public class MChatTextField extends WBase {
 		final Area b = a.child(1, 1, -1, -1);
 		this.t.setX((int) b.x1());
 		this.t.setY((int) b.y1());
-		this.t.width = (int) b.w();
-		this.t.height = (int) b.h();
+		this.t.setWidth((int) b.w());
+		this.t.setHeight((int) b.h());
 	}
 
 	/**
@@ -277,13 +276,16 @@ public class MChatTextField extends WBase {
 		return this.t.getNthWordFromCursor(p_146187_1_);
 	}
 
+	/*
 	public int getNthWordFromPos(final int p_146183_1_, final int p_146183_2_) {
-		return this.t.getNthWordFromPos(p_146183_1_, p_146183_2_);
+		return this.t.getN(p_146183_1_, p_146183_2_);
 	}
 
 	public int func_146197_a(final int p_146197_1_, final int p_146197_2_, final boolean p_146197_3_) {
 		return this.t.getNthWordFromPosWS(p_146197_1_, p_146197_2_, p_146197_3_);
 	}
+
+	 */
 
 	public void moveCursorBy(final int p_146182_1_) {
 		this.t.moveCursorBy(p_146182_1_);
@@ -311,7 +313,8 @@ public class MChatTextField extends WBase {
 	}
 
 	public int getMaxStringLength() {
-		return this.t.getMaxStringLength();
+		// return this.t.();
+		return 255;
 	}
 
 	public int getCursorPosition() {
@@ -323,7 +326,8 @@ public class MChatTextField extends WBase {
 	 * @return デフォルトのMinecraftテキストフィールドデザインを描画する場合はtrue
 	 */
 	public boolean getEnableBackgroundDrawing() {
-		return this.t.getEnableBackgroundDrawing();
+		// return this.t.getEnableBackgroundDrawing();
+		return true;
 	}
 
 	/**
@@ -382,7 +386,8 @@ public class MChatTextField extends WBase {
 	}
 
 	public int getSelectionEnd() {
-		return this.t.getSelectionEnd();
+		return 255;
+		// return this.t.getSelectionEnd();
 	}
 
 	public int getWidth() {
@@ -518,9 +523,9 @@ public class MChatTextField extends WBase {
 				MChatTextField.this.onFocusChanged();
 		}
 
-		@Override
+		// @Override
 		public void drawTextBox() {
-			super.drawTextBox();
+			// super.drawTextBox();
 			if (!StringUtils.isEmpty(getWatermark())&&StringUtils.isEmpty(getText())&&!isFocused()) {
 				final int l = getEnableBackgroundDrawing() ? getX()+4 : getX();
 				final int i1 = getEnableBackgroundDrawing() ? getY()+(this.height-8)/2 : getY();

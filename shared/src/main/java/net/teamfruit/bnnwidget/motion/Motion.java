@@ -1,9 +1,10 @@
 package net.teamfruit.bnnwidget.motion;
 
+import net.teamfruit.bnnwidget.util.Timer;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.lwjgl.util.Timer;
 
 /**
  * モーション
@@ -15,7 +16,8 @@ public abstract class Motion implements IMotion {
 	/**
 	 * タイマー
 	 */
-	protected final @Nonnull Timer timer;
+	protected final @Nonnull
+	Timer timer;
 	/**
 	 * モーションの長さ
 	 */

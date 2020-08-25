@@ -2,10 +2,10 @@ package net.teamfruit.bnnwidget.component;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.client.gui.screen.Screen;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.teamfruit.bnnwidget.OverridablePoint;
 import net.teamfruit.bnnwidget.ShortestFloatFormatter;
@@ -62,9 +62,9 @@ public class MNumber extends WPanel {
 	 */
 	protected boolean negClicked() {
 		float f;
-		if (GuiScreen.isShiftKeyDown())
+		if (Screen.hasShiftDown())
 			f = .1f;
-		else if (GuiScreen.isCtrlKeyDown())
+		else if (Screen.hasControlDown())
 			f = .01f;
 		else
 			f = 1f;
@@ -78,9 +78,9 @@ public class MNumber extends WPanel {
 	 */
 	protected boolean posClicked() {
 		float f;
-		if (GuiScreen.isShiftKeyDown())
+		if (Screen.hasShiftDown())
 			f = .1f;
-		else if (GuiScreen.isCtrlKeyDown())
+		else if (Screen.hasControlDown())
 			f = .01f;
 		else
 			f = 1f;

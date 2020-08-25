@@ -160,7 +160,7 @@ public class Compat {
 
 		@Override
 		public @Nonnull WVertex tex(final double u, final double v) {
-			w.tex(u, v);
+			w.tex((float) u, (float) v);
 			return this;
 		}
 
@@ -171,7 +171,7 @@ public class Compat {
 
 		@Override
 		public @Nonnull WVertex color(final int red, final int green, final int blue, final int alpha) {
-			w.putColorRGBA(0, red, green, blue, alpha);
+			w.setDefaultColor(red, green, blue, alpha);
 			return this;
 		}
 
@@ -183,7 +183,7 @@ public class Compat {
 
 		@Override
 		public void setTranslation(final double x, final double y, final double z) {
-			w.setTranslation(x, y, z);
+			// w.sortVertexData((float)x, (float)y, (float)z);
 		}
 
 		private void endVertex() {

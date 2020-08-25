@@ -1,20 +1,20 @@
 package net.teamfruit.bnnwidget;
 
+import java.nio.DoubleBuffer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.java.games.input.Mouse;
 import net.minecraft.client.gui.screen.Screen;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.Sets;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.teamfruit.bnnwidget.compat.OpenGL;
 import net.teamfruit.bnnwidget.position.Area;
 import net.teamfruit.bnnwidget.position.Point;
@@ -22,12 +22,14 @@ import net.teamfruit.bnnwidget.position.R;
 import net.teamfruit.bnnwidget.render.RenderOption;
 import net.teamfruit.bnnwidget.render.WRenderer;
 
+import static org.lwjgl.glfw.GLFW.*;
+
 /**
  * MinecraftのGUIとウィジェットをつなぐ重量コンポーネントです。
  * <p>
  * 全てのウィジェットはこの重量コンポーネントの上で動作し、描画されます。
  * <p>
- * {@link net.minecraft.client.Minecraft#displayGuiScreen(GuiScreen) displayGuiScreen(GuiScreen)}メソッドなどでGUIを開く際はこのクラスのインスタンスを渡す必要があります。
+ * メソッドなどでGUIを開く際はこのクラスのインスタンスを渡す必要があります。
  *
  * @author TeamFruit
  */
@@ -59,7 +61,6 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	protected boolean fixGuiScale;
 	/**
 	 * シングルプレイ時にゲームを一時停止させる場合はtrue
-	 * @see GuiScreen#doesGuiPauseGame()
 	 */
 	protected boolean doesPauseGui = true;
 	/**
@@ -267,8 +268,12 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @return カーソルの絶対座標
 	 */
 	public @Nonnull Point getMouseAbsolute() {
-		return new Point(Mouse.getX()*width()/getDisplayWidth(),
-				height()-Mouse.getY()*height()/getDisplayHeight()-1);
+		DoubleBuffer x = DoubleBuffer.allocate(334);
+		DoubleBuffer y = DoubleBuffer.allocate(334);
+		//todo
+		glfwGetCursorPos(Minecraft.getInstance().getMainWindow().getHandle(),x,y);
+		return new Point((float) x.get()*width()/getDisplayWidth(),
+				height()-(float)y.get()*height()/getDisplayHeight()-1);
 	}
 
 	@Override
@@ -314,7 +319,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	protected void sInitGui() {
 		checkParentAndClose();
 		if (this.parent!=null)
-			this.parent.initGui();
+			initGui();
 		this.screen.sInitGui();
 	}
 
@@ -342,7 +347,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	protected void sSetWorldAndResolution(final @Nonnull Minecraft mc, final int i, final int j) {
 		checkParentAndClose();
 		if (this.parent!=null)
-			this.parent.setWorldAndResolution(mc, i, j);
+			setWorldAndResolution(mc, i, j);
 		this.screen.sSetWorldAndResolution(mc, i, j);
 	}
 
@@ -359,11 +364,11 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 
 	protected void sDrawScreen(final int mousex, final int mousey, final float f) {
 		checkParentAndClose();
-		final GuiScreen parent = this.parent;
+		final Screen parent = this.parent;
 		if (parent!=null) {
 			OpenGL.glPushMatrix();
 			OpenGL.glTranslatef(0, 0, -200f);
-			parent.drawScreen(mousex, mousey, f);
+			parent.render(mousex, mousey, f);
 			OpenGL.glPopMatrix();
 		}
 		this.screen.sDrawScreen(mousex, mousey, f);
@@ -419,7 +424,8 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 			this.state.reset();
 			for (final Iterator<Integer> itr = this.pressed.iterator(); itr.hasNext();) {
 				final Integer button = itr.next();
-				if (!Mouse.isButtonDown(button)) {
+				int state = glfwGetMouseButton(Minecraft.getInstance().getMainWindow().getHandle(), button);
+				if (state == 1) {
 					this.state.removed.add(button);
 					this.state.lastRemoved = button;
 					itr.remove();
@@ -481,7 +487,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	protected void sUpdateScreen() {
 		checkParentAndClose();
 		if (this.parent!=null)
-			this.parent.updateScreen();
+			updateScreen();
 		this.screen.sUpdateScreen();
 	}
 
@@ -494,7 +500,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 
 	@OverridablePoint
 	protected void sKeyTyped(final char c, final int keycode) {
-		if (keycode==Keyboard.KEY_ESCAPE)
+		if (keycode==32)
 			requestClose();
 	}
 
@@ -539,8 +545,15 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	protected void onClosed() {
 	}
 
+
 	public void handleMouseInput() {
-		final int i = Mouse.getEventDWheel();
+		AtomicReference<Double> x = new AtomicReference<>((double) 0);
+		AtomicReference<Double> y = new AtomicReference<>((double) 0);
+		glfwSetScrollCallback(Minecraft.getInstance().getMainWindow().getHandle(), (windowHandle, xoffset, yoffset) -> {
+			x.set(xoffset);
+			y.set(yoffset);
+		});
+		final int i = (y.get()).intValue();
 		if (i!=0) {
 			final Area gp = getAbsolute();
 			final Point p = getMouseAbsolute();
@@ -571,7 +584,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 
 	protected boolean parentDoesGuiPauseGame() {
 		checkParentAndClose();
-		return this.parent!=null&&this.parent.doesGuiPauseGame();
+		return this.parent!=null&&this.parent.isPauseScreen();
 	}
 
 	/**
@@ -622,7 +635,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * 親GUIを設定します
 	 * @param parent 親
 	 */
-	public void setParent(@Nullable final GuiScreen parent) {
+	public void setParent(@Nullable final Screen parent) {
 		this.parent = parent;
 	}
 
@@ -630,16 +643,15 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * 親GUIを返します
 	 * @return 親
 	 */
-	public @Nullable GuiScreen getParent() {
+	public @Nullable Screen getParent() {
 		return this.parent;
 	}
 
 	/**
 	 * 現在のGUIを返します
-	 * @param screen GUI
 	 * @return 親
 	 */
-	public static @Nullable GuiScreen getCurrent() {
+	public static @Nullable Screen getCurrent() {
 		return WRenderer.mc.currentScreen;
 	}
 
@@ -650,7 +662,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param screen GUI
 	 * @return 親
 	 */
-	public static @Nullable GuiScreen getParentOrNull(@Nullable final GuiScreen screen) {
+	public static @Nullable Screen getParentOrNull(@Nullable final Screen screen) {
 		if (screen instanceof WScreen)
 			return ((WScreen) screen).getWidget().parent;
 		return null;
@@ -663,7 +675,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param screen GUI
 	 * @return 親
 	 */
-	public static @Nullable GuiScreen getParentOrThis(@Nullable final GuiScreen screen) {
+	public static @Nullable Screen getParentOrThis(@Nullable final Screen screen) {
 		if (screen instanceof WScreen)
 			return ((WScreen) screen).getWidget().parent;
 		return screen;
@@ -675,7 +687,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * 現在のGUIがWFrameでない場合はnullを返します
 	 * @return 親
 	 */
-	public static @Nullable GuiScreen getParentOrNull() {
+	public static @Nullable Screen getParentOrNull() {
 		return getParentOrNull(getCurrent());
 	}
 
@@ -685,7 +697,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * 現在のGUIがWFrameでない場合は現在のGUIを返します
 	 * @return 親
 	 */
-	public static @Nullable GuiScreen getParentOrThis() {
+	public static @Nullable Screen getParentOrThis() {
 		return getParentOrThis(getCurrent());
 	}
 
@@ -694,7 +706,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param screen GUI
 	 * @return ウィジェット
 	 */
-	public static @Nullable WFrame getWidget(@Nullable final GuiScreen screen) {
+	public static @Nullable WFrame getWidget(@Nullable final Screen screen) {
 		if (screen instanceof WScreen)
 			return ((WScreen) screen).getWidget();
 		return null;
@@ -714,7 +726,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param widgettype 判定用ウィジェット
 	 * @return ウィジェットのインスタンスかどうか
 	 */
-	public static boolean isInstanceOf(@Nullable final GuiScreen screen, @Nonnull final Class<?> widgettype) {
+	public static boolean isInstanceOf(@Nullable final Screen screen, @Nonnull final Class<?> widgettype) {
 		return widgettype.isInstance(getWidget(screen));
 	}
 
@@ -724,7 +736,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param widgettype 判定用ウィジェット
 	 * @return ウィジェットのインスタンスかどうか
 	 */
-	public static boolean isInstanceOf(@Nullable final GuiScreen screen, @Nonnull final WFrame widgettype) {
+	public static boolean isInstanceOf(@Nullable final Screen screen, @Nonnull final WFrame widgettype) {
 		return isInstanceOf(screen, widgettype.getClass());
 	}
 
@@ -752,7 +764,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param widgettype 判定用ウィジェット
 	 * @return ウィジェット
 	 */
-	public static @Nullable <T extends WFrame> T getWidgetWithCheck(@Nullable final GuiScreen screen, @Nonnull final Class<T> widgettype) {
+	public static @Nullable <T extends WFrame> T getWidgetWithCheck(@Nullable final Screen screen, @Nonnull final Class<T> widgettype) {
 		if (isInstanceOf(screen, widgettype)) {
 			@SuppressWarnings("unchecked")
 			final T typedwidget = (T) getWidget(screen);
@@ -767,7 +779,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @param widgettype 判定用ウィジェット
 	 * @return ウィジェット
 	 */
-	public static @Nullable <T extends WFrame> T getWidgetWithCheck(@Nullable final GuiScreen screen, @Nonnull final T widgettype) {
+	public static @Nullable <T extends WFrame> T getWidgetWithCheck(@Nullable final Screen screen, @Nonnull final T widgettype) {
 		if (isInstanceOf(screen, widgettype)) {
 			@SuppressWarnings("unchecked")
 			final T typedwidget = (T) getWidget(screen);
