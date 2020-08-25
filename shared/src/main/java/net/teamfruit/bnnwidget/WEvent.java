@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.lwjgl.util.Timer;
 
 import com.google.common.eventbus.EventBus;
 
@@ -69,7 +68,7 @@ public class WEvent {
 	 * @return
 	 */
 	public boolean isCurrent() {
-		return WRenderer.mc.currentScreen==this.owner.getScreen();
+		return WRenderer.mc.currentScreen == this.owner.getScreen();
 	}
 
 	/**
@@ -84,7 +83,7 @@ public class WEvent {
 		if (this.lastClickedTime.getTime()*1000<this.multiClickInterval)
 			this.isDoubleClicked = true;
 		else {
-			this.lastClickedTime.reset();
+			this.lastClickedTime.rest();
 			this.isDoubleClicked = false;
 		}
 	}

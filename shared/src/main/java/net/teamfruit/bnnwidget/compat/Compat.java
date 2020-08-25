@@ -3,27 +3,32 @@ package net.teamfruit.bnnwidget.compat;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.Sound;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.fonts.Font;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.TextFormatting;
 
 public class Compat {
-	public static PositionedSoundRecord createClickSound() {
-		return PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F);
+	/*
+	public static ISound createClickSound() {
+		// return PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F);
 	}
 
-	public static class CompatGuiTextField extends GuiTextField {
+	 */
+
+	public static class CompatGuiTextField extends TextFieldWidget {
 		public CompatGuiTextField() {
-			super(1, getFontRenderer().getFontRendererObj(), 0, 0, 0, 0);
+			super(getFontRenderer().getFontRendererObj(), 0, 0, 0, 0,"");
 		}
 
 		public int getX() {
@@ -45,7 +50,8 @@ public class Compat {
 
 	public static abstract class CompatFontRendererBase extends FontRenderer {
 		public CompatFontRendererBase(final GameSettings gameSettingsIn, final ResourceLocation location, final TextureManager textureManagerIn, final boolean unicode) {
-			super(gameSettingsIn, location, textureManagerIn, unicode);
+			super(textureManagerIn, new Font(textureManagerIn,location));
+			// super(gameSettingsIn, location, textureManagerIn, unicode);
 		}
 
 		@Override
@@ -56,11 +62,11 @@ public class Compat {
 		protected abstract int drawStringWithShadowCompat(@Nullable final String str, final float x, final float y, final int color);
 
 		@Override
-		public int drawString(@Nullable final String str, final float x, final float y, final int color, final boolean shadow) {
-			return drawStringCompat(str, (int) x, (int) y, color, shadow);
+		public int drawString(@Nullable final String str, final float x, final float y, final int color) {
+			return drawStringCompat(str, (int) x, (int) y, color);
 		}
 
-		protected abstract int drawStringCompat(@Nullable final String str, final float x, final float y, final int color, final boolean shadow);
+		protected abstract int drawStringCompat(@Nullable final String str, final float x, final float y, final int color);
 
 		@Override
 		public int getWordWrappedHeight(final String str, final int maxLength) {
@@ -71,7 +77,8 @@ public class Compat {
 	}
 
 	public static @Nonnull Minecraft getMinecraft() {
-		return Minecraft.getMinecraft();
+		return Minecraft.getInstance();
+		// return Minecraft.getMinecraft();
 	}
 
 	public static @Nonnull CompatFontRenderer getFontRenderer() {
@@ -86,7 +93,7 @@ public class Compat {
 		}
 
 		public int drawString(final String msg, final float x, final float y, final int color, final boolean shadow) {
-			return this.font.drawString(msg, x, y, color, shadow);
+			return this.font.drawString(msg, x, y, color);
 		}
 
 		public int drawString(final String msg, final float x, final float y, final int color) {

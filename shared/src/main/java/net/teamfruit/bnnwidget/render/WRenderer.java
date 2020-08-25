@@ -12,19 +12,19 @@ import com.google.common.collect.ImmutableMap.Builder;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.teamfruit.bnnwidget.compat.Compat;
 import net.teamfruit.bnnwidget.compat.OpenGL;
 import net.teamfruit.bnnwidget.compat.WVertex;
+import org.lwjgl.opengl.GL14;
 
 /**
  * 基本描画準備を担当します
  *
  * @author TeamFruit
  */
-public class WRenderer extends Gui {
+public class WRenderer{
 	/**
 	 * Minecraftインスタンス
 	 */
@@ -35,11 +35,11 @@ public class WRenderer extends Gui {
 	 * <p>
 	 * テクスチャをバインドする際に使用します
 	 * <br>
-	 * {@link Minecraft#renderEngine}と等価です
-	 * @return {@link Minecraft#renderEngine}
+	 * {@link Minecraft#textureManager}と等価です
+	 * @return {@link Minecraft#getTextureManager()}
 	 */
 	public static @Nonnull TextureManager texture() {
-		return mc.renderEngine;
+		return mc.textureManager;
 	}
 
 	/**
@@ -190,10 +190,10 @@ public class WRenderer extends Gui {
 		DST_ALPHA(8, GL_DST_ALPHA),
 		ONE_MINUS_DST_ALPHA(9, GL_ONE_MINUS_DST_ALPHA),
 		SRC_ALPHA_SATURATE(10, GL_SRC_ALPHA_SATURATE),
-		CONSTANT_COLOR(11, GL_CONSTANT_COLOR),
-		ONE_MINUS_CONSTANT_COLOR(12, GL_ONE_MINUS_CONSTANT_COLOR),
-		CONSTANT_ALPHA(13, GL_CONSTANT_ALPHA),
-		ONE_MINUS_CONSTANT_ALPHA(14, GL_ONE_MINUS_CONSTANT_ALPHA),
+		CONSTANT_COLOR(11, GL14.GL_CONSTANT_COLOR),
+		ONE_MINUS_CONSTANT_COLOR(12, GL14.GL_ONE_MINUS_CONSTANT_COLOR),
+		CONSTANT_ALPHA(13, GL14.GL_CONSTANT_ALPHA),
+		ONE_MINUS_CONSTANT_ALPHA(14, GL14.GL_ONE_MINUS_CONSTANT_ALPHA),
 		// @formatter:on
 
 		;

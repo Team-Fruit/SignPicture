@@ -79,7 +79,7 @@ public class SignPicture {
 	#endif ;
 
     #if MC_12_LATER
-    public Emojicord() {
+    public SignPicture() {
         instance = this;
 
         // FMLJavaModLoadingContext.get().getModEventBus().addListener(this::preInit);

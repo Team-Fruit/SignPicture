@@ -86,7 +86,8 @@ public class MButton extends WBase {
 	 * ボタンが押された時の効果音を再生します
 	 */
 	public static void playPressButtonSound() {
-		mc.getSoundHandler().playSound(Compat.createClickSound());
+		// mc.getSoundHandler().playSound(Compat.createClickSound());
+		// mc.getSoundHandler().play(Compat.createClickSound());
 	}
 
 	/**

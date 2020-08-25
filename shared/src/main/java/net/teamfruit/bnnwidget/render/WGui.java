@@ -2,19 +2,16 @@ package net.teamfruit.bnnwidget.render;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.*;
 
-import net.minecraft.client.renderer.GLAllocation;
 import net.teamfruit.bnnwidget.compat.Compat;
-import net.teamfruit.bnnwidget.compat.OpenGL;
 import net.teamfruit.bnnwidget.position.Area;
 
 /**
@@ -34,19 +31,21 @@ public class WGui extends WRenderer {
 
 	public static final @Nonnull Area defaultTextureArea = Area.abs(0f, 0f, 1f, 1f);
 
-	private static final @Nullable org.lwjgl.input.Cursor cur;
-
+	// private static final @Nullable org.lwjgl.input.Cursor cur;
+/*
 	static {
 		org.lwjgl.input.Cursor cursor = null;
 		try {
-			final IntBuffer buf = GLAllocation.createDirectIntBuffer(1);
-			buf.put(0);
+			final ByteBuffer buf = GLAllocation.createDirectByteBuffer(1);
+			buf.put();
 			buf.flip();
 			cursor = new org.lwjgl.input.Cursor(1, 1, 0, 0, 1, buf, null);
 		} catch (final LWJGLException e) {
 		}
 		cur = cursor;
 	}
+
+ */
 
 	/**
 	 * カーソルの表示を切り替えます。
@@ -55,11 +54,14 @@ public class WGui extends WRenderer {
 	 * @param b カーソルを表示する場合true
 	 */
 	public static void setCursorVisible(final boolean b) {
+		/*
 		if (cur!=null)
 			try {
 				Mouse.setNativeCursor(b ? null : cur);
 			} catch (final LWJGLException e) {
 			}
+
+		 */
 	}
 
 	public static void showCursor() {
@@ -235,19 +237,19 @@ public class WGui extends WRenderer {
 	 * @param shadow 影を付ける場合true
 	 */
 	public static void drawString(final @Nonnull String text, final float x, final float y, final float w, final float h, final @Nonnull Align align, final @Nonnull VerticalAlign valign, final boolean shadow) {
-		OpenGL.glPushMatrix();
+		GL11.glPushMatrix();
 		align.translate(text, x, w);
 		valign.translate(text, y, h);
 		buf.clear();
-		GL11.glGetFloat(GL11.GL_CURRENT_COLOR, buf);
+		GL11.glGetFloat(GL11.GL_CURRENT_COLOR);
 		final float r = buf.get(0);
 		final float g = buf.get(1);
 		final float b = buf.get(2);
 		final float a = buf.get(3);
-		OpenGL.glColor4f(1f, 1f, 1f, 1f);
+		GL11.glColor4f(1f, 1f, 1f, 1f);
 		Compat.getFontRenderer().drawString(text, 0, 0, Math.max((int) (a*255+0.5)&0xff, 0x4)<<24|((int) (r*255+0.5)&0xFF)<<16|((int) (g*255+0.5)&0xFF)<<8|((int) (b*255+0.5)&0xFF)<<0, shadow);
-		OpenGL.glColor4f(r, g, b, a);
-		OpenGL.glPopMatrix();
+		GL11.glColor4f(r, g, b, a);
+		GL11.glPopMatrix();
 	}
 
 	/**
@@ -274,7 +276,7 @@ public class WGui extends WRenderer {
 		LEFT {
 			@Override
 			protected void translate(final @Nonnull String text, final float x, final float w) {
-				OpenGL.glTranslatef(x, 0, 0);
+				GL11.glTranslatef(x, 0, 0);
 			}
 		},
 		/**
@@ -283,7 +285,7 @@ public class WGui extends WRenderer {
 		CENTER {
 			@Override
 			protected void translate(final @Nonnull String text, final float x, final float w) {
-				OpenGL.glTranslatef(x+(w-getStringWidth(text))/2, 0, 0);
+				GL11.glTranslatef(x+(w-getStringWidth(text))/2, 0, 0);
 			}
 		},
 		/**
@@ -292,7 +294,7 @@ public class WGui extends WRenderer {
 		RIGHT {
 			@Override
 			protected void translate(final @Nonnull String text, final float x, final float w) {
-				OpenGL.glTranslatef(x-getStringWidth(text), 0, 0);
+				GL11.glTranslatef(x-getStringWidth(text), 0, 0);
 			}
 		},
 		;
@@ -311,7 +313,7 @@ public class WGui extends WRenderer {
 		TOP {
 			@Override
 			protected void translate(final @Nonnull String text, final float y, final float h) {
-				OpenGL.glTranslatef(0, y, 0);
+				GL11.glTranslatef(0, y, 0);
 			}
 		},
 		/**
@@ -320,7 +322,7 @@ public class WGui extends WRenderer {
 		MIDDLE {
 			@Override
 			protected void translate(final @Nonnull String text, final float y, final float h) {
-				OpenGL.glTranslatef(0, y+(h-Compat.getFontRenderer().getFontRendererObj().FONT_HEIGHT)/2, 0);
+				GL11.glTranslatef(0, y+(h-Compat.getFontRenderer().getFontRendererObj().FONT_HEIGHT)/2, 0);
 			}
 		},
 		/**
@@ -329,7 +331,7 @@ public class WGui extends WRenderer {
 		BOTTOM {
 			@Override
 			protected void translate(final @Nonnull String text, final float y, final float h) {
-				OpenGL.glTranslatef(0, y+h-Compat.getFontRenderer().getFontRendererObj().FONT_HEIGHT, 0);
+				GL11.glTranslatef(0, y+h-Compat.getFontRenderer().getFontRendererObj().FONT_HEIGHT, 0);
 			}
 		},
 		;

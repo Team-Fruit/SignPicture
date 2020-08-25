@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -36,7 +37,8 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * <p>
 	 * ウィジェットを他のGUIの上で動作させる場合に役立ちます
 	 */
-	protected @Nullable GuiScreen parent;
+	protected @Nullable
+	Screen parent;
 	/**
 	 * ルート・パネルです。すべてのウィジェットはこのパネルの中に配置されます。
 	 */
@@ -78,7 +80,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * ウィジェットからGUIを取得します
 	 * @return GUI
 	 */
-	public @Nonnull GuiScreen getScreen() {
+	public @Nonnull Screen getScreen() {
 		return this.screen;
 	}
 
@@ -86,14 +88,14 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * ウィジェットからGUIを取得します
 	 * @return GUI
 	 */
-	public static @Nullable GuiScreen getScreen(@Nullable final WFrame frame) {
+	public static @Nullable Screen getScreen(@Nullable final WFrame frame) {
 		return frame==null ? null : frame.getScreen();
 	}
 
 	/**
 	 * GUIを描画します
 	 */
-	public static void displayGuiScreen(final GuiScreen screen) {
+	public static void displayGuiScreen(final Screen screen) {
 		WRenderer.mc.displayGuiScreen(screen);
 	}
 
@@ -171,7 +173,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @return Minecraftの画面の幅
 	 */
 	protected static float getDisplayWidth() {
-		return WRenderer.mc.displayWidth;
+		return WRenderer.mc.currentScreen.width;
 	}
 
 	/**
@@ -179,7 +181,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * @return Minecraftの画面の高さ
 	 */
 	protected static float getDisplayHeight() {
-		return WRenderer.mc.displayHeight;
+		return WRenderer.mc.currentScreen.height;
 	}
 
 	/**
@@ -244,7 +246,7 @@ public class WFrame implements WCommon, WContainer<WCommon> {
 	 * 親GUIを指定してGUIを作成します
 	 * @param parent 親GUI
 	 */
-	public WFrame(final @Nullable GuiScreen parent) {
+	public WFrame(final @Nullable Screen parent) {
 		this.parent = parent;
 		this.screen.mc = WRenderer.mc;
 	}

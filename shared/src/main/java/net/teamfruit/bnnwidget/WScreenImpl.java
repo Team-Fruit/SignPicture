@@ -7,11 +7,13 @@ import javax.annotation.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 
-public class WScreenImpl extends GuiScreen implements WScreen {
+public class WScreenImpl extends Screen implements WScreen {
 	private WFrame widget;
 
 	public WScreenImpl(final WFrame frame) {
+		super();
 		this.widget = frame;
 	}
 
