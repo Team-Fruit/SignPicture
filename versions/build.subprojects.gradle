@@ -257,7 +257,7 @@ dependencies {
 	}
 
 	// Manifold
-	implementation group: 'systems.manifold', name: 'manifold-all', version: '2020.1.22'
+	implementation group: 'systems.manifold', name: 'manifold-all', version: '2020.1.27'
 	testImplementation group: 'junit', name: 'junit', version: '4.12'
 
 	// tools.jar dependency (for Java 8 only), primarily to support structural typing without static proxies.
@@ -265,7 +265,7 @@ dependencies {
 	implementation files("${System.properties['java.home']}/../lib/tools.jar")
 
 	// Add manifold to -processorpath for javac
-	annotationProcessor group: 'systems.manifold', name: 'manifold-preprocessor', version: '2020.1.22'
+	annotationProcessor group: 'systems.manifold', name: 'manifold-preprocessor', version: '2020.1.27'
 }
 
 // Manifold
