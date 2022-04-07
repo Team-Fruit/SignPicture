@@ -1,4 +1,4 @@
-# Czech - v1.1
+# Czech - v1.2
 # Translate by Kofola45cz
 # Overlay
 ## Overlay
@@ -36,7 +36,7 @@ signpic.item.sign.desc.named.meta=§7meta: %s§7
 signpic.item.sign.desc.named.raw=§7Název: [%s§7]
 
 # Key
-signpic.key.category=Sign Picture
+signpic.key.category=SignPicture
 signpic.key.gui=Otevřete GUI
 
 # GUI
@@ -103,10 +103,10 @@ signpic.gui.settings.paas=Preventivní ochrana
 signpic.gui.settings.hide=Deaktivovat
 ### Sign Option
 signpic.gui.settings.sign=Nastavení Cedule
-signpic.gui.settings.sign.load=Načítání URL a Meta
-signpic.gui.settings.sign.load.content=Načítání URL
-signpic.gui.settings.sign.load.meta=Načítání Meta
-signpic.gui.settings.sign.openurl=Načítání URL
+signpic.gui.settings.sign.load=Načíst URL a Meta
+signpic.gui.settings.sign.load.content=Načíst URL
+signpic.gui.settings.sign.load.meta=Načíst Meta
+signpic.gui.settings.sign.openurl=Načíst URL
 signpic.gui.settings.sign.loadcancel=Zrušit načítání
 signpic.gui.settings.sign.reload=Znovu načíst
 signpic.gui.settings.sign.redownload=Znovu stáhnout
