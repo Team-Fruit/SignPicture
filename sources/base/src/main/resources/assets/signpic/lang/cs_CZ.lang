@@ -37,7 +37,7 @@ signpic.item.sign.desc.named.raw=§7Název: [%s§7]
 
 # Key
 signpic.key.category=SignPicture
-signpic.key.gui=Otevřete GUI
+signpic.key.gui=Otevření GUI
 
 # GUI
 ## Sign Editor
