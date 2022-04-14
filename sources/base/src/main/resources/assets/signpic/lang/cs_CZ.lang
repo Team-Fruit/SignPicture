@@ -7,7 +7,7 @@ signpic.over.hub.usage.takeall=[%s]: Pořiďte snímek obrazovky
 signpic.over.hub.usage.takerangewindow=[%s]: Pořiďte snímek obrazovky zadaného rozsahu
 signpic.over.hub.usage.release=[Release]: Otevřete rozhraní SignPicture
 ### Mode
-signpic.over.mode.place=Umístěte ceduli a použij obrázek
+signpic.over.mode.place=Umístěte ceduli a použijte obrázek
 signpic.over.mode.option=Klikni na ceduli s obrázkem a otevři GUI s nastavením.
 signpic.over.mode.setpreview=Klikni na blok a zobraz ukázku umístění
 ## F3
