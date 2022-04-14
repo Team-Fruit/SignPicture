@@ -147,7 +147,7 @@ signpic.gui.notice.screenshot.window.error=Došlo k chybě. %s
 signpic.gui.notice.screenshot.window.capture.error=Nelze pořídit snímek obrazovky. %s
 
 # Upload UI
-signpic.ui.title=Soubor SignPicture!
+signpic.ui.title= Soubory pro SignPicture! 
 signpic.ui.description=Nahrávač souborů!
 signpic.ui.drop=Přetáhněte obrázek
 signpic.ui.select=nebo vyberte obrázek k nahrání
