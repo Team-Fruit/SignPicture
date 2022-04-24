@@ -1,0 +1,212 @@
+# Czech - v1.3
+# Translated by Kofola45cz
+# Overlay
+## Overlay
+signpic.over.hub.usage.takerange=[%s]: Pořiďte snímek obrazovky zadaného rozsahu
+signpic.over.hub.usage.takeall=[%s]: Pořiďte snímek obrazovky
+signpic.over.hub.usage.takerangewindow=[%s]: Pořiďte snímek obrazovky zadaného rozsahu
+signpic.over.hub.usage.release=[Release]: Otevřete rozhraní SignPicture
+### Mode
+signpic.over.mode.place=Umístěte ceduli a použijte obrázek
+signpic.over.mode.option=Klikni na ceduli s obrázkem a otevři GUI s nastavením.
+signpic.over.mode.setpreview=Klikni na blok a zobraz ukázku umístění
+## F3
+signpic.over.sign=[§6Sign§r] §7[§r%s§7]
+signpic.over.id=[§6Sign-URL§r] %s
+signpic.over.size=[§6Sign-Size§r] §7[§r%s§7] [§dSign:§7[§r%s§7×§r%s§7], §dImage:§7[§r%s§7×§r%s§7], §dView:§7[§r%s§7×§r%s§7]]
+signpic.over.status=[§6Sign-Status§r] %s
+signpic.over.advmsg=[§6Sign-Info§r] %s
+signpic.over.raw=[§6Sign-Raw§r] [[§r%s§7], [§r%s§7], [§r%s§7], [§r%s§7]]
+signpic.over.local=[§6Sign-Local§r] §7[§r%s§7]
+
+# Chat
+signpic.chat.error.place=[§6SignPicture§r] Je nám líto, ale kvůli chybě nebudete moci tuto funkci použít.
+
+# Item
+signpic.item.hold=§7Podržte §3§o%s §7pro podrobnosti
+signpic.item.sign.desc=§dPodržením §a%s§d upravíte SignPicture
+signpic.item.sign.desc.keyconflict=§cOtevřete §a%2$s§c in §a%1$s§c a vyřešte klíčový konflikt!
+signpic.item.sign.desc.keyconflict.key=§c - conflict §a%2$s§c in §a%1$s
+signpic.item.sign.desc.named=Sign Picture§r §7(%s)
+signpic.item.sign.desc.named.prop.size=§7 - rozměry: %s×%s
+signpic.item.sign.desc.named.prop.offset=§7 - Umístění: ⇨:%s, ⇧:%s, ↗:%s
+signpic.item.sign.desc.named.prop.rotation=§7 - otáčení: %s
+signpic.item.sign.desc.named.url=§7url: %s§7
+signpic.item.sign.desc.named.meta=§7meta: %s§7
+signpic.item.sign.desc.named.raw=§7Název: [%s§7]
+
+# Key
+signpic.key.category=SignPicture
+signpic.key.gui=Otevření GUI
+
+# GUI
+## Sign Editor
+signpic.gui.editor.see=Zobrazit ceduli
+signpic.gui.editor.preview=Náhled
+signpic.gui.editor.continue=Pokračovat
+signpic.gui.editor.option=Editovat
+signpic.gui.editor.place=Umístit
+signpic.gui.editor.cancel=Ukončit
+signpic.gui.editor.file=Nahrát
+signpic.gui.editor.paste=Vložit
+signpic.gui.editor.openurl=Otevřít URL
+signpic.gui.editor.textfield=Umístit URL zde!
+signpic.gui.editor.number.neg=-
+signpic.gui.editor.number.pos=+
+signpic.gui.editor.number.unknown=?
+### Size
+signpic.gui.editor.size.category=Rozměry
+signpic.gui.editor.size.width=Š
+signpic.gui.editor.size.height=V
+signpic.gui.editor.size.width.neg=-
+signpic.gui.editor.size.width.pos=+
+signpic.gui.editor.size.width.unknown=Poměr str. - Šířka
+signpic.gui.editor.size.height.neg=-
+signpic.gui.editor.size.height.pos=+
+signpic.gui.editor.size.height.unknown=Poměr str. - Výška
+### Offset
+signpic.gui.editor.offset.category=Umístění
+signpic.gui.editor.offset.x=X
+signpic.gui.editor.offset.x.neg=⇦
+signpic.gui.editor.offset.x.pos=⇨
+signpic.gui.editor.offset.x.unknown=0
+signpic.gui.editor.offset.y=Y
+signpic.gui.editor.offset.y.neg=⇩
+signpic.gui.editor.offset.y.pos=⇧
+signpic.gui.editor.offset.y.unknown=0
+signpic.gui.editor.offset.z=Z
+signpic.gui.editor.offset.z.neg=↗
+signpic.gui.editor.offset.z.pos=↙
+signpic.gui.editor.offset.z.unknown=0
+### Rotation
+signpic.gui.editor.rotation.category=Otáčení
+signpic.gui.editor.rotation.up=↑
+signpic.gui.editor.rotation.down=↓
+signpic.gui.editor.rotation.x=X
+signpic.gui.editor.rotation.y=Y
+signpic.gui.editor.rotation.z=Z
+signpic.gui.editor.rotation.remove=-
+signpic.gui.editor.rotation.add=+
+signpic.gui.editor.rotation.neg=-
+signpic.gui.editor.rotation.pos=+
+signpic.gui.editor.rotation.unknown=0
+## Settings
+signpic.gui.settings.api.upimage=Obrazek
+signpic.gui.settings.api.upimage.desc=Nastavení nahrávání obrázků
+signpic.gui.settings.api.urlshortener=Zkracovač
+signpic.gui.settings.api.urlshortener.desc=Nastavení URL Zkracovače
+signpic.gui.settings.api.type=API Type
+signpic.gui.settings.api.key=API Key
+signpic.gui.settings.default=Výchozí
+signpic.gui.settings.config=Konfigurace
+signpic.gui.settings.paas=Preventivní ochrana
+signpic.gui.settings.hide=Deaktivovat
+### Sign Option
+signpic.gui.settings.sign=Nastavení Cedule
+signpic.gui.settings.sign.load=Načíst URL a Meta
+signpic.gui.settings.sign.load.content=Načíst URL
+signpic.gui.settings.sign.load.meta=Načíst Meta
+signpic.gui.settings.sign.openurl=Načíst URL
+signpic.gui.settings.sign.loadcancel=Zrušit načítání
+signpic.gui.settings.sign.reload=Znovu načíst
+signpic.gui.settings.sign.redownload=Znovu stáhnout
+signpic.gui.settings.sign.block=Blokovat
+signpic.gui.settings.sign.unblock=Odblokovat
+signpic.gui.settings.sign.reloadall=Znovu načíst vše
+signpic.gui.settings.sign.redownloadall=Znovu stáhnout vše
+## Update
+signpic.gui.update.message=Nová verze SignPicture! Je k dispozici! Aktualizaci provedete kliknutím sem.
+signpic.gui.update.message.changelog=%s
+## Prevent Anti-AutoSign
+signpic.gui.paas.count=Prosím, čekejte ( %d / %d znaků )
+signpic.gui.paas.time=Esc pro zrušení ( %.2f / %.2f sekund )
+
+# Notice
+signpic.gui.notice.paste.unsupported=Není podporováno
+signpic.gui.notice.paste.typeunsupported=Nepodporovaný typ
+signpic.gui.notice.paste.error=Chyba vložení: %s
+signpic.gui.notice.uploading=Nahrávání %s
+signpic.gui.notice.uploaded=Nahrávání dokončeno %s
+signpic.gui.notice.uploadfailed=Nahrávání se nezdařilo: §7%s
+signpic.gui.notice.downloading=Stahování %s
+signpic.gui.notice.downloaded=Stahování dokončeno %s
+signpic.gui.notice.downloadfailed=Stažení se nezdařilo: §7%s
+signpic.gui.notice.openurlfailed=Otevřený URL se nezdařilo: §7%s
+signpic.gui.notice.openurlfailed.invalid=Neplatné URL
+signpic.gui.notice.versioning.downloadedAlready=Ukončete hru, odstraňte starou verzi a znovu spusťte hru!
+signpic.gui.notice.versioning.downloadingAlready=Aktualizace se již stahuje!
+signpic.gui.notice.toolongname=URL + délka metadata musí být menší než 40 znaků.
+signpic.gui.notice.toolongplace=URL + délka metadata musí být menší než 60 znaků.
+signpic.gui.notice.shortening=Čekejte prosím... URL se zkracuje
+signpic.gui.notice.shortened=Zkrácení URL dokončeno
+signpic.gui.notice.shorteningfailed=Zkrácení adresy URL se nezdařilo
+signpic.gui.notice.shorteningother=Čekejte prosím... Další úlohy zkrácení URL nejsou dokončeny
+signpic.gui.notice.screenshot.ingame.error=Došlo k chybě. %s
+signpic.gui.notice.screenshot.ingame.capture.error=Nelze pořídit snímek obrazovky. %s
+signpic.gui.notice.screenshot.window.error=Došlo k chybě. %s
+signpic.gui.notice.screenshot.window.capture.error=Nelze pořídit snímek obrazovky. %s
+
+# Upload UI
+signpic.ui.title= Soubory pro SignPicture! 
+signpic.ui.description=Nahrávač souborů!
+signpic.ui.drop=Přetáhněte obrázek
+signpic.ui.select=nebo vyberte obrázek k nahrání
+signpic.ui.title.file=Soubor SignPicture!
+
+# Image State
+signpic.state.init=Čekání...
+signpic.state.initalized=Initalized!
+signpic.state.downloading=Stahování... (%d%%)
+signpic.state.downloaded=Stahování dokončeno!
+signpic.state.loading=Načítání... (%d%%)
+signpic.state.loaded=Načítání dokončeno!
+signpic.state.available=K dispozici! (%d%%)
+signpic.state.failed=Načítání se nezdařilo... (%d%%)
+signpic.state.error=CHYBA
+signpic.state.format.unsupported=Nepodporováno. Vyzkoušejte novou verzi!
+
+# Image State Additional Message
+signpic.advmsg.invalidurl=Neplatná URL
+signpic.advmsg.loadstopped=Zastavit stahování
+signpic.advmsg.capacityover=Kapacita nad
+signpic.advmsg.blocked=Blokovaný obrázek
+signpic.advmsg.retryover=Maximální počet opakování
+signpic.advmsg.invalidimage=Neplatný obrázek
+signpic.advmsg.ioerror=Načtení se nezdařilo: §7%s
+signpic.advmsg.unknown=Neznámá chyba: §7%s
+signpic.advmsg.format.unsupported=Nepodporovaný obrázek
+signpic.advmsg.format.needupdate=Vyzkoušejte novou verzi!
+signpic.advmsg.format.outdated=Zastaralý SignPicture!
+signpic.advmsg.format.needreplace=Importujte pomocí „Možnost“ a Nahradit!
+
+# Command
+signpic.command.aliases=Aliasy: %s
+signpic.command.help=Zadejte '%s' pro pomoc.
+signpic.command.list=Dostupné příkazy:
+signpic.command.permlevel=Úroveň oprávnění: %s
+signpic.command.noperms=K použití tohoto příkazu nemáte oprávnění.
+signpic.command.signpic.help=Různé příkazy pro Railcraft
+signpic.command.signpic.format=Formát: /%s <příkaz>
+signpic.command.signpic.version.desc=- %s : Verze Nástroje
+signpic.command.signpic.version.help=Nástroje pro správu verzí.
+signpic.command.signpic.version.format=Formát: /%s
+signpic.command.signpic.version.check.desc=- %s : Zkontrolujte novou verzi
+signpic.command.signpic.version.check.help=Spustit kontrolu verze.
+signpic.command.signpic.version.check.format=Formát: /%s
+signpic.command.signpic.version.update.desc=- %s : Aktualizujte SignPicture
+signpic.command.signpic.version.update.help=Spusťte aktualizaci SignPicture.
+signpic.command.signpic.version.update.format=Formát: /%s
+
+# Version Checking
+signpic.versioning.check.start=Spustit Kontrolu
+signpic.versioning.check.cooldown=Kontrola se nezdařila: §7Požadovaný čas za
+signpic.versioning.noupdate=K dispozici není žádná aktualizace
+signpic.versioning.updateMessage=["[",{"text":"SignPicture","color":"gold"},"] Nová verze k dispozici: ",{"text":"$new$","color":"green"},"."," [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Kliknutím na toto tlačítko automaticky stáhnete nejnovější verzi","color":"green"}},"clickEvent":$download$},"] [",{"text":"Webová stránka","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Kliknutím na toto přejděte na web modu","color":"green"}},"clickEvent":$website$},"] [",{"text":"Seznam změn","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Kliknutím sem přejdete do seznamu změn verze","color":"green"}},"clickEvent":$changelog$},"]"]
+signpic.versioning.changelog=[§6SignPicture§r] [§aUpdate§r] %s
+signpic.versioning.startingDownload=[{"text":"Zahajuje se stahování %s. Neodstraňujte pevný disk. Enjoying ","color":"aqua"}]
+signpic.versioning.doneDownloading=Stahování dokončeno %s. Odstraňte svůj starý soubor SignPicture .jar a znovu spusťte hru.
+signpic.versioning.doneDownloadingWithFile=Stahování dokončeno %s. Chcete-li provést aktualizaci, odstraňte %s a znovu spusťte hru.
+signpic.versioning.downloadedAlready=Už jste si stáhli nejnovější verzi. Zavřete hru, odstraňte starou verzi ze složky mods a znovu spusťte hru.
+signpic.versioning.downloadingAlready=Aktualizace se již stahuje, dej jí trochu času, jo?
+signpic.versioning.error=Woah! Při pokusu o stažení aktualizace Sign Picture se zdá, že se něco pokazilo.
+signpic.versioning.disabled=Promiňte. Tato funkce je aktuálně deaktivována, měla by se brzy vrátit.
