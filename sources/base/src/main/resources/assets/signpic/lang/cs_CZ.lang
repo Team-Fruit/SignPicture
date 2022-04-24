@@ -1,4 +1,4 @@
-# Czech - v1.2
+# Czech - v1.3
 # Translate by Kofola45cz
 # Overlay
 ## Overlay
@@ -60,10 +60,10 @@ signpic.gui.editor.size.width=Š
 signpic.gui.editor.size.height=V
 signpic.gui.editor.size.width.neg=-
 signpic.gui.editor.size.width.pos=+
-signpic.gui.editor.size.width.unknown=Poměr stran - Šířka
+signpic.gui.editor.size.width.unknown=Poměr str. - Šířka
 signpic.gui.editor.size.height.neg=-
 signpic.gui.editor.size.height.pos=+
-signpic.gui.editor.size.height.unknown=Poměr stran - Výška
+signpic.gui.editor.size.height.unknown=Poměr str. - Výška
 ### Offset
 signpic.gui.editor.offset.category=Umístění
 signpic.gui.editor.offset.x=X
